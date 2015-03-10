@@ -1,7 +1,7 @@
 # commons-cops
 **Platform for the communities of the CommonS Erasmus+ Project**
 
-[*CommonS*](www.commonspaces.eu) is an [*Erasmus+*](ec.europa.eu/programmes/erasmus-plus/index_en.htm) project funded by the EU,
+[*CommonS*](http://www.commonspaces.eu) is an [*Erasmus+*](http://ec.europa.eu/programmes/erasmus-plus/index_en.htm) project funded by the EU,
 aimed at experimenting new forms of co-learning, e-tutoring and e-mentoring.
 
 The *Commons Platform* will support Communities of Practice (CoPs) in their activities.
@@ -9,7 +9,7 @@ CoPs will comprise teachers, students, young and senior professionals;
 they will work mainly to the retrieval, adaptation (including translation),
 reuse and remix of available OER contents, also in order to propose some learning paths.
 
-We will start by creating a [Django](www.djangoproject.com) *starter project* that will customize and wrap the [*Mayan-EDMS*](github.com/mayan-edms) application
+We will start by creating a [Django](https://www.djangoproject.com) *starter project* that will customize and wrap the [*Mayan-EDMS*](https://github.com/mayan-edms) application
 in order to be able to create a *Sample OER Library* (OER = open educational resources).
 
 My organization and other partners of the CommonS Project have much experience in developing applications
