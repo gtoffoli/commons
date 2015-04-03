@@ -6,7 +6,13 @@ from mayan.settings.base import *
 
 # ========= EXTENSIONS BY COMMONS
 
+MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
+MIDDLEWARE_CLASSES.extend((
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+))
+
 INSTALLED_APPS = list(INSTALLED_APPS) + [
+    'django.contrib.flatpages',
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
@@ -66,6 +72,10 @@ sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
 # ========= COMMONS' CUSTOMIZATIONS
 
 from django.utils.translation import ugettext_lazy as _
+
+PROJECT_TITLE = 'CommonSpaces'
+PROJECT_NAME = 'mayan'
+LOGIN_REDIRECT_URL = '/'
 
 LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (

@@ -13,4 +13,5 @@ urlpatterns = patterns('',
     url(r'^mayan', include('mayan.urls')),
     url(r"^$", TemplateView.as_view(template_name="homepage.html"), name="home"),
     url(r"^cops$", 'commons.views.cops_tree', name="cops_tree"),
+    url(r'^info/', include('django.contrib.flatpages.urls')),
 )
