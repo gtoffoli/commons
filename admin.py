@@ -28,6 +28,10 @@ class RepoAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'repo_type', 'url', 'info_page', 'created', 'modified',)
     search_fields = ['name', 'description', 'repo_type',]
 
+    def save_model(self, request, obj, form, change):
+        obj.lasteditor = request.user
+        obj.save()
+
 admin.site.register(Languages, LanguagesAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
