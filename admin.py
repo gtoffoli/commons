@@ -5,9 +5,9 @@ Created on 03/apr/2015
 
 from django.contrib import admin
 
-from commons.models import Languages, RepoType, Repo
+from commons.models import Language, RepoType, Repo, ProjType, Project
 
-class LanguagesAdmin(admin.ModelAdmin):
+class LanguageAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['code', 'name',]}),
     ]
@@ -23,15 +23,28 @@ class RepoTypeAdmin(admin.ModelAdmin):
 
 class RepoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'repo_type', 'languages', 'url', 'info_page',]}),
+        (None, {'fields': ['name', 'description', 'repo_type', 'url', 'features', 'languages', 'info_page',]}),
     ]
     list_display = ('name', 'description', 'repo_type', 'url', 'info_page', 'created', 'modified',)
-    search_fields = ['name', 'description', 'repo_type',]
+    search_fields = ['name', 'description', 'repo_type', 'features', 'languages',]
 
-    def save_model(self, request, obj, form, change):
-        obj.lasteditor = request.user
-        obj.save()
+class ProjTypeAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['name', 'description',]}),
+    ]
+    list_display = ('name', 'description',)
+    search_fields = ['name',]
 
-admin.site.register(Languages, LanguagesAdmin)
+class ProjAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['name', 'description', 'proj_type', 'info_page',]}),
+    ]
+    list_display = ('name', 'description', 'proj_type', 'info_page', 'created', 'modified',)
+    search_fields = ['name', 'description', 'proj_type',]
+
+admin.site.register(Language, LanguageAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
+admin.site.register(ProjType, ProjTypeAdmin)
+admin.site.register(Project, ProjAdmin)
+

@@ -1,0 +1,20 @@
+{% extends "banner_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}CommonS Platform - Repository: {{ repo.name }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body_base %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}CommonS Platform - Repository:{% endblocktrans %} {{ repo.name }}</h2>
+            <p class="lead">
+            <div>Type: {{ repo_type.description }}</div>
+            <div>In short: {{ repo.description }}</div>
+            <div>URL: <a href="{{ repo.url }}">{{ repo.url }}</a></div>
+            </p>
+        </div>
+    </section>
+{% endblock %}

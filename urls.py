@@ -11,7 +11,9 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^mayan', include('mayan.urls')),
-    url(r"^$", TemplateView.as_view(template_name="homepage.html"), name="home"),
-    url(r"^cops$", 'commons.views.cops_tree', name="cops_tree"),
     url(r'^info/', include('django.contrib.flatpages.urls')),
+    url(r"^$", TemplateView.as_view(template_name="homepage.html"), name="home"),
+    url(r"^cops/$", 'commons.views.cops_tree', name="cops_tree"),
+    url(r"^repos/$", 'commons.views.repos_list', name="repos_list"),
+    url(r"^repo/(?P<repo_slug>[\w-]+)/$", 'commons.views.repo_detail_by_slug', name="repo_detail"),
 )
