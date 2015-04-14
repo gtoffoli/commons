@@ -30,7 +30,7 @@ REPO_FEATURES = (
   ('FT', 'Full-text search',),
   ('ML', 'Multi-Lingual UI support',),
   ('PP', 'Popularity Score',),
-  ('PR', 'Pear Review',),
+  ('PR', 'Peer Review',),
   ('QR', 'Quality Rating',),
   ('SE', 'specialized Search Engine',),
 )
@@ -72,7 +72,7 @@ def create_repos():
 PROJECTS = (
   ('com', 'Sapienza', 'Sapienza Community',),
   ('com', 'EST', 'European School of Translation',),
-  ('oer', 'Employability OERs', 'Cataloguing OERs on Employability',),
+  ('oer', 'Sample Library of OERs', 'Build and test a Sample Library',),
 )
 
 def create_projects():
