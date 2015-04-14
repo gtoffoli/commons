@@ -1,0 +1,19 @@
+{% extends "banner_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}CommonS Platform - Community: {{ project.name }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body_base %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}CommonS Platform - Community:{% endblocktrans %} {{ project.name }} &nbsp;<a href="/admin/commons/project/{{ project.id }}/"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a></h2>
+            <p class="lead">
+            <div>Type: {{ proj_type.description }}</div>
+            <div>In short: {{ project.description }}</div>
+            </p>
+        </div>
+    </section>
+{% endblock %}

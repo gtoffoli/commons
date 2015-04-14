@@ -9,11 +9,29 @@
 {% block body_base %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}CommonS Platform - Repository:{% endblocktrans %} {{ repo.name }}</h2>
+            <h2 class="text-center">{% blocktrans %}CommonS Platform - Repository:{% endblocktrans %} {{ repo.name }} &nbsp;<a href="/admin/commons/repo/{{ repo.id }}/"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a></h2>
             <p class="lead">
             <div>Type: {{ repo_type.description }}</div>
             <div>In short: {{ repo.description }}</div>
-            <div>URL: <a href="{{ repo.url }}">{{ repo.url }}</a></div>
+            <div>URL: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
+    		{% if repo.features.all %}
+    		<div>Features:
+			<ul class="root">
+		        {% for feature in repo.features.all %}
+		        <li>{{ feature.code }} - {{ feature.name }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if repo.languages.all %}
+    		<div>OER languages:
+			<ul class="root">
+		        {% for language in repo.languages.all %}
+		        <li>{{ language.code }} - {{ language.name }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
             </p>
         </div>
     </section>

@@ -31,6 +31,13 @@ TEMPLATE_CONTEXT_PROCESSORS = list(TEMPLATE_CONTEXT_PROCESSORS) + [
     "pinax_theme_bootstrap.context_processors.theme",
 ]
 
+# in development, disable template caching
+if os.name == 'nt':
+    TEMPLATE_LOADERS = (
+        'django.template.loaders.filesystem.Loader',
+        'django.template.loaders.app_directories.Loader',
+    )
+
 
 # ========= MAYAN'S IMPROVEMENTS
 
@@ -109,3 +116,14 @@ from private import *
 AUTHENTICATION_BACKENDS = (
     'hierarchical_auth.backends.HierarchicalModelBackend',
 )
+
+# --------- EXCEPTIONS TO THE MAYAN'S "LOGIN REQUIRED" GENERAL RULE ----------------
+LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
+    r'^$',
+    r'^info/',
+    r"^cops/$",
+    r"^project/(?P<project_slug>[\w-]+)/$",
+    r"^repos/$",
+    r"^repo/(?P<repo_slug>[\w-]+)/$",
+]
+

@@ -37,10 +37,10 @@ class ProjTypeAdmin(admin.ModelAdmin):
 
 class ProjAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'proj_type', 'info_page',]}),
+        (None, {'fields': ['description', 'proj_type', 'info_page',]}),
     ]
-    list_display = ('name', 'description', 'proj_type', 'info_page', 'created', 'modified',)
-    search_fields = ['name', 'description', 'proj_type',]
+    list_display = ('description', 'proj_type', 'info_page', 'created', 'modified',)
+    search_fields = ['description', 'proj_type',]
 
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)

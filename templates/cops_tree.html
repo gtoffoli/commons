@@ -16,7 +16,11 @@
 <ul class="root">
     {% recursetree nodes %}
         <li>
-            {{ node.name }}
+    		{% if node.project %}
+            	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>
+    		{% else %}    	
+            	{{ node.name }}
+    		{% endif %}
             {% if not node.is_leaf_node %}
                 <ul class="children">
                     {{ children }}
@@ -24,7 +28,8 @@
             {% endif %}
         </li>
     {% endrecursetree %}
-</ul>    {% else %}
+</ul>
+    {% else %}
        	<p>{% trans "No community is present" %}.</p>
     {% endif %}
             </p>

@@ -23,6 +23,13 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 CreationDateTimeField(_('created')).contribute_to_class(Group, 'created')
 ModificationDateTimeField(_('modified')).contribute_to_class(Group, 'modified')
 """
+def group_project(self):
+    projects = Project.objects.filter(group=self)
+    print 'projects = ', projects
+    if len(projects) == 1:
+        return projects[0]
+    return None
+Group.project = group_project
 
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
@@ -169,7 +176,7 @@ class Project(models.Model):
         try:
             group = self.group
         except:
-            name = self.group_name
+            name = self.group.name
             try:
                 group = Group.objects.get(name=name)
             except:
@@ -178,7 +185,7 @@ class Project(models.Model):
                 # group = Group.objects.get(name=name)
             self.group = group
             # obj.group_id = group.id
-        self.slug = self.group_name.replace(' ', '-').lower()
+        self.slug = self.group.name.replace(' ', '-').lower()
         print self.group_id, self.slug
         # self.user = request.user
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
