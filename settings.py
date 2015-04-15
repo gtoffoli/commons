@@ -17,6 +17,7 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     "hierarchical_auth",
     "django_extensions",
     # "organizations",
+    'tinymce',
     # theme (from pinax project)
     "pinax_theme_bootstrap",
     "bootstrapform",
@@ -127,3 +128,25 @@ LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
     r"^repo/(?P<repo_slug>[\w-]+)/$",
 ]
 
+# TinyMCE settings (from roma APP of RomaPaese project)
+TINYMCE_COMPRESSOR = True
+
+TINYMCE_DEFAULT_CONFIG = {
+    'width': '640',
+    'height': '480',
+    'plugins': 'fullscreen,media,preview,paste,table',
+    'theme': 'advanced',
+    'relative_urls': False,
+    'theme_advanced_toolbar_location': 'top',
+    'theme_advanced_toolbar_align': 'left',
+    'theme_advanced_buttons1': 'undo,redo,|,formatselect,bold,italic,underline,|,' \
+        'justifyleft,justifycenter,justifyright,justifyfull,|,forecolor,backcolor,' \
+        'sub,sup,charmap,|,bullist,numlist,|,indent,outdent,|,link,unlink,anchor,image,media',
+    'theme_advanced_buttons2': '|,tablecontrols,|,cut,copy,paste,pasteword,pastetext,selectall,|,removeformat,cleanup,|,visualaid,code,preview,fullscreen',
+    'theme_advanced_buttons3': '',
+    'theme_advanced_blockformats': 'p,pre,address,blockquote,h1,h2,h3,h4,' \
+        'h5,h6',
+    'plugin_preview_width' : '800',
+    'plugin_preview_height' : '600',
+    'paste_auto_cleanup_on_paste': 'true',
+    }

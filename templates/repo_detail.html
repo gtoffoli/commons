@@ -9,7 +9,7 @@
 {% block body_base %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}CommonS Platform - Repository:{% endblocktrans %} {{ repo.name }} &nbsp;<a href="/admin/commons/repo/{{ repo.id }}/"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a></h2>
+            <h2 class="text-center">{% blocktrans %}Repository:{% endblocktrans %} {{ repo.name }} &nbsp;<a href="/admin/commons/repo/{{ repo.id }}/"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a></h2>
             <p class="lead">
             <div>Type: {{ repo_type.description }}</div>
             <div>In short: {{ repo.description }}</div>
@@ -30,6 +30,11 @@
 		        <li>{{ language.code }} - {{ language.name }}</li>
 		        {% endfor %}
 			</ul>
+			</div>
+		    {% endif %}
+    		{% if repo.info_page %}
+    		<div>Additional information: &nbsp;<a href="/admin/flatpages/flatpage/{{ repo.info_page.id }}/"><i class="fa fa-edit" style="font-size: 1.0em;""></i></a>
+				<div>{{ repo.info_page.content|safe }}</div>
 			</div>
 		    {% endif %}
             </p>

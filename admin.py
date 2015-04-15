@@ -48,3 +48,25 @@ admin.site.register(Repo, RepoAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
 
+from django.contrib.flatpages.admin import FlatPageAdmin
+from django.contrib.flatpages.forms import FlatpageForm
+from django.contrib.flatpages.models import FlatPage
+from tinymce.widgets import TinyMCE
+
+class PageForm(FlatpageForm):
+
+    class Meta:
+        model = FlatPage
+        widgets = {
+            'content' : TinyMCE(),
+        }
+
+
+class PageAdmin(FlatPageAdmin):
+    """
+    Page Admin
+    """
+    form = PageForm
+    
+admin.site.unregister(FlatPage)
+admin.site.register(FlatPage, PageAdmin)
