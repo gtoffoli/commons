@@ -5,7 +5,8 @@ Created on 03/apr/2015
 
 from django.contrib import admin
 
-from commons.models import Subject, Language, RepoFeature, RepoType, Repo, ProjType, Project
+from .models import Subject, Language, RepoFeature, RepoType, Repo, ProjType, Project
+from .forms import RepoForm, ProjectForm
 
 class LanguageAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -35,10 +36,11 @@ class RepoFeatureAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
+    form = RepoForm
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'repo_type', 'url', 'features', 'subjects', 'languages', 'info_page',]}),
+        (None, {'fields': ['name', 'description', 'repo_type', 'url', 'features', 'subjects', 'languages', 'info', 'eval',]}),
     ]
-    list_display = ('name', 'description', 'repo_type', 'url', 'info_page', 'created', 'modified',)
+    list_display = ('name', 'description', 'repo_type', 'url', 'created', 'modified',)
     search_fields = ['name', 'description', 'repo_type', 'features', 'subjects', 'languages',]
 
 class ProjTypeAdmin(admin.ModelAdmin):
@@ -49,10 +51,11 @@ class ProjTypeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class ProjAdmin(admin.ModelAdmin):
+    form = RepoForm
     fieldsets = [
-        (None, {'fields': ['description', 'proj_type', 'info_page',]}),
+        (None, {'fields': ['description', 'proj_type', 'info', 'eval',]}),
     ]
-    list_display = ('description', 'proj_type', 'info_page', 'created', 'modified',)
+    list_display = ('description', 'proj_type', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
 
 admin.site.register(Subject, SubjectAdmin)

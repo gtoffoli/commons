@@ -133,8 +133,8 @@ LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
 TINYMCE_COMPRESSOR = True
 
 TINYMCE_DEFAULT_CONFIG = {
-    'width': '640',
-    'height': '480',
+    'width': '400', # '640',
+    'height': '300', # '480',
     'plugins': 'fullscreen,media,preview,paste,table',
     'theme': 'advanced',
     'relative_urls': False,

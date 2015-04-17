@@ -18,7 +18,7 @@
             <div>In short: {{ repo.description }}</div>
             <div>URL: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
     		{% if repo.features.all %}
-    		<div>Features:
+    		<div style="margin-top: 0.5em;">Features:
 			<ul class="root">
 		        {% for feature in repo.features.all %}
 		        <li>{{ feature.code }} - {{ feature.name }}</li>
@@ -44,9 +44,14 @@
 			</ul>
 			</div>
 		    {% endif %}
-    		{% if repo.info_page %}
-    		<div>Additional information: &nbsp;<a href="/admin/flatpages/flatpage/{{ repo.info_page.id }}/"><i class="fa fa-edit" style="font-size: 1.0em;""></i></a>
-				<div>{{ repo.info_page.content|safe }}</div>
+    		{% if repo.info %}
+    		<div style="margin-top: 0.5em;">Additional information:
+				<div style="margin-left: 1.5em;">{{ repo.info|safe }}</div>
+			</div>
+		    {% endif %}
+    		{% if repo.eval %}
+    		<div style="margin-top: 0.5em;">Comments / evaluation:
+				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
 			</div>
 		    {% endif %}
             </p>

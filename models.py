@@ -121,7 +121,9 @@ class Repo(models.Model):
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
     subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subjects')
-    info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
+    # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
+    info = models.TextField(_('longer description'), blank=True, null=True)
+    eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))
@@ -143,10 +145,11 @@ class Repo(models.Model):
             self.user = user
         super(Repo, self).save(*args, **kwargs) # Call the "real" save() method.
 
+"""
 def repo_post_save(instance, created, raw, **kwargs):
-    """
+    ""
     at creation, add info page (a flatpage)
-    """
+    ""
     # Ignore fixtures and saves for existing repos.
     if not created or raw:
         return
@@ -158,6 +161,7 @@ def repo_post_save(instance, created, raw, **kwargs):
     instance.save()
 
 models.signals.post_save.connect(repo_post_save, sender=Repo, dispatch_uid='repo_post_save')
+"""
 
 class ProjType(models.Model):
     """
@@ -180,7 +184,8 @@ class Project(models.Model):
     proj_type = models.ForeignKey(ProjType, verbose_name=_('project type'), related_name='projects')
     slug = SlugField(editable=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
-    info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='project')
+    # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='project')
+    info = models.TextField(_('longer description'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))

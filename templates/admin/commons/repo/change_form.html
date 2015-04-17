@@ -44,8 +44,6 @@
 {% if not add %}
 <fieldset class="grp-module" style="padding:5px;  text-align:right;">
   <input type="button" class="btn btn-info" name="user-view" value="{% trans 'User view' %}" onClick="window.location='/repo/{{ original.slug }}/';">
-  &nbsp;
-  <input type="button" class="btn btn-info" name="user-view" value="{% trans 'Edit additional info' %}" onClick="window.location='/admin/flatpages/flatpage/{{ original.info_page.id }}/';">
 </fieldset>
 {% endif %}
 {% if errors %}
