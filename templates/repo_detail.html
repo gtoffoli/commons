@@ -9,7 +9,10 @@
 {% block body_base %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}Repository:{% endblocktrans %} {{ repo.name }} &nbsp;<a href="/admin/commons/repo/{{ repo.id }}/"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a></h2>
+            <h2 class="text-center">{% blocktrans %}Repository:{% endblocktrans %}
+            	&nbsp; {{ repo.name }}
+            	&nbsp; <a href="/repos/" title="show Repository list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
+                &nbsp; <a href="/admin/commons/repo/{{ repo.id }}/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a></h2>
             <p class="lead">
             <div>Type: {{ repo_type.description }}</div>
             <div>In short: {{ repo.description }}</div>
