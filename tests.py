@@ -3,7 +3,7 @@ Created on 09/apr/2015
 @author: giovanni
 '''
 
-from commons.models import Language, RepoType, RepoFeature, Repo, ProjType, Project
+from commons.models import Subject, Language, RepoType, RepoFeature, Repo, ProjType, Project
 
 def populate_languages():
     import mayan.settings.base
@@ -41,6 +41,24 @@ def populate_repo_features():
         j += 1
         repo_feature = RepoFeature(code=i[0], name=i[1], order=j)
         repo_feature.save()
+
+SUBJECTS = (
+  ('ART', 'Arts',),
+  ('BIZ', 'Business (BIZ)',),
+  ('BIZ-ENT', 'BIZ - Enterpreneurship',),
+  ('HUM', 'Humanities (HUM)',),
+  ('HUM-FR', 'HUM - Foreign Languages',),
+  ('HUM-LT', 'HUM - Learning & Teaching',),
+  ('STM', 'Science, Technology and Mathematics (STM)',),
+  ('STM-ICT', 'STM - ICT Literacy',),
+  ('SOC', 'Social Sciences (SOC)',),
+  ('SOC-REL', 'SOC - Interpersonal Skills',),
+)
+
+def populate_subjects():
+    for i in SUBJECTS:
+        subject = Subject(code=i[0], name=i[1])
+        subject.save()
 
 PROJ_TYPES = (
   ('com', 'community',),

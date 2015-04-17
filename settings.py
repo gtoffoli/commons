@@ -82,7 +82,8 @@ sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
 from django.utils.translation import ugettext_lazy as _
 
 PROJECT_TITLE = 'CommonSpaces'
-PROJECT_NAME = 'mayan'
+# PROJECT_NAME = 'mayan'
+PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
 
 LANGUAGE_CODE = 'en-gb'

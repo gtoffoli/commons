@@ -5,9 +5,16 @@ Created on 03/apr/2015
 
 from django.contrib import admin
 
-from commons.models import Language, RepoType, Repo, ProjType, Project
+from commons.models import Subject, Language, RepoType, Repo, ProjType, Project
 
 class LanguageAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['code', 'name',]}),
+    ]
+    list_display = ('code', 'name',)
+    search_fields = ['code', 'name',]
+
+class SubjectAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['code', 'name',]}),
     ]
@@ -23,10 +30,10 @@ class RepoTypeAdmin(admin.ModelAdmin):
 
 class RepoAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'repo_type', 'url', 'features', 'languages', 'info_page',]}),
+        (None, {'fields': ['name', 'description', 'repo_type', 'url', 'features', 'subjects', 'languages', 'info_page',]}),
     ]
     list_display = ('name', 'description', 'repo_type', 'url', 'info_page', 'created', 'modified',)
-    search_fields = ['name', 'description', 'repo_type', 'features', 'languages',]
+    search_fields = ['name', 'description', 'repo_type', 'features', 'subjects', 'languages',]
 
 class ProjTypeAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -42,6 +49,7 @@ class ProjAdmin(admin.ModelAdmin):
     list_display = ('description', 'proj_type', 'info_page', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
 
+admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)

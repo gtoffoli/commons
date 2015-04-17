@@ -1,10 +1,11 @@
 # import pycountry
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+# from django import forms
 from django.contrib.flatpages.models import FlatPage
 from django.core.validators import URLValidator
-from django.utils.text import slugify
-
+# from django.utils.text import slugify
+# from mayan import sources
 # from documents.settings import (LANGUAGE_CHOICES,)
 
 """ how to make the 'file' field optional in a DocumentVersion?
@@ -58,7 +59,22 @@ class Language(models.Model):
 
     def __unicode__(self):
         return self.name
-    
+
+class Subject(models.Model):
+    """
+    Enumerate languages referred by Repos and OERs
+    """
+    code = models.CharField(max_length=10, primary_key=True, verbose_name=_('Code'))
+    name = models.CharField(max_length=100, verbose_name=_('Name'))
+
+    class Meta:
+        verbose_name = _('OER subject')
+        verbose_name_plural = _('OER subjects')
+        ordering = ['code']
+
+    def __unicode__(self):
+        return self.name
+
 class RepoFeature(models.Model):
     """
     Define a repertoire of miscellaneous repository features
@@ -104,6 +120,7 @@ class Repo(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
+    subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subjects')
     info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -201,4 +218,52 @@ class Project(models.Model):
 
     def add_member(self, user):
         self.group.user_set.add(user)
-   
+
+"""
+from sources.models import Source, InteractiveSource
+sources.literals.SOURCE_CHOICE_NULL_SOURCE = 'nullsource'
+from sources.literals import SOURCE_CHOICES, SOURCE_CHOICE_NULL_SOURCE
+SOURCE_CHOICES = list(SOURCE_CHOICES) + [(SOURCE_CHOICE_NULL_SOURCE, _('Null source')),]
+
+class NullSource(InteractiveSource):
+    is_interactive = True
+    source_type = SOURCE_CHOICE_NULL_SOURCE
+
+    def get_upload_file_object(self, form_data):
+        # return SourceUploadedFile(source=self, file=form_data['file'])
+        return None
+
+    class Meta:
+        verbose_name = _('Null source')
+        verbose_name_plural = _('Null sources')
+
+class NullSourceForm(forms.Form):
+    pass
+
+import sources.utils
+
+old_get_class = sources.utils.get_class
+def get_class(source_type):
+    if source_type == SOURCE_CHOICE_NULL_SOURCE:
+        return NullSource
+    return old_get_class(source_type)
+sources.utils.old_get_class = old_get_class
+sources.utils.get_class = get_class
+
+old_get_form_class = sources.utils.get_form_class
+def get_form_class(source_type):
+    if source_type == SOURCE_CHOICE_NULL_SOURCE:
+        return NullSourceForm
+    return old_get_form_class(source_type)
+sources.utils.old_get_form_class = old_get_form_class
+sources.utils.get_form_class = get_form_class
+
+
+from navigation.api import register_links # , object_navigation
+from sources.permissions import PERMISSION_SOURCES_SETUP_CREATE
+
+from sources.links import setup_sources, setup_source_create_webform, setup_source_create_staging_folder, setup_source_create_watch_folder, setup_source_create_pop3_email, setup_source_create_imap_email
+setup_source_create_nullsource = {'text': _('Add new null source'), 'view': 'sources:setup_source_create', 'args': '"%s"' % SOURCE_CHOICE_NULL_SOURCE, 'famfam': 'application_form_add', 'permissions': [PERMISSION_SOURCES_SETUP_CREATE], 'conditional_highlight': lambda context: context.get('source_type') == SOURCE_CHOICE_NULL_SOURCE and 'source' not in context}
+register_links([Source, 'sources:setup_source_list', 'sources:setup_source_create'], [setup_sources, setup_source_create_nullsource, setup_source_create_webform, setup_source_create_staging_folder, setup_source_create_pop3_email, setup_source_create_imap_email, setup_source_create_watch_folder], menu_name='secondary_menu')
+# register_links(Source, [setup_source_create_nullsource], menu_name='modified_menu')
+"""

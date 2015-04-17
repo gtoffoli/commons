@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}CommonS Platform - Repository: {{ repo.name }}{% endblock %}
+{% block head_title %}Repository: {{ repo.name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -19,6 +19,15 @@
 			<ul class="root">
 		        {% for feature in repo.features.all %}
 		        <li>{{ feature.code }} - {{ feature.name }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if repo.subjects.all %}
+    		<div>Subject areas:
+			<ul class="root">
+		        {% for subject in repo.subjects.all %}
+		        <li>{{ subjects.name }}</li>
 		        {% endfor %}
 			</ul>
 			</div>

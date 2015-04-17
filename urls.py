@@ -4,12 +4,15 @@ from django.views.generic import TemplateView
 from django.contrib import admin
 admin.autodiscover()
 
+from .wizards import DocumentCreateWizard
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'pippo.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^/mayansources/create/from/local/multiple/$', DocumentCreateWizard.as_view(), name='commons_document_create_multiple'),
     url(r'^mayan', include('mayan.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
     url(r'^info/', include('django.contrib.flatpages.urls')),
