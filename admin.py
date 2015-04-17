@@ -5,7 +5,7 @@ Created on 03/apr/2015
 
 from django.contrib import admin
 
-from commons.models import Subject, Language, RepoType, Repo, ProjType, Project
+from commons.models import Subject, Language, RepoFeature, RepoType, Repo, ProjType, Project
 
 class LanguageAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -27,6 +27,12 @@ class RepoTypeAdmin(admin.ModelAdmin):
     ]
     list_display = ('name', 'description',)
     search_fields = ['name',]
+
+class RepoFeatureAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['code', 'name', 'order',]}),
+    ]
+    list_display = ('code', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -51,6 +57,7 @@ class ProjAdmin(admin.ModelAdmin):
 
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(Language, LanguageAdmin)
+admin.site.register(RepoFeature, RepoFeatureAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)

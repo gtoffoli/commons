@@ -84,8 +84,8 @@ class RepoFeature(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('feature')
-        verbose_name_plural = _('features')
+        verbose_name = _('repository feature')
+        verbose_name_plural = _('repository features')
         ordering = ['order']
 
     def __unicode__(self):
