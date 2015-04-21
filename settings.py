@@ -2,11 +2,13 @@
 Django settings for commons project.
 """
 
+PRODUCTION = False
 from mayan.settings.base import *
 from private import *
 
 if PRODUCTION:
     DEBUG = False
+    ALLOWED_HOSTS = ['*']
 else:
     DEBUG = True
 
