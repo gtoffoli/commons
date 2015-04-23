@@ -4,7 +4,7 @@ Created on 03/apr/2015
 '''
 
 from django.db import models
-from django.forms import TextInput, Textarea, SelectMultiple
+from django.forms import TextInput, Textarea, Select, SelectMultiple
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
@@ -63,7 +63,8 @@ class RepoAdmin(admin.ModelAdmin):
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
-       models.ManyToManyField: {'widget': SelectMultiple(attrs={'size':'11'})},}
+       models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},}
 
     def save_model(self, request, obj, form, change):
         if not change and request.user:

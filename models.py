@@ -203,7 +203,7 @@ class Repo(models.Model):
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
     subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subjects')
     # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
-    info = models.TextField(_('longer description'), blank=True, null=True)
+    info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
