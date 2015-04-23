@@ -188,3 +188,10 @@ TINYMCE_DEFAULT_CONFIG = {
     'plugin_preview_height' : '600',
     'paste_auto_cleanup_on_paste': 'true',
     }
+
+# configure graph_models command of django-extensions
+GRAPH_MODELS = {
+  'all_applications': False,
+  'group_models': False,
+}
+

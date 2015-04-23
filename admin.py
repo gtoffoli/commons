@@ -4,7 +4,7 @@ Created on 03/apr/2015
 '''
 
 from django.db import models
-from django.forms import TextInput, Textarea
+from django.forms import TextInput, Textarea, SelectMultiple
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
@@ -62,7 +62,8 @@ class RepoAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description', 'repo_type', 'features', 'subjects', 'languages',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
-       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},}
+       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'size':'11'})},}
 
     def save_model(self, request, obj, form, change):
         if not change and request.user:

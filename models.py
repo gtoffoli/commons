@@ -54,12 +54,15 @@ class Language(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Name'))
 
     class Meta:
-        verbose_name = _('language')
-        verbose_name_plural = _('languages')
+        verbose_name = _('OER language')
+        verbose_name_plural = _('OER languages')
         ordering = ['name']
 
+    def option_label(self):
+        return '%s - %s' % (self.code, self.name)
+
     def __unicode__(self):
-        return self.name
+        return self.option_label()
 
 class Subject(models.Model):
     """
@@ -73,8 +76,17 @@ class Subject(models.Model):
         verbose_name_plural = _('OER subjects')
         ordering = ['code']
 
+    def option_label(self):
+        label = self.name
+        n = self.code.count('-')
+        if n:
+            label = ' ' + label
+            for i in range(0, n):
+                label = '--' + label
+        return label
+
     def __unicode__(self):
-        return self.name
+        return self.option_label()
 
 class ProjType(models.Model):
     """
@@ -85,16 +97,16 @@ class ProjType(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('project/community type')
-        verbose_name_plural = _('project/community types')
+        verbose_name = _('Project / Community type')
+        verbose_name_plural = _('Project / Community types')
         ordering = ['order', 'name',]
 
     def __unicode__(self):
         return self.name
 
 class Project(models.Model):
-    group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
-    proj_type = models.ForeignKey(ProjType, verbose_name=_('project type'), related_name='projects')
+    group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
+    proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     slug = SlugField(editable=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='project')
@@ -104,7 +116,7 @@ class Project(models.Model):
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 
     class Meta:
-        verbose_name = _('project')
+        verbose_name = _('Project / Community')
         verbose_name_plural = _('projects')
 
     def save(self, *args, **kwargs):
@@ -146,12 +158,15 @@ class RepoFeature(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('repository feature')
-        verbose_name_plural = _('repository features')
+        verbose_name = _('Repository feature')
+        verbose_name_plural = _('Repository features')
         ordering = ['order']
 
+    def option_label(self):
+        return '%s - %s' % (self.code, self.name)
+
     def __unicode__(self):
-        return self.name
+        return self.option_label()
 
 class RepoType(models.Model):
     """
@@ -162,19 +177,21 @@ class RepoType(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('repository type')
-        verbose_name_plural = _('repository types')
+        verbose_name = _('Repository type')
+        verbose_name_plural = _('Repository types')
         ordering = ['name']
         ordering = ['order', 'name',]
 
+    def option_label(self):
+        return '%s - %s' % (self.name, self.description)
+
     def __unicode__(self):
-        return self.name
+        # return self.name
+        return self.option_label()
 
     def natural_key(self):
         return (self.name,)
 
-    def option_label(self):
-        return '%s - %s' % (self.name, self.description)
 
 class Repo(models.Model):
     repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
@@ -193,8 +210,8 @@ class Repo(models.Model):
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 
     class Meta:
-        verbose_name = _('repository')
-        verbose_name_plural = _('repositories')
+        verbose_name = _('External repository')
+        verbose_name_plural = _('External repositories')
 
     def __unicode__(self):
         return self.name
@@ -240,6 +257,10 @@ class OER(models.Model):
     modified = ModificationDateTimeField(_('modified'))
     user = models.ForeignKey(User, default=1, verbose_name=_('last editor'))
 
+    class Meta:
+        verbose_name = _('OER with core metadata')
+        verbose_name_plural = _('OERs')
+
     def __unicode__(self):
         return self.title
 
@@ -253,7 +274,7 @@ class OerMetadata(models.Model):
     Link an OER to a specific instance of a metadata type with it's current value
     """
     oer = models.ForeignKey(OER, related_name='metadata', verbose_name=_('OER'))
-    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Type'))
+    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Metadatum type'))
     value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
     modified = ModificationDateTimeField(_('modified'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))
@@ -275,13 +296,13 @@ class OerMetadata(models.Model):
 
     class Meta:
         unique_together = ('oer', 'metadata_type')
-        verbose_name = _('OER metadata')
-        verbose_name_plural = _('OER metadata')
+        verbose_name = _('Additional OER metadatum')
+        verbose_name_plural = _('Additional OER metadata')
 
 class OerTypeMetadataType(models.Model):
     # oer_type = models.ForeignKey(OerType, related_name='metadata', verbose_name=_('OER type'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=0, null=True, verbose_name='OER type')
-    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Metadata type'))
+    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Metadatum type'))
     required = models.BooleanField(default=False, verbose_name=_('Required'))
 
     def __unicode__(self):
@@ -289,8 +310,8 @@ class OerTypeMetadataType(models.Model):
 
     class Meta:
         unique_together = ('oer_type', 'metadata_type')
-        verbose_name = _('metadata type option for OER type')
-        verbose_name_plural = _('metadata type options for OER type')
+        verbose_name = _('Metadatum type for OER type')
+        verbose_name_plural = _('Metadata types for OER type')
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -359,3 +380,7 @@ class OerProxy(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('project'))
     created = CreationDateTimeField(_('created'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))
+
+    class Meta:
+        verbose_name = _('OER proxy')
+        verbose_name_plural = _('OER proxies')
