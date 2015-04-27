@@ -1,0 +1,55 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load url from future %}
+
+{% load menu account %}
+{% generate_menu %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+    <head>
+        <meta charset="utf-8" />
+        <title>{% block head_title_base %}{% if SITE_NAME %}{{ SITE_NAME }} | {% endif %}{% block head_title %}{% endblock %}{% endblock %}</title>
+        {% block viewport %}
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        {% endblock %}
+
+        {% block style_base %}
+            <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
+            <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+            <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+            {% block extra_style %}{% endblock %}
+        {% endblock %}
+
+        {% block html5shim %}
+            <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+            <!--[if lt IE 9]>
+                <script src="{% static "pinax/js/html5shiv.js" %}"></script>
+            <![endif]-->
+        {% endblock %}
+
+        {% block extra_head_base %}
+            {% block extra_head %}{% endblock %}
+        {% endblock %}
+    </head>
+
+    <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+        <div class="{% block wrapper_class %}{% endblock %}">
+
+{# remove to bring back topbar #}
+{% block topbar_base %}<a href="/"><img src="/static/commons/img/LogoPerSito.jpg" /></a>
+
+	<div class="nav-collapse" style="display: inline-block; vertical-align: center;">
+
+{% block nav %}{{ menus }}
+	{% with menu=menus.main %}<ul class="nav">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
+{% endblock %}
+
+	</div>
+
+{% endblock %}
+
+</div>
+</body>
+</html>

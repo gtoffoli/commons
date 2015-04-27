@@ -9,6 +9,9 @@ from django.shortcuts import render_to_response, get_object_or_404
 
 from commons.models import Repo, Project
 
+def my_account(request):
+    return render_to_response('my_account.html', {'user': request.user,}, context_instance=RequestContext(request))
+
 def cops_tree(request):
     groups = Group.objects.all()
     return render_to_response('cops_tree.html', {'nodes': groups,}, context_instance=RequestContext(request))

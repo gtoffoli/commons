@@ -11,6 +11,7 @@ if PRODUCTION:
     ALLOWED_HOSTS = ['*']
 else:
     DEBUG = True
+    TEMPLATE_STRING_IF_INVALID = '%s'
 
 # ========= EXTENSIONS BY COMMONS
 
@@ -24,13 +25,20 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
-    # "organizations",
+    # django-allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    # ... include the providers you want to enable:
+    'allauth.socialaccount.providers.facebook',
     'tinymce',
     # theme (from pinax project)
     "pinax_theme_bootstrap",
     "bootstrapform",
     # pinax starter project ?
     "pinax",
+    # menus and ...
+    'menu',
     # commons project
     'commons',
 ]
@@ -38,6 +46,8 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
 TEMPLATE_CONTEXT_PROCESSORS = list(TEMPLATE_CONTEXT_PROCESSORS) + [
     # theme (from pinax project)
     "pinax_theme_bootstrap.context_processors.theme",
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
 ]
 
 # in development, disable template caching
@@ -159,6 +169,7 @@ AUTHENTICATION_BACKENDS = (
 # --------- EXCEPTIONS TO THE MAYAN'S "LOGIN REQUIRED" GENERAL RULE ----------------
 LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
     r'^$',
+    r'^accounts/',
     r'^info/',
     r"^cops/$",
     r"^project/(?P<project_slug>[\w-]+)/$",

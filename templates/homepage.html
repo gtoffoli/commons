@@ -6,19 +6,19 @@
 
 {% block body_class %}home{% endblock %}
 
-{% block body_base %}
-    <section class="jumbotron">
-        <div class="container">
-            {% include "_messages.html" %}
-            <h2>{% blocktrans %}Welcome to CommonS{% endblocktrans %}</h2>
-            <p>
-                {% blocktrans %}
-                <b>CommonS</b>[paces] is an international <i>community of practice</i>
-                devoted to the improvement of <b>employability</b> skills.
-                {% endblocktrans %}
-            </p>
-        </div>
-    </section>
+{% block banner %}
+<section class="jumbotron">
+	<div class="container"  style="margin-top: 1.5em;">
+		<h2>Welcome to CommonS</h2>
+	    <p>
+	    <b>CommonS</b>[paces] is an international <i>community of practice</i>
+	    devoted to the improvement of <b>employability</b> skills.
+	    </p>
+	</div>
+</section>
+{% endblock %}
+
+{% block column-1 %}
     <section>
         <div class="container">
             <div class="feature-columns">
@@ -57,3 +57,10 @@
         </div>
     </section>
 {% endblock %}
+
+{% block column-2 %}{% endblock %}
+{% block column-3 %}{% endblock %}
+{% block column-4 %}{% endblock %}
+{% block column-5 %}{% endblock %}
+
+

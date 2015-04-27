@@ -1,0 +1,19 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% blocktrans %}My account:{% endblocktrans %} {{ user.username }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}My account:{% endblocktrans %} {{ user.username }}</h2>
+            <p class="lead">
+            <div>Name: {{ user.first_name }} {{ user.last_name }}</div>
+            <div>Email: {{ user.email }}</div>
+            </p>
+        </div>
+    </section>
+{% endblock %}
