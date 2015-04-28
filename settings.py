@@ -16,6 +16,7 @@ else:
 # ========= EXTENSIONS BY COMMONS
 
 MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
+MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:10] + MIDDLEWARE_CLASSES[11:]
 MIDDLEWARE_CLASSES.extend((
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ))
@@ -170,6 +171,7 @@ AUTHENTICATION_BACKENDS = (
     'hierarchical_auth.backends.HierarchicalModelBackend',
 )
 
+"""
 # --------- EXCEPTIONS TO THE MAYAN'S "LOGIN REQUIRED" GENERAL RULE ----------------
 LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
     r'^$',
@@ -181,6 +183,7 @@ LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
     r"^repos/$",
     r"^repo/(?P<repo_slug>[\w-]+)/$",
 ]
+"""
 
 # TinyMCE settings (from roma APP of RomaPaese project)
 TINYMCE_COMPRESSOR = True
