@@ -26,7 +26,7 @@ ModificationDateTimeField(_('modified')).contribute_to_class(Group, 'modified')
 """
 def group_project(self):
     projects = Project.objects.filter(group=self)
-    print 'projects = ', projects
+    print self, projects
     if len(projects) == 1:
         return projects[0]
     return None
@@ -101,15 +101,17 @@ class ProjType(models.Model):
         verbose_name_plural = _('Project / Community types')
         ordering = ['order', 'name',]
 
+    def option_label(self):
+        return '%s - %s' % (self.name, self.description)
+
     def __unicode__(self):
-        return self.name
+        return self.option_label()
 
 class Project(models.Model):
     group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     slug = SlugField(editable=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
-    # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='project')
     info = models.TextField(_('longer description'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -239,7 +241,7 @@ OER_STATE_CHOICES = (
 class OER(models.Model):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
-    source = models.ForeignKey(Repo, verbose_name=_('source repository'))
+    source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
@@ -267,7 +269,7 @@ class OER(models.Model):
     def save(self, *args, **kwargs):
         if not self.user_id:
             self.user_id = admin_user_id
-        super(Repo, self).save(*args, **kwargs) # Call the "real" save() method.
+        super(OER, self).save(*args, **kwargs) # Call the "real" save() method.
 
 class OerMetadata(models.Model):
     """

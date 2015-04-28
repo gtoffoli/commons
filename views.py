@@ -4,16 +4,30 @@ Created on 02/apr/2015
 '''
 
 from django.template import RequestContext
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
 from django.shortcuts import render_to_response, get_object_or_404
 
-from commons.models import Repo, Project
+from models import Repo, Project
+
+def group_has_project(group):
+    try:
+        return group.project
+    except:
+        return None  
+
+def user_profile(request, username, user=None):
+    if not user:
+        user = get_object_or_404(User, username=username)
+    groups = [group for group in user.groups.all() if group_has_project(group)]
+    return render_to_response('user_profile.html', {'user': user, 'groups': groups,}, context_instance=RequestContext(request))
 
 def my_account(request):
-    return render_to_response('my_account.html', {'user': request.user,}, context_instance=RequestContext(request))
+    user = request.user
+    return user_profile(request, None, user=user)
 
 def cops_tree(request):
     groups = Group.objects.all()
+    groups = [group for group in groups if group_has_project(group)]
     return render_to_response('cops_tree.html', {'nodes': groups,}, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):

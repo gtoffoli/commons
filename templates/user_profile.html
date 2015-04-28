@@ -1,0 +1,24 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% blocktrans %}My account:{% endblocktrans %} {{ user.username }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% trans "user"|capfirst %}: {{ user.username }}</h2>
+            <p class="lead">
+            <div><strong>{% trans "name"|capfirst %}</strong>: {{ user.first_name }} {{ user.last_name }}</div>
+            <div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
+            <div><strong>{% trans "projects"|capfirst %}</strong>:
+            {% for group in groups %}{% if group.project %}
+            	<a href="/project/{{ group.project.slug }}/">{{ group.name }}</a>{% if not forloop.last %},{% endif %}
+            {% endif %}{% endfor %}
+			</div>
+            </p>
+        </div>
+    </section>
+{% endblock %}

@@ -11,7 +11,7 @@ if PRODUCTION:
     ALLOWED_HOSTS = ['*']
 else:
     DEBUG = True
-    TEMPLATE_STRING_IF_INVALID = '%s'
+    # TEMPLATE_STRING_IF_INVALID = '%s'
 
 # ========= EXTENSIONS BY COMMONS
 
@@ -131,6 +131,10 @@ if os.name == 'nt':
 else:
     COMMON_TEMPORARY_DIRECTORY = '/tmp'
 
+# --------- Django (were redefined by Mayan) -------------------
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'commons.home'
+
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
@@ -170,6 +174,7 @@ AUTHENTICATION_BACKENDS = (
 LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
     r'^$',
     r'^accounts/',
+    r'^profile/',
     r'^info/',
     r"^cops/$",
     r"^project/(?P<project_slug>[\w-]+)/$",

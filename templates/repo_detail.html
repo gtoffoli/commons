@@ -14,11 +14,11 @@
             	&nbsp; <a href="/repos/" title="show Repository list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
                 &nbsp; <a href="/admin/commons/repo/{{ repo.id }}/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a></h2>
             <p class="lead">
-            <div>Type: {{ repo_type.description }}</div>
-            <div>In short: {{ repo.description }}</div>
-            <div>URL: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
+            <div><strong>Type</strong>: {{ repo_type.description }}</div>
+            <div><strong>In short</strong>: {{ repo.description }}</div>
+            <div><strong>URL</strong>: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
     		{% if repo.features.all %}
-    		<div style="margin-top: 0.5em;">Features:
+    		<div style="margin-top: 0.5em;"><strong>Features</strong>:
 			<ul class="root">
 		        {% for feature in repo.features.all %}
 		        <li>{{ feature.code }} - {{ feature.name }}</li>
@@ -27,7 +27,7 @@
 			</div>
 		    {% endif %}
     		{% if repo.subjects.all %}
-    		<div>Subject areas:
+    		<div><strong>Subject areas</strong>:
 			<ul class="root">
 		        {% for subject in repo.subjects.all %}
 		        <li>{{ subject.name }}</li>
@@ -36,7 +36,7 @@
 			</div>
 		    {% endif %}
     		{% if repo.languages.all %}
-    		<div>OER languages:
+    		<div><strong>OER languages</strong>:
 			<ul class="root">
 		        {% for language in repo.languages.all %}
 		        <li>{{ language.code }} - {{ language.name }}</li>
@@ -45,12 +45,12 @@
 			</div>
 		    {% endif %}
     		{% if repo.info %}
-    		<div style="margin-top: 0.5em;">Additional information:
+    		<div style="margin-top: 0.5em;"><strong>Additional information</strong>:
 				<div style="margin-left: 1.5em;">{{ repo.info|safe }}</div>
 			</div>
 		    {% endif %}
     		{% if repo.eval %}
-    		<div style="margin-top: 0.5em;">Comments / evaluation:
+    		<div style="margin-top: 0.5em;"><strong>Comments / evaluation</strong>:
 				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
 			</div>
 		    {% endif %}
