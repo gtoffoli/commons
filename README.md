@@ -16,9 +16,7 @@ My organization and other partners of the CommonS Project have much experience i
 and tools with OS software, but this is our first attempt at using Git and GitHub.
 
 Within a few months, we intend to publish documentation useful to get collaboration from others,
-but at this moment we are still developing design ideas and organizing development work.
+but at this moment we are still finalizing the requirements and designing the preliminary software architecture.
 
-The *production* version of the Platform will run on Linux-Ubuntu, but we want to be able
-to deploy it and to perform some development also on Windows:
-thus, we are producing patches and instructions for installing Mayan-EDMS on Windows.
+The *production* version of the Platform runs on Linux-Ubuntu, but we are performing most of development on Windows: using *commons* as a Django *starter project*, we were able to deploy Mayan-EDMS also on Windows.
 
