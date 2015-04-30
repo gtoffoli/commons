@@ -134,7 +134,7 @@ else:
 
 # --------- Django (were redefined by Mayan) -------------------
 LOGIN_URL = 'account_login'
-# LOGIN_REDIRECT_URL = 'commons.home'
+LOGIN_REDIRECT_URL = 'commons.home'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
@@ -169,6 +169,8 @@ LOGGING = {
 # --------- HIERARCHICAL GROUPS ----------------
 AUTHENTICATION_BACKENDS = (
     'hierarchical_auth.backends.HierarchicalModelBackend',
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
 
 """
