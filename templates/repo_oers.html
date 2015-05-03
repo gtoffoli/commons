@@ -1,0 +1,25 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}Catalog of OER Repositories{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}OERs from repository{% endblocktrans %}
+            &nbsp;<a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a></h2>
+            <p class="lead">
+			<ul class="root">
+		        {% for oer in oers %}
+		        <li>
+		            <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a>. {% trans "Type" %}: <i>{{ oer.oer_type }}</i>
+		        </li>
+		        {% endfor %}
+			</ul>
+            </p>
+        </div>
+    </section>
+{% endblock %}

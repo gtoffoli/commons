@@ -1,25 +1,14 @@
 {% extends "theme_bootstrap/base.html" %}
-
 {% load staticfiles %}
 {% load i18n %}
-
-
-{# remove to bring back topbar #}
-{% comment %}{% block topbar_base %}{% endblock %}{% endcomment %}
 
 {% block site_brand %}<a href="/"><img src="/static/commons/img/LogoPerSito.jpg" /></a>{% endblock %}
 
 {% block nav %}
-{% comment %}
-    <ul class="nav navbar-nav">
-        <li><a href="#tab_one">One</a></li>
-        <li><a href="#tab_two">Two</a></li>
-    </ul>
-{% endcomment %}
+	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
 {% endblock %}
 
 {% block style_base %}
-    <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
     <link href="{% static "css/site.css" %}" rel="stylesheet">
     {% block extra_style %}{% endblock %}
 {% endblock %}

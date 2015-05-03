@@ -12,11 +12,12 @@
             <h2 class="text-center">{% blocktrans %}Catalog of external OER repositories{% endblocktrans %}
                 &nbsp; <a href="/admin/commons/repo/add/" title="add a repository"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a></h2>
             <p class="lead">
-    {% if repos %}
+    {% if repo_list %}
 	<ul class="root">
-        {% for repo in repos %}
+        {% for repo, n in repo_list %}
         <li>
             <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. {% trans "Type" %}: <i>{{ repo.type_description }}</i>. {{ repo.description|truncatechars:60 }}
+            {% if n %}(<a href="/repo_oers/{{ repo.slug }}/">{{ n }}</a>){% endif %}
         </li>
         {% endfor %}
 	</ul>

@@ -1,7 +1,5 @@
 {% load staticfiles %}
 {% load url from future %}
-
-{% load i18n %}
 {% load menu %}
 {% generate_menu %}
 
@@ -67,7 +65,7 @@
                 <section id="content_body">
                     <div class="container">
                         {% include "_messages.html" %}
-                        {% block body %}{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left">{% include "commons-navbar.html" %}</ul>{% endwith %}
+                        {% block body %}
                         {% endblock %}
                     </div>
                 </section>

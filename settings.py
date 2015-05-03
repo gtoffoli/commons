@@ -3,6 +3,7 @@ Django settings for commons project.
 """
 
 PRODUCTION = False
+DEBUG_TOOLBAR= False
 from mayan.settings.base import *
 from private import *
 
@@ -20,6 +21,10 @@ MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:10] + MIDDLEWARE_CLASSES[11:]
 MIDDLEWARE_CLASSES.extend((
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ))
+if DEBUG and DEBUG_TOOLBAR:
+    MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
+
+
 
 INSTALLED_APPS = list(INSTALLED_APPS) + [
     'django.contrib.flatpages',
@@ -43,6 +48,8 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # commons project
     'commons',
 ]
+if DEBUG and DEBUG_TOOLBAR:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
 TEMPLATE_CONTEXT_PROCESSORS = list(TEMPLATE_CONTEXT_PROCESSORS) + [
     # theme (from pinax project)
