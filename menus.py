@@ -10,7 +10,6 @@ def oers_children(request):
          weight=80,
          check=True,
         ))
-    """
     children.append (MenuItem(
          _("By project"),
          url='/oers/by_project/',
@@ -26,17 +25,10 @@ def oers_children(request):
          url='/oers/search/',
          weight=80,
         ))
-    """
     return children
 
 def help_children(request):
     children = []
-    children.append (MenuItem(
-         _("Registration and authentication"),
-         url='/help/register/',
-         weight=80,
-         check=True,
-        ))
     children.append (MenuItem(
          _("Site navigation"),
          url='/help/navigation/',
@@ -46,6 +38,18 @@ def help_children(request):
     children.append (MenuItem(
          _("OER search"),
          url='/help/search/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("OER collection and classification"),
+         url='/help/catalog/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("Registration and authentication"),
+         url='/help/register/',
          weight=80,
          check=True,
         ))
@@ -74,7 +78,7 @@ def info_children(request):
     return children
 
 # Add a few items to our main menu
-Menu.add_item("main", MenuItem(ugettext_lazy("OERs"),
+Menu.add_item("main", MenuItem(ugettext_lazy("Find OERs"),
                                url='/p',
                                weight=30,
                                check=True,
