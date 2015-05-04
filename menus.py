@@ -5,12 +5,6 @@ from django.utils.translation import ugettext as _, ugettext_lazy
 def oers_children(request):
     children = []
     children.append (MenuItem(
-         _("About"),
-         url='/oers/about/',
-         weight=80,
-         check=True,
-        ))
-    children.append (MenuItem(
          _("By source"),
          url='/repos/',
          weight=80,
@@ -35,6 +29,50 @@ def oers_children(request):
     """
     return children
 
+def help_children(request):
+    children = []
+    children.append (MenuItem(
+         _("Registration and authentication"),
+         url='/help/register/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("Site navigation"),
+         url='/help/navigation/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("OER search"),
+         url='/help/search/',
+         weight=80,
+         check=True,
+        ))
+    return children
+
+def info_children(request):
+    children = []
+    children.append (MenuItem(
+         _("About"),
+         url='/info/about/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("OERs and metadata"),
+         url='/info/oers/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("External repositories"),
+         url='/info/repos/',
+         weight=80,
+         check=True,
+        ))
+    return children
+
 # Add a few items to our main menu
 Menu.add_item("main", MenuItem(ugettext_lazy("OERs"),
                                url='/p',
@@ -42,11 +80,15 @@ Menu.add_item("main", MenuItem(ugettext_lazy("OERs"),
                                check=True,
                                children=oers_children,
                                separator=True))
-""" 
-Menu.add_item("main", MenuItem(ugettext_lazy("Project"),
+Menu.add_item("main", MenuItem(ugettext_lazy("Help"),
                                url='/p',
                                weight=30,
                                check=True,
-                               children=project_children,
+                               children=help_children,
+                               separator=True))
+Menu.add_item("main", MenuItem(ugettext_lazy("Info"),
+                               url='/p',
+                               weight=30,
+                               check=True,
+                               children=info_children,
                                separator=True))     
-"""
