@@ -3,7 +3,7 @@ Created on 09/apr/2015
 @author: giovanni
 '''
 
-from commons.models import Subject, Language, RepoType, RepoFeature, Repo, ProjType, Project
+from commons.models import ProjType, Project, Subject, Language, RepoType, RepoFeature, Repo, OER
 
 def populate_languages():
     import mayan.settings.base
@@ -107,3 +107,17 @@ def populate():
     populate_proj_types()
     create_repos()
     create_projects()
+    
+def repo_subjects():
+    repos = Repo.objects.all().order_by('id')
+    for repo in repos:
+        print repo
+        subjects = repo.subjects.all()
+        for s in subjects:
+            print '-', s.code, s.name
+
+def repo_editor():
+    repos = Repo.objects.all().order_by('id')
+    for repo in repos:
+        print repo, repo.user
+
