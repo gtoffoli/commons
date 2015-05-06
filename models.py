@@ -1,12 +1,12 @@
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 # from django import forms
 from django.core.validators import URLValidator
 # from mayan import sources
-from metadata.models import MetadataType
 from documents.models import Document
+from metadata.models import MetadataType
+from vocabularies import LicenseNode, SubjectNode
 
 """ how to make the 'file' field optional in a DocumentVersion?
 import uuid
@@ -203,13 +203,13 @@ class Repo(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
-    subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subjects')
+    subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subject areas')
     # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
     info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
+    user = models.ForeignKey(User,  editable=False, verbose_name=_('last editor'))
 
     class Meta:
         verbose_name = _('External repository')
@@ -247,17 +247,21 @@ class OER(models.Model):
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info used to identify and/or access the OER in the source repository'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
-    subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subjects')
+    # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
+    subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     # derived_from = models.ManyToManyField('self', through='OerOer', symmetrical=False, verbose_name='derived from')
-    oers = models.ManyToManyField('self', symmetrical=False, blank=True, verbose_name='derived from')
+    oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
+    metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
+    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # state = models.ForeignKey(OerState, verbose_name=_('OER state'))
     state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User, default=1, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, default=1, verbose_name=_('last editor'))
+    user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
 
     class Meta:
         verbose_name = _('OER with core metadata')
@@ -266,54 +270,12 @@ class OER(models.Model):
     def __unicode__(self):
         return self.title
 
+    """
     def save(self, *args, **kwargs):
         if not self.user_id:
             self.user_id = admin_user_id
         super(OER, self).save(*args, **kwargs) # Call the "real" save() method.
-
-class OerMetadata(models.Model):
     """
-    Link an OER to a specific instance of a metadata type with it's current value
-    """
-    oer = models.ForeignKey(OER, related_name='metadata', verbose_name=_('OER'))
-    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Metadatum type'))
-    value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
-    modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
-
-    def __unicode__(self):
-        return unicode(self.metadata_type)
-
-    def save(self, *args, **kwargs):
-        if self.metadata_type.pk not in self.oer.oer_type.metadata.values_list('metadata_type', flat=True):
-            raise ValidationError(_('Metadata type is not valid for this OER type.'))
-
-        return super(OerMetadata, self).save(*args, **kwargs)
-
-    def delete(self, enforce_required=True, *args, **kwargs):
-        if enforce_required and self.metadata_type.pk in self.oer.oer_type.metadata.filter(required=True).values_list('metadata_type', flat=True):
-            raise ValidationError(_('Metadata type is required for this oer type.'))
-
-        return super(OerMetadata, self).delete(*args, **kwargs)
-
-    class Meta:
-        unique_together = ('oer', 'metadata_type')
-        verbose_name = _('Additional OER metadatum')
-        verbose_name_plural = _('Additional OER metadata')
-
-class OerTypeMetadataType(models.Model):
-    # oer_type = models.ForeignKey(OerType, related_name='metadata', verbose_name=_('OER type'))
-    oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=0, null=True, verbose_name='OER type')
-    metadata_type = models.ForeignKey(MetadataType, verbose_name=_('Metadatum type'))
-    required = models.BooleanField(default=False, verbose_name=_('Required'))
-
-    def __unicode__(self):
-        return unicode(self.metadata_type)
-
-    class Meta:
-        unique_together = ('oer_type', 'metadata_type')
-        verbose_name = _('Metadatum type for OER type')
-        verbose_name_plural = _('Metadata types for OER type')
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -386,3 +348,6 @@ class OerProxy(models.Model):
     class Meta:
         verbose_name = _('OER proxy')
         verbose_name_plural = _('OER proxies')
+
+from commons.metadata_models import *
+# import vocabularies

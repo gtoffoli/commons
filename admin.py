@@ -3,8 +3,10 @@ Created on 03/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import TextInput, Textarea, Select, SelectMultiple
+from django.forms.models import BaseInlineFormSet
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
@@ -74,30 +76,36 @@ class RepoAdmin(admin.ModelAdmin):
     def user_fullname(self, obj):
         return obj.user.get_full_name()
 
+class OerMetadataInline(admin.TabularInline):
+    model = OerMetadata
+    extra = 5 # how many rows to show
+
 class OERAdmin(admin.ModelAdmin):
     fieldsets = []
-    list_display = ('source', 'title', 'project', 'state', 'user_fullname', 'created',)
+    inlines = (OerMetadataInline,)
+    list_display = ('title', 'source', 'project', 'state', 'user_fullname', 'created',)
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},}
 
     def save_model(self, request, obj, form, change):
-        if not change and request.user:
-            obj.user = request.user
+        obj.user = request.user
         obj.save()
+
+    # http://stackoverflow.com/questions/3048313/why-save-model-method-doesnt-work-in-admin-stackedinline
+    # http://stackoverflow.com/questions/1477319/in-django-how-do-i-know-the-currently-logged-in-user
+    def save_formset(self, request, form, formset, change):
+        for f in formset.forms:
+            obj = f.instance 
+            obj.user = request.user
+        formset.save()
 
     def user_fullname(self, obj):
         return obj.user.get_full_name()
-    
-class OerMetadataAdmin(admin.ModelAdmin):
-    fieldsets = []
-
-class OerTypeMetadataTypeAdmin(admin.ModelAdmin):
-    fieldsets = []
 
 class OerProxyAdmin(admin.ModelAdmin):
     fieldsets = []
-
+    
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
 admin.site.register(Language, LanguageAdmin)
@@ -106,8 +114,6 @@ admin.site.register(RepoFeature, RepoFeatureAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(OER, OERAdmin)
-admin.site.register(OerMetadata, OerMetadataAdmin)
-admin.site.register(OerTypeMetadataType, OerTypeMetadataTypeAdmin)
 admin.site.register(OerProxy, OerProxyAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin
@@ -132,3 +138,6 @@ class PageAdmin(FlatPageAdmin):
     
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, PageAdmin)
+
+from commons.metadata_admin import *
+

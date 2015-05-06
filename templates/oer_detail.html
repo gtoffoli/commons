@@ -15,9 +15,10 @@
                 &nbsp; <a href="/admin/commons/oer/{{ oer.id }}/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a></h2>
             <p class="lead">
             <div><strong>Title</strong>: {{ oer.title }}</div>
-            <div><strong>Description</strong>: {{ oer.description }}</div>
+            {% if oer.description %}<div><strong>Description</strong>: {{ oer.description }}</div>{% endif %}
             <div><strong>Source repository:</strong>: <a href="/repo/{{ oer.source.slug }}/">{{ oer.source.name }}</a></div>
-            <div><strong>URL</strong>: <a href="{{ oer }}" target="_blank">{{ oer.url }}</a></div>
+            {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
+            {% if oer.license %}<div><strong>Terms of use</strong>: {{ oer.license.name }}</div>{% endif %}
     		{% if oer.subjects.all %}
     		<div><strong>Subject areas</strong>:
 			<ul class="root">
@@ -36,7 +37,16 @@
 			</ul>
 			</div>
 		    {% endif %}
-            <div><strong>Submitted</strong> by {{ oer.user.get_full_name }} in project <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+    		{% if oer.metadata_set.all %}
+    		<div><strong>Other metadata</strong>:
+			<ul class="root">
+		        {% for metadatum in oer.metadata_set.all %}
+		        <li><i>{{ metadatum.metadata_type.name }}</i>: {{ metadatum.value }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+            <div><strong>Submitted by</strong> {{ oer.user.get_full_name }} <strong>in project</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
             </p>
         </div>
     </section>
