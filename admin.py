@@ -86,7 +86,9 @@ class OERAdmin(admin.ModelAdmin):
     list_display = ('title', 'source', 'project', 'state', 'user_fullname', 'created',)
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
-       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},}
+       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
+       models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},}
 
     def save_model(self, request, obj, form, change):
         obj.user = request.user

@@ -23,9 +23,11 @@ class VocabularyNode(MPTTModel):
     def option_label(self):
         indent = ''
         for i in range(self.level):
-            indent += '---'
+            indent += '&nbsp;&nbsp;'
+        """
         if self.level:
             indent += ' '
+        """
         return '%s%s' % (indent, self.name)
 
     def __unicode__(self):
