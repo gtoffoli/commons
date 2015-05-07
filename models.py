@@ -6,7 +6,7 @@ from django.core.validators import URLValidator
 # from mayan import sources
 from documents.models import Document
 from metadata.models import MetadataType
-from vocabularies import LicenseNode, SubjectNode
+from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 
 """ how to make the 'file' field optional in a DocumentVersion?
 import uuid
@@ -246,17 +246,21 @@ class OER(models.Model):
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
-    reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info used to identify and/or access the OER in the source repository'))
+    reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source repository'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
+    material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
+    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
+    levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
+    media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
+    accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
     # derived_from = models.ManyToManyField('self', through='OerOer', symmetrical=False, verbose_name='derived from')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
-    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
-    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
+    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
     # state = models.ForeignKey(OerState, verbose_name=_('OER state'))
     state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
     created = CreationDateTimeField(_('created'))
@@ -351,4 +355,4 @@ class OerProxy(models.Model):
         verbose_name_plural = _('OER proxies')
 
 from commons.metadata_models import *
-# import vocabularies
+

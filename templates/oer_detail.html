@@ -16,9 +16,19 @@
             <p class="lead">
             <div><strong>Title</strong>: {{ oer.title }}</div>
             {% if oer.description %}<div><strong>Description</strong>: {{ oer.description }}</div>{% endif %}
-            <div><strong>Source repository:</strong>: <a href="/repo/{{ oer.source.slug }}/">{{ oer.source.name }}</a></div>
+            {% if oer.material %}<div><strong>Type of material</strong>: {{ oer.material.name }}</div>{% endif %}
+            {% if oer.source %}<div><strong>Source repository:</strong>: <a href="/repo/{{ oer.source.slug }}/">{{ oer.source.name }}</a></div>{% endif %}
             {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
             {% if oer.license %}<div><strong>Terms of use</strong>: {{ oer.license.name }}</div>{% endif %}
+    		{% if oer.levels.all %}
+    		<div><strong>Levels</strong>:
+			<ul class="root">
+		        {% for level in oer.levels.all %}
+		        <li>{{ level.option_label|safe }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
     		{% if oer.subjects.all %}
     		<div><strong>Subject areas</strong>:
 			<ul class="root">
@@ -33,6 +43,24 @@
 			<ul class="root">
 		        {% for language in oer.languages.all %}
 		        <li>{{ language.code }} - {{ language.name }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if oer.media.all %}
+    		<div><strong>Media formats</strong>:
+			<ul class="root">
+		        {% for medium in oer.media.all %}
+		        <li>{{ medium.option_label|safe }}</li>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if oer.accessibility.all %}
+    		<div><strong>Accessibility features</strong>:
+			<ul class="root">
+		        {% for feature in oer.accessibility.all %}
+		        <li>{{ feature.option_label|safe }}</li>
 		        {% endfor %}
 			</ul>
 			</div>
