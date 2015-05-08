@@ -64,6 +64,12 @@ def info_children(request):
          check=True,
         ))
     children.append (MenuItem(
+         _("Community and projects"),
+         url='/info/projects/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
          _("OERs and metadata"),
          url='/info/oers/',
          weight=80,

@@ -61,7 +61,7 @@ class RepoAdmin(admin.ModelAdmin):
         (None, {'fields': ['name', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
     ]
     list_display = ('name', 'description', 'repo_type', 'url', 'user_fullname', 'created', 'modified',)
-    search_fields = ['name', 'description', 'repo_type', 'features', 'subjects', 'languages',]
+    search_fields = ['name', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
@@ -84,6 +84,7 @@ class OERAdmin(admin.ModelAdmin):
     fieldsets = []
     inlines = (OerMetadataInline,)
     list_display = ('title', 'source', 'project', 'state', 'user_fullname', 'created',)
+    search_fields = ['title', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},

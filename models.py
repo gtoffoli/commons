@@ -102,7 +102,8 @@ class ProjType(models.Model):
         ordering = ['order', 'name',]
 
     def option_label(self):
-        return '%s - %s' % (self.name, self.description)
+        # return '%s - %s' % (self.name, self.description)
+        return self.name
 
     def __unicode__(self):
         return self.option_label()
@@ -165,7 +166,8 @@ class RepoFeature(models.Model):
         ordering = ['order']
 
     def option_label(self):
-        return '%s - %s' % (self.code, self.name)
+        # return '%s - %s' % (self.code, self.name)
+        return self.name
 
     def __unicode__(self):
         return self.option_label()
@@ -185,10 +187,10 @@ class RepoType(models.Model):
         ordering = ['order', 'name',]
 
     def option_label(self):
-        return '%s - %s' % (self.name, self.description)
+        # return '%s - %s' % (self.name, self.description)
+        return self.name
 
     def __unicode__(self):
-        # return self.name
         return self.option_label()
 
     def natural_key(self):

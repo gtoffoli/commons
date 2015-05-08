@@ -42,16 +42,14 @@ class VocabularyNode(MPTTModel, VocabularyEntry):
     def option_label(self):
         indent = ''
         for i in range(self.level):
-            indent += '&nbsp;&nbsp;'
-        """
+            indent += '-'
         if self.level:
             indent += ' '
-        """
         return '%s%s' % (indent, self.name)
 
     def __unicode__(self):
-        return self.name
-        # return self.option_label()
+        # return self.name
+        return self.option_label()
 
 class MaterialEntry(VocabularyEntry):
 

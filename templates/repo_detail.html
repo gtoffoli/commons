@@ -22,29 +22,33 @@
     		<div style="margin-top: 0.5em;"><strong>Features</strong>:
 			<ul class="root">
 		        {% for feature in repo.features.all %}
-		        <li>{{ feature.code }} - {{ feature.name }}</li>
+		        <li>{{ feature.name }}</li>
 		        {% endfor %}
 			</ul>
 			</div>
 		    {% endif %}
-    		{% if repo.subjects.all %}
     		<div><strong>Subject areas</strong>:
-			<ul class="root">
+    		{% if repo.subjects.all %}
+ 			<ul class="root">
 		        {% for subject in repo.subjects.all %}
 		        <li>{{ subject.option_label|safe }}</li>
 		        {% endfor %}
 			</ul>
-			</div>
+		    {% else %}
+				<div style="margin-left: 1.5em;"><i>Any</i></div>
 		    {% endif %}
-    		{% if repo.languages.all %}
+			</div>
     		<div><strong>OER languages</strong>:
+    		{% if repo.languages.all %}
 			<ul class="root">
 		        {% for language in repo.languages.all %}
 		        <li>{{ language.code }} - {{ language.name }}</li>
 		        {% endfor %}
 			</ul>
-			</div>
+		    {% else %}
+				<div style="margin-left: 1.5em;"><i>Any</i></div>
 		    {% endif %}
+			</div>
     		{% if repo.info %}
     		<div style="margin-top: 0.5em;"><strong>Additional information</strong>:
 				<div style="margin-left: 1.5em;">{{ repo.info|safe }}</div>
@@ -67,7 +71,7 @@
 				</ul>
 				{% else %}
 	                &nbsp; <a href="/admin/commons/oer/add/?source={{ repo.id }}" title="add an OER"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a></h2>
-					<div style="margin-left: 1.5em;"><i>No OERs are present having this repository as their source</i></div>
+					<div style="margin-left: 1.5em;"><i>No OERs are present having this repository as their source.</i></div>
 				{% endif %}
 			{% endwith %}
             </p>
