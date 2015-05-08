@@ -194,7 +194,6 @@ class RepoType(models.Model):
     def natural_key(self):
         return (self.name,)
 
-
 class Repo(models.Model):
     repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
@@ -215,6 +214,7 @@ class Repo(models.Model):
     class Meta:
         verbose_name = _('External repository')
         verbose_name_plural = _('External repositories')
+        ordering = ['name']
 
     def __unicode__(self):
         return self.name
@@ -227,17 +227,22 @@ class Repo(models.Model):
             self.user_id = admin_user_id
         super(Repo, self).save(*args, **kwargs) # Call the "real" save() method.
 
+    def get_oers(self):
+        return OER.objects.filter(source=self.id)
+
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
-    (0, '-'),
+    # (0, '-'),
     (1, 'metadata only'),
-    (2, 'metadata plus online reference'),
-    (3, 'document'),)
+    (2, 'metadata and online reference'),
+    (3, 'metadata and document(s)'),)
+OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
 OER_STATE_CHOICES = (
     (0, 'new'),
     (1, 'ok'),
     (2, 'off'),)
+OER_STATE_DICT = dict(OER_STATE_CHOICES)
 
 class OER(models.Model):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
@@ -247,7 +252,7 @@ class OER(models.Model):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source repository'))
-    description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
+    description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
     license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
@@ -271,16 +276,32 @@ class OER(models.Model):
     class Meta:
         verbose_name = _('OER with core metadata')
         verbose_name_plural = _('OERs')
+        ordering = ['title']
 
     def __unicode__(self):
         return self.title
 
+    def get_type(self):
+        return OER_TYPE_DICT[self.oer_type]
+
+    def get_more_metadata(self):
+        return self.metadata_set.all().order_by('metadata_type__name')
+
+class OerMetadata(models.Model):
     """
-    def save(self, *args, **kwargs):
-        if not self.user_id:
-            self.user_id = admin_user_id
-        super(OER, self).save(*args, **kwargs) # Call the "real" save() method.
+    Link an OER to a specific instance of a metadata type with it's current value
     """
+    oer = models.ForeignKey(OER, related_name='metadata_set', verbose_name=_('OER')) # here related_name is critical !
+    metadata_type = models.ForeignKey(MetadataType, related_name='metadata_type', verbose_name=_('Metadatum type'))
+    value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
+
+    def __unicode__(self):
+        return unicode(self.metadata_type)
+
+    class Meta:
+        verbose_name = _('Additional DC metadatum')
+        verbose_name_plural = _('Additional DC metadata')
+
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -354,5 +375,5 @@ class OerProxy(models.Model):
         verbose_name = _('OER proxy')
         verbose_name_plural = _('OER proxies')
 
-from commons.metadata_models import *
+# from commons.metadata_models import *
 

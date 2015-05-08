@@ -9,13 +9,13 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}OERs from repository{% endblocktrans %}
-            &nbsp;<a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a></h2>
+            <h2 class="text-center">{% blocktrans %}OERs from repository{% endblocktrans %}&nbsp;{{ repo.name }}
+            &nbsp; <a href="/repo/{{ repo.slug }}/" title="View repository {{ repo.name }}"><i class="fa fa-level-up" style="font-size: 0.7em;"></i></a></h2>
             <p class="lead">
 			<ul class="root">
 		        {% for oer in oers %}
 		        <li>
-		            <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a>. {% trans "Type" %}: <i>{{ oer.oer_type }}</i>
+		            <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a> &nbsp;<i>({{ oer.get_type }})</i> - {{ oer.description|truncatechars:80 }}
 		        </li>
 		        {% endfor %}
 			</ul>

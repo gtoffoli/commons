@@ -16,7 +16,7 @@
 	<ul class="root">
         {% for repo, n in repo_list %}
         <li>
-            <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. {% trans "Type" %}: <i>{{ repo.type_description }}</i>. {{ repo.description|truncatechars:60 }}
+            <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. &nbsp;<i>{{ repo.type_description }}</i>.&nbsp; {{ repo.description|truncatechars:80 }}
             {% if n %}(<a href="/repo_oers/{{ repo.slug }}/">{{ n }}</a>){% endif %}
         </li>
         {% endfor %}

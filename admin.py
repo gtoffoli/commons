@@ -10,7 +10,7 @@ from django.forms.models import BaseInlineFormSet
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
-from .models import Subject, Language, ProjType, Project, RepoFeature, RepoType, Repo, OerMetadata, OER, OerTypeMetadataType, OerProxy
+from .models import Subject, Language, ProjType, Project, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
 from .forms import RepoForm, ProjectForm
 
 class ProjTypeAdmin(admin.ModelAdmin):
@@ -105,6 +105,10 @@ class OERAdmin(admin.ModelAdmin):
     def user_fullname(self, obj):
         return obj.user.get_full_name()
 
+class OerMetadataAdmin(admin.ModelAdmin):
+    fieldsets = []
+    list_display = ('oer', 'metadata_type', 'value',)
+
 class OerProxyAdmin(admin.ModelAdmin):
     fieldsets = []
     
@@ -116,6 +120,7 @@ admin.site.register(RepoFeature, RepoFeatureAdmin)
 admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(OER, OERAdmin)
+admin.site.register(OerMetadata, OerMetadataAdmin)
 admin.site.register(OerProxy, OerProxyAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin
@@ -141,5 +146,5 @@ class PageAdmin(FlatPageAdmin):
 admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, PageAdmin)
 
-from commons.metadata_admin import *
+# from commons.metadata_admin import *
 
