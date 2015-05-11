@@ -46,6 +46,8 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # menus and ...
     'menu',
     # commons project
+    'django_messages',
+    'roles',
     'commons',
 ]
 if DEBUG and DEBUG_TOOLBAR:
