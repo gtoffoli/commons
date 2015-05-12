@@ -10,7 +10,7 @@ from django.forms.models import BaseInlineFormSet
 from django.contrib import admin
 from tinymce.widgets import TinyMCE
 
-from .models import Subject, Language, ProjType, Project, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
+from .models import Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
 from .forms import RepoForm, ProjectForm
 
 class ProjTypeAdmin(admin.ModelAdmin):
@@ -25,8 +25,18 @@ class ProjAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['description', 'proj_type', 'info', 'eval',]}),
     ]
-    list_display = ('description', 'proj_type', 'created', 'modified',)
+    list_display = ('description', 'project_type', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
+
+    def project_type(self, obj):
+        return obj.proj_type.description
+
+class ProjectMemberAdmin(admin.ModelAdmin):
+    fieldsets = []
+    list_display = ('id', 'project', 'user_fullname', 'state', 'created', 'accepted', 'modified', 'editor', 'history',)
+
+    def user_fullname(self, obj):
+        return obj.user.get_full_name()
 
 class LanguageAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -69,12 +79,14 @@ class RepoAdmin(admin.ModelAdmin):
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},}
 
     def save_model(self, request, obj, form, change):
-        if not change and request.user:
-            obj.user = request.user
+        # if not change and request.user:
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
         obj.save()
 
     def user_fullname(self, obj):
-        return obj.user.get_full_name()
+        return obj.creator.get_full_name()
 
 class OerMetadataInline(admin.TabularInline):
     model = OerMetadata
@@ -83,7 +95,7 @@ class OerMetadataInline(admin.TabularInline):
 class OERAdmin(admin.ModelAdmin):
     fieldsets = []
     inlines = (OerMetadataInline,)
-    list_display = ('title', 'source', 'project', 'state', 'user_fullname', 'created',)
+    list_display = ('title', 'source', 'project', 'state', 'creator_fullname', 'created',)
     search_fields = ['title', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -92,7 +104,9 @@ class OERAdmin(admin.ModelAdmin):
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},}
 
     def save_model(self, request, obj, form, change):
-        obj.user = request.user
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
         obj.save()
 
     # http://stackoverflow.com/questions/3048313/why-save-model-method-doesnt-work-in-admin-stackedinline
@@ -103,8 +117,8 @@ class OERAdmin(admin.ModelAdmin):
             obj.user = request.user
         formset.save()
 
-    def user_fullname(self, obj):
-        return obj.user.get_full_name()
+    def creator_fullname(self, obj):
+        return obj.creator.get_full_name()
 
 class OerMetadataAdmin(admin.ModelAdmin):
     fieldsets = []
@@ -115,6 +129,7 @@ class OerProxyAdmin(admin.ModelAdmin):
     
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
+admin.site.register(ProjectMember, ProjectMemberAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(Subject, SubjectAdmin)
 admin.site.register(RepoFeature, RepoFeatureAdmin)

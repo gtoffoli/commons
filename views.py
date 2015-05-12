@@ -40,6 +40,15 @@ def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
+def apply_for_membership(request, project_id, project=None):
+    if not project:
+        project = get_object_or_404(Project, pk=project_id)
+    pass
+
+def apply_for_membership_by_slug(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    return apply_for_membership(request, project.id, project)
+
 def repo_list(request):
     """
     repos = Repo.objects.all()

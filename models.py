@@ -43,9 +43,6 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
-admin_user = User.objects.get(pk=1)
-admin_user_id = 1
-
 class Language(models.Model):
     """
     Enumerate languages referred by Repos and OERs
@@ -103,10 +100,17 @@ class ProjType(models.Model):
 
     def option_label(self):
         # return '%s - %s' % (self.name, self.description)
-        return self.name
+        return self.description
 
     def __unicode__(self):
         return self.option_label()
+
+MEMBERSHIP_STATE_CHOICES = (
+    (0, 'request submitted'),
+    (1, 'request accepted'),
+    (2, 'request rejected'),
+    (3, 'membership suspended'),)
+MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
 class Project(models.Model):
     group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
@@ -116,7 +120,9 @@ class Project(models.Model):
     info = models.TextField(_('longer description'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, verbose_name=_('last editor'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='project_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='project_editor')
 
     class Meta:
         verbose_name = _('Project / Community')
@@ -147,10 +153,48 @@ class Project(models.Model):
         return self.name()
 
     def members(self, sort_on='last_name'):
-        return User.objects.filter(groups=self.group).order_by(sort_on)
+        users = User.objects.filter(groups=self.group)
+        if sort_on:
+            users = users.order_by(sort_on)
+        return users
 
-    def add_member(self, user):
-        self.group.user_set.add(user)
+    def add_member(self, user, editor=None, state=0):
+        if not editor:
+            editor = user
+        if ProjectMember.objects.filter(project=self, user=user):
+            return None
+        membership = ProjectMember(project=self, user=user, editor=editor, state=state)
+        membership.save()
+        if not user in self.members():
+            self.group.user_set.add(user)
+        return membership
+
+    def get_memberships(self, state=None):
+        if state:
+            memberships = User.objects.filter(state=state)
+        else:
+            memberships = User.objects.all()
+        return memberships
+
+    def get_member(self, user):
+        members = self.members()
+        if user in members:
+            return user
+        return None
+
+class ProjectMember(models.Model):
+    project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
+    user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
+    state = models.IntegerField(choices=MEMBERSHIP_STATE_CHOICES, default=0, null=True, verbose_name='membership state')
+    created = CreationDateTimeField(_('request created'))
+    accepted = models.DateTimeField(_('last acceptance'), default=None, null=True)
+    modified = ModificationDateTimeField(_('last state change'))
+    editor = models.ForeignKey(User, verbose_name=_('last state modifier'), related_name='membership_editor')
+    history = models.TextField(_('history of state changes'), blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Project member')
+        verbose_name_plural = _('Project member')
 
 class RepoFeature(models.Model):
     """
@@ -211,7 +255,9 @@ class Repo(models.Model):
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User,  editable=False, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='repo_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='repo__editor')
 
     class Meta:
         verbose_name = _('External repository')
@@ -224,10 +270,12 @@ class Repo(models.Model):
     def type_description(self):
         return self.repo_type.description
 
+    """
     def save(self, *args, **kwargs):
         if not self.user_id:
             self.user_id = admin_user_id
         super(Repo, self).save(*args, **kwargs) # Call the "real" save() method.
+    """
 
     def get_oers(self):
         return OER.objects.filter(source=self.id)
@@ -272,8 +320,9 @@ class OER(models.Model):
     state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    # user = models.ForeignKey(User, default=1, verbose_name=_('last editor'))
-    user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oer_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oer__editor')
 
     class Meta:
         verbose_name = _('OER with core metadata')
@@ -371,7 +420,10 @@ class OerProxy(models.Model):
     # folder = models.ForeignKey(OerFolder, verbose_name=_('OER folder'))
     project = models.ForeignKey(Project, verbose_name=_('project'))
     created = CreationDateTimeField(_('created'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, verbose_name=_('last editor'))
+    modified = ModificationDateTimeField(_('modified'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oerproxy_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oerproxy__editor')
 
     class Meta:
         verbose_name = _('OER proxy')
