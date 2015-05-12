@@ -21,8 +21,11 @@
             <h2 class="text-center">{% trans "member"|capfirst %}:
 				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
 			</h2>
-            <div><strong>{% trans "in short"|capfirst %}</strong>:
-
+			{% if request.path = '/my_account/' %}
+			<div><strong>{% trans "username"|capfirst %}</strong>: {{ user.username }}</div>
+			<div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
+			{% endif %}
+			<div><strong>{% trans "in short"|capfirst %}</strong>:</div>
             </p>
     </section>
   </div>
