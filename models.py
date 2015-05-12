@@ -146,8 +146,8 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name()
 
-    def members(self):
-        return User.objects.filter(groups=self.group)
+    def members(self, sort_on='last_name'):
+        return User.objects.filter(groups=self.group).order_by(sort_on)
 
     def add_member(self, user):
         self.group.user_set.add(user)

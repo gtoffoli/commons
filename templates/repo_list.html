@@ -14,7 +14,7 @@
             </h2>
             <p class="lead">
     {% if repo_list %}
-	<ul class="root">
+	<ul class="list-unstyled">
         {% for repo, n in repo_list %}
         <li>
             <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. &nbsp;<i>{{ repo.type_description }}</i>.&nbsp; {{ repo.description|truncatechars:80 }}

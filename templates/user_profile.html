@@ -7,18 +7,27 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
+<div class="row">
+  <div class="col-sm-3">
+   			<h4 style="margin-top: 4.0em;">{% trans "membership"|capfirst %}</h4>
+            <ul class="list-unstyled">
+            {% for group in groups %}
+            	<li><a href="/project/{{ group.project.slug }}/">{{ group.name }}</a></li>
+            {% endfor %}
+            </ul>
+  </div>
+  <div class="col-sm-6">
     <section>
-        <div class="container">
-            <h2 class="text-center">{% trans "user"|capfirst %}: {{ user.username }}</h2>
-            <p class="lead">
-            <div><strong>{% trans "name"|capfirst %}</strong>: {{ user.first_name }} {{ user.last_name }}</div>
-            <div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
-            <div><strong>{% trans "projects"|capfirst %}</strong>:
-            {% for group in groups %}{% if group.project %}
-            	<a href="/project/{{ group.project.slug }}/">{{ group.name }}</a>{% if not forloop.last %},{% endif %}
-            {% endif %}{% endfor %}
-			</div>
+            <h2 class="text-center">{% trans "member"|capfirst %}:
+				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
+			</h2>
+            <div><strong>{% trans "in short"|capfirst %}</strong>:
+
             </p>
-        </div>
     </section>
+  </div>
+  <div class="col-sm-3">
+   			<h4 style="margin-top: 4.0em;">{% trans "recent work"|capfirst %}</h4>
+  </div>
+</div>
 {% endblock %}

@@ -8,16 +8,17 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
+ <div class="row">
+  <div class="col-sm-12">
     <section>
-        <div class="container">
-            <h2 class="text-center">{% blocktrans %}All communities{% endblocktrans %}</h2>
+            <h2 class="text-center">{% blocktrans %}Communities of Practice{% endblocktrans %}</h2>
             <p class="lead">
     {% if nodes %}
-<ul class="root">
+<ul class="list-unstyled">
     {% recursetree nodes %}
         <li>
     		{% if node.project %}
-            	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>
+            	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>. &nbsp;<i>({{ node.project.proj_type.description }})</i>&nbsp; {{ node.project.description }}
     		{% else %}    	
             	{{ node.name }}
     		{% endif %}
@@ -33,6 +34,7 @@
        	<p>{% trans "No community is present" %}.</p>
     {% endif %}
             </p>
-        </div>
     </section>
+  </div>
+</div>
 {% endblock %}

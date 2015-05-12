@@ -7,8 +7,17 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
+<div class="row">
+  <div class="col-sm-3">
+   			<h4 style="margin-top: 4.0em;">{% trans "members"|capfirst %}</h4>
+            <ul class="list-unstyled">
+            {% with users=project.members %}{% for user in users %}
+            	<li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a></li>
+            {% endfor %}{% endwith %}
+            </ul>
+  </div>
+  <div class="col-sm-6">
     <section>
-        <div class="container">
             <h2 class="text-center">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
 			{{ project.name }}
 			&nbsp; <a href="/cops/" title="show Community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
@@ -17,12 +26,14 @@
             <p class="lead">
             <div><strong>{% trans "type"|capfirst %}</strong>: {{ proj_type.description }}</div>
             <div><strong>{% trans "in short"|capfirst %}</strong>: {{ project.description }}</div>
-            <div><strong>{% trans "members"|capfirst %}</strong>:
-            {% with members=project.group.user_set.all %}{% for user in members %}
-            	<a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>{% if not forloop.last %},{% endif %}
-            {% endfor %}{% endwith %}
-            </div>
             </p>
-        </div>
     </section>
+    <section>
+            <h4 class="text-center">{% trans "forum & chat"|capfirst %}</h4>
+    </section>
+  </div>
+  <div class="col-sm-3">
+   			<h4 style="margin-top: 4.0em;">{% trans "recent work"|capfirst %}</h4>
+  </div>
+</div>
 {% endblock %}
