@@ -15,6 +15,18 @@
             	<li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a></li>
             {% endfor %}{% endwith %}
             </ul>
+			{% if request.user.is_authenticated %}
+			<hr />
+			{% if membership == None %}
+			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join project"|capfirst %}</a> -</div>
+			{% else %}
+				{% if membership.state == 0 %}					
+				<div><i>{% trans "your application is waiting for acceptation by the " %}
+				{% if membership.project.get_project_type == 'com' %}{% trans "community administrator" %}{% else %}{% trans "project supervisor" %}{% endif %}
+				</i></div>
+				{% endif %}
+			{% endif %}
+			{% endif %}
   </div>
   <div class="col-sm-6">
     <section>
@@ -27,7 +39,7 @@
             <div><strong>{% trans "type"|capfirst %}</strong>: {{ proj_type.description }}</div>
             <div><strong>{% trans "in short"|capfirst %}</strong>: {{ project.description }}</div>
     		{% if project.info %}
-            <div style="margin-top: 0.5em;"><strong>{% trans "additional inormation"|capfirst %}</strong>:
+            <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
 			{% endif %}
             </p>

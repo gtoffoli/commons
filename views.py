@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.contrib.auth.models import User, Group
 from django.shortcuts import render_to_response, get_object_or_404
 
-from models import Repo, Project, OER
+from models import Repo, Project, ProjectMember, OER
 
 def group_has_project(group):
     try:
@@ -18,9 +18,12 @@ def group_has_project(group):
 def user_profile(request, username, user=None):
     if not user:
         user = get_object_or_404(User, username=username)
-    groups = [group for group in user.groups.all() if group_has_project(group)]
-    return render_to_response('user_profile.html', {'user': user, 'groups': groups,}, context_instance=RequestContext(request))
-
+    memberships = ProjectMember.objects.filter(user=user, state=1)
+    applications = None
+    if user == request.user:
+        applications = ProjectMember.objects.filter(user=user, state=0)
+    return render_to_response('user_profile.html', {'user': user, 'memberships': memberships, 'applications': applications,}, context_instance=RequestContext(request))
+    
 def my_account(request):
     user = request.user
     return user_profile(request, None, user=user)
@@ -40,20 +43,26 @@ def project_detail(request, project_id, project=None):
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type,}, context_instance=RequestContext(request))
+    if request.user.is_authenticated():
+        membership = project.get_membership(request.user)
+    else:
+        membership = None
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
-def apply_for_membership(request, project_id, project=None):
-    if not project:
-        project = get_object_or_404(Project, pk=project_id)
-    pass
-
-def apply_for_membership_by_slug(request, project_slug):
+def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    return apply_for_membership(request, project.id, project)
+    users = User.objects.filter(username=username)
+    if users and users[0].id == request.user.id:
+        membership = project.add_member(request.user)
+        return my_account(request)
+
+def project_membership(request, project_id, user_id):
+    membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
+    return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
 
 def repo_list(request):
     """

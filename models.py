@@ -152,6 +152,9 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name()
 
+    def get_project_type(self):
+        return self.proj_type.name
+
     def members(self, sort_on='last_name'):
         users = User.objects.filter(groups=self.group)
         if sort_on:
@@ -169,17 +172,25 @@ class Project(models.Model):
             self.group.user_set.add(user)
         return membership
 
-    def get_memberships(self, state=None):
-        if state:
-            memberships = User.objects.filter(state=state)
-        else:
-            memberships = User.objects.all()
-        return memberships
-
     def get_member(self, user):
         members = self.members()
         if user in members:
             return user
+        return None
+
+    def get_memberships(self, state=None, user=None):
+        if user:
+            memberships = ProjectMember.objects.filter(project=self, user=user)
+        elif state:
+            memberships = ProjectMember.objects.filter(project=self, state=state)
+        else:
+            memberships = ProjectMember.objects.all(project=self)
+        return memberships
+
+    def get_membership(self, user):
+        memberships = self.get_memberships(user=user)
+        if memberships:
+            return memberships[0]
         return None
 
 class ProjectMember(models.Model):

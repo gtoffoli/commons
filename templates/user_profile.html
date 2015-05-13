@@ -11,8 +11,13 @@
   <div class="col-sm-3">
    			<h4 style="margin-top: 4.0em;">{% trans "membership"|capfirst %}</h4>
             <ul class="list-unstyled">
-            {% for group in groups %}
-            	<li><a href="/project/{{ group.project.slug }}/">{{ group.name }}</a></li>
+            {% for membership in memberships %}
+            	<li><a href="/project/{{ membership.project.slug }}/">{{ membership.project.name }}</a>
+            	</li>
+            {% endfor %}
+            {% for application in applications %}
+            	<li><a href="/project/{{ application.project.slug }}/">{{ application.project.name }}</a> &nbsp;<i>{% trans "application pending" %}</i>
+            	</li>
             {% endfor %}
             </ul>
   </div>
