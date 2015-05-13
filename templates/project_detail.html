@@ -26,6 +26,10 @@
             <p class="lead">
             <div><strong>{% trans "type"|capfirst %}</strong>: {{ proj_type.description }}</div>
             <div><strong>{% trans "in short"|capfirst %}</strong>: {{ project.description }}</div>
+    		{% if project.info %}
+            <div style="margin-top: 0.5em;"><strong>{% trans "additional inormation"|capfirst %}</strong>:
+				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
+			{% endif %}
             </p>
     </section>
     <section>

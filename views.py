@@ -26,9 +26,15 @@ def my_account(request):
     return user_profile(request, None, user=user)
 
 def cops_tree(request):
+    """
     groups = Group.objects.all()
     groups = [group for group in groups if group_has_project(group)]
-    return render_to_response('cops_tree.html', {'nodes': groups,}, context_instance=RequestContext(request))
+    """
+    nodes = Group.objects.filter(level=0)
+    if nodes:
+        root = nodes[0]
+        nodes = root.get_descendants(include_self=True)
+    return render_to_response('cops_tree.html', {'nodes': nodes,}, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):
     if not project:

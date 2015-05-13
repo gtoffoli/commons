@@ -23,13 +23,22 @@ class ProjTypeAdmin(admin.ModelAdmin):
 class ProjAdmin(admin.ModelAdmin):
     form = RepoForm
     fieldsets = [
-        (None, {'fields': ['description', 'proj_type', 'info', 'eval',]}),
+        (None, {'fields': ['group', 'proj_type', 'description', 'info',]}),
     ]
-    list_display = ('description', 'project_type', 'created', 'modified',)
+    list_display = ('project_name', 'description', 'project_type', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
+
+    def project_name(self, obj):
+        return obj.name()
 
     def project_type(self, obj):
         return obj.proj_type.description
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
+        obj.save()
 
 class ProjectMemberAdmin(admin.ModelAdmin):
     fieldsets = []
