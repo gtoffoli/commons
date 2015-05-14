@@ -7,6 +7,7 @@ from django.core.validators import URLValidator
 from documents.models import Document
 from metadata.models import MetadataType
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
+from roles.utils import get_roles, has_permission
 
 """ how to make the 'file' field optional in a DocumentVersion?
 import uuid
@@ -155,12 +156,26 @@ class Project(models.Model):
     def get_project_type(self):
         return self.proj_type.name
 
-    def members(self, sort_on='last_name'):
-        users = User.objects.filter(groups=self.group)
-        if sort_on:
-            users = users.order_by(sort_on)
-        return users
+    def admin_name(self):
+        if self.proj_type.name == 'com':
+            return _('Administrator')
+        else:
+            return _('Supervisor')
 
+    def members(self, user_only=False, sort_on='last_name'):
+        memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
+        users = [membership.user for membership in memberships]
+        if user_only:
+            return users
+        else:
+            # return [[user, self.is_admin(user)] for user in users]
+            out = []
+            for user in users:
+                item = [user, self.is_admin(user)]
+                print item
+                out.append(item)
+            return out
+    
     def add_member(self, user, editor=None, state=0):
         if not editor:
             editor = user
@@ -168,24 +183,23 @@ class Project(models.Model):
             return None
         membership = ProjectMember(project=self, user=user, editor=editor, state=state)
         membership.save()
-        if not user in self.members():
+        if not user in self.members(user_only=True):
             self.group.user_set.add(user)
         return membership
 
-    def get_member(self, user):
-        members = self.members()
-        if user in members:
-            return user
-        return None
-
     def get_memberships(self, state=None, user=None):
+        print self, state, user
         if user:
             memberships = ProjectMember.objects.filter(project=self, user=user)
-        elif state:
+        elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
+            print memberships
         else:
-            memberships = ProjectMember.objects.all(project=self)
+            memberships = ProjectMember.objects.filter(project=self)
         return memberships
+
+    def get_applications(self):
+        return self.get_memberships(state=0)
 
     def get_membership(self, user):
         memberships = self.get_memberships(user=user)
@@ -193,6 +207,29 @@ class Project(models.Model):
             return memberships[0]
         return None
 
+    def get_roles(self, user):
+        return get_roles(user, obj=self)
+
+    def is_admin(self, user):
+        role_names = [role.name for role in self.get_roles(user)]
+        return 'admin' in role_names
+
+    def can_accept_member(self, user):
+        return has_permission(self, user, 'accept-member')
+
+    def accept_application(self, request, application):
+        group = self.group
+        user = application.user
+        application.state = 1
+        application.editor = request.user
+        application.save()
+        if not group in user.groups.all():
+            user.groups.add(user)
+        # next 3 lines to be removed ASAP
+        if not user.is_staff and self.name().count('OER'):
+            user.is_staff = True
+            user.save(using=self._db) # ???
+        
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
     user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')

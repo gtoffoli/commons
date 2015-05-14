@@ -45,9 +45,11 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     if request.user.is_authenticated():
         membership = project.get_membership(request.user)
+        can_accept_member = project.can_accept_member(request.user)
     else:
         membership = None
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership,}, context_instance=RequestContext(request))
+        can_accept_member = False
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'can_accept_member': can_accept_member,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -59,6 +61,17 @@ def apply_for_membership(request, username, project_slug):
     if users and users[0].id == request.user.id:
         membership = project.add_member(request.user)
         return my_account(request)
+
+def accept_application(request, username, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    membership = project.get_membership(request.user)
+    users = User.objects.filter(username=username)
+    if users and users.count()==1:
+        applicant = users[0]
+        if project.can_accept_member(request.user):
+            application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
+            project.accept_application(request, application)
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
 
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
