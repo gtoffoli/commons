@@ -1,12 +1,14 @@
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.db.models.signals import post_save
 # from django import forms
 from django.core.validators import URLValidator
 # from mayan import sources
 from documents.models import Document
 from metadata.models import MetadataType
-from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
+from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
+from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from roles.utils import get_roles, has_permission
 
 """ how to make the 'file' field optional in a DocumentVersion?
@@ -44,10 +46,9 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
+"""
 class Language(models.Model):
-    """
-    Enumerate languages referred by Repos and OERs
-    """
+    # Enumerate languages referred by Repos and OERs
     code = models.CharField(max_length=5, primary_key=True, verbose_name=_('Code'))
     name = models.CharField(max_length=100, verbose_name=_('Name'))
 
@@ -61,6 +62,45 @@ class Language(models.Model):
 
     def __unicode__(self):
         return self.option_label()
+"""
+
+GENDERS = (
+   ('-', 'not specified'),
+   ('m', 'Male'),
+   ('f', 'Female'),)
+
+class UserProfile(models.Model):
+    # user = models.OneToOneField(User, unique=True)
+    user = models.OneToOneField(User, primary_key=True, related_name='profile')
+    gender = models.CharField(max_length=1, blank=True, null=True,
+                                  choices=GENDERS, default='-')
+    dob = models.DateField(blank=True, null=True, verbose_name=_('date of birth'), help_text=_('Format: dd/mm/yyyy'))
+    country = models.ForeignKey(CountryEntry, blank=True, null=True, verbose_name=_('country'))
+    city = models.CharField(max_length=250, null=True, blank=True, verbose_name=_('city'))
+    edu_level = models.ForeignKey(EduLevelEntry, blank=True, null=True, verbose_name=_('education level'))
+    pro_status = models.ForeignKey(ProStatusNode, blank=True, null=True, verbose_name=_('study or work status'))
+    position = models.TextField(blank=True, null=True, verbose_name=_('study or work position'))
+    edu_field = models.ForeignKey(EduFieldEntry, blank=True, null=True, verbose_name=_('field of study'))
+    pro_field = models.ForeignKey(ProFieldEntry, blank=True, null=True, verbose_name=_('work sector'))
+    subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='interest areas')
+    languages = models.ManyToManyField(Language, blank=True, verbose_name='known languages', help_text=_('The UI will support only EN, IT and PT.'))
+    other_languages = models.TextField(blank=True, verbose_name=_('known languages not listed above'), help_text=_('List one per line.'))
+    short = models.TextField(blank=True, verbose_name=_('short presentation'))
+    long = models.TextField(blank=True, verbose_name=_('longer presentation'))
+    url = models.CharField(max_length=64, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
+    networks = models.ManyToManyField(NetworkEntry, blank=True, verbose_name=_('online networks / services used'))
+
+    def __unicode__(self):
+        # return u'%s profile' % self.user.username
+        return u'profile of %s %s' % (self.user.first_name, self.user.last_name)
+
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+        print 'profile created'
+
+post_save.connect(create_user_profile, sender=User,
+                 dispatch_uid="create_user_profile")
 
 class Subject(models.Model):
     """

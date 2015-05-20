@@ -5,9 +5,11 @@ Created on 02/apr/2015
 
 from django.template import RequestContext
 from django.contrib.auth.models import User, Group
+from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 
-from models import Repo, Project, ProjectMember, OER
+from models import UserProfile, Repo, Project, ProjectMember, OER
+from forms import UserProfileForm
 
 def group_has_project(group):
     try:
@@ -23,10 +25,28 @@ def user_profile(request, username, user=None):
     if user == request.user:
         applications = ProjectMember.objects.filter(user=user, state=0)
     return render_to_response('user_profile.html', {'user': user, 'memberships': memberships, 'applications': applications,}, context_instance=RequestContext(request))
-    
+
 def my_account(request):
     user = request.user
     return user_profile(request, None, user=user)
+ 
+def profile_edit(request, username):
+    user = get_object_or_404(User, username=username)
+    profiles = UserProfile.objects.filter(user=user)
+    profile = profiles and profiles[0] or None
+    if request.POST:
+        form = UserProfileForm(request.POST, instance=profile)
+        if request.POST['submitted']: 
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect('/profile/%s/' % username)
+            else:
+                return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+    elif profile:
+        form = UserProfileForm(instance=profile)
+    else:
+        form = UserProfileForm(initial={'user': user.id})
+    return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
 
 def cops_tree(request):
     """

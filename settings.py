@@ -41,6 +41,7 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # theme (from pinax project)
     "pinax_theme_bootstrap",
     "bootstrapform",
+    "datetimewidget",
     # pinax starter project ?
     "pinax",
     # menus and ...
@@ -119,6 +120,8 @@ LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (
     ('en', _('English')),
 )
+
+DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
 WSGI_APPLICATION = 'commons.wsgi.application'
 ROOT_URLCONF = 'commons.urls'

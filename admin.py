@@ -3,15 +3,33 @@ Created on 03/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.forms import TextInput, Textarea, Select, SelectMultiple
-from django.forms.models import BaseInlineFormSet
 from django.contrib import admin
+from django.contrib.auth.models import User
+from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
 
-from .models import Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
-from .forms import RepoForm, ProjectForm
+from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
+from .forms import UserChangeForm, UserProfileChangeForm, RepoChangeForm, ProjectChangeForm
+
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
+    form = UserProfileChangeForm
+    can_delete = False
+    verbose_name_plural = 'user profile'
+    formfield_overrides = {
+       models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
+       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
+       models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span6', 'size':'12'})},}
+
+class UserAdmin(UserWithMPTTAdmin):
+    form = UserChangeForm
+    inlines = (UserProfileInline,)
+
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 
 class ProjTypeAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -21,12 +39,16 @@ class ProjTypeAdmin(admin.ModelAdmin):
     search_fields = ['name',]
 
 class ProjAdmin(admin.ModelAdmin):
-    form = RepoForm
+    form = ProjectChangeForm
     fieldsets = [
         (None, {'fields': ['group', 'proj_type', 'description', 'info',]}),
     ]
     list_display = ('project_name', 'description', 'project_type', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
+    formfield_overrides = {
+       models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
+       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
+       models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},}
 
     def project_name(self, obj):
         return obj.name()
@@ -75,7 +97,7 @@ class RepoFeatureAdmin(admin.ModelAdmin):
     list_display = ('code', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
-    form = RepoForm
+    form = RepoChangeForm
     fieldsets = [
         (None, {'fields': ['name', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
     ]

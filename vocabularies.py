@@ -11,7 +11,7 @@ from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from mptt.admin import MPTTModelAdmin
 
-# MODEL
+# ABSTRACT CLASSES
 
 class VocabularyEntry(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -26,11 +26,6 @@ class VocabularyEntry(models.Model):
     def __unicode__(self):
         return self.name
 
-"""
-class VocabularyNode(MPTTModel):
-    name = models.CharField(max_length=100)
-    order = models.IntegerField(default=100)
-"""
 class VocabularyNode(MPTTModel, VocabularyEntry):
     # parent = TreeForeignKey('self', null=True, blank=True, related_name = 'children', limit_choices_to=Q(parent__isnull=True))
     parent = TreeForeignKey('self', null=True, blank=True, related_name = 'children')
@@ -50,6 +45,25 @@ class VocabularyNode(MPTTModel, VocabularyEntry):
     def __unicode__(self):
         # return self.name
         return self.option_label()
+
+class CodedEntry(models.Model):
+    """
+    Abstract class for classification entries with control on key
+    """
+    code = models.CharField(max_length=5, primary_key=True)
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        abstract = True
+        ordering = ['name']
+
+    def option_label(self):
+        return '%s - %s' % (self.code, self.name)
+
+    def __unicode__(self):
+        return self.name
+
+# OER METADATA MODEL
 
 class MaterialEntry(VocabularyEntry):
 
@@ -87,7 +101,57 @@ class LicenseNode(VocabularyNode):
         verbose_name = _('license')
         verbose_name_plural = _('licenses')
 
-# ADMIN
+# USER PROFILE MODEL
+
+class EduLevelEntry(VocabularyEntry):
+
+    class Meta:
+        verbose_name = _('education level')
+        verbose_name_plural = _('education levels')
+
+class ProStatusNode(VocabularyNode):
+
+    class Meta:
+        verbose_name = _('study or work status')
+        verbose_name_plural = _('study or work statuses')
+
+class EduFieldEntry(VocabularyEntry):
+
+    class Meta:
+        verbose_name = _('education field')
+        verbose_name_plural = _('education fields')
+
+class ProFieldEntry(VocabularyEntry):
+
+    class Meta:
+        verbose_name = _('professional field')
+        verbose_name_plural = _('professional fields')
+
+class NetworkEntry(VocabularyEntry):
+
+    class Meta:
+        verbose_name = _('social network')
+        verbose_name_plural = _('social networks')
+
+class Language(CodedEntry):
+    """
+    Enumerate languages referred by Repos and OERs
+    """
+
+    class Meta:
+        verbose_name = _('OER language')
+        verbose_name_plural = _('OER languages')
+
+class CountryEntry(CodedEntry):
+    """
+    Enumerate countries
+    """
+
+    class Meta:
+        verbose_name = _('country')
+        verbose_name_plural = _('countries')
+
+# OER METADATA ADMIN
 
 class VocabularyEntryAdmin(admin.ModelAdmin):
     fieldset = ['name', 'order',]
@@ -118,9 +182,42 @@ class SubjectNodeAdmin(VocabularyNodeAdmin):
 class LicenseNodeAdmin(VocabularyNodeAdmin):
     pass
 
+# USER PROFILE ADMIN
+
+class CodedEntryAdmin(admin.ModelAdmin):
+    fieldset = ['code', 'name',]
+    list_display = ('code', 'name', )
+
+class CountryEntryAdmin(CodedEntryAdmin):
+    pass
+
+class EduLevelEntryAdmin(VocabularyEntryAdmin):
+    pass
+
+class ProStatusNodeAdmin(VocabularyNodeAdmin):
+    pass
+
+class EduFieldEntryAdmin(VocabularyEntryAdmin):
+    pass
+
+class ProFieldEntryAdmin(VocabularyEntryAdmin):
+    pass
+
+class NetworkEntryEntryAdmin(VocabularyEntryAdmin):
+    pass
+
+# OER metadata
 admin.site.register(MaterialEntry, MaterialEntryAdmin)
 admin.site.register(MediaEntry, MediaEntryAdmin)
 admin.site.register(AccessibilityEntry, AccessibilityEntryAdmin)
 admin.site.register(LevelNode, LevelNodeAdmin)
 admin.site.register(SubjectNode, SubjectNodeAdmin)
 admin.site.register(LicenseNode, LicenseNodeAdmin)
+
+# User profile
+admin.site.register(CountryEntry, CountryEntryAdmin)
+admin.site.register(EduLevelEntry, EduLevelEntryAdmin)
+admin.site.register(ProStatusNode, ProStatusNodeAdmin)
+admin.site.register(EduFieldEntry, EduFieldEntryAdmin)
+admin.site.register(ProFieldEntry, ProFieldEntryAdmin)
+admin.site.register(NetworkEntry, NetworkEntryEntryAdmin)

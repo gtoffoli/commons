@@ -25,8 +25,9 @@
     <section>
             <h2 class="text-center">{% trans "member"|capfirst %}:
 				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
+				{% if request.user.is_superuser or request.user.id == user.id %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
-			{% if request.path = '/my_account/' %}
+			{% if request.path = '/my_profile/' %}
 			<div><strong>{% trans "username"|capfirst %}</strong>: {{ user.username }}</div>
 			<div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
 			{% endif %}
