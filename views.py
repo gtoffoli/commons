@@ -140,11 +140,40 @@ def repo_oers_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_oers(request, repo.id, repo)
 
+def repo_new(request):
+    form = RepoForm()
+    return render_to_response('repo_edit.html', {'form': form, 'repo': None,}, context_instance=RequestContext(request))
+
+def repo_save(request):
+    if request.POST:
+        form = RepoForm(request.POST)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                repo = form.save(commit=False)
+                user = request.user
+                try:
+                    repo.creator
+                except:
+                    repo.creator = user
+                repo.editor = user
+                repo.save()
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/repo/%s/' % repo.slug)
+                else:
+                    return HttpResponseRedirect('/repo/%s/edit/' % repo.slug)
+            else:
+                return render_to_response('repo_edit.html', {'form': form,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            return HttpResponseRedirect('/repo/%s/' % request.POST.get('slug', ''))
+    else:
+        return repo_new(request)
+
 def repo_edit(request, repo_id):
     repo = get_object_or_404(Repo, id=repo_id)
     if not repo.can_edit(request):
         return HttpResponseRedirect('/repo/%s/' % repo.slug)
     if request.POST:
+        """
         form = RepoForm(request.POST, instance=repo)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
@@ -157,6 +186,8 @@ def repo_edit(request, repo_id):
                 return render_to_response('repo_edit.html', {'form': form,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/repo/%s/' % repo.slug)
+        """
+        return repo_save(request)
     elif repo:
         form = RepoForm(instance=repo)
     else:

@@ -62,11 +62,11 @@ class RepoForm(forms.ModelForm):
     class Meta:
         model = Repo
 
-    name = forms.CharField(required=False, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    slug = forms.CharField(widget=forms.HiddenInput())
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    slug = forms.CharField(required=False, widget=forms.HiddenInput())
     description = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
-    repo_type = forms.ModelChoiceField(required=False, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
+    repo_type = forms.ModelChoiceField(required=True, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
     features = forms.ModelMultipleChoiceField(required=False, label=_('repository features'), queryset=RepoFeature.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages of documents'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
