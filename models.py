@@ -35,6 +35,16 @@ def group_project(self):
     return None
 Group.project = group_project
 
+def user_can_edit(self, request):
+    user = request.user
+    return user.is_authenticated() and (user.is_superuser or user.id==self.id)
+User.can_edit = user_can_edit
+
+def user_get_profile(self):
+    profiles = UserProfile.objects.filter(user=self)
+    return profiles and profiles[0] or None
+User.get_profile = user_get_profile
+
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
 from django.dispatch import receiver

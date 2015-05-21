@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r"^my_account/$", 'commons.views.my_account', name="account_settings"),
+    url(r"^my_profile/$", 'commons.views.my_profile', name="account_settings"),
     url(r"^profile/(?P<username>[\w\.-]+)/edit/$", 'commons.views.profile_edit', name="profile_edit"),
     url(r"^profile/(?P<username>[\w\.-]+)/$", 'commons.views.user_profile', name="user_profile"),
     # url(r'^/mayansources/create/from/local/multiple/$', DocumentCreateWizard.as_view(), name='commons_document_create_multiple'),

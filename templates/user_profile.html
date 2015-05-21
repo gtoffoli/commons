@@ -25,14 +25,36 @@
     <section>
             <h2 class="text-center">{% trans "member"|capfirst %}:
 				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
-				{% if request.user.is_superuser or request.user.id == user.id %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
+				{% if can_edit %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
-			{% if request.path = '/my_profile/' %}
+{% if profile %}
+			{% if profile.short %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ profile.short }}</div>{% endif %}
+{% endif %}
+{% if request.path = '/my_profile/' %}
 			<div><strong>{% trans "username"|capfirst %}</strong>: {{ user.username }}</div>
 			<div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
-			{% endif %}
-			<div><strong>{% trans "in short"|capfirst %}</strong>:</div>
-            </p>
+{% endif %}
+{% if profile %}
+			{% if profile.country %}<div><strong>{% trans "country"|capfirst %}</strong>: {{ profile.country }}</div>{% endif %}
+			{% if profile.city %}<div><strong>{% trans "city"|capfirst %}</strong>: {{ profile.city }}</div>{% endif %}
+			{% if profile.edu_level %}<div><strong>{% trans "education"|capfirst %}</strong>: {{ profile.edu_level }}</div>{% endif %}
+			{% if profile.pro_status %}<div><strong>{% trans "status"|capfirst %}</strong>: {{ profile.pro_status }}</div>{% endif %}
+			{% if profile.position %}<div><strong>{% trans "position"|capfirst %}</strong>: {{ profile.position }}</div>{% endif %}
+			{% if profile.edu_field %}<div><strong>{% trans "field of study"|capfirst %}</strong>: {{ profile.edu_field }}</div>{% endif %}
+			{% if profile.pro_field %}<div><strong>{% trans "sector of work"|capfirst %}</strong>: {{ profile.pro_field }}</div>{% endif %}
+			{% if profile.languages or profile.other_languages %}<div><strong>{% trans "languages"|capfirst %}</strong>:
+				{% for language in profile.languages.all %}{{ language }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if profile.other_languages %},
+					{{ profile.other_languages }}{% endif %}
+			</div>{% endif %}
+			{% if profile.subjects %}<div><strong>{% trans "subjects of interest"|capfirst %}</strong>:
+				{% for subject in profile.subjects.all %}{{ subject }}{% if not forloop.last %}, {% endif %}{% endfor %}
+			</div>{% endif %}
+			{% if profile.url %}<div><strong>{% trans "web site"|capfirst %}</strong>: <a href="{{ profile.url }}" target="_blank">{{ profile.url }}</a></div>{% endif %}
+			{% if profile.networks %}<div><strong>{% trans "social networks"|capfirst %}</strong>:
+				{% for network in profile.networks.all %}{{ network }}{% if not forloop.last %}, {% endif %}{% endfor %}
+			</div>{% endif %}
+			{% if profile.long %}<div style="margin-top: 1em">{{ profile.long|safe }}</div>{% endif %}
+{% endif %}
     </section>
   </div>
   <div class="col-sm-3">

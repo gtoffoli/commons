@@ -20,28 +20,36 @@ def group_has_project(group):
 def user_profile(request, username, user=None):
     if not user:
         user = get_object_or_404(User, username=username)
+    can_edit = user.can_edit(request)
     memberships = ProjectMember.objects.filter(user=user, state=1)
     applications = None
     if user == request.user:
         applications = ProjectMember.objects.filter(user=user, state=0)
-    return render_to_response('user_profile.html', {'user': user, 'memberships': memberships, 'applications': applications,}, context_instance=RequestContext(request))
+    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications,}, context_instance=RequestContext(request))
 
-def my_account(request):
+def my_profile(request):
     user = request.user
     return user_profile(request, None, user=user)
  
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
+    if not user.can_edit(request):
+        return HttpResponseRedirect('/profile/%s/' % username)
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
         form = UserProfileForm(request.POST, instance=profile)
-        if request.POST['submitted']: 
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()
-                return HttpResponseRedirect('/profile/%s/' % username)
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/profile/%s/' % username)
+                else: 
+                    return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
             else:
                 return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            return HttpResponseRedirect('/profile/%s/' % username)
     elif profile:
         form = UserProfileForm(instance=profile)
     else:
