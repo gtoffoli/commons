@@ -45,6 +45,17 @@ def user_get_profile(self):
     return profiles and profiles[0] or None
 User.get_profile = user_get_profile
 
+def user_can_add_repository(self, request):
+    user = request.user
+    if user.is_superuser:
+        return True
+    projects = Project.objects.all()
+    for project in projects:
+        if project.can_add_repository(user):
+            return True
+    return False
+User.can_add_repository = user_can_add_repository
+
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -279,7 +290,10 @@ class Project(models.Model):
         if not user.is_staff and self.name().count('OER'):
             user.is_staff = True
             user.save(using=self._db) # ???
-        
+
+    def can_add_repository(self, user):
+        return has_permission(self, user, 'add-repository')
+       
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
     user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
@@ -329,8 +343,7 @@ class RepoType(models.Model):
         ordering = ['order', 'name',]
 
     def option_label(self):
-        # return '%s - %s' % (self.name, self.description)
-        return self.name
+        return self.description
 
     def __unicode__(self):
         return self.option_label()
@@ -339,14 +352,13 @@ class RepoType(models.Model):
         return (self.name,)
 
 class Repo(models.Model):
-    repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
+    repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
     url = models.CharField(max_length=64,  null=True, blank=True, verbose_name=_('URL of the repository site'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
-    languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
-    # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='OER subject areas')
+    languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
     info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
@@ -377,6 +389,12 @@ class Repo(models.Model):
 
     def get_oers(self):
         return OER.objects.filter(source=self.id)
+
+    def can_edit(self, request):
+        user = request.user
+        if not user.is_authenticated():
+            return False
+        return user.is_superuser or self.creator==user or user.can_add_repository(request)
 
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
@@ -435,7 +453,7 @@ class OER(models.Model):
 
     def get_more_metadata(self):
         return self.metadata_set.all().order_by('metadata_type__name')
-
+        
 class OerMetadata(models.Model):
     """
     Link an OER to a specific instance of a metadata type with it's current value

@@ -13,7 +13,7 @@ from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Language, SubjectNode
+from models import Repo, Language, SubjectNode, RepoType, RepoFeature
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -57,6 +57,18 @@ class UserProfileForm(forms.ModelForm):
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
-    
-    
-    
+
+class RepoForm(forms.ModelForm):
+    class Meta:
+        model = Repo
+
+    name = forms.CharField(required=False, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    slug = forms.CharField(widget=forms.HiddenInput())
+    description = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
+    repo_type = forms.ModelChoiceField(required=False, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
+    features = forms.ModelMultipleChoiceField(required=False, label=_('repository features'), queryset=RepoFeature.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}))
+    languages = forms.ModelMultipleChoiceField(required=False, label=_('languages of documents'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+    info = forms.CharField(required=False, label=_('longer description / search suggestions'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
+    eval = forms.CharField(required=False, label=_('comments / evaluation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 10,}))
