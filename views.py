@@ -88,7 +88,7 @@ def apply_for_membership(request, username, project_slug):
     users = User.objects.filter(username=username)
     if users and users[0].id == request.user.id:
         membership = project.add_member(request.user)
-        return my_account(request)
+        return my_profile(request)
 
 def accept_application(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -144,9 +144,12 @@ def repo_new(request):
     form = RepoForm()
     return render_to_response('repo_edit.html', {'form': form, 'repo': None,}, context_instance=RequestContext(request))
 
-def repo_save(request):
+def repo_save(request, repo=None):
     if request.POST:
-        form = RepoForm(request.POST)
+        repo_id = request.POST.get('id', '')
+        if repo_id:
+            repo = get_object_or_404(Repo, id=repo_id)
+        form = RepoForm(request.POST, instance=repo)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 repo = form.save(commit=False)
@@ -162,7 +165,8 @@ def repo_save(request):
                 else:
                     return HttpResponseRedirect('/repo/%s/edit/' % repo.slug)
             else:
-                return render_to_response('repo_edit.html', {'form': form,}, context_instance=RequestContext(request))
+                print form.errors
+                return render_to_response('repo_edit.html', {'repo': repo, 'form': form,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/repo/%s/' % request.POST.get('slug', ''))
     else:
@@ -187,7 +191,7 @@ def repo_edit(request, repo_id):
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/repo/%s/' % repo.slug)
         """
-        return repo_save(request)
+        return repo_save(request, repo=repo)
     elif repo:
         form = RepoForm(instance=repo)
     else:

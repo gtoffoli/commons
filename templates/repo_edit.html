@@ -20,6 +20,7 @@
     <form method="post" action="/repo/save/" id="edit_form" class="form-horizontal">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
 	{% csrf_token %}
+	{% if repo %}<input type="hidden" id="id" name="id" value="{{ repo.id }}" />{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
