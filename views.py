@@ -25,7 +25,9 @@ def user_profile(request, username, user=None):
     applications = None
     if user == request.user:
         applications = ProjectMember.objects.filter(user=user, state=0)
-    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications,}, context_instance=RequestContext(request))
+    repos = Repo.objects.filter(creator=user).order_by('-created')[:5]
+    oers = OER.objects.filter(creator=user).order_by('-created')[:5]
+    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'oers': oers,}, context_instance=RequestContext(request))
 
 def my_profile(request):
     user = request.user
@@ -217,6 +219,15 @@ def oer_list(request):
     can_add = user.is_authenticated()
     oer_list = OER.objects.all()
     return render_to_response('oer_list.html', {'can_add': can_add, 'oer_list': oer_list,}, context_instance=RequestContext(request))
+
+def oers_by_project(request):
+    project_list = []
+    for project in Project.objects.all().order_by('group__name'):
+        oers = OER.objects.filter(project=project)
+        n = len(oers)
+        if n:
+            project_list.append([project, n])
+    return render_to_response('oers_by_project.html', {'project_list': project_list,}, context_instance=RequestContext(request))
 
 def oer_detail(request, oer_id, oer=None):
     if not oer:

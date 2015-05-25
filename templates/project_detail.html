@@ -60,11 +60,14 @@
     	<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i>  {% trans "classify OER"|capfirst %}</a></div>
     </section>
 	{% endif %}
+    {% if user.is_authenticated %}
     <section>
             <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
     </section>
+	{% endif %}
   </div>
   <div class="col-sm-3"  style="margin-top: 4.0em;">
+  {% if project.proj_type.name == 'oer'  %}
     {% if repos %}
 		<h4>{% trans "recent repositories"|capfirst %}</h4>
 		<ul class="list-unstyled">
@@ -81,6 +84,7 @@
         	{% endfor %}
         </ul>
 	{% endif %}
+  {% endif %}
   </div>
 </div>
 {% endblock %}
