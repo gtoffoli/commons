@@ -293,6 +293,10 @@ class Project(models.Model):
 
     def can_add_repository(self, user):
         return has_permission(self, user, 'add-repository')
+
+    def can_add_oer(self, user):
+        # return has_permission(self, user, 'add-oer')
+        return self.can_add_repository(user)
        
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
@@ -365,9 +369,8 @@ class Repo(models.Model):
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    # user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='repo_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='repo__editor')
+    creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='repo_creator')
+    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='repo__editor')
 
     class Meta:
         verbose_name = _('External repository')
@@ -379,13 +382,6 @@ class Repo(models.Model):
 
     def type_description(self):
         return self.repo_type.description
-
-    """
-    def save(self, *args, **kwargs):
-        if not self.user_id:
-            self.user_id = admin_user_id
-        super(Repo, self).save(*args, **kwargs) # Call the "real" save() method.
-    """
 
     def get_oers(self):
         return OER.objects.filter(source=self.id)
@@ -412,13 +408,17 @@ OER_STATE_DICT = dict(OER_STATE_CHOICES)
 
 class OER(models.Model):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
-    oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
-    source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
-    title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
+    title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
+    description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
+    state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
+    oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
+    documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
+    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
+    oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
+    source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source repository'))
-    description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
     license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
@@ -427,18 +427,12 @@ class OER(models.Model):
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
-    # derived_from = models.ManyToManyField('self', through='OerOer', symmetrical=False, verbose_name='derived from')
-    oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
-    documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
-    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
-    # state = models.ForeignKey(OerState, verbose_name=_('OER state'))
-    state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     # user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oer_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oer__editor')
+    creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='oer_creator')
+    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='oer__editor')
 
     class Meta:
         verbose_name = _('OER with core metadata')
@@ -453,7 +447,13 @@ class OER(models.Model):
 
     def get_more_metadata(self):
         return self.metadata_set.all().order_by('metadata_type__name')
-        
+ 
+    def can_edit(self, user):
+        if not user.is_authenticated():
+            return False
+        project = self.project
+        return user.is_superuser or self.creator==user or project.can_add_oer(user)
+       
 class OerMetadata(models.Model):
     """
     Link an OER to a specific instance of a metadata type with it's current value

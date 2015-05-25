@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 
 from models import UserProfile, Repo, Project, ProjectMember, OER
-from forms import UserProfileForm, RepoForm
+from forms import UserProfileForm, RepoForm, OerForm
 
 def group_has_project(group):
     try:
@@ -71,13 +71,17 @@ def project_detail(request, project_id, project=None):
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
+    membership = None
+    can_accept_member = can_add_repository = can_add_oer = False
     if request.user.is_authenticated():
-        membership = project.get_membership(request.user)
-        can_accept_member = project.can_accept_member(request.user)
-    else:
-        membership = None
-        can_accept_member = False
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'can_accept_member': can_accept_member,}, context_instance=RequestContext(request))
+        user = request.user
+        membership = project.get_membership(user)
+        can_accept_member = project.can_accept_member(user)
+        can_add_repository = project.can_add_repository(user)
+        can_add_oer = project.can_add_oer(user)
+    repos = Repo.objects.all().order_by('-created')[:5]
+    oers = OER.objects.filter(project_id=project_id).order_by('-created')[:5]
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -152,11 +156,16 @@ def repo_save(request, repo=None):
         form = RepoForm(request.POST, instance=repo)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
-                repo = form.save(commit=False)
+                # repo = form.save(commit=False)
+                repo = form.save()
                 user = request.user
+                """
                 try:
                     repo.creator
                 except:
+                    repo.creator = user
+                """
+                if repo.creator_id == 1:
                     repo.creator = user
                 repo.editor = user
                 repo.save()
@@ -202,13 +211,74 @@ def repo_edit_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_edit(request, repo.id)
 
+def oer_list(request):
+    user = request.user
+    # can_add = user.is_authenticated() and user.can_add_repository(request)
+    can_add = user.is_authenticated()
+    oer_list = OER.objects.all()
+    return render_to_response('oer_list.html', {'can_add': can_add, 'oer_list': oer_list,}, context_instance=RequestContext(request))
+
 def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer = get_object_or_404(OER, pk=oer_id)
-    return render_to_response('oer_detail.html', {'oer': oer,}, context_instance=RequestContext(request))
+    can_edit = oer.can_edit(request.user)
+    return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit}, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
     # oer = get_object_or_404(OER, slug=oer_slug)
     oer = OER.objects.get(slug=oer_slug)
     return oer_detail(request, oer.id, oer)
 
+def oer_edit(request, oer_id=None, project_id=None):
+    user = request.user
+    oer = None
+    action = '/oer/edit/'
+    if oer_id:
+        oer = get_object_or_404(OER, pk=oer_id)
+        action = '/oer/%s/edit/' % oer.slug
+        if not user.can_edit(request):
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+    if request.POST:
+        oer_id = request.POST.get('id', '')
+        if oer_id:
+            oer = get_object_or_404(OER, id=oer_id)
+            action = '/oer/%s/edit/' % oer.slug
+            project_id = oer.project_id
+        form = OerForm(request.POST, instance=oer)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                # oer = form.save(commit=False)
+                oer = form.save()
+                if oer.creator_id == 1:
+                    oer.creator = user
+                oer.editor = user
+                oer.save()
+                oer = get_object_or_404(OER, id=oer.id)
+                action = '/oer/%s/edit/' % oer.slug
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+                else:
+                    return render_to_response('oer_edit.html', {'form': form, 'oer': oer, 'action': action,}, context_instance=RequestContext(request))
+            else:
+                print form.errors
+                return render_to_response('oer_edit.html', {'form': form, 'oer': oer, 'action': action, 'project_id': project_id,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            if oer:
+                return HttpResponseRedirect('/oer/%s/' % oer.slug)
+            else:
+                return HttpResponseRedirect('/oers/')
+    elif oer:
+        form = OerForm(instance=oer)
+    else:
+        form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+    return render_to_response('oer_edit.html', {'form': form, 'oer': oer, 'action': action}, context_instance=RequestContext(request))
+
+def oer_edit_by_slug(request, oer_slug):
+    oer = get_object_or_404(OER, slug=oer_slug)
+    return oer_edit(request, oer_id=oer.id)
+
+def project_add_oer(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    if not project.can_add_oer(request.user):
+        return HttpResponseRedirect('/project/%s/' % project.slug)
+    return oer_edit(request, project_id=project_id) 

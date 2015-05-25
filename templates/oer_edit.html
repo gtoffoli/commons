@@ -1,0 +1,54 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+{% load tinymce_tags %}
+
+{% block head_title %}{% if oer %}{% trans "edit OER"|capfirst %}: &nbsp;{{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block extra_head %}
+	{% tinymce_preview "preview-content" %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col-sm-12">
+    <section>
+       <h2 class="text-center">{% if oer %}{% trans "edit OER"|capfirst %}: &nbsp;{{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+    <form method="post" action="{{ action }}" id="oer_edit_form" class="form-horizontal">
+    {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
+	{% csrf_token %}
+	{% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}" />{% endif %}
+	{% if project_id %}<input type="hidden" id="project" name="project value="{{ project_id }}" />{% endif %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
+	<div class="form-group col-lg-{% if i == 1 or i == 2 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 10 %}8{% else %}4{% endif %}">
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
+		<span style="color: red;">{{ field.errors }}</span>{{ field }}
+		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
+	</div>
+	</div>
+    {% endwith %}{% endfor %}
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save{% if oer %} changes{% endif %}</button>&nbsp;
+		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save and continue</button>&nbsp;
+		{% if oer %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
+		{% else %}<button type="button" onclick="window.location.href='/oers/'" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel</button>
+		{% endif %}
+    </form>
+    </section>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
+	<script>
+	tinyMCE.init({
+	    mode: "specific_textareas",
+	    editor_selector : "richtext",
+	    theme : "advanced",
+	});	</script>
+{% endblock %}
+
