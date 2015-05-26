@@ -26,12 +26,27 @@
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
 	<div class="form-group col-lg-{% if i == 1 or i == 2 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 10 %}8{% else %}4{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
 		<span style="color: red;">{{ field.errors }}</span>{{ field }}
 		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
 	</div>
 	</div>
     {% endwith %}{% endfor %}
+
+	<input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS"></input>
+	<input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS"></input>
+	<input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS"></input>
+	<div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8"><label style="margin-bottom: 0;">{% trans "additional metadata"|capfirst %}</label></div></div>
+	<div class="row"><div class="form-group col-lg-8">
+	<table style="border-collapse: separate; border-spacing: 1.5em 0.1em;">
+    {% for fm in metadata_formset %}
+    {% if forloop.first %}<thead><tr style="margin: 0;">{% for field in fm.visible_fields %}<td>{{ field.label|capfirst}}</th>{% endfor %}</td></thead><tbody>{% endif %}  
+    <tr>{% for field in fm.hidden_fields %}{{ field }}{% endfor %}
+    	{% for field in fm.visible_fields %}<td><span style="color: red;">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
+    {% endfor %}
+   	</tbody></table>
+   	</div></div>
+
 		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save{% if oer %} changes{% endif %}</button>&nbsp;
 		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save and continue</button>&nbsp;
 		{% if oer %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>

@@ -466,6 +466,7 @@ class OerMetadata(models.Model):
         return unicode(self.metadata_type)
 
     class Meta:
+        unique_together = ('oer', 'metadata_type', 'value')
         verbose_name = _('Additional DC metadatum')
         verbose_name_plural = _('Additional DC metadata')
 

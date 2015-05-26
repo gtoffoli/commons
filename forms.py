@@ -14,7 +14,7 @@ from datetimewidget.widgets import DateWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, OER_TYPE_CHOICES, OER_STATE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project
+from models import OER, OER_TYPE_CHOICES, OER_STATE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -75,15 +75,32 @@ class RepoForm(forms.ModelForm):
     eval = forms.CharField(required=False, label=_('comments / evaluation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 10,}))
 
 
+class OerMetadataForm(forms.ModelForm):
+    class Meta:
+        model = OerMetadata
+        exclude = ('oer',)
+
+# http://www.whoisnicoleharris.com/2015/01/06/implementing-django-formsets.html
+# http://yergler.net/blog/2009/09/27/nested-formsets-with-django/
+# http://stackoverflow.com/questions/2853350/using-a-custom-form-in-a-modelformset-factory
+# http://streamhacker.com/2010/03/01/django-model-formsets/
+from django.forms.models import inlineformset_factory
+OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, can_delete=True, extra=3)
+# OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
+
 class OerForm(forms.ModelForm):
     class Meta:
         model = OER
         exclude = ('metadata',)
 
-    title = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    title = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    state = forms.ChoiceField(required=True, choices=OER_STATE_CHOICES, label=_('OER state'), widget=forms.Select(attrs={'class':'form-control',}))
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
+    documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
+    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
     source = forms.ModelChoiceField(required=True, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
     url = forms.CharField(required=False, label=_('URL to the OER in the source repository, if applicable'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source repository'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
@@ -94,10 +111,3 @@ class OerForm(forms.ModelForm):
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
-    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
-    state = forms.ChoiceField(required=True, choices=OER_STATE_CHOICES, label=_('OER state'), widget=forms.Select(attrs={'class':'form-control',}))
-    
-    
-    

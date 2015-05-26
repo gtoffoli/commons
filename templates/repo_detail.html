@@ -65,14 +65,12 @@
 			{% with oers=repo.get_oers %}
 				{% if oers %}
 	                &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list" style="font-size: 0.7em;""></i></a>
-	                {% if request.user.is_staff %}&nbsp; <a href="/admin/commons/oer/add/?source={{ repo.id }}" title="add an OER"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a>{% endif %}
 				<ul class="root">
 			        {% for oer in oers %}
 			        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
 			        {% endfor %}
 				</ul>
 				{% else %}
-	                {% if request.user.is_staff %}&nbsp; <a href="/admin/commons/oer/add/?source={{ repo.id }}" title="add an OER"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a>{% endif %}
 					<div style="margin-left: 1.5em;"><i>No OERs are present having this repository as their source.</i></div>
 				{% endif %}
 			{% endwith %}
