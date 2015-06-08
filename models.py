@@ -286,10 +286,12 @@ class Project(models.Model):
         application.save()
         if not group in user.groups.all():
             user.groups.add(user)
+        """
         # next 3 lines to be removed ASAP
         if not user.is_staff and self.name().count('OER'):
             user.is_staff = True
             user.save(using=self._db) # ???
+        """
 
     def can_add_repository(self, user):
         return has_permission(self, user, 'add-repository')

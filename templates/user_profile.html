@@ -42,15 +42,15 @@
 			{% if profile.position %}<div><strong>{% trans "position"|capfirst %}</strong>: {{ profile.position }}</div>{% endif %}
 			{% if profile.edu_field %}<div><strong>{% trans "field of study"|capfirst %}</strong>: {{ profile.edu_field }}</div>{% endif %}
 			{% if profile.pro_field %}<div><strong>{% trans "sector of work"|capfirst %}</strong>: {{ profile.pro_field }}</div>{% endif %}
-			{% if profile.languages or profile.other_languages %}<div><strong>{% trans "languages"|capfirst %}</strong>:
+			{% if profile.languages.all or profile.other_languages %}<div><strong>{% trans "languages"|capfirst %}</strong>:
 				{% for language in profile.languages.all %}{{ language }}{% if not forloop.last %}, {% endif %}{% endfor %}{% if profile.other_languages %},
 					{{ profile.other_languages }}{% endif %}
 			</div>{% endif %}
-			{% if profile.subjects %}<div><strong>{% trans "subjects of interest"|capfirst %}</strong>:
+			{% if profile.subjects.all %}<div><strong>{% trans "subjects of interest"|capfirst %}</strong>:
 				{% for subject in profile.subjects.all %}{{ subject }}{% if not forloop.last %}, {% endif %}{% endfor %}
 			</div>{% endif %}
 			{% if profile.url %}<div><strong>{% trans "web site"|capfirst %}</strong>: <a href="{{ profile.url }}" target="_blank">{{ profile.url }}</a></div>{% endif %}
-			{% if profile.networks %}<div><strong>{% trans "social networks"|capfirst %}</strong>:
+			{% if profile.networks.all %}<div><strong>{% trans "social networks"|capfirst %}</strong>:
 				{% for network in profile.networks.all %}{{ network }}{% if not forloop.last %}, {% endif %}{% endfor %}
 			</div>{% endif %}
 			{% if profile.long %}<div style="margin-top: 1em">{{ profile.long|safe }}</div>{% endif %}
