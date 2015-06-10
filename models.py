@@ -29,7 +29,6 @@ ModificationDateTimeField(_('modified')).contribute_to_class(Group, 'modified')
 """
 def group_project(self):
     projects = Project.objects.filter(group=self)
-    print self, projects
     if len(projects) == 1:
         return projects[0]
     return None
@@ -118,7 +117,6 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
-        print 'profile created'
 
 post_save.connect(create_user_profile, sender=User,
                  dispatch_uid="create_user_profile")
@@ -204,7 +202,6 @@ class Project(models.Model):
             self.group = group
             # obj.group_id = group.id
         self.slug = self.group.name.replace(' ', '-').lower()
-        print self.group_id, self.slug
         # self.user = request.user
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
     
@@ -217,11 +214,27 @@ class Project(models.Model):
     def get_project_type(self):
         return self.proj_type.name
 
+    def get_parent(self):
+        parent_group = self.group.parent
+        if parent_group:
+            return group_project(parent_group)
+        else:
+            return None
+
+    def get_children(self):
+        children_groups = self.group.get_children()
+        return Project.objects.filter(group__in=children_groups)
+
     def admin_name(self):
         if self.proj_type.name == 'com':
             return _('Administrator')
         else:
             return _('Supervisor')
+
+    def can_edit(self, user):
+        if not user.is_authenticated():
+            return False
+        return user.is_superuser or self.can_accept_member(user)
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -233,7 +246,6 @@ class Project(models.Model):
             out = []
             for user in users:
                 item = [user, self.is_admin(user)]
-                print item
                 out.append(item)
             return out
     
@@ -249,12 +261,10 @@ class Project(models.Model):
         return membership
 
     def get_memberships(self, state=None, user=None):
-        print self, state, user
         if user:
             memberships = ProjectMember.objects.filter(project=self, user=user)
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
-            print memberships
         else:
             memberships = ProjectMember.objects.filter(project=self)
         return memberships

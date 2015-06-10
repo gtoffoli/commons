@@ -1,0 +1,69 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+{% load tinymce_tags %}
+
+{% block head_title %}{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.name }}{% else %}{{ parent.name }}: {% trans "add child Project"|capfirst %}{% endif %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block extra_head %}
+	{% tinymce_preview "preview-content" %}
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col-sm-12">
+    <section>
+       <h2 class="text-center">{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.name }}{% else %}{{ parent.name }}: {% trans "add child Project"|capfirst %}{% endif %}</h2>
+    <form method="post" action="{{ action }}" id="project_edit_form" class="form-horizontal">
+	{% csrf_token %}
+	{% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}" />{% endif %}
+	{% if parent %}
+	<input type="hidden" id="parent" name="parent" value="{{ parent.id }}" />
+    <div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8">
+	    <label for="name" style="margin-bottom: 0;">Name <span style="color: red;">*</span></label>
+		<input type="text" id="name" name="name" class="form-control" />
+	</div></div>
+	{% endif %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    <div class="row" style="margin-top: 0; margin-bottom: 0;">
+	<div class="form-group col-lg-{% if i == 1 %}4{% else %}8{% endif %}">
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+		<span style="color: red;">{{ field.errors }}</span>{{ field }}
+		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
+	</div>
+	</div>
+    {% endwith %}{% endfor %}
+	</div>
+
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save{% if project %} changes{% endif %}</button>&nbsp;
+		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save and continue</button>&nbsp;
+		{% if project %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
+		{% else %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel</button>
+		{% endif %}
+    </form>
+    </section>
+  </div>
+{% endblock %}
+
+{% block extra_script %}
+	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
+	<script>
+	tinyMCE.init({
+	    schema: "html5",
+	    mode: "specific_textareas",
+	    editor_selector: "richtext",
+	    width: "100%",
+	    theme: "advanced",
+	    theme_advanced_toolbar_location: "top",
+	    theme_advanced_resizing: true,
+	    theme_advanced_resizing_horizontal: false,
+	    theme_advanced_resizing_min_height: 350,
+	    theme_advanced_buttons1: "undo,redo,formatselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,outdent,indent,sub,sup,charmap,separator,cleanup,code",
+	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea"
+	});	</script>
+{% endblock %}
+

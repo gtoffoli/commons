@@ -36,13 +36,28 @@
 				{% endif %}
 			{% endif %}
 			{% endif %}
+			{% if project.get_children %}
+   			<h4>{% trans "child projects"|capfirst %}</h4>
+            <ul class="list-unstyled">
+			{% with subprojects=project.get_children %}{% for subproject in subprojects %}
+            	<li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.name }}</a></li>
+            {% endfor %}{% endwith %}
+            </ul>
+			{% endif %}
+			{% if can_edit %}
+			<div>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create child project"|capfirst %}</a> -</div>
+			{% endif %}
   </div>
   <div class="col-sm-6">
     <section>
             <h2 class="text-center">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
-			{{ project.name }}
-			&nbsp; <a href="/cops/" title="show Community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
-			{% if request.user.is_staff %}&nbsp;<a href="/admin/commons/project/{{ project.id }}/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
+			{{ project.name }}&nbsp;
+			{% if project.get_parent %}
+			<a href="/project/{{ project.get_parent.slug }}/" title="Parent community"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
+			{% else %}
+			<a href="/cops/" title="Community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
+			{% endif %}
+			{% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
             <p class="lead">
 			{% if project.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ project.description }}</div>{% endif %}

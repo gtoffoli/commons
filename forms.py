@@ -13,7 +13,7 @@ from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Repo, Language, SubjectNode, RepoType, RepoFeature
+from models import Project, ProjType, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, OER_TYPE_CHOICES, OER_STATE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
 
 class UserChangeForm(UserWithMPTTChangeForm):
@@ -58,6 +58,18 @@ class UserProfileForm(forms.ModelForm):
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+
+
+class ProjectForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        exclude = ('group',)
+
+    proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
+    slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
+
 
 class RepoForm(forms.ModelForm):
     class Meta:

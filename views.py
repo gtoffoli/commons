@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
-from forms import UserProfileForm, RepoForm, OerForm, OerMetadataFormSet
+from forms import UserProfileForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet
 
 def group_has_project(group):
     try:
@@ -81,13 +81,89 @@ def project_detail(request, project_id, project=None):
         can_accept_member = project.can_accept_member(user)
         can_add_repository = project.can_add_repository(user)
         can_add_oer = project.can_add_oer(user)
+        can_edit = project.can_edit(user)
     repos = Repo.objects.all().order_by('-created')[:5]
     oers = OER.objects.filter(project_id=project_id).order_by('-created')[:5]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer,}, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
+
+def project_edit(request, project_id=None, parent_id=None):
+    """
+    project_id: edit existent project
+    parent_id: create sub-project
+    """
+    user = request.user
+    project = parent = None
+    action = '/project/edit/'
+    if project_id:
+        print 'project_id: ', project_id
+        project = get_object_or_404(Project, pk=project_id)
+        if project.can_edit(user):
+            form = ProjectForm(instance=project)
+            action = '/project/%s/edit/' % project.slug
+            return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action}, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/project/%s/' % project.slug)
+    elif parent_id:
+        parent = get_object_or_404(Project, pk=parent_id)
+        if parent.can_edit(user):
+            form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
+            return render_to_response('project_edit.html', {'form': form, 'parent': parent, 'action': action}, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/project/%s/' % parent.slug)
+    elif request.POST:
+        project_id = request.POST.get('id', '')
+        parent_id = request.POST.get('parent', '')
+        if project_id:
+            project = get_object_or_404(Project, id=project_id)
+            form = ProjectForm(request.POST, instance=project)
+            action = '/project/%s/edit/' % project.slug
+        elif parent_id:
+            parent = get_object_or_404(Project, pk=parent_id)
+            form = ProjectForm(request.POST)
+            name = request.POST.get('name', '')
+        else:
+            raise
+        if request.POST.get('cancel', ''):
+            if project_id:
+                return HttpResponseRedirect('/project/%s/' % project.slug)
+            elif parent_id:
+                return HttpResponseRedirect('/project/%s/' % parent.slug)
+            else:
+                return HttpResponseRedirect('/cops/')
+        else: # Save or Save & continue
+            if form.is_valid():
+                project = form.save(commit=False)
+                if parent:
+                    group = Group(name=name)
+                    group.parent = parent.group
+                    group.save()
+                    project.group = group
+                    project.creator = user
+                project.editor = user
+                project.save()
+                action = '/project/%s/edit/' % project.slug
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/project/%s/' % project.slug)
+                else: # continue
+                    form = ProjectForm(request.POST, instance=project) # togliere ?
+                    return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action,}, context_instance=RequestContext(request))
+            else:
+                print form.errors
+                return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action, 'parent_id': parent_id,}, context_instance=RequestContext(request))
+    else:
+        raise
+
+def project_edit_by_slug(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    return project_edit(request, project_id=project.id)
+
+def project_new_by_slug(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    return project_edit(request, parent_id=project.id)
 
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
