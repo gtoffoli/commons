@@ -134,8 +134,8 @@ def project_edit(request, project_id=None, parent_id=None):
                 return HttpResponseRedirect('/cops/')
         else: # Save or Save & continue
             if form.is_valid():
+                project = form.save(commit=False)
                 if parent:
-                    project = form.save(commit=False)
                     group = Group(name=name)
                     group.parent = parent.group
                     group.save()
