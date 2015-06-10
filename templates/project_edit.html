@@ -17,7 +17,7 @@
   <div class="col-sm-12">
     <section>
        <h2 class="text-center">{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.name }}{% else %}{{ parent.name }}: {% trans "add child Project"|capfirst %}{% endif %}</h2>
-    <form method="post" action="{{ action }}" id="project_edit_form" class="form-horizontal">
+    <form method="post" action="/project/edit/" id="project_edit_form" class="form-horizontal">
 	{% csrf_token %}
 	{% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}" />{% endif %}
 	{% if parent %}

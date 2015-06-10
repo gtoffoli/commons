@@ -10,6 +10,8 @@ from django.shortcuts import render_to_response, get_object_or_404
 
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
 from forms import UserProfileForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet
+from roles.utils import add_local_role, grant_permission
+from roles.models import Role
 
 def group_has_project(group):
     try:
@@ -96,22 +98,19 @@ def project_edit(request, project_id=None, parent_id=None):
     parent_id: create sub-project
     """
     user = request.user
-    project = parent = None
-    action = '/project/edit/'
+    project = project_id and get_object_or_404(Project, pk=project_id)
+    parent = parent_id and get_object_or_404(Project, pk=parent_id)
     if project_id:
         print 'project_id: ', project_id
-        project = get_object_or_404(Project, pk=project_id)
         if project.can_edit(user):
             form = ProjectForm(instance=project)
-            action = '/project/%s/edit/' % project.slug
-            return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action}, context_instance=RequestContext(request))
+            return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
-        parent = get_object_or_404(Project, pk=parent_id)
         if parent.can_edit(user):
             form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
-            return render_to_response('project_edit.html', {'form': form, 'parent': parent, 'action': action}, context_instance=RequestContext(request))
+            return render_to_response('project_edit.html', {'form': form, 'parent': parent,}, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
@@ -120,7 +119,6 @@ def project_edit(request, project_id=None, parent_id=None):
         if project_id:
             project = get_object_or_404(Project, id=project_id)
             form = ProjectForm(request.POST, instance=project)
-            action = '/project/%s/edit/' % project.slug
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
             form = ProjectForm(request.POST)
@@ -136,24 +134,31 @@ def project_edit(request, project_id=None, parent_id=None):
                 return HttpResponseRedirect('/cops/')
         else: # Save or Save & continue
             if form.is_valid():
-                project = form.save(commit=False)
                 if parent:
+                    project = form.save(commit=False)
                     group = Group(name=name)
                     group.parent = parent.group
                     group.save()
                     project.group = group
                     project.creator = user
-                project.editor = user
-                project.save()
-                action = '/project/%s/edit/' % project.slug
+                    project.editor = user
+                    project.save()
+                    membership = project.add_member(user)
+                    project.accept_application(request, membership)
+                    role_admin = Role.objects.get(name='admin')
+                    add_local_role(project, user, role_admin)
+                    grant_permission(project, role_admin, 'accept-member')
+                else:
+                    project.editor = user
+                    project.save()
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
                     form = ProjectForm(request.POST, instance=project) # togliere ?
-                    return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action,}, context_instance=RequestContext(request))
+                    return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
             else:
                 print form.errors
-                return render_to_response('project_edit.html', {'form': form, 'project': project, 'action': action, 'parent_id': parent_id,}, context_instance=RequestContext(request))
+                return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent_id': parent_id,}, context_instance=RequestContext(request))
     else:
         raise
 
