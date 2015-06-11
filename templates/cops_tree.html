@@ -17,8 +17,9 @@
 <ul class="list-unstyled">
     {% recursetree nodes %}
         <li>
-    		{% if node.project and node.level > 0 %}
-            	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>. &nbsp;<i>({{ node.project.proj_type.description }})</i>&nbsp; {{ node.project.description|truncatechars:80 }}
+    		{% if node.project %}
+            	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>.
+            	{% if node.level > 0 %} &nbsp;<i>({{ node.project.proj_type.description }})</i>&nbsp; {{ node.project.description|truncatechars:80 }}{% endif %}
     		{% else %}    	
             	{{ node.name }}
     		{% endif %}

@@ -9,6 +9,7 @@
 {% block body %}
 <div class="row">
   <div class="col-sm-3" style="margin-top: 4.0em;">
+  		 {% if project.group.level > 0 %}
    			<h4>{% trans "members"|capfirst %}</h4>
             <ul class="list-unstyled">
             {% with users=project.members %}{% for user in users %}
@@ -36,17 +37,18 @@
 				{% endif %}
 			{% endif %}
 			{% endif %}
-			{% if project.get_children %}
+		{% endif %}
+		{% if project.get_children %}
    			<h4>{% trans "child projects"|capfirst %}</h4>
             <ul class="list-unstyled">
 			{% with subprojects=project.get_children %}{% for subproject in subprojects %}
             	<li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.name }}</a></li>
             {% endfor %}{% endwith %}
             </ul>
-			{% endif %}
-			{% if can_edit %}
+		{% endif %}
+		{% if can_edit %}
 			<div>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create child project"|capfirst %}</a> -</div>
-			{% endif %}
+		{% endif %}
   </div>
   <div class="col-sm-6">
     <section>
