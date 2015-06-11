@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
-from forms import UserProfileForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet
+from forms import UserProfileForm, UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 
@@ -42,10 +42,13 @@ def profile_edit(request, username):
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
-        form = UserProfileForm(request.POST, instance=profile)
+        form = UserProfileExtendedForm(request.POST, instance=profile)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()
+                user.first_name = request.POST.get('first_name', '')
+                user.last_name = request.POST.get('last_name', '')
+                user.save()
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/profile/%s/' % username)
                 else: 
@@ -55,9 +58,9 @@ def profile_edit(request, username):
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/profile/%s/' % username)
     elif profile:
-        form = UserProfileForm(instance=profile)
+        form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name,})
     else:
-        form = UserProfileForm(initial={'user': user.id})
+        form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
 
 def cops_tree(request):
@@ -76,7 +79,7 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     membership = None
-    can_accept_member = can_add_repository = can_add_oer = False
+    can_accept_member = can_add_repository = can_add_oer = can_edit = False
     if request.user.is_authenticated():
         user = request.user
         membership = project.get_membership(user)

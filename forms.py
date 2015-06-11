@@ -40,25 +40,32 @@ dateTimeOptions = {
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
+        fields = ['user', 'gender', 'dob', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'short', 'long', 'url', 'networks',]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
-    dob = forms.DateField(required=False, label=_('date of birth'), input_formats=settings.DATE_INPUT_FORMATS, widget=DateWidget(bootstrap_version=3, options=dateTimeOptions, attrs={'id': 'birth_date', 'class':'form-control',}), help_text=_('Format: dd/mm/yyyy'))
-    country = forms.ModelChoiceField(required=False, queryset=CountryEntry.objects.all().order_by('name'), label=_('country'), widget=forms.Select(attrs={'class':'form-control',}))
+    dob = forms.DateField(required=True, label=_('date of birth'), input_formats=settings.DATE_INPUT_FORMATS, widget=DateWidget(bootstrap_version=3, options=dateTimeOptions, attrs={'id': 'birth_date', 'class':'form-control',}), help_text=_('Format: dd/mm/yyyy'))
+    country = forms.ModelChoiceField(required=True, queryset=CountryEntry.objects.all().order_by('name'), label=_('country'), widget=forms.Select(attrs={'class':'form-control',}))
     city = forms.CharField(required=False, label=_('city'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    edu_level = forms.ModelChoiceField(required=False, queryset=EduLevelEntry.objects.all(), label=_('education level'), widget=forms.Select(attrs={'class':'form-control',}))
-    pro_status = forms.ModelChoiceField(required=False, queryset=ProStatusNode.objects.all(), label=_('study or work status'), widget=forms.Select(attrs={'class':'form-control',}))
+    edu_level = forms.ModelChoiceField(required=True, queryset=EduLevelEntry.objects.all(), label=_('education level'), widget=forms.Select(attrs={'class':'form-control',}))
+    pro_status = forms.ModelChoiceField(required=True, queryset=ProStatusNode.objects.all(), label=_('study or work status'), widget=forms.Select(attrs={'class':'form-control',}))
     position = forms.CharField(required=False, label=_('study or work position'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 120,}))
     edu_field = forms.ModelChoiceField(required=False, queryset=EduFieldEntry.objects.all(), label=_('field of study'), widget=forms.Select(attrs={'class':'form-control'}))
     pro_field = forms.ModelChoiceField(required=False, queryset=ProFieldEntry.objects.all(), label=_('sector of work'), widget=forms.Select(attrs={'class':'form-control',}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('interest areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 14,}))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     other_languages = forms.CharField(required=False, label=_('known languages not listed above'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 1,}))
-    short = forms.CharField(required=False, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
+    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
 
+class UserProfileExtendedForm(UserProfileForm):
+    first_name = forms.CharField(required=True, label=_('person name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    last_name = forms.CharField(required=True, label=_('family name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+
+    class Meta(UserProfileForm.Meta):
+        fields =  ['first_name', 'last_name',] + UserProfileForm.Meta.fields
 
 class ProjectForm(forms.ModelForm):
     class Meta:

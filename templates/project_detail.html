@@ -12,7 +12,7 @@
    			<h4>{% trans "members"|capfirst %}</h4>
             <ul class="list-unstyled">
             {% with users=project.members %}{% for user in users %}
-            	<li><a href="/profile/{{ user.0.username }}/" title="{% trans "view user profile" %}">{{ user.0.first_name }} {{ user.0.last_name }}</a>
+            	<li><a href="/profile/{{ user.0.username }}/" title="{% trans "view user profile" %}">{{ user.0.get_display_name }}</a>
             		{% if user.1 %}&nbsp; <i>{{ project.admin_name }}</i>{% endif %}
             	</li>
             {% endfor %}{% endwith %}
@@ -20,7 +20,7 @@
             {% with applications=project.get_applications %}
             {% if applications %}<h4 style="margin-top: 1.0em;">{% trans "applications"|capfirst %}</h4>{% endif %}
             {% for application in applications %}
-            	<li><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.first_name }} {{ application.user.last_name }}</a> &nbsp; - <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}">accept</a> -</li>
+            	<li><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; - <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}">accept</a> -</li>
             {% endfor %}{% endwith %}
 			{% endif %}
             </ul>

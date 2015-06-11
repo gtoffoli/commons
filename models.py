@@ -34,6 +34,11 @@ def group_project(self):
     return None
 Group.project = group_project
 
+def get_display_name(self):
+    display_name = '%s %s' % (self.first_name, self.last_name)
+    return display_name or self.username
+User.get_display_name = get_display_name
+
 def user_can_edit(self, request):
     user = request.user
     return user.is_authenticated() and (user.is_superuser or user.id==self.id)

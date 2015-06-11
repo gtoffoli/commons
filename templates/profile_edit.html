@@ -31,9 +31,9 @@
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 1 or i == 2 %}3{% elif i == 7 or i == 13 or i == 14 or i == 15 %}8{% else %}5{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label}}</label>
-		{{ field.errors }}{{ field }}
+	<div class="form-group col-lg-{% if i == 3 or i == 4 %}3{% elif i == 9 or i == 15 or i == 16 or i == 17 %}8{% else %}5{% endif %}">
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+		<span style="color: red;">{{ field.errors }}</span> {{ field }}
 		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
 	</div>
 	</div>
