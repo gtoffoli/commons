@@ -228,7 +228,7 @@ class Project(models.Model):
 
     def get_children(self):
         children_groups = self.group.get_children()
-        return Project.objects.filter(group__in=children_groups)
+        return Project.objects.filter(group__in=children_groups).order_by('group__name')
 
     def admin_name(self):
         if self.proj_type.name == 'com':

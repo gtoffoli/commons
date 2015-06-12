@@ -27,6 +27,16 @@ def oers_children(request):
         ))
     return children
 
+def rosters_children(request):
+    children = []
+    children.append (MenuItem(
+         _("Repositories by submitter"),
+         url='/repository/contributors/',
+         weight=80,
+         check=True,
+        ))
+    return children
+
 def help_children(request):
     children = []
     children.append (MenuItem(
@@ -50,6 +60,12 @@ def help_children(request):
     children.append (MenuItem(
          _("Registration and authentication"),
          url='/help/register/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         _("Editing the user profile"),
+         url='/help/profile/',
          weight=80,
          check=True,
         ))
@@ -81,6 +97,12 @@ def info_children(request):
          weight=80,
          check=True,
         ))
+    children.append (MenuItem(
+         _("The user profile"),
+         url='/info/profile/',
+         weight=80,
+         check=True,
+        ))
     return children
 
 # Add a few items to our main menu
@@ -89,6 +111,12 @@ Menu.add_item("main", MenuItem(ugettext_lazy("Find OERs"),
                                weight=30,
                                check=True,
                                children=oers_children,
+                               separator=True))
+Menu.add_item("main", MenuItem(ugettext_lazy("Rosters"),
+                               url='/p',
+                               weight=30,
+                               check=True,
+                               children=rosters_children,
                                separator=True))
 Menu.add_item("main", MenuItem(ugettext_lazy("Help"),
                                url='/p',

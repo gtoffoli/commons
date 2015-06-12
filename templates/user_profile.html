@@ -64,6 +64,7 @@
 	        {% for repo in repos %}
 	        <li><a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a></li>
         	{% endfor %}
+	        {% if more_repos %}<li><a href="/repos_by/{{ user.username }}/">...</a></li>{% endif %}
         </ul>
 	{% endif %}
     {% if oers %}
@@ -72,6 +73,7 @@
 	        {% for oer in oers %}
 	        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
         	{% endfor %}
+	        {% if more_oers %}<li><a href="/oers_by/{{ user.username }}/">...</a></li>{% endif %}
         </ul>
 	{% endif %}
   </div>

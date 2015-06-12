@@ -2,15 +2,17 @@
 
 {% load i18n %}
 
-{% block head_title %}Catalog of OER Repositories{% endblock %}
+{% block head_title %}{% trans "external OER repositories"|capfirst %}
+    {% if user %}{% trans "catalogued by " %}{{ user.get_display_name }}{% else %} - {% trans "full catalog" %}{% endif %}
+{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}Catalog of external OER repositories{% endblocktrans %}
-                {% comment %}{% if request.user.is_staff %}&nbsp; <a href="/admin/commons/repo/add/" title="add a repository"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a>{% endif %}{% endcomment %}
+            <h2 class="text-center">{% trans "external OER repositories"|capfirst %}
+				{% if user %}{% trans "catalogued by " %}{{ user.get_display_name }}{% else %} - {% trans "full catalog" %}{% endif %}
                 {% if can_add %}&nbsp; <a href="/repo/new/" title="add a repository"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a>{% endif %}
             </h2>
             <p class="lead">

@@ -4,6 +4,7 @@ Created on 02/apr/2015
 '''
 
 from django.template import RequestContext
+from django.db.models import Count
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -20,6 +21,7 @@ def group_has_project(group):
         return None  
 
 def user_profile(request, username, user=None):
+    MAX_REPOS = MAX_OERS = 5
     if not user:
         user = get_object_or_404(User, username=username)
     can_edit = user.can_edit(request)
@@ -27,9 +29,14 @@ def user_profile(request, username, user=None):
     applications = None
     if user == request.user:
         applications = ProjectMember.objects.filter(user=user, state=0)
-    repos = Repo.objects.filter(creator=user).order_by('-created')[:5]
-    oers = OER.objects.filter(creator=user).order_by('-created')[:5]
-    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'oers': oers,}, context_instance=RequestContext(request))
+    repos = Repo.objects.filter(creator=user).order_by('-created')
+    more_repos = repos.count() > MAX_REPOS
+    repos = repos[:MAX_REPOS]
+    oers = OER.objects.filter(creator=user).order_by('-created')
+    more_oers = oers.count() > MAX_OERS
+    oers = oers[:MAX_REPOS]
+    oers = oers[:5]
+    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
 
 def my_profile(request):
     user = request.user
@@ -150,7 +157,7 @@ def project_edit(request, project_id=None, parent_id=None):
                     project.accept_application(request, membership)
                     role_admin = Role.objects.get(name='admin')
                     add_local_role(project, user, role_admin)
-                    grant_permission(project, role_admin, 'accept-member')
+                    # grant_permission(project, role_admin, 'accept-member')
                 else:
                     project.editor = user
                     project.save()
@@ -209,6 +216,16 @@ def repo_list(request):
         repo_list.append([repo, n])
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list,}, context_instance=RequestContext(request))
 
+def repos_by_user(request, username):
+    user = get_object_or_404(User, username=username)
+    can_add = user.is_authenticated() and user.can_add_repository(request) and user==request.user
+    repo_list = []
+    for repo in Repo.objects.filter(creator=user).order_by('-created'):
+        oers = OER.objects.filter(source=repo)
+        n = len(oers)
+        repo_list.append([repo, n])
+    return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user}, context_instance=RequestContext(request))
+
 def repo_detail(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
@@ -219,6 +236,10 @@ def repo_detail(request, repo_id, repo=None):
 def repo_detail_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_detail(request, repo.id, repo)
+
+def repo_contributors(request):
+    users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
+    return render_to_response('repo_contributors.html', { 'user_list': users, }, context_instance=RequestContext(request))
 
 def repo_oers(request, repo_id, repo=None):
     if not repo:

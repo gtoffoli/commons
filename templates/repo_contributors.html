@@ -1,0 +1,28 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}Top contributors to ROERs cataloguing{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% blocktrans %}Top contributors to ROERs cataloguing{% endblocktrans %}</h2>
+            <p class="lead">
+    {% if user_list %}
+	<ul class="list-unstyled">
+        {% for user in user_list %}
+        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
+            ({% if user.num_repos > 0 %}<a href="/repos_by/{{ user.username }}/">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
+        </li>
+        {% endfor %}
+	</ul>
+	{% else %}
+       	<p>{% trans "No repository is present" %}.</p>
+    {% endif %}
+            </p>
+        </div>
+    </section>
+{% endblock %}

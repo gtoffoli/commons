@@ -11,7 +11,7 @@
  <div class="row">
   <div class="col-sm-12">
     <section>
-            <h2 class="text-center">{% blocktrans %}Communities of Practice{% endblocktrans %}</h2>
+            <h2 class="text-center">{% blocktrans %}Communities and Projects{% endblocktrans %}</h2>
             <p class="lead">
     {% if nodes %}
 <ul class="list-unstyled">
@@ -19,7 +19,11 @@
         <li>
     		{% if node.project %}
             	<a href="/project/{{ node.project.slug }}/">{{ node.name }}</a>.
-            	{% if node.level > 0 %} &nbsp;<i>({{ node.project.proj_type.description }})</i>&nbsp; {{ node.project.description|truncatechars:80 }}{% endif %}
+            	{% if node.level > 1 %}
+                    <i>({{ node.project.proj_type.description }})</i>&nbsp;{{ node.project.description|truncatechars:90 }}
+                {% else %}
+                    {{ node.project.description|truncatechars:110 }}
+                {% endif %}
     		{% else %}    	
             	{{ node.name }}
     		{% endif %}
