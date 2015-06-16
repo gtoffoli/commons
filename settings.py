@@ -38,6 +38,7 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
     'tinymce',
+    # 'conversejs',
     # theme (from pinax project)
     "pinax_theme_bootstrap",
     "bootstrapform",

@@ -94,9 +94,10 @@ def project_detail(request, project_id, project=None):
         can_add_repository = project.can_add_repository(user)
         can_add_oer = project.can_add_oer(user)
         can_edit = project.can_edit(user)
+        can_chat = project.can_chat(user)
     repos = Repo.objects.all().order_by('-created')[:5]
     oers = OER.objects.filter(project_id=project_id).order_by('-created')[:5]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer,}, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -224,7 +225,7 @@ def repos_by_user(request, username):
         oers = OER.objects.filter(source=repo)
         n = len(oers)
         repo_list.append([repo, n])
-    return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user}, context_instance=RequestContext(request))
+    return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
 
 def repo_detail(request, repo_id, repo=None):
     if not repo:

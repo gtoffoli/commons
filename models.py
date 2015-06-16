@@ -71,24 +71,6 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
-"""
-class Language(models.Model):
-    # Enumerate languages referred by Repos and OERs
-    code = models.CharField(max_length=5, primary_key=True, verbose_name=_('Code'))
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
-
-    class Meta:
-        verbose_name = _('OER language')
-        verbose_name_plural = _('OER languages')
-        ordering = ['name']
-
-    def option_label(self):
-        return '%s - %s' % (self.code, self.name)
-
-    def __unicode__(self):
-        return self.option_label()
-"""
-
 GENDERS = (
    ('-', 'not specified'),
    ('m', 'Male'),
@@ -170,6 +152,11 @@ class ProjType(models.Model):
     def __unicode__(self):
         return self.option_label()
 
+CHAT_TYPE_CHOICES = (
+    (0, 'no chatroom'),
+    (1, 'permanent chatroom'),)
+CHAT_TYPE_DICT = dict(CHAT_TYPE_CHOICES)
+
 MEMBERSHIP_STATE_CHOICES = (
     (0, 'request submitted'),
     (1, 'request accepted'),
@@ -179,8 +166,9 @@ MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
 class Project(models.Model):
     group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
-    proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     slug = SlugField(editable=True)
+    proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
+    chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
@@ -240,6 +228,12 @@ class Project(models.Model):
         if not user.is_authenticated():
             return False
         return user.is_superuser or self.can_accept_member(user)
+
+    def can_chat(self, user):
+        if not user.is_authenticated():
+            return False
+        # return self.chat_type==1 and self.get_memberships(user=user, state=1)
+        return False
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -417,10 +411,20 @@ OER_TYPE_CHOICES = (
     (3, 'metadata and document(s)'),)
 OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
+SOURCE_TYPE_CHOICES = (
+    (1, 'catalogued source: select source repository'),
+    (2, 'non-catalogued source'),
+    (3, 'derived-translated: select original'),
+    (4, 'derived-adapted: select original'),
+    (5, 'derived-remixed: select original(s)'),
+    (6, 'none (brand new OER)'),)
+SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
+
 OER_STATE_CHOICES = (
-    (0, 'new'),
-    (1, 'ok'),
-    (2, 'off'),)
+    (1, 'draft'),
+    (2, 'submitted'),
+    (3, 'published'),
+    (4, 'un-published'),)
 OER_STATE_DICT = dict(OER_STATE_CHOICES)
 
 class OER(models.Model):
@@ -430,12 +434,12 @@ class OER(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
     state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
+    source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
     documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
-    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
-    url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('URL to the OER in the source repository, if applicable'), validators=[URLValidator()])
-    reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source repository'))
+    url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
+    reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
     license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
@@ -444,6 +448,7 @@ class OER(models.Model):
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
+    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -461,6 +466,9 @@ class OER(models.Model):
 
     def get_type(self):
         return OER_TYPE_DICT[self.oer_type]
+
+    def get_source_type(self):
+        return SOURCE_TYPE_DICT[self.source_type]
 
     def get_more_metadata(self):
         return self.metadata_set.all().order_by('metadata_type__name')

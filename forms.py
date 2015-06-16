@@ -13,8 +13,8 @@ from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Project, ProjType, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, OER_TYPE_CHOICES, OER_STATE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
+from models import Project, ProjType, CHAT_TYPE_CHOICES, Repo, Language, SubjectNode, RepoType, RepoFeature
+from models import OER, OER_TYPE_CHOICES, OER_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -73,6 +73,7 @@ class ProjectForm(forms.ModelForm):
         exclude = ('group',)
 
     proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
+    chat_type = forms.ChoiceField(required=True, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.Select(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
@@ -110,19 +111,20 @@ OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, can_delete=True, ex
 class OerForm(forms.ModelForm):
     class Meta:
         model = OER
-        exclude = ('metadata',)
+        exclude = ('documents', 'metadata',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     state = forms.ChoiceField(required=True, choices=OER_STATE_CHOICES, label=_('OER state'), widget=forms.Select(attrs={'class':'form-control',}))
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
+    source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}))
     documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
     project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
     source = forms.ModelChoiceField(required=True, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
-    url = forms.CharField(required=False, label=_('URL to the OER in the source repository, if applicable'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
-    reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source repository'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
+    url = forms.CharField(required=False, label=_('specific URL to the OER, if applicable'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
+    reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}))
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('Levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))

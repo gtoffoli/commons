@@ -16,11 +16,6 @@ def oers_children(request):
          weight=80,
         ))
     children.append (MenuItem(
-         _("By submitter"),
-         url='/oers/by_user/',
-         weight=80,
-        ))
-    children.append (MenuItem(
          _("Full search"),
          url='/oers/search/',
          weight=80,
@@ -31,9 +26,14 @@ def rosters_children(request):
     children = []
     children.append (MenuItem(
          _("Repositories by submitter"),
-         url='/repository/contributors/',
+         url='/repositories/contributors/',
          weight=80,
          check=True,
+        ))
+    children.append (MenuItem(
+         _("Resources by submitter"),
+         url='/oers/contributors/',
+         weight=80,
         ))
     return children
 
