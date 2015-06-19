@@ -12,11 +12,11 @@
    			<h4 style="margin-top: 4.0em;">{% trans "membership"|capfirst %}</h4>
             <ul class="list-unstyled">
             {% for membership in memberships %}
-            	<li><a href="/project/{{ membership.project.slug }}/">{{ membership.project.name }}</a>
+            	<li><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>
             	</li>
             {% endfor %}
             {% for application in applications %}
-            	<li><a href="/project/{{ application.project.slug }}/">{{ application.project.name }}</a> &nbsp;<i>{% trans "application pending" %}</i>
+            	<li><a href="/project/{{ application.project.slug }}/">{{ application.project.get_name }}</a> &nbsp;<i>{% trans "application pending" %}</i>
             	</li>
             {% endfor %}
             </ul>

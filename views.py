@@ -5,12 +5,15 @@ Created on 02/apr/2015
 
 from django.template import RequestContext
 from django.db.models import Count
+from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 
+from documents import DocumentType, Document
+# from sources.models import WebFormSource
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
-from forms import UserProfileForm, UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet
+from forms import UserProfileForm, UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, OerSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 
@@ -147,7 +150,11 @@ def project_edit(request, project_id=None, parent_id=None):
             if form.is_valid():
                 project = form.save(commit=False)
                 if parent:
+                    """
                     group = Group(name=name)
+                    """
+                    group_name = slugify(name)[:50]
+                    group = Group(name=group_name)
                     group.parent = parent.group
                     group.save()
                     project.group = group
@@ -339,7 +346,11 @@ def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer = get_object_or_404(OER, pk=oer_id)
     can_edit = oer.can_edit(request.user)
-    return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit}, context_instance=RequestContext(request))
+    if can_edit:
+        form = DocumentUploadForm()
+        return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
+    else:
+        return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit,}, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
     # oer = get_object_or_404(OER, slug=oer_slug)
@@ -366,7 +377,9 @@ def oer_edit(request, oer_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             # if form.is_valid() and metadata_formset.is_valid():
             if form.is_valid():
-                oer = form.save()
+                #oer = form.save()
+                oer = form.save(commit=False)
+                oer.documents = request.POST.getlist('documents')
                 if oer.creator_id == 1:
                     oer.creator = user
                 oer.editor = user
@@ -412,8 +425,70 @@ def oer_edit_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
     return oer_edit(request, oer_id=oer.id)
 
+def handle_uploaded_file(file_object):
+    document_type = DocumentType.objects.get(pk=2) # OER file type
+    """
+    source = get_object_or_404(WebFormSource, pk=1) # WebForm source
+    source.upload_document(f, f.name, document_type=document_type)
+    """
+    from documents.settings import LANGUAGE
+    version = Document.objects.upload_single_document(document_type, file_object, language=LANGUAGE)
+    return version
+
+def oer_add_document(request):
+    if request.POST:
+        oer_id = request.POST.get('id')
+        oer = get_object_or_404(OER, id=oer_id)
+        if request.POST.get('cancel', ''):
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+        form = DocumentUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES['docfile']
+            version = handle_uploaded_file(uploaded_file)
+            oer.documents.add(version.document)
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+        else:
+            can_edit = oer.can_edit(request.user)
+            return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
+
+def oer_download_document(request):
+    if request.POST:
+        document_id = request.POST.get('id')
+        document = get_object_or_404(Document, pk=document_id)
+        version = document.latest_version()
+        file_descriptor = version.open()
+    
 def project_add_oer(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     if not project.can_add_oer(request.user):
         return HttpResponseRedirect('/project/%s/' % project.slug)
     return oer_edit(request, project_id=project_id) 
+
+q_extra = ['(', ')', '[', ']', '"']
+def clean_q(q):
+    for c in q_extra:
+        q = q.replace(c, '')
+    return q
+
+def search_by_string(request, q, subjects=[], languages=[]):
+    pass
+
+def oers_search(request):
+    if request.method == 'POST': # If the form has been submitted...
+        form = OerSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            q = request.POST.get('q', '')
+            q = clean_q(q)
+            subjects = request.POST.getlist('subjects')
+            languages = request.POST.getlist('languages')
+    else:
+        subjects = []
+        languages = ''
+        q = request.GET.get('q', '')
+        q = clean_q(q)
+        if q:
+            form = OerSearchForm(q=q)
+        else:
+            form = OerSearchForm()
+    oers = search_by_string(request, q, subjects=subjects, languages=languages)
+    return render_to_response('search_results.html', {'q': q, 'oers': oers, 'form': form,}, context_instance=RequestContext(request))

@@ -72,6 +72,7 @@ class ProjectForm(forms.ModelForm):
         model = Project
         exclude = ('group',)
 
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
     chat_type = forms.ChoiceField(required=True, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.Select(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -119,7 +120,7 @@ class OerForm(forms.ModelForm):
     state = forms.ChoiceField(required=True, choices=OER_STATE_CHOICES, label=_('OER state'), widget=forms.Select(attrs={'class':'form-control',}))
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
     source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}))
-    documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
+    # documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
     project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
     source = forms.ModelChoiceField(required=True, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -128,7 +129,36 @@ class OerForm(forms.ModelForm):
     material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}))
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('Levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+
+class OerSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        q = kwargs.get('q', '')
+        if q:
+            kwargs.pop('q')
+        super(OerSearchForm, self).__init__(*args,**kwargs)
+        if q:
+            self.fields['q'].initial = q
+
+    q = forms.CharField(
+        label=_("text to match"),
+        required=False,
+        widget=forms.TextInput())
+    subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
+        label=_('subject areas'),
+        help_text=_("choose subject areas (no selection = all areas)"),
+        required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+    languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
+        label=_('languages'),
+        help_text=_("choose languages (no selection = all areas)"),
+        required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+
+class DocumentUploadForm(forms.Form):
+    docfile = forms.FileField(
+        label=_('select a file'),
+        widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))

@@ -1,0 +1,32 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block head_title %}{% trans "Search OERs" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <div class="container">
+	<div class="col-sm-12">
+    <section>
+	<h2 class="text-center">{% trans "Search OERs" %}</h2>
+  	<form style="margin: 0;" action="/cerca/?q={{ form.cleaned_data.q }}" method="post" id="search_form"><div>
+	{% csrf_token %}
+	<table>
+	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th>
+   	<td style="vertical-align: bottom"><input type="submit" value="{% trans "apply"|capfirst %}"></td></tr>
+	{% for field in form.visible_fields %}
+       <tr style="vertical-align: top;">
+	   		<th style="font-weight: bold; text-align: right;">{% if field.help_text %}<img src="{% static "admin/img/icon-unknown.gif" %}" Title="{{ field.help_text }}" style="cursor: pointer; float:right; margin:5px;">{% endif %}
+	   		{{ field.label_tag|capfirst }}</th>
+	   		<td><div class="checkbox-multiple">{{ field }}</div></td>
+   		</tr>
+	{% endfor %}
+	</table>
+	</div></form>
+    </section>
+	</div>
+	</div>
+{% endblock %}
+

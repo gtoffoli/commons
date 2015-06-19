@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.name }}{% else %}{{ parent.name }}: {% trans "add child Project"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child Project"|capfirst %}{% endif %}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -16,21 +16,21 @@
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.name }}{% else %}{{ parent.name }}: {% trans "add child Project"|capfirst %}{% endif %}</h2>
+       <h2 class="text-center">{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child Project"|capfirst %}{% endif %}</h2>
     <form method="post" action="/project/edit/" id="project_edit_form" class="form-horizontal">
 	{% csrf_token %}
 	{% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}" />{% endif %}
 	{% if parent %}
 	<input type="hidden" id="parent" name="parent" value="{{ parent.id }}" />
-    <div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8">
+    {% comment %}<div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8">
 	    <label for="name" style="margin-bottom: 0;">Name <span style="color: red;">*</span></label>
 		<input type="text" id="name" name="name" class="form-control" />
-	</div></div>
+	</div></div>{% endcomment %}
 	{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row" style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 1 or i == 2 %}4{% else %}8{% endif %}">
+	<div class="form-group col-lg-{% if i == 2 or i == 3 %}4{% else %}8{% endif %}">
 	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
 		<span style="color: red;">{{ field.errors }}</span>{{ field }}
 		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}

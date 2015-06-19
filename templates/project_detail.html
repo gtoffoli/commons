@@ -3,7 +3,7 @@
 {% load i18n %}
 {% comment %}{% if can_chat %}{% load conversejs %}{% endif %}{% endcomment %}
 
-{% block head_title %}Community: {{ project.name }}{% endblock %}
+{% block head_title %}Community: {{ project.get_name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -47,7 +47,7 @@
    			<h4>{% trans "child projects"|capfirst %}</h4>
             <ul class="list-unstyled">
 			{% with subprojects=project.get_children %}{% for subproject in subprojects %}
-            	<li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.name }}</a></li>
+            	<li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
             {% endfor %}{% endwith %}
             </ul>
 		{% endif %}
@@ -58,7 +58,7 @@
   <div class="col-sm-6">
     <section>
             <h2 class="text-center">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
-			{{ project.name }}&nbsp;
+			{{ project.get_name }}&nbsp;
 			{% if project.get_parent %}
 			<a href="/project/{{ project.get_parent.slug }}/" title="Parent community"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
 			{% else %}

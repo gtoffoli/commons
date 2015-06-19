@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}OER: {{ oer.name }}{% endblock %}
+{% block head_title %}OER: {{ oer.title }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -74,6 +74,26 @@
 			</div>
 		    {% endif %}
             <div><strong>Submitted by</strong> &nbsp;<a href="/profile/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a>&nbsp; <strong>in project</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+    		{% if oer.documents.all or oer.oer_type == 3 and can_edit %}
+    		<div><strong>{% trans "attached documents"|capfirst %}</strong></div>
+			<ul class="root">
+		    {% for document in oer.get_sorted_documents %}
+		        <li>{{ document.label }}</li>
+		    {% endfor %}
+			</ul>
+    		{% if oer.oer_type == 3 and can_edit %}
+    		<div><i>{% trans "add document"|capfirst %}</i></div>
+    		<form enctype="multipart/form-data" method="POST" id="add_document" action="/oer/add_document/">
+				{% csrf_token %}
+				<input type="hidden" id="id" name="id" value="{{ oer.id }}" />
+	            <div>{{ form.non_field_errors }}</div>
+	            <div><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}
+				<button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}' style="margin-left: 1.0em; padding: 0 1.5em;">{% trans "add"|capfirst %}</button>
+				{% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="padding: 0 1.5em;">Cancel</button>{% endif %}
+				</div>
+    		</form>
+		    {% endif %}
+		    {% endif %}
             </p>
         </div>
     </section>

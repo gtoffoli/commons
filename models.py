@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models.signals import post_save
 # from django import forms
 from django.core.validators import URLValidator
+from django.template.defaultfilters import slugify
 # from mayan import sources
 from documents.models import Document
 from metadata.models import MetadataType
@@ -21,7 +22,8 @@ setattr(DocumentVersion, 'file', models.FileField(upload_to=lambda instance, fil
 """
 
 from django.contrib.auth.models import User, Group
-from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, SlugField, AutoSlugField
+# from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, SlugField, AutoSlugField
+from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 """
 # 150402 Giovanni.Toffoli - see django-extensions and django-organizations
 CreationDateTimeField(_('created')).contribute_to_class(Group, 'created')
@@ -166,7 +168,11 @@ MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
 class Project(models.Model):
     group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
+    """
     slug = SlugField(editable=True)
+    """
+    name = models.CharField(max_length=100, verbose_name=_('name'))
+    slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
@@ -181,6 +187,7 @@ class Project(models.Model):
         verbose_name = _('Project / Community')
         verbose_name_plural = _('projects')
 
+    """
     def save(self, *args, **kwargs):
         try:
             group = self.group
@@ -195,11 +202,24 @@ class Project(models.Model):
             self.group = group
             # obj.group_id = group.id
         self.slug = self.group.name.replace(' ', '-').lower()
-        # self.user = request.user
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
-    
+    """
+    def save(self, *args, **kwargs):
+        try:
+            group = self.group
+        except:
+            group_name = slugify(self.name)[:50]
+            group = Group(name=group_name)
+            group.save()
+            self.group = group
+        super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
+
+    """   
     def name(self):
         return self.group.name
+    """
+    def get_name(self):
+        return self.name or self.group.name
 
     def __unicode__(self):
         return self.name()
@@ -478,6 +498,9 @@ class OER(models.Model):
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.can_add_oer(user)
+
+    def get_sorted_documents(self):
+        return self.documents.all().order_by('date_added')
        
 class OerMetadata(models.Model):
     """
