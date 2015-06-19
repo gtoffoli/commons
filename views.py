@@ -379,11 +379,12 @@ def oer_edit(request, oer_id=None, project_id=None):
             if form.is_valid():
                 #oer = form.save()
                 oer = form.save(commit=False)
-                oer.documents = request.POST.getlist('documents')
+                # oer.documents = request.POST.getlist('documents')
                 if oer.creator_id == 1:
                     oer.creator = user
                 oer.editor = user
                 oer.save()
+                form.save_m2m()
                 oer = get_object_or_404(OER, id=oer.id)
                 # metadata_formset.save()
                 n = len(metadata_formset)
