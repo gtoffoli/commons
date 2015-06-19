@@ -412,7 +412,9 @@ def oer_edit(request, oer_id=None, project_id=None):
             if oer:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)
             else:
-                return HttpResponseRedirect('/oers/')
+                project_id = project_id or request.POST.get('project')
+                project = get_object_or_404(Project, id=project_id)
+                return HttpResponseRedirect('/project/%s/' % project.slug)
     elif oer:
         form = OerForm(instance=oer)
         metadata_formset = OerMetadataFormSet(instance=oer)
