@@ -51,7 +51,7 @@ class ProjAdmin(admin.ModelAdmin):
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},}
 
     def project_name(self, obj):
-        return obj.name()
+        return obj.get_name()
 
     def project_type(self, obj):
         return obj.proj_type.description
