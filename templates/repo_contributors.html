@@ -2,14 +2,14 @@
 
 {% load i18n %}
 
-{% block head_title %}Top contributors to ROERs cataloguing{% endblock %}
+{% block head_title %}{% trans "top contributors to"|capfirst %} {% trans "ROERs cataloguing"|capfirst %}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}Top contributors to ROERs cataloguing{% endblocktrans %}</h2>
+            <h2 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "ROERs cataloguing"|capfirst %}</h2>
             <p class="lead">
     {% if user_list %}
 	<ul class="list-unstyled">
@@ -20,7 +20,7 @@
         {% endfor %}
 	</ul>
 	{% else %}
-       	<p>{% trans "No repository is present" %}.</p>
+       	<p>{% trans "no repository"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
             </p>
         </div>

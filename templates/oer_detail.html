@@ -14,13 +14,13 @@
             </h2>
             <p class="lead">
             <div><strong>Title</strong>: {{ oer.title }}</div>
-            {% if oer.description %}<div><strong>Description</strong>: {{ oer.description }}</div>{% endif %}
-            {% if oer.material %}<div><strong>Type of material</strong>: {{ oer.material.name }}</div>{% endif %}
-            {% if oer.source %}<div><strong>Source repository:</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
+            {% if oer.description %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ oer.description }}</div>{% endif %}
+            {% if oer.material %}<div><strong>{% trans "type of material"|capfirst %}</strong>: {{ oer.material.name }}</div>{% endif %}
+            {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}:</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
             {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
-            {% if oer.license %}<div><strong>Terms of use</strong>: {{ oer.license.name }}</div>{% endif %}
+            {% if oer.license %}<div><strong>{% trans "terms of use"|capfirst %}</strong>: {{ oer.license.name }}</div>{% endif %}
     		{% if oer.levels.all %}
-    		<div><strong>Levels</strong>:
+    		<div><strong>{% trans "levels"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for level in oer.levels.all %}
 		        <li>{{ level.option_label|safe }}</li>
@@ -29,7 +29,7 @@
 			</div>
 		    {% endif %}
     		{% if oer.subjects.all %}
-    		<div><strong>Subject areas</strong>:
+    		<div><strong>{% trans "subject areas"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for subject in oer.subjects.all %}
 		        <li>{{ subject.option_label|safe }}</li>
@@ -38,7 +38,7 @@
 			</div>
 		    {% endif %}
     		{% if oer.languages.all %}
-    		<div><strong>OER languages</strong>:
+    		<div><strong>{% trans "OER languages"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for language in oer.languages.all %}
 		        <li>{{ language.code }} - {{ language.name }}</li>
@@ -47,7 +47,7 @@
 			</div>
 		    {% endif %}
     		{% if oer.media.all %}
-    		<div><strong>Media formats</strong>:
+    		<div><strong>{% trans "media formats"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for medium in oer.media.all %}
 		        <li>{{ medium.option_label|safe }}</li>
@@ -56,7 +56,7 @@
 			</div>
 		    {% endif %}
     		{% if oer.accessibility.all %}
-    		<div><strong>Accessibility features</strong>:
+    		<div><strong>{% trans "accessibility features"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for feature in oer.accessibility.all %}
 		        <li>{{ feature.option_label|safe }}</li>
@@ -65,7 +65,7 @@
 			</div>
 		    {% endif %}
     		{% if oer.get_more_metadata %}
-    		<div><strong>Other metadata</strong>:
+    		<div><strong>{% trans "other metadata"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for metadatum in oer.get_more_metadata %}
 		        <li><i>{{ metadatum.metadata_type.name }}</i>: {{ metadatum.value }}</li>
@@ -73,7 +73,7 @@
 			</ul>
 			</div>
 		    {% endif %}
-            <div><strong>Submitted by</strong> &nbsp;<a href="/profile/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a>&nbsp; <strong>in project</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+            <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
     		{% if oer.documents.all or oer.oer_type == 3 and can_edit %}
     		<div><strong>{% trans "attached documents"|capfirst %}</strong></div>
 			<ul class="root">

@@ -3,7 +3,7 @@
 {% load i18n %}
 {% comment %}{% if can_chat %}{% load conversejs %}{% endif %}{% endcomment %}
 
-{% block head_title %}Community: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 

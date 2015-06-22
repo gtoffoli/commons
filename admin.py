@@ -99,9 +99,9 @@ class RepoFeatureAdmin(admin.ModelAdmin):
 class RepoAdmin(admin.ModelAdmin):
     form = RepoChangeForm
     fieldsets = [
-        (None, {'fields': ['name', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
+        (None, {'fields': ['name', 'state', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
     ]
-    list_display = ('name', 'description', 'repo_type', 'url', 'user_fullname', 'created', 'modified',)
+    list_display = ('name', 'description', 'repo_type', 'state', 'user_fullname', 'created', 'modified',)
     search_fields = ['name', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},

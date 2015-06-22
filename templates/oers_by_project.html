@@ -9,7 +9,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}Catalogued OERs by project{% endblocktrans %}</h2>
+            <h2 class="text-center">{% trans "catalogued OERs"|capfirst %} {% trans "by project"|capfirst %}</h2>
             <p class="lead">
 		    {% if project_list %}
 			<ul class="list-unstyled">
@@ -20,7 +20,7 @@
 		        {% endfor %}
 			</ul>
 			{% else %}
-		       	<p>{% trans "No project has catalogued OERs yet." %}.</p>
+		       	<p>{% trans "no project"|capfirst %} {% trans "has" %} {% trans "catalogued OERs" %}.</p>
 		    {% endif %}
             </p>
         </div>

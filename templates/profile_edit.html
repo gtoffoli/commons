@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% trans "Edit profile of" %}: &nbsp;
+{% block head_title %}{% trans "edit the profile of"|capfirst %}: &nbsp;
 	{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}
 	{% else %}{{ user.username }}
 	{% endif %}{% endblock %}
@@ -22,7 +22,7 @@
 <div class="container">
   <div class="col-sm-12">
     <section>
-            <h2 class="text-center">{% trans "edit profile of"|capfirst %}:
+            <h2 class="text-center">{% trans "edit the profile of"|capfirst %}:
 				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
 			</h2>
     <form method="post" id="edit_form" class="form-horizontal">

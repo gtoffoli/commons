@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child Project"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if project %}{% trans "edit"|capfirst %} {% trans "project" %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child project"|capfirst %}{% endif %}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -16,14 +16,14 @@
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% if project %}{% trans "edit Project"|capfirst %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child Project"|capfirst %}{% endif %}</h2>
+       <h2 class="text-center">{% if project %}{% trans "edit"|capfirst %} {% trans "project" %}: &nbsp;{{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child project"|capfirst %}{% endif %}</h2>
     <form method="post" action="/project/edit/" id="project_edit_form" class="form-horizontal">
 	{% csrf_token %}
 	{% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}" />{% endif %}
 	{% if parent %}
 	<input type="hidden" id="parent" name="parent" value="{{ parent.id }}" />
     {% comment %}<div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8">
-	    <label for="name" style="margin-bottom: 0;">Name <span style="color: red;">*</span></label>
+	    <label for="name" style="margin-bottom: 0;">{% trans "name"|capfirst %} <span style="color: red;">*</span></label>
 		<input type="text" id="name" name="name" class="form-control" />
 	</div></div>{% endcomment %}
 	{% endif %}
@@ -39,10 +39,10 @@
     {% endwith %}{% endfor %}
 	</div>
 
-		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save{% if project %} changes{% endif %}</button>&nbsp;
-		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save and continue</button>&nbsp;
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if project %} {% trans "changes" %}{% endif %}</button>&nbsp;
+		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and continue"|capfirst %}</button>&nbsp;
 		{% if project %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
-		{% else %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel</button>
+		{% else %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %}</button>
 		{% endif %}
     </form>
     </section>

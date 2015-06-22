@@ -2,24 +2,29 @@
 
 {% load i18n %}
 
-{% block head_title %}Catalog of OER Repositories{% endblock %}
+{% block head_title %}{% trans "OERs from repository"|capfirst %}&nbsp;{{ repo.name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}OERs from repository{% endblocktrans %}&nbsp;{{ repo.name }}
+            <h2 class="text-center">{% trans "OERs from repository"|capfirst %}&nbsp;{{ repo.name }}
             &nbsp; <a href="/repo/{{ repo.slug }}/" title="View repository {{ repo.name }}"><i class="fa fa-level-up" style="font-size: 0.7em;"></i></a></h2>
             <p class="lead">
-			<ul class="root">
+			{% if oers %}
+ 			<ul class="root">
 		        {% for oer in oers %}
-		        <li>
-		            <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a> &nbsp;<i>({{ oer.get_type }})</i> - {{ oer.description|truncatechars:80 }}
-		        </li>
+		        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
 		        {% endfor %}
 			</ul>
+			{% else %}
+				<div style="margin-left: 1.5em;"><i>{% trans "no OERs are present having this repository as their source"|capfirst %}.</i></div>
+			{% endif %}
             </p>
+
+
+
         </div>
     </section>
 {% endblock %}

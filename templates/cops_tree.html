@@ -11,7 +11,7 @@
  <div class="row">
   <div class="col-sm-12">
     <section>
-            <h2 class="text-center">{% blocktrans %}Communities and Projects{% endblocktrans %}</h2>
+            <h2 class="text-center">{% trans "Communities and Projects" %}</h2>
             <p class="lead">
     {% if nodes %}
 <ul class="list-unstyled">
@@ -36,7 +36,7 @@
     {% endrecursetree %}
 </ul>
     {% else %}
-       	<p>{% trans "No community is present" %}.</p>
+       	<p>{% trans "no community"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
             </p>
     </section>

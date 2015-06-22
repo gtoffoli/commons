@@ -74,16 +74,16 @@ def create_favorites(sender, instance, created, **kwargs):
 """
 
 GENDERS = (
-   ('-', 'not specified'),
-   ('m', 'Male'),
-   ('f', 'Female'),)
+   ('-', _('not specified')),
+   ('m', _('male')),
+   ('f', _('female')),)
 
 class UserProfile(models.Model):
     # user = models.OneToOneField(User, unique=True)
     user = models.OneToOneField(User, primary_key=True, related_name='profile')
     gender = models.CharField(max_length=1, blank=True, null=True,
                                   choices=GENDERS, default='-')
-    dob = models.DateField(blank=True, null=True, verbose_name=_('date of birth'), help_text=_('Format: dd/mm/yyyy'))
+    dob = models.DateField(blank=True, null=True, verbose_name=_('date of birth'), help_text=_('format: dd/mm/yyyy'))
     country = models.ForeignKey(CountryEntry, blank=True, null=True, verbose_name=_('country'))
     city = models.CharField(max_length=250, null=True, blank=True, verbose_name=_('city'))
     edu_level = models.ForeignKey(EduLevelEntry, blank=True, null=True, verbose_name=_('education level'))
@@ -114,8 +114,8 @@ class Subject(models.Model):
     """
     Enumerate languages referred by Repos and OERs
     """
-    code = models.CharField(max_length=10, primary_key=True, verbose_name=_('Code'))
-    name = models.CharField(max_length=100, verbose_name=_('Name'))
+    code = models.CharField(max_length=10, primary_key=True, verbose_name=_('code'))
+    name = models.CharField(max_length=100, verbose_name=_('name'))
 
     class Meta:
         verbose_name = _('OER subject')
@@ -143,8 +143,8 @@ class ProjType(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('Project / Community type')
-        verbose_name_plural = _('Project / Community types')
+        verbose_name = _('project / community type')
+        verbose_name_plural = _('project / community types')
         ordering = ['order', 'name',]
 
     def option_label(self):
@@ -155,19 +155,19 @@ class ProjType(models.Model):
         return self.option_label()
 
 CHAT_TYPE_CHOICES = (
-    (0, 'no chatroom'),
-    (1, 'permanent chatroom'),)
+    (0, _('no chatroom')),
+    (1, _('permanent chatroom')),)
 CHAT_TYPE_DICT = dict(CHAT_TYPE_CHOICES)
 
 MEMBERSHIP_STATE_CHOICES = (
-    (0, 'request submitted'),
-    (1, 'request accepted'),
-    (2, 'request rejected'),
-    (3, 'membership suspended'),)
+    (0, _('request submitted')),
+    (1, _('request accepted')),
+    (2, _('request rejected')),
+    (3, _('membership suspended')),)
 MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
 class Project(models.Model):
-    group = models.OneToOneField(Group, verbose_name=_('Associated user group'), related_name='project')
+    group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
     """
     slug = SlugField(editable=True)
     """
@@ -184,7 +184,7 @@ class Project(models.Model):
     editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='project_editor')
 
     class Meta:
-        verbose_name = _('Project / Community')
+        verbose_name = _('project / community')
         verbose_name_plural = _('projects')
 
     """
@@ -240,9 +240,9 @@ class Project(models.Model):
 
     def admin_name(self):
         if self.proj_type.name == 'com':
-            return _('Administrator')
+            return _('administrator')
         else:
-            return _('Supervisor')
+            return _('supervisor')
 
     def can_edit(self, user):
         if not user.is_authenticated():
@@ -334,8 +334,8 @@ class ProjectMember(models.Model):
     history = models.TextField(_('history of state changes'), blank=True, null=True)
 
     class Meta:
-        verbose_name = _('Project member')
-        verbose_name_plural = _('Project member')
+        verbose_name = _('project member')
+        verbose_name_plural = _('project member')
 
 class RepoFeature(models.Model):
     """
@@ -346,8 +346,8 @@ class RepoFeature(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('Repository feature')
-        verbose_name_plural = _('Repository features')
+        verbose_name = _('repository feature')
+        verbose_name_plural = _('repository features')
         ordering = ['order']
 
     def option_label(self):
@@ -366,8 +366,8 @@ class RepoType(models.Model):
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 
     class Meta:
-        verbose_name = _('Repository type')
-        verbose_name_plural = _('Repository types')
+        verbose_name = _('repository type')
+        verbose_name_plural = _('repository types')
         ordering = ['name']
         ordering = ['order', 'name',]
 
@@ -379,6 +379,18 @@ class RepoType(models.Model):
 
     def natural_key(self):
         return (self.name,)
+
+DRAFT = 1
+SUBMITTED = 2
+PUBLISHED = 3
+UN_PUBLISHED = 4
+
+PUBLICATION_STATE_CHOICES = (
+    (DRAFT, _('draft')),
+    (SUBMITTED, _('submitted')),
+    (PUBLISHED, _('published')),
+    (UN_PUBLISHED, _('un-published')),)
+PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
 class Repo(models.Model):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
@@ -392,14 +404,15 @@ class Repo(models.Model):
     # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
     info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='repo_creator')
     editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='repo__editor')
 
     class Meta:
-        verbose_name = _('External repository')
-        verbose_name_plural = _('External repositories')
+        verbose_name = _('external repository')
+        verbose_name_plural = _('external repositories')
         ordering = ['name']
 
     def __unicode__(self):
@@ -420,33 +433,26 @@ class Repo(models.Model):
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
     # (0, '-'),
-    (1, 'metadata only'),
-    (2, 'metadata and online reference'),
-    (3, 'metadata and document(s)'),)
+    (1, _('metadata only')),
+    (2, _('metadata and online reference')),
+    (3, _('metadata and document(s)')),)
 OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
 SOURCE_TYPE_CHOICES = (
-    (1, 'catalogued source: select source repository'),
-    (2, 'non-catalogued source'),
-    (3, 'derived-translated: select original'),
-    (4, 'derived-adapted: select original'),
-    (5, 'derived-remixed: select original(s)'),
-    (6, 'none (brand new OER)'),)
+    (1, _('catalogued source: select source repository')),
+    (2, _('non-catalogued source')),
+    (3, _('derived-translated: select original')),
+    (4, _('derived-adapted: select original')),
+    (5, _('derived-remixed: select original(s)')),
+    (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
-
-OER_STATE_CHOICES = (
-    (1, 'draft'),
-    (2, 'submitted'),
-    (3, 'published'),
-    (4, 'un-published'),)
-OER_STATE_DICT = dict(OER_STATE_CHOICES)
 
 class OER(models.Model):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
-    state = models.IntegerField(choices=OER_STATE_CHOICES, default=0, null=True, verbose_name='OER state')
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
     documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
@@ -471,7 +477,7 @@ class OER(models.Model):
     editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='oer__editor')
 
     class Meta:
-        verbose_name = _('OER with core metadata')
+        verbose_name = _('OER')
         verbose_name_plural = _('OERs')
         ordering = ['title']
 
@@ -509,8 +515,8 @@ class OerMetadata(models.Model):
 
     class Meta:
         unique_together = ('oer', 'metadata_type', 'value')
-        verbose_name = _('Additional DC metadatum')
-        verbose_name_plural = _('Additional DC metadata')
+        verbose_name = _('additional metadatum')
+        verbose_name_plural = _('additional metadata')
 
 
 """ OER Evaluations will be user volunteered paradata
@@ -523,7 +529,7 @@ class EvaluationTypeManager(models.Manager):
 # Similar to metadata type (see mayan.metadata)
 class EvaluationType(models.Model):
     # Define a type of evaluation (see MetadataType in metadata.models
-    name = models.CharField(unique=True, max_length=48, verbose_name=_('Name'), help_text=_('Do not use python reserved words, or spaces.'))
+    name = models.CharField(unique=True, max_length=48, verbose_name=_('name'), help_text=_('Do not use python reserved words, or spaces.'))
     # TODO: normalize 'title' to 'label'
     title = models.CharField(max_length=48, verbose_name=_('Title'))
     default = models.CharField(max_length=128, blank=True, null=True,
@@ -547,8 +553,8 @@ class EvaluationType(models.Model):
 
     class Meta:
         ordering = ('title',)
-        verbose_name = _('Evaluation type')
-        verbose_name_plural = _('Evaluation types')
+        verbose_name = _('evaluation type')
+        verbose_name_plural = _('evaluation types')
 
 class OerEvaluation(models.Model):
     # Link an OER to a specific instance of an evaluation type with it's current value

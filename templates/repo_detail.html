@@ -2,14 +2,14 @@
 
 {% load i18n %}
 
-{% block head_title %}Repository: {{ repo.name }}{% endblock %}
+{% block head_title %}{% trans "repository"|capfirst %}: {{ repo.name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% blocktrans %}Repository:{% endblocktrans %}
+            <h2 class="text-center">{% trans "repository"|capfirst %}:
             	&nbsp; {{ repo.name }}
             	&nbsp; <a href="/repos/" title="show repository list"><i class="fa fa-level-up" style="font-size: 0.7em;"></i></a>
                 &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list" style="font-size: 0.7em;""></i></a>
@@ -48,33 +48,19 @@
 		        {% endfor %}
 			</ul>
 		    {% else %}
-				<div style="margin-left: 1.5em;"><i>Any</i></div>
+				<div style="margin-left: 1.5em;"><i>{% trans "any"|capfirst %}</i></div>
 		    {% endif %}
 			</div>
     		{% if repo.info %}
-    		<div style="margin-top: 0.5em;"><strong>Additional information</strong>:
+    		<div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ repo.info|safe }}</div>
 			</div>
 		    {% endif %}
     		{% if repo.eval %}
-    		<div style="margin-top: 0.5em;"><strong>Comments / evaluation</strong>:
+    		<div style="margin-top: 0.5em;"><strong>{% trans "comments / evaluation"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
 			</div>
 		    {% endif %}
-    		<div style="margin-top: 0.5em;"><strong>OERs from this source</strong>:
-			{% with oers=repo.get_oers %}
-				{% if oers %}
-	                &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list" style="font-size: 0.7em;""></i></a>
-				<ul class="root">
-			        {% for oer in oers %}
-			        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
-			        {% endfor %}
-				</ul>
-				{% else %}
-					<div style="margin-left: 1.5em;"><i>No OERs are present having this repository as their source.</i></div>
-				{% endif %}
-			{% endwith %}
-            </p>
         </div>
     </section>
 {% endblock %}

@@ -1,22 +1,23 @@
 from menu import Menu, MenuItem
 from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
 def oers_children(request):
     children = []
     children.append (MenuItem(
-         _("By source"),
+         capfirst(_("by source")),
          url='/repos/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("By project"),
+         capfirst(_("by project")),
          url='/oers/by_project/',
          weight=80,
         ))
     children.append (MenuItem(
-         _("Full search"),
+         capfirst(_("full search")),
          url='/oers/search/',
          weight=80,
         ))
@@ -25,13 +26,13 @@ def oers_children(request):
 def rosters_children(request):
     children = []
     children.append (MenuItem(
-         _("Repositories by submitter"),
+         capfirst(_("repositories by submitter")),
          url='/repositories/contributors/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("Resources by submitter"),
+         capfirst(_("resources by submitter")),
          url='/oers/contributors/',
          weight=80,
         ))
@@ -40,7 +41,7 @@ def rosters_children(request):
 def help_children(request):
     children = []
     children.append (MenuItem(
-         _("Site navigation"),
+         capfirst(_("site navigation")),
          url='/help/navigation/',
          weight=80,
          check=True,
@@ -58,13 +59,13 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         _("Registration and authentication"),
+         capfirst(_("registration and authentication")),
          url='/help/register/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("Editing the user profile"),
+         capfirst(_("editing the user profile")),
          url='/help/profile/',
          weight=80,
          check=True,
@@ -74,13 +75,13 @@ def help_children(request):
 def info_children(request):
     children = []
     children.append (MenuItem(
-         _("About"),
+         capfirst(_("about")),
          url='/info/about/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("Community and projects"),
+         capfirst(_("community and projects")),
          url='/info/projects/',
          weight=80,
          check=True,
@@ -92,13 +93,13 @@ def info_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         _("External repositories"),
+         capfirst(_("external repositories")),
          url='/info/repos/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("The user profile"),
+         capfirst(_("the user profile")),
          url='/info/profile/',
          weight=80,
          check=True,
@@ -106,25 +107,25 @@ def info_children(request):
     return children
 
 # Add a few items to our main menu
-Menu.add_item("main", MenuItem(ugettext_lazy("Find OERs"),
+Menu.add_item("main", MenuItem(capfirst(_("find OERs")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=oers_children,
                                separator=True))
-Menu.add_item("main", MenuItem(ugettext_lazy("Rosters"),
+Menu.add_item("main", MenuItem(capfirst(_("rosters")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=rosters_children,
                                separator=True))
-Menu.add_item("main", MenuItem(ugettext_lazy("Help"),
+Menu.add_item("main", MenuItem(capfirst(_("help")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=help_children,
                                separator=True))
-Menu.add_item("main", MenuItem(ugettext_lazy("Info"),
+Menu.add_item("main", MenuItem(capfirst(_("info")),
                                url='/p',
                                weight=30,
                                check=True,

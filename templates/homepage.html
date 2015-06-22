@@ -11,8 +11,8 @@
 	<div class="container"  style="margin-top: 1.5em;">
 		<h2>Welcome to CommonS</h2>
 	    <p>
-	    <b>CommonS</b>[paces] is an international <i>community of practice</i>
-	    devoted to the improvement of <b>employability</b> skills.
+	    <b>CommonS</b>[paces] {% trans "is an international" %} <i>{% trans "community of practice" %}</i>
+	    {% trans "devoted to" %} {% trans "the improvement of" %} <b>{% trans "employability skills" %}</b>.
 	    </p>
 	</div>
 </section>
@@ -24,24 +24,20 @@
             <div class="feature-columns">
                 <div>
                     <a href="/cops/"><i class="fa fa-wechat fa-3x"></i><br>
-                    {% blocktrans %}
                     <b>COPs</b>.
-                    <i>Communities of Practice</i>.
-                    {% endblocktrans %}</a>
+                    <i>{% trans "Communities of Practice" %}</i>.
+                    </a>
                 </div>
                 <div>
                     <a href="/repos/"><i class="fa fa-cubes fa-3x"></i><br>
-                    {% blocktrans %}
                     <b>OERs</b>.
-                    a library of <i>Open Educational Resources</i>.
-                    {% endblocktrans %}</a>
+                    {% trans "a library of"|capfirst %} <i>{% trans "Open Educational Resources" %}</i>.
+                    </a>
                 </div>
                 <div>
                     <i class="fa fa-road fa-3x"></i><br>
-                    {% blocktrans %}
                     <b>LPs</b>.
-                    a repertoire of <i>Learning Paths</i>.
-                    {% endblocktrans %}
+                    {% trans "a repertoire of"|capfirst %} <i>{% trans "Learning Paths" %}</i>.
                 </div>
             </div>
         </div>
@@ -49,10 +45,8 @@
     <section>
         <div class="container">
             <p class="lead text-center">
-                {% blocktrans %}
-                See <a href="http://www.commonspaces.eu/" target="_blank">www.commonspaces.eu</a>
-                for more information.
-                {% endblocktrans %}
+                {% trans "see"|capfirst %} <a href="http://www.commonspaces.eu/" target="_blank">www.commonspaces.eu</a>
+                {% trans "for more information" %}.
             </p>
         </div>
     </section>
