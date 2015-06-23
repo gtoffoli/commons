@@ -3,22 +3,27 @@ from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
-def oers_children(request):
+def search_children(request):
     children = []
     children.append (MenuItem(
-         capfirst(_("by source")),
+         string_concat(capfirst(_("OERs")), ' - ', _("by source")),
          url='/repos/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("by project")),
+         string_concat(capfirst(_("OERs")), ' - ', _("by project")),
          url='/oers/by_project/',
          weight=80,
         ))
     children.append (MenuItem(
-         capfirst(_("advanced search")),
+         string_concat(capfirst(_("OERs")), ' - ', _("advanced search")),
          url='/oers/search/',
+         weight=80,
+        ))
+    children.append (MenuItem(
+         string_concat(capfirst(_("repositories")), ' - ', _("advanced search")),
+         url='/repos/search/',
          weight=80,
         ))
     return children
@@ -107,11 +112,11 @@ def info_children(request):
     return children
 
 # Add a few items to our main menu
-Menu.add_item("main", MenuItem(capfirst(_("find OERs")),
+Menu.add_item("main", MenuItem(capfirst(_("search")),
                                url='/p',
                                weight=30,
                                check=True,
-                               children=oers_children,
+                               children=search_children,
                                separator=True))
 Menu.add_item("main", MenuItem(capfirst(_("rankings")),
                                url='/p',

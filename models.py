@@ -187,23 +187,6 @@ class Project(models.Model):
         verbose_name = _('project / community')
         verbose_name_plural = _('projects')
 
-    """
-    def save(self, *args, **kwargs):
-        try:
-            group = self.group
-        except:
-            name = self.group.name
-            try:
-                group = Group.objects.get(name=name)
-            except:
-                group = Group(name=name)
-                group.save()
-                # group = Group.objects.get(name=name)
-            self.group = group
-            # obj.group_id = group.id
-        self.slug = self.group.name.replace(' ', '-').lower()
-        super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
-    """
     def save(self, *args, **kwargs):
         try:
             group = self.group
@@ -214,10 +197,6 @@ class Project(models.Model):
             self.group = group
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
 
-    """   
-    def name(self):
-        return self.group.name
-    """
     def get_name(self):
         return self.name or self.group.name
 
@@ -452,7 +431,6 @@ class OER(models.Model):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
-    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
     documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
@@ -469,6 +447,7 @@ class OER(models.Model):
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
     project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))

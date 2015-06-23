@@ -5,6 +5,7 @@ Created on 02/apr/2015
 
 from django.template import RequestContext
 from django.db.models import Count
+from django.db.models import Q
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
@@ -13,7 +14,10 @@ from django.shortcuts import render_to_response, get_object_or_404
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
-from forms import UserProfileForm, UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, OerSearchForm
+from models import DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
+
+from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm
+from forms import RepoSearchForm, OerSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 
@@ -98,8 +102,8 @@ def project_detail(request, project_id, project=None):
         can_add_oer = project.can_add_oer(user)
         can_edit = project.can_edit(user)
         can_chat = project.can_chat(user)
-    repos = Repo.objects.all().order_by('-created')[:5]
-    oers = OER.objects.filter(project_id=project_id).order_by('-created')[:5]
+    repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
+    oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')[:5]
     return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -211,15 +215,11 @@ def project_membership(request, project_id, user_id):
     return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
 
 def repo_list(request):
-    """
-    repos = Repo.objects.all()
-    return render_to_response('repos_list.html', {'repos': repos,}, context_instance=RequestContext(request))
-    """
     user = request.user
     can_add = user.is_authenticated() and user.can_add_repository(request)
     repo_list = []
-    for repo in Repo.objects.all().order_by('name'):
-        oers = OER.objects.filter(source=repo)
+    for repo in Repo.objects.filter(state=PUBLISHED).order_by('name'):
+        oers = OER.objects.filter(source=repo, state=PUBLISHED)
         n = len(oers)
         repo_list.append([repo, n])
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list,}, context_instance=RequestContext(request))
@@ -228,8 +228,8 @@ def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)
     can_add = user.is_authenticated() and user.can_add_repository(request) and user==request.user
     repo_list = []
-    for repo in Repo.objects.filter(creator=user).order_by('-created'):
-        oers = OER.objects.filter(source=repo)
+    for repo in Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created'):
+        oers = OER.objects.filter(source=repo, state=PUBLISHED)
         n = len(oers)
         repo_list.append([repo, n])
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
@@ -252,7 +252,7 @@ def repo_contributors(request):
 def repo_oers(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
-    oers = OER.objects.filter(source=repo)
+    oers = OER.objects.filter(source=repo, state=PUBLISHED)
     return render_to_response('repo_oers.html', {'repo': repo, 'oers': oers,}, context_instance=RequestContext(request))
 
 def repo_oers_by_slug(request, repo_slug):
@@ -330,13 +330,13 @@ def oer_list(request):
     user = request.user
     # can_add = user.is_authenticated() and user.can_add_repository(request)
     can_add = user.is_authenticated()
-    oer_list = OER.objects.all()
+    oer_list = OER.objects.filter(state=PUBLISHED)
     return render_to_response('oer_list.html', {'can_add': can_add, 'oer_list': oer_list,}, context_instance=RequestContext(request))
 
 def oers_by_project(request):
     project_list = []
     for project in Project.objects.all().order_by('group__name'):
-        oers = OER.objects.filter(project=project)
+        oers = OER.objects.filter(project=project, state=PUBLISHED)
         n = len(oers)
         if n:
             project_list.append([project, n])
@@ -467,6 +467,30 @@ def project_add_oer(request, project_id):
         return HttpResponseRedirect('/project/%s/' % project.slug)
     return oer_edit(request, project_id=project_id) 
 
+def repos_search(request):
+    repos = []
+    if request.method == 'POST': # If the form has been submitted...
+        form = OerSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            qq = []
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__in=subjects))
+            languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__in=languages))
+            repo_features = request.POST.getlist('features')
+            if repo_features:
+                qq.append(Q(features__in=repo_features))
+            if qq:
+                query = qq[0]
+                for q in qq[1:]:
+                    query = query | q
+                repos = Repo.objects.filter(query).order_by('name')
+    else:
+        form = RepoSearchForm()
+    return render_to_response('search_repos.html', {'repos': repos, 'form': form,}, context_instance=RequestContext(request))
+
 q_extra = ['(', ')', '[', ']', '"']
 def clean_q(q):
     for c in q_extra:
@@ -477,21 +501,45 @@ def search_by_string(request, q, subjects=[], languages=[]):
     pass
 
 def oers_search(request):
+    oers = []
     if request.method == 'POST': # If the form has been submitted...
         form = OerSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             q = request.POST.get('q', '')
             q = clean_q(q)
+            qq = []
+            oer_types = request.POST.getlist('oer_type')
+            if oer_types:
+                qq.append(Q(oer_type__in=oer_types))
+            source_types = request.POST.getlist('source_type')
+            if source_types:
+                qq.append(Q(source_type__in=source_types))
+            materials = request.POST.getlist('material')
+            if materials:
+                qq.append(Q(material__in=materials))
+            licenses = request.POST.getlist('license')
+            if licenses:
+                qq.append(Q(license__in=licenses))
+            levels = request.POST.getlist('levels')
+            if levels:
+                qq.append(Q(level__in=levels))
             subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__in=subjects))
             languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__in=languages))
+            media = request.POST.getlist('media')
+            if media:
+                qq.append(Q(media__in=media))
+            acc_features = request.POST.getlist('accessibility')
+            if acc_features:
+                qq.append(Q(accessibility__in=acc_features))
+            if qq:
+                query = qq[0]
+                for q in qq[1:]:
+                    query = query | q
+                    oers = OER.objects.filter(query).order_by('title')
     else:
-        subjects = []
-        languages = ''
-        q = request.GET.get('q', '')
-        q = clean_q(q)
-        if q:
-            form = OerSearchForm(q=q)
-        else:
-            form = OerSearchForm()
-    oers = search_by_string(request, q, subjects=subjects, languages=languages)
-    return render_to_response('search_results.html', {'q': q, 'oers': oers, 'form': form,}, context_instance=RequestContext(request))
+        form = OerSearchForm()
+    return render_to_response('search_oers.html', {'oers': oers, 'form': form,}, context_instance=RequestContext(request))
