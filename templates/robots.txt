@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /
+Crawl-delay: 12
+User-agent: BUbiNG
+Disallow: /
+User-agent: BLEXBot
+Disallow: /
+User-agent: spbot
+Disallow: /

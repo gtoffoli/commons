@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-23 17:58+0200\n"
+"POT-Creation-Date: 2015-06-24 00:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,7 +93,7 @@ msgstr ""
 msgid "family name"
 msgstr ""
 
-#: .\forms.py:75 .\forms.py:87 .\forms.py:151 .\models.py:118 .\models.py:141
+#: .\forms.py:75 .\forms.py:87 .\forms.py:152 .\models.py:118 .\models.py:141
 #: .\models.py:174 .\models.py:324 .\models.py:343 .\models.py:375
 #: .\models.py:432
 msgid "name"
@@ -115,15 +115,15 @@ msgstr ""
 msgid "longer description"
 msgstr ""
 
-#: .\forms.py:91 .\forms.py:117 .\models.py:348 .\models.py:377
+#: .\forms.py:91 .\forms.py:118 .\models.py:348 .\models.py:377
 msgid "repository type"
 msgstr ""
 
-#: .\forms.py:92 .\forms.py:119 .\models.py:329
+#: .\forms.py:92 .\forms.py:121 .\models.py:329
 msgid "repository features"
 msgstr ""
 
-#: .\forms.py:93 .\forms.py:123 .\forms.py:164 .\forms.py:202
+#: .\forms.py:93 .\forms.py:124 .\forms.py:165 .\forms.py:203
 #: .\templates\oer_detail.html:32
 msgid "subject areas"
 msgstr ""
@@ -157,99 +157,99 @@ msgstr ""
 msgid "evaluation"
 msgstr ""
 
-#: .\forms.py:97 .\forms.py:168
+#: .\forms.py:97 .\forms.py:169
 msgid "publication state"
 msgstr ""
 
-#: .\forms.py:113 .\forms.py:184
-msgid "text in title and description"
-msgstr ""
-
-#: .\forms.py:114 .\forms.py:185
-msgid "enter search string"
-msgstr ""
-
-#: .\forms.py:124 .\forms.py:203
+#: .\forms.py:125 .\forms.py:204
 msgid "choose subject areas (no selection = all areas)"
 msgstr ""
 
-#: .\forms.py:127 .\forms.py:165 .\forms.py:206
+#: .\forms.py:128 .\forms.py:166 .\forms.py:207
 #: .\templates\user_profile.html:45
 msgid "languages"
 msgstr ""
 
-#: .\forms.py:128 .\forms.py:207
+#: .\forms.py:129 .\forms.py:208
 msgid "choose languages (no selection = all areas)"
 msgstr ""
 
-#: .\forms.py:152 .\models.py:433
+#: .\forms.py:153 .\models.py:433
 msgid "abstract or description"
 msgstr ""
 
-#: .\forms.py:153 .\forms.py:187
+#: .\forms.py:154 .\forms.py:188
 msgid "OER type"
 msgstr ""
 
-#: .\forms.py:154 .\forms.py:190
+#: .\forms.py:155 .\forms.py:191
 msgid "source type"
 msgstr ""
 
-#: .\forms.py:156 .\models.py:565 .\templates\project_detail.html:7
+#: .\forms.py:157 .\models.py:565 .\templates\project_detail.html:7
 #: .\templates\project_detail.html.py:62 .\templates\project_edit.html:7
 #: .\templates\project_edit.html.py:19
 msgid "project"
 msgstr ""
 
-#: .\forms.py:156 .\models.py:449
+#: .\forms.py:157 .\models.py:449
 msgid "where the OER has been cataloged or created"
 msgstr ""
 
-#: .\forms.py:157
+#: .\forms.py:158
 msgid "derived from"
 msgstr ""
 
-#: .\forms.py:158 .\models.py:438 .\templates\oer_detail.html:19
+#: .\forms.py:159 .\models.py:438 .\templates\oer_detail.html:19
 msgid "source repository"
 msgstr ""
 
-#: .\forms.py:159
+#: .\forms.py:160
 msgid "specific URL of the OER"
 msgstr ""
 
-#: .\forms.py:159
+#: .\forms.py:160
 msgid "if applicable"
 msgstr ""
 
-#: .\forms.py:160 .\models.py:440
+#: .\forms.py:161 .\models.py:440
 msgid "other info to identify/access the OER in the source"
 msgstr ""
 
-#: .\forms.py:161 .\forms.py:193 .\models.py:441
+#: .\forms.py:162 .\forms.py:194 .\models.py:441
 #: .\templates\oer_detail.html:18
 msgid "type of material"
 msgstr ""
 
-#: .\forms.py:162 .\forms.py:196 .\models.py:442
+#: .\forms.py:163 .\forms.py:197 .\models.py:442
 #: .\templates\oer_detail.html:21
 msgid "terms of use"
 msgstr ""
 
-#: .\forms.py:163 .\forms.py:198 .\vocabularies.py:90
+#: .\forms.py:164 .\forms.py:199 .\vocabularies.py:90
 #: .\templates\oer_detail.html:23
 msgid "levels"
 msgstr ""
 
-#: .\forms.py:166 .\forms.py:210 .\vocabularies.py:78
+#: .\forms.py:167 .\forms.py:211 .\vocabularies.py:78
 #: .\templates\oer_detail.html:50
 msgid "media formats"
 msgstr ""
 
-#: .\forms.py:167 .\forms.py:214 .\vocabularies.py:84
+#: .\forms.py:168 .\forms.py:215 .\vocabularies.py:84
 #: .\templates\oer_detail.html:59
 msgid "accessibility features"
 msgstr ""
 
-#: .\forms.py:219
+#: .\forms.py:185
+msgid "text in title and description"
+msgstr ""
+
+#: .\forms.py:186
+msgid "enter search string"
+msgstr ""
+
+#: .\forms.py:220
 msgid "select a file"
 msgstr ""
 
@@ -719,10 +719,6 @@ msgstr ""
 msgid "sign up"
 msgstr ""
 
-#: .\templates\_footer - Copia.html:3
-msgid "&copy; 2014 &lt;your company here&gt;"
-msgstr ""
-
 #: .\templates\_footer.html:3
 msgid "consortium"
 msgstr ""
@@ -752,19 +748,11 @@ msgid "is present"
 msgstr ""
 
 #: .\templates\homepage.html:14
-msgid "is an international"
-msgstr ""
-
-#: .\templates\homepage.html:14
-msgid "community of practice"
+msgid "is an international community of practice"
 msgstr ""
 
 #: .\templates\homepage.html:15
-msgid "devoted to"
-msgstr ""
-
-#: .\templates\homepage.html:15
-msgid "the improvement of"
+msgid "devoted to the improvement of"
 msgstr ""
 
 #: .\templates\homepage.html:15
@@ -1011,21 +999,24 @@ msgstr ""
 msgid "search OERs"
 msgstr ""
 
-#: .\templates\search_oers.html:14 .\templates\search_repos.html:14
+#: .\templates\search_oers.html:14
 msgid "work in progress"
 msgstr ""
 
-#: .\templates\search_oers.html:18 .\templates\search_repos.html:31
+#: .\templates\search_oers.html:17 .\templates\search_repos.html:18
+msgid "search results"
+msgstr ""
+
+#: .\templates\search_oers.html:24 .\templates\search_repos.html:32
 msgid "new search"
 msgstr ""
 
-#: .\templates\search_oers.html:19 .\templates\search_repos.html:18
-#: .\templates\search_repos.html.py:32
+#: .\templates\search_oers.html:25 .\templates\search_repos.html:33
 msgid "apply the search criteria below"
 msgstr ""
 
-#: .\templates\search_repos.html:17
-msgid "search results"
+#: .\templates\search_repos.html:24
+msgid "no results were found"
 msgstr ""
 
 #: .\templates\user_profile.html:5 .\templates\user_profile.html.py:26

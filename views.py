@@ -21,6 +21,11 @@ from forms import RepoSearchForm, OerSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 
+def robots(request):
+    response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
+    response['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
 def group_has_project(group):
     try:
         return group.project
@@ -119,7 +124,6 @@ def project_edit(request, project_id=None, parent_id=None):
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
     if project_id:
-        print 'project_id: ', project_id
         if project.can_edit(user):
             form = ProjectForm(instance=project)
             return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
@@ -470,23 +474,26 @@ def project_add_oer(request, project_id):
 def repos_search(request):
     repos = []
     if request.method == 'POST': # If the form has been submitted...
-        form = OerSearchForm(request.POST) # A form bound to the POST data
+        form = RepoSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             qq = []
+            repo_types = request.POST.getlist('repo_type')
+            if repo_types:
+                qq.append(Q(repo_type_id__in=repo_types))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__in=subjects))
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
             languages = request.POST.getlist('languages')
             if languages:
-                qq.append(Q(languages__in=languages))
+                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
             repo_features = request.POST.getlist('features')
             if repo_features:
                 qq.append(Q(features__in=repo_features))
             if qq:
                 query = qq[0]
                 for q in qq[1:]:
-                    query = query | q
-                repos = Repo.objects.filter(query).order_by('name')
+                    query = query & q
+                repos = Repo.objects.filter(query).distinct().order_by('name')
     else:
         form = RepoSearchForm()
     return render_to_response('search_repos.html', {'repos': repos, 'form': form,}, context_instance=RequestContext(request))

@@ -102,22 +102,23 @@ class RepoSearchForm(forms.Form):
         if q:
             kwargs.pop('q')
         super(RepoSearchForm, self).__init__(*args,**kwargs)
+        if q:
+            self.fields['q'].initial = q
         for fieldname in ('repo_type',):
             self.fields[fieldname].empty_label = None
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
-        if q:
-            self.fields['q'].initial = q
 
+    """
     q = forms.CharField(
         label=_("text in title and description"), required=False,
         widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
-    repo_type = forms.ModelChoiceField(required=True,
-        queryset=RepoType.objects.all(),
-        label=_('repository type'), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 5,}))
-    features = forms.ModelMultipleChoiceField(
-        label=_('repository features'),
-        queryset=RepoFeature.objects.all(),
+    """
+    repo_type = forms.ModelMultipleChoiceField(RepoType.objects.all(),
+        label=_('repository type'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 5,}))
+    features = forms.ModelMultipleChoiceField(RepoFeature.objects.all(),
+        label=_('repository features'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
