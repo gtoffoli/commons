@@ -93,7 +93,7 @@ class UserProfile(models.Model):
     pro_field = models.ForeignKey(ProFieldEntry, blank=True, null=True, verbose_name=_('work sector'))
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='interest areas')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='known languages', help_text=_('The UI will support only EN, IT and PT.'))
-    other_languages = models.TextField(blank=True, verbose_name=_('known languages not listed above'), help_text=_('List one per line.'))
+    other_languages = models.TextField(blank=True, verbose_name=_('known languages not listed above'), help_text=_('list one per line.'))
     short = models.TextField(blank=True, verbose_name=_('short presentation'))
     long = models.TextField(blank=True, verbose_name=_('longer presentation'))
     url = models.CharField(max_length=64, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
@@ -118,8 +118,8 @@ class Subject(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('name'))
 
     class Meta:
-        verbose_name = _('OER subject')
-        verbose_name_plural = _('OER subjects')
+        verbose_name = _('subject')
+        verbose_name_plural = _('subjects')
         ordering = ['code']
 
     def option_label(self):

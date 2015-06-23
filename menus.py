@@ -1,5 +1,5 @@
 from menu import Menu, MenuItem
-from django.utils.translation import ugettext as _, ugettext_lazy
+from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
@@ -17,7 +17,7 @@ def oers_children(request):
          weight=80,
         ))
     children.append (MenuItem(
-         capfirst(_("full search")),
+         capfirst(_("advanced search")),
          url='/oers/search/',
          weight=80,
         ))
@@ -26,13 +26,13 @@ def oers_children(request):
 def rosters_children(request):
     children = []
     children.append (MenuItem(
-         capfirst(_("repositories by submitter")),
+         string_concat(capfirst(_("repositories")), ' ', _("by submitter")),
          url='/repositories/contributors/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("resources by submitter")),
+         string_concat(capfirst(_("resources")), ' ', _("by submitter")),
          url='/oers/contributors/',
          weight=80,
         ))
@@ -47,13 +47,13 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         _("OER search"),
+         capfirst(_("OER search")),
          url='/help/search/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         _("OER collection and classification"),
+         capfirst(_("OER collection and classification")),
          url='/help/catalog/',
          weight=80,
          check=True,
@@ -113,7 +113,7 @@ Menu.add_item("main", MenuItem(capfirst(_("find OERs")),
                                check=True,
                                children=oers_children,
                                separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("rosters")),
+Menu.add_item("main", MenuItem(capfirst(_("rankings")),
                                url='/p',
                                weight=30,
                                check=True,

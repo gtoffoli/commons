@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-"""
 """
 Django settings for commons project.
 """
+
+from django.utils.translation import ugettext_lazy as _
 
 PRODUCTION = False
 DEBUG_TOOLBAR= False
@@ -110,8 +113,6 @@ sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
 
 # ========= COMMONS' CUSTOMIZATIONS
 
-from django.utils.translation import ugettext_lazy as _
-
 PROJECT_TITLE = 'CommonSpaces'
 # PROJECT_NAME = 'mayan'
 PROJECT_NAME = 'commons'
@@ -120,6 +121,8 @@ LOGIN_REDIRECT_URL = '/'
 LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (
     ('en', _('English')),
+    ('it', _('Italian')),
+    ('pt', _('Portuguese')),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
