@@ -98,7 +98,7 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     membership = None
-    can_accept_member = can_add_repository = can_add_oer = can_edit = False
+    can_accept_member = can_add_repository = can_add_oer = can_edit = can_chat = False
     if request.user.is_authenticated():
         user = request.user
         membership = project.get_membership(user)
