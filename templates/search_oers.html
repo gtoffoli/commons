@@ -11,11 +11,19 @@
 	<div class="col-sm-12">
     <section>
 	<h2 class="text-center">{% trans "search OERs"|capfirst %}</h2>
-	<div class="text-center" style="font-style: italic; color:red;">({% trans "work in progress"|capfirst %})</div>
+	{% comment %}<div class="text-center" style="font-style: italic; color:red;">({% trans "work in progress"|capfirst %})</div>{% endcomment %}
 
-	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
+	<table style="border-collapse: separate; border-spacing: 0 .0em;">
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
-	<tr><td>...</td></tr>
+	{% if oers %}
+	{% for oer in oers %}
+       <tr><td><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></td></tr>
+	{% endfor %}
+	{% elif qq %}
+       <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>
+	{% else %}
+       <tr><td><i>{% trans "no query has been specified"|capfirst %}.</i></td></tr>
+	{% endif %}
 	</table>
 
   	<form style="margin: 0;" action="/oers/search/" method="post" id="search_form"><div>

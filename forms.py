@@ -11,6 +11,8 @@ from mptt.forms import TreeNodeMultipleChoiceField
 from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
+from taggit.models import Tag
+from taggit_live.forms import LiveTagField, TaggitLiveWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, CHAT_TYPE_CHOICES, Repo, Language, SubjectNode, RepoType, RepoFeature
@@ -147,9 +149,10 @@ class OerForm(forms.ModelForm):
     class Meta:
         model = OER
         exclude = ('documents', 'metadata',)
+        fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
-    title = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
     source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -163,10 +166,17 @@ class OerForm(forms.ModelForm):
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+    tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+
+class OerChangeForm(forms.ModelForm):
+    class Meta:
+        model = OER
+        fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'metadata',]
+    tags = LiveTagField()
 
 class OerSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -181,13 +191,15 @@ class OerSearchForm(forms.Form):
         if q:
             self.fields['q'].initial = q
 
+    """
     q = forms.CharField(
         label=_("text in title and description"), required=False,
         widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
-    oer_type = forms.ChoiceField(choices=OER_TYPE_CHOICES,
+    """
+    oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
         label=_('OER type'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 3,}))
-    source_type = forms.ChoiceField(choices=SOURCE_TYPE_CHOICES,
+    source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
         label=_('source type'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     material = forms.ModelChoiceField(queryset=MaterialEntry.objects.all(),
@@ -196,13 +208,16 @@ class OerSearchForm(forms.Form):
     license = forms.ModelChoiceField(queryset=LicenseNode.objects.filter(level=0),
         label=_('terms of use'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
-    levels = forms.ModelMultipleChoiceField(label=_('levels'),
-        queryset=LevelNode.objects.filter(level=0), required=False,
+    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
+        label=_('levels'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 14,}))
+    tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
+        label=_('tags'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),

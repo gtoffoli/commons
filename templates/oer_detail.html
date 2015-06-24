@@ -13,7 +13,7 @@
                 {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
             </h2>
             <p class="lead">
-            <div><strong>Title</strong>: {{ oer.title }}</div>
+            <div><strong>{% trans "title"|capfirst %}</strong>: {{ oer.title }}</div>
             {% if oer.description %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ oer.description }}</div>{% endif %}
             {% if oer.material %}<div><strong>{% trans "type of material"|capfirst %}</strong>: {{ oer.material.name }}</div>{% endif %}
             {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}:</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
@@ -26,6 +26,15 @@
 		        <li>{{ level.option_label|safe }}</li>
 		        {% endfor %}
 			</ul>
+			</div>
+		    {% endif %}
+    		{% if oer.tags.all %}
+    		<div><strong>{% trans "tags"|capfirst %}</strong>:
+			<div style="margin-left: 2.0em;">
+		        {% for tag in oer.tags.all %}
+		        <a href="/oers/with-tag/{{ tag.slug }}/">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+		        {% endfor %}
+			</div>
 			</div>
 		    {% endif %}
     		{% if oer.subjects.all %}

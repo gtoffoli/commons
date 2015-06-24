@@ -10,6 +10,11 @@
 
 {% block extra_head %}
 	{% tinymce_preview "preview-content" %}
+	<link href="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.css" type="text/css" media="all" rel="stylesheet" />
+	<link href="/static/taggit_live/css/taggit_live.css" type="text/css" media="all" rel="stylesheet" />
+	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
+	<script type="text/javascript" src="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.js"></script>
+	<script type="text/javascript" src="/static/taggit_live/js/taggit_live.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -25,9 +30,9 @@
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 1 or i == 2 or i == 5 or i == 6 or i == 7 or i == 8 or i == 16 %}8{% else %}4{% endif %}">
+	<div class="form-group col-lg-{% if i == 1 or i == 2 or i == 5 or i == 6 or i == 7 or i == 8 or i == 17 %}8{% else %}5{% endif %}">
 	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
-		<span style="color: red;">{{ field.errors }}</span>{{ field }}
+		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
 		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
 	</div>
 	</div>

@@ -50,6 +50,8 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     "pinax",
     # menus and ...
     'menu',
+    'taggit',
+    'taggit_live',
     # commons project
     'django_messages',
     'roles',

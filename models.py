@@ -11,6 +11,7 @@ from metadata.models import MetadataType
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from roles.utils import get_roles, has_permission
+from taggit.managers import TaggableManager
 
 """ how to make the 'file' field optional in a DocumentVersion?
 import uuid
@@ -429,7 +430,7 @@ SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 class OER(models.Model):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
-    title = models.CharField(max_length=200, db_index=True, verbose_name=_('name'))
+    title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
@@ -443,6 +444,7 @@ class OER(models.Model):
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
+    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please using suggestion of existing tags'))
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
