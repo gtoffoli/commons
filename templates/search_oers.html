@@ -19,7 +19,7 @@
 	{% for oer in oers %}
        <tr><td><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></td></tr>
 	{% endfor %}
-	{% elif qq %}
+	{% elif query %}
        <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>
 	{% else %}
        <tr><td><i>{% trans "no query has been specified"|capfirst %}.</i></td></tr>
