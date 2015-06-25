@@ -444,7 +444,7 @@ class OER(models.Model):
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please using suggestion of existing tags'))
+    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
@@ -563,10 +563,8 @@ class OerFolder(models.Model):
 
 class OerProxy(models.Model):
     oer = models.ForeignKey(OER, verbose_name=_('stands for'))
-    # folder = models.ForeignKey(OerFolder, verbose_name=_('OER folder'))
     project = models.ForeignKey(Project, verbose_name=_('project'))
     created = CreationDateTimeField(_('created'))
-    # user = models.ForeignKey(User, verbose_name=_('last editor'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oerproxy_creator')
     editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oerproxy__editor')
