@@ -10,9 +10,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-25 17:04+0200\n"
-"PO-Revision-Date: 2015-06-25 21:57+0000\n"
-"Last-Translator: Andrea Spila <andrea.spila@gmail.com>\n"
+"POT-Creation-Date: 2015-06-26 18:16+0200\n"
+"PO-Revision-Date: 2015-06-26 16:17+0000\n"
+"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -275,77 +275,82 @@ msgstr "per origine"
 msgid "by project"
 msgstr "per progetto"
 
-#: .\menus.py:20 .\menus.py:25
+#: .\menus.py:20 .\menus.py:30
 msgid "advanced search"
 msgstr "ricerca avanzata"
 
-#: .\menus.py:25 .\menus.py:34 .\templates\search_repos.html:5
+#: .\menus.py:25 .\menus.py:30 .\menus.py:39 .\templates\search_repos.html:5
 #: .\templates\search_repos.html.py:13
 msgid "repositories"
 msgstr "repository"
 
-#: .\menus.py:34 .\menus.py:40
+#: .\menus.py:25 .\templates\browse_repos.html:5
+#: .\templates\browse_repos.html.py:12
+msgid "distributions"
+msgstr "distribuzioni"
+
+#: .\menus.py:39 .\menus.py:45
 msgid "by submitter"
 msgstr "per proponente"
 
-#: .\menus.py:40
+#: .\menus.py:45
 msgid "resources"
 msgstr "risorse"
 
-#: .\menus.py:49
+#: .\menus.py:54
 msgid "site navigation"
 msgstr "navigazione nel sito"
 
-#: .\menus.py:55
+#: .\menus.py:60
 msgid "OER search"
 msgstr "ricerca degli OER"
 
-#: .\menus.py:61
+#: .\menus.py:66
 msgid "OER collection and classification"
 msgstr "raccolta e classificazione degli OER"
 
-#: .\menus.py:67
+#: .\menus.py:72
 msgid "registration and authentication"
 msgstr "registrazione e autenticazione"
 
-#: .\menus.py:73
+#: .\menus.py:78
 msgid "editing the user profile"
 msgstr "modifica del profilo utente"
 
-#: .\menus.py:83
+#: .\menus.py:88
 msgid "about"
 msgstr "chi siamo"
 
-#: .\menus.py:89
+#: .\menus.py:94
 msgid "community and projects"
 msgstr "comunità e progetti"
 
-#: .\menus.py:95
+#: .\menus.py:100
 msgid "OERs and metadata"
 msgstr "OER e metadati"
 
-#: .\menus.py:101 .\models.py:395
+#: .\menus.py:106 .\models.py:395
 msgid "external repositories"
 msgstr "repository esterni"
 
-#: .\menus.py:107
+#: .\menus.py:112
 msgid "the user profile"
 msgstr "profilo utente"
 
-#: .\menus.py:115 .\templates\search_repos.html:5
+#: .\menus.py:120 .\templates\search_repos.html:5
 #: .\templates\search_repos.html.py:13
 msgid "search"
 msgstr "ricerca"
 
-#: .\menus.py:121
+#: .\menus.py:126
 msgid "rankings"
 msgstr "graduatorie"
 
-#: .\menus.py:127
+#: .\menus.py:132
 msgid "help"
 msgstr "guida"
 
-#: .\menus.py:133
+#: .\menus.py:138
 msgid "info"
 msgstr "informazioni"
 
@@ -748,6 +753,10 @@ msgstr "con"
 #: .\templates\_footer.html:6
 msgid "privacy policy"
 msgstr "informativa sulla privacy"
+
+#: .\templates\browse_repos.html:5 .\templates\browse_repos.html.py:12
+msgid "of repositories"
+msgstr "dei repository"
 
 #: .\templates\cops_tree.html:14
 msgid "Communities and Projects"

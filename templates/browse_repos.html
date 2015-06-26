@@ -1,0 +1,24 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "distributions"|capfirst %} {% trans "of repositories" %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% trans "distributions"|capfirst %} {% trans "of repositories" %}</h2>
+			<ul style="list-style-type: none; padding-bottom: 10px;">
+		    {% for field_name, field_label, entries in browse_list %}
+		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
+		    	{% for code, label, prefix, n in entries %}
+		    	<li>{% if prefix %}{{ prefix }} {% endif %}{{ label }} ({{ n }})</li>
+		    	{% endfor %}
+		    	</ul></li>
+		    {% endfor %}
+			</ul>
+        </div>
+    </section>
+{% endblock %}

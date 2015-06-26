@@ -22,6 +22,11 @@ def search_children(request):
          weight=80,
         ))
     children.append (MenuItem(
+         string_concat(capfirst(_("repositories")), ' - ', _("distributions")),
+         url='/repos/',
+         weight=80,
+        ))
+    children.append (MenuItem(
          string_concat(capfirst(_("repositories")), ' - ', _("advanced search")),
          url='/repos/search/',
          weight=80,

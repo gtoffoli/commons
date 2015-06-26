@@ -6,10 +6,12 @@ Created on 02/apr/2015
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
+from django.forms import ModelMultipleChoiceField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
+from django.utils.translation import get_language, pgettext
 
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
@@ -330,6 +332,38 @@ def repo_edit(request, repo_id):
 def repo_edit_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_edit(request, repo.id)
+
+def browse_repos(request):
+    form = RepoSearchForm
+    field_names = ['features', 'languages', 'subjects', 'repo_type',]
+    browse_list = []
+    base_fields = form.base_fields
+    for field_name in field_names:
+        field = base_fields[field_name]
+        field_label = pgettext(RequestContext(request), field.label)
+        queryset = field.queryset
+        entries = []
+        for entry in queryset:    
+            try:
+                code = entry.code
+                label = entry.name
+            except:
+                try:
+                    label = entry.description
+                    code = entry.name
+                except:
+                    label = entry.name
+                    code = entry.id
+            try:
+                prefix = '-' * entry.level
+            except:
+                prefix = ''
+            n = Repo.objects.filter(**{field_name: entry}).count()
+            print entry, n
+            entries.append([code, label, prefix, n])
+        browse_list.append([field_name, field_label, entries])
+    return render_to_response('browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,}, context_instance=RequestContext(request))
+    
 
 def oer_list(request, field_name='', field_value=None):
     oers = []

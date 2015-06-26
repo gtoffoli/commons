@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-25 17:04+0200\n"
+"POT-Creation-Date: 2015-06-26 18:16+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -270,77 +270,82 @@ msgstr ""
 msgid "by project"
 msgstr ""
 
-#: .\menus.py:20 .\menus.py:25
+#: .\menus.py:20 .\menus.py:30
 msgid "advanced search"
 msgstr ""
 
-#: .\menus.py:25 .\menus.py:34 .\templates\search_repos.html:5
+#: .\menus.py:25 .\menus.py:30 .\menus.py:39 .\templates\search_repos.html:5
 #: .\templates\search_repos.html.py:13
 msgid "repositories"
 msgstr ""
 
-#: .\menus.py:34 .\menus.py:40
+#: .\menus.py:25 .\templates\browse_repos.html:5
+#: .\templates\browse_repos.html.py:12
+msgid "distributions"
+msgstr ""
+
+#: .\menus.py:39 .\menus.py:45
 msgid "by submitter"
 msgstr ""
 
-#: .\menus.py:40
+#: .\menus.py:45
 msgid "resources"
 msgstr ""
 
-#: .\menus.py:49
+#: .\menus.py:54
 msgid "site navigation"
 msgstr ""
 
-#: .\menus.py:55
+#: .\menus.py:60
 msgid "OER search"
 msgstr ""
 
-#: .\menus.py:61
+#: .\menus.py:66
 msgid "OER collection and classification"
 msgstr ""
 
-#: .\menus.py:67
+#: .\menus.py:72
 msgid "registration and authentication"
 msgstr ""
 
-#: .\menus.py:73
+#: .\menus.py:78
 msgid "editing the user profile"
 msgstr ""
 
-#: .\menus.py:83
+#: .\menus.py:88
 msgid "about"
 msgstr ""
 
-#: .\menus.py:89
+#: .\menus.py:94
 msgid "community and projects"
 msgstr ""
 
-#: .\menus.py:95
+#: .\menus.py:100
 msgid "OERs and metadata"
 msgstr ""
 
-#: .\menus.py:101 .\models.py:395
+#: .\menus.py:106 .\models.py:395
 msgid "external repositories"
 msgstr ""
 
-#: .\menus.py:107
+#: .\menus.py:112
 msgid "the user profile"
 msgstr ""
 
-#: .\menus.py:115 .\templates\search_repos.html:5
+#: .\menus.py:120 .\templates\search_repos.html:5
 #: .\templates\search_repos.html.py:13
 msgid "search"
 msgstr ""
 
-#: .\menus.py:121
+#: .\menus.py:126
 msgid "rankings"
 msgstr ""
 
-#: .\menus.py:127
+#: .\menus.py:132
 msgid "help"
 msgstr ""
 
-#: .\menus.py:133
+#: .\menus.py:138
 msgid "info"
 msgstr ""
 
@@ -742,6 +747,10 @@ msgstr ""
 
 #: .\templates\_footer.html:6
 msgid "privacy policy"
+msgstr ""
+
+#: .\templates\browse_repos.html:5 .\templates\browse_repos.html.py:12
+msgid "of repositories"
 msgstr ""
 
 #: .\templates\cops_tree.html:14
