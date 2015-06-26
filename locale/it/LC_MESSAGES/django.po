@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2015-06-25 17:04+0200\n"
-"PO-Revision-Date: 2015-06-25 15:06+0000\n"
-"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
+"PO-Revision-Date: 2015-06-25 21:57+0000\n"
+"Last-Translator: Andrea Spila <andrea.spila@gmail.com>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -723,11 +723,11 @@ msgstr "amministratore"
 
 #: .\templates\_account_bar.html:19
 msgid "log out"
-msgstr "scollegati"
+msgstr "esci"
 
 #: .\templates\_account_bar.html:24
 msgid "log in"
-msgstr "autenticati"
+msgstr "accedi"
 
 #: .\templates\_account_bar.html:26
 msgid "sign up"
@@ -827,7 +827,7 @@ msgstr "aggiungi"
 
 #: .\templates\oer_edit.html:7 .\templates\oer_edit.html.py:24
 msgid "edit OER"
-msgstr "edita OER"
+msgstr "modifica OER"
 
 #: .\templates\oer_edit.html:7 .\templates\oer_edit.html.py:24
 msgid "add OER"
@@ -835,11 +835,11 @@ msgstr "aggiungi OER"
 
 #: .\templates\oer_list.html:5 .\templates\oer_list.html.py:12
 msgid "OERs with tag"
-msgstr "OERs con il tag"
+msgstr "OER con tag"
 
 #: .\templates\oer_list.html:21
 msgid "no OERs are present"
-msgstr "non sono presenti OERs"
+msgstr "non sono presenti OER"
 
 #: .\templates\oer_list.html:21
 msgid "with this tag"
@@ -859,7 +859,7 @@ msgstr "ha"
 
 #: .\templates\profile_edit.html:7 .\templates\profile_edit.html.py:25
 msgid "edit the profile of"
-msgstr "edita il profilo di"
+msgstr "modifica il profilo di"
 
 #: .\templates\project_detail.html:7 .\templates\project_detail.html.py:62
 msgid "community"

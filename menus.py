@@ -1,5 +1,5 @@
 from menu import Menu, MenuItem
-from django.utils.translation import ugettext as _, ugettext_lazy, string_concat
+from django.utils.translation import ugettext_lazy as _, string_concat
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
