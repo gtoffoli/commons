@@ -349,11 +349,11 @@ def browse_repos(request):
                 label = entry.name
             except:
                 try:
-                    label = entry.description
-                    code = entry.name
-                except:
                     label = entry.name
                     code = entry.id
+                except:
+                    label = entry.description
+                    code = entry.name
             try:
                 prefix = '-' * entry.level
             except:
@@ -518,10 +518,12 @@ def repos_search(request):
                 qq.append(Q(repo_type_id__in=repo_types))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                qq.append(Q(state=PUBLISHED) & Q(subjects__in=subjects))
             languages = request.POST.getlist('languages')
             if languages:
-                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                qq.append(Q(state=PUBLISHED) & Q(languages__in=languages))
             repo_features = request.POST.getlist('features')
             if repo_features:
                 qq.append(Q(features__in=repo_features))

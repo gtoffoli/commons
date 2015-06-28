@@ -6,6 +6,12 @@ from django.utils.text import capfirst
 def search_children(request):
     children = []
     children.append (MenuItem(
+         capfirst(_("distributions")),
+         url='/repos/',
+         weight=80,
+        ))
+    """
+    children.append (MenuItem(
          string_concat(capfirst(_("OERs")), ' - ', _("by source")),
          url='/repos/',
          weight=80,
@@ -16,14 +22,10 @@ def search_children(request):
          url='/oers/by_project/',
          weight=80,
         ))
+    """
     children.append (MenuItem(
          string_concat(capfirst(_("OERs")), ' - ', _("advanced search")),
          url='/oers/search/',
-         weight=80,
-        ))
-    children.append (MenuItem(
-         string_concat(capfirst(_("repositories")), ' - ', _("distributions")),
-         url='/repos/',
          weight=80,
         ))
     children.append (MenuItem(
