@@ -7,7 +7,8 @@ def search_children(request):
     children = []
     children.append (MenuItem(
          capfirst(_("distributions")),
-         url='/repos/',
+         # url='/repos/',
+         url='/browse/',
          weight=80,
         ))
     """

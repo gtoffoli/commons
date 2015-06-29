@@ -366,10 +366,10 @@ PUBLISHED = 3
 UN_PUBLISHED = 4
 
 PUBLICATION_STATE_CHOICES = (
-    (DRAFT, _('draft')),
-    (SUBMITTED, _('submitted')),
-    (PUBLISHED, _('published')),
-    (UN_PUBLISHED, _('un-published')),)
+    (DRAFT, _('Draft')),
+    (SUBMITTED, _('Submitted')),
+    (PUBLISHED, _('Published')),
+    (UN_PUBLISHED, _('Un-published')),)
 PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
 class Repo(models.Model):
@@ -413,17 +413,26 @@ class Repo(models.Model):
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
     # (0, '-'),
-    (1, _('metadata only')),
-    (2, _('metadata and online reference')),
-    (3, _('metadata and document(s)')),)
+    (1, _('Metadata only')),
+    (2, _('Metadata and online reference')),
+    (3, _('Metadata and document(s)')),)
 OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
+"""
 SOURCE_TYPE_CHOICES = (
     (1, _('catalogued source: select source repository')),
     (2, _('non-catalogued source')),
     (3, _('derived-translated: select original')),
     (4, _('derived-adapted: select original')),
     (5, _('derived-remixed: select original(s)')),
+    (6, _('none (brand new OER)')),)
+"""
+SOURCE_TYPE_CHOICES = (
+    (1, _('Catalogued source')),
+    (2, _('Non-catalogued source')),
+    (3, _('Derived-translated')),
+    (4, _('Derived-adapted')),
+    (5, _('Derived-remixed')),
     (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 

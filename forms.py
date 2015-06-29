@@ -202,19 +202,21 @@ class OerSearchForm(forms.Form):
     source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
         label=_('source type'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
-    material = forms.ModelChoiceField(queryset=MaterialEntry.objects.all(),
+    material = forms.ModelMultipleChoiceField(queryset=MaterialEntry.objects.all(),
         label=_('type of material'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
-    license = forms.ModelChoiceField(queryset=LicenseNode.objects.filter(level=0),
+    # license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.filter(level=0),
+    license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.all(),
         label=_('terms of use'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
-    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+    # levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
+    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 14,}))
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))

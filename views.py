@@ -15,7 +15,7 @@ from django.utils.translation import get_language, pgettext
 
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
+from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, LicenseNode, LevelNode
 from models import DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
 
 from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm
@@ -363,7 +363,85 @@ def browse_repos(request):
             entries.append([code, label, prefix, n])
         browse_list.append([field_name, field_label, entries])
     return render_to_response('browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,}, context_instance=RequestContext(request))
-    
+ 
+def browse(request):
+    form = OerSearchForm
+    field_names = ['oer_type', 'source_type', 'levels', 'material', 'languages', 'subjects', 'tags', 'media', 'accessibility', 'license', ]
+    oers_browse_list = []
+    base_fields = form.base_fields
+    for field_name in field_names:
+        field = base_fields[field_name]
+        field_label = pgettext(RequestContext(request), field.label)
+        entries = []
+        if hasattr(field, 'queryset'):
+            queryset = field.queryset
+            """
+            if field_name == 'license':
+                queryset = LicenseNode.objects.all()
+            elif field_name == 'levels':
+                queryset = LevelNode.objects.all()
+            """
+            entries = []
+            for entry in queryset:    
+                try:
+                    code = entry.code
+                    label = entry.name
+                except:
+                    try:
+                        label = entry.name
+                        code = entry.id
+                    except:
+                        label = entry.description
+                        code = entry.name
+                try:
+                    prefix = '-' * entry.level
+                except:
+                    prefix = ''
+                n = OER.objects.filter(**{field_name: entry}).count()
+                # print entry, n
+                if n:
+                    entries.append([code, label, prefix, n])
+        else:
+            choices = field.choices
+            for entry in choices:
+                code = entry[0]
+                label = pgettext(RequestContext(request), entry[1])
+                n = OER.objects.filter(**{field_name: code}).count()
+                if n:
+                    entries.append([code, label, '', n])
+        if entries:
+            oers_browse_list.append([field_name, field_label, entries])
+    form = RepoSearchForm
+    field_names = ['features', 'languages', 'subjects', 'repo_type',]
+    repos_browse_list = []
+    base_fields = form.base_fields
+    for field_name in field_names:
+        field = base_fields[field_name]
+        field_label = pgettext(RequestContext(request), field.label)
+        queryset = field.queryset
+        entries = []
+        for entry in queryset:    
+            try:
+                code = entry.code
+                label = entry.name
+            except:
+                try:
+                    label = entry.name
+                    code = entry.id
+                except:
+                    label = entry.description
+                    code = entry.name
+            try:
+                prefix = '-' * entry.level
+            except:
+                prefix = ''
+            n = Repo.objects.filter(**{field_name: entry}).count()
+            # print entry, n
+            if n:
+                entries.append([code, label, prefix, n])
+        repos_browse_list.append([field_name, field_label, entries])
+    return render_to_response('browse.html', {'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
+   
 
 def oer_list(request, field_name='', field_value=None):
     oers = []
