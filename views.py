@@ -644,7 +644,7 @@ def oers_search(request):
                 qq.append(Q(license__in=licenses))
             levels = request.POST.getlist('levels')
             if levels:
-                qq.append(Q(level__in=levels))
+                qq.append(Q(levels__in=levels))
             subjects = request.POST.getlist('subjects')
             if subjects:
                 qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))

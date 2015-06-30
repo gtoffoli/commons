@@ -52,11 +52,13 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     'menu',
     'taggit',
     'taggit_live',
+    # 'datatrans',
     # commons project
     'django_messages',
     'roles',
     'commons',
 ]
+INSTALLED_APPS.remove('south')
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 

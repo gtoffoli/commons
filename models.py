@@ -583,4 +583,4 @@ class OerProxy(models.Model):
         verbose_name_plural = _('OER proxies')
 
 # from commons.metadata_models import *
-
+# from translations import *

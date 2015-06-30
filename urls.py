@@ -11,8 +11,10 @@ urlpatterns = patterns('',
     # url(r'^$', 'pippo.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
-    url(r'', include('taggit_live.urls')),
     url(r'^robots.txt$', 'commons.views.robots', name='robots'),
+    # Import urls from app datatrans
+    url(r'^datatrans/', include('datatrans.urls')),
+    url(r'', include('taggit_live.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r"^my_profile/$", 'commons.views.my_profile', name="account_settings"),
