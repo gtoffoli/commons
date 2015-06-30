@@ -52,7 +52,7 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     'menu',
     'taggit',
     'taggit_live',
-    # 'datatrans',
+    'datatrans',
     # commons project
     'django_messages',
     'roles',

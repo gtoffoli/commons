@@ -13,7 +13,7 @@ urlpatterns = patterns('',
 
     url(r'^robots.txt$', 'commons.views.robots', name='robots'),
     # Import urls from app datatrans
-    # url(r'^datatrans/', include('datatrans.urls')),
+    url(r'^datatrans/', include('datatrans.urls')),
     url(r'', include('taggit_live.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', include(admin.site.urls)),
