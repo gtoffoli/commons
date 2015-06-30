@@ -2,25 +2,25 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "top contributors to"|capfirst %} {% trans "cataloguing of OER sources" %}{% endblock %}
+{% block head_title %}{% trans "top contributors to"|capfirst %} {% trans "OER cataloguing" %}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "cataloguing of OER sources" %}</h2>
+            <h2 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "OER cataloguing" %}</h2>
             <p class="lead">
     {% if user_list %}
 	<ul class="list-unstyled">
         {% for user in user_list %}
         <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_repos > 0 %}<a href="/repos_by/{{ user.username }}/">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
+            ({% if user.num_oers > 0 %}<a href="/oers_by/{{ user.username }}/">{{ user.num_oers }}</a>{% else %}{{ user.num_oers }}{% endif %})
         </li>
         {% endfor %}
 	</ul>
 	{% else %}
-       	<p>{% trans "no repository"|capfirst %} {% trans "is present" %}.</p>
+       	<p>{% trans "no OER"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
             </p>
         </div>

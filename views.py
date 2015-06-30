@@ -256,6 +256,15 @@ def repo_contributors(request):
     users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
     return render_to_response('repo_contributors.html', { 'user_list': users, }, context_instance=RequestContext(request))
 
+def oer_contributors(request):
+    users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
+    return render_to_response('oer_contributors.html', { 'user_list': users, }, context_instance=RequestContext(request))
+
+def oers_by_user(request, username):
+    user = get_object_or_404(User, username=username)
+    oers = OER.objects.filter(creator=user, state=PUBLISHED)
+    return render_to_response('oer_list.html', {'oers': oers, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+
 def repo_oers(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)

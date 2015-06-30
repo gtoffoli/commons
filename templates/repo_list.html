@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "external OER repositories"|capfirst %}
+{% block head_title %}{% trans "OER sources"|capfirst %}
     {% if submitter %}{% trans "catalogued by " %}{{ submitter.get_display_name }}{% else %} - {% trans "full catalog" %}{% endif %}
 {% endblock %}
 
@@ -11,7 +11,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "external OER repositories"|capfirst %}
+            <h2 class="text-center">{% trans "OER sources"|capfirst %}
 				{% if submitter %}{% trans "catalogued by " %}{{ submitter.get_display_name }}{% else %} - {% trans "full catalog" %}{% endif %}
                 {% if can_add %}&nbsp; <a href="/repo/new/" title="add a repository"><i class="fa fa-plus" style="font-size: 0.7em;""></i></a>{% endif %}
             </h2>

@@ -36,8 +36,14 @@ def search_children(request):
         ))
     return children
 
-def rosters_children(request):
+def community_children(request):
     children = []
+    children.append (MenuItem(
+         capfirst(_("communities and projects")),
+         url='/cops/',
+         weight=80,
+         check=True,
+        ))
     children.append (MenuItem(
          string_concat(capfirst(_("repositories")), ' ', _("by submitter")),
          url='/repositories/contributors/',
@@ -120,17 +126,17 @@ def info_children(request):
     return children
 
 # Add a few items to our main menu
-Menu.add_item("main", MenuItem(capfirst(_("search")),
+Menu.add_item("main", MenuItem(capfirst(_("community")),
+                               url='/p',
+                               weight=30,
+                               check=True,
+                               children=community_children,
+                               separator=True))
+Menu.add_item("main", MenuItem(capfirst(_("library")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=search_children,
-                               separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("rankings")),
-                               url='/p',
-                               weight=30,
-                               check=True,
-                               children=rosters_children,
                                separator=True))
 Menu.add_item("main", MenuItem(capfirst(_("help")),
                                url='/p',

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-06-29 23:39+0200\n"
+"POT-Creation-Date: 2015-06-30 23:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -258,13 +258,14 @@ msgstr ""
 msgid "select a file"
 msgstr ""
 
-#: .\menus.py:9 .\templates\browse.html:5 .\templates\browse.html.py:12
-#: .\templates\browse.html:30 .\templates\browse_repos.html:5
+#: .\menus.py:9 .\templates\browse.html:5 .\templates\browse.html.py:15
+#: .\templates\browse.html:33 .\templates\browse_repos.html:5
 #: .\templates\browse_repos.html.py:12
 msgid "distributions"
 msgstr ""
 
-#: .\menus.py:28 .\models.py:471
+#: .\menus.py:28 .\models.py:471 .\templates\oer_list.html:5
+#: .\templates\oer_list.html.py:12
 msgid "OERs"
 msgstr ""
 
@@ -272,73 +273,77 @@ msgstr ""
 msgid "advanced search"
 msgstr ""
 
-#: .\menus.py:33 .\menus.py:42 .\templates\search_repos.html:5
+#: .\menus.py:33 .\menus.py:48 .\templates\search_repos.html:5
 #: .\templates\search_repos.html.py:13
 msgid "repositories"
 msgstr ""
 
-#: .\menus.py:42 .\menus.py:48
+#: .\menus.py:42
+msgid "communities and projects"
+msgstr ""
+
+#: .\menus.py:48 .\menus.py:54
 msgid "by submitter"
 msgstr ""
 
-#: .\menus.py:48
+#: .\menus.py:54
 msgid "resources"
 msgstr ""
 
-#: .\menus.py:57
+#: .\menus.py:63
 msgid "site navigation"
 msgstr ""
 
-#: .\menus.py:63
+#: .\menus.py:69
 msgid "OER search"
 msgstr ""
 
-#: .\menus.py:69
+#: .\menus.py:75
 msgid "OER collection and classification"
 msgstr ""
 
-#: .\menus.py:75
+#: .\menus.py:81
 msgid "registration and authentication"
 msgstr ""
 
-#: .\menus.py:81
+#: .\menus.py:87
 msgid "editing the user profile"
 msgstr ""
 
-#: .\menus.py:91
+#: .\menus.py:97
 msgid "about"
 msgstr ""
 
-#: .\menus.py:97
+#: .\menus.py:103
 msgid "community and projects"
 msgstr ""
 
-#: .\menus.py:103
+#: .\menus.py:109
 msgid "OERs and metadata"
 msgstr ""
 
-#: .\menus.py:109 .\models.py:395
+#: .\menus.py:115 .\models.py:395
 msgid "external repositories"
 msgstr ""
 
-#: .\menus.py:115
+#: .\menus.py:121
 msgid "the user profile"
 msgstr ""
 
-#: .\menus.py:123 .\templates\search_repos.html:5
-#: .\templates\search_repos.html.py:13
-msgid "search"
-msgstr ""
-
-#: .\menus.py:129
-msgid "rankings"
+#: .\menus.py:129 .\templates\project_detail.html:7
+#: .\templates\project_detail.html.py:62
+msgid "community"
 msgstr ""
 
 #: .\menus.py:135
-msgid "help"
+msgid "library"
 msgstr ""
 
 #: .\menus.py:141
+msgid "help"
+msgstr ""
+
+#: .\menus.py:147
 msgid "info"
 msgstr ""
 
@@ -622,15 +627,15 @@ msgstr ""
 msgid "OER proxies"
 msgstr ""
 
-#: .\settings.py:125
+#: .\settings.py:127
 msgid "English"
 msgstr ""
 
-#: .\settings.py:126
+#: .\settings.py:128
 msgid "Italian"
 msgstr ""
 
-#: .\settings.py:127
+#: .\settings.py:129
 msgid "Portuguese"
 msgstr ""
 
@@ -742,19 +747,23 @@ msgstr ""
 msgid "privacy policy"
 msgstr ""
 
-#: .\templates\browse.html:12
+#: .\templates\browse.html:11
+msgid "educational library"
+msgstr ""
+
+#: .\templates\browse.html:15
 msgid "of the resources"
 msgstr ""
 
-#: .\templates\browse.html:30
-msgid "of the repositories"
+#: .\templates\browse.html:33
+msgid "of the sources"
 msgstr ""
 
 #: .\templates\browse_repos.html:5 .\templates\browse_repos.html.py:12
 msgid "of repositories"
 msgstr ""
 
-#: .\templates\cops_tree.html:14
+#: .\templates\cops_tree.html:14 .\templates\homepage.html:27
 msgid "Communities and Projects"
 msgstr ""
 
@@ -762,7 +771,8 @@ msgstr ""
 msgid "no community"
 msgstr ""
 
-#: .\templates\cops_tree.html:39 .\templates\repo_contributors.html:23
+#: .\templates\cops_tree.html:39 .\templates\oer_contributors.html:23
+#: .\templates\repo_contributors.html:23
 msgid "is present"
 msgstr ""
 
@@ -778,32 +788,33 @@ msgstr ""
 msgid "employability skills"
 msgstr ""
 
-#: .\templates\homepage.html:28
-msgid "Communities of Practice"
-msgstr ""
-
-#: .\templates\homepage.html:34
-msgid "a library of"
-msgstr ""
-
-#: .\templates\homepage.html:34
-msgid "Open Educational Resources"
-msgstr ""
-
-#: .\templates\homepage.html:40
-msgid "a repertoire of"
-msgstr ""
-
-#: .\templates\homepage.html:40
+#: .\templates\homepage.html:32
 msgid "Learning Paths"
 msgstr ""
 
-#: .\templates\homepage.html:48
+#: .\templates\homepage.html:36
+msgid "Educational Library"
+msgstr ""
+
+#: .\templates\homepage.html:45
 msgid "see"
 msgstr ""
 
-#: .\templates\homepage.html:49
+#: .\templates\homepage.html:46
 msgid "for more information"
+msgstr ""
+
+#: .\templates\oer_contributors.html:5 .\templates\oer_contributors.html:12
+#: .\templates\repo_contributors.html:5 .\templates\repo_contributors.html:12
+msgid "top contributors to"
+msgstr ""
+
+#: .\templates\oer_contributors.html:5 .\templates\oer_contributors.html:12
+msgid "OER cataloguing"
+msgstr ""
+
+#: .\templates\oer_contributors.html:23
+msgid "no OER"
 msgstr ""
 
 #: .\templates\oer_detail.html:77
@@ -839,7 +850,7 @@ msgid "add OER"
 msgstr ""
 
 #: .\templates\oer_list.html:5 .\templates\oer_list.html.py:12
-msgid "OERs with tag"
+msgid "catalogued by"
 msgstr ""
 
 #: .\templates\oer_list.html:21
@@ -868,10 +879,6 @@ msgstr ""
 
 #: .\templates\profile_edit.html:7 .\templates\profile_edit.html.py:25
 msgid "edit the profile of"
-msgstr ""
-
-#: .\templates\project_detail.html:7 .\templates\project_detail.html.py:62
-msgid "community"
 msgstr ""
 
 #: .\templates\project_detail.html:20
@@ -979,11 +986,7 @@ msgid "cancel"
 msgstr ""
 
 #: .\templates\repo_contributors.html:5 .\templates\repo_contributors.html:12
-msgid "top contributors to"
-msgstr ""
-
-#: .\templates\repo_contributors.html:5 .\templates\repo_contributors.html:12
-msgid "ROERs cataloguing"
+msgid "cataloguing of OER sources"
 msgstr ""
 
 #: .\templates\repo_contributors.html:23
@@ -1007,7 +1010,7 @@ msgid "add repository"
 msgstr ""
 
 #: .\templates\repo_list.html:5 .\templates\repo_list.html.py:14
-msgid "external OER repositories"
+msgid "OER sources"
 msgstr ""
 
 #: .\templates\repo_list.html:6 .\templates\repo_list.html.py:15
@@ -1053,6 +1056,10 @@ msgstr ""
 
 #: .\templates\search_oers.html:34 .\templates\search_repos.html:35
 msgid "apply the search criteria below"
+msgstr ""
+
+#: .\templates\search_repos.html:5 .\templates\search_repos.html.py:13
+msgid "search"
 msgstr ""
 
 #: .\templates\user_profile.html:5 .\templates\user_profile.html.py:26

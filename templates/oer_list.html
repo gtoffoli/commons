@@ -2,14 +2,14 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "OERs with tag"|capfirst %}&nbsp;"{{ field_value }}"{% endblock %}
+{% block head_title %}{% trans "resources"|capfirst %} {% trans "catalogued by" %}&nbsp;{{ submitter.get_display_name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "OERs with tag"|capfirst %}&nbsp;"{{ field_value }}"</h2>
+            <h2 class="text-center">{% trans "resources"|capfirst %} {% trans "catalogued by" %}&nbsp;{{ submitter.get_display_name }}</h2>
             <p class="lead">
 			{% if oers %}
  			<ul class="root">
@@ -21,9 +21,6 @@
 				<div style="margin-left: 1.5em;"><i>{% trans "no OERs are present"|capfirst %} {% trans "with this tag" %}.</i></div>
 			{% endif %}
             </p>
-
-
-
         </div>
     </section>
 {% endblock %}
