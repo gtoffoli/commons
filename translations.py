@@ -7,6 +7,7 @@ Created on 30/giu/2015
 
 from datatrans.utils import register as register_translations
 # from django.contrib.flatpages.models import FlatPage
+from taggit.models import Tag
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 # from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 
@@ -15,6 +16,11 @@ class FlatPageTranslation(object):
     fields = ('title', 'content',)
 register_translations(FlatPage, FlatPageTranslation)
 """
+
+class TagTranslation(object):
+    fields = ('name',)
+register_translations(Tag, TagTranslation)
+
 
 class MaterialEntryTranslation(object):
     fields = ('name',)
