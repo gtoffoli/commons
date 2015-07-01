@@ -321,7 +321,7 @@ class RepoFeature(models.Model):
     """
     Define a repertoire of miscellaneous repository features
     """
-    code = models.CharField(max_length=10, primary_key=True, verbose_name=_('code'))
+    # code = models.CharField(max_length=10, primary_key=True, verbose_name=_('code'))
     name = models.CharField(max_length=100, verbose_name=_('name'))
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
 

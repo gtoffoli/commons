@@ -91,11 +91,18 @@ class RepoTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'description', 'order',)
     search_fields = ['name',]
 
+"""
 class RepoFeatureAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['code', 'name', 'order',]}),
     ]
     list_display = ('code', 'name', 'order',)
+"""
+class RepoFeatureAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {'fields': ['name', 'order',]}),
+    ]
+    list_display = ('id', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
     form = RepoChangeForm

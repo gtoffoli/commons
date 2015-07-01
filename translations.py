@@ -8,6 +8,7 @@ Created on 30/giu/2015
 from datatrans.utils import register as register_translations
 # from django.contrib.flatpages.models import FlatPage
 from taggit.models import Tag
+from models import RepoType, RepoFeature
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 # from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 
@@ -21,6 +22,14 @@ class TagTranslation(object):
     fields = ('name',)
 register_translations(Tag, TagTranslation)
 
+
+class RepoTypeTranslation(object):
+    fields = ('name',)
+register_translations(RepoType, RepoTypeTranslation)
+
+class RepoFeatureTranslation(object):
+    fields = ('name',)
+register_translations(RepoFeature, RepoFeatureTranslation)
 
 class MaterialEntryTranslation(object):
     fields = ('name',)
