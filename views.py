@@ -385,12 +385,6 @@ def browse(request):
         entries = []
         if hasattr(field, 'queryset'):
             queryset = field.queryset
-            """
-            if field_name == 'license':
-                queryset = LicenseNode.objects.all()
-            elif field_name == 'levels':
-                queryset = LevelNode.objects.all()
-            """
             entries = []
             for entry in queryset:    
                 try:
@@ -407,7 +401,7 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                n = OER.objects.filter(**{field_name: entry}).count()
+                n = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
                 # print entry, n
                 if n:
                     entries.append([code, label, prefix, n])
@@ -416,7 +410,7 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                n = OER.objects.filter(**{field_name: code}).count()
+                n = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
                 if n:
                     entries.append([code, label, '', n])
         if entries:
@@ -445,7 +439,7 @@ def browse(request):
                 prefix = '-' * entry.level
             except:
                 prefix = ''
-            n = Repo.objects.filter(**{field_name: entry}).count()
+            n = Repo.objects.filter(Q(**{field_name: entry}) & Q(state=PUBLISHED)).count()
             # print entry, n
             if n:
                 entries.append([code, label, prefix, n])
@@ -678,8 +672,8 @@ def oers_search(request):
             if acc_features:
                 qq.append(Q(accessibility__in=acc_features))
             if qq:
-                query = qq[0]
-                for q in qq[1:]:
+                query = Q(state=PUBLISHED)
+                for q in qq:
                     query = query & q
                 oers = OER.objects.filter(query).distinct().order_by('title')
     else:
