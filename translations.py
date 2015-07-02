@@ -8,9 +8,9 @@ Created on 30/giu/2015
 from datatrans.utils import register as register_translations
 # from django.contrib.flatpages.models import FlatPage
 from taggit.models import Tag
-from models import RepoType, RepoFeature
+from models import ProjType, RepoType, RepoFeature
+from vocabularies import Language, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
-# from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 
 """
 class FlatPageTranslation(object):
@@ -21,6 +21,41 @@ register_translations(FlatPage, FlatPageTranslation)
 class TagTranslation(object):
     fields = ('name',)
 register_translations(Tag, TagTranslation)
+
+
+class ProjTypeTranslation(object):
+    fields = ('description',)
+register_translations(ProjType, ProjTypeTranslation)
+
+"""
+class LanguageTranslation(object):
+    fields = ('description',)
+register_translations(Language, LanguageTranslation)
+
+class CountryEntryTranslation(object):
+    fields = ('description',)
+register_translations(CountryEntry, CountryEntryTranslation)
+"""
+
+class EduLevelEntryTranslation(object):
+    fields = ('name',)
+register_translations(EduLevelEntry, EduLevelEntryTranslation)
+
+class EduFieldEntryTranslation(object):
+    fields = ('name',)
+register_translations(EduFieldEntry, EduFieldEntryTranslation)
+
+class ProStatusNodeTranslation(object):
+    fields = ('name',)
+register_translations(ProStatusNode, ProStatusNodeTranslation)
+
+class ProFieldEntryTranslation(object):
+    fields = ('name',)
+register_translations(ProFieldEntry, ProFieldEntryTranslation)
+
+class NetworkEntryTranslation(object):
+    fields = ('name',)
+register_translations(NetworkEntry, NetworkEntryTranslation)
 
 
 class RepoTypeTranslation(object):
