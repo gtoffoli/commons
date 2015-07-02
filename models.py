@@ -410,6 +410,9 @@ class Repo(models.Model):
             return False
         return user.is_superuser or self.creator==user or user.can_add_repository(request)
 
+    def get_state(self):
+        return PUBLICATION_STATE_DICT[self.state]
+
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
     # (0, '-'),
@@ -488,6 +491,9 @@ class OER(models.Model):
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.can_add_oer(user)
+
+    def get_state(self):
+        return PUBLICATION_STATE_DICT[self.state]
 
     def get_sorted_documents(self):
         return self.documents.all().order_by('date_added')

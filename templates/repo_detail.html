@@ -9,7 +9,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "repository"|capfirst %}:
+            <h2 class="text-center" {% if repo.state != 3 %}style="color: red;"{% endif %}>{% trans "repository"|capfirst %}:
             	&nbsp; {{ repo.name }}
             	&nbsp; <a href="/repos/" title="show repository list"><i class="fa fa-level-up" style="font-size: 0.7em;"></i></a>
                 &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list" style="font-size: 0.7em;""></i></a>
@@ -61,6 +61,8 @@
 				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
 			</div>
 		    {% endif %}
+            <div><strong>{% trans "submitted by"|capfirst %}</strong>: &nbsp;<a href="/profile/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a></div>
+            <div><strong>{% trans "publication state"|capfirst %}</strong>: {{ repo.get_state }}</div>
         </div>
     </section>
 {% endblock %}

@@ -83,6 +83,7 @@
 			</div>
 		    {% endif %}
             <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+            <div><strong>{% trans "publication state"|capfirst %}</strong>: {{ oer.get_state }}</div>
     		{% if oer.documents.all or oer.oer_type == 3 and can_edit %}
     		<div><strong>{% trans "attached documents"|capfirst %}</strong></div>
 			<ul class="root">

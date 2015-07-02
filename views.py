@@ -255,11 +255,23 @@ def repo_detail_by_slug(request, repo_slug):
 
 def repo_contributors(request):
     users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
-    return render_to_response('repo_contributors.html', { 'user_list': users, }, context_instance=RequestContext(request))
+    user_list = []
+    for user in users:
+        n = Repo.objects.filter(creator=user, state=PUBLISHED).count()
+        if n:
+            user.num_repos = n
+            user_list.append(user)
+    return render_to_response('repo_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
 
 def oer_contributors(request):
     users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
-    return render_to_response('oer_contributors.html', { 'user_list': users, }, context_instance=RequestContext(request))
+    user_list = []
+    for user in users:
+        n = OER.objects.filter(creator=user, state=PUBLISHED).count()
+        if n:
+            user.num_oers = n
+            user_list.append(user)
+    return render_to_response('oer_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
 
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
@@ -599,9 +611,11 @@ def project_add_oer(request, project_id):
 def repos_search(request):
     qq = []
     repos = []
+    include_all = ''
     if request.method == 'POST': # If the form has been submitted...
         form = RepoSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
+            include_all = request.POST.get('include')
             repo_types = request.POST.getlist('repo_type')
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
@@ -617,13 +631,16 @@ def repos_search(request):
             if repo_features:
                 qq.append(Q(features__in=repo_features))
             if qq:
-                query = qq[0]
-                for q in qq[1:]:
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = Q(state=PUBLISHED)
+                for q in qq:
                     query = query & q
                 repos = Repo.objects.filter(query).distinct().order_by('name')
     else:
         form = RepoSearchForm()
-    return render_to_response('search_repos.html', {'repos': repos, 'query': qq, 'form': form,}, context_instance=RequestContext(request))
+    return render_to_response('search_repos.html', {'repos': repos, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
 
 q_extra = ['(', ')', '[', ']', '"']
 def clean_q(q):
@@ -637,9 +654,11 @@ def search_by_string(request, q, subjects=[], languages=[]):
 def oers_search(request):
     qq = []
     oers = []
+    include_all = ''
     if request.method == 'POST': # If the form has been submitted...
         form = OerSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
+            include_all = request.POST.get('include')
             oer_types = request.POST.getlist('oer_type')
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -672,7 +691,10 @@ def oers_search(request):
             if acc_features:
                 qq.append(Q(accessibility__in=acc_features))
             if qq:
-                query = Q(state=PUBLISHED)
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = Q(state=PUBLISHED)
                 for q in qq:
                     query = query & q
                 oers = OER.objects.filter(query).distinct().order_by('title')

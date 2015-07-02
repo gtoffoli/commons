@@ -17,7 +17,7 @@
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
 	{% if oers %}
 	{% for oer in oers %}
-       <tr><td><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></td></tr>
+       <tr><td><a href="/oer/{{ oer.slug }}/" {% if oer.state != 3 %}style="color: red;"{% endif %}>{{ oer.title }}</a></td></tr>
 	{% endfor %}
 	{% elif query %}
        <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>
@@ -30,7 +30,9 @@
 	{% csrf_token %}
 	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
 	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
-   	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}"></td></tr>
+   	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}">
+   	   	{% if user.is_authenticated %}&nbsp; <input type="checkbox" name="include" value="include" {{ include_all }}> include non published items{% else %}<input type="hidden" name="include" value="">{% endif %}
+   	</td></tr>
 	{% for field in form.visible_fields %}
        <tr style="vertical-align: top;">
 	   		<th style="margin-top: .5em; font-weight: bold; text-align: right; vertical-align: middle;">{% if field.help_text %}<img src="{% static "admin/img/icon-unknown.gif" %}" Title="{{ field.help_text }}" style="cursor: pointer; float:right; margin:5px;">{% endif %}
