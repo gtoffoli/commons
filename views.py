@@ -23,6 +23,7 @@ from forms import RepoSearchForm, OerSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
+from filetransfers.api import serve_file
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -581,12 +582,19 @@ def oer_add_document(request):
             can_edit = oer.can_edit(request.user)
             return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
 
-def oer_download_document(request):
+def document_download(request):
     if request.POST:
         document_id = request.POST.get('id')
         document = get_object_or_404(Document, pk=document_id)
-        version = document.latest_version()
-        file_descriptor = version.open()
+        document_version = document.latest_version
+        file_descriptor = document_version.open()
+        file_descriptor.close()
+        return serve_file(
+            request,
+            document_version.file,
+            save_as='"%s"' % document_version.document.label,
+            content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
+        )
     
 def project_add_oer(request, project_id):
     project = get_object_or_404(Project, id=project_id)

@@ -87,7 +87,12 @@
     		<div><strong>{% trans "attached documents"|capfirst %}</strong></div>
 			<ul class="root">
 		    {% for document in oer.get_sorted_documents %}
-		        <li>{{ document.label }}</li>
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
+  	{% csrf_token %}
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	<input type="hidden" name="id" value="{{ document.id }}">
+   	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ document.label }}">
+	</li></form>
 		    {% endfor %}
 			</ul>
     		{% if oer.oer_type == 3 and can_edit %}
