@@ -615,7 +615,7 @@ def repos_search(request):
     if request.method == 'POST': # If the form has been submitted...
         form = RepoSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include')
+            include_all = request.POST.get('include_all')
             repo_types = request.POST.getlist('repo_type')
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
@@ -658,7 +658,7 @@ def oers_search(request):
     if request.method == 'POST': # If the form has been submitted...
         form = OerSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include')
+            include_all = request.POST.get('include_all')
             oer_types = request.POST.getlist('oer_type')
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -700,4 +700,4 @@ def oers_search(request):
                 oers = OER.objects.filter(query).distinct().order_by('title')
     else:
         form = OerSearchForm()
-    return render_to_response('search_oers.html', {'oers': oers, 'query': qq, 'form': form,}, context_instance=RequestContext(request))
+    return render_to_response('search_oers.html', {'oers': oers, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))

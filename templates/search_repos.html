@@ -31,7 +31,7 @@
 	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
 	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
    	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}">
-   		{% if user.is_authenticated %}&nbsp; <input type="checkbox" name="include" value="include" {{ include_all }}> include non published items{% else %}<input type="hidden" name="include" value="">{% endif %}
+   		{% if user.is_authenticated %}&nbsp; <input type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> include non published items{% else %}<input type="hidden" name="include" value="">{% endif %}
    	</td></tr>
 	{% for field in form.visible_fields %}
        <tr style="vertical-align: top;">
