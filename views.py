@@ -435,11 +435,11 @@ def browse(request):
                 label = entry.name
             except:
                 try:
-                    label = entry.name
+                    label = entry.description
                     code = entry.id
                 except:
-                    label = entry.description
-                    code = entry.name
+                    label = entry.name
+                    code = entry.id
             try:
                 prefix = '-' * entry.level
             except:

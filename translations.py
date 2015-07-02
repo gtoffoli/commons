@@ -24,7 +24,7 @@ register_translations(Tag, TagTranslation)
 
 
 class RepoTypeTranslation(object):
-    fields = ('name',)
+    fields = ('description',)
 register_translations(RepoType, RepoTypeTranslation)
 
 class RepoFeatureTranslation(object):
