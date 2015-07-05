@@ -3,10 +3,55 @@ from django.utils.translation import ugettext_lazy as _, string_concat
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
+def community_children(request):
+    children = []
+    children.append (MenuItem(
+         capfirst(_("about")),
+         url='/info/about/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         capfirst(_("all communities")),
+         url='/cops/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         capfirst(_("the platform")),
+         url='/info/platform/',
+         weight=80,
+         check=True,
+        ))
+    return children
+
+def projects_children(request):
+    children = []
+    children.append (MenuItem(
+         capfirst(_("all projects")),
+         url='/projects/',
+         weight=80,
+         check=True,
+        ))
+    """
+    children.append (MenuItem(
+         string_concat(capfirst(_("repositories")), ' ', _("by submitter")),
+         url='/repositories/contributors/',
+         weight=80,
+         check=True,
+        ))
+    """
+    children.append (MenuItem(
+         capfirst(_("top contributors")),
+         url='/resources/contributors/',
+         weight=80,
+        ))
+    return children
+
 def search_children(request):
     children = []
     children.append (MenuItem(
-         capfirst(_("distributions")),
+         capfirst(_("all resources")),
          # url='/repos/',
          url='/browse/',
          weight=80,
@@ -25,34 +70,13 @@ def search_children(request):
         ))
     """
     children.append (MenuItem(
-         string_concat(capfirst(_("OERs")), ' - ', _("advanced search")),
+         string_concat(capfirst(_("open resources")), ' - ', _("advanced search")),
          url='/oers/search/',
          weight=80,
         ))
     children.append (MenuItem(
-         string_concat(capfirst(_("repositories")), ' - ', _("advanced search")),
+         string_concat(capfirst(_("source repositories")), ' - ', _("advanced search")),
          url='/repos/search/',
-         weight=80,
-        ))
-    return children
-
-def community_children(request):
-    children = []
-    children.append (MenuItem(
-         capfirst(_("communities and projects")),
-         url='/cops/',
-         weight=80,
-         check=True,
-        ))
-    children.append (MenuItem(
-         string_concat(capfirst(_("repositories")), ' ', _("by submitter")),
-         url='/repositories/contributors/',
-         weight=80,
-         check=True,
-        ))
-    children.append (MenuItem(
-         string_concat(capfirst(_("resources")), ' ', _("by submitter")),
-         url='/oers/contributors/',
          weight=80,
         ))
     return children
@@ -66,14 +90,20 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("OER search")),
+         capfirst(_("searching the catalogued resources")),
          url='/help/search/',
          weight=80,
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("OER collection and classification")),
+         capfirst(_("cataloguing open resources")),
          url='/help/catalog/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         capfirst(_("learning paths")),
+         url='/info/learn/',
          weight=80,
          check=True,
         ))
@@ -84,21 +114,16 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("editing the user profile")),
+         capfirst(_("user profiles")),
          url='/help/profile/',
          weight=80,
          check=True,
         ))
     return children
 
+"""
 def info_children(request):
     children = []
-    children.append (MenuItem(
-         capfirst(_("about")),
-         url='/info/about/',
-         weight=80,
-         check=True,
-        ))
     children.append (MenuItem(
          capfirst(_("community and projects")),
          url='/info/projects/',
@@ -124,6 +149,7 @@ def info_children(request):
          check=True,
         ))
     return children
+"""
 
 # Add a few items to our main menu
 Menu.add_item("main", MenuItem(capfirst(_("community")),
@@ -132,6 +158,12 @@ Menu.add_item("main", MenuItem(capfirst(_("community")),
                                check=True,
                                children=community_children,
                                separator=True))
+Menu.add_item("main", MenuItem(capfirst(_("projects")),
+                               url='/p',
+                               weight=30,
+                               check=True,
+                               children=projects_children,
+                               separator=True))     
 Menu.add_item("main", MenuItem(capfirst(_("library")),
                                url='/p',
                                weight=30,
@@ -144,9 +176,3 @@ Menu.add_item("main", MenuItem(capfirst(_("help")),
                                check=True,
                                children=help_children,
                                separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("info")),
-                               url='/p',
-                               weight=30,
-                               check=True,
-                               children=info_children,
-                               separator=True))     

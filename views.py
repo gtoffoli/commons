@@ -51,7 +51,6 @@ def user_profile(request, username, user=None):
     oers = OER.objects.filter(creator=user).order_by('-created')
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
-    oers = oers[:5]
     return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
 
 def my_profile(request):
@@ -94,8 +93,16 @@ def cops_tree(request):
     nodes = Group.objects.filter(level=0)
     if nodes:
         root = nodes[0]
-        nodes = root.get_descendants(include_self=True)
+        # nodes = root.get_descendants(include_self=True)
+        nodes = root.get_descendants()
     return render_to_response('cops_tree.html', {'nodes': nodes,}, context_instance=RequestContext(request))
+
+def projects(request):
+    nodes = Group.objects.filter(level=0)
+    if nodes:
+        root = nodes[0]
+        nodes = root.get_descendants()
+    return render_to_response('projects.html', {'nodes': nodes,}, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):
     if not project:
@@ -103,16 +110,19 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     membership = None
     can_accept_member = can_add_repository = can_add_oer = can_edit = can_chat = False
-    if request.user.is_authenticated():
-        user = request.user
+    user = request.user
+    if user.is_authenticated():
         membership = project.get_membership(user)
         can_accept_member = project.can_accept_member(user)
         can_add_repository = project.can_add_repository(user)
         can_add_oer = project.can_add_oer(user)
         can_edit = project.can_edit(user)
         can_chat = project.can_chat(user)
-    repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
-    oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')[:5]
+    # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
+    repos = []
+    oers = OER.objects.filter(project_id=project_id).order_by('-created')
+    oers = [oer for oer in oers if oer.state==PUBLISHED or membership]
+    oers = oers[:5]
     return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -273,10 +283,34 @@ def oer_contributors(request):
             user_list.append(user)
     return render_to_response('oer_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
 
+def resource_contributors(request):
+    users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
+    resource_contributors = []
+    for user in users:
+        n = OER.objects.filter(creator=user, state=PUBLISHED).count()
+        if n:
+            user.num_oers = n
+            resource_contributors.append(user)
+    users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
+    source_contributors = []
+    for user in users:
+        n = Repo.objects.filter(creator=user, state=PUBLISHED).count()
+        if n:
+            user.num_repos = n
+            source_contributors.append(user)
+    return render_to_response('oer_contributors.html', { 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
+
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
     return render_to_response('oer_list.html', {'oers': oers, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+
+def resources_by(request, username):
+    user = get_object_or_404(User, username=username)
+    oers = OER.objects.filter(creator=user, state=PUBLISHED)
+    repos = Repo.objects.filter(creator=user, state=PUBLISHED)
+    return render_to_response('resources_by.html', {'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+
 
 def repo_oers(request, repo_id, repo=None):
     if not repo:

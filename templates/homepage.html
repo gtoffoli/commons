@@ -28,8 +28,9 @@
                     </a>
                 </div>
                 <div>
-                    <i class="fa fa-road fa-3x"></i><br>
+                    <a href="/info/learn/"><i class="fa fa-road fa-3x"></i><br>
                     <b><i>{% trans "Learning Paths" %}</i></b>.
+                    </a>
                 </div>
                 <div>
                     <a href="/browse/"><i class="fa fa-cubes fa-3x"></i><br>
@@ -39,14 +40,14 @@
             </div>
         </div>
     </section>
-    <section>
+    {% comment %}<section>
         <div class="container">
             <p class="text-center">
                 {% trans "see"|capfirst %} <a href="http://www.commonspaces.eu/" target="_blank">www.commonspaces.eu</a>
                 {% trans "for more information" %}.
             </p>
         </div>
-    </section>
+    </section>{% endcomment %}
 {% endblock %}
 
 {% block column-2 %}{% endblock %}

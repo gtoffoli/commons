@@ -9,20 +9,30 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "OER cataloguing" %}</h2>
-            <p class="lead">
-    {% if user_list %}
+            <h2 class="text-center">{% trans "top contributors"|capfirst %}</h2>
+
+    {% if resource_contributors %}
+            <h3>{% trans "cataloguing of OERs"|capfirst %}</h3>
 	<ul class="list-unstyled">
-        {% for user in user_list %}
+        {% for user in resource_contributors %}
         <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_oers > 0 %}<a href="/oers_by/{{ user.username }}/">{{ user.num_oers }}</a>{% else %}{{ user.num_oers }}{% endif %})
+            ({% if user.num_oers > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_oers }}</a>{% else %}{{ user.num_oers }}{% endif %})
         </li>
         {% endfor %}
 	</ul>
-	{% else %}
-       	<p>{% trans "no OER"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
-            </p>
+
+    {% if source_contributors %}
+            <h3>{% trans "cataloguing of OER sources"|capfirst %}</h3>
+	<ul class="list-unstyled">
+        {% for user in source_contributors %}
+        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
+            ({% if user.num_repos > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
+        </li>
+        {% endfor %}
+	</ul>
+    {% endif %}
+
         </div>
     </section>
 {% endblock %}

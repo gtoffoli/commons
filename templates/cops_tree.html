@@ -3,42 +3,40 @@
 {% load i18n %}
 {% load mptt_tags %}
 
-{% block head_title %}All communities{% endblock %}
-
-{% block body_class %}home{% endblock %}
+{% block head_title %}{% trans "all communities"|capfirst %}{% endblock %}
 
 {% block body %}
  <div class="row">
   <div class="col-sm-12">
     <section>
-            <h2 class="text-center">{% trans "Communities and Projects" %}</h2>
-            <p class="lead">
+            <h2 class="text-center">{% trans "all communities"|capfirst %}</h2>
     {% if nodes %}
-<ul class="list-unstyled">
-    {% recursetree nodes %}
-        <li>
-    		{% if node.project %}
-            	<a href="/project/{{ node.project.slug }}/">{{ node.project.get_name }}</a>.
-            	{% if node.level > 1 %}
-                    <i>({{ node.project.proj_type.description }})</i>&nbsp;{{ node.project.description|truncatechars:90 }}
-                {% else %}
-                    {{ node.project.description|truncatechars:110 }}
-                {% endif %}
-    		{% else %}    	
-            	{{ node.name }}
-    		{% endif %}
-            {% if not node.is_leaf_node %}
-                <ul class="children">
-                    {{ children }}
-                </ul>
+	<ul class="list-unstyled">
+    {% recursetree nodes %}<li>
+    
+   	{% with project=node.project %}
+   		{% if node.project %}
+   			{% if project.proj_type.name == 'com' %}
+   			<div style="margin-top: 1em; margin-bottom: 0,5em;">
+        	<div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
+            <div><i>{{ project.description }}</i></div></div>
+            {% else %}
+            	<a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
+				&nbsp;<i>({{ project.proj_type.description }})</i>.
             {% endif %}
-        </li>
-    {% endrecursetree %}
-</ul>
+   		{% else %}    	
+        		<div>{{ node.name }}</div>
+   		{% endif %}
+        {% if not node.is_leaf_node %}
+            <ul class="children">{{ children }}</ul>
+        {% endif %}
+   	{% endwith %}
+
+    </li>{% endrecursetree %}
+	</ul>
     {% else %}
        	<p>{% trans "no community"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
-            </p>
     </section>
   </div>
 </div>

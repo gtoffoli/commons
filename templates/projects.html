@@ -1,0 +1,31 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load mptt_tags %}
+
+{% block head_title %}{% trans "all projects"|capfirst %}{% endblock %}
+
+{% block body %}
+ <div class="row">
+  <div class="col-sm-12">
+    <section>
+            <h2 class="text-center">{% trans "all projects"|capfirst %}</h2>
+            
+    {% if nodes %}
+    {% recursetree nodes %}
+    	{% with project=node.project %}
+    		{% if project and project.proj_type.name != 'com' %}
+            	<div style="font-size: larger; margin-top: 1em;"><a href="/project/{{ project.slug }}/">{{ node.project.get_name }}</a></div>
+                <div><strong>{% trans "project type"|capfirst %}</strong>: {{ project.proj_type.description }}</div>
+            	<div><i>{{ project.description|truncatechars:300 }}</i><div>
+    		{% endif %}
+            {% if not node.is_leaf_node %}
+                {{ children }}
+            {% endif %}
+    	{% endwith %}
+    {% endrecursetree %}
+    {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

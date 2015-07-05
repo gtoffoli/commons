@@ -59,16 +59,24 @@
     <section>
             <h2 class="text-center">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
 			{{ project.get_name }}&nbsp;
-			{% if project.get_parent %}
-			<a href="/project/{{ project.get_parent.slug }}/" title="Parent community"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
+{% comment %}
+			{% if parent %}
+			<a href="/project/{{ parent.slug }}/" title="parent"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
 			{% else %}
-			<a href="/cops/" title="Community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
+			<a href="/cops/" title="community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
 			{% endif %}
+{% endcomment %}
 			{% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
             <p class="lead">
 			{% if project.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ project.description }}</div>{% endif %}
             <div><strong>{% trans "project type"|capfirst %}</strong>: {{ proj_type.description }}</div>
+		{% with parent=project.get_parent %}
+			{% if parent %}
+            <div><strong>{% if parent.proj_type.name == 'com' %}{% trans "parent community"|capfirst %}{% else %}{% trans "parent project"|capfirst %}{% endif %}</strong>:
+            	<a href="/project/{{ parent.slug }}/" title="parent">{{ parent.get_name }}</a></div>
+			{% endif %}
+		{% endwith %}
     		{% if project.info %}
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
@@ -100,7 +108,7 @@
 		<h4>{% trans "recent repositories"|capfirst %}</h4>
 		<ul class="list-unstyled">
 	        {% for repo in repos %}
-	        <li><a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a></li>
+	        <li><a href="/repo/{{ repo.slug }}/" {% if repo.state != 3 %}style="color: red;"{% endif %}>{{ repo.name }}</a></li>
         	{% endfor %}
         </ul>
 	{% endif %}
@@ -108,7 +116,7 @@
 		<h4>{% trans "recent OERs"|capfirst %}</h4>
 		<ul class="list-unstyled">
 	        {% for oer in oers %}
-	        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
+	        <li><a href="/oer/{{ oer.slug }}/" {% if oer.state != 3 %}style="color: red;"{% endif %}>{{ oer.title }}</a></li>
         	{% endfor %}
         </ul>
 	{% endif %}
