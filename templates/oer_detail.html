@@ -15,15 +15,32 @@
             <p class="lead">
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ oer.title }}</div>
             {% if oer.description %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ oer.description }}</div>{% endif %}
-            {% if oer.material %}<div><strong>{% trans "type of material"|capfirst %}</strong>: {{ oer.material.name }}</div>{% endif %}
-            {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}:</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
+            {% if oer.material %}<div><strong>{% trans "type of material"|capfirst %}</strong>: 
+            {% comment %}{{ oer.material.name }}{% endcomment %}
+  	<form class="form-inline" style="display: inline;" action="/oers/search/" method="post" id="material">
+	{% csrf_token %}<input type="hidden" name="material" value="{{ oer.material.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ oer.material.name }}">
+    </form>
+            </div>{% endif %}
+            {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
             {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
-            {% if oer.license %}<div><strong>{% trans "terms of use"|capfirst %}</strong>: {{ oer.license.name }}</div>{% endif %}
+            {% if oer.license %}<div><strong>{% trans "terms of use"|capfirst %}</strong>:
+            {% comment %}{{ oer.license.name }}{% endcomment %}
+  	<form class="form-inline" style="display: inline;" action="/oers/search/" method="post" id="license">
+	{% csrf_token %}<input type="hidden" name="license" value="{{ oer.license.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ oer.license.name }}">
+    </form>
+			</div>{% endif %}
     		{% if oer.levels.all %}
     		<div><strong>{% trans "levels"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for level in oer.levels.all %}
-		        <li>{{ level.option_label|safe }}</li>
+		        {% comment %}<li>{{ level.option_label|safe }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ level.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="levels" value="{{ level.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ level.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>
@@ -32,7 +49,12 @@
     		<div><strong>{% trans "tags"|capfirst %}</strong>:
 			<div style="margin-left: 2.0em;">
 		        {% for tag in oer.tags.all %}
-		        <a href="/oers/with-tag/{{ tag.slug }}/">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}
+		        {% comment %}<a href="/oers/with-tag/{{ tag.slug }}/">{{ tag.name }}</a>{% if not forloop.last %},{% endif %}{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ tag.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ tag.name }}">
+	</li></form>
 		        {% endfor %}
 			</div>
 			</div>
@@ -41,7 +63,12 @@
     		<div><strong>{% trans "subject areas"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for subject in oer.subjects.all %}
-		        <li>{{ subject.option_label|safe }}</li>
+		        {% comment %}<li>{{ subject.option_label|safe }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ subject.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>
@@ -50,7 +77,12 @@
     		<div><strong>{% trans "OER languages"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for language in oer.languages.all %}
-		        <li>{{ language.code }} - {{ language.name }}</li>
+		        {% comment %}<li>{{ language.code }} - {{ language.name }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ language.code }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ language.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>
@@ -59,7 +91,12 @@
     		<div><strong>{% trans "media formats"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for medium in oer.media.all %}
-		        <li>{{ medium.option_label|safe }}</li>
+		        {% comment %}<li>{{ medium.option_label|safe }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ medium.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="media" value="{{ medium.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ medium.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>
