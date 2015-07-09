@@ -11,6 +11,17 @@
         <div class="container">
             <h2 class="text-center">{% trans "top contributors"|capfirst %}</h2>
 
+    {% if lp_contributors %}
+            <h3>{% trans "creation of learning paths"|capfirst %}</h3>
+	<ul class="list-unstyled">
+        {% for user in lp_contributors %}
+        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
+            ({% if user.num_lps > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_lps }}</a>{% else %}{{ user.num_lps }}{% endif %})
+        </li>
+        {% endfor %}
+	</ul>
+    {% endif %}
+
     {% if resource_contributors %}
             <h3>{% trans "cataloguing of OERs"|capfirst %}</h3>
 	<ul class="list-unstyled">

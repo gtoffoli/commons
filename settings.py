@@ -56,6 +56,7 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # commons project
     'django_messages',
     'roles',
+    'django_dag',
     'commons',
 ]
 INSTALLED_APPS.remove('south')

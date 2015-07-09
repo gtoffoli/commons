@@ -10,6 +10,26 @@
      <section>
     	<h2 class="text-center" style="margin: 0 0;">{% trans "educational library"|capfirst %}</h2>
      </section>
+
+     <section style="margin: 0 0;">
+        <div class="container" style="margin: 0 0;">
+            <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h3>
+			<ul style="list-style-type: none; padding-bottom: 10px;">
+		    {% for field_name, field_label, entries in lps_browse_list %}
+		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
+		    	{% for code, label, prefix, n in entries %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ code }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
+	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
+   	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
+	</li></form>
+		    	{% endfor %}
+		    	</ul></li>
+		    {% endfor %}
+			</ul>
+        </div>
+    </section>
+
      <section style="margin: 0 0;">
         <div class="container" style="margin: 0 0;">
             <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the resources" %}</h3>
@@ -28,6 +48,7 @@
 			</ul>
         </div>
     </section>
+
     <section style="margin: 0 0;">
          <div class="container" style="margin: 0 0;">
             <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the sources" %}</h3>

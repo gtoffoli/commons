@@ -1,0 +1,66 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center" {% if oer.state != 3 %}style="color: red;"{% endif %}>{% trans "learning path"|capfirst %}: &nbsp; {{ lp.title }}
+                {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
+            </h2>
+            <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
+            {% if lp.short %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ lp.short }}</div>{% endif %}
+
+            <div><strong>{% trans "type of learning path"|capfirst %}</strong>: 
+  	<form class="form-inline" style="display: inline;" action="/lps/search/" method="post" id="path_type">
+	{% csrf_token %}<input type="hidden" name="path_type" value="{{ lp.path_type }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ lp.get_type }}">
+    </form>
+            </div>
+    		{% if lp.levels.all %}
+    		<div><strong>{% trans "levels"|capfirst %}</strong>:
+			<ul class="root">
+		        {% for level in lp.levels.all %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ level.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="levels" value="{{ level.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ level.option_label|safe }}">
+	</li></form>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if lp.tags.all %}
+    		<div><strong>{% trans "tags"|capfirst %}</strong>:
+			<ul class="root">
+		        {% for tag in lp.tags.all %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ tag.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ tag.name }}">
+	</li></form>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+    		{% if lp.subjects.all %}
+    		<div><strong>{% trans "subject areas"|capfirst %}</strong>:
+			<ul class="root">
+		        {% for subject in lp.subjects.all %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="oers_{{ subject.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
+	</li></form>
+		        {% endfor %}
+			</ul>
+			</div>
+		    {% endif %}
+
+            <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a></div>
+            <div><strong>{% trans "publication state"|capfirst %}</strong>: {{ lp.get_state }}</div>
+         </div>
+    </section>
+{% endblock %}

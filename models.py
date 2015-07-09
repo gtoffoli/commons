@@ -6,11 +6,12 @@ from django.db.models.signals import post_save
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
 # from mayan import sources
+from django_dag.models import node_factory, edge_factory
+from roles.utils import get_roles, has_permission
 from documents.models import Document
 from metadata.models import MetadataType
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from roles.utils import get_roles, has_permission
 from taggit.managers import TaggableManager
 
 """ how to make the 'file' field optional in a DocumentVersion?
@@ -299,6 +300,9 @@ class Project(models.Model):
     def can_add_repository(self, user):
         return has_permission(self, user, 'add-repository')
 
+    def can_add_collection(self, user):
+        return has_permission(self, user, 'add-collection')
+
     def can_add_oer(self, user):
         # return has_permission(self, user, 'add-oer')
         return self.can_add_repository(user)
@@ -576,6 +580,7 @@ class OerFolder(models.Model):
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 """
 
+"""
 class OerProxy(models.Model):
     oer = models.ForeignKey(OER, verbose_name=_('stands for'))
     project = models.ForeignKey(Project, verbose_name=_('project'))
@@ -587,6 +592,88 @@ class OerProxy(models.Model):
     class Meta:
         verbose_name = _('OER proxy')
         verbose_name_plural = _('OER proxies')
+"""
+"""
+class LearningPath(PathNode):
+    slug = AutoSlugField(unique=True, populate_from='title', editable=True)
+    title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
+    path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
+    short = models.TextField(blank=True, verbose_name=_('short presentation'))
+    long = models.TextField(blank=True, verbose_name=_('longer presentation'))
+    project = models.ForeignKey(Project, verbose_name=_('project'))
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
+
+LearningPath._meta.get_field('oer').blank = 'True'
+LearningPath._meta.get_field('oer').null = 'True'
+LearningPath._meta.get_field('children').othermodel = 'PathNode'
+LearningPath._meta.get_field('children').related_name = 'path'
+"""
+
+LP_TYPE_CHOICES = (
+    (1, _('collection')),
+    (2, _('sequence')),
+    (3, _('directed graph')),
+    (4, _('scripted graph')),)
+LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
+
+class LearningPath(models.Model):
+    slug = AutoSlugField(unique=True, populate_from='title', editable=True)
+    title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
+    path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
+    short = models.TextField(blank=True, verbose_name=_('short presentation'))
+    long = models.TextField(blank=True, verbose_name=_('longer presentation'))
+    levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
+    subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
+    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
+    project = models.ForeignKey(Project, verbose_name=_('project'))
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
+    created = CreationDateTimeField(_('created'))
+    modified = ModificationDateTimeField(_('modified'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='path_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='path__editor')
+
+    class Meta:
+        verbose_name = _('learning path')
+        verbose_name_plural = _('learning paths')
+
+    def __unicode__(self):
+        return self.title
+
+    def get_state(self):
+        return PUBLICATION_STATE_DICT[self.state]
+
+    def get_type(self):
+        return LP_TYPE_DICT[self.path_type]
+
+    def can_edit(self, user):
+        if not user.is_authenticated():
+            return False
+        return user.is_superuser or self.creator==user
+
+class PathNode(node_factory('PathEdge')):
+    path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))
+    label = models.TextField(blank=True, verbose_name=_('label'))
+    oer = models.ForeignKey(OER, verbose_name=_('stands for'))
+    created = CreationDateTimeField(_('created'))
+    modified = ModificationDateTimeField(_('modified'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='pathnode_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='pathnode__editor')
+
+    class Meta:
+        verbose_name = _('path node')
+        verbose_name_plural = _('path nodes')
+
+class PathEdge(edge_factory('PathNode', concrete = False)):
+    label = models.TextField(blank=True, verbose_name=_('label'))
+    content = models.TextField(blank=True, verbose_name=_('content'))
+    created = CreationDateTimeField(_('created'))
+    modified = ModificationDateTimeField(_('modified'))
+    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='pathedge_creator')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='pathedge__editor')
+
+    class Meta:
+        verbose_name = _('path edge')
+        verbose_name_plural = _('path edges')
 
 # from commons.metadata_models import *
 from translations import *

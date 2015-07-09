@@ -11,7 +11,8 @@ from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
 from taggit_live.forms import LiveTagField
 
-from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo, OerMetadata, OER, OerProxy
+from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import OerMetadata, OER, PathNode, PathEdge, LearningPath
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm
 
 class UserProfileInline(admin.StackedInline):
@@ -170,8 +171,45 @@ class OerMetadataAdmin(admin.ModelAdmin):
     fieldsets = []
     list_display = ('oer', 'metadata_type', 'value',)
 
+"""
 class OerProxyAdmin(admin.ModelAdmin):
     fieldsets = []
+"""
+
+class LearningPathAdmin(admin.ModelAdmin):
+    fieldsets = [
+         (None, {'fields': ['title', 'slug', 'path_type', 'short', 'long', 'project', 'state',]}),
+    ]
+    list_display = ('title', 'slug', 'path_type', 'project', 'state', 'creator', 'created',)
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
+        obj.save()
+
+class PathNodeAdmin(admin.ModelAdmin):
+    fieldsets = []
+    list_display = ('id', 'path', 'label', 'oer_title', 'creator', 'created',)
+
+    def oer_title(self, obj):
+        return obj.oer.title
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
+        obj.save()
+
+class PathEdgeAdmin(admin.ModelAdmin):
+    fieldsets = []
+    list_display = ('id', 'label', 'parent', 'child', 'creator', 'created',)
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.creator = request.user
+        obj.editor = request.user
+        obj.save()
     
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
@@ -183,7 +221,10 @@ admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(OER, OERAdmin)
 admin.site.register(OerMetadata, OerMetadataAdmin)
-admin.site.register(OerProxy, OerProxyAdmin)
+# admin.site.register(OerProxy, OerProxyAdmin)
+admin.site.register(PathNode, PathNodeAdmin)
+admin.site.register(PathEdge, PathEdgeAdmin)
+admin.site.register(LearningPath, LearningPathAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.forms import FlatpageForm

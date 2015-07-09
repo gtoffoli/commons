@@ -15,11 +15,12 @@ from django.utils.translation import get_language, pgettext
 
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, LicenseNode, LevelNode
-from models import DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
+from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
+from models import LearningPath # , PathNode
+from models import PUBLISHED
 
-from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm
-from forms import RepoSearchForm, OerSearchForm
+from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm
+from forms import RepoSearchForm, OerSearchForm, LpSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
@@ -123,7 +124,9 @@ def project_detail(request, project_id, project=None):
     oers = OER.objects.filter(project_id=project_id).order_by('-created')
     oers = [oer for oer in oers if oer.state==PUBLISHED or membership]
     oers = oers[:5]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
+    lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
+    lps = [lp for lp in lps if lp.state==PUBLISHED or lp.project.is_admin(user) or user.is_superuser]
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -284,6 +287,14 @@ def oer_contributors(request):
     return render_to_response('oer_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
 
 def resource_contributors(request):
+    users = User.objects.annotate(num_lps=Count('path_creator')).exclude(num_lps=0).order_by('-num_lps')
+    lp_contributors = []
+    for user in users:
+        # n = LearningPath.objects.filter(creator=user, state=PUBLISHED).count()
+        n = LearningPath.objects.filter(creator=user).count()
+        if n:
+            user.num_lps = n
+            lp_contributors.append(user)
     users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
     resource_contributors = []
     for user in users:
@@ -298,7 +309,7 @@ def resource_contributors(request):
         if n:
             user.num_repos = n
             source_contributors.append(user)
-    return render_to_response('oer_contributors.html', { 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
+    return render_to_response('contributors.html', { 'lp_contributors': lp_contributors, 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
 
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
@@ -307,9 +318,11 @@ def oers_by_user(request, username):
 
 def resources_by(request, username):
     user = get_object_or_404(User, username=username)
+    # lps = LearningPath.objects.filter(creator=user, state=PUBLISHED)
+    lps = LearningPath.objects.filter(creator=user)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
     repos = Repo.objects.filter(creator=user, state=PUBLISHED)
-    return render_to_response('resources_by.html', {'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+    return render_to_response('resources_by.html', {'lps': lps, 'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
 
 
 def repo_oers(request, repo_id, repo=None):
@@ -421,6 +434,46 @@ def browse_repos(request):
     return render_to_response('browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,}, context_instance=RequestContext(request))
  
 def browse(request):
+    form = LpSearchForm
+    field_names = ['path_type', 'levels', 'subjects', 'tags', ]
+    lps_browse_list = []
+    base_fields = form.base_fields
+    for field_name in field_names:
+        field = base_fields[field_name]
+        field_label = pgettext(RequestContext(request), field.label)
+        entries = []
+        if hasattr(field, 'queryset'):
+            queryset = field.queryset
+            entries = []
+            for entry in queryset:    
+                try:
+                    code = entry.code
+                    label = entry.name
+                except:
+                    try:
+                        label = entry.name
+                        code = entry.id
+                    except:
+                        label = entry.description
+                        code = entry.name
+                try:
+                    prefix = '-' * entry.level
+                except:
+                    prefix = ''
+                n = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
+                # print entry, n
+                if n:
+                    entries.append([code, label, prefix, n])
+        else:
+            choices = field.choices
+            for entry in choices:
+                code = entry[0]
+                label= pgettext(RequestContext(request), entry[1])
+                n = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
+                if n:
+                    entries.append([code, label, '', n])
+        if entries:
+            lps_browse_list.append([field_name, field_label, entries])
     form = OerSearchForm
     field_names = ['oer_type', 'source_type', 'levels', 'material', 'languages', 'subjects', 'tags', 'media', 'accessibility', 'license', ]
     oers_browse_list = []
@@ -642,6 +695,72 @@ def project_add_oer(request, project_id):
         return HttpResponseRedirect('/project/%s/' % project.slug)
     return oer_edit(request, project_id=project_id) 
 
+def lp_detail(request, lp_id, lp=None):
+    if not lp:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
+    project = lp.project
+    can_edit = lp.can_edit(request.user)
+    return render_to_response('lp_detail.html', {'lp': lp, 'project': project, 'can_edit': can_edit,}, context_instance=RequestContext(request))
+
+def lp_detail_by_slug(request, lp_slug):
+    lp = LearningPath.objects.get(slug=lp_slug)
+    return lp_detail(request, lp.id, lp)
+
+def lp_edit(request, lp_id=None, project_id=None):
+    user = request.user
+    lp = None
+    action = '/lp/edit/'
+    if lp_id:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
+        action = '/lp/%s/edit/' % lp.slug
+        if not user.can_edit(request):
+            return HttpResponseRedirect('/lp/%s/' % lp.slug)
+    if request.POST:
+        lp_id = request.POST.get('id', '')
+        if lp_id:
+            lp = get_object_or_404(LearningPath, id=lp_id)
+            action = '/lp/%s/edit/' % lp.slug
+            project_id = lp.project_id
+        form = LpForm(request.POST, instance=lp)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                lp = form.save(commit=False)
+                if not hasattr(lp, 'creator'):
+                    lp.creator = user
+                lp.editor = user
+                lp.save()
+                form.save_m2m()
+                lp = get_object_or_404(LearningPath, id=lp.id)
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+                else:
+                    return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action,}, context_instance=RequestContext(request))
+            else:
+                print form.errors
+                return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'project_id': project_id,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            if lp:
+                return HttpResponseRedirect('/lp/%s/' % lp.slug)
+            else:
+                project_id = project_id or request.POST.get('project')
+                project = get_object_or_404(Project, id=project_id)
+                return HttpResponseRedirect('/project/%s/' % project.slug)
+    elif lp:
+        form = LpForm(instance=lp)
+    else:
+        form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+    return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
+
+def lp_edit_by_slug(request, lp_slug):
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    return lp_edit(request, lp_id=lp.id)
+
+def project_add_lp(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    if not project.can_add_oer(request.user):
+        return HttpResponseRedirect('/project/%s/' % project.slug)
+    return lp_edit(request, project_id=project_id) 
+
 def repos_search(request):
     qq = []
     repos = []
@@ -735,3 +854,36 @@ def oers_search(request):
     else:
         form = OerSearchForm()
     return render_to_response('search_oers.html', {'oers': oers, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+
+def lps_search(request):
+    qq = []
+    lps = []
+    include_all = ''
+    if request.method == 'POST': # If the form has been submitted...
+        form = LpSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            include_all = request.POST.get('include_all')
+            path_types = request.POST.getlist('path_type')
+            if path_types:
+                qq.append(Q(path_type__in=path_types))
+                print 'path_types = ', path_types
+            levels = request.POST.getlist('levels')
+            if levels:
+                qq.append(Q(levels__in=levels))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+            tags = request.POST.getlist('tags')
+            if tags:
+                qq.append(Q(tags__in=tags))
+            if qq:
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = Q(state=PUBLISHED)
+                for q in qq:
+                    query = query & q
+                lps = LearningPath.objects.filter(query).distinct().order_by('title')
+    else:
+        form = LpSearchForm()
+    return render_to_response('search_lps.html', {'lps': lps, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))

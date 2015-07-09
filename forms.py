@@ -16,7 +16,7 @@ from taggit_live.forms import LiveTagField, TaggitLiveWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, CHAT_TYPE_CHOICES, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, OER_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
+from models import OER, OER_TYPE_CHOICES, LearningPath, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -236,3 +236,52 @@ class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
+
+
+class LpForm(forms.ModelForm):
+    class Meta:
+        model = LearningPath
+        fields = ['title', 'path_type', 'short', 'long', 'levels', 'subjects', 'tags', 'project', 'state',]
+
+    slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('collection type'), widget=forms.Select(attrs={'class':'form-control',}))
+    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
+    long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
+    levels = forms.ModelMultipleChoiceField(required=False, label=_('levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+    tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+
+class LpSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        q = kwargs.get('q', '')
+        if q:
+            kwargs.pop('q')
+        super(LpSearchForm, self).__init__(*args,**kwargs)
+        for fieldname in ('levels',):
+            self.fields[fieldname].empty_label = None
+        for fieldname in self.fields:
+            self.fields[fieldname].help_text = ''
+        if q:
+            self.fields['q'].initial = q
+
+    """
+    q = forms.CharField(
+        label=_("text in title and description"), required=False,
+        widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
+    """
+    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
+        label=_('learning path type'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
+    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
+        label=_('levels'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
+    subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
+        label=_('subject areas'), required=False,
+        help_text=_("choose subject areas (no selection = all areas)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+    tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
+        label=_('tags'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))

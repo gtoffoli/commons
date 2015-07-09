@@ -85,9 +85,10 @@
     </section>
     {% if can_add_repository or can_add_oer %}
     <section>
-           <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
+        <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
     	<div><a href="/repo/new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify external repository"|capfirst %}</a></div>
-    	<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i>  {% trans "classify OER"|capfirst %}</a></div>
+    	<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify OER"|capfirst %}</a></div>
+    	<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>
     </section>
 	{% endif %}
     {% if user.is_authenticated %}
@@ -103,20 +104,20 @@
 	{% endif %}
   </div>
   <div class="col-sm-3"  style="margin-top: 4.0em;">
-  {% if project.proj_type.name == 'oer'  %}
-    {% if repos %}
-		<h4>{% trans "recent repositories"|capfirst %}</h4>
-		<ul class="list-unstyled">
-	        {% for repo in repos %}
-	        <li><a href="/repo/{{ repo.slug }}/" {% if repo.state != 3 %}style="color: red;"{% endif %}>{{ repo.name }}</a></li>
-        	{% endfor %}
-        </ul>
-	{% endif %}
+  {% if project.proj_type.name == 'oer' or project.proj_type.name == 'lp' %}
     {% if oers %}
 		<h4>{% trans "recent OERs"|capfirst %}</h4>
 		<ul class="list-unstyled">
 	        {% for oer in oers %}
 	        <li><a href="/oer/{{ oer.slug }}/" {% if oer.state != 3 %}style="color: red;"{% endif %}>{{ oer.title }}</a></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
+      {% if lps %}
+		<h4>{% trans "recent learning paths"|capfirst %}</h4>
+		<ul class="list-unstyled">
+	        {% for lp in lps %}
+	        <li><a href="/lp/{{ lp.slug }}/" {% if lp.state != 3 %}style="color: red;"{% endif %}>{{ lp.title }}</a></li>
         	{% endfor %}
         </ul>
 	{% endif %}

@@ -11,12 +11,12 @@
         <div class="container">
             <h2 class="text-center">{% trans "resources catalogued by"|capfirst %} &nbsp;{{ submitter.get_display_name }}</h2>
 
-	    {% if repos %}
-        <h3>{% trans "sources"|capfirst %}</h3>
+	    {% if lps %}
+        <h3>{% trans "learning paths"|capfirst %}</h3>
 		<ul class="list-unstyled">
-	        {% for repo in repos %}
+	        {% for lp in lps %}
 	        <li>
-	            <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. &nbsp;<i>{{ repo.type_description }}</i>.&nbsp; {{ repo.description|truncatechars:80 }}
+	            <a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a>. &nbsp;<i>{{ lp.get_type }}</i>.&nbsp; {{ lp.short|truncatechars:80 }}
 	        </li>
 	        {% endfor %}
 		</ul>
@@ -30,6 +30,17 @@
 	        {% endfor %}
 		</ul>
 		{% endif %}
+
+	    {% if repos %}
+        <h3>{% trans "sources"|capfirst %}</h3>
+		<ul class="list-unstyled">
+	        {% for repo in repos %}
+	        <li>
+	            <a href="/repo/{{ repo.slug }}/">{{ repo.name }}</a>. &nbsp;<i>{{ repo.type_description }}</i>.&nbsp; {{ repo.description|truncatechars:80 }}
+	        </li>
+	        {% endfor %}
+		</ul>
+	    {% endif %}
 
         </div>
     </section>
