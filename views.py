@@ -46,10 +46,16 @@ def user_profile(request, username, user=None):
     applications = None
     if user == request.user:
         applications = ProjectMember.objects.filter(user=user, state=0)
-    repos = Repo.objects.filter(creator=user).order_by('-created')
+    if user == request.user:
+        repos = Repo.objects.filter(creator=user).order_by('-created')
+    else:
+        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     more_repos = repos.count() > MAX_REPOS
     repos = repos[:MAX_REPOS]
-    oers = OER.objects.filter(creator=user).order_by('-created')
+    if user == request.user:
+        oers = OER.objects.filter(creator=user).order_by('-created')
+    else:
+        oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
     return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
@@ -248,8 +254,12 @@ def repo_list(request):
 def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)
     can_add = user.is_authenticated() and user.can_add_repository(request) and user==request.user
+    if user == request.user:
+        repos = Repo.objects.filter(creator=user).order_by('-created')
+    else:
+        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     repo_list = []
-    for repo in Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created'):
+    for repo in repos:
         oers = OER.objects.filter(source=repo, state=PUBLISHED)
         n = len(oers)
         repo_list.append([repo, n])

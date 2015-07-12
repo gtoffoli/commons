@@ -43,9 +43,9 @@ class ProjTypeAdmin(admin.ModelAdmin):
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
     fieldsets = [
-        (None, {'fields': ['group', 'proj_type', 'description', 'info',]}),
+        (None, {'fields': ['group', 'proj_type', 'description', 'info', 'state,']}),
     ]
-    list_display = ('project_name', 'description', 'project_type', 'chat_type', 'created', 'modified',)
+    list_display = ('project_name', 'description', 'project_type', 'chat_type', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -57,6 +57,9 @@ class ProjAdmin(admin.ModelAdmin):
 
     def project_type(self, obj):
         return obj.proj_type.description
+
+    def project_state(self, obj):
+        return obj.get_state()
 
     def save_model(self, request, obj, form, change):
         if not change:

@@ -14,7 +14,7 @@
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
 	{% if lps %}
 	{% for lp in lps %}
-       <tr><td><a href="/lp/{{ lp.slug }}/" {% if lp.state != 3 %}style="color: red;"{% endif %}>{{ lp.title }}</a></td></tr>
+       <tr><td><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></td></tr>
 	{% endfor %}
 	{% elif query %}
        <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>

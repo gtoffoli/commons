@@ -9,7 +9,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center" {% if oer.state != 3 %}style="color: red;"{% endif %}>OER: &nbsp; {{ oer.title }}
+            <h2 class="text-center" style="color: {{ oer.get_title_color }};">OER: &nbsp; {{ oer.title }}
                 {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
             </h2>
             <p class="lead">
@@ -92,7 +92,7 @@
 			<ul class="root">
 		        {% for medium in oer.media.all %}
 		        {% comment %}<li>{{ medium.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ medium.id }}">
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="media_{{ medium.id }}">
 	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
 	{% csrf_token %}<input type="hidden" name="media" value="{{ medium.id }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ medium.option_label|safe }}">
@@ -105,7 +105,12 @@
     		<div><strong>{% trans "accessibility features"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for feature in oer.accessibility.all %}
-		        <li>{{ feature.option_label|safe }}</li>
+		        {% comment %}<li>{{ feature.option_label|safe }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="accessibility_{{ feature.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="accessibility" value="{{ feature.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ feature.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>

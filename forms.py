@@ -16,7 +16,7 @@ from taggit_live.forms import LiveTagField, TaggitLiveWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, CHAT_TYPE_CHOICES, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, OER_TYPE_CHOICES, LearningPath, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
+from models import PROJECT_STATE_CHOICES, OER, OER_TYPE_CHOICES, LearningPath, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -80,6 +80,7 @@ class ProjectForm(forms.ModelForm):
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
+    state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 
 class RepoForm(forms.ModelForm):
@@ -146,6 +147,10 @@ OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, can_delete=True, ex
 # OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
 
 class OerForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(OerForm, self).__init__(*args,**kwargs)
+        self.fields['project'].widget.attrs['disabled'] = True
+
     class Meta:
         model = OER
         exclude = ('documents', 'metadata',)
@@ -239,13 +244,17 @@ class DocumentUploadForm(forms.Form):
 
 
 class LpForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(LpForm, self).__init__(*args,**kwargs)
+        self.fields['project'].widget.attrs['disabled'] = True
+
     class Meta:
         model = LearningPath
         fields = ['title', 'path_type', 'short', 'long', 'levels', 'subjects', 'tags', 'project', 'state',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('collection type'), widget=forms.Select(attrs={'class':'form-control',}))
+    path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))

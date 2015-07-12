@@ -161,6 +161,31 @@ CHAT_TYPE_CHOICES = (
     (1, _('permanent chatroom')),)
 CHAT_TYPE_DICT = dict(CHAT_TYPE_CHOICES)
 
+PROJECT_DRAFT = 0
+PROJECT_SUBMITTED = 1
+PROJECT_OPEN = 2
+PROJECT_CLOSED = 3
+
+PROJECT_STATE_CHOICES = (
+    (PROJECT_DRAFT, _('draft proposal')),
+    (PROJECT_SUBMITTED, _('proposal submitted')),
+    (PROJECT_OPEN, _('project open')),
+    (PROJECT_CLOSED, _('project closed')),)
+PROJECT_STATE_DICT = dict(PROJECT_STATE_CHOICES)
+
+PROJECT_COLOR_DICT = {
+  PROJECT_DRAFT: 'yellow',
+  PROJECT_SUBMITTED: 'green',
+  PROJECT_OPEN: 'black',
+  PROJECT_CLOSED: 'red',
+}
+PROJECT_LINK_DICT = {
+  PROJECT_DRAFT: 'yellow',
+  PROJECT_SUBMITTED: 'green',
+  PROJECT_OPEN: '#428bca',
+  PROJECT_CLOSED: 'red',
+}
+
 MEMBERSHIP_STATE_CHOICES = (
     (0, _('request submitted')),
     (1, _('request accepted')),
@@ -179,6 +204,7 @@ class Project(models.Model):
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
+    state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     # user = models.ForeignKey(User, verbose_name=_('last editor'))
@@ -207,6 +233,14 @@ class Project(models.Model):
 
     def get_project_type(self):
         return self.proj_type.name
+
+    def get_state(self):
+        return PROJECT_STATE_DICT[self.state]
+
+    def get_title_color(self):
+        return PROJECT_COLOR_DICT[self.state]
+    def get_link_color(self):
+        return PROJECT_LINK_DICT[self.state]
 
     def get_parent(self):
         parent_group = self.group.parent
@@ -376,6 +410,19 @@ PUBLICATION_STATE_CHOICES = (
     (UN_PUBLISHED, _('Un-published')),)
 PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
+PUBLICATION_COLOR_DICT = {
+  DRAFT: 'yellow',
+  SUBMITTED: 'green',
+  PUBLISHED: 'black',
+  UN_PUBLISHED: 'red',
+}
+PUBLICATION_LINK_DICT = {
+  DRAFT: 'yellow',
+  SUBMITTED: 'green',
+  PUBLISHED: '#428bca',
+  UN_PUBLISHED: 'red',
+}
+
 class Repo(models.Model):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
@@ -416,6 +463,11 @@ class Repo(models.Model):
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
+
+    def get_title_color(self):
+        return PUBLICATION_COLOR_DICT[self.state]
+    def get_link_color(self):
+        return PUBLICATION_LINK_DICT[self.state]
 
 # probably an OerType class is not necessary
 OER_TYPE_CHOICES = (
@@ -498,6 +550,11 @@ class OER(models.Model):
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
+
+    def get_title_color(self):
+        return PUBLICATION_COLOR_DICT[self.state]
+    def get_link_color(self):
+        return PUBLICATION_LINK_DICT[self.state]
 
     def get_sorted_documents(self):
         return self.documents.all().order_by('date_added')
@@ -610,10 +667,10 @@ LearningPath._meta.get_field('children').related_name = 'path'
 """
 
 LP_TYPE_CHOICES = (
-    (1, _('collection')),
+    (1, _('simple collection')),
     (2, _('sequence')),
     (3, _('directed graph')),
-    (4, _('scripted graph')),)
+    (4, _('scripted directed graph')),)
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
 class LearningPath(models.Model):
@@ -644,6 +701,11 @@ class LearningPath(models.Model):
 
     def get_type(self):
         return LP_TYPE_DICT[self.path_type]
+
+    def get_title_color(self):
+        return PUBLICATION_COLOR_DICT[self.state]
+    def get_link_color(self):
+        return PUBLICATION_LINK_DICT[self.state]
 
     def can_edit(self, user):
         if not user.is_authenticated():

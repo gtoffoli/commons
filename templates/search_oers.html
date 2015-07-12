@@ -16,7 +16,7 @@
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
 	{% if oers %}
 	{% for oer in oers %}
-       <tr><td><a href="/oer/{{ oer.slug }}/" {% if oer.state != 3 %}style="color: red;"{% endif %}>{{ oer.title }}</a></td></tr>
+       <tr><td><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></td></tr>
 	{% endfor %}
 	{% elif query %}
        <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>

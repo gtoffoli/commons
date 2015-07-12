@@ -16,7 +16,7 @@
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
 	{% if repos %}
 	{% for repo in repos %}
-       <tr><td><a href="/repo/{{ repo.slug }}/" {% if repo.state != 3 %}style="color: red;"{% endif %}>{{ repo.name }}</a>.&nbsp; {{ repo.description|truncatechars:120 }}</td></tr>
+       <tr><td><a href="/repo/{{ repo.slug }}/" style="color: {{ repo.get_link_color }};">{{ repo.name }}</a>.&nbsp; {{ repo.description|truncatechars:120 }}</td></tr>
 	{% endfor %}
 	{% elif query %}
        <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>

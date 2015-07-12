@@ -108,6 +108,12 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
+         capfirst(_("translations of the user interface")),
+         url='/info/translation/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
          capfirst(_("registration and authentication")),
          url='/help/register/',
          weight=80,
