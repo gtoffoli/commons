@@ -606,13 +606,12 @@ def oer_edit(request, oer_id=None, project_id=None):
         form = OerForm(request.POST, instance=oer)
         metadata_formset = OerMetadataFormSet(request.POST, instance=oer)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
-            # if form.is_valid() and metadata_formset.is_valid():
             if form.is_valid():
-                #oer = form.save()
                 oer = form.save(commit=False)
-                # oer.documents = request.POST.getlist('documents')
-                if oer.creator_id == 1:
+                """
+                if not hasattr(oer, 'creator'):
                     oer.creator = user
+                """
                 oer.editor = user
                 oer.save()
                 form.save_m2m()
@@ -735,8 +734,10 @@ def lp_edit(request, lp_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
+                """
                 if not hasattr(lp, 'creator'):
                     lp.creator = user
+                """
                 lp.editor = user
                 lp.save()
                 form.save_m2m()

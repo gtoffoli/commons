@@ -6,7 +6,7 @@ Created on 16/apr/2015
 
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
 from mptt.forms import TreeNodeMultipleChoiceField
 from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
@@ -81,6 +81,8 @@ class ProjectForm(forms.ModelForm):
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
     state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 
 class RepoForm(forms.ModelForm):
@@ -98,6 +100,8 @@ class RepoForm(forms.ModelForm):
     info = forms.CharField(required=False, label=string_concat(_('longer description'), " / ", _('search suggestions')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
     eval = forms.CharField(required=False, label=string_concat(_('comments'), " / ", _('evaluation')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 10,}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 class RepoSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -149,12 +153,12 @@ OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, can_delete=True, ex
 class OerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OerForm, self).__init__(*args,**kwargs)
-        self.fields['project'].widget.attrs['disabled'] = True
+        # self.fields['project'].widget.attrs['disabled'] = True
 
     class Meta:
         model = OER
         exclude = ('documents', 'metadata',)
-        fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state',]
+        # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
@@ -162,9 +166,8 @@ class OerForm(forms.ModelForm):
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
     source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}))
     # documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    source = forms.ModelChoiceField(required=True, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
+    source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
     url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -175,7 +178,10 @@ class OerForm(forms.ModelForm):
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 class OerChangeForm(forms.ModelForm):
     class Meta:
@@ -250,7 +256,7 @@ class LpForm(forms.ModelForm):
 
     class Meta:
         model = LearningPath
-        fields = ['title', 'path_type', 'short', 'long', 'levels', 'subjects', 'tags', 'project', 'state',]
+        # fields = ['title', 'path_type', 'short', 'long', 'levels', 'subjects', 'tags', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
@@ -262,6 +268,8 @@ class LpForm(forms.ModelForm):
     tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
     project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 class LpSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):

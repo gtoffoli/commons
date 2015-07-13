@@ -174,16 +174,16 @@ PROJECT_STATE_CHOICES = (
 PROJECT_STATE_DICT = dict(PROJECT_STATE_CHOICES)
 
 PROJECT_COLOR_DICT = {
-  PROJECT_DRAFT: 'yellow',
-  PROJECT_SUBMITTED: 'green',
+  PROJECT_DRAFT: 'Orange',
+  PROJECT_SUBMITTED: 'LimeGreen',
   PROJECT_OPEN: 'black',
-  PROJECT_CLOSED: 'red',
+  PROJECT_CLOSED: 'Red',
 }
 PROJECT_LINK_DICT = {
-  PROJECT_DRAFT: 'yellow',
-  PROJECT_SUBMITTED: 'green',
+  PROJECT_DRAFT: 'Orange',
+  PROJECT_SUBMITTED: 'LimeGreen',
   PROJECT_OPEN: '#428bca',
-  PROJECT_CLOSED: 'red',
+  PROJECT_CLOSED: 'Red',
 }
 
 MEMBERSHIP_STATE_CHOICES = (
@@ -207,9 +207,12 @@ class Project(models.Model):
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    # user = models.ForeignKey(User, verbose_name=_('last editor'))
+    """
     creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='project_editor')
+    """
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
 
     class Meta:
         verbose_name = _('project / community')
@@ -338,8 +341,8 @@ class Project(models.Model):
         return has_permission(self, user, 'add-collection')
 
     def can_add_oer(self, user):
-        # return has_permission(self, user, 'add-oer')
-        return self.can_add_repository(user)
+        # return self.can_add_repository(user)
+        return has_permission(self, user, 'add-oer')
        
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
@@ -411,16 +414,16 @@ PUBLICATION_STATE_CHOICES = (
 PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
 PUBLICATION_COLOR_DICT = {
-  DRAFT: 'yellow',
-  SUBMITTED: 'green',
+  DRAFT: 'Orange',
+  SUBMITTED: 'LimeGreen',
   PUBLISHED: 'black',
-  UN_PUBLISHED: 'red',
+  UN_PUBLISHED: 'Red',
 }
 PUBLICATION_LINK_DICT = {
-  DRAFT: 'yellow',
-  SUBMITTED: 'green',
+  DRAFT: 'Orange',
+  SUBMITTED: 'LimeGreen',
   PUBLISHED: '#428bca',
-  UN_PUBLISHED: 'red',
+  UN_PUBLISHED: 'Red',
 }
 
 class Repo(models.Model):
@@ -438,8 +441,12 @@ class Repo(models.Model):
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
+    """
     creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='repo_creator')
-    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='repo__editor')
+    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='repo_editor')
+    """
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='repo_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='repo_editor')
 
     class Meta:
         verbose_name = _('external repository')
@@ -521,9 +528,12 @@ class OER(models.Model):
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    # user = models.ForeignKey(User, editable=False, verbose_name=_('last editor'))
+    """
     creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='oer_creator')
-    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='oer__editor')
+    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='oer_editor')
+    """
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='oer_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='oer_editor')
 
     class Meta:
         verbose_name = _('OER')
@@ -644,7 +654,7 @@ class OerProxy(models.Model):
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oerproxy_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oerproxy__editor')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oerproxy_editor')
 
     class Meta:
         verbose_name = _('OER proxy')
@@ -686,8 +696,12 @@ class LearningPath(models.Model):
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
+    """
     creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='path_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='path__editor')
+    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='path_editor')
+    """
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='path_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='path_editor')
 
     class Meta:
         verbose_name = _('learning path')
@@ -718,8 +732,8 @@ class PathNode(node_factory('PathEdge')):
     oer = models.ForeignKey(OER, verbose_name=_('stands for'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='pathnode_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='pathnode__editor')
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathnode_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathnode_editor')
 
     class Meta:
         verbose_name = _('path node')
@@ -730,8 +744,8 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     content = models.TextField(blank=True, verbose_name=_('content'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='pathedge_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='pathedge__editor')
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathedge_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathedge_editor')
 
     class Meta:
         verbose_name = _('path edge')
