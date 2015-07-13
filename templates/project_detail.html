@@ -72,6 +72,7 @@
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
 			{% endif %}
+            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}</div>
             </p>
     </section>
     {% if can_add_repo or can_add_oer or can_add_lp %}

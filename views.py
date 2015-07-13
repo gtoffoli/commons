@@ -182,9 +182,6 @@ def project_edit(request, project_id=None, parent_id=None):
             if form.is_valid():
                 project = form.save(commit=False)
                 if parent:
-                    """
-                    group = Group(name=name)
-                    """
                     group_name = slugify(name)[:50]
                     group = Group(name=group_name)
                     group.parent = parent.group
@@ -193,11 +190,18 @@ def project_edit(request, project_id=None, parent_id=None):
                     project.creator = user
                     project.editor = user
                     project.save()
+                    role_member = Role.objects.get(name='member')
+                    add_local_role(project, group, role_member)
                     membership = project.add_member(user)
                     project.accept_application(request, membership)
                     role_admin = Role.objects.get(name='admin')
                     add_local_role(project, user, role_admin)
-                    # grant_permission(project, role_admin, 'accept-member')
+                    if project.get_project_type() == 'oer':
+                        grant_permission(project, role_member, 'add-repo')
+                        grant_permission(project, role_member, 'add-oer')
+                    elif project.get_project_type() == 'lp':
+                        grant_permission(project, role_member, 'add-oer')
+                        grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user
                     project.save()
