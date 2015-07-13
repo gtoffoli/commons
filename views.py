@@ -116,13 +116,14 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     membership = None
-    can_accept_member = can_add_repository = can_add_oer = can_edit = can_chat = False
+    can_accept_member = can_add_repo = can_add_oer = can_add_lp = can_edit = can_chat = False
     user = request.user
     if user.is_authenticated():
         membership = project.get_membership(user)
         can_accept_member = project.can_accept_member(user)
-        can_add_repository = project.can_add_repository(user)
+        can_add_repo = project.can_add_repo(user)
         can_add_oer = project.can_add_oer(user)
+        can_add_lp = project.can_add_lp(user)
         can_edit = project.can_edit(user)
         can_chat = project.can_chat(user)
     # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
@@ -132,7 +133,7 @@ def project_detail(request, project_id, project=None):
     oers = oers[:5]
     lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or lp.project.is_admin(user) or user.is_superuser]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repository': can_add_repository, 'can_add_oer': can_add_oer, 'can_chat': can_chat,}, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -243,7 +244,7 @@ def project_membership(request, project_id, user_id):
 
 def repo_list(request):
     user = request.user
-    can_add = user.is_authenticated() and user.can_add_repository(request)
+    can_add = user.is_authenticated() and user.can_add_repo(request)
     repo_list = []
     for repo in Repo.objects.filter(state=PUBLISHED).order_by('name'):
         oers = OER.objects.filter(source=repo, state=PUBLISHED)
@@ -253,7 +254,7 @@ def repo_list(request):
 
 def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)
-    can_add = user.is_authenticated() and user.can_add_repository(request) and user==request.user
+    can_add = user.is_authenticated() and user.can_add_repo(request) and user==request.user
     if user == request.user:
         repos = Repo.objects.filter(creator=user).order_by('-created')
     else:

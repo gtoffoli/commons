@@ -45,7 +45,7 @@ class ProjAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {'fields': ['group', 'proj_type', 'description', 'info', 'state,']}),
     ]
-    list_display = ('project_name', 'description', 'project_type', 'chat_type', 'project_state', 'created', 'modified',)
+    list_display = ('id', 'project_name', 'description', 'project_type', 'chat_type', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},

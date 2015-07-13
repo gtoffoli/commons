@@ -57,13 +57,6 @@
     <section>
             <h2 class="text-center" style="color: {{ project.get_title_color }};">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
 			{{ project.get_name }}&nbsp;
-{% comment %}
-			{% if parent %}
-			<a href="/project/{{ parent.slug }}/" title="parent"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
-			{% else %}
-			<a href="/cops/" title="community list"><i class="fa fa-level-up" style="font-size: 0.7em;""></i></a>
-			{% endif %}
-{% endcomment %}
 			{% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
             <p class="lead">
@@ -81,12 +74,12 @@
 			{% endif %}
             </p>
     </section>
-    {% if can_add_repository or can_add_oer %}
+    {% if can_add_repo or can_add_oer or can_add_lp %}
     <section>
         <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
-    	<div><a href="/repo/new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify external repository"|capfirst %}</a></div>
-    	<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify OER"|capfirst %}</a></div>
-    	<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>
+    	{% if can_add_repo %}<div><a href="/repo/new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify external repository"|capfirst %}</a></div>{% endif %}
+    	{% if can_add_oer %}<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify OER"|capfirst %}</a></div>{% endif %}
+    	{% if can_add_lp %}<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>{% endif %}
     </section>
 	{% endif %}
     {% if user.is_authenticated %}

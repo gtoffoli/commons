@@ -53,16 +53,16 @@ def user_get_profile(self):
     return profiles and profiles[0] or None
 User.get_profile = user_get_profile
 
-def user_can_add_repository(self, request):
+def user_can_add_repo(self, request):
     user = request.user
     if user.is_superuser:
         return True
     projects = Project.objects.all()
     for project in projects:
-        if project.can_add_repository(user):
+        if project.can_add_repo(user):
             return True
     return False
-User.can_add_repository = user_can_add_repository
+User.can_add_repo = user_can_add_repo
 
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
@@ -334,14 +334,13 @@ class Project(models.Model):
         if not group in user.groups.all():
             user.groups.add(user)
 
-    def can_add_repository(self, user):
+    def can_add_repo(self, user):
         return has_permission(self, user, 'add-repository')
 
-    def can_add_collection(self, user):
-        return has_permission(self, user, 'add-collection')
+    def can_add_lp(self, user):
+        return has_permission(self, user, 'add-lp')
 
     def can_add_oer(self, user):
-        # return self.can_add_repository(user)
         return has_permission(self, user, 'add-oer')
        
 class ProjectMember(models.Model):
@@ -466,7 +465,7 @@ class Repo(models.Model):
         user = request.user
         if not user.is_authenticated():
             return False
-        return user.is_superuser or self.creator==user or user.can_add_repository(request)
+        return user.is_superuser or self.creator==user or user.can_add_repo(request)
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
