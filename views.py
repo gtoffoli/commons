@@ -129,10 +129,10 @@ def project_detail(request, project_id, project=None):
     # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
     repos = []
     oers = OER.objects.filter(project_id=project_id).order_by('-created')
-    oers = [oer for oer in oers if oer.state==PUBLISHED or membership]
+    oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     oers = oers[:5]
     lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
-    lps = [lp for lp in lps if lp.state==PUBLISHED or lp.project.is_admin(user) or user.is_superuser]
+    lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -273,9 +273,15 @@ def repos_by_user(request, username):
 def repo_detail(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
-    can_edit = repo.can_edit(request)
-    repo_type = repo.repo_type
-    return render_to_response('repo_detail.html', {'can_edit': can_edit, 'repo': repo, 'repo_type': repo_type,}, context_instance=RequestContext(request))
+    var_dict = { 'repo': repo, }
+    var_dict['repo_type'] = repo.repo_type
+    var_dict['can_edit'] = repo.can_edit(request)
+    var_dict['can_submit'] = repo.can_submit(request)
+    var_dict['can_withdraw'] = repo.can_withdraw(request)
+    var_dict['can_reject'] = repo.can_reject(request)
+    var_dict['can_publish'] = repo.can_publish(request)
+    var_dict['can_un_publish'] = repo.can_un_publish(request)
+    return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
 
 def repo_detail_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
@@ -416,6 +422,27 @@ def repo_edit(request, repo_id):
 def repo_edit_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_edit(request, repo.id)
+
+def repo_submit(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    repo.submit(request)
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
+def repo_withdraw(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    repo.withdraw(request)
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
+def repo_reject(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    repo.reject(request)
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
+def repo_publish(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    repo.publish(request)
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
+def repo_un_publish(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    repo.un_publish(request)
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
 
 def browse_repos(request):
     form = RepoSearchForm
@@ -569,6 +596,7 @@ def oer_list(request, field_name='', field_value=None):
         oers = OER.objects.filter(q & Q(state=PUBLISHED))
         return render_to_response('oer_list.html', {'oers': oers, 'field_name': field_name, 'field_value': field_value,}, context_instance=RequestContext(request))
 
+"""
 def oers_by_project(request):
     project_list = []
     for project in Project.objects.all().order_by('group__name'):
@@ -577,16 +605,21 @@ def oers_by_project(request):
         if n:
             project_list.append([project, n])
     return render_to_response('oers_by_project.html', {'project_list': project_list,}, context_instance=RequestContext(request))
+"""
 
 def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer = get_object_or_404(OER, pk=oer_id)
-    can_edit = oer.can_edit(request.user)
+    var_dict = { 'oer': oer, }
+    var_dict['can_edit'] = can_edit = oer.can_edit(request.user)
+    var_dict['can_submit'] = oer.can_submit(request)
+    var_dict['can_withdraw'] = oer.can_withdraw(request)
+    var_dict['can_reject'] = oer.can_reject(request)
+    var_dict['can_publish'] = oer.can_publish(request)
+    var_dict['can_un_publish'] = oer.can_un_publish(request)
     if can_edit:
-        form = DocumentUploadForm()
-        return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
-    else:
-        return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit,}, context_instance=RequestContext(request))
+        var_dict['form'] = DocumentUploadForm()
+    return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
     # oer = get_object_or_404(OER, slug=oer_slug)
@@ -663,6 +696,27 @@ def oer_edit_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
     return oer_edit(request, oer_id=oer.id)
 
+def oer_submit(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    oer.submit(request)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+def oer_withdraw(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    oer.withdraw(request)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+def oer_reject(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    oer.reject(request)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+def oer_publish(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    oer.publish(request)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+def oer_un_publish(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    oer.un_publish(request)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+
 def handle_uploaded_file(file_object):
     document_type = DocumentType.objects.get(pk=2) # OER file type
     """
@@ -712,9 +766,15 @@ def project_add_oer(request, project_id):
 def lp_detail(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
-    project = lp.project
-    can_edit = lp.can_edit(request.user)
-    return render_to_response('lp_detail.html', {'lp': lp, 'project': project, 'can_edit': can_edit,}, context_instance=RequestContext(request))
+    var_dict = { 'lp': lp, }
+    var_dict['project'] = lp.project
+    var_dict['can_edit'] = lp.can_edit(request.user)
+    var_dict['can_submit'] = lp.can_submit(request)
+    var_dict['can_withdraw'] = lp.can_withdraw(request)
+    var_dict['can_reject'] = lp.can_reject(request)
+    var_dict['can_publish'] = lp.can_publish(request)
+    var_dict['can_un_publish'] = lp.can_un_publish(request)
+    return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
@@ -739,10 +799,6 @@ def lp_edit(request, lp_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
-                """
-                if not hasattr(lp, 'creator'):
-                    lp.creator = user
-                """
                 lp.editor = user
                 lp.save()
                 form.save_m2m()
@@ -771,9 +827,30 @@ def lp_edit_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_edit(request, lp_id=lp.id)
 
+def lp_submit(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    lp.submit(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+def lp_withdraw(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    lp.withdraw(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+def lp_reject(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    lp.reject(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+def lp_publish(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    lp.publish(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+def lp_un_publish(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    lp.un_publish(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
 def project_add_lp(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    if not project.can_add_oer(request.user):
+    if not project.can_add_lp(request.user):
         return HttpResponseRedirect('/project/%s/' % project.slug)
     return lp_edit(request, project_id=project_id) 
 

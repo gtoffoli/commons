@@ -256,7 +256,6 @@ class LpForm(forms.ModelForm):
 
     class Meta:
         model = LearningPath
-        # fields = ['title', 'path_type', 'short', 'long', 'levels', 'subjects', 'tags', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))

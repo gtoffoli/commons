@@ -425,7 +425,42 @@ PUBLICATION_LINK_DICT = {
   UN_PUBLISHED: 'Red',
 }
 
-class Repo(models.Model):
+class Publishable():
+
+    def can_submit(self, request):
+        return self.state in [DRAFT] and request.user == self.creator
+    def can_withdraw(self, request):
+        return self.state in [SUBMITTED] and request.user == self.creator
+    def can_reject(self, request):
+        return self.state in [SUBMITTED] and self.project.is_admin(request.user)
+    def can_publish(self, request):
+        return self.state in [SUBMITTED, UN_PUBLISHED] and self.project.is_admin(request.user)
+    def can_un_publish(self, request):
+        return self.state in [PUBLISHED] and self.project.is_admin(request.user)
+
+    def submit(self, request):
+        if self.can_submit(request):
+            self.state = SUBMITTED
+            self.save()
+    def withdraw(self, request):
+        if self.can_withdraw(request):
+            self.state = DRAFT
+            self.save()
+    def reject(self, request):
+        if self.can_reject(request):
+            self.state = DRAFT
+            self.save()
+    def publish(self, request):
+        if self.can_publish(request):
+            self.state = PUBLISHED
+            self.save()
+    def un_publish(self, request):
+        if self.can_un_publish(request):
+            self.state = UN_PUBLISHED
+            self.save()
+
+
+class Repo(models.Model, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
@@ -467,6 +502,15 @@ class Repo(models.Model):
             return False
         return user.is_superuser or self.creator==user or user.can_add_repo(request)
 
+    def get_project(self):
+        return Project.objects.get(pk=3)
+    def can_reject(self, request):
+        return self.state in [SUBMITTED] and self.get_project().is_admin(request.user)
+    def can_publish(self, request):
+        return self.state in [SUBMITTED, UN_PUBLISHED] and self.get_project().is_admin(request.user)
+    def can_un_publish(self, request):
+        return self.state in [PUBLISHED] and self.get_project().is_admin(request.user)
+
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
 
@@ -501,7 +545,7 @@ SOURCE_TYPE_CHOICES = (
     (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 
-class OER(models.Model):
+class OER(models.Model, Publishable):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
@@ -556,7 +600,7 @@ class OER(models.Model):
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.can_add_oer(user)
-
+    
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
 
@@ -682,7 +726,7 @@ LP_TYPE_CHOICES = (
     (4, _('scripted directed graph')),)
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
-class LearningPath(models.Model):
+class LearningPath(models.Model, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
