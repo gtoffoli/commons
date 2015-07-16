@@ -1,0 +1,17 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{{ node.label }} - {% trans "node of path"|capfirst %}: {{ node.path.title }}{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center"><i>{{ node.label }}</i> - {% trans "node of path"|capfirst %}: <i>{{ node.path.title }}</i></h2>
+            <div><strong>{% trans "label"|capfirst %}</strong>: {{ node.label }}</div>
+            <div><strong>{% trans "learning path"|capfirst %}</strong>: <a href="/lp/{{ node.path.slug }}/" style="color: {{ node.path.get_link_color }};">{{ node.path }}</a></div>
+            <div><strong>{% trans "OER"|capfirst %}</strong>: <a href="/oer/{{ node.oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ node.oer }}</a></div>
+            <div><strong>{% trans "node added by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ node.creator.username }}">{{ node.creator.get_full_name }}</a></div>
+         </div>
+    </section>
+{% endblock %}

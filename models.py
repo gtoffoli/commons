@@ -769,6 +769,9 @@ class LearningPath(models.Model, Publishable):
             return False
         return user.is_superuser or self.creator==user
 
+    def get_nodes(self):
+        return PathNode.objects.all().order_by('created')
+
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))
     label = models.TextField(blank=True, verbose_name=_('label'))

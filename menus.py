@@ -70,6 +70,11 @@ def search_children(request):
         ))
     """
     children.append (MenuItem(
+         string_concat(capfirst(_("learning paths")), ' - ', _("advanced search")),
+         url='/lps/search/',
+         weight=80,
+        ))
+    children.append (MenuItem(
          string_concat(capfirst(_("open resources")), ' - ', _("advanced search")),
          url='/oers/search/',
          weight=80,

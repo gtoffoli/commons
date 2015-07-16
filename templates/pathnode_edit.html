@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if lp %}{% trans "edit learning path"|capfirst %}: &nbsp;{{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: &nbsp;{{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_head %}
 	{% tinymce_preview "preview-content" %}
@@ -19,12 +19,9 @@
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% if lp %}{% trans "edit learning path"|capfirst %}: &nbsp;{{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
-    <form method="post" action="{{ action }}" id="lp_edit_form" class="form-horizontal">
-    {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
+       <h2 class="text-center">{% if node %}{% trans "edit learning path node"|capfirst %}: &nbsp;{{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
+    <form method="post" action="{{ action }}" id="pathnode_edit_form" class="form-horizontal">
 	{% csrf_token %}
-	{% comment %}{% if lp %}<input type="hidden" id="id" name="id" value="{{ lp.id }}" />{% endif %}{% endcomment %}
-	{% comment %}{% if project_id %}<input type="hidden" id="project" name="project value="{{ project_id }}" />{% endif %}{% endcomment %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
@@ -43,22 +40,4 @@
     </form>
     </section>
   </div>
-{% endblock %}
-
-{% block extra_script %}
-	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
-	<script>
-	tinyMCE.init({
-	    schema: "html5",
-	    mode: "specific_textareas",
-	    editor_selector: "richtext",
-	    width: "100%",
-	    theme: "advanced",
-	    theme_advanced_toolbar_location: "top",
-	    theme_advanced_resizing: true,
-	    theme_advanced_resizing_horizontal: false,
-	    theme_advanced_resizing_min_height: 350,
-	    theme_advanced_buttons1: "undo,redo,formatselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,bullist,numlist,outdent,indent,sub,sup,charmap,separator,cleanup,code",
-	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea"
-	});	</script>
 {% endblock %}

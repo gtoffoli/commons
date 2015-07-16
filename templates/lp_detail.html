@@ -7,7 +7,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: &nbsp; {{ lp.title }}
+            <h2 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
                 {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
             </h2>
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
@@ -69,6 +69,19 @@
                 {% if can_un_publish %}&nbsp; <a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
             </div>
 {% endif %}
+
+    		{% if lp.get_nodes or can_edit %}
+    		<div><strong>{% trans "path nodes"|capfirst %}</strong></div>
+			<ol class="root">
+		    {% for node in lp.get_nodes %}
+            	<li><a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
+		    {% endfor %}
+			</ol>
+    		{% if can_edit %}
+				<div style="margin-left: 1.5em;"><button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_new/';">{% trans "add node"|capfirst %}</button></div>
+		    {% endif %}
+		    {% endif %}
+
          </div>
     </section>
 {% endblock %}

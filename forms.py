@@ -15,8 +15,10 @@ from taggit.models import Tag
 from taggit_live.forms import LiveTagField, TaggitLiveWidget
 import settings
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Project, ProjType, CHAT_TYPE_CHOICES, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import PROJECT_STATE_CHOICES, OER, OER_TYPE_CHOICES, LearningPath, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, Project, OerMetadata
+from models import Project, ProjType, Repo, Language, SubjectNode, RepoType, RepoFeature
+from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata
+from models import LearningPath, PathNode
+from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -252,7 +254,7 @@ class DocumentUploadForm(forms.Form):
 class LpForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(LpForm, self).__init__(*args,**kwargs)
-        self.fields['project'].widget.attrs['disabled'] = True
+        # self.fields['project'].widget.attrs['disabled'] = True
 
     class Meta:
         model = LearningPath
@@ -301,3 +303,18 @@ class LpSearchForm(forms.Form):
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))
+
+class PathNodeForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(PathNodeForm, self).__init__(*args,**kwargs)
+        # self.fields['path'].widget.attrs['disabled'] = True
+
+    class Meta:
+        model = PathNode
+        exclude = ('children',)
+
+    path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
+    label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'span4 form-control',}))
+    oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all(), widget=forms.Select(attrs={'class':'span8 form-control',}))
+    creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())

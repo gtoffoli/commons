@@ -25,8 +25,10 @@
     <form method="post" action="{{ action }}" id="oer_edit_form" class="form-horizontal">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
 	{% csrf_token %}
+{% comment %}
 	{% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}" />{% endif %}
 	{% if project_id %}<input type="hidden" id="project" name="project value="{{ project_id }}" />{% endif %}
+{% endcomment %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">

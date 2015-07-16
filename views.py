@@ -16,10 +16,10 @@ from django.utils.translation import get_language, pgettext
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
-from models import LearningPath # , PathNode
+from models import LearningPath, PathNode
 from models import PUBLISHED
 
-from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm
+from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import RepoSearchForm, OerSearchForm, LpSearchForm
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
@@ -182,7 +182,7 @@ def project_edit(request, project_id=None, parent_id=None):
             if form.is_valid():
                 project = form.save(commit=False)
                 if parent:
-                    group_name = slugify(name)[:50]
+                    group_name = slugify(name[:50])
                     group = Group(name=group_name)
                     group.parent = parent.group
                     group.save()
@@ -646,10 +646,6 @@ def oer_edit(request, oer_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 oer = form.save(commit=False)
-                """
-                if not hasattr(oer, 'creator'):
-                    oer.creator = user
-                """
                 oer.editor = user
                 oer.save()
                 form.save_m2m()
@@ -671,12 +667,14 @@ def oer_edit(request, oer_id=None, project_id=None):
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
+                    """
                 else:
                     return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action,}, context_instance=RequestContext(request))
+                    """
             else:
                 print form.errors
                 print metadata_formset.errors
-                return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'project_id': project_id,}, context_instance=RequestContext(request))
+            return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if oer:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -805,11 +803,9 @@ def lp_edit(request, lp_id=None, project_id=None):
                 lp = get_object_or_404(LearningPath, id=lp.id)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/lp/%s/' % lp.slug)
-                else:
-                    return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action,}, context_instance=RequestContext(request))
             else:
                 print form.errors
-                return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'project_id': project_id,}, context_instance=RequestContext(request))
+            return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -847,6 +843,68 @@ def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.un_publish(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
+def pathnode_detail(request, node_id, node=None):
+    if not node:
+        node = get_object_or_404(PathNode, pk=node_id)
+    var_dict = { 'node': node, }
+    var_dict['lp'] = node.path
+    return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
+
+def pathnode_detail_by_id(request, node_id):
+    return pathnode_detail(request, node_id=node_id)
+
+def pathnode_edit(request, node_id=None, path_id=None):
+    user = request.user
+    node = None
+    action = '/pathnode/edit/'
+    if node_id:
+        node = get_object_or_404(PathNode, id=node_id)
+        path = node.path
+        action = '/pathnode/%d/edit/' % node.id
+        if not path.can_edit(request):
+            return HttpResponseRedirect('/lp/%s/' % path.slug)
+    if request.POST:
+        node_id = request.POST.get('id', '')
+        if node_id:
+            node = get_object_or_404(PathNode, id=node_id)
+            action = '/pathnode/%d/edit/' % node.id
+            path_id = node.path_id
+        form = PathNodeForm(request.POST, instance=node)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                node = form.save(commit=False)
+                node.editor = user
+                node.save()
+                form.save_m2m()
+                node = get_object_or_404(PathNode, id=node.id)
+                if not node.label:
+                    node.label = slugify(node.oer.title[:50])
+                    node.save()
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/pathnode/%d/' % node.id)
+            else:
+                print form.errors
+            return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            if node:
+                return HttpResponseRedirect('/pathnode/%d/' % node.id)
+            else:
+                path_id = path_id or request.POST.get('path_id')
+                path = get_object_or_404(LearningPath, id=path_id)
+                return HttpResponseRedirect('/lp/%s/' % path.slug)
+    elif node:
+        form = PathNodeForm(instance=node)
+    else:
+        form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
+    return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action}, context_instance=RequestContext(request))
+
+def pathnode_edit_by_id(request, node_id):
+    return pathnode_edit(request, node_id=node_id)
+
+def lp_add_node(request, lp_slug):
+    path = get_object_or_404(LearningPath, slug=lp_slug)
+    return pathnode_edit(request, path_id=path.id) 
 
 def project_add_lp(request, project_id):
     project = get_object_or_404(Project, id=project_id)
