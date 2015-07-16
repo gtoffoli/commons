@@ -4,7 +4,7 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: &nbsp;{{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: <i>{{ node.label }}</i>{% else %}{% trans "add learning path node"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_head %}
 	{% tinymce_preview "preview-content" %}
@@ -13,6 +13,30 @@
 	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.js"></script>
 	<script type="text/javascript" src="/static/taggit_live/js/taggit_live.js"></script>
+<script type="text/javascript">
+//Copyright: CodePug.com 2009
+//Do not REMOVE these comments
+//Usage: setReadonly('mySelect');
+function setReadonly( selectElementId ){
+	var selectElement = document.getElementById(selectElementId);
+	if (selectElement){		
+		var parent = selectElement.parentElement;
+		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
+		if (!parent){
+			parent=selectElement.parentNode;
+			textValue = selectElement.options[selectElement.options.selectedIndex].text;
+		}
+		var input = document.createElement("input");
+		input.setAttribute("id",selectElement.id);
+		input.setAttribute("type","text");
+		input.setAttribute("value",textValue);
+		input.setAttribute("class","form-control");
+		input.style.background="#eeeeee";
+		input.readOnly = true;
+		parent.appendChild(input);
+	}
+	selectElement.style.display="none";
+}</script>
 {% endblock %}
 
 {% block body %}
@@ -40,4 +64,12 @@
     </form>
     </section>
   </div>
+{% endblock %}
+
+{% block extra_script %}
+{% if node %}
+<script type="text/javascript">
+	setReadonly('id_path');
+</script>
+{% endif %}
 {% endblock %}

@@ -7,7 +7,9 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center"><i>{{ node.label }}</i> - {% trans "node of path"|capfirst %}: <i>{{ node.path.title }}</i></h2>
+            <h2 class="text-center"><i>{{ node.label }}</i> - {% trans "node of path"|capfirst %}: <i>{{ node.path.title }}</i>
+                {% if can_edit %}&nbsp; <a href="/pathnode/{{ node.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
+            </h2>
             <div><strong>{% trans "label"|capfirst %}</strong>: {{ node.label }}</div>
             <div><strong>{% trans "learning path"|capfirst %}</strong>: <a href="/lp/{{ node.path.slug }}/" style="color: {{ node.path.get_link_color }};">{{ node.path }}</a></div>
             <div><strong>{% trans "OER"|capfirst %}</strong>: <a href="/oer/{{ node.oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ node.oer }}</a></div>

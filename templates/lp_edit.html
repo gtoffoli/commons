@@ -13,18 +13,40 @@
 	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.js"></script>
 	<script type="text/javascript" src="/static/taggit_live/js/taggit_live.js"></script>
+<script type="text/javascript">
+//Copyright: CodePug.com 2009
+//Do not REMOVE these comments
+//Usage: setReadonly('mySelect');
+function setReadonly( selectElementId ){
+	var selectElement = document.getElementById(selectElementId);
+	if (selectElement){		
+		var parent = selectElement.parentElement;
+		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
+		if (!parent){
+			parent=selectElement.parentNode;
+			textValue = selectElement.options[selectElement.options.selectedIndex].text;
+		}
+		var input = document.createElement("input");
+		input.setAttribute("id",selectElement.id);
+		input.setAttribute("type","text");
+		input.setAttribute("value",textValue);
+		input.setAttribute("class","form-control");
+		input.style.background="#eeeeee";
+		input.readOnly = true;
+		parent.appendChild(input);
+	}
+	selectElement.style.display="none";
+}</script>
 {% endblock %}
 
 {% block body %}
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% if lp %}{% trans "edit learning path"|capfirst %}: &nbsp;{{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
+       <h2 class="text-center">{% if lp %}{% trans "edit learning path"|capfirst %}: <i>{{ lp.title }}</i>{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
     <form method="post" action="{{ action }}" id="lp_edit_form" class="form-horizontal">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
 	{% csrf_token %}
-	{% comment %}{% if lp %}<input type="hidden" id="id" name="id" value="{{ lp.id }}" />{% endif %}{% endcomment %}
-	{% comment %}{% if project_id %}<input type="hidden" id="project" name="project value="{{ project_id }}" />{% endif %}{% endcomment %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="row"  style="margin-top: 0; margin-bottom: 0;">
@@ -46,6 +68,12 @@
 {% endblock %}
 
 {% block extra_script %}
+{% if lp %}
+<script type="text/javascript">
+	setReadonly('id_path_type');
+	setReadonly('id_project');
+</script>
+{% endif %}
 	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
 	<script>
 	tinyMCE.init({

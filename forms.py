@@ -252,10 +252,6 @@ class DocumentUploadForm(forms.Form):
 
 
 class LpForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(LpForm, self).__init__(*args,**kwargs)
-        # self.fields['project'].widget.attrs['disabled'] = True
-
     class Meta:
         model = LearningPath
 
@@ -305,10 +301,6 @@ class LpSearchForm(forms.Form):
         widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))
 
 class PathNodeForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(PathNodeForm, self).__init__(*args,**kwargs)
-        # self.fields['path'].widget.attrs['disabled'] = True
-
     class Meta:
         model = PathNode
         exclude = ('children',)

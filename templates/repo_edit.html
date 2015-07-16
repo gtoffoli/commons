@@ -6,8 +6,6 @@
 
 {% block head_title %}{% if repo %}{% trans "edit repository"|capfirst %}: &nbsp;{{ repo.name }}{% else %}{% trans "add repository"|capfirst %}{% endif %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
-
 {% block extra_head %}
 	{% tinymce_preview "preview-content" %}
 {% endblock %}
@@ -16,7 +14,7 @@
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% if repo %}{% trans "edit repository"|capfirst %}: &nbsp;{{ repo.name }}{% else %}{% trans "add repository"|capfirst %}{% endif %}</h2>
+       <h2 class="text-center">{% if repo %}{% trans "edit repository"|capfirst %}: <i>{{ repo.name }}</i>{% else %}{% trans "add repository"|capfirst %}{% endif %}</h2>
     <form method="post" action="/repo/save/" id="edit_form" class="form-horizontal">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
 	{% csrf_token %}

@@ -764,7 +764,8 @@ class LearningPath(models.Model, Publishable):
     def get_link_color(self):
         return PUBLICATION_LINK_DICT[self.state]
 
-    def can_edit(self, user):
+    def can_edit(self, request):
+        user = request.user
         if not user.is_authenticated():
             return False
         return user.is_superuser or self.creator==user
@@ -784,6 +785,9 @@ class PathNode(node_factory('PathEdge')):
     class Meta:
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
+
+    def can_edit(self, request):
+        return self.path.can_edit(request)
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
     label = models.TextField(blank=True, verbose_name=_('label'))

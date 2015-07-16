@@ -766,7 +766,7 @@ def lp_detail(request, lp_id, lp=None):
         lp = get_object_or_404(LearningPath, pk=lp_id)
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
-    var_dict['can_edit'] = lp.can_edit(request.user)
+    var_dict['can_edit'] = lp.can_edit(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)
@@ -849,6 +849,7 @@ def pathnode_detail(request, node_id, node=None):
         node = get_object_or_404(PathNode, pk=node_id)
     var_dict = { 'node': node, }
     var_dict['lp'] = node.path
+    var_dict['can_edit'] = node.can_edit(request)
     return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
 
 def pathnode_detail_by_id(request, node_id):
