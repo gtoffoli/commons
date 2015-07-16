@@ -35,7 +35,7 @@
 
             {% block topbar_base %}
                 <header>
-                    <div class="navbar navbar-default {% block navbar_class %}navbar-fixed-top{% endblock %}">
+                    <div class="navbar navbar-default {% block navbar_class %}{% comment %}navbar-fixed-top{% endcomment %}{% endblock %}" style="margin-bottom:0; padding-top:5px; padding-bottom:5px">
                         <div class="container">
                         {% block topbar %}
                             <div class="navbar-header">

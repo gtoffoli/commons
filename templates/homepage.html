@@ -7,33 +7,36 @@
 {% block body_class %}home{% endblock %}
 
 {% block banner %}
-<section class="jumbotron">
-	<div class="container"  style="margin-top: 1.5em;">
-		<h2>Welcome to CommonS</h2>
-	    <p>
-	    <b>CommonS</b>[paces] {% trans "is an international community of practice" %}</i>
-	    {% trans "devoted to the improvement of" %} <b>{% trans "employability skills" %}</b>.
-	    </p>
+<div class="row" style="background: #67AE73; /*#007CC2*/">
+	<div class="col-md-6">
+	<div style="padding-top:0; padding-left:0"><img alt="" src="/static/commons/img/sfondo.fw.png" style="max-width:100%; height:auto"></div>
 	</div>
-</section>
+<div class="col-md-6" style="height:300px">
+	<div style="position:relative; top:30%; padding-right: 30px;">
+	<h1 style="font-family: 'Biryani', sans-serif; font-weight: 700; font-size:40px; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.6);">CommonsSpaces<br><small style="color:white">{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1></div>
+	</div>
+</div>
 {% endblock %}
 
 {% block column-1 %}
-    <section>
+    <section style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
         <div class="container">
             <div class="feature-columns">
                 <div>
-                    <a href="/cops/"><i class="fa fa-wechat fa-3x"></i><br>
+                    <a href="/cops/">{% comment %}<i class="fa fa-wechat fa-3x"></i>{% endcomment %}<img src="/static/commons/img/group.png"><br>
+                    <div style="font-size: larger;">{% trans "learn together"|capfirst %}</div>
                     <b><i>{% trans "Communities and Projects" %}</i></b>.
                     </a>
                 </div>
-                <div>
+                <div style="padding-top: 5em;">
                     <a href="/info/learn/"><i class="fa fa-road fa-3x"></i><br>
+                     <div style="font-size: larger;">{% trans "reuse other people's experience"|capfirst %}</div>
                     <b><i>{% trans "Learning Paths" %}</i></b>.
                     </a>
                 </div>
-                <div>
+                <div style="padding-top: 5em;">
                     <a href="/browse/"><i class="fa fa-cubes fa-3x"></i><br>
+                    <div style="font-size: larger;">{% trans "start explore"|capfirst %}</div>
                     <b><i>{% trans "Educational Library" %}</i></b>.
                     </a>
                 </div>
