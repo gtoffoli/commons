@@ -18,6 +18,7 @@ from documents import DocumentType, Document
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
 from models import LearningPath, PathNode
 from models import PUBLISHED
+from models import LP_COLLECTION, LP_SEQUENCE
 
 from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import RepoSearchForm, OerSearchForm, LpSearchForm
@@ -772,6 +773,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_reject'] = lp.can_reject(request)
     var_dict['can_publish'] = lp.can_publish(request)
     var_dict['can_un_publish'] = lp.can_un_publish(request)
+    var_dict['can_chain'] = lp.can_chain(request)
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -844,6 +846,11 @@ def lp_un_publish(request, lp_id):
     lp.un_publish(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
+def lp_make_sequence(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    head = lp.make_sequence(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
 def pathnode_detail(request, node_id, node=None):
     if not node:
         node = get_object_or_404(PathNode, pk=node_id)
@@ -870,7 +877,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
         if node_id:
             node = get_object_or_404(PathNode, id=node_id)
             action = '/pathnode/%d/edit/' % node.id
-            path_id = node.path_id
+            path = node.path
         form = PathNodeForm(request.POST, instance=node)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
@@ -882,6 +889,9 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 if not node.label:
                     node.label = slugify(node.oer.title[:50])
                     node.save()
+                path = node.path
+                if path.path_type==LP_SEQUENCE and not node.parents():
+                    path.append_node(node, request)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/pathnode/%d/' % node.id)
             else:
@@ -891,8 +901,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
             if node:
                 return HttpResponseRedirect('/pathnode/%d/' % node.id)
             else:
-                path_id = path_id or request.POST.get('path_id')
-                path = get_object_or_404(LearningPath, id=path_id)
                 return HttpResponseRedirect('/lp/%s/' % path.slug)
     elif node:
         form = PathNodeForm(instance=node)

@@ -18,6 +18,7 @@
 	{% csrf_token %}<input type="hidden" name="path_type" value="{{ lp.path_type }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ lp.get_type }}">
     </form>
+            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain" style="font-size: 0.7em;""></i></a>{% endif %}
             </div>
     		{% if lp.levels.all %}
     		<div><strong>{% trans "levels"|capfirst %}</strong>:
@@ -72,11 +73,11 @@
 
     		{% if lp.get_nodes or can_edit %}
     		<div><strong>{% trans "path nodes"|capfirst %}</strong></div>
-			<ol class="root">
+			{% if lp.path_type == 2 %}<ol class="root">{% else %}<ul class="root">{% endif %}
 		    {% for node in lp.get_nodes %}
             	<li><a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
 		    {% endfor %}
-			</ol>
+			{% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
     		{% if can_edit %}
 				<div style="margin-left: 1.5em;"><button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_new/';">{% trans "add node"|capfirst %}</button></div>
 		    {% endif %}

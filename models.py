@@ -719,11 +719,15 @@ LearningPath._meta.get_field('children').othermodel = 'PathNode'
 LearningPath._meta.get_field('children').related_name = 'path'
 """
 
+LP_COLLECTION = 1
+LP_SEQUENCE = 2
+LP_DAG = 3
+LP_SCRIPTED_DAG = 4
 LP_TYPE_CHOICES = (
-    (1, _('simple collection')),
-    (2, _('sequence')),
-    (3, _('directed graph')),
-    (4, _('scripted directed graph')),)
+    (LP_COLLECTION, _('simple collection')),
+    (LP_SEQUENCE, _('sequence')),
+    (LP_DAG, _('directed graph')),
+    (LP_SCRIPTED_DAG, _('scripted directed graph')),)
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
 class LearningPath(models.Model, Publishable):
@@ -771,7 +775,61 @@ class LearningPath(models.Model, Publishable):
         return user.is_superuser or self.creator==user
 
     def get_nodes(self):
-        return PathNode.objects.all().order_by('created')
+        return PathNode.objects.filter(path=self).order_by('created')
+    
+    def is_pure_collection(self):
+        nodes = self.get_nodes()
+        for node in nodes:
+            if node.parents():
+                return False
+            if node.children.all():
+                return False
+        return True
+ 
+    def can_chain(self, request):
+        return self.path_type==LP_COLLECTION and self.can_edit(request) and self.get_nodes() and self.is_pure_collection()
+        
+    def make_sequence(self, request):
+        if not self.is_pure_collection():
+            return None
+        nodes = self.get_nodes()
+        if nodes and self.path_type==LP_COLLECTION:
+            previous = None
+            for node in nodes:
+                if previous:
+                    edge = PathEdge(parent=previous, child=node, creator=request.user, editor=request.user)
+                    edge.save()
+                else:
+                    head = node
+                previous = node
+            self.path_type = LP_SEQUENCE
+            self.editor = request.user
+            self.save()
+            return head
+        else:
+            return None             
+
+    def sequence_tail(self, exclude=[]):
+        tail = None
+        n = 0
+        print 'sequence_tail', self.get_nodes()
+        for node in self.get_nodes():
+            if not node.id in exclude and not node.children.all():
+                tail = node
+                n += 1
+        print 'sequence_tail', tail, n
+        if tail and n==1:
+            return tail
+        return None
+
+    def append_node(self, node, request):
+        tail = self.sequence_tail(exclude=[node.id])
+        if tail:
+            edge = PathEdge(parent=tail, child=node, creator=request.user, editor=request.user)
+            edge.save()
+            return edge
+            print 'append_node', tail, node, edge
+        return None
 
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))

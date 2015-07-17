@@ -193,10 +193,14 @@ class LearningPathAdmin(admin.ModelAdmin):
 
 class PathNodeAdmin(admin.ModelAdmin):
     fieldsets = []
-    list_display = ('id', 'path', 'label', 'oer_title', 'creator', 'created',)
+    list_display = ('id', 'path', 'label', 'oer_title', 'list_children', 'creator', 'created',)
 
     def oer_title(self, obj):
         return obj.oer.title
+
+    def list_children(self, obj):
+        l = [str(c.id) for c in obj.children.all()]
+        return '-'.join(l)
 
     def save_model(self, request, obj, form, change):
         if not change:
