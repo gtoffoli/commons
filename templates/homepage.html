@@ -4,21 +4,24 @@
 
 {% block head_title %}CommonS Platform{% endblock %}
 
+{% block extra_style %}
+	<link href='http://fonts.googleapis.com/css?family=Biryani:400,600,700,800,900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+{% endblock %}
+
 {% block body_class %}home{% endblock %}
 
-{% block banner %}
+{% block body_base %}
 <div class="row" style="background: #67AE73; /*#007CC2*/">
 	<div class="col-md-6">
 	<div style="padding-top:0; padding-left:0"><img alt="" src="/static/commons/img/sfondo.fw.png" style="max-width:100%; height:auto"></div>
 	</div>
 <div class="col-md-6" style="height:300px">
 	<div style="position:relative; top:30%; padding-right: 30px;">
-	<h1 style="font-family: 'Biryani', sans-serif; font-weight: 700; font-size:40px; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.6);">CommonsSpaces<br><small style="color:white">{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1></div>
+	<h1 style="font-family: 'Biryani', sans-serif; font-weight: 700; font-size:40px; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.6);">CommonSpaces<br><small style="color:white">{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1></div>
 	</div>
 </div>
-{% endblock %}
 
-{% block column-1 %}
+
     <section style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
         <div class="container">
             <div class="feature-columns">
@@ -43,19 +46,4 @@
             </div>
         </div>
     </section>
-    {% comment %}<section>
-        <div class="container">
-            <p class="text-center">
-                {% trans "see"|capfirst %} <a href="http://www.commonspaces.eu/" target="_blank">www.commonspaces.eu</a>
-                {% trans "for more information" %}.
-            </p>
-        </div>
-    </section>{% endcomment %}
 {% endblock %}
-
-{% block column-2 %}{% endblock %}
-{% block column-3 %}{% endblock %}
-{% block column-4 %}{% endblock %}
-{% block column-5 %}{% endblock %}
-
-
