@@ -1,0 +1,195 @@
+/* commons.css */
+
+html, body {
+	height: 100%;
+}
+
+/* FONT FAMILY */
+body,
+h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
+	font-family: 'Open Sans', sans-serif;
+}
+
+/* FOOTER FIXED */
+.wrapper {
+	min-height: 100%;
+	height: auto;
+	margin: 0 0 -80px 0;
+	padding: 0 0 80px 0;
+}
+
+.footer-fixed {
+	min-height: 60px;
+}
+
+/* CAROUSEL */
+.carousel-fade .carousel-inner .item {
+	opacity: 0;
+	transition-property: opacity;
+}
+
+.carousel-fade .carousel-inner .active {
+	opacity: 1;
+}
+
+.carousel-fade .carousel-inner .active.left,
+.carousel-fade .carousel-inner .active.right {
+	left: 0;
+	opacity: 0;
+	z-index: 1;
+}
+
+.carousel-fade .carousel-inner .next.left,
+.carousel-fade .carousel-inner .prev.right {
+	opacity: 1;
+}
+
+.carousel-fade .carousel-control {
+	z-index: 2;
+}
+
+.carousel-inner > .item-left {
+	text-align : left;
+}
+
+.carousel-inner > .item-right {
+	text-align : right;
+}
+
+.carousel-inner img {
+	max-width:100%;
+	height:auto;
+}
+.carousel-control {
+	position:absolute;
+	top: 40%;
+	left:0;
+	bottom:40%;
+	width: 5%;
+}
+.carousel-control .glyphicon-chevron-right,
+.carousel-control .glyphicon-chevron-left{
+	width: 24px;
+	height: 24px;
+	font-size: 24px;
+	
+}
+.carousel-control.left,
+.carousel-control.right {
+	background-image:none;
+}
+.carousel-caption {
+	position: absolute;
+	top: auto;
+	bottom: 22%;
+	z-index:10;
+	padding-top:20px;
+	padding-bottom:20px;
+	width:50%;
+	color:#fff;
+	text-shadow:0 1px 2px rgba(0,0,0,0.6)
+}
+.carousel-caption-left {
+	left:auto;
+	right:2%;
+	bottom: 22%;
+	text-align:left;
+}
+.carousel-caption-right {
+	left:2%;
+	right:auto;
+	text-align:right;
+}
+.carousel-caption h1 {
+    font-family: 'Biryani', sans-serif;
+	font-weight: 700; 
+	font-size:40px;
+	color:#fff;
+}
+
+.carousel-caption h1 small {
+	color:#fefefe;
+}
+
+	@media (min-width:992px) and (max-width:1199px)
+{
+.carousel-caption {
+	width:33%;
+	bottom:10%;
+	padding-left:10px; 
+	padding-right: 10px;
+}
+
+.carousel-caption h1 {
+	font-size:36px;
+}
+
+}
+
+	@media screen and (max-width:991px)
+{
+.carousel-inner > .item-right,
+.carousel-inner > .item-left {
+	text-align: center;
+}
+
+.carousel-caption {
+	position: relative;
+	top: 0;
+	bottom: 0;
+	width: auto;
+	padding-top:0;
+	padding-left:10px; 
+	padding-right: 10px;
+}
+
+.carousel-caption-left,
+.carousel-caption-right {
+	left:0;
+	right:0;
+	text-align : center;
+}
+
+.carousel-caption h1 {
+	font-size:32px;
+}
+
+}
+
+	@media all and (transform-3d), (-webkit-transform-3d) {
+.carousel-fade .carousel-inner > .item.next,
+.carousel-fade .carousel-inner > .item.active.right,
+.carousel-fade .carousel-inner > .item.prev,
+.carousel-fade .carousel-inner > .item.active.left{
+	opacity: 0;
+	-webkit-transform: translate3d(0, 0, 0);
+			transform: translate3d(0, 0, 0);
+}
+
+.carousel-fade .carousel-inner > .item.next.left,
+.carousel-fade .carousel-inner > .item.prev.right,
+.carousel-fade .carousel-inner > .item.active {
+	opacity: 1;
+	-webkit-transform: translate3d(0, 0, 0);
+		transform: translate3d(0, 0, 0);
+}
+
+}
+
+/* PADDING E MARGIN */
+.paddingTB20 {
+	padding-top:20px;
+	padding-bottom:20px;
+}
+
+/* STILI FONT */
+.LargerDemiBold {
+	font-size: larger;
+	font-weight:600;
+}
+.demiBold {
+	font-weight:600;
+}
+.bold {
+	font-weight:700;
+}

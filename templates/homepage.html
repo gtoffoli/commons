@@ -1,6 +1,6 @@
-{% extends "banner_base.html" %}
+{% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load staticfiles i18n %}
 
 {% block head_title %}CommonS Platform{% endblock %}
 
@@ -11,39 +11,51 @@
 {% block body_class %}home{% endblock %}
 
 {% block body_base %}
-<div class="row" style="background: #67AE73; /*#007CC2*/">
-	<div class="col-md-6">
-	<div style="padding-top:0; padding-left:0"><img alt="" src="/static/commons/img/sfondo.fw.png" style="max-width:100%; height:auto"></div>
-	</div>
-<div class="col-md-6" style="height:300px">
-	<div style="position:relative; top:30%; padding-right: 30px;">
-	<h1 style="font-family: 'Biryani', sans-serif; font-weight: 700; font-size:40px; color:white; text-shadow:0 1px 2px rgba(0,0,0,0.6);">CommonSpaces<br><small style="color:white">{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1></div>
-	</div>
-</div>
+
+{% comment %} SLIDESHOW {% endcomment %}
+    <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
+{% comment %} SEQUENCE SLIDE WITH CAPTION {% endcomment %}
+        <div class="carousel-inner">
+             <div class="active item item-left" style="background: #67AE73;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-left">
+                     <h1>CommonSpaces<br><small>{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1>
+                 </div>
+             </div>
+             <div class="item item-right" style="background: #FABE66;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-right">
+                     <h1>CommonSpaces<br><small>{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1>
+                 </div>
+             </div>
+        </div>
+{% comment %} SLIDE CONTROL {% endcomment %}
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
+    </div>
 
 
-    <section style="margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0;">
-        <div class="container">
-            <div class="feature-columns">
-                <div>
-                    <a href="/cops/">{% comment %}<i class="fa fa-wechat fa-3x"></i>{% endcomment %}<img src="/static/commons/img/group.png"><br>
-                    <div style="font-size: larger;">{% trans "learn together"|capfirst %}</div>
-                    <b><i>{% trans "Communities and Projects" %}</i></b>.
-                    </a>
-                </div>
-                <div style="padding-top: 5em;">
-                    <a href="/info/learn/"><i class="fa fa-road fa-3x"></i><br>
-                     <div style="font-size: larger;">{% trans "reuse other people's experience"|capfirst %}</div>
-                    <b><i>{% trans "Learning Paths" %}</i></b>.
-                    </a>
-                </div>
-                <div style="padding-top: 5em;">
-                    <a href="/browse/"><i class="fa fa-cubes fa-3x"></i><br>
-                    <div style="font-size: larger;">{% trans "start explore"|capfirst %}</div>
-                    <b><i>{% trans "Educational Library" %}</i></b>.
-                    </a>
-                </div>
+{% comment %} MAIN CTA {% endcomment %}
+    <div class="container paddingTB20">
+        <div class="row">
+            <div class="col-sm-4 col-md-4 text-center">
+                <a href="/cops/"><img src="{% static "commons/img/group.png" %}"><br>
+                <span class="largerDemiBold">{% trans "learn together"|capfirst %}</span><br>
+                <span class="boldItalic"><i>{% trans "Communities and Projects" %}</i></span>
+                </a>
+            </div>
+            <div class="col-sm-4 col-md-4 text-center" style="padding-top: 5.5em;">
+                <a href="/info/learn/"><i class="fa fa-road fa-3x"></i><br>
+                <span class="largerDemiBold">{% trans "reuse other people's experience"|capfirst %}</span><br>
+                <span class="boldItalic"><i>{% trans "Learning Paths" %}</i></span>
+                </a>
+            </div>
+            <div class="col-sm-4 col-md-4 text-center" style="padding-top: 5.5em;">
+                 <a href="/browse/"><i class="fa fa-cubes fa-3x"></i><br>
+                 <span class="largerDemiBold">{% trans "start explore"|capfirst %}</span><br>
+                 <span class="boldItalic"><i>{% trans "Educational Library" %}</i></span>
+                 </a>
             </div>
         </div>
-    </section>
+    </div>
 {% endblock %}
