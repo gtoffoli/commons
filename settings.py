@@ -7,7 +7,8 @@ from django.utils.translation import ugettext_lazy as _
 
 PRODUCTION = False
 DEBUG_TOOLBAR= False
-from mayan.settings.base import *
+# from mayan.settings.base import *
+from base import *
 from private import *
 
 if PRODUCTION:

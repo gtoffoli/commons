@@ -2,12 +2,6 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block site_brand %}<a href="/"><img src="/static/commons/img/LogoPerSito.png" class="img-responsive" /></a>{% endblock %}
-
-{% block nav %}
-	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
-{% endblock %}
-
 {% block style_base %}
     <link href="{% static "css/site.css" %}" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
@@ -18,14 +12,10 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
-{% block body_base %}{% comment %}redefined to add top margin{% endcomment %}
-    <section id="content_body">
-        <div class="container">
-            {% include "_messages.html" %}
-            {% block body %}
-            {% endblock %}
-        </div>
-    </section>
+{% block site_brand %}<a href="/"><img src="/static/commons/img/LogoPerSito.png" class="img-responsive" /></a>{% endblock %}
+
+{% block nav %}
+	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
 {% endblock %}
 
 {% block footer %}

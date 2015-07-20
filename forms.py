@@ -305,6 +305,7 @@ class PathNodeForm(forms.ModelForm):
         model = PathNode
         exclude = ('children',)
 
+    id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'span4 form-control',}))
     oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all(), widget=forms.Select(attrs={'class':'span8 form-control',}))

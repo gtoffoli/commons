@@ -775,8 +775,30 @@ class LearningPath(models.Model, Publishable):
         return user.is_superuser or self.creator==user
 
     def get_nodes(self):
-        return PathNode.objects.filter(path=self).order_by('created')
+        return PathNode.objects.filter(path=self)
     
+    def get_ordered_nodes(self):
+        nodes = self.get_nodes()
+        if not nodes:
+            return []
+        if self.path_type == LP_COLLECTION:
+            return nodes.order_by('created')
+        node = nodes[0]
+        if nodes.count()>1 and not node.is_root():
+            roots = list(node.get_roots())
+            assert len(roots) == 1
+            node = roots[0]
+        ordered = [node]
+        while True:
+            children = node.children.all()
+            print 'node, children = ', node, children
+            if not children:
+                assert len(ordered) == len(nodes)
+                return ordered
+            assert len(children) == 1
+            node = children[0]
+            ordered.append(node)
+
     def is_pure_collection(self):
         nodes = self.get_nodes()
         for node in nodes:
@@ -785,13 +807,22 @@ class LearningPath(models.Model, Publishable):
             if node.children.all():
                 return False
         return True
+
+    def is_node_sequence(self):
+        nodes = self.get_nodes()
+        l = nodes.count()
+        n = 0
+        for node in nodes:
+            if not node.parents() and not node.children.all():
+                return False
+            n +=1
+        return n == l
  
     def can_chain(self, request):
         return self.path_type==LP_COLLECTION and self.can_edit(request) and self.get_nodes() and self.is_pure_collection()
         
     def make_sequence(self, request):
-        if not self.is_pure_collection():
-            return None
+        assert self.is_pure_collection()
         nodes = self.get_nodes()
         if nodes and self.path_type==LP_COLLECTION:
             previous = None
@@ -812,24 +843,107 @@ class LearningPath(models.Model, Publishable):
     def sequence_tail(self, exclude=[]):
         tail = None
         n = 0
-        print 'sequence_tail', self.get_nodes()
         for node in self.get_nodes():
             if not node.id in exclude and not node.children.all():
                 tail = node
                 n += 1
-        print 'sequence_tail', tail, n
         if tail and n==1:
             return tail
         return None
 
-    def append_node(self, node, request):
-        tail = self.sequence_tail(exclude=[node.id])
-        if tail:
-            edge = PathEdge(parent=tail, child=node, creator=request.user, editor=request.user)
-            edge.save()
-            return edge
-            print 'append_node', tail, node, edge
+    def sequence_head(self, exclude=[]):
+        head = None
+        n = 0
+        for node in self.get_nodes():
+            if not node.id in exclude and not node.parents():
+                head = node
+                n += 1
+        if head and n==1:
+            return head
         return None
+
+    def append_node(self, node, request):
+        nodes = self.get_nodes().exclude(id=node.id)
+        if not nodes:
+            return
+        if nodes.count()==1:
+            tail = nodes[0]
+        else:
+            tail = self.sequence_tail(exclude=[node.id])
+        assert tail
+        edge = PathEdge(parent=tail, child=node, creator=request.user, editor=request.user)
+        edge.save()
+        self.editor = request.user
+        self.save()
+        return edge
+
+    def remove_node(self, node, request):
+        assert self.can_edit(request)
+        assert node.path == self
+        if not node.is_root():
+            parent_edge = PathEdge.objects.get(child=node)
+        if not node.is_leaf():
+            child_edge = PathEdge.objects.get(parent=node)
+            child = child_edge.child
+        if node.is_root():
+            child_edge.delete()
+        elif node.is_leaf():
+            parent_edge.delete()
+        else:
+            parent_edge.child = child
+            parent_edge.save(disable_circular_check=True)
+            child_edge.delete()
+        node.delete()
+        self.editor = request.user
+        self.save()
+
+    def node_up(self, node, request):
+        assert self.is_node_sequence()
+        assert not node.is_root()
+        parent_edge = PathEdge.objects.get(child=node)
+        parent = parent_edge.parent        
+        was_leaf = node.is_leaf()
+        if not was_leaf:
+            child_edge = PathEdge.objects.get(parent=node)
+        if parent.is_root():
+            parent_edge.parent = node
+            parent_edge.child = parent
+        else:
+            grandparent_edge = PathEdge.objects.get(child=parent)
+            grandparent_edge.child = node
+            parent_edge.parent = node
+            parent_edge.child = parent
+            grandparent_edge.save(disable_circular_check=True)
+        parent_edge.save(disable_circular_check=True)
+        if not was_leaf:
+            child_edge.parent = parent
+            child_edge.save(disable_circular_check=True)
+        self.editor = request.user
+        self.save()
+
+    def node_down(self, node, request):
+        assert self.is_node_sequence()
+        assert not node.is_leaf()
+        child_edge = PathEdge.objects.get(parent=node)
+        child = child_edge.child        
+        was_root = node.is_root()
+        if not was_root:
+            parent_edge = PathEdge.objects.get(child=node)
+        if child.is_leaf():
+            child_edge.child = node
+            child_edge.parent = child
+        else:
+            grandbaby_edge = PathEdge.objects.get(parent=child)
+            grandbaby_edge.parent = node
+            child_edge.child = node
+            child_edge.parent = child
+            grandbaby_edge.save(disable_circular_check=True)
+        child_edge.save(disable_circular_check=True)
+        if not was_root:
+            parent_edge.child = child
+            parent_edge.save(disable_circular_check=True)
+        self.editor = request.user
+        self.save()
 
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))

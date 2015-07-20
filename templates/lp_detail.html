@@ -8,7 +8,7 @@
     <section>
         <div class="container">
             <h2 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
-                {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
+                {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>{% endif %}
             </h2>
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
             {% if lp.short %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ lp.short }}</div>{% endif %}
@@ -18,7 +18,7 @@
 	{% csrf_token %}<input type="hidden" name="path_type" value="{{ lp.path_type }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ lp.get_type }}">
     </form>
-            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain" style="font-size: 0.7em;""></i></a>{% endif %}
+            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain" style="font-size: 0.7em;"></i></a>{% endif %}
             </div>
     		{% if lp.levels.all %}
     		<div><strong>{% trans "levels"|capfirst %}</strong>:
@@ -63,19 +63,23 @@
             <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a></div>
 {% if user.is_authenticated %}            
             <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span>
-                {% if can_submit %}&nbsp; <a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_withdraw %}&nbsp; <a href="/lp/{{ lp.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_reject %}&nbsp; <a href="/lp/{{ lp.id }}/reject/" title="{% trans "reject" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_publish %}&nbsp; <a href="/lp/{{ lp.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_un_publish %}&nbsp; <a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
+                {% if can_submit %}&nbsp; <a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;"></i></a>{% endif %}
+                {% if can_withdraw %}&nbsp; <a href="/lp/{{ lp.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;"></i></a>{% endif %}
+                {% if can_reject %}&nbsp; <a href="/lp/{{ lp.id }}/reject/" title="{% trans "reject" %}"><i class="fa fa-reply" style="font-size: 0.7em;"></i></a>{% endif %}
+                {% if can_publish %}&nbsp; <a href="/lp/{{ lp.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;"></i></a>{% endif %}
+                {% if can_un_publish %}&nbsp; <a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;"></i></a>{% endif %}
             </div>
 {% endif %}
 
     		{% if lp.get_nodes or can_edit %}
     		<div><strong>{% trans "path nodes"|capfirst %}</strong></div>
 			{% if lp.path_type == 2 %}<ol class="root">{% else %}<ul class="root">{% endif %}
-		    {% for node in lp.get_nodes %}
-            	<li><a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
+		    {% for node in lp.get_ordered_nodes %}
+            	<li>{% if can_edit %}&nbsp;<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
+            	{% if node.is_root or node.is_island %}&nbsp;&nbsp;{% else %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up" style="font-size: 0.7em;"></i></a>{% endif %}
+            	{% if node.is_leaf or node.is_island %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down" style="font-size: 0.7em;"></i></a>&nbsp;{% endif %}
+            	{% endif %}
+            	<a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
 		    {% endfor %}
 			{% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
     		{% if can_edit %}

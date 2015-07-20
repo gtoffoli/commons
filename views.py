@@ -866,6 +866,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
     user = request.user
     node = None
     action = '/pathnode/edit/'
+    if path_id:
+        path = get_object_or_404(LearningPath, id=path_id)
     if node_id:
         node = get_object_or_404(PathNode, id=node_id)
         path = node.path
@@ -899,8 +901,15 @@ def pathnode_edit(request, node_id=None, path_id=None):
             return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if node:
-                return HttpResponseRedirect('/pathnode/%d/' % node.id)
+                node_id = node.id
             else:
+                node_id = request.POST.get('id', '')
+            if node_id:
+                return HttpResponseRedirect('/pathnode/%d/' % node_id)
+            else:
+                if not path_id:
+                    path_id = request.POST.get('path', '')
+                path = get_object_or_404(LearningPath, id=path_id)
                 return HttpResponseRedirect('/lp/%s/' % path.slug)
     elif node:
         form = PathNodeForm(instance=node)
@@ -914,6 +923,22 @@ def pathnode_edit_by_id(request, node_id):
 def lp_add_node(request, lp_slug):
     path = get_object_or_404(LearningPath, slug=lp_slug)
     return pathnode_edit(request, path_id=path.id) 
+
+def pathnode_delete(request, node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    path = node.path
+    path.remove_node(node, request)
+    return lp_detail(request, path.id, lp=path)
+def pathnode_up(request, node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    path = node.path
+    path.node_up(node, request)
+    return lp_detail(request, path.id, lp=path)
+def pathnode_down(request, node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    path = node.path
+    path.node_down(node, request)
+    return lp_detail(request, path.id, lp=path)
 
 def project_add_lp(request, project_id):
     project = get_object_or_404(Project, id=project_id)
