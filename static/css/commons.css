@@ -177,9 +177,22 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 }
 
 /* PADDING E MARGIN */
+.paddingTB5 {
+	 padding-top: 5px;
+	 padding-bottom: 5px;
+
+}
+
 .paddingTB20 {
 	padding-top:20px;
 	padding-bottom:20px;
+}
+
+.marginB0 {
+	margin-bottom: 0;
+}
+.marginT10 {
+	margin-top:10px;
 }
 
 /* STILI FONT */

@@ -13,12 +13,12 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
-{% block wrapper_class %}wrapper{% endblock %}
+{% block navbar_class %}marginB0 paddingTB5{% endblock %}
 
 {% block site_brand %}<a href="/"><img src="{% static "commons/img/LogoPerSito.png" %}" class="img-responsive" /></a>{% endblock %}
 
 {% block nav %}
-	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
+	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left marginT10">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
 {% endblock %}
 
 {% block footer %}

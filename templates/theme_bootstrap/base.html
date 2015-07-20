@@ -11,6 +11,9 @@
         {% block viewport %}
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% endblock %}
+        
+        <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
+        <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png">
 
         {% block style_base %}
             <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
@@ -31,12 +34,12 @@
         {% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
-        <div class="{% block wrapper_class %}{% endblock %}">
-
+        <div class="{% block wrapper_class %}wrapper{% endblock %}">
+            
             {% block topbar_base %}
                 <header>
-                    <div class="navbar navbar-default {% block navbar_class %}{% comment %}navbar-fixed-top{% endcomment %}{% endblock %}" style="margin-bottom:0; padding-top:5px; padding-bottom:5px">
-                        <div class="container">
+                    <div class="navbar navbar-default {% block navbar_class %}navbar-fixed-top{% endblock %}">
+                        <div class="container-fluid">
                         {% block topbar %}
                             <div class="navbar-header">
                                 <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -73,12 +76,14 @@
         </div>
 
             {% block footer_base %}
+            <div class="footer-fixed">
                 <hr />
                 <footer>
-                    <div class="container">
+                    <div class="container-fluid">
                         {% block footer %}{% endblock %}
                     </div>
                 </footer>
+             </div>
             {% endblock %}
 
         {% block script_base %}
