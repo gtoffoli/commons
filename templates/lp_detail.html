@@ -60,7 +60,9 @@
 			</div>
 		    {% endif %}
 
-            <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a></div>
+            <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>
+				 {% if project %}<strong>&nbsp;{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a>{% endif %}
+		    </div>
 {% if user.is_authenticated %}            
             <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span>
                 {% if can_submit %}&nbsp; <a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;"></i></a>{% endif %}

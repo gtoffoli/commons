@@ -250,10 +250,14 @@ class DocumentUploadForm(forms.Form):
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
 
+class LpGroupChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.project.name
 
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
+        exclude = ('project',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
@@ -263,7 +267,10 @@ class LpForm(forms.ModelForm):
     levels = forms.ModelMultipleChoiceField(required=False, label=_('levels'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
     tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    """
     project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    """
+    group = LpGroupChoiceField(required=False, queryset=Group.objects.filter(lp_group__isnull=False).distinct(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -309,5 +316,6 @@ class PathNodeForm(forms.ModelForm):
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'span4 form-control',}))
     oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all(), widget=forms.Select(attrs={'class':'span8 form-control',}))
+    range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'span8 form-control',}), help_text=_('possibly specify document and page display range'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())

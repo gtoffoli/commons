@@ -181,9 +181,9 @@ class OerProxyAdmin(admin.ModelAdmin):
 
 class LearningPathAdmin(admin.ModelAdmin):
     fieldsets = [
-         (None, {'fields': ['title', 'slug', 'path_type', 'short', 'long', 'project', 'state',]}),
+         (None, {'fields': ['title', 'slug', 'path_type', 'short', 'long', 'project', 'group', 'state',]}),
     ]
-    list_display = ('title', 'slug', 'path_type', 'project', 'state', 'creator', 'created',)
+    list_display = ('title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
 
     def save_model(self, request, obj, form, change):
         if not change:

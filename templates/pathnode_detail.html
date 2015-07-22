@@ -13,6 +13,7 @@
             <div><strong>{% trans "label"|capfirst %}</strong>: {{ node.label }}</div>
             <div><strong>{% trans "learning path"|capfirst %}</strong>: <a href="/lp/{{ node.path.slug }}/" style="color: {{ node.path.get_link_color }};">{{ node.path }}</a></div>
             <div><strong>{% trans "OER"|capfirst %}</strong>: <a href="/oer/{{ node.oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ node.oer }}</a></div>
+            {% if node.range %}<div><strong>{% trans "display range"|capfirst %}</strong>: {{ node.range }}</div>{% endif %}
             <div><strong>{% trans "node added by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ node.creator.username }}">{{ node.creator.get_full_name }}</a></div>
          </div>
     </section>

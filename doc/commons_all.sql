@@ -314,18 +314,18 @@ CREATE TABLE "commons_oermetadata" (
     UNIQUE ("oer_id", "metadata_type_id", "value")
 )
 ;
-CREATE TABLE "commons_learningpath_levels" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "learningpath_id" integer NOT NULL,
-    "levelnode_id" integer NOT NULL REFERENCES "commons_levelnode" ("id") DEFERRABLE INITIALLY DEFERRED,
-    UNIQUE ("learningpath_id", "levelnode_id")
-)
-;
 CREATE TABLE "commons_learningpath_subjects" (
     "id" serial NOT NULL PRIMARY KEY,
     "learningpath_id" integer NOT NULL,
     "subjectnode_id" integer NOT NULL REFERENCES "commons_subjectnode" ("id") DEFERRABLE INITIALLY DEFERRED,
     UNIQUE ("learningpath_id", "subjectnode_id")
+)
+;
+CREATE TABLE "commons_learningpath_levels" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "learningpath_id" integer NOT NULL,
+    "levelnode_id" integer NOT NULL REFERENCES "commons_levelnode" ("id") DEFERRABLE INITIALLY DEFERRED,
+    UNIQUE ("learningpath_id", "levelnode_id")
 )
 ;
 CREATE TABLE "commons_learningpath" (
@@ -335,7 +335,8 @@ CREATE TABLE "commons_learningpath" (
     "path_type" integer NOT NULL,
     "short" text NOT NULL,
     "long" text NOT NULL,
-    "project_id" integer NOT NULL REFERENCES "commons_project" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "project_id" integer REFERENCES "commons_project" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "group_id" integer REFERENCES "auth_group" ("id") DEFERRABLE INITIALLY DEFERRED,
     "state" integer,
     "created" timestamp with time zone NOT NULL,
     "modified" timestamp with time zone NOT NULL,
@@ -343,13 +344,14 @@ CREATE TABLE "commons_learningpath" (
     "editor_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED
 )
 ;
-ALTER TABLE "commons_learningpath_levels" ADD CONSTRAINT "learningpath_id_refs_id_534d2d5d" FOREIGN KEY ("learningpath_id") REFERENCES "commons_learningpath" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_learningpath_subjects" ADD CONSTRAINT "learningpath_id_refs_id_09cb2724" FOREIGN KEY ("learningpath_id") REFERENCES "commons_learningpath" ("id") DEFERRABLE INITIALLY DEFERRED;
+ALTER TABLE "commons_learningpath_levels" ADD CONSTRAINT "learningpath_id_refs_id_534d2d5d" FOREIGN KEY ("learningpath_id") REFERENCES "commons_learningpath" ("id") DEFERRABLE INITIALLY DEFERRED;
 CREATE TABLE "commons_pathnode" (
     "id" serial NOT NULL PRIMARY KEY,
     "path_id" integer NOT NULL REFERENCES "commons_learningpath" ("id") DEFERRABLE INITIALLY DEFERRED,
     "label" text NOT NULL,
     "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "range" text NOT NULL,
     "created" timestamp with time zone NOT NULL,
     "modified" timestamp with time zone NOT NULL,
     "creator_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
@@ -465,14 +467,15 @@ CREATE INDEX "commons_oermetadata_oer_id" ON "commons_oermetadata" ("oer_id");
 CREATE INDEX "commons_oermetadata_metadata_type_id" ON "commons_oermetadata" ("metadata_type_id");
 CREATE INDEX "commons_oermetadata_value" ON "commons_oermetadata" ("value");
 CREATE INDEX "commons_oermetadata_value_like" ON "commons_oermetadata" ("value" varchar_pattern_ops);
-CREATE INDEX "commons_learningpath_levels_learningpath_id" ON "commons_learningpath_levels" ("learningpath_id");
-CREATE INDEX "commons_learningpath_levels_levelnode_id" ON "commons_learningpath_levels" ("levelnode_id");
 CREATE INDEX "commons_learningpath_subjects_learningpath_id" ON "commons_learningpath_subjects" ("learningpath_id");
 CREATE INDEX "commons_learningpath_subjects_subjectnode_id" ON "commons_learningpath_subjects" ("subjectnode_id");
+CREATE INDEX "commons_learningpath_levels_learningpath_id" ON "commons_learningpath_levels" ("learningpath_id");
+CREATE INDEX "commons_learningpath_levels_levelnode_id" ON "commons_learningpath_levels" ("levelnode_id");
 CREATE INDEX "commons_learningpath_slug_like" ON "commons_learningpath" ("slug" varchar_pattern_ops);
 CREATE INDEX "commons_learningpath_title" ON "commons_learningpath" ("title");
 CREATE INDEX "commons_learningpath_title_like" ON "commons_learningpath" ("title" varchar_pattern_ops);
 CREATE INDEX "commons_learningpath_project_id" ON "commons_learningpath" ("project_id");
+CREATE INDEX "commons_learningpath_group_id" ON "commons_learningpath" ("group_id");
 CREATE INDEX "commons_learningpath_creator_id" ON "commons_learningpath" ("creator_id");
 CREATE INDEX "commons_learningpath_editor_id" ON "commons_learningpath" ("editor_id");
 CREATE INDEX "commons_pathnode_path_id" ON "commons_pathnode" ("path_id");

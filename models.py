@@ -739,7 +739,10 @@ class LearningPath(models.Model, Publishable):
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
-    project = models.ForeignKey(Project, verbose_name=_('project'))
+    # project = models.ForeignKey(Project, verbose_name=_('project'))
+    project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True)
+    # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
+    group = models.ForeignKey(Group, verbose_name=_(u"Group"), blank=True, null=True,  related_name='lp_group',)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -756,6 +759,25 @@ class LearningPath(models.Model, Publishable):
 
     def __unicode__(self):
         return self.title
+
+    def get_principal(self):
+        """Returns the principal.
+        """
+        return self.group or self.creator
+
+    def set_principal(self, principal):
+        """Sets the principal.
+        """
+        if isinstance(principal, Group):
+            self.group = principal
+
+    principal = property(get_principal, set_principal)
+
+    def get_project(self):
+        if isinstance(self.principal, Group):
+            return self.principal.project()
+        else:
+            return None
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
@@ -949,6 +971,7 @@ class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))
     label = models.TextField(blank=True, verbose_name=_('label'))
     oer = models.ForeignKey(OER, verbose_name=_('stands for'))
+    range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathnode_creator')

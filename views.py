@@ -766,7 +766,9 @@ def lp_detail(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
     var_dict = { 'lp': lp, }
-    var_dict['project'] = lp.project
+    # var_dict['project'] = lp.project
+    var_dict['project'] = lp.get_project
+    var_dict['user'] = not var_dict['project'] and lp.user
     var_dict['can_edit'] = lp.can_edit(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
@@ -1047,6 +1049,7 @@ def lps_search(request):
     if request.method == 'POST': # If the form has been submitted...
         form = LpSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
+            qq.append(Q(project__isnull=False))
             include_all = request.POST.get('include_all')
             path_types = request.POST.getlist('path_type')
             if path_types:
