@@ -22,6 +22,9 @@ else:
     DEBUG = True
     # TEMPLATE_STRING_IF_INVALID = '%s'
 
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = 'om^a(i8^6&h+umbd2%pt91cj!qu_@oztw117rgxmn(n2lp^*c!'
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'corsheaders.middleware.CorsMiddleware',
