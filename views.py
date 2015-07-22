@@ -796,7 +796,8 @@ def lp_edit(request, lp_id=None, project_id=None):
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
             action = '/lp/%s/edit/' % lp.slug
-            project_id = lp.project_id
+            # project_id = lp.project_id
+            group_id = lp.group_id
         form = LpForm(request.POST, instance=lp)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
@@ -814,13 +815,22 @@ def lp_edit(request, lp_id=None, project_id=None):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
             else:
+                """
                 project_id = project_id or request.POST.get('project')
                 project = get_object_or_404(Project, id=project_id)
+                """
+                if project_id:
+                    project = get_object_or_404(Project, id=project_id)
+                else:
+                    group_id = request.POST.get('group')
+                    group = get_object_or_404(Group, id=int(group_id))
+                    project = group.project
                 return HttpResponseRedirect('/project/%s/' % project.slug)
     elif lp:
         form = LpForm(instance=lp)
     else:
-        form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+        project = get_object_or_404(Project, id=project_id)
+        form = LpForm(initial={'group': project.group_id, 'creator': user.id, 'editor': user.id})
     return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
 
 def lp_edit_by_slug(request, lp_slug):
