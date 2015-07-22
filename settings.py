@@ -8,7 +8,11 @@ from django.utils.translation import ugettext_lazy as _
 PRODUCTION = False
 DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
-from base import *
+# from base import *
+
+import os
+import sys
+
 from private import *
 
 if PRODUCTION:
@@ -18,23 +22,49 @@ else:
     DEBUG = True
     # TEMPLATE_STRING_IF_INVALID = '%s'
 
-# ========= EXTENSIONS BY COMMONS
-
-MIDDLEWARE_CLASSES = list(MIDDLEWARE_CLASSES)
-MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES[:10] + MIDDLEWARE_CLASSES[11:]
-MIDDLEWARE_CLASSES.extend((
+MIDDLEWARE_CLASSES = (
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-))
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+)
 if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
 
-
-
-INSTALLED_APPS = list(INSTALLED_APPS) + [
+INSTALLED_APPS = (
+    # Django
+    'django.contrib.admin',
+    'django.contrib.admindocs',
+    'django.contrib.auth',
+    'django.contrib.comments',
+    'django.contrib.contenttypes',
+    'django.contrib.messages',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
     'django.contrib.flatpages',
+    # 3rd party
+    # 'compressor',
+    'corsheaders',
+    'djcelery',
+    'filetransfers',
+    'mptt',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'solo',
+    # 'south',
+    # Mayan EDMS
+    'documents',
+    'metadata',
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
+    "datetimewidget",
     # django-allauth
     'allauth',
     'allauth.account',
@@ -42,11 +72,9 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
     'tinymce',
-    # 'conversejs',
     # theme (from pinax project)
     "pinax_theme_bootstrap",
     "bootstrapform",
-    "datetimewidget",
     # pinax starter project ?
     "pinax",
     # menus and ...
@@ -59,17 +87,31 @@ INSTALLED_APPS = list(INSTALLED_APPS) + [
     'roles',
     'django_dag',
     'commons',
-]
-INSTALLED_APPS.remove('south')
+    # Placed after rest_api to allow template overriding
+    # Must be last on Django < 1.7 as per documentation
+    # https://django-activity-stream.readthedocs.org/en/latest/installation.html
+    'actstream',
+)
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
-TEMPLATE_CONTEXT_PROCESSORS = list(TEMPLATE_CONTEXT_PROCESSORS) + [
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.request',
+    'django.contrib.messages.context_processors.messages',
     # theme (from pinax project)
     "pinax_theme_bootstrap.context_processors.theme",
     "allauth.account.context_processors.account",
     "allauth.socialaccount.context_processors.socialaccount",
-]
+)
+
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
 
 # in development, disable template caching
 # if os.name == 'nt':
@@ -79,6 +121,39 @@ if not PRODUCTION:
         'django.template.loaders.app_directories.Loader',
     )
 
+# ========= FROM MAYAN
+
+# --------- Pagination ----------------
+PAGINATION_INVALID_PAGE_RAISES_404 = True
+# ---------- Search ------------------
+SEARCH_SHOW_OBJECT_TYPE = False
+# ---------- Django REST framework -----------
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 10,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'MAX_PAGINATE_BY': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+# ----------- Celery ----------
+CELERY_TIMEZONE = 'UTC'
+CELERY_ENABLE_UTC = True
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_ALWAYS_EAGER = True
+CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
+# ------------ CORS ------------
+CORS_ORIGIN_ALLOW_ALL = True
+# ------ Django REST Swagger -----
+SWAGGER_SETTINGS = {
+    'api_version': '0',  # Specify your API's version
+}
 
 # ========= MAYAN'S IMPROVEMENTS
 
@@ -95,22 +170,6 @@ else:
     CONVERTER_GM_PATH = '/usr/bin/gm'
     CONVERTER_LIBREOFFICE_PATH = '/usr/bin/libreoffice'
     CONVERTER_PDFTOPPM_PATH = '/usr/bin/pdftoppm'
-
-# --------- OpenPGP signature ----------------
-if os.name == 'nt':
-    SIGNATURES_GPG_PATH = '\\Program Files (x86)\\GNU\\GnuPG\\pub\\gpg.exe'
-else:
-    SIGNATURES_GPG_PATH = '/usr/bin/gpg'
-
-# --------- OCR ----------------
-if os.name == 'nt':
-    OCR_TESSERACT_PATH = '/Program Files (x86)/Tesseract-OCR/tesseract.exe'
-    OCR_UNPAPER_PATH = '/Program Files (x86)/PDFRead/bin/unpaper.exe'
-    OCR_PDFTOTEXT_PATH = '/Program Files (x86)/xpdf/pdftotext.exe'
-else:
-    OCR_TESSERACT_PATH = '/usr/bin/tesseract'
-    OCR_UNPAPER_PATH = '/usr/bin/unpaper'
-    OCR_PDFTOTEXT_PATH = '/usr/bin/pdftotext'
 
 # ========= DON'T KNOW WHY THIS NEEDED
 
@@ -133,11 +192,15 @@ LANGUAGES = (
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
+SITE_ID = 1
+
 WSGI_APPLICATION = 'commons.wsgi.application'
 ROOT_URLCONF = 'commons.urls'
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "commons", "static"),
@@ -194,20 +257,6 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
 )
-
-"""
-# --------- EXCEPTIONS TO THE MAYAN'S "LOGIN REQUIRED" GENERAL RULE ----------------
-LOGIN_EXEMPT_URLS = list(LOGIN_EXEMPT_URLS) + [
-    r'^$',
-    r'^accounts/',
-    r'^profile/',
-    r'^info/',
-    r"^cops/$",
-    r"^project/(?P<project_slug>[\w-]+)/$",
-    r"^repos/$",
-    r"^repo/(?P<repo_slug>[\w-]+)/$",
-]
-"""
 
 # TinyMCE settings (from roma APP of RomaPaese project)
 TINYMCE_COMPRESSOR = True
