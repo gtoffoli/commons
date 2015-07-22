@@ -61,9 +61,16 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'solo',
     # 'south',
+    # Base generic
+    'acls',
+    'permissions',
+    'user_management',
     # Mayan EDMS
+    'checkouts',
+    'document_acls',
     'documents',
     'metadata',
+    'events',
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
