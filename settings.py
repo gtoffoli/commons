@@ -72,7 +72,7 @@ INSTALLED_APPS = (
     'checkouts',
     'document_acls',
     'documents',
-    'metadata',
+    # 'metadata',
     'events',
     # extend auth model
     "hierarchical_auth",
