@@ -40,6 +40,8 @@ if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
 
 INSTALLED_APPS = (
+    # 3rd party
+    'suit',
     # Django
     'django.contrib.admin',
     'django.contrib.admindocs',
@@ -53,17 +55,18 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # 3rd party
     # 'compressor',
-    'corsheaders',
-    'djcelery',
-    'filetransfers',
+    # 'corsheaders',
+    # 'djcelery',
+    # 'filetransfers',
     'mptt',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'solo',
+    # 'rest_framework',
+    # 'rest_framework.authtoken',
+    # 'solo',
     # 'south',
     # Base generic
     'acls',
     'permissions',
+    'smart_settings',
     'user_management',
     # Mayan EDMS
     'checkouts',
