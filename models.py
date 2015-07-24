@@ -9,9 +9,10 @@ from django.template.defaultfilters import slugify
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
 
-from documents.models import Document
+# from documents.models import Document
 # from metadata.models import MetadataType
 from metadata import MetadataType
+from documents import Document
 
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry

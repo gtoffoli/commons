@@ -1,4 +1,13 @@
 BEGIN;
+CREATE TABLE "commons_metadatatype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(48) NOT NULL UNIQUE,
+    "title" varchar(48) NOT NULL,
+    "default" varchar(128),
+    "lookup" text,
+    "validation" varchar(64) NOT NULL
+)
+;
 CREATE TABLE "commons_materialentry" (
     "id" serial NOT NULL PRIMARY KEY,
     "name" varchar(100) NOT NULL UNIQUE,
@@ -309,7 +318,7 @@ ALTER TABLE "commons_oer_media" ADD CONSTRAINT "oer_id_refs_id_87e86869" FOREIGN
 CREATE TABLE "commons_oermetadata" (
     "id" serial NOT NULL PRIMARY KEY,
     "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
-    "metadata_type_id" integer NOT NULL REFERENCES "metadata_metadatatype" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "metadata_type_id" integer NOT NULL REFERENCES "commons_metadatatype" ("id") DEFERRABLE INITIALLY DEFERRED,
     "value" varchar(255),
     UNIQUE ("oer_id", "metadata_type_id", "value")
 )
@@ -351,7 +360,7 @@ CREATE TABLE "commons_pathnode" (
     "path_id" integer NOT NULL REFERENCES "commons_learningpath" ("id") DEFERRABLE INITIALLY DEFERRED,
     "label" text NOT NULL,
     "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
-    "range" text NOT NULL,
+    "range" text,
     "created" timestamp with time zone NOT NULL,
     "modified" timestamp with time zone NOT NULL,
     "creator_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED,
@@ -370,6 +379,7 @@ CREATE TABLE "commons_pathedge" (
     "editor_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED
 )
 ;
+CREATE INDEX "commons_metadatatype_name_like" ON "commons_metadatatype" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_materialentry_name_like" ON "commons_materialentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_mediaentry_name_like" ON "commons_mediaentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_accessibilityentry_name_like" ON "commons_accessibilityentry" ("name" varchar_pattern_ops);

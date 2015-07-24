@@ -722,7 +722,8 @@ def handle_uploaded_file(file_object):
     source = get_object_or_404(WebFormSource, pk=1) # WebForm source
     source.upload_document(f, f.name, document_type=document_type)
     """
-    from documents.settings import LANGUAGE
+    # from documents.settings import LANGUAGE
+    from documents import LANGUAGE
     version = Document.objects.upload_single_document(document_type, file_object, language=LANGUAGE)
     return version
 
