@@ -54,7 +54,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
     # 3rd party
-    # 'compressor',
+    'compressor',
     # 'corsheaders',
     # 'djcelery',
     'filetransfers',
@@ -186,8 +186,8 @@ else:
 
 # ========= DON'T KNOW WHY THIS NEEDED
 
-import mayan.apps
-sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
+# import mayan.apps
+# sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
 
 # ========= COMMONS' CUSTOMIZATIONS
 

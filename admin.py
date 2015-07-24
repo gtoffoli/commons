@@ -242,6 +242,7 @@ class PageForm(FlatpageForm):
 
     class Meta:
         model = FlatPage
+        fields = ('url', 'title', 'content', 'enable_comments','template_name',)
         widgets = {
             'content' : TinyMCE(),
         }

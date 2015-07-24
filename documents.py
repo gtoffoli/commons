@@ -11,7 +11,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 # from django.utils.importlib import import_module
-from common.compressed_files import CompressedFile, NotACompressedFile
+from compressed_files import CompressedFile, NotACompressedFile
 
 import settings
 # CACHE_PATH = os.path.join(settings.MEDIA_ROOT, 'image_cache')

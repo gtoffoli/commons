@@ -473,16 +473,11 @@ class Repo(models.Model, Publishable):
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of documents')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    # info_page = models.OneToOneField(FlatPage, null=True, blank=True, verbose_name=_('help page'), related_name='repository')
     info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    """
-    creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='repo_creator')
-    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='repo_editor')
-    """
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='repo_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='repo_editor')
 

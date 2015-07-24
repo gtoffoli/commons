@@ -90,15 +90,16 @@ class ProjectForm(forms.ModelForm):
 class RepoForm(forms.ModelForm):
     class Meta:
         model = Repo
+        fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    repo_type = forms.ModelChoiceField(required=True, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
     description = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
-    repo_type = forms.ModelChoiceField(required=True, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
     features = forms.ModelMultipleChoiceField(required=False, label=_('repository features'), queryset=RepoFeature.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository is not focused on specific subjects"), "."))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages of documents'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository includes a relevant number of contents in many languages"), "."))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository is not focused on specific subjects"), "."))
     info = forms.CharField(required=False, label=string_concat(_('longer description'), " / ", _('search suggestions')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
     eval = forms.CharField(required=False, label=string_concat(_('comments'), " / ", _('evaluation')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 10,}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -149,7 +150,7 @@ class OerMetadataForm(forms.ModelForm):
 # http://stackoverflow.com/questions/2853350/using-a-custom-form-in-a-modelformset-factory
 # http://streamhacker.com/2010/03/01/django-model-formsets/
 from django.forms.models import inlineformset_factory
-OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, can_delete=True, extra=3)
+OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('metadata_type', 'value',), can_delete=True, extra=3)
 # OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
 
 class OerForm(forms.ModelForm):
