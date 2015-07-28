@@ -149,8 +149,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 # theme (from pinax project)
                 # "pinax_theme_bootstrap.context_processors.theme",
-                "allauth.account.context_processors.account",
-                "allauth.socialaccount.context_processors.socialaccount",
+                # "allauth.account.context_processors.account",
+                # "allauth.socialaccount.context_processors.socialaccount",
             ],
         },
     },
