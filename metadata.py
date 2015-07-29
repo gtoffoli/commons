@@ -2,7 +2,6 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from dateutil.parser import parse
 
-
 default_available_validators = {
     'Parse date and time': lambda input: parse(input).isoformat(),
     'Parse date': lambda input: parse(input).date().isoformat(),
@@ -11,6 +10,7 @@ default_available_validators = {
 AVAILABLE_VALIDATORS = default_available_validators
 
 class MetadataTypeManager(models.Manager):
+
     def get_by_natural_key(self, name):
         return self.get(name=name)
 
@@ -44,7 +44,6 @@ class MetadataType(models.Model):
         ordering = ('title',)
         verbose_name = _('Metadata type')
         verbose_name_plural = _('Metadata types')
-
 
 from django.contrib import admin
 

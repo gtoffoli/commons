@@ -1,35 +1,22 @@
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
+from django.db.models import Max
 from django.db.models.signals import post_save
-# from django import forms
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
-# from mayan import sources
+from django.contrib.auth.models import User, Group
+
+from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
-
-# from documents.models import Document
-# from metadata.models import MetadataType
-from metadata import MetadataType
-from documents import Document
-
-from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
-from vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from taggit.managers import TaggableManager
 
-""" how to make the 'file' field optional in a DocumentVersion?
-import uuid
-UUID_FUNCTION = lambda: unicode(uuid.uuid4())
-from common.utils import load_backend
-storage_backend = load_backend('storage.backends.filebasedstorage.FileBasedStorage')
-from documents.models import DocumentVersion
-setattr(DocumentVersion, 'file', models.FileField(upload_to=lambda instance, filename: UUID_FUNCTION(), storage=storage_backend, verbose_name=_('File'), null=True, blank=True))
-"""
+from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
+from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
+from commons.documents import DocumentType, Document, DocumentVersion
+from commons.metadata import MetadataType
 
-from django.contrib.auth.models import User, Group
-# from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, SlugField, AutoSlugField
-from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 """
 # 150402 Giovanni.Toffoli - see django-extensions and django-organizations
 CreationDateTimeField(_('created')).contribute_to_class(Group, 'created')
@@ -551,7 +538,8 @@ class OER(models.Model, Publishable):
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
-    documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
+    # documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
+    documents = models.ManyToManyField(Document, through='OerDocument', related_name='oer_document', blank=True, verbose_name='attached documents')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
     url = models.CharField(max_length=64,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
@@ -609,7 +597,49 @@ class OER(models.Model, Publishable):
         return PUBLICATION_LINK_DICT[self.state]
 
     def get_sorted_documents(self):
-        return self.documents.all().order_by('date_added')
+        # return self.documents.all().order_by('date_added')
+        oer_documents = OerDocument.objects.filter(oer=self).order_by('order', 'document__date_added')
+        return [oer_document.document for oer_document in oer_documents]
+
+class oer_documents(models.Model):
+    """
+    to be removed after data migration
+    """
+    oer = models.ForeignKey(OER, related_name='old_oer', verbose_name=_('OER'))
+    document = models.ForeignKey(Document, related_name='old_document', verbose_name=_('Document'))
+
+    def __unicode__(self):
+        return unicode(self.document.label)
+
+    class Meta:
+        unique_together = ('oer', 'document',)
+        verbose_name = _('attached document')
+        verbose_name_plural = _('attached documents')
+
+class OerDocument(models.Model):
+    """
+    Link an OER to an attached document; attachments are ordered
+    """
+    order = models.IntegerField()
+    oer = models.ForeignKey(OER, related_name='oer', verbose_name=_('OER'))
+    document = models.ForeignKey(Document, related_name='document', verbose_name=_('Document'))
+
+    def __unicode__(self):
+        return unicode(self.document.label)
+
+    class Meta:
+        unique_together = ('oer', 'document',)
+        verbose_name = _('attached document')
+        verbose_name_plural = _('attached documents')
+
+    def save(self, *args, **kwargs):
+        oer_documents = OerDocument.objects.filter(oer=self.oer)
+        if oer_documents:
+            last_order = oer_documents.aggregate(Max('order'))['order__max']
+        else:
+            last_order = 0
+        self.order = last_order+1
+        super(OerDocument, self).save(*args, **kwargs) # Call the "real" save() method.
        
 class OerMetadata(models.Model):
     """
@@ -626,7 +656,6 @@ class OerMetadata(models.Model):
         unique_together = ('oer', 'metadata_type', 'value')
         verbose_name = _('additional metadatum')
         verbose_name_plural = _('additional metadata')
-
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -689,34 +718,6 @@ class OerFolder(models.Model):
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 """
 
-"""
-class OerProxy(models.Model):
-    oer = models.ForeignKey(OER, verbose_name=_('stands for'))
-    project = models.ForeignKey(Project, verbose_name=_('project'))
-    created = CreationDateTimeField(_('created'))
-    modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='oerproxy_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='oerproxy_editor')
-
-    class Meta:
-        verbose_name = _('OER proxy')
-        verbose_name_plural = _('OER proxies')
-"""
-"""
-class LearningPath(PathNode):
-    slug = AutoSlugField(unique=True, populate_from='title', editable=True)
-    title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
-    path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
-    short = models.TextField(blank=True, verbose_name=_('short presentation'))
-    long = models.TextField(blank=True, verbose_name=_('longer presentation'))
-    project = models.ForeignKey(Project, verbose_name=_('project'))
-    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
-
-LearningPath._meta.get_field('oer').blank = 'True'
-LearningPath._meta.get_field('oer').null = 'True'
-LearningPath._meta.get_field('children').othermodel = 'PathNode'
-LearningPath._meta.get_field('children').related_name = 'path'
-"""
 
 LP_COLLECTION = 1
 LP_SEQUENCE = 2
@@ -745,10 +746,6 @@ class LearningPath(models.Model, Publishable):
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    """
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='path_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='path_editor')
-    """
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='path_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='path_editor')
 
@@ -982,6 +979,33 @@ class PathNode(node_factory('PathEdge')):
 
     def can_edit(self, request):
         return self.path.can_edit(request)
+    
+    def get_range(self):
+        """ return page range:
+        None = no specified or invalid string
+        list of numbers and of sublists representing ranges
+        """
+        if not self.range:
+            return None
+        raw = eval(self.range)
+        try:
+            if not isinstance(raw, (list, tuple)):
+                raw = list(raw)
+            page_range = []
+            for el in raw:
+                if isinstance(el, int):
+                    page_range.append(el)
+                if el.count(':'):
+                    el = el.split(':')
+                    page_range.append(el)
+                else:
+                    page_range.append(int(el))
+            return page_range
+        except:
+            return None
+
+    def page_in_range(self, page):
+        return True
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
     label = models.TextField(blank=True, verbose_name=_('label'))

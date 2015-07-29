@@ -3,7 +3,7 @@ Created on 06/mag/2015
 @author: giovanni
 '''
 
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 # from django.db.models.query import Q
 from django.contrib import admin

@@ -8,6 +8,33 @@ CREATE TABLE "commons_metadatatype" (
     "validation" varchar(64) NOT NULL
 )
 ;
+CREATE TABLE "commons_documenttype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(32) NOT NULL UNIQUE,
+    "ocr" boolean NOT NULL
+)
+;
+CREATE TABLE "commons_document" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "uuid" varchar(48) NOT NULL,
+    "document_type_id" integer NOT NULL REFERENCES "commons_documenttype" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "label" varchar(255) NOT NULL,
+    "description" text,
+    "date_added" timestamp with time zone NOT NULL,
+    "language" varchar(8) NOT NULL
+)
+;
+CREATE TABLE "commons_documentversion" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "document_id" integer NOT NULL REFERENCES "commons_document" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "timestamp" timestamp with time zone NOT NULL,
+    "comment" text NOT NULL,
+    "file" varchar(100),
+    "mimetype" varchar(255),
+    "encoding" varchar(64),
+    "checksum" text
+)
+;
 CREATE TABLE "commons_materialentry" (
     "id" serial NOT NULL PRIMARY KEY,
     "name" varchar(100) NOT NULL UNIQUE,
@@ -245,13 +272,6 @@ CREATE TABLE "commons_oer_accessibility" (
     UNIQUE ("oer_id", "accessibilityentry_id")
 )
 ;
-CREATE TABLE "commons_oer_documents" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "oer_id" integer NOT NULL,
-    "document_id" integer NOT NULL REFERENCES "documents_document" ("id") DEFERRABLE INITIALLY DEFERRED,
-    UNIQUE ("oer_id", "document_id")
-)
-;
 CREATE TABLE "commons_oer_oers" (
     "id" serial NOT NULL PRIMARY KEY,
     "from_oer_id" integer NOT NULL,
@@ -308,13 +328,27 @@ CREATE TABLE "commons_oer" (
 )
 ;
 ALTER TABLE "commons_oer_accessibility" ADD CONSTRAINT "oer_id_refs_id_6b1109d7" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
-ALTER TABLE "commons_oer_documents" ADD CONSTRAINT "oer_id_refs_id_0c5faf8b" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_oers" ADD CONSTRAINT "from_oer_id_refs_id_09361874" FOREIGN KEY ("from_oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_oers" ADD CONSTRAINT "to_oer_id_refs_id_09361874" FOREIGN KEY ("to_oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_languages" ADD CONSTRAINT "oer_id_refs_id_a1f1192a" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_subjects" ADD CONSTRAINT "oer_id_refs_id_cfe3da6d" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_levels" ADD CONSTRAINT "oer_id_refs_id_4d219eda" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
 ALTER TABLE "commons_oer_media" ADD CONSTRAINT "oer_id_refs_id_87e86869" FOREIGN KEY ("oer_id") REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED;
+CREATE TABLE "commons_oer_documents" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "document_id" integer NOT NULL REFERENCES "commons_document" ("id") DEFERRABLE INITIALLY DEFERRED,
+    UNIQUE ("oer_id", "document_id")
+)
+;
+CREATE TABLE "commons_oerdocument" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "order" integer NOT NULL,
+    "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "document_id" integer NOT NULL REFERENCES "commons_document" ("id") DEFERRABLE INITIALLY DEFERRED,
+    UNIQUE ("oer_id", "document_id")
+)
+;
 CREATE TABLE "commons_oermetadata" (
     "id" serial NOT NULL PRIMARY KEY,
     "oer_id" integer NOT NULL REFERENCES "commons_oer" ("id") DEFERRABLE INITIALLY DEFERRED,
@@ -380,6 +414,11 @@ CREATE TABLE "commons_pathedge" (
 )
 ;
 CREATE INDEX "commons_metadatatype_name_like" ON "commons_metadatatype" ("name" varchar_pattern_ops);
+CREATE INDEX "commons_documenttype_name_like" ON "commons_documenttype" ("name" varchar_pattern_ops);
+CREATE INDEX "commons_document_document_type_id" ON "commons_document" ("document_type_id");
+CREATE INDEX "commons_document_label" ON "commons_document" ("label");
+CREATE INDEX "commons_document_label_like" ON "commons_document" ("label" varchar_pattern_ops);
+CREATE INDEX "commons_documentversion_document_id" ON "commons_documentversion" ("document_id");
 CREATE INDEX "commons_materialentry_name_like" ON "commons_materialentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_mediaentry_name_like" ON "commons_mediaentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_accessibilityentry_name_like" ON "commons_accessibilityentry" ("name" varchar_pattern_ops);
@@ -451,8 +490,6 @@ CREATE INDEX "commons_repo_creator_id" ON "commons_repo" ("creator_id");
 CREATE INDEX "commons_repo_editor_id" ON "commons_repo" ("editor_id");
 CREATE INDEX "commons_oer_accessibility_oer_id" ON "commons_oer_accessibility" ("oer_id");
 CREATE INDEX "commons_oer_accessibility_accessibilityentry_id" ON "commons_oer_accessibility" ("accessibilityentry_id");
-CREATE INDEX "commons_oer_documents_oer_id" ON "commons_oer_documents" ("oer_id");
-CREATE INDEX "commons_oer_documents_document_id" ON "commons_oer_documents" ("document_id");
 CREATE INDEX "commons_oer_oers_from_oer_id" ON "commons_oer_oers" ("from_oer_id");
 CREATE INDEX "commons_oer_oers_to_oer_id" ON "commons_oer_oers" ("to_oer_id");
 CREATE INDEX "commons_oer_languages_oer_id" ON "commons_oer_languages" ("oer_id");
@@ -473,6 +510,10 @@ CREATE INDEX "commons_oer_license_id" ON "commons_oer" ("license_id");
 CREATE INDEX "commons_oer_project_id" ON "commons_oer" ("project_id");
 CREATE INDEX "commons_oer_creator_id" ON "commons_oer" ("creator_id");
 CREATE INDEX "commons_oer_editor_id" ON "commons_oer" ("editor_id");
+CREATE INDEX "commons_oer_documents_oer_id" ON "commons_oer_documents" ("oer_id");
+CREATE INDEX "commons_oer_documents_document_id" ON "commons_oer_documents" ("document_id");
+CREATE INDEX "commons_oerdocument_oer_id" ON "commons_oerdocument" ("oer_id");
+CREATE INDEX "commons_oerdocument_document_id" ON "commons_oerdocument" ("document_id");
 CREATE INDEX "commons_oermetadata_oer_id" ON "commons_oermetadata" ("oer_id");
 CREATE INDEX "commons_oermetadata_metadata_type_id" ON "commons_oermetadata" ("metadata_type_id");
 CREATE INDEX "commons_oermetadata_value" ON "commons_oermetadata" ("value");

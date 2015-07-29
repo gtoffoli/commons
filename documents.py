@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import hashlib
 import logging
 import os
+import StringIO
 # import tempfile
 import uuid
 
@@ -12,6 +13,7 @@ from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 # from django.utils.importlib import import_module
 from compressed_files import CompressedFile, NotACompressedFile
+import utils
 
 import settings
 # CACHE_PATH = os.path.join(settings.MEDIA_ROOT, 'image_cache')
@@ -75,6 +77,12 @@ class DocumentType(models.Model):
     Define document types or classes to which a specific set of
     properties can be attached
     """
+    class Meta:
+        verbose_name = _('Document type')
+        verbose_name_plural = _('Documents types')
+        ordering = ['name']
+        app_label = 'commons'
+
     name = models.CharField(max_length=32, verbose_name=_('Name'), unique=True)
 
     # TODO: find a way to move this to the ocr app
@@ -87,12 +95,6 @@ class DocumentType(models.Model):
 
     def natural_key(self):
         return (self.name,)
-
-    class Meta:
-        verbose_name = _('Document type')
-        verbose_name_plural = _('Documents types')
-        ordering = ['name']
-
 
 class DocumentManager(models.Manager):
     @transaction.atomic
@@ -541,6 +543,12 @@ class DocumentVersion(models.Model):
     @property
     def page_count(self):
         return self.pages.count()
+
+    def get_page(self, page):
+        if self.mimetype.lower().count('pdf'):
+            i_stream = self.open()
+            self.o_stream = StringIO.StringIO()
+            utils.get_pdf_page(i_stream, self.o_stream, page)
 
 """
 from events.classes import Event

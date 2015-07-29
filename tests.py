@@ -3,13 +3,8 @@ Created on 09/apr/2015
 @author: giovanni
 '''
 
-from commons.models import ProjType, Project, Subject, Language, RepoType, RepoFeature, Repo, OER
-
-def populate_languages():
-    import mayan.settings.base
-    for i in mayan.settings.base.LANGUAGES:
-        choice = Language(code=i[0], name=i[1])
-        choice.save()
+from models import ProjType, Project, Subject, RepoType, RepoFeature, Repo, OER
+from models import DocumentType, Document, DocumentVersion, oer_documents, OerDocument
 
 REPO_TYPES = (
   ('repository', 'OER Repository (contents)',),
@@ -101,7 +96,7 @@ def create_projects():
         proj.save()
 
 def populate():
-    populate_languages()
+    # populate_languages()
     populate_repo_types()
     populate_repo_features()
     populate_proj_types()
@@ -120,4 +115,13 @@ def repo_editor():
     repos = Repo.objects.all().order_by('id')
     for repo in repos:
         print repo, repo.user
+
+def migrate_oer_documents():
+    oers = OER.objects.all()
+    for oer in oers:
+        old_oer_documents = oer_documents.objects.filter(oer=oer).order_by('document__date_added')
+        for old_oer_document in old_oer_documents:
+            oer_document = OerDocument(oer=old_oer_document.oer, document=old_oer_document.document)
+            oer_document.save()
+            print oer_document.oer, oer_document.document
 
