@@ -58,24 +58,6 @@
     </section>
   </div>
   <div class="col-sm-3"  style="margin-top: 4.0em;">
-    {% if repos %}
-		<h4>{% trans "recent sources"|capfirst %}</h4>
-		<ul class="list-unstyled">
-	        {% for repo in repos %}
-	        <li><a href="/repo/{{ repo.slug }}/" style="color: {{ repo.get_link_color }};">{{ repo.name }}</a></li>
-        	{% endfor %}
-	        {% if more_repos %}<li><a href="/repos_by/{{ user.username }}/">...</a></li>{% endif %}
-        </ul>
-	{% endif %}
-    {% if oers %}
-		<h4>{% trans "recent OERs"|capfirst %}</h4>
-		<ul class="list-unstyled">
-	        {% for oer in oers %}
-	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></li>
-        	{% endfor %}
-	        {% if more_oers %}<li><a href="/oers_by/{{ user.username }}/">...</a></li>{% endif %}
-        </ul>
-	{% endif %}
   </div>
 </div>
 {% endblock %}

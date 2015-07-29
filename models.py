@@ -742,7 +742,7 @@ class LearningPath(models.Model, Publishable):
     # project = models.ForeignKey(Project, verbose_name=_('project'))
     project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True)
     # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
-    group = models.ForeignKey(Group, verbose_name=_(u"Group"), blank=True, null=True,  related_name='lp_group',)
+    group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -771,7 +771,8 @@ class LearningPath(models.Model, Publishable):
 
     def get_project(self):
         if isinstance(self.principal, Group):
-            return self.principal.project()
+            # return self.principal.project()
+            return self.principal.project
         else:
             return None
 

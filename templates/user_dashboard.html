@@ -1,0 +1,76 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "dashboard of"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-sm-3">
+   			<h4 style="margin-top: 4.0em;">{% trans "membership"|capfirst %}</h4>
+            <ul class="list-unstyled">
+            {% for membership in memberships %}
+            	<li><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>
+            	</li>
+            {% endfor %}
+            {% for application in applications %}
+            	<li><a href="/project/{{ application.project.slug }}/">{{ application.project.get_name }}</a> &nbsp;<i>{% trans "application pending" %}</i>
+            	</li>
+            {% endfor %}
+            </ul>
+  </div>
+  <div class="col-sm-6">
+    <section>
+            <h2 class="text-center">{% trans "dashboard of"|capfirst %}:
+				{{ user.get_display_name }}
+			</h2>
+    </section>
+{% if profile %}
+    <section>
+        <h3 class="text-center">{% trans "personal resources"|capfirst %}</h3>
+	    {% if my_lps %}
+		<h4>{% trans "learning paths"|capfirst %}</h4>
+		<ul class="list-unstyled">
+	        {% for lp in my_lps %}
+	        <li><a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></li>
+        	{% endfor %}
+        </ul>
+		{% endif %}
+    	<div><a href="/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create private learning path"|capfirst %}</a></div>
+{% else %}
+		{% trans "you must fill your profile to enable your dashboard"|capfirst %}.
+{% endif %}
+    </section>
+  </div>
+  <div class="col-sm-3"  style="margin-top: 4.0em;">
+    {% if repos %}
+		<h4>{% trans "recent sources"|capfirst %}</h4>
+		<ul class="list-unstyled">
+	        {% for repo in repos %}
+	        <li><a href="/repo/{{ repo.slug }}/" style="color: {{ repo.get_link_color }};">{{ repo.name }}</a></li>
+        	{% endfor %}
+	        {% if more_repos %}<li><a href="/repos_by/{{ user.username }}/">...</a></li>{% endif %}
+        </ul>
+	{% endif %}
+    {% if oers %}
+		<h4>{% trans "recent OERs"|capfirst %}</h4>
+		<ul class="list-unstyled">
+	        {% for oer in oers %}
+	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></li>
+        	{% endfor %}
+	        {% if more_oers %}<li><a href="/oers_by/{{ user.username }}/">...</a></li>{% endif %}
+        </ul>
+	{% endif %}
+    {% if lps %}
+		<h4>{% trans "recent learning paths"|capfirst %}</h4>
+		<ul class="list-unstyled">
+	        {% for lp in lps %}
+	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
+  </div>
+</div>
+{% endblock %}
