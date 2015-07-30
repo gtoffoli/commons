@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 00:14+0200\n"
-"PO-Revision-Date: 2015-07-29 22:41+0000\n"
+"POT-Creation-Date: 2015-07-30 16:56+0200\n"
+"PO-Revision-Date: 2015-07-30 15:05+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/projects/p/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -946,38 +946,44 @@ msgid "is present"
 msgstr "è presente"
 
 #: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "is an international community of practice"
-msgstr "è una comunità di pratica internazionale"
+#: .\templates\homepage.html:36 .\templates\homepage.html.py:42
+#: .\templates\homepage.html:48 .\templates\homepage.html.py:54
+msgid "are spaces where"
+msgstr "sono spazi in cui"
 
-#: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "devoted to the improvement of"
-msgstr "finalizzata al potenziamento delle"
+#: .\templates\homepage.html:24 .\templates\homepage.html.py:42
+msgid "you can learn together in online communities of practice"
+msgstr "puoi imparare con altri in comunità di pratica online"
 
-#: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "employability skills"
-msgstr "abilità utili all'impiego"
+#: .\templates\homepage.html:30 .\templates\homepage.html.py:48
+msgid "you can reuse resources to build learning paths"
+msgstr "puoi riusare risorse per costruire percorsi di apprendimento"
 
-#: .\templates\homepage.html:47
+#: .\templates\homepage.html:36 .\templates\homepage.html.py:54
+msgid "you can browse collections in our library of OER"
+msgstr "puoi esplorare raccolte di OER nella nostra biblioteca"
+
+#: .\templates\homepage.html:71
 msgid "learn together"
 msgstr "impara in compagnia"
 
-#: .\templates\homepage.html:48
+#: .\templates\homepage.html:72
 msgid "Communities and Projects"
 msgstr "Comunità e Progetti"
 
-#: .\templates\homepage.html:53
+#: .\templates\homepage.html:77
 msgid "reuse other people's experience"
 msgstr "riusa l'esperienza di altri"
 
-#: .\templates\homepage.html:54
+#: .\templates\homepage.html:78
 msgid "Learning Paths"
 msgstr "Percorsi di Apprendimento"
 
-#: .\templates\homepage.html:59
+#: .\templates\homepage.html:83
 msgid "start explore"
 msgstr "comincia ad esplorare"
 
-#: .\templates\homepage.html:60
+#: .\templates\homepage.html:84
 msgid "Educational Library"
 msgstr "Biblioteca di Risorse Educative"
 

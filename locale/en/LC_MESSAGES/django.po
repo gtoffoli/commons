@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-30 00:14+0200\n"
+"POT-Creation-Date: 2015-07-30 16:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -941,38 +941,44 @@ msgid "is present"
 msgstr ""
 
 #: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "is an international community of practice"
+#: .\templates\homepage.html:36 .\templates\homepage.html.py:42
+#: .\templates\homepage.html:48 .\templates\homepage.html.py:54
+msgid "are spaces where"
 msgstr ""
 
-#: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "devoted to the improvement of"
+#: .\templates\homepage.html:24 .\templates\homepage.html.py:42
+msgid "you can learn together in online communities of practice"
 msgstr ""
 
-#: .\templates\homepage.html:24 .\templates\homepage.html.py:30
-msgid "employability skills"
+#: .\templates\homepage.html:30 .\templates\homepage.html.py:48
+msgid "you can reuse resources to build learning paths"
 msgstr ""
 
-#: .\templates\homepage.html:47
+#: .\templates\homepage.html:36 .\templates\homepage.html.py:54
+msgid "you can browse collections in our library of OER"
+msgstr ""
+
+#: .\templates\homepage.html:71
 msgid "learn together"
 msgstr ""
 
-#: .\templates\homepage.html:48
+#: .\templates\homepage.html:72
 msgid "Communities and Projects"
 msgstr ""
 
-#: .\templates\homepage.html:53
+#: .\templates\homepage.html:77
 msgid "reuse other people's experience"
 msgstr ""
 
-#: .\templates\homepage.html:54
+#: .\templates\homepage.html:78
 msgid "Learning Paths"
 msgstr ""
 
-#: .\templates\homepage.html:59
+#: .\templates\homepage.html:83
 msgid "start explore"
 msgstr ""
 
-#: .\templates\homepage.html:60
+#: .\templates\homepage.html:84
 msgid "Educational Library"
 msgstr ""
 

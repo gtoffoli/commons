@@ -19,41 +19,65 @@
              <div class="active item item-left" style="background: #67AE73;">
                  <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
                  <div class="carousel-caption carousel-caption-left">
-                     <h1>CommonSpaces<br><small>{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1>
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can learn together in online communities of practice" %}</small></h1>
                  </div>
              </div>
              <div class="item item-right" style="background: #FABE66;">
                  <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
                  <div class="carousel-caption carousel-caption-right">
-                     <h1>CommonSpaces<br><small>{% trans "is an international community of practice" %} {% trans "devoted to the improvement of" %} {% trans "employability skills" %}.</small></h1>
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can reuse resources to build learning paths" %}</small></h1>
+                 </div>
+             </div>
+             <div class="item item-left" style="background: #007CC2;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-left">
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can browse collections in our library of OER" %}</small></h1>
+                 </div>
+             </div>
+             <div class="item item-right" style="background: #67AE73;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-right">
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can learn together in online communities of practice" %}</small></h1>
+                 </div>
+             </div>
+             <div class="item item-left" style="background: #FABE66;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-left">
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can reuse resources to build learning paths" %}</small></h1>
+                 </div>
+             </div>
+             <div class="item item-right" style="background: #007CC2;">
+                 <div><img alt="" src="{% static "commons/img/sfondo.png" %}"></div>
+                 <div class="carousel-caption carousel-caption-right">
+                     <h1>CommonSpaces<br><small>{% trans "are spaces where" %} {% trans "you can browse collections in our library of OER" %}</small></h1>
                  </div>
              </div>
         </div>
-{% comment %} SLIDE CONTROL {% endcomment %}
+{% comment %} SLIDE CONTROL
         <a class="left carousel-control" href="#myCarousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a>
         <a class="right carousel-control" href="#myCarousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a>
     </div>
-
+ {% endcomment %}
 
 {% comment %} MAIN CTA {% endcomment %}
-    <div class="container paddingTB20">
+    <div class="container paddingB20">
         <div class="row">
-            <div class="col-sm-4 col-md-4 text-center">
+            <div class="col-sm-4 col-md-4 text-center paddingT20">
                 <a href="/cops/"><img src="{% static "commons/img/group.png" %}"><br>
                 <span class="largerDemiBold">{% trans "learn together"|capfirst %}</span><br>
-                <span class="boldItalic"><i>{% trans "Communities and Projects" %}</i></span>
+                <span class="bold"><i>{% trans "Communities and Projects" %}</i></span>
                 </a>
             </div>
-            <div class="col-sm-4 col-md-4 text-center">
+            <div class="col-sm-4 col-md-4 text-center paddingT20">
                 <a href="/info/learn/"><img src="{% static "commons/img/lp.png" %}"></i><br>
                 <span class="largerDemiBold">{% trans "reuse other people's experience"|capfirst %}</span><br>
-                <span class="boldItalic"><i>{% trans "Learning Paths" %}</i></span>
+                <span class="bold"><i>{% trans "Learning Paths" %}</i></span>
                 </a>
             </div>
-            <div class="col-sm-4 col-md-4 text-center">
+            <div class="col-sm-4 col-md-4 text-center paddingT20">
                  <a href="/browse/"><img src="{% static "commons/img/resources.png" %}"></i><br>
                  <span class="largerDemiBold">{% trans "start explore"|capfirst %}</span><br>
-                 <span class="boldItalic"><i>{% trans "Educational Library" %}</i></span>
+                 <span class="bold"><i>{% trans "Educational Library" %}</i></span>
                  </a>
             </div>
         </div>

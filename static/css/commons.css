@@ -188,6 +188,14 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	padding-bottom:20px;
 }
 
+.paddingT20 {
+	padding-top:20px;
+}
+
+.paddingB20 {
+	padding-bottom:20px;
+}
+
 .marginB0 {
 	margin-bottom: 0;
 }
@@ -196,9 +204,9 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 }
 
 /* STILI FONT */
-.LargerDemiBold {
+.largerDemiBold {
 	font-size: larger;
-	font-weight:600;
+	font-weight:500;
 }
 .demiBold {
 	font-weight:600;
