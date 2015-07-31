@@ -16,9 +16,10 @@
         <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png">
 
         {% block style_base %}
-            <link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">
+            {% comment %}<link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">{% endcomment %}
             <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
             <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+            {% block plus_style %}{% endblock %}
             {% block extra_style %}{% endblock %}
         {% endblock %}
 

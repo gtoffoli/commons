@@ -92,7 +92,7 @@ INSTALLED_APPS = (
     "pinax_theme_bootstrap",
     "bootstrapform",
     # pinax starter project ?
-    "pinax",
+    # "pinax",
     # menus and ...
     'menu',
     'taggit',
