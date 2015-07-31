@@ -9,18 +9,18 @@ PRODUCTION = False
 DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
 # from base import *
+if PRODUCTION:
+    DEBUG = False
+    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS.append(XMPP_SERVER)
+else:
+    DEBUG = True
+    # TEMPLATE_STRING_IF_INVALID = '%s'
 
 import os
 import sys
 
 from private import *
-
-if PRODUCTION:
-    DEBUG = False
-    ALLOWED_HOSTS = ['*']
-else:
-    DEBUG = True
-    # TEMPLATE_STRING_IF_INVALID = '%s'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'om^a(i8^6&h+umbd2%pt91cj!qu_@oztw117rgxmn(n2lp^*c!'
@@ -35,6 +35,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'dmuc.middleware.UserXMPPMiddleware',
 )
 if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
@@ -96,6 +98,9 @@ INSTALLED_APPS = (
     'taggit',
     'taggit_live',
     'datatrans',
+    # muc
+    'conversejs',
+    'dmuc',
     # commons project
     'django_messages',
     'roles',
@@ -278,18 +283,42 @@ LOGGING = {
             '()': 'django.utils.log.RequireDebugFalse'
         }
     },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'stream': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        'dmuc': {
+            'handlers': ['stream'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+        'conversejs': {
+            'handlers': ['stream'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+        },
+        'sleekxmpp': {
+            'handlers': ['stream'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
     }
 }

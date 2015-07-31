@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^robots.txt$', 'commons.views.robots', name='robots'),
+    url(r'^dmuc$', TemplateView.as_view(template_name='dmuc/home.html')),
     # Import urls from app datatrans
     url(r'^datatrans/', include('datatrans.urls')),
     url(r'', include('taggit_live.urls')),
