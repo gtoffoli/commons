@@ -601,6 +601,45 @@ class OER(models.Model, Publishable):
         oer_documents = OerDocument.objects.filter(oer=self).order_by('order', 'document__date_added')
         return [oer_document.document for oer_document in oer_documents]
 
+    def remove_document(self, document, request):
+        assert self.can_edit(request.user)
+        oer_document = OerDocument.objects.get(oer=self, document=document)
+        document.delete()
+        oer_document.delete()
+        self.editor = request.user
+        self.save()
+
+    def document_up(self, document, request):
+        assert self.can_edit(request.user)
+        oer_document = OerDocument.objects.get(oer=self, document=document)
+        order = oer_document.order
+        assert order > 1
+        previous_order = order-1
+        previous = OerDocument.objects.get(oer=self, order=previous_order)
+        previous.order = 0
+        previous.save()
+        oer_document.order = previous_order
+        oer_document.save()
+        previous.order = order
+        previous.save()
+        self.editor = request.user
+        self.save()
+
+    def document_down(self, document, request):
+        assert self.can_edit(request.user)
+        oer_document = OerDocument.objects.get(oer=self, document=document)
+        order = oer_document.order
+        next_order = order+1
+        next = OerDocument.objects.get(oer=self, order=next_order)
+        next.order = 0
+        next.save()
+        oer_document.order = next_order
+        oer_document.save()
+        next.order = order
+        next.save()
+        self.editor = request.user
+        self.save()
+
 class oer_documents(models.Model):
     """
     to be removed after data migration
@@ -633,12 +672,13 @@ class OerDocument(models.Model):
         verbose_name_plural = _('attached documents')
 
     def save(self, *args, **kwargs):
-        oer_documents = OerDocument.objects.filter(oer=self.oer)
-        if oer_documents:
-            last_order = oer_documents.aggregate(Max('order'))['order__max']
-        else:
-            last_order = 0
-        self.order = last_order+1
+        if not self.order:
+            oer_documents = OerDocument.objects.filter(oer=self.oer)
+            if oer_documents:
+                last_order = oer_documents.aggregate(Max('order'))['order__max']
+            else:
+                last_order = 0
+            self.order = last_order+1
         super(OerDocument, self).save(*args, **kwargs) # Call the "real" save() method.
        
 class OerMetadata(models.Model):

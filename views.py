@@ -15,7 +15,7 @@ from django.utils.translation import get_language, pgettext
 
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata
+from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
 from models import LP_COLLECTION, LP_SEQUENCE
@@ -755,7 +755,9 @@ def oer_add_document(request):
         if form.is_valid():
             uploaded_file = request.FILES['docfile']
             version = handle_uploaded_file(uploaded_file)
-            oer.documents.add(version.document)
+            # oer.documents.add(version.document)
+            oer_document = OerDocument(oer=oer, document=version.document)
+            oer_document.save()
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
         else:
             can_edit = oer.can_edit(request.user)
@@ -789,7 +791,23 @@ def document_page_download(request, page=1):
             save_as='"%d_%s"' % (page, document_version.document.label),
             content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
         )
-   
+
+def document_delete(request, document_id):
+    oer_document = OerDocument.objects.get(document_id=document_id)
+    oer = oer_document.oer
+    oer.remove_document(oer_document.document, request)
+    return oer_detail(request, oer.id, oer=oer)
+def document_up(request, document_id):
+    oer_document = OerDocument.objects.get(document_id=document_id)
+    oer = oer_document.oer
+    oer.document_up(oer_document.document, request)
+    return oer_detail(request, oer.id, oer=oer)
+def document_down(request, document_id):
+    oer_document = OerDocument.objects.get(document_id=document_id)
+    oer = oer_document.oer
+    oer.document_down(oer_document.document, request)
+    return oer_detail(request, oer.id, oer=oer)
+
 def project_add_oer(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     if not project.can_add_oer(request.user):
