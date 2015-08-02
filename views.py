@@ -779,7 +779,7 @@ def document_download(request, document_id):
     )
 
 def document_view(request, document_id):
-    return HttpResponseRedirect('/ViewerJS/#http://localhost:8000/document/%s/download/' % document_id)
+    return HttpResponseRedirect('/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id))
     # return HttpResponseRedirect('/ViewerJS/#http://localhost:8000/static/pdf/FI-ADOPT_FAIRVILLAGE_Draft_Sustainability_Plan-v1.pdf/')
 
 def document_page_download(request, page=1):
