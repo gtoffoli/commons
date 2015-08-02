@@ -139,12 +139,16 @@
   	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
 	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
   	{% csrf_token %}
-	<input type="hidden" name="id" value="{{ document.id }}">
-   	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ document.label }}">
- 	{% if can_edit %}&nbsp;<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
+ 	{% if can_edit %}<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
+ 	{% if not forloop.first or not forloop.last %}
         {% if forloop.first %}&nbsp;&nbsp;{% else %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up" style="font-size: 0.7em;"></i></a>{% endif %}
         {% if forloop.last %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down" style="font-size: 0.7em;"></i></a>&nbsp;{% endif %}
 	{% endif %}
+	{% endif %}
+	<input type="hidden" name="id" value="{{ document.id }}"><i>{{ document.label }}</i>
+   	{% comment %}<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ document.label }}">{% endcomment %}
+    &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
+    &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>
 	</li></form>
 		    {% endfor %}
 			</ol>

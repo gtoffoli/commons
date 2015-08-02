@@ -763,19 +763,24 @@ def oer_add_document(request):
             can_edit = oer.can_edit(request.user)
             return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
 
-def document_download(request):
-    if request.POST:
-        document_id = request.POST.get('id')
-        document = get_object_or_404(Document, pk=document_id)
-        document_version = document.latest_version
-        file_descriptor = document_version.open()
-        file_descriptor.close()
-        return serve_file(
-            request,
-            document_version.file,
-            save_as='"%s"' % document_version.document.label,
-            content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
-        )
+# def document_download(request):
+def document_download(request, document_id):
+    # if request.POST:
+    # document_id = request.POST.get('id')
+    document = get_object_or_404(Document, pk=document_id)
+    document_version = document.latest_version
+    file_descriptor = document_version.open()
+    file_descriptor.close()
+    return serve_file(
+        request,
+        document_version.file,
+        save_as='"%s"' % document_version.document.label,
+        content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
+    )
+
+def document_view(request, document_id):
+    return HttpResponseRedirect('/ViewerJS/#http://localhost:8000/document/%s/download/' % document_id)
+    # return HttpResponseRedirect('/ViewerJS/#http://localhost:8000/static/pdf/FI-ADOPT_FAIRVILLAGE_Draft_Sustainability_Plan-v1.pdf/')
 
 def document_page_download(request, page=1):
     if request.POST:

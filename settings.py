@@ -102,6 +102,7 @@ INSTALLED_APPS = (
     'conversejs',
     'dmuc',
     # commons project
+    'viewerjs',
     'django_messages',
     'roles',
     'django_dag',

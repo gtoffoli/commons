@@ -1021,29 +1021,47 @@ class PathNode(node_factory('PathEdge')):
     def can_edit(self, request):
         return self.path.can_edit(request)
     
-    def get_range(self):
-        """ return page range:
-        None = no specified or invalid string
-        list of numbers and of sublists representing ranges
+    def subranges(self, r=''):
+        """ parses the value of the field range and return subranges
+        as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
         """
-        if not self.range:
-            return None
-        raw = eval(self.range)
-        try:
-            if not isinstance(raw, (list, tuple)):
-                raw = list(raw)
-            page_range = []
-            for el in raw:
-                if isinstance(el, int):
-                    page_range.append(el)
-                if el.count(':'):
-                    el = el.split(':')
-                    page_range.append(el)
-                else:
-                    page_range.append(int(el))
-            return page_range
-        except:
-            return None
+        subranges = []
+        if not r: # argument r useful only for offline testing
+            r = self.range
+        splitted = r.split(',')
+        for s in splitted:
+            document = 1
+            first_page = 1
+            last_page = None
+            s = s.strip()
+            if not s:
+                continue
+            if s.count('.'):
+                l = s.split('.')
+                if len(l)>2 or not l[0].isdigit():
+                    return None
+                document = int(l[0])
+                if document < 1:
+                    return None
+                s = l[1]
+            if s.count('-'):
+                l = s.split('-')
+                if len(l)>2 or not l[1].isdigit():
+                    return None
+                last_page = int(l[1])
+                s = l[0]
+            if not s.isdigit():
+                return None
+            first_page = int(s)
+            if first_page < 1:
+                return None
+            subrange = [document, first_page]
+            if not last_page is None:
+                if last_page < first_page:
+                    return None
+                subrange.append(last_page)
+            subranges.append(subrange)
+        return subranges            
 
     def page_in_range(self, page):
         return True
