@@ -11,6 +11,8 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
 from taggit.managers import TaggableManager
+from conversejs.models import XMPPAccount
+from dmuc.models import Room, RoomMember
 
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -189,19 +191,17 @@ class Project(models.Model):
     """
     slug = SlugField(editable=True)
     """
-    name = models.CharField(max_length=100, verbose_name=_('name'))
+    # name = models.CharField(max_length=100, verbose_name=_('name'))
+    name = models.CharField(max_length=50, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
+    chat_room = models.ForeignKey(Room, verbose_name=_('chat room'), blank=True, null=True, related_name='project')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    """
-    creator = models.ForeignKey(User, editable=False, verbose_name=_('creator'), related_name='project_creator')
-    editor = models.ForeignKey(User, editable=False, verbose_name=_('last editor'), related_name='project_editor')
-    """
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
 
@@ -259,10 +259,11 @@ class Project(models.Model):
         return user.is_superuser or self.can_accept_member(user)
 
     def can_chat(self, user):
-        if not user.is_authenticated():
+        if not (user.is_authenticated() and self.is_member(user)) :
             return False
-        # return self.chat_type==1 and self.get_memberships(user=user, state=1)
-        return False
+        if not (self.chat_type in [1] and self.chat_room):
+            return False
+        return self.is_room_member(user)
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -306,6 +307,10 @@ class Project(models.Model):
             return memberships[0]
         return None
 
+    def is_member(self, user):
+        membership = self.get_membership(user)
+        return membership and membership.state in [1]
+
     def get_roles(self, user):
         return get_roles(user, obj=self)
 
@@ -333,6 +338,34 @@ class Project(models.Model):
 
     def can_add_oer(self, user):
         return has_permission(self, user, 'add-oer')
+ 
+    def has_chat_room(self):
+        return self.chat_type in [1] and self.chat_room
+
+    def need_create_room(self):
+        return self.chat_type in [1] and not self.chat_room
+
+    def is_room_member(self, user):
+        if not user.is_active:
+            return False
+        assert self.chat_room
+        xmpp_accounts = XMPPAccount.objects.filter(user=user)
+        if not xmpp_accounts:
+            return False
+        room_members = RoomMember.objects.filter(xmpp_account=xmpp_accounts[0], room=self.chat_room)
+        return room_members and True or False
+
+    def need_sync_xmppaccounts(self):
+        if not self.chat_type in [1]:
+            return False
+        if not self.chat_room:
+            return False
+        users = self.members(user_only=True)
+        for user in users:
+            print user, self.is_room_member(user)
+            if user.is_active and not self.is_room_member(user):
+                return True
+        return False
        
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))

@@ -22,6 +22,11 @@ from models import LP_COLLECTION, LP_SEQUENCE
 
 from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import RepoSearchForm, OerSearchForm, LpSearchForm
+
+from conversejs.models import XMPPAccount
+from dmuc.models import Room, RoomMember
+from dmuc.middleware import create_xmpp_account
+
 from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
@@ -138,6 +143,7 @@ def project_detail(request, project_id, project=None):
     user = request.user
     if user.is_authenticated():
         membership = project.get_membership(user)
+        is_member = project.is_member(user)
         can_accept_member = project.can_accept_member(user)
         can_add_repo = project.can_add_repo(user)
         can_add_oer = project.can_add_oer(user)
@@ -152,7 +158,7 @@ def project_detail(request, project_id, project=None):
     # lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
     lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'is_member': is_member, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -168,6 +174,8 @@ def project_edit(request, project_id=None, parent_id=None):
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
     if project_id:
         if project.can_edit(user):
+            if not project.name:
+                project.name = project.group.name
             form = ProjectForm(instance=project)
             return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
         else:
@@ -264,6 +272,35 @@ def accept_application(request, username, project_slug):
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
     return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
+
+def project_create_room(request, project_id):
+    project = get_object_or_404(Project,id=project_id)
+    assert project.need_create_room()
+    name = project.slug
+    title = project.get_name()
+    room = Room(name=name, title=title)
+    room.save()
+    project.chat_room = room
+    project.editor = request.user
+    project.save()
+    return project_detail(request, project_id, project=project)    
+
+def project_sync_xmppaccounts(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    assert project.chat_type in [1]
+    room = project.chat_room
+    assert room
+    users = project.members(user_only=True)
+    for user in users:
+        try:
+            xmpp_account = XMPPAccount.objects.get(user=user)
+        except:
+            xmpp_account = create_xmpp_account(request, user)
+        if xmpp_account:
+            RoomMember.objects.get_or_create(xmpp_account=xmpp_account, room=room)
+        else:
+            pass
+    return project_detail(request, project_id, project=project)
 
 def repo_list(request):
     user = request.user

@@ -9,6 +9,7 @@ PRODUCTION = False
 DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
 # from base import *
+XMPP_SERVER = 'openfire.commonspaces.eu'
 if PRODUCTION:
     DEBUG = False
     ALLOWED_HOSTS = ['*']
@@ -36,7 +37,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    'dmuc.middleware.UserXMPPMiddleware',
+    # 'dmuc.middleware.UserXMPPMiddleware',
 )
 if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES

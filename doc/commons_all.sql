@@ -1,40 +1,4 @@
 BEGIN;
-CREATE TABLE "commons_metadatatype" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "name" varchar(48) NOT NULL UNIQUE,
-    "title" varchar(48) NOT NULL,
-    "default" varchar(128),
-    "lookup" text,
-    "validation" varchar(64) NOT NULL
-)
-;
-CREATE TABLE "commons_documenttype" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "name" varchar(32) NOT NULL UNIQUE,
-    "ocr" boolean NOT NULL
-)
-;
-CREATE TABLE "commons_document" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "uuid" varchar(48) NOT NULL,
-    "document_type_id" integer NOT NULL REFERENCES "commons_documenttype" ("id") DEFERRABLE INITIALLY DEFERRED,
-    "label" varchar(255) NOT NULL,
-    "description" text,
-    "date_added" timestamp with time zone NOT NULL,
-    "language" varchar(8) NOT NULL
-)
-;
-CREATE TABLE "commons_documentversion" (
-    "id" serial NOT NULL PRIMARY KEY,
-    "document_id" integer NOT NULL REFERENCES "commons_document" ("id") DEFERRABLE INITIALLY DEFERRED,
-    "timestamp" timestamp with time zone NOT NULL,
-    "comment" text NOT NULL,
-    "file" varchar(100),
-    "mimetype" varchar(255),
-    "encoding" varchar(64),
-    "checksum" text
-)
-;
 CREATE TABLE "commons_materialentry" (
     "id" serial NOT NULL PRIMARY KEY,
     "name" varchar(100) NOT NULL UNIQUE,
@@ -131,6 +95,42 @@ CREATE TABLE "commons_countryentry" (
     "name" varchar(100) NOT NULL
 )
 ;
+CREATE TABLE "commons_documenttype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(32) NOT NULL UNIQUE,
+    "ocr" boolean NOT NULL
+)
+;
+CREATE TABLE "commons_document" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "uuid" varchar(48) NOT NULL,
+    "document_type_id" integer NOT NULL REFERENCES "commons_documenttype" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "label" varchar(255) NOT NULL,
+    "description" text,
+    "date_added" timestamp with time zone NOT NULL,
+    "language" varchar(8) NOT NULL
+)
+;
+CREATE TABLE "commons_documentversion" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "document_id" integer NOT NULL REFERENCES "commons_document" ("id") DEFERRABLE INITIALLY DEFERRED,
+    "timestamp" timestamp with time zone NOT NULL,
+    "comment" text NOT NULL,
+    "file" varchar(100),
+    "mimetype" varchar(255),
+    "encoding" varchar(64),
+    "checksum" text
+)
+;
+CREATE TABLE "commons_metadatatype" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "name" varchar(48) NOT NULL UNIQUE,
+    "title" varchar(48) NOT NULL,
+    "default" varchar(128),
+    "lookup" text,
+    "validation" varchar(64) NOT NULL
+)
+;
 CREATE TABLE "commons_userprofile_languages" (
     "id" serial NOT NULL PRIMARY KEY,
     "userprofile_id" integer NOT NULL,
@@ -187,10 +187,11 @@ CREATE TABLE "commons_projtype" (
 CREATE TABLE "commons_project" (
     "id" serial NOT NULL PRIMARY KEY,
     "group_id" integer NOT NULL UNIQUE REFERENCES "auth_group" ("id") DEFERRABLE INITIALLY DEFERRED,
-    "name" varchar(100) NOT NULL,
+    "name" varchar(50) NOT NULL,
     "slug" varchar(50) NOT NULL UNIQUE,
     "proj_type_id" integer NOT NULL REFERENCES "commons_projtype" ("id") DEFERRABLE INITIALLY DEFERRED,
     "chat_type" integer,
+    "chat_room_id" integer REFERENCES "dmuc_room" ("id") DEFERRABLE INITIALLY DEFERRED,
     "description" text,
     "info" text,
     "state" integer,
@@ -413,12 +414,6 @@ CREATE TABLE "commons_pathedge" (
     "editor_id" integer NOT NULL REFERENCES "auth_user" ("id") DEFERRABLE INITIALLY DEFERRED
 )
 ;
-CREATE INDEX "commons_metadatatype_name_like" ON "commons_metadatatype" ("name" varchar_pattern_ops);
-CREATE INDEX "commons_documenttype_name_like" ON "commons_documenttype" ("name" varchar_pattern_ops);
-CREATE INDEX "commons_document_document_type_id" ON "commons_document" ("document_type_id");
-CREATE INDEX "commons_document_label" ON "commons_document" ("label");
-CREATE INDEX "commons_document_label_like" ON "commons_document" ("label" varchar_pattern_ops);
-CREATE INDEX "commons_documentversion_document_id" ON "commons_documentversion" ("document_id");
 CREATE INDEX "commons_materialentry_name_like" ON "commons_materialentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_mediaentry_name_like" ON "commons_mediaentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_accessibilityentry_name_like" ON "commons_accessibilityentry" ("name" varchar_pattern_ops);
@@ -452,6 +447,12 @@ CREATE INDEX "commons_profieldentry_name_like" ON "commons_profieldentry" ("name
 CREATE INDEX "commons_networkentry_name_like" ON "commons_networkentry" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_language_code_like" ON "commons_language" ("code" varchar_pattern_ops);
 CREATE INDEX "commons_countryentry_code_like" ON "commons_countryentry" ("code" varchar_pattern_ops);
+CREATE INDEX "commons_documenttype_name_like" ON "commons_documenttype" ("name" varchar_pattern_ops);
+CREATE INDEX "commons_document_document_type_id" ON "commons_document" ("document_type_id");
+CREATE INDEX "commons_document_label" ON "commons_document" ("label");
+CREATE INDEX "commons_document_label_like" ON "commons_document" ("label" varchar_pattern_ops);
+CREATE INDEX "commons_documentversion_document_id" ON "commons_documentversion" ("document_id");
+CREATE INDEX "commons_metadatatype_name_like" ON "commons_metadatatype" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_userprofile_languages_userprofile_id" ON "commons_userprofile_languages" ("userprofile_id");
 CREATE INDEX "commons_userprofile_languages_language_id" ON "commons_userprofile_languages" ("language_id");
 CREATE INDEX "commons_userprofile_languages_language_id_like" ON "commons_userprofile_languages" ("language_id" varchar_pattern_ops);
@@ -469,6 +470,7 @@ CREATE INDEX "commons_subject_code_like" ON "commons_subject" ("code" varchar_pa
 CREATE INDEX "commons_projtype_name_like" ON "commons_projtype" ("name" varchar_pattern_ops);
 CREATE INDEX "commons_project_slug_like" ON "commons_project" ("slug" varchar_pattern_ops);
 CREATE INDEX "commons_project_proj_type_id" ON "commons_project" ("proj_type_id");
+CREATE INDEX "commons_project_chat_room_id" ON "commons_project" ("chat_room_id");
 CREATE INDEX "commons_project_creator_id" ON "commons_project" ("creator_id");
 CREATE INDEX "commons_project_editor_id" ON "commons_project" ("editor_id");
 CREATE INDEX "commons_projectmember_project_id" ON "commons_projectmember" ("project_id");
