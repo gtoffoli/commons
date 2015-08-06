@@ -139,7 +139,7 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     membership = None
-    can_accept_member = can_add_repo = can_add_oer = can_add_lp = can_edit = can_chat = False
+    is_member = can_accept_member = can_add_repo = can_add_oer = can_add_lp = can_edit = can_chat = False
     user = request.user
     if user.is_authenticated():
         membership = project.get_membership(user)
