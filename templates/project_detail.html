@@ -1,15 +1,26 @@
 {% extends "commons_base.html" %}
 
 {% load i18n %}
-{% comment %}{% if can_chat %}{% load conversejs %}{% endif %}{% endcomment %}
+{% if project.has_chat_room and can_chat %}
+	{% load static from staticfiles %}
+	{% load conversejs %}
+{% endif %}
 
 {% block head_title %}{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block extra_head %}
-	{% comment %}{% if can_chat %}{% conversejs_static %}{% endif %}{% endcomment %}
+	{% if project.has_chat_room and can_chat %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
+<script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
+<script>window.scrollTo(0, 2000);</script>
+	{% endif %}
 {% endblock %}
 
 {% block body %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
 <div class="row">
   <div class="col-sm-3" style="margin-top: 4.0em;">
   		 {% if project.group.level > 0 %}
@@ -105,15 +116,14 @@
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
         {% if project.has_chat_room %}
 	        {% if can_chat %}
-            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
-	        {% comment %}
-	      		{% conversejs_chatpanel %}
-	            {% conversejs_initialize %}
-	        {% endcomment %}
+	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
+	            <div style="margin-top: 270px;"></div>
+		      	{% conversejs_chatpanel %}
+		        {% conversejs_initialize %}
 	        {% elif is_member %}
-            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chat room" %}</i>
+	            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chat room" %}</i>
 	        {% else %}
-            <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
+	            <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
 			{% endif %}
         {% else %}
             <i>{% trans "no chat room has has been created for this project"|capfirst %}</i>

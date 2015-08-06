@@ -95,6 +95,12 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
+         capfirst(_("communities and projects")),
+         url='/help/community/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
          capfirst(_("searching the catalogued resources")),
          url='/help/search/',
          weight=80,
