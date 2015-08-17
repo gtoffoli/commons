@@ -102,6 +102,9 @@ INSTALLED_APPS = (
     # muc
     'conversejs',
     'dmuc',
+    # blog
+    'tagging',
+    'zinnia',
     # commons project
     'viewerjs',
     'django_messages',
@@ -158,6 +161,7 @@ TEMPLATES = [
                 # "pinax_theme_bootstrap.context_processors.theme",
                 # "allauth.account.context_processors.account",
                 # "allauth.socialaccount.context_processors.socialaccount",
+                'zinnia.context_processors.version',  # Optional
             ],
         },
     },
