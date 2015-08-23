@@ -31,7 +31,7 @@
     </form>
 			</div>{% endif %}
     		{% if oer.levels.all %}
-    		<div><strong>{% trans "levels"|capfirst %}</strong>:
+    		<div><strong>{% trans "target audience"|capfirst %}</strong>:
 			<ul class="root">
 		        {% for level in oer.levels.all %}
 		        {% comment %}<li>{{ level.option_label|safe }}</li>{% endcomment %}
@@ -148,7 +148,7 @@
 	<input type="hidden" name="id" value="{{ document.id }}"><i>{{ document.label }}</i>
    	{% comment %}<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ document.label }}">{% endcomment %}
     &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
-    &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>
+    {% if 'pdf' in document.file_mimetype or 'opendocument.text' in document.file_mimetype %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
 	</li></form>
 		    {% endfor %}
 			</ol>
