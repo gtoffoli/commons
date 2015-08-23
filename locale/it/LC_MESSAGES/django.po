@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-06 12:33+0200\n"
-"PO-Revision-Date: 2015-08-06 10:38+0000\n"
+"POT-Creation-Date: 2015-08-23 23:50+0200\n"
+"PO-Revision-Date: 2015-08-23 21:56+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -141,11 +141,11 @@ msgstr "lingue conosciute"
 msgid "known languages not listed above"
 msgstr "lingue conosciute non presenti nell'elenco"
 
-#: .\forms.py:64 .\forms.py:269 .\models.py:92 .\models.py:810
+#: .\forms.py:64 .\models.py:92
 msgid "short presentation"
 msgstr "presentazione breve"
 
-#: .\forms.py:65 .\forms.py:270 .\models.py:93 .\models.py:811
+#: .\forms.py:65 .\models.py:93
 msgid "longer presentation"
 msgstr "presentazione estesa"
 
@@ -213,8 +213,8 @@ msgid ""
 "if the repository includes a relevant number of contents in many languages"
 msgstr "se il repository contiene molti contenuti in un gran numero di lingue"
 
-#: .\forms.py:105 .\forms.py:137 .\forms.py:182 .\forms.py:234 .\forms.py:272
-#: .\forms.py:307 .\templates\lp_detail.html:50 .\templates\oer_detail.html:63
+#: .\forms.py:105 .\forms.py:137 .\forms.py:182 .\forms.py:234 .\forms.py:270
+#: .\forms.py:307 .\templates\lp_detail.html:49 .\templates\oer_detail.html:63
 msgid "subject areas"
 msgstr "aree tematiche"
 
@@ -234,7 +234,7 @@ msgstr "commenti"
 msgid "evaluation"
 msgstr "valutazione"
 
-#: .\forms.py:108 .\forms.py:188 .\forms.py:278 .\templates\lp_detail.html:67
+#: .\forms.py:108 .\forms.py:188 .\forms.py:278 .\templates\lp_detail.html:71
 #: .\templates\oer_detail.html:133 .\templates\repo_detail.html:64
 msgid "publication state"
 msgstr "stato di pubblicazione"
@@ -299,18 +299,17 @@ msgstr "tipo di materiale"
 msgid "terms of use"
 msgstr "termini di utilizzo"
 
-#: .\forms.py:181 .\forms.py:231 .\forms.py:271 .\forms.py:304
-#: .\templates\lp_detail.html:24 .\templates\oer_detail.html:35
-#: .\vocabularies.py:90
-msgid "levels"
-msgstr "livelli"
+#: .\forms.py:181 .\forms.py:269 .\templates\lp_detail.html:23
+#: .\templates\oer_detail.html:35
+msgid "target audience"
+msgstr "destinatari"
 
-#: .\forms.py:183 .\forms.py:238 .\forms.py:273 .\forms.py:311
-#: .\templates\lp_detail.html:37 .\templates\oer_detail.html:50
+#: .\forms.py:183 .\forms.py:238 .\forms.py:271 .\forms.py:311
+#: .\templates\lp_detail.html:36 .\templates\oer_detail.html:50
 msgid "tags"
 msgstr "tags"
 
-#: .\forms.py:183 .\forms.py:273
+#: .\forms.py:183 .\forms.py:271
 msgid ""
 "Comma-separated strings. Please consider suggestions for using existing "
 "tags."
@@ -336,13 +335,30 @@ msgstr "progetto"
 msgid "where the OER has been cataloged or created"
 msgstr "dove l'OER è stato catalogato o creato"
 
+#: .\forms.py:231 .\forms.py:304 .\vocabularies.py:90
+msgid "levels"
+msgstr "livelli"
+
 #: .\forms.py:254
 msgid "select a file"
 msgstr "scegli un file"
 
-#: .\forms.py:268 .\templates\lp_detail.html:16
+#: .\forms.py:268 .\templates\lp_detail.html:15
 msgid "type of learning path"
 msgstr "tipo di percorso"
+
+#: .\forms.py:272 .\models.py:813 .\templates\lp_detail.html:61
+msgid "objectives"
+msgstr "obbiettivi"
+
+#: .\forms.py:273 .\models.py:137 .\models.py:409 .\models.py:814
+#: .\templates\lp_detail.html:63 .\templates\oer_detail.html:17
+msgid "description"
+msgstr "descrizione"
+
+#: .\forms.py:273
+msgid "sub-objectives, strategy, method, contents"
+msgstr "sotto-obbiettivi, strategia, metodo, contenuti"
 
 #: .\forms.py:301
 msgid "learning path type"
@@ -379,80 +395,84 @@ msgid "all communities"
 msgstr "tutte le comunità"
 
 #: .\menus.py:21
+msgid "blog"
+msgstr "blog"
+
+#: .\menus.py:27
 msgid "the platform"
 msgstr "la piattaforma"
 
-#: .\menus.py:31 .\templates\projects.html:6 .\templates\projects.html.py:12
+#: .\menus.py:37 .\templates\projects.html:6 .\templates\projects.html.py:12
 msgid "all projects"
 msgstr "tutti i progetti"
 
-#: .\menus.py:45 .\templates\contributors.html:12
+#: .\menus.py:51 .\templates\contributors.html:12
 msgid "top contributors"
 msgstr "principali contributori"
 
-#: .\menus.py:54
+#: .\menus.py:60
 msgid "all resources"
 msgstr "tutte le risorse"
 
-#: .\menus.py:73 .\menus.py:116 .\models.py:827
+#: .\menus.py:79 .\menus.py:122 .\models.py:827
 #: .\templates\resources_by.html:15 .\templates\user_dashboard.html:34
 msgid "learning paths"
 msgstr "percorsi di apprendimento"
 
-#: .\menus.py:73 .\menus.py:78 .\menus.py:83
+#: .\menus.py:79 .\menus.py:84 .\menus.py:89
 msgid "advanced search"
 msgstr "ricerca avanzata"
 
-#: .\menus.py:78
+#: .\menus.py:84
 msgid "open resources"
 msgstr "risorse aperte"
 
-#: .\menus.py:83
+#: .\menus.py:89
 msgid "source repositories"
 msgstr "fonti"
 
-#: .\menus.py:92
+#: .\menus.py:98
 msgid "site navigation"
 msgstr "navigazione nel sito"
 
-#: .\menus.py:98
+#: .\menus.py:104
 msgid "communities and projects"
 msgstr "comunità e progetti"
 
-#: .\menus.py:104
+#: .\menus.py:110
 msgid "searching the catalogued resources"
 msgstr "ricerca delle risorse catalogate"
 
-#: .\menus.py:110
+#: .\menus.py:116
 msgid "cataloguing open resources"
 msgstr "catalogazione di risorse aperte"
 
-#: .\menus.py:122
+#: .\menus.py:128
 msgid "translations of the user interface"
 msgstr "traduzioni dell'interfaccia utente"
 
-#: .\menus.py:128
+#: .\menus.py:134
 msgid "registration and authentication"
 msgstr "registrazione e autenticazione"
 
-#: .\menus.py:134
+#: .\menus.py:140
 msgid "user profiles"
 msgstr "profili d'utente"
 
-#: .\menus.py:172 .\templates\project_detail.html:9
+#: .\menus.py:178 .\templates\project_detail.html:9
 #: .\templates\project_detail.html.py:86
 msgid "community"
 msgstr "comunità"
 
-#: .\menus.py:178 .\models.py:210
+#: .\menus.py:184 .\models.py:210
 msgid "projects"
 msgstr "progetti"
 
-#: .\menus.py:184
+#: .\menus.py:190
 msgid "library"
 msgstr "biblioteca"
 
-#: .\menus.py:190
+#: .\menus.py:196
 msgid "help"
 msgstr "guida"
 
@@ -531,11 +551,6 @@ msgstr "area tematica"
 #: .\models.py:117 .\vocabularies.py:96
 msgid "subjects"
 msgstr "aree tematiche"
-
-#: .\models.py:137 .\models.py:409 .\templates\lp_detail.html:14
-#: .\templates\oer_detail.html:17
-msgid "description"
-msgstr "descrizione"
 
 #: .\models.py:138 .\models.py:390 .\models.py:410
 msgid "sort order"
@@ -761,7 +776,7 @@ msgstr "URL specifico dell'OER, se appropriato"
 msgid "reference"
 msgstr "riferimento"
 
-#: .\models.py:585 .\models.py:814
+#: .\models.py:585 .\models.py:812
 msgid "comma separated strings; please try using suggestion of existing tags"
 msgstr "stringhe separate da virgole; se possibile accettare i suggerimenti per l'uso di tag esistenti"
 
@@ -830,7 +845,7 @@ msgstr "sta per"
 msgid "path node"
 msgstr "nodo del percorso"
 
-#: .\models.py:1052 .\templates\lp_detail.html:77
+#: .\models.py:1052 .\templates\lp_detail.html:81
 msgid "path nodes"
 msgstr "nodi del percorso"
 
@@ -846,15 +861,15 @@ msgstr "arco del percorso"
 msgid "path edges"
 msgstr "archi del percorso"
 
-#: .\settings.py:244
+#: .\settings.py:248
 msgid "English"
 msgstr "Inglese"
 
-#: .\settings.py:245
+#: .\settings.py:249
 msgid "Italian"
 msgstr "Italiano"
 
-#: .\settings.py:246
+#: .\settings.py:250
 msgid "Portuguese"
 msgstr "Portoghese"
 
@@ -1001,57 +1016,57 @@ msgstr "Biblioteca di Risorse Educative"
 msgid "show edit view"
 msgstr "mostra la vista di editing"
 
-#: .\templates\lp_detail.html:21
+#: .\templates\lp_detail.html:20
 msgid "make sequence"
 msgstr "trasforma in una sequenza"
 
-#: .\templates\lp_detail.html:63 .\templates\oer_detail.html:131
+#: .\templates\lp_detail.html:67 .\templates\oer_detail.html:131
 #: .\templates\repo_detail.html:62
 msgid "submitted by"
 msgstr "proposto da"
 
-#: .\templates\lp_detail.html:64 .\templates\oer_detail.html:131
+#: .\templates\lp_detail.html:68 .\templates\oer_detail.html:131
 msgid "in project"
 msgstr "nel progetto"
 
-#: .\templates\lp_detail.html:68 .\templates\oer_detail.html:134
+#: .\templates\lp_detail.html:72 .\templates\oer_detail.html:134
 #: .\templates\repo_detail.html:65
 msgid "submit for publication"
 msgstr "sottoponi per la pubblicazione"
 
-#: .\templates\lp_detail.html:69 .\templates\oer_detail.html:135
+#: .\templates\lp_detail.html:73 .\templates\oer_detail.html:135
 #: .\templates\repo_detail.html:66
 msgid "withdraw"
 msgstr "ritira"
 
-#: .\templates\lp_detail.html:70 .\templates\oer_detail.html:136
+#: .\templates\lp_detail.html:74 .\templates\oer_detail.html:136
 #: .\templates\repo_detail.html:67
 msgid "reject"
 msgstr "respingi"
 
-#: .\templates\lp_detail.html:71 .\templates\oer_detail.html:137
+#: .\templates\lp_detail.html:75 .\templates\oer_detail.html:137
 #: .\templates\repo_detail.html:68
 msgid "publish"
 msgstr "pubblica"
 
-#: .\templates\lp_detail.html:72 .\templates\oer_detail.html:138
+#: .\templates\lp_detail.html:76 .\templates\oer_detail.html:138
 #: .\templates\repo_detail.html:69
 msgid "unpublish"
 msgstr "sospendi la pubblicazione"
 
-#: .\templates\lp_detail.html:80 .\templates\oer_detail.html:148
+#: .\templates\lp_detail.html:84 .\templates\oer_detail.html:148
 msgid "delete"
 msgstr "elimina"
 
-#: .\templates\lp_detail.html:81 .\templates\oer_detail.html:150
+#: .\templates\lp_detail.html:85 .\templates\oer_detail.html:150
 msgid "move up"
 msgstr "sposta in su"
 
-#: .\templates\lp_detail.html:82 .\templates\oer_detail.html:151
+#: .\templates\lp_detail.html:86 .\templates\oer_detail.html:151
 msgid "move down"
 msgstr "sposta in giù"
 
-#: .\templates\lp_detail.html:88
+#: .\templates\lp_detail.html:92
 msgid "add node"
 msgstr "aggiungi un nodo"
 
@@ -1444,6 +1459,43 @@ msgstr "aree di interesse"
 #: .\templates\user_profile.html:53 .\vocabularies.py:134
 msgid "social networks"
 msgstr "social networks"
+
+#: .\templates\zinnia\skeleton.html:33 .\templates\zinnia\skeleton.html:34
+#: .\templates\zinnia\skeleton.html:75 .\templates\zinnia\skeleton.html:76
+msgid "Sitemap"
+msgstr "Mappa del blog"
+
+#: .\templates\zinnia\skeleton.html:38
+msgid "RSS feed of latest entries"
+msgstr "Feed RSS degli ultimi post"
+
+#: .\templates\zinnia\skeleton.html:39
+msgid "RSS feed"
+msgstr "Feed RSS"
+
+#: .\templates\zinnia\skeleton.html:46
+msgid "Keywords..."
+msgstr ""
+
+#: .\templates\zinnia\skeleton.html:67
+msgid "Useful links"
+msgstr "Link utili"
+
+#: .\templates\zinnia\skeleton.html:70 .\templates\zinnia\skeleton.html:71
+msgid "Weblog index"
+msgstr "Indice del blog"
+
+#: .\templates\zinnia\skeleton.html:82
+msgid "Search"
+msgstr "Cerca"
+
+#: .\templates\zinnia\skeleton.html:92
+#, python-format
+msgid ""
+"Powered by <a href=\"http://www.djangoproject.com\">Django</a> and <a "
+"href=\"https://github.com/Fantomas42/django-blog-zinnia\">Zinnia "
+"%(ZINNIA_VERSION)s</a>."
+msgstr ""
 
 #: .\vocabularies.py:71
 msgid "material type"
