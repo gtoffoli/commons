@@ -11,7 +11,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import get_language, pgettext
+from django.utils.translation import get_language, pgettext, ugettext_lazy as _
 
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
@@ -31,6 +31,7 @@ from roles.utils import add_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
 from filetransfers.api import serve_file
+from notification import models as notification
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -253,9 +254,14 @@ def project_new_by_slug(request, project_slug):
 
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    users = User.objects.filter(username=username)
-    if users and users[0].id == request.user.id:
-        membership = project.add_member(request.user)
+    user = get_object_or_404(User, username=username)
+    if user.id == request.user.id:
+        membership = project.add_member(user)
+        if membership:
+            role_admin = Role.objects.get(name='admin')
+            receivers = role_admin.get_users(content=project)
+            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': _('has applied for membership in project'), 'user_name': user.get_full_name(), 'project_name': project.get_name(),}
+            notification.send(receivers, 'membership_application', extra_content)
         return my_profile(request)
 
 def accept_application(request, username, project_slug):

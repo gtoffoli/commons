@@ -89,11 +89,13 @@ INSTALLED_APPS = (
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
     'tinymce',
-    # theme (from pinax project)
+    # from pinax project
     "pinax_theme_bootstrap",
     "bootstrapform",
     # pinax starter project ?
     # "pinax",
+    # "pinax.notifications",
+    "notification",
     # menus and ...
     'menu',
     'taggit',
