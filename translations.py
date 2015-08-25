@@ -6,17 +6,15 @@ Created on 30/giu/2015
 '''
 
 from datatrans.utils import register as register_translations
-# from django.contrib.flatpages.models import FlatPage
+from django.contrib.flatpages.models import FlatPage
 from taggit.models import Tag
 from models import ProjType, RepoType, RepoFeature
 from vocabularies import Language, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 
-"""
 class FlatPageTranslation(object):
     fields = ('title', 'content',)
 register_translations(FlatPage, FlatPageTranslation)
-"""
 
 class TagTranslation(object):
     fields = ('name',)
