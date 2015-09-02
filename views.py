@@ -13,6 +13,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import get_language, pgettext, ugettext_lazy as _
 
+from commons import settings
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, OerDocument
@@ -139,10 +140,14 @@ def project_detail(request, project_id, project=None):
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
+    var_dict = {'project': project, 'proj_type': proj_type,}
+    """
     membership = None
     is_member = can_accept_member = can_add_repo = can_add_oer = can_add_lp = can_edit = can_chat = False
+    """
     user = request.user
     if user.is_authenticated():
+        """
         membership = project.get_membership(user)
         is_member = project.is_member(user)
         can_accept_member = project.can_accept_member(user)
@@ -151,15 +156,31 @@ def project_detail(request, project_id, project=None):
         can_add_lp = project.can_add_lp(user)
         can_edit = project.can_edit(user)
         can_chat = project.can_chat(user)
+        """
+        var_dict['membership'] = project.get_membership(user)
+        var_dict['is_member'] = project.is_member(user)
+        var_dict['can_accept_member'] = project.can_accept_member(user)
+        var_dict['can_add_repo'] = project.can_add_repo(user)
+        var_dict['can_add_oer'] = project.can_add_oer(user)
+        var_dict['can_add_lp'] = project.can_add_lp(user)
+        var_dict['can_edit'] = project.can_edit(user)
+        var_dict['can_chat'] = project.can_chat(user)
+        var_dict['xmpp_server'] = settings.XMPP_SERVER
+        var_dict['room_label'] = project.slug
+        
     # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
-    repos = []
+    # repos = []
+    var_dict['repos'] = []
     oers = OER.objects.filter(project_id=project_id).order_by('-created')
     oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     oers = oers[:5]
+    var_dict['oers'] = oers
     # lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
     lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'is_member': is_member, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
+    var_dict['lps'] = lps
+    # return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'is_member': is_member, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html',var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)

@@ -34,6 +34,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'pybb.middleware.PybbMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
@@ -107,6 +108,8 @@ INSTALLED_APPS = (
     # blog
     'tagging',
     'zinnia',
+    # forum
+    'pybb',
     # commons project
     'viewerjs',
     'django_messages',
@@ -164,6 +167,7 @@ TEMPLATES = [
                 # "allauth.account.context_processors.account",
                 # "allauth.socialaccount.context_processors.socialaccount",
                 'zinnia.context_processors.version',  # Optional
+                'pybb.context_processors.processor',
             ],
         },
     },
@@ -368,4 +372,3 @@ GRAPH_MODELS = {
   'all_applications': False,
   'group_models': False,
 }
-

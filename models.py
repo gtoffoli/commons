@@ -32,8 +32,10 @@ def group_project(self):
 Group.project = group_project
 
 def get_display_name(self):
-    display_name = '%s %s' % (self.first_name, self.last_name)
-    return display_name or self.username
+    display_name = self.username
+    if self.first_name and self.last_name:
+        display_name = '%s %s' % (self.first_name, self.last_name)
+    return display_name
 User.get_display_name = get_display_name
 
 def user_can_edit(self, request):
