@@ -22,7 +22,7 @@ from models import PUBLISHED
 from models import LP_COLLECTION, LP_SEQUENCE
 
 from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm, PathNodeForm
-from forms import RepoSearchForm, OerSearchForm, LpSearchForm
+from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -669,6 +669,91 @@ def browse(request):
                 entries.append([code, label, prefix, n])
         repos_browse_list.append([field_name, field_label, entries])
     return render_to_response('browse.html', {'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
+
+
+def people_search(request):
+    query = qq = []
+    profiles = []
+    if request.method == 'POST': # If the form has been submitted...
+        form = PeopleSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            countries = request.POST.getlist('country')
+            if countries:
+                qq.append(Q(country__in=countries))
+            edu_levels = request.POST.getlist('edu_level')
+            if edu_levels:
+                qq.append(Q(edu_level__in=edu_levels))
+            pro_statuses = request.POST.getlist('pro_status')
+            if pro_statuses:
+                qq.append(Q(pro_status__in=pro_statuses))
+            edu_fields = request.POST.getlist('edu_field')
+            if edu_fields:
+                qq.append(Q(edu_field__in=edu_fields))
+            pro_fields = request.POST.getlist('pro_field')
+            if pro_fields:
+                qq.append(Q(pro_field__in=pro_fields))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__in=subjects))
+            languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__in=languages))
+            networks = request.POST.getlist('networks')
+            if networks:
+                qq.append(Q(networks__in=networks))
+            if qq:
+                query = qq.pop()
+                for q in qq:
+                    query = query & q
+                # profiles = UserProfile.objects.filter(query).distinct().order_by('title')
+                profiles = UserProfile.objects.filter(query).distinct()
+    else:
+        form = PeopleSearchForm()
+    return render_to_response('search_people.html', {'profiles': profiles, 'query': query, 'form': form,}, context_instance=RequestContext(request))
+
+def browse_people(request):
+    form = PeopleSearchForm
+    field_names = ['country', 'edu_level', 'pro_status', 'edu_field', 'pro_field', 'subjects', 'languages', 'networks', ]
+    people_browse_list = []
+    base_fields = form.base_fields
+    for field_name in field_names:
+        field = base_fields[field_name]
+        field_label = pgettext(RequestContext(request), field.label)
+        entries = []
+        if hasattr(field, 'queryset'):
+            queryset = field.queryset
+            entries = []
+            for entry in queryset:    
+                try:
+                    code = entry.code
+                    label = entry.name
+                except:
+                    try:
+                        label = entry.name
+                        code = entry.id
+                    except:
+                        label = entry.description
+                        code = entry.name
+                try:
+                    prefix = '-' * entry.level
+                except:
+                    prefix = ''
+                # n = UserProfile.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
+                n = UserProfile.objects.filter(Q(**{field_name: entry}),).count()
+                # print entry, n
+                if n:
+                    entries.append([code, label, prefix, n])
+        else:
+            choices = field.choices
+            for entry in choices:
+                code = entry[0]
+                label = pgettext(RequestContext(request), entry[1])
+                n = UserProfile.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
+                if n:
+                    entries.append([code, label, '', n])
+        if entries:
+            people_browse_list.append([field_name, field_label, entries])
+    return render_to_response('browse_people.html', {'people_browse_list': people_browse_list,}, context_instance=RequestContext(request))
    
 
 def oer_list(request, field_name='', field_value=None):
@@ -1086,7 +1171,7 @@ def user_add_lp(request):
     return lp_edit(request, project_id=0) 
 
 def repos_search(request):
-    qq = []
+    query = qq = []
     repos = []
     include_all = ''
     if request.method == 'POST': # If the form has been submitted...
@@ -1117,7 +1202,7 @@ def repos_search(request):
                 repos = Repo.objects.filter(query).distinct().order_by('name')
     else:
         form = RepoSearchForm()
-    return render_to_response('search_repos.html', {'repos': repos, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+    return render_to_response('search_repos.html', {'repos': repos, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
 
 q_extra = ['(', ')', '[', ']', '"']
 def clean_q(q):
@@ -1129,7 +1214,7 @@ def search_by_string(request, q, subjects=[], languages=[]):
     pass
 
 def oers_search(request):
-    qq = []
+    query = qq = []
     oers = []
     include_all = ''
     if request.method == 'POST': # If the form has been submitted...
@@ -1177,10 +1262,10 @@ def oers_search(request):
                 oers = OER.objects.filter(query).distinct().order_by('title')
     else:
         form = OerSearchForm()
-    return render_to_response('search_oers.html', {'oers': oers, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+    return render_to_response('search_oers.html', {'oers': oers, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
 
 def lps_search(request):
-    qq = []
+    query = qq = []
     lps = []
     include_all = ''
     if request.method == 'POST': # If the form has been submitted...
@@ -1211,4 +1296,4 @@ def lps_search(request):
                 lps = LearningPath.objects.filter(query).distinct().order_by('title')
     else:
         form = LpSearchForm()
-    return render_to_response('search_lps.html', {'lps': lps, 'query': qq, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+    return render_to_response('search_lps.html', {'lps': lps, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))

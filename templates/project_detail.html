@@ -68,7 +68,7 @@
 		{% endif %}
 		{% endif %}
 		{% if project.get_children or can_edit %}
-   			<h4>{% trans "child projects"|capfirst %}</h4>
+   			<h4>{% if project.get_parent %}{% trans "child projects"|capfirst %}{% else %}{% trans "sub-communities"|capfirst %}{% endif %}</h4>
 			{% if project.get_children %}
 	            <ul class="list-unstyled">
 				{% with subprojects=project.get_children %}{% for subproject in subprojects %}
@@ -78,7 +78,8 @@
 			{% endif %}
 			{% if can_edit %}
 	            <ul class="list-unstyled">
-					<li>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create child project"|capfirst %}</a> -</li>
+					<li>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
+						{% if project.get_parent %}{% trans "child project" %}{% else %}{% trans "sub-community" %}{% endif %}</a> -</li>
 	            </ul>
 			{% endif %}
 		{% endif %}
@@ -113,7 +114,7 @@
     	{% if can_add_lp %}<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>{% endif %}
     </section>
 	{% endif %}
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not project.proj_type.name == 'com' %}
     <section>
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
         {% if project.has_chat_room %}

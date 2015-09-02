@@ -18,6 +18,18 @@ def community_children(request):
          check=True,
         ))
     children.append (MenuItem(
+         capfirst(_("browse people")),
+         url='/browse_people/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         capfirst(_("search people")),
+         url='/people/search/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
          capfirst(_("blog")),
          url='/weblog/',
          weight=80,

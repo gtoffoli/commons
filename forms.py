@@ -66,6 +66,51 @@ class UserProfileForm(forms.ModelForm):
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
 
+class PeopleSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        q = kwargs.get('q', '')
+        if q:
+            kwargs.pop('q')
+        super(PeopleSearchForm, self).__init__(*args,**kwargs)
+        for fieldname in []:
+            self.fields[fieldname].empty_label = None
+        for fieldname in self.fields:
+            self.fields[fieldname].help_text = ''
+        if q:
+            self.fields['q'].initial = q
+
+    country = forms.ModelMultipleChoiceField(CountryEntry.objects.all(),
+        label=_('country'), required=False,
+        help_text=_("choose country (no selection = all countries)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+    edu_level = forms.ModelMultipleChoiceField(EduLevelEntry.objects.all(),
+        label=_('education level'), required=False,
+        help_text=_("choose education level (no selection = all levels)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
+    pro_status = forms.ModelMultipleChoiceField(ProStatusNode.objects.all(),
+        label=_('study or work status'), required=False,
+        help_text=_("choose status (no selection = all statuses)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+    edu_field = forms.ModelMultipleChoiceField(EduFieldEntry.objects.all(),
+        label=_('field of study'), required=False,
+        help_text=_("choose field of study' (no selection = all fields)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+    pro_field = forms.ModelMultipleChoiceField(ProFieldEntry.objects.all(),
+        label=_('sector of work'), required=False,
+        help_text=_("choose education level (no selection = all levels)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+    subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
+        label=_('subject areas'), required=False,
+        help_text=_("choose subject areas (no selection = all areas)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+    languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
+        label=_('languages'), required=False,
+        help_text=_("choose languages (no selection = all areas)"),
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+    networks = forms.ModelMultipleChoiceField(NetworkEntry.objects.all().order_by('name'),
+        label=_('social networks / services used'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
+
 class UserProfileExtendedForm(UserProfileForm):
     first_name = forms.CharField(required=True, label=_('person name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     last_name = forms.CharField(required=True, label=_('family name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
