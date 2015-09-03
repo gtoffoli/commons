@@ -6,6 +6,7 @@ admin.autodiscover()
 
 from django.conf.urls.static import static
 from commons import settings
+from commons.forms import MessageComposeForm
 
 # from .wizards import DocumentCreateWizard
 
@@ -22,6 +23,9 @@ urlpatterns = patterns('',
     url(r'', include('taggit_live.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^my_mail/compose/', 'django_messages.views.compose', {'form_class': MessageComposeForm,}, name='messages_compose'),
+    url(r'^my_mail/reply/(?P<message_id>[\d]+)/$', 'django_messages.views.reply', {'form_class': MessageComposeForm,}, name='messages_reply'),
+    url(r'^my_mail/', include('django_messages.urls')),
     url(r'^weblog/', include('zinnia.urls', namespace='zinnia')),
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
     url(r'^comments/', include('django_comments.urls')),

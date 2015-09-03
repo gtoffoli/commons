@@ -14,6 +14,9 @@ from datetimewidget.widgets import DateWidget
 from taggit.models import Tag
 from taggit_live.forms import LiveTagField, TaggitLiveWidget
 
+from django_messages.forms import ComposeForm
+from django_messages.fields import CommaSeparatedUserField
+
 import settings
 from dmuc.models import Room
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -368,3 +371,18 @@ class PathNodeForm(forms.ModelForm):
     range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'span8 form-control',}), help_text=_('possibly specify document and page display range'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
+class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_display_name()
+
+class MessageComposeForm(ComposeForm):
+    """
+    A customized form for private messages.
+    """
+    # recipient = CommaSeparatedUserField(label=_(u"Recipient"))
+    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).distinct(), widget=forms.SelectMultiple(attrs={'class':'form-control',}))
+    subject = forms.CharField(label=_(u"Subject"), max_length=120, widget=forms.TextInput(attrs={'class':'span8 form-control'}),)
+    body = forms.CharField(label=_(u"Body"),
+        widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
+
