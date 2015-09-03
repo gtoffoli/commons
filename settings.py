@@ -372,3 +372,9 @@ GRAPH_MODELS = {
   'all_applications': False,
   'group_models': False,
 }
+
+PYBB_PERMISSION_HANDLER = 'commons.permissions.ForumPermissionHandler'
+PYBB_ATTACHMENT_ENABLE = True
+PYBB_SMILES = {}
+PYBB_DISABLE_SUBSCRIPTIONS = False
+PYBB_DISABLE_NOTIFICATIONS = False
