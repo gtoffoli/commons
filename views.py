@@ -281,7 +281,7 @@ def apply_for_membership(request, username, project_slug):
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
-            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': _('has applied for membership in project'), 'user_name': user.get_full_name(), 'project_name': project.get_name(),}
+            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': _('has applied for membership in project'), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
         return my_profile(request)
 
