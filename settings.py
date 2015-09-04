@@ -18,13 +18,16 @@ else:
     DEBUG = True
     # TEMPLATE_STRING_IF_INVALID = '%s'
 
+ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
+ACCOUNT_USERNAME_REQUIRED = False # True
+ACCOUNT_EMAIL_REQUIRED = True # False
+ACCOUNT_EMAIL_VERIFICATION = "optional" # "mandatory"
+SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
+
 import os
 import sys
 
 from private import *
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'om^a(i8^6&h+umbd2%pt91cj!qu_@oztw117rgxmn(n2lp^*c!'
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -373,6 +376,8 @@ GRAPH_MODELS = {
   'group_models': False,
 }
 
+TAGGIT_CASE_INSENSITIVE = True
+
 PYBB_PERMISSION_HANDLER = 'commons.permissions.ForumPermissionHandler'
 PYBB_ATTACHMENT_ENABLE = True
 PYBB_SMILES = {}
@@ -383,3 +388,8 @@ PYBB_DISABLE_NOTIFICATIONS = True
 COMMONS_PROJECTS_MAX_DEPTH = 3
 COMMONS_PROJECTS_NO_APPLY = ('sup',)
 COMMONS_PROJECTS_NO_CHAT = ('com',)
+
+CONVERSEJS_ENABLED = True
+CONVERSEJS_HIDE_MUC_SERVER = True
+CONVERSEJS_ALLOW_CONTACT_REQUESTS = False
+
