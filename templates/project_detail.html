@@ -54,12 +54,20 @@
 			{% endif %}
 			{% endif %}
 		{% endif %}
+
+		{% if can_accept_member and not project.forum %}
+   			<h4>{% trans "project forum"|capfirst %}</h4>
+            <ul class="list-unstyled">
+            	<li>- <a href="/project/{{ project.id }}/create_forum/">{% trans "create"|capfirst %} {% trans "project forum" %}</a> -</li>
+            </ul>
+		{% endif %}
+
 		{% if can_accept_member %}
 		{% if project.need_create_room or project.need_sync_xmppaccounts %}
    			<h4>{% trans "chat room"|capfirst %}</h4>
             <ul class="list-unstyled">
 			{% if project.need_create_room %}
-            	<li>- <a href="/project/{{ project.id }}/create_room/">{% trans "create chat room"|capfirst %}</a> -</li>
+            	<li>- <a href="/project/{{ project.id }}/create_room/">{% trans "create"|capfirst %} {% trans "chat room" %}</a> -</li>
 			{% endif %}
 			{% if project.need_sync_xmppaccounts %}
             	<li>- <a href="/project/{{ project.id }}/sync_xmpp/">{% trans "add missing accounts"|capfirst %}</a> -</li>

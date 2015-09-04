@@ -33,6 +33,7 @@ from roles.models import Role
 from taggit.models import Tag
 from filetransfers.api import serve_file
 from notification import models as notification
+from pybb.models import Forum, Category
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -302,6 +303,21 @@ def accept_application(request, username, project_slug):
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
     return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
+
+def project_create_forum(request, project_id):
+    project = get_object_or_404(Project,id=project_id)
+    assert not project.forum
+    try:
+        category = Category.objects.get(position=1)
+        category_id = category.id
+    except:
+        category_id = 1
+    forum = Forum(name=project.get_name(), category_id=category_id)
+    forum.save()
+    project.forum = forum
+    project.editor = request.user
+    project.save()
+    return project_detail(request, project_id, project=project)    
 
 def project_create_room(request, project_id):
     project = get_object_or_404(Project,id=project_id)

@@ -37,3 +37,21 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         By default always True
         """
         return False
+
+    def may_create_post(self, user, topic):
+        """ return True if `user` is allowed to create a new post in `topic` """
+
+        if topic.forum.hidden and (not user.is_staff):
+            # if topic is hidden, only staff may post
+            return False
+
+        if topic.closed and (not user.is_staff):
+            # if topic is closed, only staff may post
+            return False
+
+        # only user which have 'pybb.add_post' permission may post
+        if defaults.PYBB_ENABLE_ANONYMOUS_POST:
+            return True
+
+        return self.may_create_topic(user, topic.forum)
+

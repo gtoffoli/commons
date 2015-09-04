@@ -124,7 +124,7 @@ class UserProfileExtendedForm(UserProfileForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        exclude = ('group',)
+        exclude = ('group', 'forum',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
