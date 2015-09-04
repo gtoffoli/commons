@@ -167,6 +167,9 @@ def project_detail(request, project_id, project=None):
         var_dict['can_chat'] = project.can_chat(user)
         var_dict['xmpp_server'] = settings.XMPP_SERVER
         var_dict['room_label'] = project.slug
+        var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
+        var_dict['project_no_apply'] = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
+        var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
         
     # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
     # repos = []

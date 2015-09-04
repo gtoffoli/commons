@@ -43,9 +43,9 @@ class ProjTypeAdmin(admin.ModelAdmin):
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
     fieldsets = [
-        (None, {'fields': ['group', 'proj_type', 'description', 'info', 'state',]}),
+        (None, {'fields': ['group', 'proj_type', 'chat_type', 'chat_room', 'forum', 'description', 'info', 'state',]}),
     ]
-    list_display = ('id', 'project_name', 'description', 'project_type', 'chat_type', 'chat_room', 'project_state', 'created', 'modified',)
+    list_display = ('id', 'project_name', 'description', 'project_type', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},

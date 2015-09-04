@@ -11,9 +11,11 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
 from taggit.managers import TaggableManager
+from pybb.models import Forum
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 
+from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from commons.documents import DocumentType, Document, DocumentVersion
@@ -199,6 +201,7 @@ class Project(models.Model):
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     chat_room = models.ForeignKey(Room, verbose_name=_('chat room'), blank=True, null=True, related_name='project')
+    forum = models.ForeignKey(Forum, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
@@ -345,7 +348,8 @@ class Project(models.Model):
         return self.chat_type in [1] and self.chat_room
 
     def need_create_room(self):
-        return self.chat_type in [1] and not self.chat_room
+        # return self.chat_type in [1] and not self.chat_room
+        return self.chat_type in [1] and not self.chat_room and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
 
     def is_room_member(self, user):
         if not user.is_active:

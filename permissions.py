@@ -4,6 +4,7 @@ Created on 03/set/2015
 '''
 from pybb.permissions import DefaultPermissionHandler
 from pybb import defaults
+from commons.models import Project
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
@@ -15,7 +16,16 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_create_topic(self, user, forum):
         """ return True if `user` is allowed to create a new topic in `forum` """
-        return user.is_authenticated
+        if not user.is_authenticated:
+            return False
+        if user.is_superuser:
+            return True
+        try:
+            project = Project.objects.get(forum=forum)
+            return project.is_member(user)
+        except:
+            return False
+
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """

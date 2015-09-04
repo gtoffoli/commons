@@ -43,7 +43,7 @@
             </ul>
 			{% if request.user.is_authenticated %}
 			<hr />
-			{% if membership == None %}
+			{% if membership == None and not project_no_apply %}
 			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join project"|capfirst %}</a> -</div>
 			{% else %}
 				{% if membership.state == 0 %}					
@@ -67,7 +67,7 @@
             </ul>
 		{% endif %}
 		{% endif %}
-		{% if project.get_children or can_edit %}
+		{% if project.get_children or can_edit and not project_no_children%}
    			<h4>{% if project.get_parent %}{% trans "child projects"|capfirst %}{% else %}{% trans "sub-communities"|capfirst %}{% endif %}</h4>
 			{% if project.get_children %}
 	            <ul class="list-unstyled">
@@ -76,7 +76,7 @@
 	            {% endfor %}{% endwith %}
 	            </ul>
 			{% endif %}
-			{% if can_edit %}
+			{% if can_edit and not project_no_children %}
 	            <ul class="list-unstyled">
 					<li>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
 						{% if project.get_parent %}{% trans "child project" %}{% else %}{% trans "sub-community" %}{% endif %}</a> -</li>
@@ -114,9 +114,13 @@
     	{% if can_add_lp %}<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>{% endif %}
     </section>
 	{% endif %}
-    {% if user.is_authenticated and not project.proj_type.name == 'com' %}
+    {% if user.is_authenticated %}
     <section>
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
+        {% if user.is_authenticated and project.forum %}
+			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">- {% trans "view project forum"|capfirst %} -</a></div>
+		{% endif %}
+   		{% if user.is_authenticated and not project.proj_type.name == 'com' %}
         {% if project.has_chat_room %}
 	        {% if can_chat %}
 	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
@@ -131,6 +135,7 @@
 			{% endif %}
         {% else %}
             <i>{% trans "no chat room has has been created for this project"|capfirst %}</i>
+        {% endif %}  
         {% endif %}  
     </section>
 	{% endif %}
