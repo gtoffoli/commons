@@ -6,6 +6,7 @@ Created on 16/apr/2015
 
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
+from django.forms.models import inlineformset_factory
 from django.contrib.auth.models import User, Group
 from mptt.forms import TreeNodeMultipleChoiceField
 from hierarchical_auth.admin import UserWithMPTTChangeForm
@@ -21,9 +22,9 @@ import settings
 from dmuc.models import Room
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata
+from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode
-from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES
+from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
@@ -200,7 +201,6 @@ class OerMetadataForm(forms.ModelForm):
 # http://yergler.net/blog/2009/09/27/nested-formsets-with-django/
 # http://stackoverflow.com/questions/2853350/using-a-custom-form-in-a-modelformset-factory
 # http://streamhacker.com/2010/03/01/django-model-formsets/
-from django.forms.models import inlineformset_factory
 OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('metadata_type', 'value',), can_delete=True, extra=3)
 # OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
 
@@ -301,6 +301,21 @@ class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
+
+
+OerQualityFormSet = inlineformset_factory(OerEvaluation, OerQualityMetadata, fields=('quality_facet', 'value',), can_delete=True, min_num=4, max_num=4)
+
+class OerEvaluationForm(forms.ModelForm):
+
+    class Meta:
+        model = OerEvaluation
+        exclude = ('quality_metadata',)
+
+    oer = forms.ModelChoiceField(queryset=OER.objects.all(), widget=forms.HiddenInput())
+    overall_score = forms.ChoiceField(required=True, choices=QUALITY_SCORE_CHOICES, label=_('overall quality assessment'), widget=forms.Select(attrs={'class':'form-control',}))
+    review = forms.CharField(required=False, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
 
 class LpGroupChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):

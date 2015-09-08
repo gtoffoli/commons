@@ -1,6 +1,8 @@
-from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from dateutil.parser import parse
+from django.db import models
+from django.contrib import admin
+from commons.vocabularies import VocabularyEntry, VocabularyEntryAdmin
 
 default_available_validators = {
     'Parse date and time': lambda input: parse(input).isoformat(),
@@ -45,11 +47,22 @@ class MetadataType(models.Model):
         verbose_name = _('Metadata type')
         verbose_name_plural = _('Metadata types')
 
-from django.contrib import admin
-
 class MetadataTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'title', 'default', 'lookup', 'validation')
 
 
+class QualityFacet(VocabularyEntry):
+    """
+    Define a quality facet
+    """
+    class Meta:
+        verbose_name = _('quality facet')
+        verbose_name_plural = _('quality facets')
+
+class QualityFacetAdmin(VocabularyEntryAdmin):
+    pass
+
 admin.site.register(MetadataType, MetadataTypeAdmin)
+admin.site.register(QualityFacet, QualityFacetAdmin)
+
 

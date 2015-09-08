@@ -19,7 +19,7 @@ from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from commons.documents import DocumentType, Document, DocumentVersion
-from commons.metadata import MetadataType
+from commons.metadata import MetadataType, QualityFacet
 
 """
 # 150402 Giovanni.Toffoli - see django-extensions and django-organizations
@@ -626,7 +626,20 @@ class OER(models.Model, Publishable):
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.can_add_oer(user)
-    
+
+    def get_evaluations(self, user=None):
+        if user:
+            return OerEvaluation.objects.filter(user=user, oer=self)
+        else:
+            return OerEvaluation.objects.filter(oer=self)
+
+    def can_evaluate(self, user):
+        if not user.is_authenticated():
+            return False
+        if self.state not in [PUBLISHED]:
+            return False
+        return ProjectMember.objects.filter(user=user, state=1)
+
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
 
@@ -679,10 +692,11 @@ class OER(models.Model, Publishable):
         self.editor = request.user
         self.save()
 
+"""
 class oer_documents(models.Model):
-    """
+    ""
     to be removed after data migration
-    """
+    ""
     oer = models.ForeignKey(OER, related_name='old_oer', verbose_name=_('OER'))
     document = models.ForeignKey(Document, related_name='old_document', verbose_name=_('Document'))
 
@@ -693,7 +707,7 @@ class oer_documents(models.Model):
         unique_together = ('oer', 'document',)
         verbose_name = _('attached document')
         verbose_name_plural = _('attached documents')
-
+"""
 class OerDocument(models.Model):
     """
     Link an OER to an attached document; attachments are ordered
@@ -772,23 +786,61 @@ class EvaluationType(models.Model):
         ordering = ('title',)
         verbose_name = _('evaluation type')
         verbose_name_plural = _('evaluation types')
+"""
+
+POOR = 1
+FAIR = 2
+GOOD = 3
+VERY_GOOD = 4
+EXCELLENT = 5
+
+QUALITY_SCORE_CHOICES = (
+    ('','---------'),
+    (POOR, _('poor')),
+    (FAIR, _('fair')),
+    (GOOD, _('good')),
+    (VERY_GOOD, _('very good')),
+    (EXCELLENT, _('excellent')),)
+QUALITY_SCORE_DICT = dict(QUALITY_SCORE_CHOICES)
 
 class OerEvaluation(models.Model):
-    # Link an OER to a specific instance of an evaluation type with it's current value
-    oer = models.ForeignKey(OER, related_name='evaluation', verbose_name=_('OER'))
-    evaluation_type = models.ForeignKey(EvaluationType, verbose_name=_('Type'))
-    value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
+    """
+    Link an OER to instances of quality metadata
+    """
+    oer = models.ForeignKey(OER, related_name='evaluated_oer', verbose_name=_('OER'))
+    overall_score = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name='overall quality assessment')
+    review = models.TextField(blank=True, null=True, verbose_name=_('free text review'))
+    quality_metadata = models.ManyToManyField(QualityFacet, through='OerQualityMetadata', related_name='quality_metadata', blank=True, verbose_name='quality metadata')
     modified = ModificationDateTimeField(_('modified'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 
     def __unicode__(self):
-        return unicode(self.evaluation_type)
+        return '%s evaluated by %s' % (self.oer.title, self.user.get_display_name())
 
     class Meta:
-        unique_together = ('oer', 'evaluation_type', 'user')
+        unique_together = ('oer', 'user')
         verbose_name = _('OER evaluation')
         verbose_name_plural = _('OER evaluations')
-"""
+
+    def get_quality_metadata(self):
+        return OerQualityMetadata.objects.filter(oer_evaluation=self)
+
+class OerQualityMetadata(models.Model):
+    """
+    Link an OER evaluation to a specific instance of a quality facet with it's current value
+    """
+    oer_evaluation = models.ForeignKey(OerEvaluation, related_name='oer_evaluation', verbose_name=_('OER evaluation'))
+    quality_facet = models.ForeignKey(QualityFacet, related_name='quality_facet', verbose_name=_('quality facet'))
+    value = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name='facet-related score')
+
+    def __unicode__(self):
+        return unicode(self.quality_facet)
+
+    class Meta:
+        unique_together = ('oer_evaluation', 'quality_facet')
+        verbose_name = _('quality metadatum')
+        verbose_name_plural = _('quality metadata')
+
 """ not necessary ? use the Project class, instead
 class OerFolder(models.Model):
     name = models.CharField(max_length=255, db_index=True, help_text=_('name used to identify the OER folder'), verbose_name=_('name'))
@@ -796,7 +848,6 @@ class OerFolder(models.Model):
     created = CreationDateTimeField(_('created'))
     user = models.ForeignKey(User, verbose_name=_('last editor'))
 """
-
 
 LP_COLLECTION = 1
 LP_SEQUENCE = 2

@@ -6,6 +6,7 @@ Created on 02/apr/2015
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
+from django.db import transaction
 from django.forms import ModelMultipleChoiceField
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
@@ -16,12 +17,13 @@ from django.utils.translation import get_language, pgettext, ugettext_lazy as _
 from commons import settings
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, OerDocument
+from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
+from models import QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
-from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, DocumentUploadForm, LpForm, PathNodeForm
+from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 
 from conversejs.models import XMPPAccount
@@ -142,22 +144,8 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     var_dict = {'project': project, 'proj_type': proj_type,}
-    """
-    membership = None
-    is_member = can_accept_member = can_add_repo = can_add_oer = can_add_lp = can_edit = can_chat = False
-    """
     user = request.user
     if user.is_authenticated():
-        """
-        membership = project.get_membership(user)
-        is_member = project.is_member(user)
-        can_accept_member = project.can_accept_member(user)
-        can_add_repo = project.can_add_repo(user)
-        can_add_oer = project.can_add_oer(user)
-        can_add_lp = project.can_add_lp(user)
-        can_edit = project.can_edit(user)
-        can_chat = project.can_chat(user)
-        """
         var_dict['membership'] = project.get_membership(user)
         var_dict['is_member'] = project.is_member(user)
         var_dict['can_accept_member'] = project.can_accept_member(user)
@@ -171,9 +159,7 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
-        
     # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
-    # repos = []
     var_dict['repos'] = []
     oers = OER.objects.filter(project_id=project_id).order_by('-created')
     oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
@@ -183,7 +169,6 @@ def project_detail(request, project_id, project=None):
     lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['lps'] = lps
-    # return render_to_response('project_detail.html', {'project': project, 'proj_type': proj_type, 'membership': membership, 'is_member': is_member, 'repos': repos, 'oers': oers, 'lps': lps, 'can_accept_member': can_accept_member, 'can_edit': can_edit, 'can_add_repo': can_add_repo, 'can_add_oer': can_add_oer, 'can_add_lp': can_add_lp, 'can_chat': can_chat,}, context_instance=RequestContext(request))
     return render_to_response('project_detail.html',var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -804,8 +789,10 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_reject'] = oer.can_reject(request)
     var_dict['can_publish'] = oer.can_publish(request)
     var_dict['can_un_publish'] = oer.can_un_publish(request)
+    var_dict['can_evaluate'] = oer.can_evaluate(request.user)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
+    var_dict['evaluations'] = oer.get_evaluations()
     return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
@@ -901,6 +888,96 @@ def oer_un_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     oer.un_publish(request)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
+
+def oer_evaluation_detail(request, evaluation=None):
+    var_dict = { 'evaluation': evaluation, }
+    var_dict['oer'] = evaluation.oer
+    var_dict['can_edit'] = evaluation.user==request.user
+    var_dict['overall_score'] = QUALITY_SCORE_DICT[evaluation.overall_score]
+    quality_metadata = []
+    for metadatum in evaluation.get_quality_metadata():
+        quality_metadata.append([metadatum.quality_facet.name, metadatum.value, QUALITY_SCORE_DICT[metadatum.value]])
+    var_dict['quality_metadata'] = quality_metadata
+    return render_to_response('oer_evaluation_detail.html', var_dict, context_instance=RequestContext(request))
+
+def oer_evaluation_by_id(request, evaluation_id):
+    evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+    return oer_evaluation_detail(request, evaluation=evaluation)
+
+@transaction.atomic
+def oer_evaluation_edit(request, evaluation_id=None, oer=None):
+    user = request.user
+    evaluation = None
+    action = '/oer_evaluation/edit/'
+    if evaluation_id:
+        evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+        oer = evaluation.oer
+        action = '/oer_evaluation/%s/edit/' % evaluation_id
+    if request.POST:
+        evaluation_id = request.POST.get('id', '')
+        if evaluation_id:
+            evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+            action = '/oer_evaluation/%s/edit/' % evaluation_id
+            oer = evaluation.oer
+        form = OerEvaluationForm(request.POST, instance=evaluation)
+        metadata_formset = OerQualityFormSet(request.POST, instance=evaluation)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                evaluation = form.save(commit=False)
+                evaluation.user = user
+                evaluation.save()
+                form.save_m2m()
+                evaluation = get_object_or_404(OerEvaluation, pk=evaluation.id)
+                n = len(metadata_formset)
+                for i in range(n):
+                    if request.POST.get('metadata_set-%d-DELETE' % i, None):
+                        quality_metadatum_id = request.POST.get('metadata_set-%d-id' % i, None)
+                        if quality_metadatum_id:
+                            quality_metadatum = OerMetadata.objects.get(id=metadatum_id)
+                            quality_metadatum.delete()
+                    metadata_form = metadata_formset[i]
+                    if metadata_form.is_valid():
+                        try:
+                            metadata_form.save()
+                        except:
+                            pass
+                action = '/oer_evaluation/%s/edit/' % evaluation.id
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+            else:
+                print form.errors
+                print metadata_formset.errors
+            return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            if evaluation:
+                oer = evaluation.oer
+            else:
+                oer_id = oer and oer.id or request.POST.get('oer')
+                oer = get_object_or_404(OER, pk=oer_id)
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+    elif evaluation:
+        form = OerEvaluationForm(instance=evaluation)
+        metadata_formset = OerQualityFormSet(instance=evaluation)
+        action = '/oer_evaluation/%s/edit/' % evaluation.id
+    else: # oer
+        form = OerEvaluationForm(initial={'oer': oer.id, 'user': user.id,})
+        metadata_formset = OerQualityFormSet()
+        action = '/oer/%s/evaluate/' % oer.slug
+    return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
+
+def oer_evaluate_by_slug(request, oer_slug):
+    oer = OER.objects.get(slug=oer_slug)
+    evaluations = oer.get_evaluations(request.user)
+    if evaluations:
+        evaluation = evaluations[0]
+        return oer_evaluation_edit(request, evaluation_id=evaluation.id, oer=oer)
+    else:
+        return oer_evaluation_edit(request, oer=oer)
+
+def oer_evaluation_edit_by_id(request, evaluation_id):
+    evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+    oer = evaluation.oer
+    return oer_evaluation_edit(request, evaluation_id=evaluation.id, oer=oer)
 
 def handle_uploaded_file(file_object):
     document_type = DocumentType.objects.get(pk=2) # OER file type

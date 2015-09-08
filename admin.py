@@ -12,8 +12,9 @@ from tinymce.widgets import TinyMCE
 from taggit_live.forms import LiveTagField
 
 from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
-from .models import OerMetadata, OER, PathNode, PathEdge, LearningPath
+from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm
+from .metadata import QualityFacet
 
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
@@ -179,6 +180,14 @@ class OerProxyAdmin(admin.ModelAdmin):
     fieldsets = []
 """
 
+class OerQualityMetadataInline(admin.TabularInline):
+    model = OerQualityMetadata
+    extra = 4 # how many rows to show
+
+class OerEvaluationAdmin(admin.ModelAdmin):
+    fieldsets = []
+    inlines = (OerQualityMetadataInline,)
+
 class LearningPathAdmin(admin.ModelAdmin):
     fieldsets = [
          (None, {'fields': ['title', 'slug', 'path_type', 'short', 'long', 'project', 'group', 'state',]}),
@@ -228,6 +237,8 @@ admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(OER, OERAdmin)
 admin.site.register(OerMetadata, OerMetadataAdmin)
+admin.site.register(OerEvaluation, OerEvaluationAdmin)
+
 # admin.site.register(OerProxy, OerProxyAdmin)
 admin.site.register(PathNode, PathNodeAdmin)
 admin.site.register(PathEdge, PathEdgeAdmin)

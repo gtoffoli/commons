@@ -1,0 +1,34 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "evaluation of OER"|capfirst %} {{ oer.title }} {% trans "by" %} {{ user.get_display_name }}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+       		<h2 class="text-center"><span style="font-size:smaller">{% trans "evaluation of"|capfirst %}</span>
+									<i>{{ oer.title }}</i> <span style="font-size:smaller">{% trans "by" %} <i>{{ user.get_display_name }}</i></span>
+                {% if can_edit %}&nbsp; <a href="/oer_evaluation/{{ evaluation.id }}/edit/" title="{% trans "edit evaluation" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
+            </h2>
+            <p class="lead">
+            <div><strong>{% trans "OER"|capfirst %}</strong>: <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></div>
+            <div><strong>{% trans "overall assessment"|capfirst %}</strong>: {{ overall_score }} ({{ evaluation.overall_score }}/5)</div>
+            {% if evaluation.review %}
+            	<div><strong>{% trans "OER review"|capfirst %}</strong><br/>
+            		{{ evaluation.review }}</div>
+            {% endif %}
+            {% if quality_metadata %}
+	            <div><strong>{% trans "quality metadata"|capfirst %}</strong></div><ul>
+	    		{% for metadatum in quality_metadata %}
+	    			<li>{{ metadatum.0 }}: {{ metadatum.2 }} ({{ metadatum.1 }}/5)</li>
+				{% endfor %}
+				</ul>
+            {% endif %}
+            <div><strong>{% trans "evaluator"|capfirst %}</strong>: <a href="/profile/{{ oer.creator.username }}">{{ user.get_display_name }}</a></div>
+            </p>
+        </div>
+    </section>
+{% endblock %}

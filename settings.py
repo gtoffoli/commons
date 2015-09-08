@@ -256,7 +256,7 @@ LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (
     ('en', _('English')),
     ('it', _('Italian')),
-    ('pt', _('Portuguese')),
+    ('pt-PT', _('Portuguese')),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
