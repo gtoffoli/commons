@@ -22,6 +22,15 @@
 		</ul>
 	    {% endif %}
 
+		{% if oer_evaluations %}
+        <h3>{% trans "OER evaluations"|capfirst %}</h3>
+		<ul class="root">
+	        {% for evaluation in oer_evaluations %}
+	        <li><a href="/oer_evaluation/{{ evaluation.id }}/">{{ evaluation.oer.title }}: {{ evaluation.overall_score }}/5</a>.</li>
+	        {% endfor %}
+		</ul>
+		{% endif %}
+
 		{% if oers %}
         <h3>{% trans "OERs"|capfirst %}</h3>
 		<ul class="root">

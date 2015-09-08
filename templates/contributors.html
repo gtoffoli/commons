@@ -22,6 +22,18 @@
 	</ul>
     {% endif %}
 
+
+    {% if oer_evaluation_contributors %}
+            <h3>{% trans "evaluation of OERs"|capfirst %}</h3>
+	<ul class="list-unstyled">
+        {% for user in oer_evaluation_contributors %}
+        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
+            ({% if user.num_oer_evaluations > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_oer_evaluations }}</a>{% else %}{{ user.num_oer_evaluations }}{% endif %})
+        </li>
+        {% endfor %}
+	</ul>
+    {% endif %}
+
     {% if resource_contributors %}
             <h3>{% trans "cataloguing of OERs"|capfirst %}</h3>
 	<ul class="list-unstyled">

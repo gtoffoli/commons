@@ -396,6 +396,7 @@ def oer_contributors(request):
 
 def resource_contributors(request):
     users = User.objects.annotate(num_lps=Count('path_creator')).exclude(num_lps=0).order_by('-num_lps')
+    var_dict = {}
     lp_contributors = []
     for user in users:
         # n = LearningPath.objects.filter(creator=user, state=PUBLISHED).count()
@@ -403,13 +404,22 @@ def resource_contributors(request):
         if n:
             user.num_lps = n
             lp_contributors.append(user)
+    var_dict['lp_contributors'] = lp_contributors
     users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
+    oer_evaluation_contributors = []
+    for user in users:
+        n = OerEvaluation.objects.filter(user=user).count()
+        if n:
+            user.num_oer_evaluations = n
+            oer_evaluation_contributors.append(user)
+    var_dict['oer_evaluation_contributors'] = oer_evaluation_contributors
     resource_contributors = []
     for user in users:
         n = OER.objects.filter(creator=user, state=PUBLISHED).count()
         if n:
             user.num_oers = n
             resource_contributors.append(user)
+    var_dict['resource_contributors'] = resource_contributors
     users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
     source_contributors = []
     for user in users:
@@ -417,7 +427,9 @@ def resource_contributors(request):
         if n:
             user.num_repos = n
             source_contributors.append(user)
-    return render_to_response('contributors.html', { 'lp_contributors': lp_contributors, 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
+    var_dict['source_contributors'] = source_contributors
+    # return render_to_response('contributors.html', { 'lp_contributors': lp_contributors, 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
+    return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
 
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
@@ -428,9 +440,10 @@ def resources_by(request, username):
     user = get_object_or_404(User, username=username)
     # lps = LearningPath.objects.filter(creator=user, state=PUBLISHED)
     lps = LearningPath.objects.filter(creator=user)
+    oer_evaluations = OerEvaluation.objects.filter(user=user)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
     repos = Repo.objects.filter(creator=user, state=PUBLISHED)
-    return render_to_response('resources_by.html', {'lps': lps, 'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+    return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
 
 
 def repo_oers(request, repo_id, repo=None):
