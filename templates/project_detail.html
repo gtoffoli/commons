@@ -150,12 +150,15 @@
   </div>
   <div class="col-sm-3" style="margin-top: 4.0em;">
   {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
-    {% if oers %}
+    {% if oers or n_oers %}
 		<h4>{% trans "recent OERs"|capfirst %}</h4>
 		<ul class="list-unstyled">
 	        {% for oer in oers %}
 	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></li>
         	{% endfor %}
+        	{% if n_oers > oers.count %}
+	        <li><a href="/project/{{ project.slug }}/project_results/">...</a></li>
+        	{% endif %}
         </ul>
 	{% endif %}
     {% if lps %}

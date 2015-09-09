@@ -159,12 +159,15 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
-    # repos = Repo.objects.filter(state=PUBLISHED).order_by('-created')[:5]
     var_dict['repos'] = []
-    oers = OER.objects.filter(project_id=project_id).order_by('-created')
-    oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
-    oers = oers[:5]
-    var_dict['oers'] = oers
+    if project.is_admin(user) or user.is_superuser:
+        oers = OER.objects.filter(project_id=project_id).order_by('-created')
+    else:
+        oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
+    var_dict['n_oers'] = oers.count()
+    # oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
+    # oers = oers[:5]
+    var_dict['oers'] = oers[:5]
     # lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
     lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
@@ -445,6 +448,17 @@ def resources_by(request, username):
     repos = Repo.objects.filter(creator=user, state=PUBLISHED)
     return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
 
+def project_results(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    var_dict = { 'project': project }
+    user = request.user
+    if project.is_admin(user) or user.is_superuser:
+        var_dict['lps'] = LearningPath.objects.filter(project=project).order_by('-created')
+        var_dict['oers'] = OER.objects.filter(project=project).order_by('-created')
+    else:
+        var_dict['lps'] = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+    return render_to_response('project_results.html', var_dict, context_instance=RequestContext(request))
 
 def repo_oers(request, repo_id, repo=None):
     if not repo:
