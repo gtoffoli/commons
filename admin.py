@@ -9,11 +9,12 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
-from taggit_live.forms import LiveTagField
+from taggit.forms import TagField
+from taggit_labels.widgets import LabelWidget
 
 from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath
-from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm
+from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm
 from .metadata import QualityFacet
 
 class UserProfileInline(admin.StackedInline):
@@ -146,7 +147,8 @@ class OERAdmin(admin.ModelAdmin):
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
-       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},}
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},
+       TagField: {'widget': LabelWidget()},}
 
     class Media:
         css = {'all': ('/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.css',)}
@@ -189,10 +191,15 @@ class OerEvaluationAdmin(admin.ModelAdmin):
     inlines = (OerQualityMetadataInline,)
 
 class LearningPathAdmin(admin.ModelAdmin):
-    fieldsets = [
-         (None, {'fields': ['title', 'slug', 'path_type', 'short', 'long', 'project', 'group', 'state',]}),
-    ]
+    form = LpChangeForm
+    fieldsets = []
     list_display = ('title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
+    formfield_overrides = {
+       models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
+       models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
+       models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
+       models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},
+       TagField: {'widget': LabelWidget()},}
 
     def save_model(self, request, obj, form, change):
         if not change:

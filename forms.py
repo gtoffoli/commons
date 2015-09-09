@@ -13,7 +13,9 @@ from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
 from taggit.models import Tag
-from taggit_live.forms import LiveTagField, TaggitLiveWidget
+from taggit.forms import TagField
+# from taggit_live.forms import LiveTagField, TaggitLiveWidget
+from taggit_labels.widgets import LabelWidget
 
 from django_messages.forms import ComposeForm
 from django_messages.fields import CommaSeparatedUserField
@@ -228,7 +230,8 @@ class OerForm(forms.ModelForm):
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
-    tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'span8 form-control'}))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
@@ -241,7 +244,8 @@ class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER
         fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'metadata',]
-    tags = LiveTagField()
+    # tags = LiveTagField()
+    tags = TagField(required=False, widget=LabelWidget())
 
 class OerSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -331,7 +335,8 @@ class LpForm(forms.ModelForm):
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
-    tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
     short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
     """
@@ -341,6 +346,13 @@ class LpForm(forms.ModelForm):
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
+class LpChangeForm(forms.ModelForm):
+    class Meta:
+        model = LearningPath
+        fields = ['slug', 'title', 'path_type', 'levels', 'subjects', 'tags', 'project', 'group', 'state',]
+
+    tags = TagField(required=False, widget=LabelWidget())
 
 class LpSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):

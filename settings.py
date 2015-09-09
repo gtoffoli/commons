@@ -103,7 +103,8 @@ INSTALLED_APPS = (
     # menus and ...
     'menu',
     'taggit',
-    'taggit_live',
+    'taggit_labels',
+    # 'taggit_live',
     'datatrans',
     # muc
     'conversejs',
