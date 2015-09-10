@@ -16,13 +16,23 @@
             </h2>
             <p class="lead">
 			{% if repo.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ repo.description }}</div>{% endif %}
-            <div><strong>Type</strong>: {{ repo_type.description }}</div>
+            <div><strong>Type</strong>: {% comment %}{{ repo_type.description }}{% endcomment %}
+	<form class="form-inline" style="display: inline;" action="/repos/search/" method="post" id="repos_{{ repo_type.id }}">
+	{% csrf_token %}<input type="hidden" name="repo_type" value="{{ repo_type.id }}">
+   	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ repo_type.description }}">
+	</form>
+			</div>
             <div><strong>URL</strong>: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
     		{% if repo.features.all %}
     		<div style="margin-top: 0.5em;"><strong>Features</strong>:
 			<ul class="root">
 		        {% for feature in repo.features.all %}
-		        <li>{{ feature.name }}</li>
+		        {% comment %}<li>{{ feature.name }}</li>{% endcomment %}
+	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ feature.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="features" value="{{ feature.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ feature.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 			</div>
@@ -31,7 +41,12 @@
     		{% if repo.subjects.all %}
  			<ul class="root">
 		        {% for subject in repo.subjects.all %}
-		        <li>{{ subject.option_label|safe }}</li>
+		        {% comment %}<li>{{ subject.option_label|safe }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ subject.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 		    {% else %}
@@ -42,7 +57,12 @@
     		{% if repo.languages.all %}
 			<ul class="root">
 		        {% for language in repo.languages.all %}
-		        <li>{{ language.code }} - {{ language.name }}</li>
+		        {% comment %}<li>{{ language.code }} - {{ language.name }}</li>{% endcomment %}
+  	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ language.code }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}">
+    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ language.option_label|safe }}">
+	</li></form>
 		        {% endfor %}
 			</ul>
 		    {% else %}
@@ -59,7 +79,8 @@
 				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
 			</div>
 		    {% endif %}
-            <div><strong>{% trans "submitted by"|capfirst %}</strong>: &nbsp;<a href="/profile/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a></div>
+        	<div><strong>{% trans "submitted by"|capfirst %}</strong> <a href="/resources_by/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a> <strong>{% trans "on" %}</strong> {{ repo.created|date:"d-m-Y" }}</div>
+        	<div><strong>{% trans "last updated"|capfirst %}</strong> {% if not repo.editor.id = repo.creator.id %} <strong>{% trans "by" %}</strong> <a href="/resources_by/{{ repo.editor.username }}">{{ repo.editor.get_full_name }}</a>{% endif %} <strong>{% trans "on" %}</strong> {{ repo.modified|date:"d-m-Y" }}</div>
 {% if user.is_authenticated %}            
             <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span>
                 {% if can_submit %}&nbsp; <a href="/repo/{{ repo.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i></a>{% endif %}

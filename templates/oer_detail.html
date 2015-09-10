@@ -167,7 +167,8 @@
                 {% if can_un_publish %}&nbsp; <a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
             </div>
 {% endif %}
-        	<div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a>&nbsp; <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+        	<div><strong>{% trans "submitted by"|capfirst %}</strong> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a> <strong>{% trans "on" %}</strong> {{ oer.created|date:"d-m-Y" }} <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
+        	<div><strong>{% trans "last updated"|capfirst %}</strong> {% if not oer.editor.id = oer.creator.id %} <strong>{% trans "by" %}</strong> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <strong>{% trans "on" %}</strong> {{ oer.modified|date:"d-m-Y" }}</div>
     		{% if evaluations %}
     			<div><strong>{% trans "evaluated by"|capfirst %}</strong>:
 			<ul class="root">

@@ -9,7 +9,7 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% trans "resources catalogued by"|capfirst %} &nbsp;{{ submitter.get_display_name }}</h2>
+            <h2 class="text-center"><span style="font-size: smaller;">{% trans "resources catalogued by"|capfirst %}</span> &nbsp;<a href="/profile/{{ submitter.username }}"><i>{{ submitter.get_display_name }}</i></a></h2>
 
 	    {% if lps %}
         <h3>{% trans "learning paths"|capfirst %}</h3>
@@ -24,7 +24,7 @@
 
 		{% if oer_evaluations %}
         <h3>{% trans "OER evaluations"|capfirst %}</h3>
-		<ul class="root">
+		<ul class="list-unstyled">
 	        {% for evaluation in oer_evaluations %}
 	        <li><a href="/oer_evaluation/{{ evaluation.id }}/">{{ evaluation.oer.title }}: {{ evaluation.overall_score }}/5</a>.</li>
 	        {% endfor %}
@@ -33,9 +33,12 @@
 
 		{% if oers %}
         <h3>{% trans "OERs"|capfirst %}</h3>
-		<ul class="root">
+		<ul class="list-unstyled">
 	        {% for oer in oers %}
-	        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a>.</li>
+	        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a>.
+        	<span style="font-size: smaller;">&nbsp;{% trans "submitted by"|capfirst %} <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a> {% trans "on" %} {{ oer.created|date:"d-m-Y" }},
+        	{% trans "last updated" %} {% trans "on" %} {{ oer.modified|date:"d-m-Y" }}</span>
+	        </li>
 	        {% endfor %}
 		</ul>
 		{% endif %}
