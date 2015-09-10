@@ -471,7 +471,8 @@ def repo_oers_by_slug(request, repo_slug):
     return repo_oers(request, repo.id, repo)
 
 def repo_new(request):
-    form = RepoForm()
+    user = request.user
+    form = RepoForm(initial={'creator': user.id, 'editor': user.id})
     return render_to_response('repo_edit.html', {'form': form, 'repo': None,}, context_instance=RequestContext(request))
 
 def repo_save(request, repo=None):
@@ -511,6 +512,7 @@ def repo_edit(request, repo_id):
     repo = get_object_or_404(Repo, id=repo_id)
     if not repo.can_edit(request):
         return HttpResponseRedirect('/repo/%s/' % repo.slug)
+    user = request.user
     if request.POST:
         """
         form = RepoForm(request.POST, instance=repo)
@@ -530,7 +532,7 @@ def repo_edit(request, repo_id):
     elif repo:
         form = RepoForm(instance=repo)
     else:
-        form = RepoForm()
+        form = RepoForm(initial={'creator': user.id, 'editor': user.id})
     return render_to_response('repo_edit.html', {'form': form, 'repo': repo,}, context_instance=RequestContext(request))
 
 def repo_edit_by_slug(request, repo_slug):
