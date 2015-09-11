@@ -85,9 +85,9 @@ class UserProfileForm(forms.ModelForm):
                      '%s x %s pixels or smaller.' % (max_width, max_height))
             #validate content type ...
             #validate file size
-            if avatar._size > (20 * 1024):
+            if avatar.size > (100 * 1024):
                 raise forms.ValidationError(
-                    u'Avatar file size may not exceed 20k.')
+                    u'Avatar file size may not exceed 100k.')
         return avatar
 
 class UserPreferencesForm(forms.ModelForm):
