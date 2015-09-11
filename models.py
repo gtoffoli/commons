@@ -97,6 +97,8 @@ class UserProfile(models.Model):
     long = models.TextField(blank=True, verbose_name=_('longer presentation'))
     url = models.CharField(max_length=64, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
     networks = models.ManyToManyField(NetworkEntry, blank=True, verbose_name=_('online networks / services used'))
+    avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
+    enable_email_notifications = models.PositiveIntegerField(default=0, verbose_name=_('email notifications'))
 
     def __unicode__(self):
         # return u'%s profile' % self.user.username

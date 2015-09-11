@@ -24,12 +24,19 @@
   <div class="col-sm-6">
     <section>
             <h2 class="text-center">{% trans "member"|capfirst %}:
-				{{ user.get_display_name }}
-				{% if can_edit %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
+			{% if profile %}
+				{% if profile.avatar %}
+				    <img src="/media/{{ profile.avatar }}"/>
+				{% else %}
+				    <img src="/media/images/avatars/anonymous.png" />
+				{% endif %}
+			{% endif %}
+			{{ user.get_display_name }}
+			{% if can_edit %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
-{% if profile %}
-			{% if profile.short %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ profile.short }}</div>{% endif %}
-{% endif %}
+			{% if profile %}
+				{% if profile.short %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ profile.short }}</div>{% endif %}
+			{% endif %}
 {% if request.path = '/my_profile/' %}
 			<div><strong>{% trans "username"|capfirst %}</strong>: {{ user.username }}</div>
 			<div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>

@@ -99,7 +99,7 @@ def profile_edit(request, username):
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
-        form = UserProfileExtendedForm(request.POST, instance=profile)
+        form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()

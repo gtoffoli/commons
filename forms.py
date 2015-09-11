@@ -4,6 +4,7 @@ Created on 16/apr/2015
 @author: giovanni
 '''
 
+from django.core.files.images import get_image_dimensions
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -52,7 +53,7 @@ dateTimeOptions = {
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['user', 'gender', 'dob', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'short', 'long', 'url', 'networks',]
+        fields = ['user', 'gender', 'dob', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'short', 'long', 'url', 'networks', 'avatar',]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
@@ -71,6 +72,28 @@ class UserProfileForm(forms.ModelForm):
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data['avatar']
+        if avatar:
+            # validate dimensions
+            max_width = max_height = 100
+            w, h = get_image_dimensions(avatar)
+            if h > max_height or w > max_width:
+                raise forms.ValidationError(
+                    u'Please use an image that is '
+                     '%s x %s pixels or smaller.' % (max_width, max_height))
+            #validate content type ...
+            #validate file size
+            if avatar._size > (20 * 1024):
+                raise forms.ValidationError(
+                    u'Avatar file size may not exceed 20k.')
+        return avatar
+
+class UserPreferencesForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['enable_email_notifications',]
 
 class PeopleSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
