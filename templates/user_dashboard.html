@@ -29,6 +29,11 @@
     </section>
 {% if profile %}
     <section>
+        <h3 class="text-center">{% trans "my preferences"|capfirst %}
+		&nbsp;<a href="/edit_preferences/" title="edit preferences"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>
+        </h3>
+		<div><strong>{% trans "Notification by email"|capfirst %}</strong>: {{ profile.get_notification_choice }}</div>
+
         <h3 class="text-center">{% trans "personal resources"|capfirst %}</h3>
 	    {% if my_lps %}
 		<h4>{% trans "learning paths"|capfirst %}</h4>

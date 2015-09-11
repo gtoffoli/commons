@@ -77,6 +77,17 @@ GENDERS = (
    ('m', _('male')),
    ('f', _('female')),)
 
+NO_NOTIFICATIONS = 0
+NOTIFY_INDIVIDUAL_MESSAGES = 1
+NOTIFY_ALL_MESSAGES = 2
+
+EMAIL_NOTIFICATION_CHOICES = (
+    (NO_NOTIFICATIONS, _('do not notify me of new private messages')),
+    (NOTIFY_INDIVIDUAL_MESSAGES, _('notify me only of individual messages')),
+    (NOTIFY_ALL_MESSAGES, _('notify me of individual and group messages')),
+)
+EMAIL_NOTIFICATION_DICT = dict(EMAIL_NOTIFICATION_CHOICES)
+
 class UserProfile(models.Model):
     # user = models.OneToOneField(User, unique=True)
     user = models.OneToOneField(User, primary_key=True, related_name='profile')
@@ -98,11 +109,14 @@ class UserProfile(models.Model):
     url = models.CharField(max_length=64, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
     networks = models.ManyToManyField(NetworkEntry, blank=True, verbose_name=_('online networks / services used'))
     avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
-    enable_email_notifications = models.PositiveIntegerField(default=0, verbose_name=_('email notifications'))
+    enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
 
     def __unicode__(self):
         # return u'%s profile' % self.user.username
         return u'profile of %s %s' % (self.user.first_name, self.user.last_name)
+
+    def get_notification_choice(self):
+        return EMAIL_NOTIFICATION_DICT[self.enable_email_notifications]
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:

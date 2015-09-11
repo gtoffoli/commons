@@ -23,7 +23,8 @@ from models import PUBLISHED
 from models import QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
-from forms import UserProfileExtendedForm, ProjectForm, RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
+from forms import UserProfileExtendedForm, UserPreferencesForm, ProjectForm
+from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 
 from conversejs.models import XMPPAccount
@@ -119,6 +120,26 @@ def profile_edit(request, username):
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+ 
+def edit_preferences(request):
+    user = request.user
+    profile = UserProfile.objects.get(user=user)
+    if request.POST:
+        form = UserPreferencesForm(request.POST, instance=profile)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                form.save()
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/my_dashboard/')
+                else: 
+                    return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+            else:
+                return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            return HttpResponseRedirect('/my_dashboard/')
+    else:
+        form = UserPreferencesForm(instance=profile)
+    return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
 
 def cops_tree(request):
     """
