@@ -118,6 +118,13 @@ class UserProfile(models.Model):
     def get_notification_choice(self):
         return EMAIL_NOTIFICATION_DICT[self.enable_email_notifications]
 
+    def get_display_name(self):
+        user = self.user
+        display_name = user.username
+        if user.first_name and user.last_name:
+            display_name = '%s %s' % (user.first_name, user.last_name)
+        return display_name
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
