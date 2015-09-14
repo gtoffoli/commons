@@ -58,8 +58,8 @@ def home(request):
     wall_dict = {}
     wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
     wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
-    wall_dict['oers'] = OER.objects.filter(state=1).order_by('-created')[:MAX_OERS]
-    wall_dict['repos'] = Repo.objects.filter(state=1).order_by('-created')[:MAX_REPOS]
+    wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
+    wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 def user_profile(request, username, user=None):
