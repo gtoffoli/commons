@@ -81,4 +81,65 @@
             </div>
         </div>
     </div>
+
+{% comment %} WALL {% endcomment %}
+    <div class="container">
+    	<hr>
+        <div class="row">
+            <div class="col-sm-3 col-md-3 text-center">
+                <h3>{% trans "info from the Communities"|capfirst %}</h3>
+    {% if members %}
+		<h4>{% trans "last memberships"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for member in members %}
+	        {% with user=member.user project=member.project %}
+	        <li><a href="/profile/{{ user.username }}/" title="{{ user.profile.short|truncatechars:100 }}">{{ user.get_display_name }}</a> (<a href="/project/{{ project.slug }}/">{{ project.get_name|truncatechars:30 }}</a>)</li>
+        	{% endwith %}
+        	{% endfor %}
+        </ul>
+	{% endif %}
+    {% if members %}
+		<h4>{% trans "forum activity"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for forum in forums %}
+	        {% with project=forum.get_project %}
+	        <li><a href="{{ forum.get_absolute_url }}">{{ forum.get_project.get_name|truncatechars:30 }}</a> ({{ forum.topic_count }} {% trans "topics" %}, {{ forum.post_count }} {% trans "posts" %})</li>
+        	{% endwith %}
+        	{% endfor %}
+        </ul>
+	{% endif %}
+            </div>
+            <div class="col-sm-6 col-md-6 text-center">
+                <h3>{% trans "from Commonspaces and the world"|capfirst %}</h3>
+    {% if articles or not articles %}
+		<h4>{% trans "last blog articles"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for article in articles %}
+	        <li></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
+            </div>
+            <div class="col-sm-3 col-md-3 text-center">
+                 <h3>{% trans "info from the Library"|capfirst %}</h3>
+    {% if oers %}
+		<h4>{% trans "last OERs"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for oer in oers %}
+	        <li><a href="/oer/{{ oer.slug }}/" title="{{ oer.description|truncatechars:100 }}">{{ oer.title }}</a></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
+    {% if repos %}
+		<h4>{% trans "last repositories"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for repo in repos %}
+	        <li><a href="/oer/{{ repo.slug }}/" title="{{ repo.description|truncatechars:100 }}">{{ repo.name }}</a></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

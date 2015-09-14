@@ -42,14 +42,14 @@
             			{% if can_delegate and u.0 != user %}      			
   	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
 	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: x-small;" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: smaller;" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
 	</form>
             			{% endif %}
             		{% else %}
             			{% if can_delegate %}
   	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
 	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: x-small;" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: smaller;" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
 	</form>
 						{% endif %}
             		{% endif %}
@@ -166,7 +166,7 @@
         {% else %}
             <i>{% trans "no chat room has has been created for this project"|capfirst %}</i>
         {% endif %}  
-        {% endif %}  
+        {% endif %}
     </section>
 	{% endif %}
   </div>

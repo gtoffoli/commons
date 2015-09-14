@@ -405,6 +405,10 @@ class Project(models.Model):
             if user.is_active and not self.is_room_member(user):
                 return True
         return False
+
+def forum_get_project(self):
+    return Project.objects.get(forum=self)
+Forum.get_project = forum_get_project
        
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))

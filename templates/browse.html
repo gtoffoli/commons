@@ -11,6 +11,7 @@
     	<h2 class="text-center" style="margin: 0 0;">{% trans "educational library"|capfirst %}</h2>
      </section>
 
+{% if lps_browse_list %}
      <section style="margin: 0 0;">
         <div class="container" style="margin: 0 0;">
             <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h3>
@@ -29,6 +30,7 @@
 			</ul>
         </div>
     </section>
+{% endif %}
 
      <section style="margin: 0 0;">
         <div class="container" style="margin: 0 0;">
