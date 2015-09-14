@@ -31,11 +31,12 @@ from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 from dmuc.middleware import create_xmpp_account
 
-from roles.utils import add_local_role, grant_permission
+from roles.utils import add_local_role, remove_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
 from filetransfers.api import serve_file
-from notification import models as notification
+# from notification import models as notification
+from pinax.notifications import models as notification
 from pybb.models import Forum, Category
 
 def robots(request):
@@ -169,6 +170,8 @@ def project_detail(request, project_id, project=None):
     if user.is_authenticated():
         var_dict['membership'] = project.get_membership(user)
         var_dict['is_member'] = project.is_member(user)
+        var_dict['is_admin'] = project.is_admin(user)
+        var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
         var_dict['can_add_repo'] = project.can_add_repo(user)
         var_dict['can_add_oer'] = project.can_add_oer(user)
@@ -312,6 +315,20 @@ def accept_application(request, username, project_slug):
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
     return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
+
+def project_toggle_supervisor_role(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    if request.POST:
+        username = request.POST.get('user', '')
+        user = get_object_or_404(User, username=username)
+        role_admin = Role.objects.get(name='admin')
+        if project.is_admin(user):
+            remove_local_role(project, user, role_admin)
+        else:
+            add_local_role(project, user, role_admin)
+        project.editor = request.user
+        project.save
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def project_create_forum(request, project_id):
     project = get_object_or_404(Project,id=project_id)

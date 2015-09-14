@@ -17,6 +17,14 @@
 <script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
 <script>window.scrollTo(0, 2000);</script>
 	{% endif %}
+{% if can_delegate %}
+	<script>
+	function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the admin or supervisor role to this member" %}?');}
+	</script>
+	<script>
+	function confirm_undelegate(form) {return confirm('{% trans "do you really want to call back the admin or supervisor role from this member" %}?');}
+	</script>
+{% endif %}
 {% endblock %}
 
 {% block body %}
@@ -28,9 +36,23 @@
   		 {% if project.group.level > 0 %}
    			<h4>{% trans "members"|capfirst %}</h4>
             <ul class="list-unstyled">
-            {% with users=project.members %}{% for user in users %}
-            	<li><a href="/profile/{{ user.0.username }}/" title="{% trans "view user profile" %}">{{ user.0.get_display_name }}</a>
-            		{% if user.1 %}&nbsp; <i>{{ project.admin_name }}</i>{% endif %}
+            {% with users=project.members %}{% for u in users %}
+            	<li><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}">{{ u.0.get_display_name }}</a>
+            		{% if u.1 %}&nbsp; <i>{{ project.admin_name }}</i>
+            			{% if can_delegate and u.0 != user %}      			
+  	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
+	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
+	</form>
+            			{% endif %}
+            		{% else %}
+            			{% if can_delegate %}
+  	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
+	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
+	</form>
+						{% endif %}
+            		{% endif %}
             	</li>
             {% endfor %}{% endwith %}
 			{% if can_accept_member %}

@@ -336,8 +336,25 @@ class Project(models.Model):
         return get_roles(user, obj=self)
 
     def is_admin(self, user):
+        if not self.is_member(user):
+            return False
         role_names = [role.name for role in self.get_roles(user)]
         return 'admin' in role_names
+
+    def get_admins(self):
+        memberships = ProjectMember.objects.filter(project=self, state=1).order_by('created')
+        admins = []
+        for membership in memberships:
+            user = membership.user
+            if self.is_admin(user):
+                admins.append(user)
+        return admins
+
+    def get_senior_admin(self):
+        if self.is_admin(self.creator):
+            return self.creator
+        admins = self.get_admins()
+        return admins and admins[0] or None        
 
     def can_accept_member(self, user):
         return has_permission(self, user, 'accept-member')

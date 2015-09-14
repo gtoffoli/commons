@@ -24,6 +24,8 @@ ACCOUNT_EMAIL_REQUIRED = True # False
 ACCOUNT_EMAIL_VERIFICATION = "optional" # "mandatory"
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
+# EMAIL_BACKEND = "mailer.backend.DbBackend"
+
 import os
 import sys
 
@@ -98,8 +100,8 @@ INSTALLED_APPS = (
     "bootstrapform",
     # pinax starter project ?
     # "pinax",
-    # "pinax.notifications",
-    "notification",
+    "pinax.notifications",
+    # "notification",
     # menus and ...
     'menu',
     'taggit',
@@ -116,6 +118,7 @@ INSTALLED_APPS = (
     'pybb',
     # commons project
     'viewerjs',
+    # 'mailer',
     'django_messages',
     'roles',
     'django_dag',
@@ -170,6 +173,7 @@ TEMPLATES = [
                 # "pinax_theme_bootstrap.context_processors.theme",
                 # "allauth.account.context_processors.account",
                 # "allauth.socialaccount.context_processors.socialaccount",
+                'django_messages.context_processors.inbox',
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
             ],
@@ -339,7 +343,6 @@ LOGGING = {
         },
     }
 }
-
 
 # --------- HIERARCHICAL GROUPS ----------------
 AUTHENTICATION_BACKENDS = (
