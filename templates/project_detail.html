@@ -35,21 +35,21 @@
   <div class="col-sm-3" style="margin-top: 4.0em;">
   		 {% if project.group.level > 0 %}
    			<h4>{% trans "members"|capfirst %}</h4>
-            <ul class="list-unstyled">
+            <ul class="list-unstyled" style="font-size: smaller;">
             {% with users=project.members %}{% for u in users %}
             	<li><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}">{{ u.0.get_display_name }}</a>
             		{% if u.1 %}&nbsp; <i>{{ project.admin_name }}</i>
             			{% if can_delegate and u.0 != user %}      			
   	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
 	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: x-small;" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
 	</form>
             			{% endif %}
             		{% else %}
             			{% if can_delegate %}
   	&nbsp;&nbsp;<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
 	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0; font-size: x-small;" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
 	</form>
 						{% endif %}
             		{% endif %}
@@ -174,7 +174,7 @@
   {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
     {% if oers or n_oers %}
 		<h4>{% trans "recent OERs"|capfirst %}</h4>
-		<ul class="list-unstyled">
+		<ul class="list-unstyled" style="font-size: smaller;">
 	        {% for oer in oers %}
 	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></li>
         	{% endfor %}
@@ -185,7 +185,7 @@
 	{% endif %}
     {% if lps %}
 		<h4>{% trans "recent learning paths"|capfirst %}</h4>
-		<ul class="list-unstyled">
+		<ul class="list-unstyled" style="font-size: smaller;">
 	        {% for lp in lps %}
 	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
         	{% endfor %}

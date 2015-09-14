@@ -100,8 +100,8 @@ INSTALLED_APPS = (
     "bootstrapform",
     # pinax starter project ?
     # "pinax",
-    "pinax.notifications",
-    # "notification",
+    # "pinax.notifications",
+    "notification",
     # menus and ...
     'menu',
     'taggit',
