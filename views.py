@@ -35,8 +35,8 @@ from roles.utils import add_local_role, remove_local_role, grant_permission
 from roles.models import Role
 from taggit.models import Tag
 from filetransfers.api import serve_file
-# from notification import models as notification
-from pinax.notifications import models as notification
+from notification import models as notification
+# from pinax.notifications import models as notification
 from pybb.models import Forum, Category
 
 def robots(request):
