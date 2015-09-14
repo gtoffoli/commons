@@ -38,6 +38,7 @@ from filetransfers.api import serve_file
 from notification import models as notification
 # from pinax.notifications import models as notification
 from pybb.models import Forum, Category
+from zinnia.models import Entry
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -53,11 +54,13 @@ def group_has_project(group):
 def home(request):
     MAX_MEMBERS = 5
     MAX_FORUMS = 5
+    MAX_ARTICLES = 5
     MAX_OERS = 10
     MAX_REPOS = 5
     wall_dict = {}
     wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
     wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
+    wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
     wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
     wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))

@@ -1,6 +1,7 @@
 {% extends "commons_base.html" %}
 
 {% load staticfiles i18n %}
+{% load comments zinnia %}
 
 {% block head_title %}CommonS Platform{% endblock %}
 
@@ -113,11 +114,15 @@
                 <h3>{% trans "from Commonspaces and the world"|capfirst %}</h3>
     {% if articles or not articles %}
 		<h4>{% trans "last blog articles"|capfirst %}</h4>
-		<ul class="list-unstyled" style="font-size: smaller;">
 	        {% for article in articles %}
-	        <li></li>
+	        <div>
+	        	<h3><a href="{{ article.short_url }}">{{ article.title }}</a></h3>
+	        	{% if article.image %}<img src="/media/{{ article.image }}">{% endif %}
+	        	<h4><i>{{ article.lead|safe }}</i></h4>
+	        	<div>{{ article.html_content|safe }}</div>
+	        </div>
+	        {% if not forloop.last %}<hr>{% endif %}
         	{% endfor %}
-        </ul>
 	{% endif %}
             </div>
             <div class="col-sm-3 col-md-3 text-center">
