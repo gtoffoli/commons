@@ -318,7 +318,7 @@ class Project(models.Model):
         return membership
 
     def get_memberships(self, state=None, user=None):
-        if user:
+        if user and user.is_authenticated():
             memberships = ProjectMember.objects.filter(project=self, user=user)
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
