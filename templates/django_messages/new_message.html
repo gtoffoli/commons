@@ -1,0 +1,11 @@
+{% load i18n %}{% load url from future %}
+{% with recipient=message.recipient sender=message.sender  %}{% blocktrans with recipient_name=recipient.get_display_name sender_name=sender.get_display_name %}Hello {{ recipient_name }},
+you received a private message from {{ sender_name }} with the following contents:{% endblocktrans %}{% endwith %}
+
+--
+{{ message.body|safe }}
+
+--
+{% blocktrans %}Sent from {{ site_url }}{% endblocktrans %}
+{% trans "Inbox" %}: {{ site_url }}{% url 'messages_inbox' %}
+{% trans "Reply" %}: {{ site_url }}{% url 'messages_reply' message.pk %}     
