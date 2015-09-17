@@ -141,7 +141,7 @@ class OERAdmin(admin.ModelAdmin):
     form = OerChangeForm
     fieldsets = []
     inlines = (OerMetadataInline,)
-    list_display = ('title', 'source', 'project', 'state', 'creator_fullname', 'created',)
+    list_display = ('title', 'slug', 'source', 'project', 'state', 'creator_fullname', 'created',)
     search_fields = ['title', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},

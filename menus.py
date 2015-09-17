@@ -113,6 +113,18 @@ def search_children(request):
 def help_children(request):
     children = []
     children.append (MenuItem(
+         capfirst(_("registration and authentication")),
+         url='/help/register/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
+         capfirst(_("user profile and user roles")),
+         url='/help/profile/',
+         weight=80,
+         check=True,
+        ))
+    children.append (MenuItem(
          capfirst(_("site navigation")),
          url='/help/navigation/',
          weight=80,
@@ -149,14 +161,8 @@ def help_children(request):
          check=True,
         ))
     children.append (MenuItem(
-         capfirst(_("registration and authentication")),
-         url='/help/register/',
-         weight=80,
-         check=True,
-        ))
-    children.append (MenuItem(
-         capfirst(_("user profiles")),
-         url='/help/profile/',
+         capfirst(_("the site administration interface")),
+         url='/help/backoffice/',
          weight=80,
          check=True,
         ))
