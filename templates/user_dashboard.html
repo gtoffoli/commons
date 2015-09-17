@@ -23,8 +23,8 @@
   </div>
   <div class="col-sm-6">
     <section>
-            <h2 class="text-center">{% trans "dashboard of"|capfirst %}:
-				{{ user.get_display_name }}
+            <h2 class="text-center"><span style="font-size:smaller">{% trans "dashboard of"|capfirst %}:</span>
+				<i>{{ user.get_display_name }}</i>
 			</h2>
     </section>
 {% if profile %}

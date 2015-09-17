@@ -875,7 +875,7 @@ class OerQualityMetadata(models.Model):
     """
     oer_evaluation = models.ForeignKey(OerEvaluation, related_name='oer_evaluation', verbose_name=_('OER evaluation'))
     quality_facet = models.ForeignKey(QualityFacet, related_name='quality_facet', verbose_name=_('quality facet'))
-    value = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name='facet-related score')
+    value = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name=_('facet-related score'))
 
     def __unicode__(self):
         return unicode(self.quality_facet)
