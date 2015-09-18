@@ -150,7 +150,8 @@ class UserProfileExtendedForm(UserProfileForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        exclude = ('group', 'forum',)
+        # exclude = ('group', 'forum',)
+        exclude = ('slug', 'group', 'forum',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -167,7 +168,8 @@ class ProjectForm(forms.ModelForm):
 class RepoForm(forms.ModelForm):
     class Meta:
         model = Repo
-        fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
+        # fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
+        fields = ('name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -236,7 +238,7 @@ class OerForm(forms.ModelForm):
 
     class Meta:
         model = OER
-        exclude = ('documents', 'metadata',)
+        exclude = ('slug', 'documents', 'metadata')
         # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -351,9 +353,9 @@ class LpGroupChoiceField(forms.ModelChoiceField):
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
-        exclude = ('project',)
+        exclude = ('slug', 'project',)
 
-    slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    # slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))

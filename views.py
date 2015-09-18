@@ -905,8 +905,7 @@ def oer_edit(request, oer_id=None, project_id=None):
                 oer.editor = user
                 oer.save()
                 form.save_m2m()
-                oer = get_object_or_404(OER, id=oer.id)
-                # metadata_formset.save()
+                # oer = get_object_or_404(OER, id=oer.id)
                 n = len(metadata_formset)
                 for i in range(n):
                     if request.POST.get('metadata_set-%d-DELETE' % i, None):
