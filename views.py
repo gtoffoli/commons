@@ -52,7 +52,7 @@ def group_has_project(group):
         return None  
 
 def home(request):
-    MAX_MEMBERS = 5
+    MAX_MEMBERS = 10
     MAX_FORUMS = 5
     MAX_ARTICLES = 5
     MAX_OERS = 10

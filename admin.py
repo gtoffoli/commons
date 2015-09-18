@@ -36,18 +36,22 @@ admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
 class ProjTypeAdmin(admin.ModelAdmin):
+    """
     fieldsets = [
         (None, {'fields': ['name', 'description',]}),
     ]
+    """
     list_display = ('name', 'description',)
     search_fields = ['name',]
 
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
+    """
     fieldsets = [
         (None, {'fields': ['group', 'proj_type', 'chat_type', 'chat_room', 'forum', 'description', 'info', 'state',]}),
     ]
-    list_display = ('id', 'project_name', 'description', 'project_type', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
+    """
+    list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -70,52 +74,39 @@ class ProjAdmin(admin.ModelAdmin):
         obj.save()
 
 class ProjectMemberAdmin(admin.ModelAdmin):
-    fieldsets = []
+    # fieldsets = []
     list_display = ('id', 'project', 'user_fullname', 'state', 'created', 'accepted', 'modified', 'editor', 'history',)
 
     def user_fullname(self, obj):
         return obj.user.get_full_name()
 
 class LanguageAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['code', 'name',]}),
-    ]
+    # fieldsets = [(None, {'fields': ['code', 'name',]}),]
     list_display = ('code', 'name',)
     search_fields = ['code', 'name',]
 
 class SubjectAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['code', 'name',]}),
-    ]
+    # fieldsets = [(None, {'fields': ['code', 'name',]}),]
     list_display = ('code', 'name',)
     search_fields = ['code', 'name',]
 
 class RepoTypeAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['name', 'description', 'order',]}),
-    ]
+    # fieldsets = [(None, {'fields': ['name', 'description', 'order',]}),]
     list_display = ('name', 'description', 'order',)
     search_fields = ['name',]
 
-"""
 class RepoFeatureAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['code', 'name', 'order',]}),
-    ]
-    list_display = ('code', 'name', 'order',)
-"""
-class RepoFeatureAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {'fields': ['name', 'order',]}),
-    ]
+    # fieldsets = [(None, {'fields': ['name', 'order',]}),]
     list_display = ('id', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
     form = RepoChangeForm
+    """
     fieldsets = [
-        (None, {'fields': ['name', 'state', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
+        (None, {'fields': ['name', 'slug', 'state', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
     ]
-    list_display = ('name', 'description', 'repo_type', 'state', 'user_fullname', 'created', 'modified',)
+    """
+    list_display = ('id', 'name', 'slug', 'description', 'repo_type', 'state', 'user_fullname', 'created', 'modified',)
     search_fields = ['name', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -139,9 +130,9 @@ class OerMetadataInline(admin.TabularInline):
 
 class OERAdmin(admin.ModelAdmin):
     form = OerChangeForm
-    fieldsets = []
+    # fieldsets = []
     inlines = (OerMetadataInline,)
-    list_display = ('title', 'slug', 'source', 'project', 'state', 'creator_fullname', 'created',)
+    list_display = ('id', 'title', 'slug', 'source', 'project', 'state', 'creator_fullname', 'created',)
     search_fields = ['title', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -174,26 +165,21 @@ class OERAdmin(admin.ModelAdmin):
         return obj.creator.get_full_name()
 
 class OerMetadataAdmin(admin.ModelAdmin):
-    fieldsets = []
+    # fieldsets = []
     list_display = ('oer', 'metadata_type', 'value',)
-
-"""
-class OerProxyAdmin(admin.ModelAdmin):
-    fieldsets = []
-"""
 
 class OerQualityMetadataInline(admin.TabularInline):
     model = OerQualityMetadata
     extra = 4 # how many rows to show
 
 class OerEvaluationAdmin(admin.ModelAdmin):
-    fieldsets = []
+    # fieldsets = []
     inlines = (OerQualityMetadataInline,)
 
 class LearningPathAdmin(admin.ModelAdmin):
     form = LpChangeForm
-    fieldsets = []
-    list_display = ('title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
+    # fieldsets = []
+    list_display = ('id', 'title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
@@ -208,7 +194,7 @@ class LearningPathAdmin(admin.ModelAdmin):
         obj.save()
 
 class PathNodeAdmin(admin.ModelAdmin):
-    fieldsets = []
+    # fieldsets = []
     list_display = ('id', 'path', 'label', 'oer_title', 'list_children', 'creator', 'created',)
 
     def oer_title(self, obj):
@@ -225,7 +211,7 @@ class PathNodeAdmin(admin.ModelAdmin):
         obj.save()
 
 class PathEdgeAdmin(admin.ModelAdmin):
-    fieldsets = []
+    # fieldsets = []
     list_display = ('id', 'label', 'parent', 'child', 'creator', 'created',)
 
     def save_model(self, request, obj, form, change):
