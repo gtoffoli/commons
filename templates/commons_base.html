@@ -13,9 +13,11 @@
     {% block extra_head %}{% endblock %}
 {% endblock %}
 
+{% block user %}{% if user.is_authenticated %}{% else %}{% include "_access_bar.html" %}{% endif %}{% endblock user %}
+
 {% block navbar_class %}marginB0 paddingTB5{% endblock %}
 
-{% block site_brand %}<a href="/"><img src="{% static "commons/img/LogoPerSito.png" %}" class="img-responsive" /></a>{% endblock %}
+{% block site_brand %}{% if user.is_authenticated %}<a href="/"><img src="{% static "commons/img/LogoPerSito.png" %}" class="img-responsive" /></a>{% else %}{% endif %}{% endblock site_brand %}
 
 {% block nav %}
 	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left marginT10">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}

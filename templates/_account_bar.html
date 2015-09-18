@@ -22,11 +22,13 @@
                 </li>
             </ul>
         </li>
+{% comment %}
     {% else %}
         <li><a href="{% url "account_login" %}">{% trans "log in"|capfirst %}</a></li>
         {% if ACCOUNT_OPEN_SIGNUP %}
             <li><a href="{% url "account_signup" %}">{% trans "sign up"|capfirst %}</a></li>
         {% endif %}
+{% endcomment %}
     {% endif %}
 </ul>
 

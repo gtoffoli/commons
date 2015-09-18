@@ -34,11 +34,14 @@
             {% block extra_head %}{% endblock %}
         {% endblock %}
     </head>
+    
     <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
         <div class="{% block wrapper_class %}wrapper{% endblock %}">
-            
+
             {% block topbar_base %}
+{% block user %}{% endblock user %}
                 <header>
+
                     <div class="navbar navbar-default {% block navbar_class %}navbar-fixed-top{% endblock %}">
                         <div class="container-fluid">
                         {% block topbar %}
@@ -56,14 +59,14 @@
                                             <li><a href="#tab_two">Two</a></li>
                                         </ul>
                                     {% endcomment %}
-                                {% endblock %}
+                                {% endblock nav %}
                                 {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
                             </div>
-                        {% endblock %}
+                        {% endblock topbar %}
                         </div>
                     </div>
                 </header>
-            {% endblock %}
+            {% endblock topbar_base %}
 
             {% block body_base %}
                 <section id="content_body">

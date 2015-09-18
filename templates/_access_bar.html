@@ -1,0 +1,131 @@
+{% load i18n %}
+<!-- riga accesso -->
+<div class="no-header">
+	<div class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0; background:#333; color:white; border:none; border-radius:0; min-height:0;" role="navigation">
+		<div class="container">
+			<!-- Toolbar for Users -->
+			<div class="navbar-header pull-left" style="margin:5px 10px 5px 0;">
+           <a href="/"><img src="/static/commons/img/common_logo_white.png" class="img-responsive"></a>
+			</div>
+			<!-- Login hidden on mobile -->
+<form class="navbar-form navbar-right hidden-xs" action="/accounts/login/" method="post" name="form-login" id="form-login">
+{% csrf_token %}
+					<div class="form-group">
+					<span id="form-login-username">
+<input name="login" id="id_login" type="email" size="15" class="form-control" style="font-size:13px; height:30px; border:0" placeholder="{% trans "email address"|capfirst %}">
+					</span>
+					<span id="form-login-password">
+<input name="password" id="id_password" type="password" size="15" class="form-control" style="font-size:13px;  height:30px; border:0" placeholder="{% trans "password"|capfirst %}">
+					</span>
+<a data-placement="bottom" style="color:#ccc" title="{% trans "Forgot Password?" %}" href="/accounts/password/reset/" class="button secondaryAction">
+						<span class="glyphicon glyphicon-question-sign"></span>
+					</a>
+				</div>
+<button type="submit" name="Submit" class="btn btn-sm btn-primary demiBold primaryAction" style="border: 0; padding: 6px; background:#6da9c7;">
+{% trans "Log in" %}
+</button>
+				<label id="form-login-remember" style="font-size: 12px; font-weight: normal; padding: 0 15px;">
+					<span for="remember">
+{% trans "Remember Me" %}: <input class="checkbox" type="checkbox" name="remember" id="id_remember" value="yes" alt="Ricordami">
+					</span>
+				</label>
+
+				<div class="fb-login-button" style="display: inline-block; float: right; margin-right: 15px; vertical-align: middle;">
+					<span class="sourcecoast login">
+						<div class="row-fluid">
+							<div class="social-login facebook jfbcLogin pull-left">
+								<a id="sc_fblogin" href="/accounts/facebook/login/?process=login">
+								<img src="/static/commons/img/fb_icon.png" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
+							</div>
+						</div>
+					</span>
+				</div>
+
+				<a class="btn btn-sm btn-accent demiBold" href="/accounts/signup/" style="border: 0; padding: 6px; background:#aac781; color:white">
+{% trans "sign up"|capfirst %}
+				</a>
+			</form>
+
+			<div class="navbar-form pull-right visible-xs">
+			<!-- MOBILE LOGIN BUTTON -->
+				<button type="button" class="btn btn-sm btn-primary demiBold" style="border: 0; padding: 6px; background:#6da9c7;" data-toggle="modal" data-target="#modal-login">
+					<i class="fa fa-sign-in"></i>
+					Login
+				</button>
+				<a class="btn btn-sm btn-accent demiBold" style="border: 0; padding: 6px; background:#aac781; color:white" href="/">Sign Up</a>
+			</div>
+		</div>
+	</div>
+	<button type="button" class="btn btn-sm btn-primary toggle-button toggle-no-header" data-toggle="collapse" data-target=".mynavbar-collapse">
+		<i class="fa fa-bars"></i>
+	</button>
+
+	<div class="modal modal-login fade" id="modal-login" role="dialog" aria-labelledby="modal-login" aria-hidden="true" style="display: none;">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
+					<h4 class="modal-title">Login</h4>
+				</div>
+				<div class="modal-body">
+<form method="post" id="login-form" action="/accounts/login/">
+{% csrf_token %}
+						<fieldset class="userdata">
+							<div id="form-login-e-mail" class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-user tip" title="Indirizzo e-mail"></i>
+									</span>
+<input id="modlgn-id_login" type="text" name="login" class="input form-control" tabindex="0" size="18" placeholder="{% trans "email address"|capfirst %}">
+								</div>
+							</div>
+							<div id="form-login-password" class="form-group">
+								<div class="input-group">
+									<span class="input-group-addon">
+										<i class="fa fa-lock tip" title="Password"></i>
+									</span>
+<input id="modlgn-id_password" type="password" name="password" class="input form-control" tabindex="0" size="18" placeholder="{% trans "password"|capfirst %}">
+								</div>
+							</div>
+					
+							<div id="form-login-remember" class="form-group">
+								<div class="checkbox">
+									<label for="modlgn-remember">
+										<input id="modlgn-remember" type="checkbox" name="remember" class="input" value="yes"> Ricordami
+									</label>
+								</div>
+							</div>
+							<div class="control-group">
+								<input type="submit" name="Submit" class="btn btn-primary" value="Log in">
+							</div>
+
+							<ul class="unstyled">
+								<li>
+									<a href="/">Create an account <span class="fa fa-arrow-right"></span></a>
+								</li>
+								<li>
+<a href="/">{% trans "Forgot Password?" %}"</a>
+								</li>
+							</ul>
+						</fieldset>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="fb-login-button">
+						<span class="sourcecoast login">
+							<div class="row-fluid">
+								<div class="social-login facebook jfbcLogin pull-left">
+									<a id="sc_fblogin" href="/accounts/facebook/login/?process=login">
+										<img src="/static/commons/img/fb_icon.png" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook">
+									</a>
+								</div>
+							</div>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- fine riga accesso -->
+?
