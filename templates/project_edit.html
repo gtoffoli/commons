@@ -41,7 +41,7 @@
 
 		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if project %} {% trans "changes" %}{% endif %}</button>&nbsp;
 		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and continue"|capfirst %}</button>&nbsp;
-		{% if project %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
+		{% if project %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
 		{% else %}<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %}</button>
 		{% endif %}
     </form>
