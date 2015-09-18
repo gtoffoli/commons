@@ -554,7 +554,7 @@ class Repo(models.Model, Publishable):
     class Meta:
         verbose_name = _('external repository')
         verbose_name_plural = _('external repositories')
-        ordering = ['name']
+        # ordering = ['name']
 
     def __unicode__(self):
         return self.name
@@ -651,7 +651,7 @@ class OER(models.Model, Publishable):
     class Meta:
         verbose_name = _('OER')
         verbose_name_plural = _('OERs')
-        ordering = ['title']
+        # ordering = ['title']
 
     def __unicode__(self):
         return self.title

@@ -353,9 +353,10 @@ class LpGroupChoiceField(forms.ModelChoiceField):
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
+        # exclude = ('slug', 'project',)
         exclude = ('slug', 'project',)
 
-    # slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
