@@ -174,7 +174,7 @@
 			<ul class="root">
 	        {% for evaluation in evaluations %}
 				<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-					{{ evaluation.user.get_display_name }}: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
+					<a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
 					<strong>{{ evaluation.overall_score }}</strong>/5 <i class="fa fa-star-o" style="font-size: 0.7em;""></i></a>
 					{% if evaluation.get_quality_metadata %}
 					<span style="font-size: smaller;"> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
