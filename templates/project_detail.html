@@ -151,6 +151,14 @@
 			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">- {% trans "view project forum"|capfirst %} -</a></div>
 		{% endif %}
    		{% if user.is_authenticated and not project.proj_type.name == 'com' %}
+        {% if False and is_member %}
+			<div style="margin-bottom: 5px;">
+  	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/compose_message/" method="post">
+	{% csrf_token %}
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "send message to members"|capfirst %} -">
+	</form>
+			</div>
+		{% endif %}
         {% if project.has_chat_room %}
 	        {% if can_chat %}
 	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
@@ -172,6 +180,14 @@
   </div>
   <div class="col-sm-3" style="margin-top: 4.0em;">
   {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
+    {% if lps %}
+		<h4>{% trans "recent learning paths"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller;">
+	        {% for lp in lps %}
+	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
+        	{% endfor %}
+        </ul>
+	{% endif %}
     {% if oers or n_oers %}
 		<h4>{% trans "recent OERs"|capfirst %}</h4>
 		<ul class="list-unstyled" style="font-size: smaller;">
@@ -183,12 +199,15 @@
         	{% endif %}
         </ul>
 	{% endif %}
-    {% if lps %}
-		<h4>{% trans "recent learning paths"|capfirst %}</h4>
+    {% if oer_evaluations %}
+		<h4>{% trans "recent OER evaluations"|capfirst %}</h4>
 		<ul class="list-unstyled" style="font-size: smaller;">
-	        {% for lp in lps %}
-	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
+	        {% for oer_evaluation in oer_evaluations %}
+	        <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/">{{ oer_evaluation.oer.title }}</a></li>
         	{% endfor %}
+        	{% if n_oer_evaluations > oer_evaluations.count %}
+	        <li><a href="/project/{{ project.slug }}/project_results/">...</a></li>
+        	{% endif %}
         </ul>
 	{% endif %}
   {% endif %}

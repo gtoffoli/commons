@@ -22,6 +22,17 @@
 		</ul>
 	    {% endif %}
 
+		{% if oer_evaluations %}
+        <h4>{% trans "OER evaluations"|capfirst %}</h4>
+		<ul class="root">
+	        {% for oer_evaluation in oer_evaluations %}
+	        <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/">{{ oer_evaluation.oer.title }}</a>.
+        	<span style="font-size: smaller;">&nbsp;{% trans "resource evaluated by"|capfirst %} <a href="/resources_by/{{ oer_evaluation.user.username }}">{{ oer_evaluation.user.get_full_name }}</a> {% trans "on" %} {{ oer_evaluation.modified|date:"d-m-Y" }}</span>
+        	</li>
+        	{% endfor %}
+		</ul>
+		{% endif %}
+
 		{% if oers %}
         <h4>{% trans "resources collected, adaped, created"|capfirst %}</h4>
 		<ul class="root">

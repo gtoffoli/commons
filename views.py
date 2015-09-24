@@ -13,6 +13,7 @@ from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.translation import get_language, pgettext, ugettext_lazy as _
+from django_messages.views import compose as message_compose
 
 from commons import settings
 from documents import DocumentType, Document
@@ -26,6 +27,7 @@ from models import LP_COLLECTION, LP_SEQUENCE
 from forms import UserProfileExtendedForm, UserPreferencesForm, ProjectForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
+from forms import ProjectMessageComposeForm
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -177,6 +179,8 @@ def projects(request):
     return render_to_response('projects.html', {'nodes': nodes,}, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):
+    MAX_OERS = 10
+    MAX_EVALUATIONS = 10
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
@@ -204,10 +208,10 @@ def project_detail(request, project_id, project=None):
     else:
         oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
     var_dict['n_oers'] = oers.count()
-    # oers = [oer for oer in oers if oer.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
-    # oers = oers[:5]
-    var_dict['oers'] = oers[:5]
-    # lps = LearningPath.objects.filter(project_id=project_id).order_by('-created')
+    var_dict['oers'] = oers[:MAX_OERS]
+    oer_evaluations = project.get_oer_evaluations()
+    var_dict['n_oer_evaluations'] = oer_evaluations.count()
+    var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
     lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['lps'] = lps
@@ -389,6 +393,13 @@ def project_sync_xmppaccounts(request, project_id):
             pass
     return project_detail(request, project_id, project=project)
 
+def project_compose_message(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    members = project.members(user_only=True)
+    recipient_filter = [member.username for member in members if member != request.user]
+    recipient = '+'.join(recipient_filter)
+    return message_compose(request, recipient=recipient, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
+
 def repo_list(request):
     user = request.user
     can_add = user.is_authenticated() and user.can_add_repo(request)
@@ -511,6 +522,8 @@ def project_results(request, project_slug):
     else:
         var_dict['lps'] = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+    oer_evaluations = project.get_oer_evaluations()
+    var_dict['oer_evaluations'] = oer_evaluations
     return render_to_response('project_results.html', var_dict, context_instance=RequestContext(request))
 
 def repo_oers(request, repo_id, repo=None):

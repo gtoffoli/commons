@@ -439,3 +439,11 @@ class MessageComposeForm(ComposeForm):
     body = forms.CharField(label=_(u"Body"),
         widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
 
+class ProjectMessageComposeForm(MessageComposeForm):
+    """
+    A customized form for group messages.
+    """
+    def __init__(self, *args, **kwargs):
+        recipient_filter = kwargs.pop('recipient_filter')
+        super (ProjectMessageComposeForm, self ).__init__(*args, **kwargs) # populates the post
+        self.fields['recipient'].queryset = User.objects.filter(username__in=recipient_filter)

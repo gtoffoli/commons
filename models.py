@@ -413,6 +413,12 @@ class Project(models.Model):
                 return True
         return False
 
+    def get_oers(self, order_by='-created'):
+        return OER.objects.filter(project=self.id).order_by(order_by)
+
+    def get_oer_evaluations(self, order_by='-modified'):
+        return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
+
 def forum_get_project(self):
     return Project.objects.get(forum=self)
 Forum.get_project = forum_get_project
