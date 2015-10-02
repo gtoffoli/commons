@@ -998,7 +998,7 @@ def oer_evaluation_by_id(request, evaluation_id):
     evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
     return oer_evaluation_detail(request, evaluation=evaluation)
 
-@transaction.atomic
+# @transaction.atomic
 def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     user = request.user
     evaluation = None
