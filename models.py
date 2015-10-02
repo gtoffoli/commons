@@ -939,7 +939,11 @@ class LearningPath(models.Model, Publishable):
     def get_principal(self):
         """Returns the principal.
         """
-        return self.group or self.creator
+        # return self.group or self.creator
+        if self.project:
+            return self.project.group
+        else:
+            return self.creator
 
     def set_principal(self, principal):
         """Sets the principal.
@@ -949,12 +953,14 @@ class LearningPath(models.Model, Publishable):
 
     principal = property(get_principal, set_principal)
 
+    """
     def get_project(self):
         if isinstance(self.principal, Group):
             # return self.principal.project()
             return self.principal.project
         else:
             return None
+    """
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]

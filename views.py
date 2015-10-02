@@ -105,10 +105,11 @@ def my_dashboard(request):
     oers = OER.objects.filter(creator=user).order_by('-created')
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
-    lps = LearningPath.objects.filter(creator=user).exclude(group__isnull=True).order_by('-created')
+    # lps = LearningPath.objects.filter(creator=user).exclude(group__isnull=True).order_by('-created')
+    lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('-created')
     more_lps = lps.count() > MAX_LP
     lps = lps[:MAX_LP]
-    my_lps = LearningPath.objects.filter(creator=user).filter(group__isnull=True).order_by('-created')
+    my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
     return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
  
 def profile_edit(request, username):
@@ -212,7 +213,8 @@ def project_detail(request, project_id, project=None):
     oer_evaluations = project.get_oer_evaluations()
     var_dict['n_oer_evaluations'] = oer_evaluations.count()
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
-    lps = LearningPath.objects.filter(group=project.group).order_by('-created')
+    # lps = LearningPath.objects.filter(group=project.group).order_by('-created')
+    lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['lps'] = lps
     return render_to_response('project_detail.html',var_dict, context_instance=RequestContext(request))
@@ -1162,9 +1164,9 @@ def lp_detail(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
     var_dict = { 'lp': lp, }
-    # var_dict['project'] = lp.project
-    var_dict['project'] = lp.get_project
-    var_dict['user'] = not var_dict['project'] and lp.user
+    var_dict['project'] = lp.project
+    # var_dict['project'] = lp.get_project
+    # var_dict['user'] = not var_dict['project'] and lp.user
     var_dict['can_edit'] = lp.can_edit(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
@@ -1224,12 +1226,17 @@ def lp_edit(request, lp_id=None, project_id=None):
     elif lp:
         form = LpForm(instance=lp)
     else:
+        """
         if project_id:
             project = get_object_or_404(Project, id=project_id)
             group_id = project.group_id
         else:
             group_id = 0
         form = LpForm(initial={'group': group_id, 'creator': user.id, 'editor': user.id})
+        """
+        if not project_id:
+            project_id = 0
+        form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
     return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
 
 def lp_edit_by_slug(request, lp_slug):

@@ -71,10 +71,13 @@ function setReadonly( selectElementId ){
 {% if lp %}
 <script type="text/javascript">
 	setReadonly('id_path_type');
-	setReadonly('id_group');
 </script>
 {% endif %}
-	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
+{% if not user.is_superuser %}
+<script type="text/javascript">
+	setReadonly('id_project');
+</script>
+{% endif %}	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
 	<script>
 	tinyMCE.init({
 	    schema: "html5",

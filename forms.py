@@ -354,7 +354,7 @@ class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
         # exclude = ('slug', 'project',)
-        exclude = ('slug', 'project',)
+        exclude = ('slug', 'group',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
@@ -365,10 +365,10 @@ class LpForm(forms.ModelForm):
     tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
     short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
-    """
-    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the Learning Path has been created'))
     """
     group = LpGroupChoiceField(required=False, queryset=Group.objects.filter(lp_group__isnull=False).distinct(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    """
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
