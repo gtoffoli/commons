@@ -10,6 +10,8 @@ DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
 # from base import *
 XMPP_SERVER = 'openfire.commonspaces.eu'
+
+from private import *
 if PRODUCTION:
     DEBUG = False
     ALLOWED_HOSTS = ['*']
@@ -29,7 +31,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 import os
 import sys
 
-from private import *
+# from private import *
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -88,7 +90,7 @@ INSTALLED_APPS = (
     "hierarchical_auth",
     "django_extensions",
     "datetimewidget",
-    # django-allauth
+    # "django_select2",
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
