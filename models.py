@@ -683,6 +683,23 @@ class OER(models.Model, Publishable):
         else:
             return OerEvaluation.objects.filter(oer=self)
 
+    def get_stars(self):
+        MAX_STARS = 5
+        evaluations = self.get_evaluations()
+        n = evaluations.count()
+        stars = sum([e.overall_score for e in evaluations])
+        half = False
+        if n:
+            float_stars = stars / float(n)
+            stars = int(float_stars)
+            remainder = float_stars - stars
+            half = remainder >= 0.4
+            full = 'i' * stars
+            empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
+            return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': n }
+        else:
+            return { 'n': n }
+
     def can_evaluate(self, user):
         if not user.is_authenticated():
             return False
