@@ -7,44 +7,59 @@
 {% endblock %}
 
 {% block body %}
-    <section>
-        <div class="container">
-            <h2 class="text-center"><span style="font-size: smaller;">{% trans "results of project"|capfirst %}</span> &nbsp;<a href="/project/{{ project.slug }}/"><i>{{ project.get_name }}</i></a></h2>
-
+    <div class="container">
+        <h2 class="text-center" style="margin-bottom:20px"><span style="font-size: smaller;">{% trans "results of project"|capfirst %}</span> &nbsp;<a href="/project/{{ project.slug }}/"><i>{{ project.get_name }}</i></a></h2>
+        <div class="row">
+	    <div class="col-md-9">
 	    {% if lps %}
-        <h4>{% trans "learning paths created"|capfirst %}</h4>
-		<ul class="list-unstyled">
-	        {% for lp in lps %}
-	        <li>
-	            <a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a>. &nbsp;<i>{{ lp.get_type }}</i>.&nbsp; {{ lp.short|truncatechars:80 }}
-	        </li>
-	        {% endfor %}
-		</ul>
+	    	<div class="row" style="background:#f8f8f8; margin-bottom:20px">
+	            <div class="col-md-3 text-right">
+	            	<h4 style="margin-top:20px">{% trans "learning paths created"|capfirst %}</h4>
+	            </div>
+                <div class="col-md-9">
+		            <ul class="list-card">
+	                {% for lp in lps %}
+	                {% include "_oer_card.html" %}
+	                {% endfor %}
+		            </ul>
+		        </div>
+		    </div>
 	    {% endif %}
 
+	    {% if oers %}
+	    	<div class="row" style="background:#f8f8f8; margin-bottom:20px">
+	            <div class="col-md-3 text-right">
+                    <h4 style="margin-top:20px">{% trans "resources collected, adaped, created"|capfirst %}</h4>
+                </div>
+                <div class="col-md-9">
+		            <ul class="list-card">
+	                {% for oer in oers %}
+	                {% include "_oer_card.html" %}
+	                {% endfor %}
+		            </ul>
+		        </div>
+		    </div>
+		{% endif %}
+
 		{% if oer_evaluations %}
-        <h4>{% trans "OER evaluations"|capfirst %}</h4>
-		<ul class="root">
-	        {% for oer_evaluation in oer_evaluations %}
-	        <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/">{{ oer_evaluation.oer.title }}</a>.
-        	<span style="font-size: smaller;">&nbsp;{% trans "resource evaluated by"|capfirst %} <a href="/resources_by/{{ oer_evaluation.user.username }}">{{ oer_evaluation.user.get_full_name }}</a> {% trans "on" %} {{ oer_evaluation.modified|date:"d-m-Y" }}</span>
-        	</li>
-        	{% endfor %}
-		</ul>
+	    	<div class="row" style="background:#f8f8f8; margin-bottom:20px">
+	            <div class="col-md-3 text-right">
+                    <h4 style="margin-top:20px">{% trans "OER evaluations"|capfirst %}</h4>
+	            </div>
+                <div class="col-md-9">
+		            <ul class="list-card">
+	                {% for oer_evaluation in oer_evaluations %}
+	                    {% include "_oer_evaluation_card.html" %}
+        	        {% endfor %}
+		            </ul>
+		        </div>
+		    </div>
 		{% endif %}
 
-		{% if oers %}
-        <h4>{% trans "resources collected, adaped, created"|capfirst %}</h4>
-		<ul class="root">
-	        {% for oer in oers %}
-	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a>.
-        	<span style="font-size: smaller;">&nbsp;{% trans "submitted by"|capfirst %} <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a> {% trans "on" %} {{ oer.created|date:"d-m-Y" }},
-        	{% trans "last updated" %} {% trans "on" %} {{ oer.modified|date:"d-m-Y" }}</span>
-	        </li>
-	        {% endfor %}
-		</ul>
-		{% endif %}
 
+	</div>
+	<div class="col-md-3">
+	</div>
+</div>
         </div>
-    </section>
 {% endblock %}

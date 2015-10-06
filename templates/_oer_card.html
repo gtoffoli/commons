@@ -1,0 +1,42 @@
+ {% comment %} items OER {% endcomment %}
+
+ {% load i18n %}
+
+<li style="border:1px solid #ccc; padding:10px 20px; background:white; margin-bottom:20px">
+	<div style="font-size:16px; line-height:21px; font-weight:400; "><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></div>
+	<div style="margin-bottom:10px">Rating 
+	    {% for i in "11111" %}
+	     <span class="glyphicon glyphicon-star"></span>
+	    {% endfor %}
+	</div>
+	 <div style="display:none" class="testo js-short-description"><i>{{ oer.description|truncatechars:80 }}</i> <a href="" class="js-expand-description">more</a></div>
+	<div style="display:inline-block" class="testo js-full-description"><i>{{ oer.description }}</i><br><a style="display:none" href="" class="js-hide-description">less</a></div>
+	{% if oer.subjects.all %}
+	    <dl class="lista-inline">
+	      <dt>{% trans "subject areas"|capfirst %}</dt>
+	        {% for subject in oer.subjects.all %}
+	        	<dd>{{ subject.option_label|safe }}</dd>
+	        {% endfor %}
+	    </dl>
+	{% endif %}
+	 {% if oer.tags.all %}
+	    <dl class="lista-inline">
+    		<dt>{% trans "tags"|capfirst %}</dt>
+		    {% for tag in oer.tags.all %}
+	        	<dd>{{ tag.name }}</dd>
+		    {% endfor %}
+		</dl>
+	{% endif %}
+	{% if oer.material %}
+	    <dl class="lista-inline">
+	        <dt>{% trans "type of material"|capfirst %}</dt>
+  	        <dd>{{ oer.material.name }}</dd>
+  	    </dl>
+    {% endif %}
+    {% if oer.license %}
+        <dl class="lista-inline">
+            <dt>{% trans "terms of use"|capfirst %}</dt>
+            <dd>{{ oer.license.name }}</dd>
+        </dl>
+  	{% endif %}
+</li>

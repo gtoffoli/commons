@@ -8,26 +8,12 @@
 
 {% block body %}
     <div class="container">
-	<div class="col-sm-12">
-    <section>
-	<h2 class="text-center">{% trans "search of OERs"|capfirst %}</h2>
-
-	<table style="border-collapse: separate; border-spacing: 0 .0em;">
-	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
-	{% if oers %}
-	{% for oer in oers %}
-       <tr><td><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></td></tr>
-	{% endfor %}
-	{% elif query %}
-       <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>
-	{% else %}
-       <tr><td><i>{% trans "no query has been specified"|capfirst %}.</i></td></tr>
-	{% endif %}
-	</table>
-
-  	<form style="margin: 0;" action="/oers/search/" method="post" id="search_form"><div>
+    	<h2 class="text-center">{% trans "search of OERs"|capfirst %}</h2>
+    	<div class="row">
+	        <div class="col-md-6">
+<form style="margin: 0;" action="/oers/search/" method="post" id="search_form">
 	{% csrf_token %}
-	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
+	<table style="border-collapse: separate; border-spacing: 0 .5em;">
 	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
    	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}">
    	   	{% if user.is_authenticated %}&nbsp; <input type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> include non published items{% else %}<input type="hidden" name="include" value="">{% endif %}
@@ -40,9 +26,21 @@
    		</tr>
 	{% endfor %}
 	</table>
-	</div></form>
-    </section>
-	</div>
+	</form>
+</div>
+<div class="col-md-6">
+	<h4>{% trans "search results"|capfirst %}</h4>
+	{% if oers %}
+	<ul class="list-card">
+	{% for oer in oers %}
+	{% include "_oer_card.html" %}
+	{% endfor %}
+    </ul>
+	{% elif query %}
+	<i>{% trans "no query has been specified"|capfirst %}.</i>
+	{% endif %}
+</div>
+</div>
 	</div>
 {% endblock %}
 

@@ -13,6 +13,7 @@ from mptt.forms import TreeNodeMultipleChoiceField
 from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
+# from django_select2.forms import Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
 from taggit.models import Tag
 from taggit.forms import TagField
 # from taggit_live.forms import LiveTagField, TaggitLiveWidget
@@ -231,6 +232,14 @@ class OerMetadataForm(forms.ModelForm):
 OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('metadata_type', 'value',), can_delete=True, extra=3)
 # OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
 
+"""
+class TitleSearchFieldMixin(object):
+    # queryset = OER.objects.all()
+    search_fields = ['title__icontains',]
+class OersSelect2MultipleWidget(TitleSearchFieldMixin, Select2MultipleWidget):
+    pass
+"""
+
 class OerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OerForm, self).__init__(*args,**kwargs)
@@ -243,20 +252,20 @@ class OerForm(forms.ModelForm):
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
-    oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}))
-    source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}))
-    # documents = forms.ModelMultipleChoiceField(required=False, label=_('attached documents'), queryset=Document.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}))
-    source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}))
-    url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
+    # description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    description = forms.CharField(label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 3, 'cols': 80,}), help_text=_('one or two lines are enough here'))
+    oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('metadata are just descriptive and classification data'))
+    source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('is this OER a reference to, or a copy of, an external resource? was it derived from other OERs catalogued by CommonSpaces? or it is a brand new resource?'))
+    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
+    # oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=OersSelect2MultipleWidget(attrs={'class':'span3 form-control', 'size': 3}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
+    source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('if the source type is "catalogued source", please specify the source'))
+    url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'span8 form-control'}), help_text=_('you should fill this field if the OER type is "metadata and online reference"'))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
-    material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}))
-    license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}))
+    material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('the type of (education) material refers to the function, not the physical aspect'))
+    license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('"CC" stands for "Creative Commons"'))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
-    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
-    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'span8 form-control'}))
+    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'span8 form-control'}), help_text=_('click to add or remove a tag'))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))

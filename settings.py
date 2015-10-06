@@ -178,6 +178,7 @@ TEMPLATES = [
                 'django_messages.context_processors.inbox',
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
+                'commons.context_processors.sitename',
             ],
         },
     },
@@ -269,6 +270,7 @@ LANGUAGES = (
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
 SITE_ID = 1
+SITE_NAME = 'CommonS Platform'
 
 WSGI_APPLICATION = 'commons.wsgi.application'
 ROOT_URLCONF = 'commons.urls'

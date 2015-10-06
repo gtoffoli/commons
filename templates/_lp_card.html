@@ -1,0 +1,13 @@
+ {% comment %} items OER {% endcomment %}
+
+ {% load i18n %}
+
+<li style="border:1px solid #ccc; padding:10px 20px; background:white; margin-bottom:20px">
+	<div style="font-size:16px; line-height:21px; font-weight:400;"><a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></div>
+	 <div style="display:none" class="testo js-short-description"><i>{{ lp.short|truncatechars:80 }}</i> <a href="" class="js-expand-description">more</a></div>
+	<div style="display:inline-block" class="testo js-full-description"><i>{{ lp.short }}</i><br><a style="display:none" href="" class="js-hide-description">less</a></div>
+	<dl class="lista-inline">
+		<dt>{% trans "Type"|capfirst %}</dt>
+		<dd>{{ lp.get_type }}</dd>
+	</dl>
+</li>

@@ -7,7 +7,7 @@
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta charset="utf-8" />
-        <title>{% block head_title_base %}{% if SITE_NAME %}{{ SITE_NAME }} | {% endif %}{% block head_title %}{% endblock %}{% endblock %}</title>
+        <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %}{{ site_name }}{% endif %}</title>
         {% block viewport %}
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% endblock %}
@@ -29,7 +29,7 @@
                 <script src="{% static "pinax/js/html5shiv.js" %}"></script>
             <![endif]-->
         {% endblock %}
-
+        <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
         {% block extra_head_base %}
             {% block extra_head %}{% endblock %}
         {% endblock %}
@@ -91,7 +91,6 @@
             {% endblock %}
 
         {% block script_base %}
-            <script src="{% block jquery_src %}{% static "jquery/js/jquery-2.1.4.min.js" %}{% endblock %}"></script>
             <script src="{% static "js/bootstrap.min.js" %}"></script>
             <script src="{% static "pinax/js/theme.js" %}"></script>
             {% block extra_script %}{% endblock %}

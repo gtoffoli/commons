@@ -214,3 +214,49 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 .bold {
 	font-weight:700;
 }
+
+/* liste in scheda */
+ul.list-card {
+	list-style:none;
+	padding:20px 0;
+}
+div.testo {
+   margin-bottom:10px;
+   font-size:13px;
+}
+dl.lista-inline {
+	font-size: 13px;
+	margin:0;
+}
+dl.lista-inline dt,
+dl.lista-inline dd {
+	display:inline;
+}
+dl.lista-inline dt {
+	font-weight:600;
+}
+dl.lista-inline dt:after {
+	content: ": ";
+}
+dl.lista-inline dd:after {
+	content: ", ";
+}
+dl.lista-inline dd:last-child:after {
+	content: ". ";
+}
+/*ul.lista-inline {
+	list-style:none;
+	margin:0;
+	padding:0;
+	font-size: 13px;
+}
+ul.lista-inline > li {
+	display:inline;
+}
+
+ul.lista-inline > li:last-child {
+	color:red;
+};
+ul.lista-inline > li:after {
+	content: ", ";
+};*/

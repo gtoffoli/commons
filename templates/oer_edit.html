@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
 	<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
 	<script type="text/javascript" src="{% static "js/taggit_labels.js" %}"></script>
+	<script type="text/javascript" src="{% static "django_select2/django_select2.js" %}"></script>
 <script type="text/javascript">
 //Copyright: CodePug.com 2009
 //Do not REMOVE these comments
@@ -83,6 +84,11 @@ function setReadonly( selectElementId ){
 {% if oer %}
 <script type="text/javascript">
 	setReadonly('id_project');
+</script>
+{% endif %}
+{% if not user.is_superuser %}
+<script type="text/javascript">
+	setReadonly('id_state');
 </script>
 {% endif %}
 	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
