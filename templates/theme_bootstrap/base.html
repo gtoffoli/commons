@@ -7,7 +7,8 @@
 <html lang="{{ LANGUAGE_CODE }}">
     <head>
         <meta charset="utf-8" />
-        <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %}{{ site_name }}{% endif %}</title>
+        <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
+
         {% block viewport %}
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {% endblock %}

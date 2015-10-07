@@ -2,12 +2,16 @@
 
  {% load i18n %}
 
-<li style="border:1px solid #ccc; padding:10px 20px; background:white; margin-bottom:20px">
-	<div style="font-size:16px; line-height:21px; font-weight:400;"><a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></div>
-	 <div style="display:none" class="testo js-short-description"><i>{{ lp.short|truncatechars:80 }}</i> <a href="" class="js-expand-description">more</a></div>
-	<div style="display:inline-block" class="testo js-full-description"><i>{{ lp.short }}</i><br><a style="display:none" href="" class="js-hide-description">less</a></div>
-	<dl class="lista-inline">
+<article class="view-card">
+	<p class="title-card"><a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></p>
+	{% if lp.short.description|length > 80 %}
+	    <p style="display:none" class="text-card short-description"><i>{{ lp.short|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+	    <p style="display:inline-block" class="text-card full-description"><i>{{ lp.short }}</i><br><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
+	{% else %}
+	    <p style="display:inline-block" class="text-card full-description"><i>{{ lp.short }}</i></p>
+	{% endif %}
+	<dl class="list-inline">
 		<dt>{% trans "Type"|capfirst %}</dt>
 		<dd>{{ lp.get_type }}</dd>
 	</dl>
-</li>
+</article>

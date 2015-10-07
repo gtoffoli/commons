@@ -4,17 +4,17 @@
 
 {% block head_title %}{% trans "search of OERs"|capfirst %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}search_oers{% endblock %}
 
 {% block body %}
-    <div class="container">
-    	<h2 class="text-center">{% trans "search of OERs"|capfirst %}</h2>
-    	<div class="row">
-	        <div class="col-md-6">
-<form style="margin: 0;" action="/oers/search/" method="post" id="search_form">
+    <h2 class="text-center">{% trans "search of OERs"|capfirst %}</h2>
+    <div class="row">
+	    <div class="col-md-6">
+	        <h4>{% trans "new search"|capfirst %}</h4>
+            <form style="margin: 0;" action="/oers/search/" method="post" id="search_form">
 	{% csrf_token %}
 	<table style="border-collapse: separate; border-spacing: 0 .5em;">
-	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
+	<tr><th style="vertical-align: top"></th></tr>
    	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}">
    	   	{% if user.is_authenticated %}&nbsp; <input type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> include non published items{% else %}<input type="hidden" name="include" value="">{% endif %}
    	</td></tr>
@@ -26,21 +26,18 @@
    		</tr>
 	{% endfor %}
 	</table>
-	</form>
-</div>
-<div class="col-md-6">
-	<h4>{% trans "search results"|capfirst %}</h4>
-	{% if oers %}
-	<ul class="list-card">
-	{% for oer in oers %}
-	{% include "_oer_card.html" %}
-	{% endfor %}
-    </ul>
-	{% elif query %}
-	<i>{% trans "no query has been specified"|capfirst %}.</i>
-	{% endif %}
-</div>
-</div>
-	</div>
+            </form>
+	    </div>
+	    <div class="col-md-6"> 
+            <h4>{% trans "search results"|capfirst %}</h4>
+            {% if oers %}
+	            {% for oer in oers %}
+	                {% include "_oer_card.html" %}
+	            {% endfor %}
+            {% elif query %}
+	            <p><i>{% trans "no query has been specified"|capfirst %}.</i></p>
+            {% endif %}
+	    </div>
+    </div>
 {% endblock %}
 

@@ -769,7 +769,7 @@ def browse(request):
             if n:
                 entries.append([code, label, prefix, n])
         repos_browse_list.append([field_name, field_label, entries])
-    return render_to_response('browse.html', {'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
+    return render_to_response('browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
 
 
 def people_search(request):

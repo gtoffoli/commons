@@ -2,10 +2,10 @@
 
  {% load i18n %}
 
-<li style="border:1px solid #ccc; padding:10px 20px; background:white; margin-bottom:20px">
-	<div style="font-size:16px; line-height:21px; font-weight:400; "><a href="/oer_evaluation/{{ oer_evaluation.id }}/">{{ oer_evaluation.oer.title }}</a></div>
-	<dl class="lista-inline">
+<article class="view-card">
+	<p class="title-card"><a href="/oer_evaluation/{{ oer_evaluation.id }}/">{{ oer_evaluation.oer.title }}</a></p>
+	<dl class="list-inline">
 		<dt>{% trans "resource evaluated by"|capfirst %}</dt>
 		<dd><a href="/resources_by/{{ oer_evaluation.user.username }}">{{ oer_evaluation.user.get_full_name }}</a></dd>
 	</dl>
-</li>
+</article>

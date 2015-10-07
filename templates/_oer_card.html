@@ -2,48 +2,51 @@
 
  {% load i18n %}
 
-<li style="border:1px solid #ccc; padding:10px 20px; background:white; margin-bottom:20px">
-	<div style="font-size:16px; line-height:21px; font-weight:400; "><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></div>
-	<div style="margin-bottom:10px">Rating &nbsp;
-	    {% comment %} {% for i in "11111" %}<span class="glyphicon glyphicon-star"></span> {% endfor %}{% endcomment %}
+<article class="view-card">
+	<p class="title-card"><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></p>
+	<p class="text-card">Rating &nbsp;
 		{% with stars=oer.get_stars %}
 		  {% if stars.stars %}
-		    {% for i in stars.full %} <span class="fa fa-star" style="color: green;"></span>{% endfor %}
-		    {% if stars.half %} <span class="fa fa-star-half-o" style="color: green;"></span>{% endif %}
-		    {% for i in stars.empty %} <span class="fa fa-star-o" style="color: green;"></span>{% endfor %}
+		    {% for i in stars.full %} <span class="fa fa-star c-green"></span>{% endfor %}
+		    {% if stars.half %} <span class="fa fa-star-half-o c-green"></span>{% endif %}
+		    {% for i in stars.empty %} <span class="fa fa-star-o c-green"></span>{% endfor %}
 		  {% else %}
-		    {% for i in "11111" %} <span class="fa fa-star" style="color: grey;"></span>{% endfor %}
+		    {% for i in "11111" %} <span class="fa fa-star c-grey"></span>{% endfor %}
 		  {% endif %}
 		{% endwith %} 	    
-	</div>
-	 <div style="display:none" class="testo js-short-description"><i>{{ oer.description|truncatechars:80 }}</i> <a href="" class="js-expand-description">more</a></div>
-	<div style="display:inline-block" class="testo js-full-description"><i>{{ oer.description }}</i><br><a style="display:none" href="" class="js-hide-description">less</a></div>
+	</p>
+	{% if oer.description|length > 80 %}
+	    <p style="display:none" class="text-card short-description"><i>{{ oer.description|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+	    <p style="display:inline-block" class="text-card full-description"><i>{{ oer.description }}</i><br><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
+	{% else %}
+		<p style="display:inline-block" class="text-card full-description"><i>{{ oer.description }}</i></p>
+	{% endif %}		
 	{% if oer.subjects.all %}
-	    <dl class="lista-inline">
+	    <dl class="list-inline">
 	      <dt>{% trans "subject areas"|capfirst %}</dt>
 	        {% for subject in oer.subjects.all %}
-	        	<dd>{{ subject.option_label|safe }}</dd>
+	            <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}"><input type="submit" class="btn-link" value="{{ subject.option_label|safe }}"></form></dd>
 	        {% endfor %}
 	    </dl>
 	{% endif %}
 	 {% if oer.tags.all %}
-	    <dl class="lista-inline">
+	    <dl class="list-inline">
     		<dt>{% trans "tags"|capfirst %}</dt>
 		    {% for tag in oer.tags.all %}
-	        	<dd>{{ tag.name }}</dd>
+	        	<dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}"><input type="submit" class="btn-link" value="{{ tag.name }}"></form></dd>
 		    {% endfor %}
 		</dl>
 	{% endif %}
 	{% if oer.material %}
-	    <dl class="lista-inline">
+	    <dl class="list-inline">
 	        <dt>{% trans "type of material"|capfirst %}</dt>
-  	        <dd>{{ oer.material.name }}</dd>
+  	        <dd><form action="/oers/search/" method="post" id="material">{% csrf_token %}<input type="hidden" name="material" value="{{ oer.material.id }}"><input type="submit" class="btn-link" value="{{ oer.material.name }}"></form></dd>
   	    </dl>
     {% endif %}
     {% if oer.license %}
-        <dl class="lista-inline">
+        <dl class="list-inline">
             <dt>{% trans "terms of use"|capfirst %}</dt>
-            <dd>{{ oer.license.name }}</dd>
+            <dd><form action="/oers/search/" method="post" id="license">{% csrf_token %}<input type="hidden" name="license" value="{{ oer.license.id }}"> <input type="submit" class="btn-link" value="{{ oer.license.name }}"></form></dd>
         </dl>
   	{% endif %}
-</li>
+</article>
