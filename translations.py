@@ -18,7 +18,7 @@ register_translations(FlatPage, FlatPageTranslation)
 
 class TagTranslation(object):
     fields = ('name',)
-register_translations(Tag, TagTranslation)
+# register_translations(Tag, TagTranslation)
 
 
 class ProjTypeTranslation(object):
