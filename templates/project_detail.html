@@ -13,9 +13,36 @@
 	{% if project.has_chat_room and can_chat %}
 {% comment %}<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="screen, projection" />{% endcomment %}
 <link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
-<script>var room_label='{{ room_label }}';</script>
 <script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
-<script>window.scrollTo(0, 2000);</script>
+<script>
+	var room_label='{{ room_label }}';
+	window.scrollTo(0, 2000);
+</script>
+<style>
+dl.add-converse-contact {
+    display: none;
+}
+a.toggle-online-users {
+    display: none;
+}
+a.change-xmpp-status-message {
+    display: none  !important;
+}
+form.add-chatroom label {
+    display: none;
+}
+form.add-chatroom input {
+    display: none;
+}
+div.button-group input.left {
+    display: none !important;
+    width: 100% !important;
+}
+div.button-group input.right {
+    display: block !important;
+    width: 100% !important;
+}
+</style>
 	{% endif %}
 {% if can_delegate %}
 	<script>

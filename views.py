@@ -67,6 +67,20 @@ def home(request):
     wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
+def my_chat(request):
+    rooms = []
+    user = request.user
+    if user.is_authenticated():
+        xmpp_accounts = XMPPAccount.objects.filter(user=user)
+        for xmpp_account in xmpp_accounts:
+            room_members = RoomMember.objects.filter(xmpp_account=xmpp_account)
+            for room_member in room_members:
+                room = room_member.room
+                rooms.append(room)
+    chat_dict = {}
+    chat_dict['rooms'] = rooms
+    return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
+
 def user_profile(request, username, user=None):
     MAX_REPOS = MAX_OERS = 5
     if not user:
@@ -139,6 +153,10 @@ def profile_edit(request, username):
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+
+def my_preferences(request):
+    user = request.user
+    return render_to_response('user_preferences.html', {'user': user, 'profile': user.get_profile(),}, context_instance=RequestContext(request))
  
 def edit_preferences(request):
     user = request.user
@@ -149,7 +167,7 @@ def edit_preferences(request):
             if form.is_valid():
                 form.save()
                 if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/my_dashboard/')
+                    return HttpResponseRedirect('/my_preferences/')
                 else: 
                     return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
             else:

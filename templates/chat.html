@@ -1,0 +1,59 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+{% load conversejs %}
+	
+{% block head_title %}{% trans "my chatrooms"|capfirst %}{% endblock %}
+
+{% if rooms %}
+{% block extra_head %}
+	<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
+    <script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
+<style>
+form.add-chatroom {
+    display: none;
+}
+</style>
+{% endblock extra_head %}
+{% endif %}
+
+{% block body %}
+<section>
+	<h2 class="text-center" style="margin: 0 0;">{% trans "my chatrooms"|capfirst %}</h2>
+</section>
+<div class="row">
+{% comment %}
+  <div class="col-sm-3" style="margin-top: 4.0em;">
+	{% if rooms %}
+		<h4>{% trans "rooms"|capfirst %}</h4>
+		<ul>
+	    {% for room in rooms %}
+	    	<li>{{ room.title }}</li>
+		{% endfor %}
+		</ul>
+	{% endif %}
+  </div>
+{% endcomment %}
+  <div class="col-sm-12">
+ 	<section>
+ 	{% if rooms %}
+		{% comment %}{% conversejs_chatpanel %}{% endcomment %}
+		{% conversejs_initialize %}
+		<div id="conversejs"></div>
+  	{% else %}
+  		<div style="margin-top: 1em;">{% trans "you aren't member of any chatroom"|capfirst %}.</div>
+  	{% endif %}
+	<section>
+  </div>
+{% comment %}
+  <div class="col-sm-3" style="margin-top: 4.0em;">
+	{% if rooms %}
+		<h4>{% trans "contacts"|capfirst %}</h4>
+		<ul>
+		</ul>
+	{% endif %}
+{% endcomment %}
+  </div>
+</div>
+{% endblock %}
