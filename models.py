@@ -420,7 +420,10 @@ class Project(models.Model):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
 
 def forum_get_project(self):
-    return Project.objects.get(forum=self)
+    try:
+        return Project.objects.get(forum=self)
+    except:
+        return None
 Forum.get_project = forum_get_project
        
 class ProjectMember(models.Model):
