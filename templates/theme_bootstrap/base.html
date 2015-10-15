@@ -78,7 +78,7 @@
             {% block body_base %}
                 <section id="content_body">
                     <div class="container">
-                        {% include "_messages.html" %}
+                        {% comment %}{% include "_messages.html" %}{% endcomment %}
                         {% block body %}
                         {% endblock %}
                     </div>

@@ -11,8 +11,8 @@
         {% if user.is_authenticated %}
 		    <ul class="nav navbar-nav pull-right my-navbar-user-auth">
 		        <li><a href="{% url "account_settings" %}" title="{% trans "my profile"|capfirst %}">
-				{% if user.get_avatar %}
-				    <img src="/media/{{ user.get_avatar }}" class="avatar-small">
+				{% if user.profile.avatar %}
+				    <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
 				{% else %}
 				    <img src="/media/images/avatars/anonymous.png" class="avatar-small">
 				{% endif %}<span class="hidden-xs"> {{ user.get_display_name }}</span>
