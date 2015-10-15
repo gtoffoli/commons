@@ -259,6 +259,7 @@ PROJECT_TITLE = 'CommonSpaces'
 # PROJECT_NAME = 'mayan'
 PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/' 
 
 LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (

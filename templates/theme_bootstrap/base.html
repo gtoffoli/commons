@@ -40,19 +40,21 @@
         <div class="{% block wrapper_class %}wrapper{% endblock %}">
 
             {% block topbar_base %}
-{% block user %}{% endblock user %}
                 <header>
-
-                    <div class="navbar navbar-default {% block navbar_class %}navbar-fixed-top{% endblock %}">
-                        <div class="container-fluid">
-                        {% block topbar %}
-                            <div class="navbar-header">
-                                <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                                    <span class="fa fa-bars"></span>
-                                </button>
-                                {% block site_brand %}<a class="navbar-brand" href="{% url "home" %}">{{ SITE_NAME }}</a>{% endblock %}
-                            </div>
-                            <div class="collapse navbar-collapse navbar-responsive-collapse">
+                    <div class="navbar-fixed-top">
+                        {% block user %} {% include "_access_bar.html" %} {% endblock user %}
+                        <div class="navbar navbar-default" >
+                            <div class="container">
+                            {% block topbar %}
+                                <div class="navbar-header">
+                                    <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                                        <span class="fa fa-bars"></span>
+                                    </button>
+                                    {% comment %}
+                                       {% block site_brand %}<a class="navbar-brand" href="{% url "home" %}">{{ SITE_NAME }}</a>{% endblock %}
+                                    {% endcomment %}
+                                </div>
+                                <div class="collapse navbar-collapse navbar-responsive-collapse">
                                 {% block nav %}
                                     {% comment %}
                                         <ul class="nav navbar-nav">
@@ -61,12 +63,16 @@
                                         </ul>
                                     {% endcomment %}
                                 {% endblock nav %}
-                                {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
+                                {% comment %}
+                                    {% block account_bar %}{% include "_account_bar.html" %}{% endblock %}
+                                {% endcomment %}
+                                </div>
+                            {% endblock topbar %}
                             </div>
-                        {% endblock topbar %}
                         </div>
                     </div>
                 </header>
+                {% block login_model %}{% include "_login_model.html" %}{% endblock %}
             {% endblock topbar_base %}
 
             {% block body_base %}
