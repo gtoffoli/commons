@@ -18,7 +18,7 @@
 				{% endif %}<span class="hidden-xs"> {{ user.get_display_name }}</span>
 			    </a></li>
 		    	<li><a href="/my_mail/" title="{% trans "my messages"|capfirst %}"><span class="fa fa-envelope"></span></a></li>
-		    	<li style="padding-top:5px"><a href="/my_chat/" title="{% trans "chat"|capfirst %}"><span class="fa fa-wechat"></span></a></li>
+		    	<li><a href="/my_chat/" title="{% trans "chat"|capfirst %}"><span class="fa fa-wechat"></span></a></li>
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 		    			<span class="fa fa-cog"></span>
@@ -32,7 +32,13 @@
 		    		</ul>
                  </li>
                 <li>
-                  <a href="{% url "account_logout" %}" title="{% trans "log out"|capfirst %}"><span class="fa fa-power-off"></span></a>
+                	<form method="post" action="{% url 'account_logout' %}" class="form-logout">
+  						{% csrf_token %}
+ 					    {% if redirect_field_value %}
+                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+                        {% endif %}
+                        <button type="submit" class="btn btn-logout"><span class="fa fa-power-off"></span></button>
+                    </form>
                 </li>
             </ul>
     	{% else %}

@@ -64,12 +64,14 @@ margin-right:0;
 }
 
 /* FORM LOGIN */
-.mylogin {
+.mylogin ,
+.mymodallogin{
 	margin-left: 0;
 	margin-right: 0;
 	margin-top:12px;
 }
-.mylogin input {
+.mylogin input,
+.mymodallogin input {
     font-size:13px;
     height:30px;
     border:0;
@@ -81,9 +83,13 @@ margin-right:0;
     color: white;
 }
 .mylogin .btn,
-.mylogin-xs .btn {
+.mylogin-xs .btn,
+.mymodallogin .btn {
 	border: 0;
 	padding: 6px; 
+}
+.mymodallogin input[type="checkbox"]{
+    height:auto;
 }
 .btn-primary {
 	font-weight: 600;
@@ -97,6 +103,27 @@ margin-right:0;
 .btn-accent:hover {
 	color: white;
 }
+.form-logout {
+	padding-top:10px;
+	padding-bottom:10px;
+
+}
+.btn-logout {
+	padding-left: 7px;
+	padding-right: 7px;
+	background:transparent;
+	border-radius:0;
+	border:none;
+	color:#ccc;
+}
+.btn-logout:hover,
+.btn-logout:focus {
+	color:white;
+} 
+.modal-backdrop {
+	z-index:0;
+}
+
 .modal-footer {
 	text-align:left;
 }

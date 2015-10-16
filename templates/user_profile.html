@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "member"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -28,6 +28,9 @@
   </div>
   <div class="col-sm-6">
     <section>
+			{% if user == profile_user and not profile.get_completeness %}
+				<div style="margin-top: 20px; color: red;">{% trans "please, complete your profile"|capfirst %}!</div>
+			{% endif %}
             <h2 class="text-center">{% trans "member"|capfirst %}:
 			{% if profile %}
 				{% if profile.avatar %}
@@ -36,15 +39,15 @@
 				    <img src="/media/images/avatars/anonymous.png" />
 				{% endif %}
 			{% endif %}
-			{{ user.get_display_name }}
-			{% if can_edit %}&nbsp;<a href="/profile/{{ user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
+			{{ profile_user.get_display_name }}
+			{% if can_edit %}&nbsp;<a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h2>
 			{% if profile %}
 				{% if profile.short %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ profile.short }}</div>{% endif %}
 			{% endif %}
 {% if request.path = '/my_profile/' %}
-			<div><strong>{% trans "username"|capfirst %}</strong>: {{ user.username }}</div>
-			<div><strong>{% trans "email"|capfirst %}</strong>: {{ user.email }}</div>
+			<div><strong>{% trans "username"|capfirst %}</strong>: {{ profile_user.username }}</div>
+			<div><strong>{% trans "email"|capfirst %}</strong>: {{ profile_user.email }}</div>
 {% endif %}
 {% if profile %}
 			{% if profile.country %}<div><strong>{% trans "country"|capfirst %}</strong>:

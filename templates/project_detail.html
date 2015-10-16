@@ -55,9 +55,7 @@ div.button-group input.right {
 {% endblock %}
 
 {% block body %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
+    {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
 <div class="row">
   <div class="col-sm-3" style="margin-top: 4.0em;">
   		 {% if project.group.level > 0 %}

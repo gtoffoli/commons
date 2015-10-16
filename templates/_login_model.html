@@ -10,7 +10,7 @@
 					<h4 class="modal-title">{% trans "Log in" %}</h4>
 				</div>
 				<div class="modal-body">
-                     <form method="post" id="form-login-modal" class="mylogin" action="/accounts/login/">
+                     <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/">
                         {% csrf_token %}
 						<fieldset class="userdata">
 							<div id="form-login-e-mail" class="form-group">
@@ -32,7 +32,7 @@
 					
 							<div id="form-login-remember" class="form-group">
 								<label for="modlgn-remember">
-									{% trans "Remember Me" %}: <input id="modlgn-remember" type="checkbox" name="remember" class="input" value="yes"> 
+									{% trans "Remember Me" %}: <input id="modlgn-remember" type="checkbox" name="remember"  value="yes"> 
 								</label>
 							</div>
 							<div class="form-group">

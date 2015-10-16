@@ -125,6 +125,13 @@ class UserProfile(models.Model):
             display_name = '%s %s' % (user.first_name, user.last_name)
         return display_name
 
+    def get_completeness(self):
+        level = 0
+        user = self.user
+        if user.first_name and user.last_name and self.dob and self.country and self.edu_level and self.pro_status and self.short:
+            level = 1
+        return level
+
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)

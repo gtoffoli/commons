@@ -26,6 +26,8 @@ ACCOUNT_EMAIL_REQUIRED = True # False
 ACCOUNT_EMAIL_VERIFICATION = "optional" # "mandatory"
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
+ACCOUNT_ADAPTER = 'commons.adapter.MyAccountAdapter'
+
 # EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 import os
@@ -259,7 +261,7 @@ PROJECT_TITLE = 'CommonSpaces'
 # PROJECT_NAME = 'mayan'
 PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/' 
+# LOGOUT_REDIRECT_URL = '/' 
 
 LANGUAGE_CODE = 'en-gb'
 LANGUAGES = (

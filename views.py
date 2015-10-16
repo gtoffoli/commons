@@ -6,13 +6,13 @@ Created on 02/apr/2015
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
-from django.db import transaction
-from django.forms import ModelMultipleChoiceField
+# from django.db import transaction
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
-from django.utils.translation import get_language, pgettext, ugettext_lazy as _
+from django.utils.text import capfirst
+from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.views import compose as message_compose
 
 from commons import settings
@@ -102,7 +102,8 @@ def user_profile(request, username, user=None):
         oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
-    return render_to_response('user_profile.html', {'can_edit': can_edit, 'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
+    profile = user.get_profile()
+    return render_to_response('user_profile.html', {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
 
 def my_profile(request):
     user = request.user
@@ -336,7 +337,7 @@ def apply_for_membership(request, username, project_slug):
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
-            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': _('has applied for membership in project'), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
+            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
         return my_profile(request)
 
@@ -370,19 +371,25 @@ def project_toggle_supervisor_role(request, project_id):
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def project_create_forum(request, project_id):
-    project = get_object_or_404(Project,id=project_id)
-    assert not project.forum
-    try:
-        category = Category.objects.get(position=1)
-        category_id = category.id
-    except:
-        category_id = 1
-    forum = Forum(name=project.get_name(), category_id=category_id)
+    project = get_object_or_404(Project, id=project_id)
+    name = project.get_name()
+    type_name = project.proj_type.name
+    if type_name == 'com':
+        position = 2
+        name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()), ' (', _('please change this name'), ')')
+    else:
+        assert not project.forum
+        position = 1
+    category = get_object_or_404(Category, position=position)
+    forum = Forum(name=name, category_id=category.id)
     forum.save()
-    project.forum = forum
-    project.editor = request.user
-    project.save()
-    return project_detail(request, project_id, project=project)    
+    if type_name == 'com':
+        return HttpResponseRedirect('/forum/forum/%d/' % forum.id)    
+    else:
+        project.forum = forum
+        project.editor = request.user
+        project.save()
+        return project_detail(request, project_id, project=project)    
 
 def project_create_room(request, project_id):
     project = get_object_or_404(Project,id=project_id)
