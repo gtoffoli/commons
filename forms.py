@@ -21,6 +21,7 @@ from taggit_labels.widgets import LabelWidget
 
 from django_messages.forms import ComposeForm
 from django_messages.fields import CommaSeparatedUserField
+from pybb.models import Forum
 
 import settings
 from dmuc.models import Room
@@ -456,3 +457,12 @@ class ProjectMessageComposeForm(MessageComposeForm):
         recipient_filter = kwargs.pop('recipient_filter')
         super (ProjectMessageComposeForm, self ).__init__(*args, **kwargs) # populates the post
         self.fields['recipient'].queryset = User.objects.filter(username__in=recipient_filter)
+
+class ForumForm(forms.ModelForm):
+    class Meta:
+        model = Forum
+        fields = ['name', 'headline',]
+ 
+    name = forms.CharField(label=_('name'), widget=forms.TextInput(attrs={'class':'span4 form-control',}), help_text=_('please, replace the automatically generated name with an appropriate one'))
+    headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
+

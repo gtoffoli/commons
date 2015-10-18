@@ -14,6 +14,7 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.views import compose as message_compose
+from actstream import action, registry
 
 from commons import settings
 from documents import DocumentType, Document
@@ -27,7 +28,9 @@ from models import LP_COLLECTION, LP_SEQUENCE
 from forms import UserProfileExtendedForm, UserPreferencesForm, ProjectForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
-from forms import ProjectMessageComposeForm
+from forms import ProjectMessageComposeForm, ForumForm
+
+from permissions import ForumPermissionHandler
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -41,6 +44,9 @@ from notification import models as notification
 # from pinax.notifications import models as notification
 from pybb.models import Forum, Category
 from zinnia.models import Entry
+
+registry.register(Project)
+registry.register(Forum)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -371,25 +377,56 @@ def project_toggle_supervisor_role(request, project_id):
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def project_create_forum(request, project_id):
+    user = request.user
     project = get_object_or_404(Project, id=project_id)
     name = project.get_name()
     type_name = project.proj_type.name
-    if type_name == 'com':
-        position = 2
-        name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()), ' (', _('please change this name'), ')')
+    if type_name == 'com' and request.GET.get('thematic', ''):
+        position = 1
+        name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()+1), ' (', _('please change this name'), ')')
     else:
         assert not project.forum
-        position = 1
+        position = 2
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
     forum.save()
-    if type_name == 'com':
+    action.send(user, verb='Create', action_object=forum, target=project)
+    if type_name == 'com' and request.GET.get('thematic', ''):
+        forum.moderators.add(user)
         return HttpResponseRedirect('/forum/forum/%d/' % forum.id)    
     else:
         project.forum = forum
-        project.editor = request.user
+        project.editor = user
         project.save()
         return project_detail(request, project_id, project=project)    
+
+def forum_edit(request, forum_id=None):
+    user = request.user
+    if forum_id:
+        forum = get_object_or_404(Forum, id=forum_id)
+        forum_permission_handler = ForumPermissionHandler()
+        if not forum_permission_handler.may_create_topic(user, forum):
+            return HttpResponseRedirect(forum.get_absolute_url())
+    if request.POST:
+        forum_id = request.POST.get('id')
+        forum = Forum.objects.get(id=forum_id)
+        if request.POST.get('save', ''):
+            form = ForumForm(request.POST, instance=forum)
+            if form.is_valid():
+                forum = form.save()
+                return HttpResponseRedirect(forum.get_absolute_url())
+            else:
+                print form.errors
+                return render_to_response('forum_edit.html', {'form': form,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            return HttpResponseRedirect(forum.get_absolute_url())
+    else:
+        form = ForumForm(instance=forum)
+        return render_to_response('forum_edit.html', {'forum': forum, 'form': form,}, context_instance=RequestContext(request))
+
+def forum_edit_by_id(request, forum_id):
+    forum = get_object_or_404(Forum, id=forum_id)
+    return forum_edit(request, forum_id=forum.id)
 
 def project_create_room(request, project_id):
     project = get_object_or_404(Project,id=project_id)
@@ -401,6 +438,7 @@ def project_create_room(request, project_id):
     project.chat_room = room
     project.editor = request.user
     project.save()
+    action.send(request.user, verb='Create', action_object=room, target=project)
     return project_detail(request, project_id, project=project)    
 
 def project_sync_xmppaccounts(request, project_id):

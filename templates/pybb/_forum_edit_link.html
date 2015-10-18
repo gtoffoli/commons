@@ -1,0 +1,2 @@
+{% load i18n %}
+{% if user in forum.moderators.all or user.is_superuser %}&nbsp; <a href="/forum_edit/{{ forum.id }}/" title="{% trans "show edit view" %}"><span class="fa fa-edit" style="font-size: 0.7em;"></span></a>{% endif %}

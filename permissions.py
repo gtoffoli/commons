@@ -12,13 +12,15 @@ class ForumPermissionHandler(DefaultPermissionHandler):
     '''
     def may_view_forum(self, user, forum):
         """ return True if user may view this forum, False if not """
-        return user.is_authenticated
+        return user.is_authenticated() or not topic.forum.get_project()
 
     def may_create_topic(self, user, forum):
         """ return True if `user` is allowed to create a new topic in `forum` """
-        if not user.is_authenticated:
+        if not user.is_authenticated():
             return False
         if user.is_superuser:
+            return True
+        elif user in forum.moderators.all():
             return True
         try:
             project = Project.objects.get(forum=forum)
@@ -29,7 +31,7 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
-        return user.is_authenticated
+        return user.is_authenticated() or not topic.forum.get_project()
     
     def may_create_poll(self, user):
         """
@@ -53,5 +55,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         if defaults.PYBB_ENABLE_ANONYMOUS_POST:
             return True
 
-        return self.may_create_topic(user, topic.forum)
+        if self.may_create_topic(user, topic.forum):
+            return True
+        
+        return user.is_authenticated() and not topic.forum.get_project()
 

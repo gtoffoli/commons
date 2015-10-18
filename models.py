@@ -432,7 +432,7 @@ def forum_get_project(self):
     except:
         return None
 Forum.get_project = forum_get_project
-       
+   
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
     user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')

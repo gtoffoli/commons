@@ -7,7 +7,7 @@
 	{% comment %}{% load dmuc %}{% endcomment %}
 {% endif %}
 
-{% block head_title %}{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block extra_head %}
 	{% if project.has_chat_room and can_chat %}
@@ -102,10 +102,17 @@ div.button-group input.right {
 			{% endif %}
 		{% endif %}
 
-		{% if can_accept_member and not project.forum %}
-   			<h4>{% trans "project forum"|capfirst %}</h4>
+		{% if is_admin %}
+		{% if proj_type.name == 'com' or not project.forum %}
+   			<h4>{% trans "forum"|capfirst %}</h4>
             <ul class="list-unstyled">
+		{% endif %}
+		{% if not project.forum %}
             	<li>- <a href="/project/{{ project.id }}/create_forum/">{% trans "create"|capfirst %} {% trans "project forum" %}</a> -</li>
+		{% endif %}
+		{% if proj_type.name == 'com' %}
+            	<li>- <a href="/project/{{ project.id }}/create_forum/?thematic=true">{% trans "create"|capfirst %} {% trans "thematic forum" %}</a> -</li>
+		{% endif %}
             </ul>
 		{% endif %}
 
@@ -173,9 +180,11 @@ div.button-group input.right {
     <section>
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
         {% if user.is_authenticated and project.forum %}
-			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">- {% trans "view project forum"|capfirst %} -</a></div>
+			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">-
+			{% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view project forum"|capfirst %}{% endif %}
+			-</a></div>
 		{% endif %}
-   		{% if user.is_authenticated and not project.proj_type.name == 'com' %}
+   		{% if user.is_authenticated and not proj_type.name == 'com' %}
         {% if False and is_member %}
 			<div style="margin-bottom: 5px;">
   	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/compose_message/" method="post">

@@ -1,0 +1,3 @@
+{% load url from future %}
+{% load i18n %}
+<a href="{% url 'account_signup' %}">{% trans "register|capfirst" %}</a> {% trans "or" %} <a href="{% url 'account_login' %}?next={{ next }}">{% trans "login" %}</a> {% trans "to post a reply" %}.

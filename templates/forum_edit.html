@@ -1,0 +1,34 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+{% load tinymce_tags %}
+
+{% block head_title %}{% trans "edit forum"|capfirst %}: &nbsp;{{ forum.name }}{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col-sm-12">
+    <section>
+       <h2 class="text-center">{% trans "edit forum"|capfirst %}: <i>{{ forum.name }}</i></h2>
+    <form method="post" action="{{ action }}" id="forum_edit_form" class="form-horizontal">
+	{% csrf_token %}
+	{% if forum %}<input type="hidden" id="id" name="id" value="{{ forum.id }}" />{% endif %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
+	<div class="form-group col-lg-{% if i == 1 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 %}8{% else %}5{% endif %}">
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
+		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
+	</div>
+	</div>
+    {% endwith %}{% endfor %}
+
+   	</div></div>
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
+		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+    </form>
+    </section>
+  </div>
+{% endblock %}
