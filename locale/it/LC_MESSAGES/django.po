@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-21 10:49+0200\n"
-"PO-Revision-Date: 2015-10-21 08:53+0000\n"
+"POT-Creation-Date: 2015-10-21 15:59+0200\n"
+"PO-Revision-Date: 2015-10-21 14:07+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1348,7 +1348,7 @@ msgstr "Vi sono %(obsolete_count)s traduzioni obsolete."
 msgid ""
 "Please review them to see if you can reuse something,\n"
 "\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
-msgstr ""
+msgstr "Elenco"
 
 #: .\templates\datatrans\obsolete_list.html:17
 #: .\templates\datatrans\obsolete_list.html:35
@@ -1479,6 +1479,7 @@ msgid "View Message"
 msgstr "Vedi Messaggio"
 
 #: .\templates\django_messages\view.html:22
+#: .\templates\pybb\post_template.html:58
 msgid "Delete"
 msgstr "Elimina"
 
@@ -1904,7 +1905,7 @@ msgstr "forum"
 msgid "create"
 msgstr "crea"
 
-#: .\templates\project_detail.html:113 .\views.py:387
+#: .\templates\project_detail.html:113 .\views.py:388
 msgid "thematic forum"
 msgstr "forum a tema"
 
@@ -2048,11 +2049,11 @@ msgstr "entra"
 msgid "to post a reply"
 msgstr "per scrivere una risposta"
 
-#: .\templates\pybb\base.html:10
+#: .\templates\pybb\base.html:12
 msgid "Latest posts on forum"
 msgstr "Ultimi post nel forum"
 
-#: .\templates\pybb\base.html:11
+#: .\templates\pybb\base.html:13
 msgid "Latest topics on forum"
 msgstr "Ultime discussioni nel forum"
 
@@ -2063,6 +2064,10 @@ msgstr "indice dei forum"
 #: .\templates\pybb\breadcrumb.html:26 .\templates\pybb\breadcrumb.html:32
 msgid "go to project"
 msgstr "vai al progetto"
+
+#: .\templates\pybb\index.html:7
+msgid "List"
+msgstr ""
 
 #: .\templates\pybb\index.html:19
 msgid "Forum categories are not created"
@@ -2079,6 +2084,74 @@ msgstr "Ultimi aggiornamenti nelle discussioni"
 #: .\templates\pybb\index.html:30
 msgid "Mark all forums as read"
 msgstr "Segna tutti i forum come letti"
+
+#: .\templates\pybb\pagination.html:7
+msgid "previous page"
+msgstr "pagina precedente"
+
+#: .\templates\pybb\pagination.html:21
+msgid "next page"
+msgstr "pagina successiva"
+
+#: .\templates\pybb\post_template.html:39
+msgid "Rank"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:57
+msgid "Delete post?"
+msgstr "Rimuovi il post?"
+
+#: .\templates\pybb\post_template.html:60
+msgid "Approve post"
+msgstr "Approva il post"
+
+#: .\templates\pybb\post_template.html:65 .\templates\pybb\topic.html:77
+msgid "Admin"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:115
+msgid "reply"
+msgstr "rispondi"
+
+#: .\templates\pybb\post_template.html:116
+msgid "quote all"
+msgstr "cita tutto"
+
+#: .\templates\pybb\post_template.html:117
+msgid "quote selected text"
+msgstr "cita il testo selezionato"
+
+#: .\templates\pybb\topic.html:33 .\templates\pybb\topic.html.py:57
+msgid "Posts"
+msgstr "Post"
+
+#: .\templates\pybb\topic.html:66
+msgid "Unstick topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:68
+msgid "Stick topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:72
+msgid "Open topic"
+msgstr "Apri il topic"
+
+#: .\templates\pybb\topic.html:74
+msgid "Close topic"
+msgstr "Chiudi il topic"
+
+#: .\templates\pybb\topic.html:85
+msgid "Unsubscribe"
+msgstr ""
+
+#: .\templates\pybb\topic.html:87
+msgid "Subscribe"
+msgstr ""
+
+#: .\templates\pybb\topic.html:103
+msgid "Subscribers"
+msgstr ""
 
 #: .\templates\repo_contributors.html:23
 msgid "no repository"
@@ -2396,19 +2469,19 @@ msgstr "Mappa del blog"
 msgid "Search"
 msgstr "Cerca"
 
-#: .\views.py:347
+#: .\views.py:348
 msgid "membership application"
 msgstr "richiesta di adesione"
 
-#: .\views.py:347
+#: .\views.py:348
 msgid "has applied for membership in"
 msgstr "ha presentato la richiesta di adesione"
 
-#: .\views.py:347
+#: .\views.py:348
 msgid " "
 msgstr ""
 
-#: .\views.py:387
+#: .\views.py:388
 msgid "please change this name"
 msgstr "per favore modifica questo nome"
 

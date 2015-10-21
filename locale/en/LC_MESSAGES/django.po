@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-21 10:49+0200\n"
+"POT-Creation-Date: 2015-10-21 15:59+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1477,6 +1477,7 @@ msgid "View Message"
 msgstr ""
 
 #: .\templates\django_messages\view.html:22
+#: .\templates\pybb\post_template.html:58
 msgid "Delete"
 msgstr ""
 
@@ -1900,7 +1901,7 @@ msgstr ""
 msgid "create"
 msgstr ""
 
-#: .\templates\project_detail.html:113 .\views.py:387
+#: .\templates\project_detail.html:113 .\views.py:388
 msgid "thematic forum"
 msgstr ""
 
@@ -2044,11 +2045,11 @@ msgstr ""
 msgid "to post a reply"
 msgstr ""
 
-#: .\templates\pybb\base.html:10
+#: .\templates\pybb\base.html:12
 msgid "Latest posts on forum"
 msgstr ""
 
-#: .\templates\pybb\base.html:11
+#: .\templates\pybb\base.html:13
 msgid "Latest topics on forum"
 msgstr ""
 
@@ -2058,6 +2059,10 @@ msgstr ""
 
 #: .\templates\pybb\breadcrumb.html:26 .\templates\pybb\breadcrumb.html:32
 msgid "go to project"
+msgstr ""
+
+#: .\templates\pybb\index.html:7
+msgid "List"
 msgstr ""
 
 #: .\templates\pybb\index.html:19
@@ -2074,6 +2079,74 @@ msgstr ""
 
 #: .\templates\pybb\index.html:30
 msgid "Mark all forums as read"
+msgstr ""
+
+#: .\templates\pybb\pagination.html:7
+msgid "previous page"
+msgstr ""
+
+#: .\templates\pybb\pagination.html:21
+msgid "next page"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:39
+msgid "Rank"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:57
+msgid "Delete post?"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:60
+msgid "Approve post"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:65 .\templates\pybb\topic.html:77
+msgid "Admin"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:115
+msgid "reply"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:116
+msgid "quote all"
+msgstr ""
+
+#: .\templates\pybb\post_template.html:117
+msgid "quote selected text"
+msgstr ""
+
+#: .\templates\pybb\topic.html:33 .\templates\pybb\topic.html.py:57
+msgid "Posts"
+msgstr ""
+
+#: .\templates\pybb\topic.html:66
+msgid "Unstick topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:68
+msgid "Stick topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:72
+msgid "Open topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:74
+msgid "Close topic"
+msgstr ""
+
+#: .\templates\pybb\topic.html:85
+msgid "Unsubscribe"
+msgstr ""
+
+#: .\templates\pybb\topic.html:87
+msgid "Subscribe"
+msgstr ""
+
+#: .\templates\pybb\topic.html:103
+msgid "Subscribers"
 msgstr ""
 
 #: .\templates\repo_contributors.html:23
@@ -2392,19 +2465,19 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: .\views.py:347
+#: .\views.py:348
 msgid "membership application"
 msgstr ""
 
-#: .\views.py:347
+#: .\views.py:348
 msgid "has applied for membership in"
 msgstr ""
 
-#: .\views.py:347
+#: .\views.py:348
 msgid " "
 msgstr ""
 
-#: .\views.py:387
+#: .\views.py:388
 msgid "please change this name"
 msgstr ""
 

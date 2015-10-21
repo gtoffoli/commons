@@ -4,7 +4,7 @@
 
 {% load i18n %}
 
-{% block title %}{{ PYBB_DEFAULT_TITLE }}{% endblock title %}
+{% block title %}{% trans "List" %} {% if category.name %}{{ category.name }}{% else %}forum{% endif %}{% endblock title %}
 
 {% block breadcrumb %}
     {% with extra_crumb="Forum" %}{% include "pybb/breadcrumb.html" %}{% endwith %}

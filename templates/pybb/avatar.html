@@ -1,10 +1,10 @@
-<div class="avatar">
+<div>
     <a href="/profile/{{ user.username }}/">
 	{% with profile=user.get_profile %}
         {% if profile.avatar %}
-            <img src="/media/{{ profile.avatar }}" alt="user avatar" width="{{ PYBB_AVATAR_WIDTH }}" height="{{ PYBB_AVATAR_HEIGHT }}"/>
+            <img src="/media/{{ profile.avatar }}" class="avatar-medium">
         {% else %}
-            <img src="{{ PYBB_DEFAULT_AVATAR_URL }}" alt="default avatar" width="{{ PYBB_AVATAR_WIDTH }}" height="{{ PYBB_AVATAR_HEIGHT }}"/>
+            <img src="/media/images/avatars/anonymous.png" class="avatar-medium">
         {% endif %}
 	{% endwith %}
     </a>

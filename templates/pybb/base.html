@@ -2,8 +2,9 @@
 {% load i18n pybb_tags %}
 {% load url from future %} 
 
-{% block title %}{{ PYBB_DEFAULT_TITLE }}{% endblock title %}
-
+{% comment %}{% block title %}{{ PYBB_DEFAULT_TITLE }}{% endblock title %}{% endcomment %}
+{
+{% block head_title %}{% block title %}{% endblock title %} | {{ PYBB_DEFAULT_TITLE }}{% endblock %}
 {% block extra_head %}
     {{ block.super }}
     <!-- Feeds -->
@@ -14,7 +15,7 @@
 {% block body %}
 <div class="container">
 
-  <div class="col-sm-9">
+  <div class="col-sm-9 col-dm-9">
   	{% block breadcrumb %}
     	{% include "pybb/breadcrumb.html" %}
   	{% endblock %}
@@ -23,7 +24,7 @@
 	{% endblock %}
   </div>
 
-  <div class="col-sm-3">
+  <div class="col-sm-3 col-dm-9">
   </div>
 
 </div>

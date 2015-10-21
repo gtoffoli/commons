@@ -5,12 +5,16 @@ html, body {
 	height: 100%;
 }
 body {
-	padding-top:100px;
+	padding-top:110px;
 }
 /* FONT FAMILY */
 body,
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family: 'Open Sans', sans-serif;
+}
+h1 {
+	font-size: 30px;
+	margin-top: 10px;
 }
 
 /* FOOTER FIXED */
@@ -140,6 +144,18 @@ margin-right:0;
 	color:#555;
     background-color: #e7e7e7;
 }
+/* BREADCRUMB */
+
+.breadcrumb {
+	background: white;
+	margin:20px 0 0;
+	padding: 0;
+
+}
+.breadcrumb > li +li:before{
+	content: "\2192" !important;
+}
+
 /* CAROUSEL */
 .carousel-fade .carousel-inner .item {
 	opacity: 0;
@@ -274,7 +290,7 @@ margin-right:0;
 
 }
 
-	@media all and (transform-3d), (-webkit-transform-3d) {
+@media all and (transform-3d), (-webkit-transform-3d) {
 .carousel-fade .carousel-inner > .item.next,
 .carousel-fade .carousel-inner > .item.active.right,
 .carousel-fade .carousel-inner > .item.prev,
@@ -398,7 +414,39 @@ dl.list-inline dd input.btn-link {
 .avatar-small {
 	width:20px;
 	height:auto;
-	/*border-radius:50%;*/
 	border-radius:3px;
 	margin-top:-4px;
+}
+.avatar-medium {
+	width:40px;
+	height:auto;
+	border-radius:3px;
+	margin-top:-4px;
+}
+/* PAGINATION */
+.pagination {
+	margin: 10px 0;
+}
+.pagination > li > a,
+.pagination >li > span {
+  padding: 4px 8px;
+  border-width : 0 !important;
+  font-size: 13px;
+}
+
+/* FORUM */
+.mytable-bordered {
+  border:1px solid #e7e7e7;
+  font-size:13px;
+  margin-bottom:0;
+}
+.mytable-bordered tbody > tr > td {
+	border:none !important;
+}
+.post-content blockquote {
+	padding: 10px 20px;
+  margin: 0 0 20px;
+  font-size: 12px;
+  border: none;
+  background: #FFFFE6;
 }

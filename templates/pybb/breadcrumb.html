@@ -26,7 +26,7 @@
     {% if object.forum %}
     {% with project=object.forum.get_project %}
     	{% if project %}
-    	&nbsp;&nbsp;<a href="/project/{{ project.slug }}/" title="{% trans "go to project" %}"><span class="fa fa-group" style="font-size: 0.7em;""></span></a>
+    	&nbsp;&nbsp;<a href="/project/{{ project.slug }}/" title="{% trans "go to project" %}"><span class="fa fa-group" style="font-size: 0.7em;"></span></a>
         {% endif %}
     {% endwith %}
     {% endif %}
