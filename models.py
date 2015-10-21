@@ -237,7 +237,7 @@ class Project(models.Model):
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
-    chat_room = models.ForeignKey(Room, verbose_name=_('chat room'), blank=True, null=True, related_name='project')
+    chat_room = models.ForeignKey(Room, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     forum = models.ForeignKey(Forum, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)

@@ -116,10 +116,10 @@
 
 		{% if can_accept_member %}
 		{% if project.need_create_room or project.need_sync_xmppaccounts %}
-   			<h4>{% trans "chat room"|capfirst %}</h4>
+   			<h4>{% trans "chatroom"|capfirst %}</h4>
             <ul class="list-unstyled">
 			{% if project.need_create_room %}
-            	<li>- <a href="/project/{{ project.id }}/create_room/">{% trans "create"|capfirst %} {% trans "chat room" %}</a> -</li>
+            	<li>- <a href="/project/{{ project.id }}/create_room/">{% trans "create"|capfirst %} {% trans "chatroom" %}</a> -</li>
 			{% endif %}
 			{% if project.need_sync_xmppaccounts %}
             	<li>- <a href="/project/{{ project.id }}/sync_xmpp/">{% trans "add missing accounts"|capfirst %}</a> -</li>
@@ -194,19 +194,19 @@
         {% if project.has_chat_room %}
 	        {% if can_chat %}
 {% comment %}
-	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
+	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chatroom" %}</i>
 	            <div style="margin-top: 270px;"></div>
 		      	{% conversejs_chatpanel %}
 		        {% conversejs_initialize %}
 {% endcomment %}
-				<div style="margin-bottom: 5px;"><a href="/my_chat/">- {% trans "view the project chat room"|capfirst %} -</a></div>
+				<div style="margin-bottom: 5px;"><a href="/my_chat/">- {% trans "view the project chatroom"|capfirst %} -</a></div>
 	        {% elif is_member %}
-	            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chat room" %}</i>
+	            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chatroom" %}</i>
 	        {% else %}
 	            <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
 			{% endif %}
         {% else %}
-            <i>{% trans "no chat room has has been created for this project"|capfirst %}</i>
+            <i>{% trans "no chatroom has has been created for this project"|capfirst %}</i>
         {% endif %}  
         {% endif %}
     </section>
