@@ -11,6 +11,7 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
 from taggit.managers import TaggableManager
+from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -60,6 +61,12 @@ def user_can_add_repo(self, request):
             return True
     return False
 User.can_add_repo = user_can_add_repo
+
+def user_has_xmpp_account(self):
+    return XMPPAccount.objects.filter(user=self)
+User.has_xmpp_account = user_has_xmpp_account
+
+User.inbox_count = inbox_count_for   
 
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save

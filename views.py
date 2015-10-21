@@ -232,7 +232,8 @@ def project_detail(request, project_id, project=None):
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')
     else:
-        oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
+        # oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
+        oers = OER.objects.filter(project_id=project_id).filter(Q(state=PUBLISHED) | Q(creator=user)).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
     oer_evaluations = project.get_oer_evaluations()

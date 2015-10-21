@@ -4,46 +4,44 @@
 {% if project.has_chat_room and can_chat %}
 	{% load static from staticfiles %}
 	{% load conversejs %}
-	{% comment %}{% load dmuc %}{% endcomment %}
 {% endif %}
 
 {% block head_title %}{% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block extra_head %}
-	{% if project.has_chat_room and can_chat %}
-{% comment %}<link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css" media="screen, projection" />{% endcomment %}
-<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
-<script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
-<script>
-	var room_label='{{ room_label }}';
-	window.scrollTo(0, 2000);
-</script>
-<style>
-dl.add-converse-contact {
-    display: none;
-}
-a.toggle-online-users {
-    display: none;
-}
-a.change-xmpp-status-message {
-    display: none  !important;
-}
-form.add-chatroom label {
-    display: none;
-}
-form.add-chatroom input {
-    display: none;
-}
-div.button-group input.left {
-    display: none !important;
-    width: 100% !important;
-}
-div.button-group input.right {
-    display: block !important;
-    width: 100% !important;
-}
-</style>
-	{% endif %}
+{% if project.has_chat_room and can_chat %}
+	<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
+	<script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
+	<script>
+		var room_label='{{ room_label }}';
+		window.scrollTo(0, 2000);
+	</script>
+	<style>
+		dl.add-converse-contact {
+		    display: none;
+		}
+		a.toggle-online-users {
+		    display: none;
+		}
+		a.change-xmpp-status-message {
+		    display: none  !important;
+		}
+		form.add-chatroom label {
+		    display: none;
+		}
+		form.add-chatroom input {
+		    display: none;
+		}
+		div.button-group input.left {
+		    display: none !important;
+		    width: 100% !important;
+		}
+		div.button-group input.right {
+		    display: block !important;
+		    width: 100% !important;
+		}
+	</style>
+{% endif %}
 {% if can_delegate %}
 	<script>
 	function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the admin or supervisor role to this member" %}?');}
@@ -181,7 +179,7 @@ div.button-group input.right {
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
         {% if user.is_authenticated and project.forum %}
 			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">-
-			{% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view project forum"|capfirst %}{% endif %}
+			{% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view the project forum"|capfirst %}{% endif %}
 			-</a></div>
 		{% endif %}
    		{% if user.is_authenticated and not proj_type.name == 'com' %}
@@ -195,11 +193,13 @@ div.button-group input.right {
 		{% endif %}
         {% if project.has_chat_room %}
 	        {% if can_chat %}
+{% comment %}
 	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chat room" %}</i>
 	            <div style="margin-top: 270px;"></div>
 		      	{% conversejs_chatpanel %}
 		        {% conversejs_initialize %}
-		        {% comment %}{% open_group_room %}{% endcomment %}
+{% endcomment %}
+				<div style="margin-bottom: 5px;"><a href="/my_chat/">- {% trans "view the project chat room"|capfirst %} -</a></div>
 	        {% elif is_member %}
 	            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chat room" %}</i>
 	        {% else %}
