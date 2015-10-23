@@ -47,6 +47,7 @@ from zinnia.models import Entry
 
 registry.register(Project)
 registry.register(Forum)
+registry.register(Room)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
