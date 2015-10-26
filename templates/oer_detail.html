@@ -170,11 +170,11 @@
 	    {% endif %}
 {% if user.is_authenticated %}            
             <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span>
-                {% if can_submit %}&nbsp; <a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_withdraw %}&nbsp; <a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_reject %}&nbsp; <a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_publish %}&nbsp; <a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_un_publish %}&nbsp; <a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
+                {% if can_submit %}&nbsp; <a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default btn-sm"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i> {% trans "submit for publication" %}</a>{% endif %}
+                {% if can_withdraw %}&nbsp; <a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default btn-sm"><i class="fa fa-reply" style="font-size: 0.7em;""></i> {% trans "withdraw" %}</a>{% endif %}
+                {% if can_reject %}&nbsp; <a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default btn-sm"><i class="fa fa-reply" style="font-size: 0.7em;""></i> {% trans "reject" %}</a>{% endif %}
+                {% if can_publish %}&nbsp; <a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "publish" %}</a>{% endif %}
+                {% if can_un_publish %}&nbsp; <a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "unpublish" %}</a>{% endif %}
             </div>
 {% endif %}
         	<div><strong>{% trans "submitted by"|capfirst %}</strong> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a> <strong>{% trans "on" %}</strong> {{ oer.created|date:"d-m-Y" }} <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
