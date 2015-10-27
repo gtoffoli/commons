@@ -1,0 +1,13 @@
+ {% comment %} items REPO {% endcomment %}
+
+ {% load i18n %}
+
+<article class="view-card">
+	<p class="title-card"><a href="/repo/{{ repo.slug }}/" style="color: {{ repo.get_link_color }}">{{ repo.name }}</a></p>
+	{% if repo.description.description|length > 80 %}
+	    <p style="display:none" class="text-card short-description"><i>{{ repo.description|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+	    <p style="display:inline-block" class="text-card full-description"><i>{{ repo.description }}</i><br><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
+	{% else %}
+	    <p style="display:inline-block" class="text-card full-description"><i>{{ repo.description }}</i></p>
+	{% endif %}
+</article>

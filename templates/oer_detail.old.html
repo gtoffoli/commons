@@ -4,14 +4,15 @@
 
 {% block head_title %}OER: {{ oer.title }}{% endblock %}
 
-{% block body_class %}oer_detail{% endblock %}
+{% block body_class %}home{% endblock %}
 
 {% block body %}
-            <h1 class="text-center" style="color: {{ oer.get_title_color }};">OER: <i>{{ oer.title }}</i>
+    <section>
+        <div class="container">
+            <h2 class="text-center" style="color: {{ oer.get_title_color }};">OER: <i>{{ oer.title }}</i>
                 {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
                 {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o" style="font-size: 0.7em;""></i></a>{% endif %}
-            </h1>
-<section class="view-card">
+            </h2>
             <p class="lead">
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ oer.title }}</div>
             {% if oer.description %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ oer.description }}</div>{% endif %}
@@ -191,9 +192,8 @@
 				</li>
 	        {% endfor %}
 			</ul>
-			            </div>
    			{% endif %}
-
-</p>
+            </p>
+        </div>
     </section>
 {% endblock %}

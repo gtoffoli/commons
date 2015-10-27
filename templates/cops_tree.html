@@ -5,20 +5,18 @@
 
 {% block head_title %}{% trans "all communities"|capfirst %}{% endblock %}
 
+{% block body_class %}cops_tree{% endblock %}
 {% block body %}
- <div class="row">
-  <div class="col-sm-12">
-    <section>
-            <h2 class="text-center">{% trans "all communities"|capfirst %}</h2>
-    {% if nodes %}
-	<ul class="list-unstyled">
+   <h1 class="text-center">{% trans "all communities"|capfirst %}</h1>
+   <section class="view-card">
+   {% if nodes %}
+<ul class="list-unstyled">
     {% recursetree nodes %}<li>
-    
    	{% with project=node.project %}
    		{% if node.project %}
    			{% if project.proj_type.name == 'com' and project.state == 2 %}
    			<div style="margin-top: 1em; margin-bottom: 0,5em;">
-        	<div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
+        <div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
             <div><i>{{ project.description }}</i></div></div>
             {% else %}
             	<a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
@@ -32,12 +30,11 @@
         {% endif %}
    	{% endwith %}
 
-    </li>{% endrecursetree %}
+    </li>
+    </article>{% endrecursetree %}
 	</ul>
-    {% else %}
+   {% else %}
        	<p>{% trans "no community"|capfirst %} {% trans "is present" %}.</p>
-    {% endif %}
-    </section>
-  </div>
-</div>
+   {% endif %}
+      </section>
 {% endblock %}

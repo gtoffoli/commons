@@ -4,14 +4,41 @@
 
 {% block head_title %}{% trans "search people"|capfirst %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}search_people{% endblock %}
 
 {% block body %}
-    <div class="container">
-	<div class="col-sm-12">
-    <section>
-	<h2 class="text-center">{% trans "search people"|capfirst %}</h2>
+	<h1 class="text-center">{% trans "search people"|capfirst %}</h1>
+<div class="row">
+	    <div class="col-md-6">
+  	<form style="margin: 0;" action="/people/search/" method="post" id="search_form">
+	{% csrf_token %}
+	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
+	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
+   	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}"></td></tr>
+	{% for field in form.visible_fields %}
+       <tr style="vertical-align: top;">
+	   		<th style="margin-top: .5em; font-weight: bold; text-align: right; vertical-align: middle;">{% if field.help_text %}<img src="{% static "admin/img/icon-unknown.gif" %}" Title="{{ field.help_text }}" style="cursor: pointer; float:right; margin:5px;">{% endif %}
+	   		{{ field.label_tag|capfirst }} &nbsp;</th>
+	   		<td><div class="checkbox-multiple">{{ field }}</div></td>
+   		</tr>
+	{% endfor %}
+	</table>
+	</form>
+	    </div>
+		    <div class="col-md-6">
+		    				<h4>{% trans "search results"|capfirst %}</h4>
+			{% if profiles %}
+				{% for profile in profiles %}
+       				{% include "_people_card.html" %}
+				{% endfor %}
+			{% elif query %}
+       			<p><i>{% trans "no results were found"|capfirst %}.</i></p>
+			{% endif %}
+	    </div>    
+</div>
 
+
+{% comment %}
 	<table style="border-collapse: separate; border-spacing: 0 .0em;">
 	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
 	{% if profiles %}
@@ -25,22 +52,9 @@
 	{% endif %}
 	</table>
 
-  	<form style="margin: 0;" action="/people/search/" method="post" id="search_form"><div>
-	{% csrf_token %}
-	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
-	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
-   	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}"></td></tr>
-	{% for field in form.visible_fields %}
-       <tr style="vertical-align: top;">
-	   		<th style="margin-top: .5em; font-weight: bold; text-align: right; vertical-align: middle;">{% if field.help_text %}<img src="{% static "admin/img/icon-unknown.gif" %}" Title="{{ field.help_text }}" style="cursor: pointer; float:right; margin:5px;">{% endif %}
-	   		{{ field.label_tag|capfirst }} &nbsp;</th>
-	   		<td><div class="checkbox-multiple">{{ field }}</div></td>
-   		</tr>
-	{% endfor %}
-	</table>
-	</div></form>
-    </section>
+
 	</div>
 	</div>
+	{% endcomment %}
 {% endblock %}
 

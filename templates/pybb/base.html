@@ -12,21 +12,18 @@
     <link rel="alternate" type="application/atom+xml" href="{% url 'pybb:feed_topics' %}" title="{% trans "Latest topics on forum" %}" >
 {% endblock %}
 
-{% block body %}
-<div class="container">
 
+{% block body %}
+<div class="row">
   <div class="col-sm-9 col-dm-9">
   	{% block breadcrumb %}
     	{% include "pybb/breadcrumb.html" %}
   	{% endblock %}
-  
 	{% block content %}
 	{% endblock %}
   </div>
-
-  <div class="col-sm-3 col-dm-9">
+  <div class="col-sm-3 col-dm-3">
   </div>
-
 </div>
 {% endblock %}
 

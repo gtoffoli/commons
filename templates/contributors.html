@@ -7,10 +7,9 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
-    <section>
-        <div class="container">
-            <h2 class="text-center">{% trans "top contributors"|capfirst %}</h2>
 
+            <h1 class="text-center">{% trans "top contributors"|capfirst %}</h1>
+<section class="view-card">
     {% if lp_contributors %}
             <h3>{% trans "creation of learning paths"|capfirst %}</h3>
 	<ul class="list-unstyled">
@@ -56,6 +55,5 @@
 	</ul>
     {% endif %}
 
-        </div>
     </section>
 {% endblock %}

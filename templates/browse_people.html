@@ -4,29 +4,27 @@
 
 {% block head_title %}{% trans "all people"|capfirst %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}browse-people{% endblock %}
 
 {% block body %}
-     <section>
-    	<h2 class="text-center" style="margin: 0 0;">{% trans "all people"|capfirst %}</h2>
-     </section>
-
-     <section style="margin: 0 0;">
-        <div class="container" style="margin: 0 0;">
-            <h3 class="text-center">{% trans "distribution of users based on self-compiled user profiles"|capfirst %}</h3>
-			<ul style="list-style-type: none; padding-bottom: 10px;">
-		    {% for field_name, field_label, entries in people_browse_list %}
-		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
-		    	{% for code, label, prefix, n in entries %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/people/search/" method="post" id="people_{{ code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
-	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
-   	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
-	</li></form>
-		    	{% endfor %}
-		    	</ul></li>
-		    {% endfor %}
-			</ul>
-        </div>
-    </section>
+   <h1 class="text-center">{% trans "all people"|capfirst %}</h1>
+   <div class="panel panel-green">
+   <div class="panel-heading"><i>{% trans "distribution of users based on self-compiled user profiles"|capfirst %}</i></div>
+   
+   <div class="panel-body">
+   <ul class="list-inline browse-list">
+   {% for field_name, field_label, entries in people_browse_list %}
+      <li>
+         <div class="demiBold">{{ field_label|capfirst }}</div>
+         <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+         <ul>
+           {% for code, label, prefix, n in entries %}
+              <li><form action="/people/search/" method="post" id="people_{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }}{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}"> (<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)</form></li>
+           {% endfor %}
+         </ul></article>
+      </li>
+   {% endfor %}
+   </ul>
+   </div>
+   </div>
 {% endblock %}

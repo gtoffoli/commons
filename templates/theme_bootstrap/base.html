@@ -36,7 +36,7 @@
         {% endblock %}
     </head>
     
-    <body class="{% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+    <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
         <div class="{% block wrapper_class %}wrapper{% endblock %}">
 
             {% block topbar_base %}
@@ -87,14 +87,11 @@
         </div>
 
             {% block footer_base %}
-            <div class="footer-fixed">
-                <hr />
-                <footer>
-                    <div class="container">
-                        {% block footer %}{% endblock %}
-                    </div>
-                </footer>
-             </div>
+               <footer class="footer-fixed">
+                  <div class="container">
+                      {% block footer %}{% endblock %}
+                  </div>
+               </footer>
             {% endblock %}
 
         {% block script_base %}

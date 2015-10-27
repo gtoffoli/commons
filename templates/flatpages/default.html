@@ -7,8 +7,10 @@
 {% block body_class %}flatpage{% endblock %}
 
 {% block body %}
-	<h2 class="text-center">{{ flatpage.title }}
+	<h1 class="text-center">{{ flatpage.title }}
 		{% if request.user.is_staff %} <small><a href="/admin/flatpages/flatpage/{{ flatpage.id }}/" title="show edit view"><i class="fa fa-edit"></i></a></small>{% endif %}
-	</h2>
-	{{ flatpage.content|safe }}
+	</h1>
+	<section class="view-card">
+		{{ flatpage.content|safe }}
+	</section>
 {% endblock %}

@@ -1,9 +1,10 @@
- {% comment %} items OER {% endcomment %}
+ {% comment %} items LP {% endcomment %}
 
  {% load i18n %}
 
 <article class="view-card">
-	<p class="title-card"><a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></p>
+	<p class="title-card"><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }}">{{ lp.title }}</a></p>
+	{% comment %}
 	{% if lp.short.description|length > 80 %}
 	    <p style="display:none" class="text-card short-description"><i>{{ lp.short|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
 	    <p style="display:inline-block" class="text-card full-description"><i>{{ lp.short }}</i><br><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
@@ -14,4 +15,5 @@
 		<dt>{% trans "Type"|capfirst %}</dt>
 		<dd>{{ lp.get_type }}</dd>
 	</dl>
+		{% endcomment %}
 </article>

@@ -4,69 +4,87 @@
 
 {% block head_title %}{% trans "distributions"|capfirst %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}browse{% endblock %}
 
 {% block body %}
-     <section>
-    	<h2 class="text-center" style="margin: 0 0;">{% trans "educational library"|capfirst %}</h2>
-     </section>
+   <h1 class="text-center">{% trans "educational library"|capfirst %}</h1>
+   <div class="panel-group" id="accordion">
+   {% if lps_browse_list %}
+      <div class="panel panel-c1">
+         <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-1"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h4></a>
+         </div>
+         <div id="pannello-1" class="panel-collapse collapse out">
+            <div class="panel-body">
+               <ul class="list-inline browse-list">
+               {% for field_name, field_label, entries in lps_browse_list %}
+                  <li>
+                     <div class="demiBold">{{ field_label|capfirst }}</div>
+                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                        <ul>
+                           {% for code, label, prefix, n in entries %}
+                              <li><form action="/lps/search/" method="post" id="lps_{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }}{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}"> (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
+                           {% endfor %}
+                        </ul>
+                     </article>
+                  </li>
+               {% endfor %}
+               </ul>
+            </div>
+         </div>
+      </div>
+   {% endif %}
 
-{% if lps_browse_list %}
-     <section style="margin: 0 0;">
-        <div class="container" style="margin: 0 0;">
-            <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h3>
-			<ul style="list-style-type: none; padding-bottom: 10px;">
-		    {% for field_name, field_label, entries in lps_browse_list %}
-		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
-		    	{% for code, label, prefix, n in entries %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
-	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
-   	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
-	</li></form>
-		    	{% endfor %}
-		    	</ul></li>
-		    {% endfor %}
-			</ul>
-        </div>
-    </section>
-{% endif %}
+   {% if oers_browse_list %}
+      <div class="panel panel-c2">
+         <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-2"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the resources" %}</h4></a>
+         </div>
+         <div id="pannello-2" class="panel-collapse collapse in">
+            <div class="panel-body" >
+               <ul class="list-inline browse-list">
+               {% for field_name, field_label, entries in oers_browse_list %}
+                  <li>
+                     <div class="demiBold">{{ field_label|capfirst }}</div>
+                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                        <ul>
+                           {% for code, label, prefix, n in entries %}
+                              <li><form action="/oers/search/" method="post" id="oers_{{ code }}">{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }} (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
+                           {% endfor %}
+                        </ul>
+                     </article>
+                  </li>
+               {% endfor %}
+               </ul>
+            </div>
+         </div>
+      </div>
+   {% endif %}
 
-     <section style="margin: 0 0;">
-        <div class="container" style="margin: 0 0;">
-            <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the resources" %}</h3>
-			<ul style="list-style-type: none; padding-bottom: 10px;">
-		    {% for field_name, field_label, entries in oers_browse_list %}
-		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
-		    	{% for code, label, prefix, n in entries %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
-	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
-   	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
-	</li></form>
-		    	{% endfor %}
-		    	</ul></li>
-		    {% endfor %}
-			</ul>
-        </div>
-    </section>
-
-    <section style="margin: 0 0;">
-         <div class="container" style="margin: 0 0;">
-            <h3 class="text-center">{% trans "distributions"|capfirst %} {% trans "of the sources" %}</h3>
-			<ul style="list-style-type: none; padding-bottom: 10px;">
-		    {% for field_name, field_label, entries in repos_browse_list %}
-		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
-		    	{% for code, label, prefix, n in entries %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
-	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
-   	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
-	</li></form>
-		    	{% endfor %}
-		    	</ul></li>
-		    {% endfor %}
-			</ul>
-        </div>
-    </section>
+   {% if repos_browse_list  %}
+      <div class="panel panel-c3"> 
+         <div class="panel-heading">
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-3"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the sources" %}</h4></a>
+         </div>
+         <div id="pannello-3" class="panel-collapse collapse out">
+            <div class="panel-body">
+               <ul class="list-inline browse-list">
+               {% for field_name, field_label, entries in repos_browse_list %}
+                  <li>
+                     <div class="demiBold">{{ field_label|capfirst }}</div>
+                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                        <ul>
+                           {% for code, label, prefix, n in entries %}
+                              <li><form action="/repos/search/" method="post" id="repos_{{ code }}">{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }} (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
+                           {% endfor %}
+                        </ul>
+                     </article>
+                  </li>
+               {% endfor %}
+               </ul>
+            </div>
+         </div>
+      </div>
+   {% endif %}
+   </div>
 {% endblock %}

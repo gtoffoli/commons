@@ -4,12 +4,12 @@
 
 {% block head_title %}{% trans "top contributors to"|capfirst %} {% trans "cataloguing of OER sources" %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}repo_contributors{% endblock %}
 
 {% block body %}
-    <section>
-        <div class="container">
-            <h2 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "cataloguing of OER sources" %}</h2>
+
+            <h1 class="text-center">{% trans "top contributors to"|capfirst %} {% trans "cataloguing of OER sources" %}</h1>
+<section class="view-card">
             <p class="lead">
     {% if user_list %}
 	<ul class="list-unstyled">
@@ -23,6 +23,5 @@
        	<p>{% trans "no repository"|capfirst %} {% trans "is present" %}.</p>
     {% endif %}
             </p>
-        </div>
     </section>
 {% endblock %}

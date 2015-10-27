@@ -3,13 +3,12 @@
 {% load i18n %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
-
+{% block body_class %}lp_detail{% endblock %}
 {% block body %}
-    <section>
-        <div class="container">
-            <h2 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
+            <h1 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
                 {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>{% endif %}
-            </h2>
+            </h1>
+<section class="view-card">
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
 
             <div><strong>{% trans "type of learning path"|capfirst %}</strong>: 
@@ -92,7 +91,5 @@
 				<div style="margin-left: 1.5em;"><button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_new/';">{% trans "add node"|capfirst %}</button></div>
 		    {% endif %}
 		    {% endif %}
-
-         </div>
-    </section>
+		  </section>
 {% endblock %}

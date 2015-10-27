@@ -60,6 +60,9 @@ class CodedEntry(models.Model):
     def option_label(self):
         return '%s - %s' % (self.code, self.name)
 
+    def only_name (self):
+        return '%s' % (self.name)
+
     def __unicode__(self):
         return self.name
 

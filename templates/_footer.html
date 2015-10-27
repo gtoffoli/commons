@@ -1,7 +1,21 @@
-{% load i18n %}
-
-&copy; 2015 <a href="http://www.commonspaces.eu/" target="_blank">{% trans "the CommonS Consortium" %}</a> -
+{% load i18n staticfiles %}
+<div class="row">
+	<div class="col-sm-4 col-md-4">
+		<div class="footer-box">&copy; 2015 <a href="http://www.commonspaces.eu/" target="_blank">{% trans "the CommonS Consortium" %}</a><br>
 {% trans "built by"|capfirst %} <a href="http://www.linkroma.it" target="_blank">LINK srl</a>
 {% trans "with" %} <a href="https://www.python.org/" target="_blank"><i>Python</i></a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank"><i>Django</i></a>
-{% comment %}, <a href="http://www.mayan-edms.com/" target="_blank"><i>Mayan-EDMS</i></a> and <a href="http://pinaxproject.com/" target="_blank"><i>Pinax</i></a>{% endcomment %}
-- <a href="/info/privacy/">{% trans "privacy policy"|capfirst %} </a>
+{% comment %}, <a href="http://www.mayan-edms.com/" target="_blank"><i>Mayan-EDMS</i></a> and <a href="http://pinaxproject.com/" target="_blank"><i>Pinax</i></a>{% endcomment %} 
+		</div>
+	</div>
+	<div class="col-sm-4 col-md-4">
+		<ul class="footer-box list-unstyled">
+			<li><small><span class="fa fa-chevron-right fa-grey"></span></small> <a href="/info/privacy/">{% trans "privacy policy"|capfirst %}</a></li>
+		</ul>
+	</div>
+	<div class="col-sm-4 col-md-4">
+		<div class="footer-box">
+			{% trans "The CommonS Project is co-funded by Programme" %}
+			<div><img src="{%static "commons/img/logo_erasmus_plus.png" %}" class="img-responsive" title="EU Erasmus+"></div>
+		</div>
+	</div>
+</div>

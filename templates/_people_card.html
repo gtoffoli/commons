@@ -1,0 +1,36 @@
+{% load i18n %}
+
+<article class="view-card">
+	<p class="user-card">
+		<a href="/profile/{{ profile.user.username }}/">
+		<span>
+        {% if profile.avatar %}
+            <img src="/media/{{ profile.avatar }}" class="avatar-medium">
+        {% else %}
+            <img src="/media/images/avatars/anonymous.png" class="avatar-medium">
+        {% endif %}
+		</span></a>
+		<a href="/profile/{{ profile.user.username }}/">{{ profile.user.get_display_name }}</a>
+	</p>
+	{% if profile.short|length > 80 %}
+		<p style="display:none" class="text-card short-description"><i>{{ profile.short|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+		<p style="display:inline-block" class="text-card full-description"><i>{{ profile.short }}</i><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
+	{% endif %}	
+	{% if profile.languages.all or profile.other_languages %}
+	<dl class="list-inline">
+		<dt>{% trans "languages"|capfirst %}</dt>
+		{% for language in profile.languages.all %}
+			<dd><form action="/people/search/" method="post" id="people_language_{{ language.code }}">{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}"><input type="submit" class="btn-link" value="{{ language.only_name|safe }}"></form></dd>
+		{% endfor %}
+		{% if profile.other_languages %}
+			<dd>{{ profile.other_languages }}</dd>
+		{% endif %}
+	</dl>
+	{% endif %}
+	{% if profile.country %}
+		<dl class="list-inline">
+			<dt>{% trans "country"|capfirst %}</dt>
+			<dd>{{ profile.country.only_name|safe }}</dd>
+		</dl>
+	{% endif %}
+</article>

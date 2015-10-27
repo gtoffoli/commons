@@ -7,12 +7,12 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
-    <section>
-        <div class="container">
-       		<h2 class="text-center"><span style="font-size:smaller">{% trans "evaluation of"|capfirst %}</span>
+
+       		<h1 class="text-center"><span style="font-size:smaller">{% trans "evaluation of"|capfirst %}</span>
 									<i>{{ oer.title }}</i> <span style="font-size:smaller">{% trans "by" %} <i>{{ evaluation.user.get_display_name }}</i></span>
                 {% if can_edit %}&nbsp; <a href="/oer_evaluation/{{ evaluation.id }}/edit/" title="{% trans "edit evaluation" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
-            </h2>
+            </h1>
+<section class="view-card">
             <p class="lead">
             <div><strong>{% trans "OER"|capfirst %}</strong>: <a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></div>
             <div><strong>{% trans "overall assessment"|capfirst %}</strong>: {{ overall_score }} ({{ evaluation.overall_score }}/5)</div>
@@ -29,6 +29,5 @@
             {% endif %}
             <div><strong>{% trans "evaluator"|capfirst %}</strong>: <a href="/profile/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a></div>
             </p>
-        </div>
     </section>
 {% endblock %}

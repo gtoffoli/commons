@@ -5,13 +5,11 @@
 
 {% block head_title %}{% trans "all projects"|capfirst %}{% endblock %}
 
+{% block body_class %}projects{% endblock %}
 {% block body %}
- <div class="row">
-  <div class="col-sm-12">
-    <section>
-            <h2 class="text-center">{% trans "all projects"|capfirst %}</h2>
-            
-    {% if nodes %}
+   <h1 class="text-center">{% trans "all projects"|capfirst %}</h1>
+   {% if nodes %}
+     <section class="view-card">
     {% recursetree nodes %}
     	{% with project=node.project %}
     		{% if project and project.proj_type.name != 'com' %}
@@ -24,8 +22,6 @@
             {% endif %}
     	{% endwith %}
     {% endrecursetree %}
+  </section>
     {% endif %}
-    </section>
-  </div>
-</div>
 {% endblock %}
