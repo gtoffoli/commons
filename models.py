@@ -7,6 +7,8 @@ from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 
+from mptt.models import MPTTModel
+from mptt.fields import TreeForeignKey
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
@@ -78,6 +80,55 @@ def create_favorites(sender, instance, created, **kwargs):
     if created:
         Favorites.objects.create(user=instance)
 """
+
+class Folder(MPTTModel):
+       
+    title = models.CharField(max_length=128, verbose_name=_('Title'), db_index=True)
+    parent = TreeForeignKey('self', null=True, blank=True, related_name = 'subfolders')
+    documents = models.ManyToManyField(Document, through='FolderDocument', related_name='document_folder', blank=True, verbose_name='documents')
+    user = models.ForeignKey(User, verbose_name=_('User'))
+    created = CreationDateTimeField(verbose_name=_('created'))
+
+    class Meta:
+        unique_together = ('title', 'user')
+        ordering = ('title',)
+        verbose_name = _('folder')
+        verbose_name_plural = _('folders')
+
+    def __unicode__(self):
+        return self.title
+
+    """
+    @models.permalink
+    def get_absolute_url(self):
+        return ('folders:folder_view', [self.pk])
+    """
+
+class FolderDocument(models.Model):
+    """
+    Link a document to a folder; documents are ordered
+    """
+    order = models.IntegerField()
+    folder = models.ForeignKey(Folder, related_name='folderdocument_folder', verbose_name=_('folder'))
+    document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
+
+    def __unicode__(self):
+        return unicode(self.document.label)
+
+    class Meta:
+        unique_together = ('folder', 'document',)
+        verbose_name = _('folder document')
+        verbose_name_plural = _('folder documents')
+
+    def save(self, *args, **kwargs):
+        if not self.order:
+            folder_documents = FolderDocument.objects.filter(folder=self.folder)
+            if folder_documents:
+                last_order = folder_documents.aggregate(Max('order'))['order__max']
+            else:
+                last_order = 0
+            self.order = last_order+1
+        super(FolderDocument, self).save(*args, **kwargs) # Call the "real" save() method.
 
 GENDERS = (
    ('-', _('not specified')),
@@ -239,6 +290,7 @@ class Project(models.Model):
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     chat_room = models.ForeignKey(Room, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     forum = models.ForeignKey(Forum, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
+    folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
@@ -251,7 +303,18 @@ class Project(models.Model):
         verbose_name = _('project / community')
         verbose_name_plural = _('projects')
 
+    def create_folder(self):
+        if not self.folders.all().count():
+            folder = Folder(title=self.get_name())
+            folder.user = self.creator
+            folder.save()
+            self.folders.add(folder)
+            return folder
+        else:
+            return None
+
     def save(self, *args, **kwargs):
+        new = self.pk is None
         try:
             group = self.group
         except:
@@ -260,6 +323,8 @@ class Project(models.Model):
             group.save()
             self.group = group
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
+        if new:
+            self.create_folder()
 
     def get_name(self):
         return self.name or self.group.name

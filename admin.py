@@ -7,12 +7,13 @@ from django.db import models
 from django.forms import TextInput, Textarea, Select, SelectMultiple
 from django.contrib import admin
 from django.contrib.auth.models import User
+from mptt.admin import MPTTModelAdmin
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
 
-from .models import UserProfile, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm
 from .metadata import QualityFacet
@@ -34,6 +35,13 @@ class UserAdmin(UserWithMPTTAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+class FolderAdmin(MPTTModelAdmin):
+    fieldset = ['title', 'parent', 'tree_id',]
+    list_display = ('id', 'title', 'parent_name', 'level', 'tree_id', 'id', 'lft', 'rght',)
+
+    def parent_name(self, obj):
+        return obj.parent.name
 
 class ProjTypeAdmin(admin.ModelAdmin):
     """
@@ -220,6 +228,7 @@ class PathEdgeAdmin(admin.ModelAdmin):
         obj.editor = request.user
         obj.save()
     
+admin.site.register(Folder, FolderAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
 admin.site.register(ProjectMember, ProjectMemberAdmin)

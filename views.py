@@ -19,7 +19,7 @@ from actstream import action, registry
 from commons import settings
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import UserProfile, Folder, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
 from models import QUALITY_SCORE_DICT
@@ -197,6 +197,12 @@ def cops_tree(request):
         # nodes = root.get_descendants(include_self=True)
         nodes = root.get_descendants()
     return render_to_response('cops_tree.html', {'nodes': nodes,}, context_instance=RequestContext(request))
+
+def create_project_folders(request):  
+    projects = Project.objects.all()
+    for project in projects:
+        project.create_folder()
+    return HttpResponseRedirect('/cops/')
 
 def projects(request):
     nodes = Group.objects.filter(level=0)
