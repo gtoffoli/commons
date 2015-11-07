@@ -183,7 +183,7 @@
 			-</a></div>
 		{% endif %}
    		{% if user.is_authenticated and not proj_type.name == 'com' %}
-        {% if False and is_member %}
+        {% if is_member %}
 			<div style="margin-bottom: 5px;">
   	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/compose_message/" method="post">
 	{% csrf_token %}

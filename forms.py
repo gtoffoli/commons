@@ -444,8 +444,7 @@ class MessageComposeForm(ComposeForm):
     """
     A customized form for private messages.
     """
-    # recipient = CommaSeparatedUserField(label=_(u"Recipient"))
-    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).distinct(), widget=forms.SelectMultiple(attrs={'class':'form-control',}))
+    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subject = forms.CharField(label=_(u"Subject"), max_length=120, widget=forms.TextInput(attrs={'class':'span8 form-control'}),)
     body = forms.CharField(label=_(u"Body"),
         widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
@@ -457,7 +456,9 @@ class ProjectMessageComposeForm(MessageComposeForm):
     def __init__(self, *args, **kwargs):
         recipient_filter = kwargs.pop('recipient_filter')
         super (ProjectMessageComposeForm, self ).__init__(*args, **kwargs) # populates the post
-        self.fields['recipient'].queryset = User.objects.filter(username__in=recipient_filter)
+        queryset = User.objects.filter(username__in=recipient_filter).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name')
+        self.fields['recipient'].widget = forms.SelectMultiple(attrs={'class':'form-control', 'size': queryset.count(),})
+        self.fields['recipient'].queryset = queryset
 
 class ForumForm(forms.ModelForm):
     class Meta:

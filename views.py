@@ -470,9 +470,8 @@ def project_sync_xmppaccounts(request, project_id):
 def project_compose_message(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     members = project.members(user_only=True)
-    recipient_filter = [member.username for member in members if member != request.user]
-    recipient = '+'.join(recipient_filter)
-    return message_compose(request, recipient=recipient, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
+    recipient_filter = [member.username for member in members]
+    return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def repo_list(request):
     user = request.user
