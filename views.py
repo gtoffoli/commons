@@ -19,13 +19,13 @@ from actstream import action, registry
 from commons import settings
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Folder, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import UserProfile, Folder, FolderDocument, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
 from models import QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
-from forms import UserProfileExtendedForm, UserPreferencesForm, ProjectForm
+from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm
@@ -210,6 +210,42 @@ def projects(request):
         root = nodes[0]
         nodes = root.get_descendants()
     return render_to_response('projects.html', {'nodes': nodes,}, context_instance=RequestContext(request))
+
+def project_add_document(request):
+    project_id = request.POST.get('id', '')
+    project = get_object_or_404(Project, id=project_id)
+    folder = project.get_folder()
+    form = DocumentUploadForm(request.POST, request.FILES)
+    if form.is_valid():
+        uploaded_file = request.FILES['docfile']
+        version = handle_uploaded_file(uploaded_file)
+        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
+        folderdocument.save()
+        return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    else:
+        # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
+        return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+
+def folderdocument_delete(request, folderdocument_id):
+    folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
+    folder = folderdocument.folder
+    document = folderdocument.document
+    project = Project.objects.get(folders=folder)
+    folder.remove_document(document, request)
+    return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+
+def project_folder(request, project_slug):
+    user = request.user
+    assert user.is_authenticated()
+    project = get_object_or_404(Project, slug=project_slug)
+    proj_type = project.proj_type
+    var_dict = {'project': project, 'proj_type': proj_type,}
+    var_dict['can_share'] = user.is_superuser or project.is_member(user)
+    var_dict['is_admin'] = project.is_admin(user)
+    var_dict['folder'] = project.get_folder()
+    var_dict['folderdocuments'] = project.get_folderdocuments(user)
+    var_dict['form'] = DocumentUploadForm()
+    return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):
     MAX_OERS = 10

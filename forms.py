@@ -166,6 +166,13 @@ class ProjectForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
+class DocumentForm(forms.Form):
+    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'span3 form-control',}))
+    docfile = forms.FileField(
+        label=_('select a file'),
+        widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
+
 
 class RepoForm(forms.ModelForm):
     class Meta:
@@ -338,7 +345,7 @@ class OerSearchForm(forms.Form):
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
 
 class DocumentUploadForm(forms.Form):
-    docfile = forms.FileField(
+    docfile = forms.FileField(required=True,
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
 

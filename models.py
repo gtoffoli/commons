@@ -81,6 +81,73 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
+
+DRAFT = 1
+SUBMITTED = 2
+PUBLISHED = 3
+UN_PUBLISHED = 4
+
+PUBLICATION_STATE_CHOICES = (
+    (DRAFT, _('Draft')),
+    (SUBMITTED, _('Submitted')),
+    (PUBLISHED, _('Published')),
+    (UN_PUBLISHED, _('Un-published')),)
+PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
+
+PUBLICATION_COLOR_DICT = {
+  DRAFT: 'Orange',
+  SUBMITTED: 'LimeGreen',
+  PUBLISHED: 'black',
+  UN_PUBLISHED: 'Red',
+}
+PUBLICATION_LINK_DICT = {
+  DRAFT: 'Orange',
+  SUBMITTED: 'LimeGreen',
+  PUBLISHED: '#428bca',
+  UN_PUBLISHED: 'Red',
+}
+
+class Publishable():
+
+    def get_state(self):
+        return PUBLICATION_STATE_DICT[self.state]
+    def get_title_color(self):
+        return PUBLICATION_COLOR_DICT[self.state]
+    def get_link_color(self):
+        return PUBLICATION_LINK_DICT[self.state]
+
+    def can_submit(self, request):
+        return self.state in [DRAFT] and request.user == self.creator
+    def can_withdraw(self, request):
+        return self.state in [SUBMITTED] and request.user == self.creator
+    def can_reject(self, request):
+        return self.state in [SUBMITTED] and self.project.is_admin(request.user)
+    def can_publish(self, request):
+        return self.state in [SUBMITTED, UN_PUBLISHED] and self.project.is_admin(request.user)
+    def can_un_publish(self, request):
+        return self.state in [PUBLISHED] and self.project.is_admin(request.user)
+
+    def submit(self, request):
+        if self.can_submit(request):
+            self.state = SUBMITTED
+            self.save()
+    def withdraw(self, request):
+        if self.can_withdraw(request):
+            self.state = DRAFT
+            self.save()
+    def reject(self, request):
+        if self.can_reject(request):
+            self.state = DRAFT
+            self.save()
+    def publish(self, request):
+        if self.can_publish(request):
+            self.state = PUBLISHED
+            self.save()
+    def un_publish(self, request):
+        if self.can_un_publish(request):
+            self.state = UN_PUBLISHED
+            self.save()
+
 class Folder(MPTTModel):
        
     title = models.CharField(max_length=128, verbose_name=_('Title'), db_index=True)
@@ -98,19 +165,26 @@ class Folder(MPTTModel):
     def __unicode__(self):
         return self.title
 
+    def remove_document(self, document, request):
+        folderdocument = FolderDocument.objects.get(folder=self, document=document)
+        document.delete()
+        folderdocument.delete()
+
     """
     @models.permalink
     def get_absolute_url(self):
         return ('folders:folder_view', [self.pk])
     """
 
-class FolderDocument(models.Model):
+class FolderDocument(models.Model, Publishable):
     """
     Link a document to a folder; documents are ordered
     """
     order = models.IntegerField()
     folder = models.ForeignKey(Folder, related_name='folderdocument_folder', verbose_name=_('folder'))
     document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
+    state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
+    user = models.ForeignKey(User, verbose_name=_('user'))
 
     def __unicode__(self):
         return unicode(self.document.label)
@@ -122,9 +196,9 @@ class FolderDocument(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.order:
-            folder_documents = FolderDocument.objects.filter(folder=self.folder)
-            if folder_documents:
-                last_order = folder_documents.aggregate(Max('order'))['order__max']
+            folderdocuments = FolderDocument.objects.filter(folder=self.folder)
+            if folderdocuments:
+                last_order = folderdocuments.aggregate(Max('order'))['order__max']
             else:
                 last_order = 0
             self.order = last_order+1
@@ -312,6 +386,20 @@ class Project(models.Model):
             return folder
         else:
             return None
+
+    def get_folder(self):
+        folders = self.folders.all()
+        return folders.count()==1 and folders[0] or None
+
+    def get_folderdocuments(self, user):
+        folder = self.get_folder()
+        folderdocuments = []
+        if folder:
+            if self.is_member(user) or user.is_superuser:
+                folderdocuments = FolderDocument.objects.filter(folder=folder).order_by('order')
+            else:
+                folderdocuments = FolderDocument.objects.filter(folder=folder, state=PUBLISHED).order_by('order')
+        return folderdocuments
 
     def save(self, *args, **kwargs):
         new = self.pk is None
@@ -562,66 +650,6 @@ class RepoType(models.Model):
     def natural_key(self):
         return (self.name,)
 
-DRAFT = 1
-SUBMITTED = 2
-PUBLISHED = 3
-UN_PUBLISHED = 4
-
-PUBLICATION_STATE_CHOICES = (
-    (DRAFT, _('Draft')),
-    (SUBMITTED, _('Submitted')),
-    (PUBLISHED, _('Published')),
-    (UN_PUBLISHED, _('Un-published')),)
-PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
-
-PUBLICATION_COLOR_DICT = {
-  DRAFT: 'Orange',
-  SUBMITTED: 'LimeGreen',
-  PUBLISHED: 'black',
-  UN_PUBLISHED: 'Red',
-}
-PUBLICATION_LINK_DICT = {
-  DRAFT: 'Orange',
-  SUBMITTED: 'LimeGreen',
-  PUBLISHED: '#428bca',
-  UN_PUBLISHED: 'Red',
-}
-
-class Publishable():
-
-    def can_submit(self, request):
-        return self.state in [DRAFT] and request.user == self.creator
-    def can_withdraw(self, request):
-        return self.state in [SUBMITTED] and request.user == self.creator
-    def can_reject(self, request):
-        return self.state in [SUBMITTED] and self.project.is_admin(request.user)
-    def can_publish(self, request):
-        return self.state in [SUBMITTED, UN_PUBLISHED] and self.project.is_admin(request.user)
-    def can_un_publish(self, request):
-        return self.state in [PUBLISHED] and self.project.is_admin(request.user)
-
-    def submit(self, request):
-        if self.can_submit(request):
-            self.state = SUBMITTED
-            self.save()
-    def withdraw(self, request):
-        if self.can_withdraw(request):
-            self.state = DRAFT
-            self.save()
-    def reject(self, request):
-        if self.can_reject(request):
-            self.state = DRAFT
-            self.save()
-    def publish(self, request):
-        if self.can_publish(request):
-            self.state = PUBLISHED
-            self.save()
-    def un_publish(self, request):
-        if self.can_un_publish(request):
-            self.state = UN_PUBLISHED
-            self.save()
-
-
 class Repo(models.Model, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
@@ -788,14 +816,6 @@ class OER(models.Model, Publishable):
         if self.state not in [PUBLISHED]:
             return False
         return ProjectMember.objects.filter(user=user, state=1)
-
-    def get_state(self):
-        return PUBLICATION_STATE_DICT[self.state]
-
-    def get_title_color(self):
-        return PUBLICATION_COLOR_DICT[self.state]
-    def get_link_color(self):
-        return PUBLICATION_LINK_DICT[self.state]
 
     def get_sorted_documents(self):
         # return self.documents.all().order_by('date_added')

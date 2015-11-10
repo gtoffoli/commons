@@ -1,0 +1,61 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "shared documents for"|capfirst %} {% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+
+{% block body_class %}project_folder{% endblock %}
+{% block body %}
+    <h2 class="text-center"><span style="font-size: smaller;">{% trans "shared folder for"|capfirst %} {% if project.proj_type.name = 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}</span>
+		<a href="/project/{{ project.slug }}/"><i>{{ project.get_name }}</i></a>
+	</h2>
+<div class="row bc-white marginB20">
+  <div class="col-sm-9 col-md-9">
+	<section>
+   		{% if can_share %}
+   		<div><strong>{% trans "shared documents"|capfirst %}</strong></div>
+   		{% if folderdocuments %}
+		<ol class="root">
+	    {% for folderdocument in folderdocuments %}
+		{% with document=folderdocument.document %}
+		  	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
+			<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+		  	{% csrf_token %}
+		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}<a href="/folderdocument/{{ folderdocument.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
+			{% endif %}
+			{% csrf_token %}
+			<input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
+		    &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
+		    {% with mimetype=document.file_mimetype %}
+		    {% if 'pdf' in mimetype or 'opendocument.text' in mimetype %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
+		    {% endwith %}
+			&nbsp; &nbsp; <i style="font-size: smaller;">{% trans "loaded by" %} {{ folderdocument.user.get_display_name }} {% trans "on" %} {{ document.date_added }}</i>
+			</li></form>
+	    {% endwith %}
+	    {% endfor %}
+		</ol>
+   		{% else %}
+		<div><i>{% trans "no shared documents are present"|capfirst %}</i></div>
+   		{% endif %}
+	    {% endif %}
+   		{% if can_share %}
+   		<div style="margin-top: 1.0em;">
+   		<div><i>{% trans "add document"|capfirst %}</i></div>
+   		<form enctype="multipart/form-data" method="POST" id="add_document" action="/project/add_document/">
+			{% csrf_token %}
+			<input type="hidden" id="id" name="id" value="{{ project.id }}" />
+            <div>{{ form.non_field_errors }}</div>
+            <div><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}
+			<button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}' style="margin-left: 1.0em; padding: 0 1.5em;">{% trans "add"|capfirst %}</button>
+			{% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="padding: 0 1.5em;">Cancel</button>{% endif %}
+			</div>
+   		</form>
+   		</div>
+	    {% endif %}
+    </section>
+  </div>
+  <div class="col-sm-3 col-md-3">
+  </div>
+</div>
+
+{% endblock %}

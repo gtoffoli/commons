@@ -177,6 +177,9 @@
     {% if user.is_authenticated %}
     <section>
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
+        {% if is_member or user.is_superuser %}
+			<div style="margin-bottom: 5px;"><a href="/project/{{ project.slug }}/folder/">- {% trans "view the shared folder"|capfirst %} -</a></div>
+		{% endif %}
         {% if user.is_authenticated and project.forum %}
 			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">-
 			{% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view the project forum"|capfirst %}{% endif %}
