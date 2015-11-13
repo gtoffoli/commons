@@ -89,24 +89,23 @@ def my_chat(request):
     return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
 
 def user_profile(request, username, user=None):
+    assert username or (user and user.is_authenticated())
     MAX_REPOS = MAX_OERS = 5
     if not user:
         user = get_object_or_404(User, username=username)
-    can_edit = user.can_edit(request)
     memberships = ProjectMember.objects.filter(user=user, state=1)
-    applications = None
-    if user == request.user:
+    if user.is_authenticated() and user==request.user:
+        can_edit = True
         applications = ProjectMember.objects.filter(user=user, state=0)
-    if user == request.user:
         repos = Repo.objects.filter(creator=user).order_by('-created')
-    else:
-        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-    more_repos = repos.count() > MAX_REPOS
-    repos = repos[:MAX_REPOS]
-    if user == request.user:
         oers = OER.objects.filter(creator=user).order_by('-created')
     else:
+        can_edit = False
+        applications = []
+        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
         oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    more_repos = repos.count() > MAX_REPOS
+    repos = repos[:MAX_REPOS]
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
     profile = user.get_profile()
