@@ -9,7 +9,7 @@ from django.db.models import Q
 # from django.db import transaction
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
@@ -507,6 +507,16 @@ def project_compose_message(request, project_id):
     members = project.members(user_only=True)
     recipient_filter = [member.username for member in members]
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
+
+def project_mailing_list(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    assert project.is_admin(request.user), "forbidden"
+    state = int(request.GET.get('state', 1))
+    memberships = project.get_memberships(state=state)
+    members = [membership.user for membership in memberships]
+    members = sorted(members, key = lambda x: x.last_name and x.last_name or 'z'+x.username)
+    emails = ['%s <%s>' % (member.get_display_name(), member.email) for member in members]
+    return HttpResponse(', '.join(emails), content_type="text/plain")
 
 def repo_list(request):
     user = request.user
