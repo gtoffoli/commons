@@ -510,7 +510,9 @@ def project_compose_message(request, project_id):
 
 def project_mailing_list(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    assert project.is_admin(request.user), "forbidden"
+    # assert project.is_admin(request.user), "forbidden"
+    if not project.is_admin(request.user):
+        return HttpResponseRedirect('/project/%s/' % project.slug)    
     state = int(request.GET.get('state', 1))
     memberships = project.get_memberships(state=state)
     members = [membership.user for membership in memberships]
