@@ -389,7 +389,8 @@ def apply_for_membership(request, username, project_slug):
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
-        return my_profile(request)
+            return my_profile(request)
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def accept_application(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
