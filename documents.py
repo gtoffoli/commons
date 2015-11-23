@@ -25,6 +25,22 @@ HASH_FUNCTION = lambda x: hashlib.sha256(x).hexdigest()  # document image cache 
 UUID_FUNCTION = lambda: unicode(uuid.uuid4())
 logger = logging.getLogger(__name__)
 
+VIEWABLE_MIMETYPES = (
+  'image/gif',
+  'image/jpeg',
+  'image/pjpeg',
+  'image/png',
+  'image/x-png',
+  'pdf',
+  'opendocument.text',
+  'opendocument.spreadsheet',
+)
+
+VIEWERJS_MIMETYPES = (
+  'pdf',
+  'opendocument.text',
+  'opendocument.spreadsheet',
+)
 
 class FileBasedStorage(FileSystemStorage):
     """Simple wrapper for the stock Django FileSystemStorage class"""
@@ -343,6 +359,25 @@ class Document(models.Model):
         temporary_path = os.path.join(TEMPORARY_DIRECTORY, filename)
         return self.save_to_file(temporary_path, buffer_size)
     """
+
+    @property
+    def viewable(self):
+        mimetype = self.file_mimetype
+        print mimetype
+        if not mimetype:
+            return False
+        for mt in VIEWABLE_MIMETYPES:
+            if mimetype.count(mt):
+                return True
+        return False
+
+    @property
+    def viewerjs_viewable(self):
+        mimetype = self.file_mimetype
+        for mt in VIEWERJS_MIMETYPES:
+            if mimetype.count(mt):
+                return True
+        return False
 
 class DocumentVersion(models.Model):
     """

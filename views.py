@@ -22,7 +22,7 @@ from documents import DocumentType, Document
 from models import UserProfile, Folder, FolderDocument, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
-from models import QUALITY_SCORE_DICT
+from models import OER_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm
@@ -999,6 +999,7 @@ def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer = get_object_or_404(OER, pk=oer_id)
     var_dict = { 'oer': oer, }
+    var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['can_edit'] = can_edit = oer.can_edit(request.user)
     var_dict['can_submit'] = oer.can_submit(request)
     var_dict['can_withdraw'] = oer.can_withdraw(request)
@@ -1224,10 +1225,9 @@ def oer_add_document(request):
             return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
 
 # def document_download(request):
-def document_download(request, document_id):
-    # if request.POST:
-    # document_id = request.POST.get('id')
-    document = get_object_or_404(Document, pk=document_id)
+def document_download(request, document_id, document=None):
+    if not document:
+        document = get_object_or_404(Document, pk=document_id)
     document_version = document.latest_version
     file_descriptor = document_version.open()
     file_descriptor.close()
@@ -1236,11 +1236,19 @@ def document_download(request, document_id):
         document_version.file,
         save_as='"%s"' % document_version.document.label,
         content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
-    )
+        )
 
 def document_view(request, document_id):
-    return HttpResponseRedirect('/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id))
-    # return HttpResponseRedirect('/ViewerJS/#http://localhost:8000/static/pdf/FI-ADOPT_FAIRVILLAGE_Draft_Sustainability_Plan-v1.pdf/')
+    document = get_object_or_404(Document, pk=document_id)
+    if document.viewerjs_viewable:
+        return HttpResponseRedirect('/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id))
+    else:
+        document_version = document.latest_version
+        return serve_file(
+            request,
+            document_version.file,
+            content_type=document_version.mimetype
+            )
 
 def document_page_download(request, page=1):
     if request.POST:
