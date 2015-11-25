@@ -89,7 +89,9 @@ def my_chat(request):
     return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
 
 def user_profile(request, username, user=None):
-    assert username or (user and user.is_authenticated())
+    # assert username or (user and user.is_authenticated())
+    if not username and (not user or not user.is_authenticated()):
+        return HttpResponseRedirect('/')
     MAX_REPOS = MAX_OERS = 5
     if not user:
         user = get_object_or_404(User, username=username)
@@ -235,8 +237,10 @@ def folderdocument_delete(request, folderdocument_id):
 
 def project_folder(request, project_slug):
     user = request.user
-    assert user.is_authenticated()
+    # assert user.is_authenticated()
     project = get_object_or_404(Project, slug=project_slug)
+    if not user.is_authenticated():
+        return project_detail(request, project.id, project=project)
     proj_type = project.proj_type
     var_dict = {'project': project, 'proj_type': proj_type,}
     var_dict['can_share'] = user.is_superuser or project.is_member(user)
@@ -430,7 +434,9 @@ def project_create_forum(request, project_id):
         position = 1
         name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()+1), ' (', _('please change this name'), ')')
     else:
-        assert not project.forum
+        # assert not project.forum
+        if not project.forum:
+            return project_detail(request, project_id, project=project)    
         position = 2
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
@@ -475,7 +481,9 @@ def forum_edit_by_id(request, forum_id):
 
 def project_create_room(request, project_id):
     project = get_object_or_404(Project,id=project_id)
-    assert project.need_create_room()
+    # assert project.need_create_room()
+    if not project.need_create_room():
+        return project_detail(request, project_id, project=project)    
     name = project.slug
     title = project.get_name()
     room = Room(name=name, title=title)
@@ -488,9 +496,13 @@ def project_create_room(request, project_id):
 
 def project_sync_xmppaccounts(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    assert project.chat_type in [1]
+    # assert project.chat_type in [1]
+    if not project.chat_type in [1]:
+        return project_detail(request, project_id, project=project)    
     room = project.chat_room
-    assert room
+    # assert room
+    if not room:
+        return project_detail(request, project_id, project=project)    
     users = project.members(user_only=True)
     for user in users:
         try:
