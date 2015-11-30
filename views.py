@@ -1022,7 +1022,10 @@ def oer_detail(request, oer_id, oer=None):
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
-    return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
+    if request.GET.get('core', ''):
+        return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
+    else:
+        return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
     # oer = get_object_or_404(OER, slug=oer_slug)
@@ -1302,10 +1305,12 @@ def project_add_oer(request, project_id):
 def lp_detail(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+    user = request.user
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     # var_dict['project'] = lp.get_project
     # var_dict['user'] = not var_dict['project'] and lp.user
+    var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = lp.can_edit(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
@@ -1318,6 +1323,33 @@ def lp_detail(request, lp_id, lp=None):
 def lp_detail_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
     return lp_detail(request, lp.id, lp)
+
+def lp_play(request, lp_id, lp=None):
+    if not lp:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
+    var_dict = { 'lp': lp, }
+    var_dict['project'] = lp.project
+    nodes = lp.get_ordered_nodes()
+    n_nodes = len(nodes)
+    var_dict['nodes'] = nodes
+    var_dict['max_node'] = n_nodes-1
+    var_dict['node_range'] = range(n_nodes)
+    i_node = request.GET.get('node', '')
+    i_node = i_node.isdigit() and int(i_node) or 0
+    var_dict['i_node'] = i_node
+    current_node = nodes[i_node]
+    var_dict['current_node'] = current_node
+    oer = current_node.oer
+    var_dict['oer'] = oer
+    var_dict['oer_url'] = oer.url
+    i_page = request.GET.get('page', '')
+    i_page = i_page.isdigit() and int(i_page) or 0
+    var_dict['i_page'] = i_page
+    return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
+
+def lp_play_by_slug(request, lp_slug):
+    lp = LearningPath.objects.get(slug=lp_slug)
+    return lp_play(request, lp.id, lp)
 
 def lp_edit(request, lp_id=None, project_id=None):
     user = request.user

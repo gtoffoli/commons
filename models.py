@@ -1092,6 +1092,13 @@ class LearningPath(models.Model, Publishable):
     def get_link_color(self):
         return PUBLICATION_LINK_DICT[self.state]
 
+    def can_play(self, request):
+        user = request.user
+        if not user.is_authenticated():
+            return False
+        project = self.project
+        return user.is_superuser or user==self.creator or (project and project.is_admin(user))
+
     def can_edit(self, request):
         user = request.user
         if not user.is_authenticated():

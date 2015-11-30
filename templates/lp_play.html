@@ -1,0 +1,76 @@
+{% extends "commons_core.html" %}
+
+{% load i18n %}
+{% load static from staticfiles %}
+
+{% block extra_head %}
+<style>
+#resource {
+    position: absolute;
+    top: 150px;
+    left: 0px;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    transition-property: all;
+    transition-duration: 0.3s;
+}
+</style>
+{% endblock extra_head %}
+
+{% block topbar_base %}
+    <header>
+	<div class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header pull-left">
+	            <a  class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
+	            <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
+			</div>
+		</div>
+	</div>
+    </header>
+{% endblock topbar_base %}
+
+{% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+
+{% block body_class %}lp_viewer{% endblock %}
+{% block body %}
+<div style="padding-top: 64px;">
+    <div style="font-weigth: bold; font-size: large;">{% trans "LP" %}:&nbsp;&nbsp;<span><a {% comment %}style="color: {{ lp.get_title_color }};"{% endcomment %} href="/lp/{{ lp.slug }}/">{{ lp.title }}</span></a> &nbsp;
+    	<span style="font-style: italic;">{{ lp.short }}</span></div>
+    <div style="font-size: 12px; line-height: 1;"">
+        <ul class="pagination pagination-sm" style="margin: 0; padding: 0;">
+            <li class="prev {% if i_node == 0 %}disabled{% endif %}">
+                <a href="{% if i_node > 0 %}/lp/{{ lp.slug }}/viewer/?node={{ i_node|add:"-1" }}{% endif %}" {% if i_node > 0 %}title='{% trans "previous node" %}'{% endif %}><span class="fa fa-chevron-left"></span></a>
+            </li>
+            {% for node in nodes %}
+                {% if forloop.counter0 == i_node %}
+                    <li class="active">
+                       <a href="/pathnode/{{ node.id }}/" class="page">{{ forloop.counter }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                       <a href="/lp/{{ lp.slug }}/viewer/?node={{ forloop.counter0 }}" title="{{ node.label }}">{{ forloop.counter }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            <li class="next {% if i_node == max_node %}disabled{% endif %}">
+                <a href="{% if i_node < max_node %}/lp/{{ lp.slug }}/viewer/?node={{ i_node|add:1 }}{% endif %}" {% if i_node < max_node %} title='{% trans "next page" %}'{% endif %}><span class="fa fa-chevron-right"></span></a>
+            </li>
+        </ul>
+    </div>
+    <div>{% trans "OER" %}:&nbsp;&nbsp;<a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></div>
+    </div>
+</div>
+
+<div style="width: 100%; height: 100%; z-index: 10; position: absolute; left: 0; top: 150px;;"></div>
+ 
+    <div style="width: 100%; height: 100%;">
+{% comment %}
+    <iframe width="100%" height="100%" style="position: relative; left: 0; top: 0; right: 0; bottom: 0;" id="canvas" src="/oer/{{ oer.slug }}/?core=true"></iframe>
+{% endcomment %}
+    <iframe id="resource" width="100%" height="100%" src="{% if oer_url %}{{ oer_url }}{% else %}/oer/{{ oer.slug }}/?core=true{% endif %}"></iframe>
+    </div>
+{% endblock  %}
+
+{% block footer_base %}{% endblock %}
