@@ -41,7 +41,7 @@
     <div style="font-size: 12px; line-height: 1;"">
         <ul class="pagination pagination-sm" style="margin: 0; padding: 0;">
             <li class="prev {% if i_node == 0 %}disabled{% endif %}">
-                <a href="{% if i_node > 0 %}/lp/{{ lp.slug }}/viewer/?node={{ i_node|add:"-1" }}{% endif %}" {% if i_node > 0 %}title='{% trans "previous node" %}'{% endif %}><span class="fa fa-chevron-left"></span></a>
+                <a href="{% if i_node > 0 %}/lp/{{ lp.slug }}/play/?node={{ i_node|add:"-1" }}{% endif %}" {% if i_node > 0 %}title='{% trans "previous node" %}'{% endif %}><span class="fa fa-chevron-left"></span></a>
             </li>
             {% for node in nodes %}
                 {% if forloop.counter0 == i_node %}
@@ -50,12 +50,12 @@
                     </li>
                 {% else %}
                     <li>
-                       <a href="/lp/{{ lp.slug }}/viewer/?node={{ forloop.counter0 }}" title="{{ node.label }}">{{ forloop.counter }}</a>
+                       <a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="{{ node.label }}">{{ forloop.counter }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
             <li class="next {% if i_node == max_node %}disabled{% endif %}">
-                <a href="{% if i_node < max_node %}/lp/{{ lp.slug }}/viewer/?node={{ i_node|add:1 }}{% endif %}" {% if i_node < max_node %} title='{% trans "next page" %}'{% endif %}><span class="fa fa-chevron-right"></span></a>
+                <a href="{% if i_node < max_node %}/lp/{{ lp.slug }}/play/?node={{ i_node|add:1 }}{% endif %}" {% if i_node < max_node %} title='{% trans "next page" %}'{% endif %}><span class="fa fa-chevron-right"></span></a>
             </li>
         </ul>
     </div>
