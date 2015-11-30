@@ -1211,19 +1211,20 @@ class LearningPath(models.Model, Publishable):
     def remove_node(self, node, request):
         assert self.can_edit(request)
         assert node.path == self
-        if not node.is_root():
-            parent_edge = PathEdge.objects.get(child=node)
-        if not node.is_leaf():
-            child_edge = PathEdge.objects.get(parent=node)
-            child = child_edge.child
-        if node.is_root():
-            child_edge.delete()
-        elif node.is_leaf():
-            parent_edge.delete()
-        else:
-            parent_edge.child = child
-            parent_edge.save(disable_circular_check=True)
-            child_edge.delete()
+        if not node.is_island():
+            if not node.is_root():
+                parent_edge = PathEdge.objects.get(child=node)
+            if not node.is_leaf():
+                child_edge = PathEdge.objects.get(parent=node)
+                child = child_edge.child
+            if node.is_root():
+                child_edge.delete()
+            elif node.is_leaf():
+                parent_edge.delete()
+            else:
+                parent_edge.child = child
+                parent_edge.save(disable_circular_check=True)
+                child_edge.delete()
         node.delete()
         self.editor = request.user
         self.save()
