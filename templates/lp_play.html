@@ -71,7 +71,7 @@
             </li>
         </ul>
     </div>
-    <div>{% trans "OER" %}:&nbsp;&nbsp;<a href="/oer/{{ oer.slug }}/">{{ current_node.label }}</a></div>
+    <div>{% trans "node"|capfirst %} (<a href="/oer/{{ oer.slug }}/" title='{% trans "view OER" %}'>{% trans "OER" %}</a>):&nbsp;&nbsp;<a href="/pathnode/{{ current_node.id }}/">{{ current_node.label }}</a></div>
     </div>
 </div>
 
