@@ -1324,6 +1324,16 @@ def lp_detail_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
     return lp_detail(request, lp.id, lp)
 
+YOUTUBE_TEMPLATE = """<div class="flex-video widescreen">
+<iframe src="http://www.youtube.com/embed/%s?autoplay=1" frameborder="0" allowfullscreen="">
+</iframe>
+</div>
+"""
+SLIDESHARE_TEMPLATE = """<div class="flex-video widescreen">
+%s
+</div>
+"""
+
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
@@ -1341,7 +1351,19 @@ def lp_play(request, lp_id, lp=None):
     var_dict['current_node'] = current_node
     oer = current_node.oer
     var_dict['oer'] = oer
+    url = oer.url
     var_dict['oer_url'] = oer.url
+    youtube = url and url.count('youtube.com') and url or ''
+    if youtube:
+        if not youtube.count('embed') and youtube.count('watch?v='):
+            youtube = youtube[youtube.index('watch?v=')+8:]
+        youtube = YOUTUBE_TEMPLATE % youtube
+    var_dict['youtube'] = youtube
+    reference = oer.reference
+    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
+    if slideshare:
+        slideshare = SLIDESHARE_TEMPLATE % slideshare
+    var_dict['slideshare'] = slideshare
     i_page = request.GET.get('page', '')
     i_page = i_page.isdigit() and int(i_page) or 0
     var_dict['i_page'] = i_page
