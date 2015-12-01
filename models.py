@@ -1093,6 +1093,8 @@ class LearningPath(models.Model, Publishable):
         return PUBLICATION_LINK_DICT[self.state]
 
     def can_play(self, request):
+        if self.state == PUBLISHED:
+            return True
         user = request.user
         if not user.is_authenticated():
             return False

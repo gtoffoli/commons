@@ -1507,7 +1507,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 form.save_m2m()
                 node = get_object_or_404(PathNode, id=node.id)
                 if not node.label:
-                    node.label = slugify(node.oer.title[:50])
+                    # node.label = slugify(node.oer.title[:50])
+                    node.label = node.oer.title
                     node.save()
                 path = node.path
                 if path.path_type==LP_SEQUENCE and not node.parents():
