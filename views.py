@@ -1325,7 +1325,7 @@ def lp_detail_by_slug(request, lp_slug):
     return lp_detail(request, lp.id, lp)
 
 YOUTUBE_TEMPLATE = """<div class="flex-video widescreen">
-<iframe src="http://www.youtube.com/embed/%s?autoplay=1" frameborder="0" allowfullscreen="">
+<iframe src="%s?autoplay=1" frameborder="0" allowfullscreen="">
 </iframe>
 </div>
 """
@@ -1353,10 +1353,17 @@ def lp_play(request, lp_id, lp=None):
     var_dict['oer'] = oer
     url = oer.url
     var_dict['oer_url'] = oer.url
-    youtube = url and url.count('youtube.com') and url or ''
+    youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
     if youtube:
-        if not youtube.count('embed') and youtube.count('watch?v='):
-            youtube = youtube[youtube.index('watch?v=')+8:]
+        if youtube.count('embed'):
+            pass
+            print 1, youtube
+        elif youtube.count('youtu.be/'):
+            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
+            print 2, youtube
+        elif youtube.count('watch?v='):
+            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+            print 3, youtube
         youtube = YOUTUBE_TEMPLATE % youtube
     var_dict['youtube'] = youtube
     reference = oer.reference
