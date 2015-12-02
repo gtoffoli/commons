@@ -1333,10 +1333,12 @@ SLIDESHARE_TEMPLATE = """<div class="flex-video widescreen">
 %s
 </div>
 """
+TED_TALK_TEMPLATE = """<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" width="854" height="480" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>"""
 
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+    language = request.LANGUAGE_CODE
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     nodes = lp.get_ordered_nodes()
@@ -1366,6 +1368,14 @@ def lp_play(request, lp_id, lp=None):
             print 3, youtube
         youtube = YOUTUBE_TEMPLATE % youtube
     var_dict['youtube'] = youtube
+    ted_talk = url and url.count('www.ted.com/talks/')
+    if ted_talk:
+        if ted_talk.count('?'):
+            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
+        else:
+            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
+        ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
+    var_dict['ted_talk'] = ted_talk
     reference = oer.reference
     slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
     if slideshare:
