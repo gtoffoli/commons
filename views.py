@@ -1368,7 +1368,7 @@ def lp_play(request, lp_id, lp=None):
             print 3, youtube
         youtube = YOUTUBE_TEMPLATE % youtube
     var_dict['youtube'] = youtube
-    ted_talk = url and url.count('www.ted.com/talks/')
+    ted_talk = url and url.count('www.ted.com/talks/') and url or ''
     if ted_talk:
         if ted_talk.count('?'):
             ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
