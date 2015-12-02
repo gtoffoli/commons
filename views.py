@@ -1333,7 +1333,10 @@ SLIDESHARE_TEMPLATE = """<div class="flex-video widescreen">
 %s
 </div>
 """
-TED_TALK_TEMPLATE = """<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" width="854" height="480" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>"""
+TED_TALK_TEMPLATE = """<div class="flex-video widescreen">
+<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" width="854" height="480" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</div>
+"""
 
 def lp_play(request, lp_id, lp=None):
     if not lp:
