@@ -121,11 +121,11 @@ class Publishable():
     def can_withdraw(self, request):
         return self.state in [SUBMITTED] and request.user == self.creator
     def can_reject(self, request):
-        return self.state in [SUBMITTED] and self.project.is_admin(request.user)
+        return self.state in [SUBMITTED] and self.project and self.project.is_admin(request.user)
     def can_publish(self, request):
-        return self.state in [SUBMITTED, UN_PUBLISHED] and self.project.is_admin(request.user)
+        return self.state in [SUBMITTED, UN_PUBLISHED] and self.project and self.project.is_admin(request.user)
     def can_un_publish(self, request):
-        return self.state in [PUBLISHED] and self.project.is_admin(request.user)
+        return self.state in [PUBLISHED] and self.project and self.project.is_admin(request.user)
 
     def submit(self, request):
         if self.can_submit(request):
