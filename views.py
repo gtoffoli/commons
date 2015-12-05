@@ -435,7 +435,7 @@ def project_create_forum(request, project_id):
         name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()+1), ' (', _('please change this name'), ')')
     else:
         # assert not project.forum
-        if not project.forum:
+        if project.forum:
             return project_detail(request, project_id, project=project)    
         position = 2
     category = get_object_or_404(Category, position=position)
