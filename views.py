@@ -1312,6 +1312,7 @@ def lp_detail(request, lp_id, lp=None):
     # var_dict['user'] = not var_dict['project'] and lp.user
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = lp.can_edit(request)
+    var_dict['can_delete'] = lp.can_delete(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)
@@ -1476,6 +1477,15 @@ def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.un_publish(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
+def lp_delete(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    project = lp.project
+    lp.lp_delete(request)
+    if project:
+        return HttpResponseRedirect('/project/%s/' % project.slug)
+    else:
+        return my_profile(request)
 
 def lp_make_sequence(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)

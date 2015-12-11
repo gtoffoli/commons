@@ -1113,6 +1113,17 @@ class LearningPath(models.Model, Publishable):
             return False
         return user.is_superuser or self.creator==user
 
+    def can_delete(self, request):
+        user = request.user
+        if not user.is_authenticated():
+            return False
+        return user.is_superuser or self.creator==user and self.state in (DRAFT, UN_PUBLISHED,)
+
+    def lp_delete(self, request):
+        for node in self.get_nodes():
+            self.remove_node(node, request)
+        self.delete()
+
     def get_nodes(self):
         return PathNode.objects.filter(path=self)
     

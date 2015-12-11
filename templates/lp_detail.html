@@ -3,11 +3,26 @@
 {% load i18n %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+
+{% block extra_head %}
+{% if can_delete %}
+	<script>
+	function confirm_delete(form) {return confirm('{% trans "do you really want to delete" %} {% trans "this learning path" %}?');}
+	</script>
+{% endif %}
+{% endblock %}
+
 {% block body_class %}lp_detail{% endblock %}
 {% block body %}
             <h1 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
                 {% if can_play %}&nbsp; <a href="/lp/{{ lp.slug }}/play/" title="{% trans "show player view" %}"><i class="fa fa-youtube-play" style="font-size: 0.7em;"></i></a>{% endif %}
                 {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>{% endif %}
+                {% if can_delete %}
+  	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">
+	{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+    <button type="submit" class="btn-link fa fa-close" style="font-size: 0.7em; color: red; cursor: hand; text-decoration: none;" title="{% trans "delete" %}" id="submit_{{ lp.id }}">
+	</form>
+				{% endif %}
             </h1>
 <section class="view-card">
             <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
