@@ -18,7 +18,7 @@
    			<div style="margin-top: 1em; margin-bottom: 0,5em;">
         <div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
             <div><i>{{ project.description }}</i></div></div>
-            {% else %}
+            {% elif project.state == 2 %}
             	<a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
 				&nbsp;<i>({{ project.proj_type.description }})</i>.
             {% endif %}

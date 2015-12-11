@@ -324,12 +324,14 @@ PROJECT_DRAFT = 0
 PROJECT_SUBMITTED = 1
 PROJECT_OPEN = 2
 PROJECT_CLOSED = 3
+PROJECT_DELETED = 4
 
 PROJECT_STATE_CHOICES = (
     (PROJECT_DRAFT, _('draft proposal')),
     (PROJECT_SUBMITTED, _('proposal submitted')),
     (PROJECT_OPEN, _('project open')),
-    (PROJECT_CLOSED, _('project closed')),)
+    (PROJECT_CLOSED, _('project closed')),
+    (PROJECT_DELETED, _('project deleted')),)
 PROJECT_STATE_DICT = dict(PROJECT_STATE_CHOICES)
 
 PROJECT_COLOR_DICT = {
@@ -337,12 +339,14 @@ PROJECT_COLOR_DICT = {
   PROJECT_SUBMITTED: 'LimeGreen',
   PROJECT_OPEN: 'black',
   PROJECT_CLOSED: 'Red',
+  PROJECT_DELETED: 'Red',
 }
 PROJECT_LINK_DICT = {
   PROJECT_DRAFT: 'Orange',
   PROJECT_SUBMITTED: 'LimeGreen',
   PROJECT_OPEN: '#428bca',
   PROJECT_CLOSED: 'Red',
+  PROJECT_DELETED: 'Red',
 }
 
 MEMBERSHIP_STATE_CHOICES = (
