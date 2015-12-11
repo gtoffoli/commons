@@ -13,12 +13,12 @@
 <ul class="list-unstyled">
     {% recursetree nodes %}<li>
    	{% with project=node.project %}
-   		{% if node.project %}
-   			{% if project.proj_type.name == 'com' and project.state == 2 %}
+   		{% if project and project.state == 2 %}
+   			{% if project.proj_type.name == 'com' %}
    			<div style="margin-top: 1em; margin-bottom: 0,5em;">
         <div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
             <div><i>{{ project.description }}</i></div></div>
-            {% elif project.state == 2 %}
+            {% else %}
             	<a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
 				&nbsp;<i>({{ project.proj_type.description }})</i>.
             {% endif %}

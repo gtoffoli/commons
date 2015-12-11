@@ -7,7 +7,7 @@
 
 {% block body_class %}projects{% endblock %}
 {% block body %}
-   <h1 class="text-center">{% trans "all projects"|capfirst %}</h1>
+   <h1 class="text-center">{% trans "all open projects"|capfirst %}</h1>
    {% if nodes %}
      <section class="view-card">
     {% recursetree nodes %}
