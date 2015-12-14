@@ -1,0 +1,34 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+{% load tinymce_tags %}
+
+{% block head_title %}{% trans "edit document in folder"|capfirst %}: &nbsp;{{ folder.get_title }}{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="col-sm-12">
+    <section>
+       <h2 class="text-center"><span style="font-size: smaller; font-style: italic;">{% trans "edit document in folder"|capfirst %}:</span> &nbsp;{{ folder.get_title }}</h2>
+    <form method="post" action="{{ field }}" id="folderdocument_edit_form" class="form-horizontal">
+	{% csrf_token %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
+	<div class="form-group col-lg-{% if i == 2 %}8{% else %}2{% endif %}">
+	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
+		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
+		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
+	</div>
+	</div>
+    {% endwith %}{% endfor %}
+
+   	</div></div>
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save{% if lp %} changes{% endif %}</button>&nbsp;
+		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
+    </form>
+    </section>
+  </div>
+{% endblock %}
+

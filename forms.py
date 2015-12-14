@@ -26,7 +26,7 @@ from pybb.models import Forum
 import settings
 from dmuc.models import Room
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Project, ProjType, Repo, Language, SubjectNode, RepoType, RepoFeature
+from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
@@ -173,6 +173,14 @@ class DocumentForm(forms.Form):
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
 
+class FolderDocumentForm(forms.ModelForm):
+    class Meta:
+        model = FolderDocument
+        exclude = ('folder', 'document', 'user',)
+
+    order = forms.IntegerField(required=True, label=_('sort order'))
+    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 class RepoForm(forms.ModelForm):
     class Meta:
@@ -270,6 +278,7 @@ class OerForm(forms.ModelForm):
     source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('if the source type is "catalogued source", please specify the source'))
     url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'span8 form-control'}), help_text=_('you should fill this field if the OER type is "metadata and online reference"'))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
+    embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
     material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('the type of (education) material refers to the function, not the physical aspect'))
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('"CC" stands for "Creative Commons"'))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))

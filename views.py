@@ -25,7 +25,7 @@ from models import PUBLISHED
 from models import OER_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
-from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm
+from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm
@@ -227,6 +227,22 @@ def project_add_document(request):
         # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
         return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
+def folderdocument_edit(request, folderdocument_id):
+    folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
+    folder = folderdocument.folder
+    if request.POST:
+        form = FolderDocumentForm(request.POST, instance=folderdocument)
+        if form.is_valid():
+            if request.POST.get('save', ''): 
+                form.save()
+            projects = Project.objects.filter(folders = folder)
+            if projects:
+                return HttpResponseRedirect('/project/%s/folder/' % projects[0].slug)
+    else:
+        form = FolderDocumentForm(instance=folderdocument)
+        action = '/folderdocument/%d/edit/' % folderdocument.id
+        return render_to_response('folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'form': form, 'action': action}, context_instance=RequestContext(request))
+ 
 def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
@@ -1385,6 +1401,7 @@ def lp_play(request, lp_id, lp=None):
     if slideshare:
         slideshare = SLIDESHARE_TEMPLATE % slideshare
     var_dict['slideshare'] = slideshare
+    var_dict['embed_code'] = oer.embed_code
     i_page = request.GET.get('page', '')
     i_page = i_page.isdigit() and int(i_page) or 0
     var_dict['i_page'] = i_page

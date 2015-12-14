@@ -21,13 +21,13 @@
 		  	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
 			<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
 		  	{% csrf_token %}
-		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}<a href="/folderdocument/{{ folderdocument.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
-			{% endif %}
+		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}<a href="/folderdocument/{{ folderdocument.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;{% endif %}
 			{% csrf_token %}
-			<input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
+			<input type="hidden" name="id" value="{{ document.id }}">{% if folderdocument.label %}{{ folderdocument.label }}{% else %}{{ document.label }}{% endif %}
 		    &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
 		    {% with mimetype=document.file_mimetype %}
 		    {% if 'pdf' in mimetype or 'opendocument.text' in mimetype %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
+		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}&nbsp;&nbsp;&nbsp;<a href="/folderdocument/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>&nbsp;&nbsp;{% endif %}
 		    {% endwith %}
 			&nbsp; &nbsp; <i style="font-size: smaller;">{% trans "loaded by" %} {{ folderdocument.user.get_display_name }} {% trans "on" %} {{ document.date_added }}</i>
 			</li></form>

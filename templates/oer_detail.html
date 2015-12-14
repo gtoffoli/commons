@@ -33,6 +33,8 @@
 	        {% endwith %}
 	        {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
 	        {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
+            {% if oer.reference %}<div><strong>{% trans "reference info"|capfirst %}</strong>: {{ oer.reference }}</div>{% endif %}
+	        {% if oer.embed_code %}<div><strong>{% trans "embed code"|capfirst %}</strong>: <span style="font-size: smaller;">{{ oer.embed_code }}</span></div>{% endif %}
 	        {% if oer.license %}<div><strong>{% trans "terms of use"|capfirst %}</strong>:
 	        {% comment %}{{ oer.license.name }}{% endcomment %}
   	<form class="form-inline" style="display: inline;" action="/oers/search/" method="post" id="license">

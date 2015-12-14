@@ -170,6 +170,14 @@ class Folder(MPTTModel):
         document.delete()
         folderdocument.delete()
 
+    def get_title(self):
+        if self.title:
+            return self.title
+        else:
+            projects = Project.objects.filter(folders=self)
+            if projects:
+                return projects[0].get_name()
+
     """
     @models.permalink
     def get_absolute_url(self):
@@ -183,6 +191,7 @@ class FolderDocument(models.Model, Publishable):
     order = models.IntegerField()
     folder = models.ForeignKey(Folder, related_name='folderdocument_folder', verbose_name=_('folder'))
     document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
+    label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     user = models.ForeignKey(User, verbose_name=_('user'))
 
@@ -747,6 +756,7 @@ class OER(models.Model, Publishable):
     source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
     url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
+    embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed the OER view in an HTML page'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
     license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
