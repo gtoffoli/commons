@@ -1121,7 +1121,12 @@ class LearningPath(models.Model, Publishable):
         user = request.user
         if not user.is_authenticated():
             return False
-        return user.is_superuser or self.creator==user
+        project = self.project
+        if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
+            return True
+        if project and project.is_member(user):
+            return True
+        return False
 
     def can_delete(self, request):
         user = request.user
