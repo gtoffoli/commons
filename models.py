@@ -1328,7 +1328,7 @@ class PathNode(node_factory('PathEdge')):
     def can_edit(self, request):
         return self.path.can_edit(request)
     
-    def subranges(self, r=''):
+    def get_subranges(self, r=''):
         """ parses the value of the field range and return subranges
         as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
         """

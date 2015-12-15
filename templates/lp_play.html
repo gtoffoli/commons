@@ -80,7 +80,9 @@
 {% endcomment %}
  
     <div style="width: 100%; height: 100%;">
-{% if embed_code %}
+{% if document_view %}
+	{{ document_view|safe }}
+{% elif embed_code %}
 	{{ embed_code|safe }}
 {% elif youtube %}
 	{{ youtube|safe }}

@@ -585,6 +585,12 @@ class DocumentVersion(models.Model):
             self.o_stream = StringIO.StringIO()
             utils.get_pdf_page(i_stream, self.o_stream, page)
 
+    def get_pages(self, pageranges):
+        if self.mimetype.lower().count('pdf'):
+            i_stream = self.open()
+            self.o_stream = StringIO.StringIO()
+            utils.get_pdf_pages(i_stream, self.o_stream, pageranges)
+
 """
 from events.classes import Event
 

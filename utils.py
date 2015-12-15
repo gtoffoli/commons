@@ -16,6 +16,18 @@ if os.name == "nt":
             pass
         os.symlink = symlink_ms
 
+""" from commons - windows.log del 150720
+from PyPDF2.pdf import *
+reader = PdfFileReader("git.from.bottom.up.pdf")
+reader.getNumPages()
+page = reader.getPage(3)
+writer = PdfFileWriter()
+writer.addPage(page)
+file = open("page3", "wb")
+writer.write(file)
+file.close
+"""
+
 def get_pdf_page(i_stream, o_stream, page):
     """ return ...
     """ 
@@ -37,11 +49,11 @@ def get_pdf_pages(i_stream, o_stream, pageranges):
     from PyPDF2.pdf import PdfFileReader, PdfFileWriter
     reader = PdfFileReader(i_stream)
     n_pages = reader.getNumPages()
+    writer = PdfFileWriter()
     for pr in pageranges:
-        writer = PdfFileWriter()
         if isinstance(pr, int):
             page = reader.getPage(pr)
-            writer.addPage(page)
+            writer.addPage(page-1)
             writer.write(o_stream)
         elif isinstance(pr, (list, tuple)) and len(pr)==2:
             low = pr[0]
@@ -50,9 +62,9 @@ def get_pdf_pages(i_stream, o_stream, pageranges):
                 raise 'invalid page range'
             if not isinstance(high, int) or high<low or high>n_pages:
                 raise 'invalid page range'
-            p = low
+            p = low-1
             step = 1
-            while p <= high:
+            while p < high:
                 page = reader.getPage(p)
                 writer.addPage(page)
                 p += step
