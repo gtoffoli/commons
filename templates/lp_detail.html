@@ -104,7 +104,12 @@
 		    {% endfor %}
 			{% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
     		{% if can_edit %}
-				<div style="margin-left: 1.5em;"><button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_new/';">{% trans "add node"|capfirst %}</button></div>
+    			<div style="margin-left: 1.5em;">
+				<button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_new/';">{% trans "add node"|capfirst %}</button>&nbsp;
+    			{% if oer %}
+				<button type="button" class="btn btn-default" onClick="document.location.href='/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/';">{% trans 'add node with OER'|capfirst %} "{{ oer.title|truncatewords:5 }}"</button>
+		    	{% endif %}
+				</div>
 		    {% endif %}
 		    {% endif %}
 		  </section>

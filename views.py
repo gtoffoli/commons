@@ -31,6 +31,7 @@ from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm
 
 from permissions import ForumPermissionHandler
+from session import get_clipboard, set_clipboard
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -1028,6 +1029,9 @@ def oer_detail(request, oer_id, oer=None):
         oer = get_object_or_404(OER, pk=oer_id)
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
+    if request.user.is_authenticated() and request.GET.get('bookmark', ''):
+        set_clipboard(request, key='oer', value=oer.id)
+    var_dict['in_clipboard'] = get_clipboard(request, key='oer')==oer.id
     var_dict['can_edit'] = can_edit = oer.can_edit(request.user)
     var_dict['can_submit'] = oer.can_submit(request)
     var_dict['can_withdraw'] = oer.can_withdraw(request)
@@ -1362,10 +1366,9 @@ def lp_detail(request, lp_id, lp=None):
     user = request.user
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
-    # var_dict['project'] = lp.get_project
-    # var_dict['user'] = not var_dict['project'] and lp.user
     var_dict['can_play'] = lp.can_play(request)
-    var_dict['can_edit'] = lp.can_edit(request)
+    can_edit = lp.can_edit(request)
+    var_dict['can_edit'] = can_edit
     var_dict['can_delete'] = lp.can_delete(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
@@ -1373,6 +1376,10 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_publish'] = lp.can_publish(request)
     var_dict['can_un_publish'] = lp.can_un_publish(request)
     var_dict['can_chain'] = lp.can_chain(request)
+    if can_edit:
+        oer_id = get_clipboard(request, key='oer')
+        if oer_id:
+            var_dict['oer'] = get_object_or_404(OER, pk=oer_id)
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -1556,6 +1563,23 @@ def lp_delete(request, lp_id):
     else:
         return my_profile(request)
 
+def lp_add_node(request, lp_slug):
+    path = get_object_or_404(LearningPath, slug=lp_slug)
+    return pathnode_edit(request, path_id=path.id) 
+
+def lp_add_oer(request, lp_slug, oer_id):
+    set_clipboard(request, key='oer', value=None)
+    user = request.user
+    path = get_object_or_404(LearningPath, slug=lp_slug)
+    if not path.can_edit(request):
+        return lp_detail(request, path.id, lp=path)
+    oer = get_object_or_404(OER, pk=oer_id)
+    node = PathNode(path=path, oer=oer, label=oer.title, creator=user, editor=user)
+    node.save()
+    if path.path_type==LP_SEQUENCE:
+        path.append_node(node, request)
+    return HttpResponseRedirect('/pathnode/%d/' % node.id)
+
 def lp_make_sequence(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     head = lp.make_sequence(request)
@@ -1631,10 +1655,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
 
 def pathnode_edit_by_id(request, node_id):
     return pathnode_edit(request, node_id=node_id)
-
-def lp_add_node(request, lp_slug):
-    path = get_object_or_404(LearningPath, slug=lp_slug)
-    return pathnode_edit(request, path_id=path.id) 
 
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
