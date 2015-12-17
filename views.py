@@ -282,8 +282,12 @@ def project_detail(request, project_id, project=None):
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
         var_dict['can_add_repo'] = project.can_add_repo(user)
-        var_dict['can_add_oer'] = project.can_add_oer(user)
-        var_dict['can_add_lp'] = project.can_add_lp(user)
+        var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user)
+        if can_add_oer:
+            var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
+        var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user)
+        if can_add_lp:
+            var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
         var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_chat'] = project.can_chat(user)
         var_dict['xmpp_server'] = settings.XMPP_SERVER
@@ -307,7 +311,7 @@ def project_detail(request, project_id, project=None):
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['lps'] = lps
-    return render_to_response('project_detail.html',var_dict, context_instance=RequestContext(request))
+    return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
@@ -440,6 +444,32 @@ def project_toggle_supervisor_role(request, project_id):
             add_local_role(project, user, role_admin)
         project.editor = request.user
         project.save
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
+
+def project_paste_oer(request, project_id, oer_id):
+    oer_id = int(oer_id)
+    cut_oers = get_clipboard(request, key='cut_oers') or []
+    project = get_object_or_404(Project, pk=project_id)
+    user = request.user
+    if user.is_authenticated() and project.can_add_oer(user) and oer_id in cut_oers:
+        oer = get_object_or_404(OER, pk=oer_id)
+        oer.project = project
+        oer.save()
+    cut_oers.remove(oer_id)
+    set_clipboard(request, key='cut_oers', value=cut_oers or None)
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
+        
+def project_paste_lp(request, project_id, lp_id):
+    lp_id = int(lp_id)
+    cut_lps = get_clipboard(request, key='cut_lps') or []
+    project = get_object_or_404(Project, id=project_id)
+    user = request.user
+    if user.is_authenticated() and project.can_add_lp(user) and lp_id in cut_lps:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
+        lp.project = project
+        lp.save()
+    cut_lps.remove(lp_id)
+    set_clipboard(request, key='cut_lps', value=cut_lps or None)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def project_create_forum(request, project_id):
@@ -1026,13 +1056,24 @@ def oers_by_project(request):
 
 def oer_detail(request, oer_id, oer=None):
     if not oer:
+        oer_id = int(oer_id)
         oer = get_object_or_404(OER, pk=oer_id)
+    elif not oer_id:
+        oer_id = oer.id
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
-    if request.user.is_authenticated() and request.GET.get('bookmark', ''):
-        set_clipboard(request, key='oer', value=oer.id)
-    var_dict['in_clipboard'] = get_clipboard(request, key='oer')==oer.id
+    if request.user.is_authenticated() and request.GET.get('copy', ''):
+        bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
+        if not oer_id in bookmarked_oers:
+            set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
+    var_dict['in_bookmarked_oers'] = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     var_dict['can_edit'] = can_edit = oer.can_edit(request.user)
+    var_dict['can_delete'] = can_delete = oer.can_delete(request.user)
+    if can_delete and request.GET.get('cut', ''):
+        cut_oers = get_clipboard(request, key='cut_oers') or []
+        if not oer_id in cut_oers:
+            set_clipboard(request, key='cut_oers', value=cut_oers+[oer_id])
+    var_dict['in_cut_oers'] = oer_id in (get_clipboard(request, key='cut_oers') or [])
     var_dict['can_submit'] = oer.can_submit(request)
     var_dict['can_withdraw'] = oer.can_withdraw(request)
     var_dict['can_reject'] = oer.can_reject(request)
@@ -1362,14 +1403,22 @@ def project_add_oer(request, project_id):
 
 def lp_detail(request, lp_id, lp=None):
     if not lp:
+        lp_id = int(lp_id)
         lp = get_object_or_404(LearningPath, pk=lp_id)
+    elif not lp_id:
+        lp_id = lp.id
     user = request.user
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     var_dict['can_play'] = lp.can_play(request)
-    can_edit = lp.can_edit(request)
-    var_dict['can_edit'] = can_edit
-    var_dict['can_delete'] = lp.can_delete(request)
+    var_dict['can_edit'] = can_edit = lp.can_edit(request)
+    var_dict['can_delete'] = can_delete = lp.can_delete(request)
+    if can_delete and request.GET.get('cut', ''):
+        set_clipboard(request, key='cut_lps', value=(get_clipboard(request, key='cut_lps') or []) + [lp_id])
+        cut_lps = get_clipboard(request, key='cut_lps') or []
+        if not lp_id in cut_lps:
+            set_clipboard(request, key='cut_lps', value=cut_lps+[lp_id])
+    var_dict['in_cut_lps'] = lp_id in (get_clipboard(request, key='cut_lps') or [])
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)
@@ -1377,9 +1426,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_un_publish'] = lp.can_un_publish(request)
     var_dict['can_chain'] = lp.can_chain(request)
     if can_edit:
-        oer_id = get_clipboard(request, key='oer')
-        if oer_id:
-            var_dict['oer'] = get_object_or_404(OER, pk=oer_id)
+        var_dict['bookmarked_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -1568,17 +1615,19 @@ def lp_add_node(request, lp_slug):
     return pathnode_edit(request, path_id=path.id) 
 
 def lp_add_oer(request, lp_slug, oer_id):
-    set_clipboard(request, key='oer', value=None)
+    oer_id = int(oer_id)
+    bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
     user = request.user
     path = get_object_or_404(LearningPath, slug=lp_slug)
-    if not path.can_edit(request):
-        return lp_detail(request, path.id, lp=path)
-    oer = get_object_or_404(OER, pk=oer_id)
-    node = PathNode(path=path, oer=oer, label=oer.title, creator=user, editor=user)
-    node.save()
-    if path.path_type==LP_SEQUENCE:
-        path.append_node(node, request)
-    return HttpResponseRedirect('/pathnode/%d/' % node.id)
+    if path.can_edit(request) and oer_id in bookmarked_oers:
+        oer = get_object_or_404(OER, pk=oer_id)
+        node = PathNode(path=path, oer=oer, label=oer.title, creator=user, editor=user)
+        node.save()
+        bookmarked_oers.remove(oer_id)
+        set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers or None)
+        if path.path_type==LP_SEQUENCE:
+            path.append_node(node, request)
+    return HttpResponseRedirect('/lp/%s/' % lp_slug)
 
 def lp_make_sequence(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)

@@ -800,6 +800,12 @@ class OER(models.Model, Publishable):
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.can_add_oer(user)
+ 
+    def can_delete(self, user):
+        if not user.is_authenticated():
+            return False
+        project = self.project
+        return user.is_superuser or self.creator==user or project.is_admin(user)
 
     def get_evaluations(self, user=None):
         if user:
