@@ -5,6 +5,7 @@ Created on 03/set/2015
 from pybb.permissions import DefaultPermissionHandler
 from pybb import defaults
 from commons.models import Project
+from django.db.models import Q
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
@@ -22,16 +23,21 @@ class ForumPermissionHandler(DefaultPermissionHandler):
             return True
         elif user in forum.moderators.all():
             return True
-        try:
-            project = Project.objects.get(forum=forum)
+        project = forum.get_project()
+        if project:
             return project.is_member(user)
-        except:
-            return False
-
+        else:
+            return user.is_full_member()
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
-        return user.is_authenticated() or not topic.forum.get_project()
+        # return user.is_authenticated() or not topic.forum.get_project()
+        forum = topic.forum
+        project = forum.get_project()
+        if project:
+            return user.is_authenticated()
+        else:
+            return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
     
     def may_create_poll(self, user):
         """
@@ -60,3 +66,12 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         
         return user.is_authenticated() and not topic.forum.get_project()
 
+    def may_view_post(self, user, post):
+        """ return True if `user` may view `post`, False otherwise """
+        topic = post.topic
+        forum = topic.forum
+        project = forum.get_project()
+        if project:
+            return user.is_authenticated()
+        else:
+            return (not post.on_moderation) or (user==post.user) or (user in forum.moderators.all())

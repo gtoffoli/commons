@@ -398,6 +398,14 @@ PYBB_DEFAULT_TITLE = 'Forum'
 PYBB_TOPIC_PAGE_SIZE = 10
 PYBB_NICE_URL = True
 # PYBB_MARKUP = 'pybb.markup.markdown.MarkdownParser'
+"""!
+def need_moderation(user, body):
+    if user.is_full_member():
+        return False
+    return True
+PYBB_PREMODERATION = need_moderation
+"""
+PYBB_PREMODERATION = False # otherwise, should customize also filter_topics and filter_posts
 
 ZINNIA_AUTO_MODERATE_COMMENTS = True
 ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 15 # 0 means no comments enabled at all

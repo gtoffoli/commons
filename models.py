@@ -53,6 +53,22 @@ def user_get_profile(self):
     return profiles and profiles[0] or None
 User.get_profile = user_get_profile
 
+def user_is_full_member(self):
+    """ user is full member of CommonSpaces if has a complete profile
+    and is member of a Community (Project membership is not enough """
+    profile = self.get_profile()
+    if not profile:
+        return False
+    if not profile.get_completeness():
+        return False
+    memberships = ProjectMember.objects.filter(user=self, state=1)
+    for membership in memberships:
+        project = membership.project
+        if project.state==PROJECT_OPEN and project.proj_type.name == 'com':
+            return True
+    return False
+User.is_full_member = user_is_full_member
+
 def user_can_add_repo(self, request):
     user = request.user
     if user.is_superuser:
