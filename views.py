@@ -22,6 +22,7 @@ from documents import DocumentType, Document
 from models import UserProfile, Folder, FolderDocument, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
+from models import PROJECT_SUBMITTED, PROJECT_OPEN
 from models import OER_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
@@ -273,28 +274,31 @@ def project_detail(request, project_id, project=None):
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
+    is_open = project.state==PROJECT_OPEN
+    is_submitted = project.state==PROJECT_SUBMITTED
     var_dict = {'project': project, 'proj_type': proj_type,}
     user = request.user
     if user.is_authenticated():
-        var_dict['membership'] = project.get_membership(user)
-        var_dict['is_member'] = project.is_member(user)
+        var_dict['membership'] = membership = project.get_membership(user)
+        var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = project.is_admin(user)
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
-        var_dict['can_add_repo'] = project.can_add_repo(user)
-        var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user)
+        var_dict['can_add_repo'] = project.can_add_repo(user) and is_open
+        var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user) and is_open
         if can_add_oer:
             var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
-        var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user)
+        var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user) and is_open
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
         var_dict['can_edit'] = project.can_edit(user)
-        var_dict['can_chat'] = project.can_chat(user)
+        var_dict['can_chat'] = project.can_chat(user) and is_open
         var_dict['xmpp_server'] = settings.XMPP_SERVER
         var_dict['room_label'] = project.slug
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
-        var_dict['project_no_apply'] = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
+        var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
+        var_dict['can_apply'] = not membership and not project_no_apply and (is_open or is_submitted)
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       
@@ -392,7 +396,8 @@ def project_edit(request, project_id=None, parent_id=None):
                     return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
             else:
                 print form.errors
-                return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent_id': parent_id,}, context_instance=RequestContext(request))
+                # return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent_id': parent_id,}, context_instance=RequestContext(request))
+                return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent': parent,}, context_instance=RequestContext(request))
     else:
         raise
 

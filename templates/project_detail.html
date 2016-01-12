@@ -92,9 +92,9 @@
             </ul>
 			{% if request.user.is_authenticated %}
 			<hr />
-			{% if membership == None and not project_no_apply %}
+			{% if can_apply %}
 			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join project"|capfirst %}</a> -</div>
-			{% else %}
+			{% elif membership %}
 				{% if membership.state == 0 %}					
 				<div><i>{% trans "your application is waiting for acceptation by the " %}
 				{% if membership.project.get_project_type == 'com' %}{% trans "community administrator" %}{% else %}{% trans "project supervisor" %}{% endif %}
@@ -169,11 +169,6 @@
     {% if can_add_repo or can_add_oer or can_add_lp %}
     <section>
         <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
-{% comment %}
-    	{% if can_add_repo %}<div><a href="/repo/new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify external repository"|capfirst %}</a></div>{% endif %}
-    	{% if can_add_oer %}<div><a href="/project/{{ project.id }}/oer_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "classify OER"|capfirst %}</a></div>{% endif %}
-    	{% if can_add_lp %}<div><a href="/project/{{ project.id }}/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create learning path"|capfirst %}</a></div>{% endif %}
-{% endcomment %}
 		<ul class="list-unstyled">
     	{% if can_add_repo %}
     	<li style="margin-top: 0em;"><a href="/repo/new/" class="btn btn-default btn-primary btn-sm">{% trans "classify external repository"|capfirst %}</a></li>
