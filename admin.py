@@ -44,21 +44,11 @@ class FolderAdmin(MPTTModelAdmin):
         return obj.parent.name
 
 class ProjTypeAdmin(admin.ModelAdmin):
-    """
-    fieldsets = [
-        (None, {'fields': ['name', 'description',]}),
-    ]
-    """
-    list_display = ('name', 'description',)
+    list_display = ['id', 'name', 'description', 'public', 'order',]
     search_fields = ['name',]
 
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
-    """
-    fieldsets = [
-        (None, {'fields': ['group', 'proj_type', 'chat_type', 'chat_room', 'forum', 'description', 'info', 'state',]}),
-    ]
-    """
     list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
@@ -109,11 +99,6 @@ class RepoFeatureAdmin(admin.ModelAdmin):
 
 class RepoAdmin(admin.ModelAdmin):
     form = RepoChangeForm
-    """
-    fieldsets = [
-        (None, {'fields': ['name', 'slug', 'state', 'description', 'url', 'repo_type', 'features', 'subjects', 'languages', 'info', 'eval',]}),
-    ]
-    """
     list_display = ('id', 'name', 'slug', 'description', 'repo_type', 'state', 'user_fullname', 'created', 'modified',)
     search_fields = ['name', 'description',]
     formfield_overrides = {

@@ -96,9 +96,7 @@
 			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join project"|capfirst %}</a> -</div>
 			{% elif membership %}
 				{% if membership.state == 0 %}					
-				<div><i>{% trans "your application is waiting for acceptation by the " %}
-				{% if membership.project.get_project_type == 'com' %}{% trans "community administrator" %}{% else %}{% trans "project supervisor" %}{% endif %}
-				</i></div>
+				<div><i>{% trans "your application is waiting for acceptation by the " %} {{ project.admin_name }}</i></div>
 				{% endif %}
 			{% endif %}
 			{% endif %}
@@ -132,7 +130,7 @@
 		{% endif %}
 		{% endif %}
 		{% if project.get_children or can_edit and not project_no_children%}
-   			<h4>{% if project.get_parent %}{% trans "child projects"|capfirst %}{% else %}{% trans "sub-communities"|capfirst %}{% endif %}</h4>
+   			<h4>{% if project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</h4>
 			{% if project.get_children %}
 	            <ul class="list-unstyled">
 				{% with subprojects=project.get_children %}{% for subproject in subprojects %}
@@ -142,8 +140,10 @@
 			{% endif %}
 			{% if can_edit and not project_no_children %}
 	            <ul class="list-unstyled">
-					<li>- <a href="/project/{{ project.slug }}/project_new/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
-						{% if project.get_parent %}{% trans "child project" %}{% else %}{% trans "sub-community" %}{% endif %}</a> -</li>
+					{% for proj_type in proj_types %}
+					<li>- <a href="/project/{{ project.slug }}/project_new/{{ proj_type.name }}/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
+						{% if project.get_level == 1 %}{% trans "project" %}{% else %}{% trans "project" %}{% endif %}: {{ proj_type.description }}</a> -</li>
+	            	{% endfor %}
 	            </ul>
 			{% endif %}
 		{% endif %}
@@ -163,7 +163,12 @@
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
 			{% endif %}
-            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}</div>
+            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}
+			{% if can_edit %}            
+                {% if can_open %}&nbsp; <a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "open" %}</a>{% endif %}
+                {% if can_close %}&nbsp; <a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "close" %}</a>{% endif %}
+			{% endif %}
+            </div>
             </p>
     </section>
     {% if can_add_repo or can_add_oer or can_add_lp %}

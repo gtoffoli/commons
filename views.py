@@ -19,7 +19,7 @@ from actstream import action, registry
 from commons import settings
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Folder, FolderDocument, Repo, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN
@@ -197,9 +197,13 @@ def cops_tree(request):
     nodes = Group.objects.filter(level=0)
     if nodes:
         root = nodes[0]
-        # nodes = root.get_descendants(include_self=True)
         nodes = root.get_descendants()
-    return render_to_response('cops_tree.html', {'nodes': nodes,}, context_instance=RequestContext(request))
+        filtered_nodes = []
+        for node in nodes:
+            project = node.project
+            if project and project.proj_type.public and project.state==PROJECT_OPEN:
+                filtered_nodes.append(node)
+    return render_to_response('cops_tree.html', {'nodes': filtered_nodes,}, context_instance=RequestContext(request))
 
 def create_project_folders(request):  
     projects = Project.objects.all()
@@ -212,7 +216,12 @@ def projects(request):
     if nodes:
         root = nodes[0]
         nodes = root.get_descendants()
-    return render_to_response('projects.html', {'nodes': nodes,}, context_instance=RequestContext(request))
+        filtered_nodes = []
+        for node in nodes:
+            project = node.project
+            if project and project.proj_type.public and project.state==PROJECT_OPEN:
+                filtered_nodes.append(node)
+    return render_to_response('projects.html', {'nodes': filtered_nodes,}, context_instance=RequestContext(request))
 
 def project_add_document(request):
     project_id = request.POST.get('id', '')
@@ -277,6 +286,7 @@ def project_detail(request, project_id, project=None):
     is_open = project.state==PROJECT_OPEN
     is_submitted = project.state==PROJECT_SUBMITTED
     var_dict = {'project': project, 'proj_type': proj_type,}
+    var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     user = request.user
     if user.is_authenticated():
         var_dict['membership'] = membership = project.get_membership(user)
@@ -292,6 +302,8 @@ def project_detail(request, project_id, project=None):
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
         var_dict['can_edit'] = project.can_edit(user)
+        var_dict['can_open'] = project.can_open(user)
+        var_dict['can_close'] = project.can_close(user)
         var_dict['can_chat'] = project.can_chat(user) and is_open
         var_dict['xmpp_server'] = settings.XMPP_SERVER
         var_dict['room_label'] = project.slug
@@ -321,7 +333,8 @@ def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
-def project_edit(request, project_id=None, parent_id=None):
+# def project_edit(request, project_id=None, parent_id=None):
+def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
     project_id: edit existent project
     parent_id: create sub-project
@@ -339,7 +352,8 @@ def project_edit(request, project_id=None, parent_id=None):
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
         if parent.can_edit(user):
-            form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
+            # form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
+            form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
             return render_to_response('project_edit.html', {'form': form, 'parent': parent,}, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
@@ -386,6 +400,9 @@ def project_edit(request, project_id=None, parent_id=None):
                     elif project.get_project_type() == 'lp':
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
+                    elif project.get_project_type() == 'ment':
+                        grant_permission(project, role_member, 'add-oer')
+                        grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user
                     project.save()
@@ -405,9 +422,24 @@ def project_edit_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_edit(request, project_id=project.id)
 
+"""
 def project_new_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_edit(request, parent_id=project.id)
+"""
+def project_new_by_slug(request, project_slug, type_name):
+    project = get_object_or_404(Project, slug=project_slug)
+    proj_type = get_object_or_404(ProjType, name=type_name)
+    return project_edit(request, parent_id=project.id, proj_type_id=proj_type.id)
+
+def project_open(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    project.open(request)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+def project_close(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    project.close(request)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)

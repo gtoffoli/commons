@@ -327,6 +327,7 @@ class ProjType(models.Model):
     name = models.CharField(max_length=20, verbose_name=_('name'), unique=True)
     description = models.CharField(max_length=100, verbose_name=_('description'))
     order = models.PositiveIntegerField(default=0, verbose_name=_('sort order'))
+    public = models.BooleanField(default=False, verbose_name=_('public'))
 
     class Meta:
         verbose_name = _('project / community type')
@@ -406,6 +407,15 @@ class Project(models.Model):
         verbose_name = _('project / community')
         verbose_name_plural = _('projects')
 
+    def open(self, request):
+        if self.can_open(request.user):
+            self.state = PROJECT_OPEN
+            self.save()
+    def close(self, request):
+        if self.can_close(request.user):
+            self.state = PROJECT_CLOSED
+            self.save()
+
     def create_folder(self):
         if not self.folders.all().count():
             folder = Folder(title=self.get_name())
@@ -460,6 +470,9 @@ class Project(models.Model):
     def get_link_color(self):
         return PROJECT_LINK_DICT[self.state]
 
+    def get_level(self):
+        return self.group.level
+
     def get_parent(self):
         parent_group = self.group.parent
         if parent_group:
@@ -472,8 +485,10 @@ class Project(models.Model):
         return Project.objects.filter(group__in=children_groups).order_by('group__name')
 
     def admin_name(self):
-        if self.proj_type.name == 'com':
+        if self.get_project_type() == 'com':
             return _('administrator')
+        elif self.get_project_type() == 'ment':
+            return _('mentor')
         else:
             return _('supervisor')
 
@@ -481,6 +496,12 @@ class Project(models.Model):
         if not user.is_authenticated():
             return False
         return user.is_superuser or self.can_accept_member(user)
+
+    def can_open(self, user):
+        return self.state!=PROJECT_OPEN and (self.is_admin(user) or self.get_parent().is_admin(user)) 
+
+    def can_close(self, user):
+        return self.state==PROJECT_OPEN and (self.is_admin(user) or self.get_parent().is_admin(user))
 
     def can_chat(self, user):
         if not (user.is_authenticated() and self.is_member(user)) :
