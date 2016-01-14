@@ -59,7 +59,8 @@ h1 {
 .navbar-fixed-top {
 	border-width: 0;
 }
-.navbar-nav {
+.navbar-nav,
+.marginRight0 {
 margin-right:0;
 }
 .mynavbar-brand {
@@ -350,7 +351,6 @@ margin-right:0;
 .paddingB20 {
 	padding-bottom:20px;
 }
-
 .marginB0 {
 	margin-bottom: 0;
 }
@@ -359,6 +359,10 @@ margin-right:0;
 }
 .marginB20 {
 	margin-bottom: 20px;
+}
+.paddingLR15 {
+	padding-left:15px;
+	padding-right:15px;
 }
 
 /* STILI FONT */
@@ -573,4 +577,26 @@ article.view-list1 li input.btn-link {
 
 .box-scroll {
   overflow: auto;
+}
+
+/* FORM */
+.form-horizontal .form-group {
+	margin-left:0;
+	margin-right:0;
+}
+select.form-control {
+	width:auto;
+}
+.help-block {
+	margin-top: 3px;
+	margin-bottom: 0;
+}
+
+.txt-error {
+	color: red;
+}
+.required:after {
+  content: ' *';
+  color: red;
+  font-size: 14px;
 }

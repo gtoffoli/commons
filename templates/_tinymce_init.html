@@ -1,4 +1,6 @@
-	<script type="text/javascript" src="/static/tiny_mce/tiny_mce.js"></script>
+	{% load staticfiles %}
+	<script type="text/javascript" src="{% static "tiny_mce/tiny_mce.js" %}"></script>
+	
 	<script>
 	tinyMCE.init({
 	    schema: "html5",
@@ -6,10 +8,11 @@
 	    editor_selector: "richtext",
 	    width: "100%",
 	    theme: "advanced",
+	    content_css : "{% static "tinymce/mycontent.css" %}",
 	    theme_advanced_toolbar_location: "top",
 	    theme_advanced_resizing: true,
 	    theme_advanced_resizing_horizontal: false,
 	    theme_advanced_resizing_min_height: 350,
-	    theme_advanced_buttons1: "undo,redo,formatselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,sub,sup,charmap,separator,bullist,numlist,outdent,indent,separator,link,unlink,image,separator,cleanup,code",
+      theme_advanced_buttons1: "undo,redo,formatselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,sub,sup,charmap,separator,bullist,numlist,outdent,indent,separator,link,unlink,image,separator,cleanup,code",
 	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea"
 	});	</script>

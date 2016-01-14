@@ -32,14 +32,14 @@ from models import LearningPath, PathNode
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 
 class UserChangeForm(UserWithMPTTChangeForm):
-    groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple(attrs={'class': 'span6'}))
+    groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
 
 class UserProfileChangeForm(forms.ModelForm):
-    long = forms.CharField(required=False, label='Longer presentation', widget=TinyMCE(attrs={'class': 'span8', 'rows': 5}))
+    long = forms.CharField(required=False, label='Longer presentation', widget=TinyMCE(attrs={'rows': 5}))
 
 class RepoChangeForm(forms.ModelForm):
-    info = forms.CharField(required=False, label='Longer description / search suggestions', widget=TinyMCE(attrs={'class': 'span8', 'rows': 5}))
-    eval = forms.CharField(required=False, label='Comments / evaluation', widget=TinyMCE(attrs={'class': 'span8', 'rows': 5}))
+    info = forms.CharField(required=False, label='Longer description / search suggestions', widget=TinyMCE(attrs={'rows': 5}))
+    eval = forms.CharField(required=False, label='Comments / evaluation', widget=TinyMCE(attrs={'rows': 5}))
 
 class ProjectChangeForm(forms.ModelForm):
     info = forms.CharField(required=False, label='Longer description', widget=TinyMCE())
@@ -61,19 +61,19 @@ class UserProfileForm(forms.ModelForm):
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
     dob = forms.DateField(required=True, label=_('date of birth'), input_formats=settings.DATE_INPUT_FORMATS, widget=DateWidget(bootstrap_version=3, options=dateTimeOptions, attrs={'id': 'birth_date', 'class':'form-control',}), help_text=_('format: dd/mm/yyyy'))
     country = forms.ModelChoiceField(required=True, queryset=CountryEntry.objects.all().order_by('name'), label=_('country'), widget=forms.Select(attrs={'class':'form-control',}))
-    city = forms.CharField(required=False, label=_('city'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    city = forms.CharField(required=False, label=_('city'), widget=forms.TextInput(attrs={'class':'form-control',}))
     edu_level = forms.ModelChoiceField(required=True, queryset=EduLevelEntry.objects.all(), label=_('education level'), widget=forms.Select(attrs={'class':'form-control',}))
     pro_status = forms.ModelChoiceField(required=True, queryset=ProStatusNode.objects.all(), label=_('study or work status'), widget=forms.Select(attrs={'class':'form-control',}))
     position = forms.CharField(required=False, label=_('study or work position'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 120,}))
     edu_field = forms.ModelChoiceField(required=False, queryset=EduFieldEntry.objects.all(), label=_('field of study'), widget=forms.Select(attrs={'class':'form-control'}))
     pro_field = forms.ModelChoiceField(required=False, queryset=ProFieldEntry.objects.all(), label=_('sector of work'), widget=forms.Select(attrs={'class':'form-control',}))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('interest areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 14,}))
-    languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
-    other_languages = forms.CharField(required=False, label=_('known languages not listed above'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 1,}))
-    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
-    long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}))
-    url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
-    networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('interest areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
+    languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    other_languages = forms.CharField(required=False, label=_('known languages not listed above'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 1,}))
+    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
+    long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}))
+    url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
+    networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
 
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
@@ -113,38 +113,38 @@ class PeopleSearchForm(forms.Form):
     country = forms.ModelMultipleChoiceField(CountryEntry.objects.all(),
         label=_('country'), required=False,
         help_text=_("choose country (no selection = all countries)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     edu_level = forms.ModelMultipleChoiceField(EduLevelEntry.objects.all(),
         label=_('education level'), required=False,
         help_text=_("choose education level (no selection = all levels)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
     pro_status = forms.ModelMultipleChoiceField(ProStatusNode.objects.all(),
         label=_('study or work status'), required=False,
         help_text=_("choose status (no selection = all statuses)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     edu_field = forms.ModelMultipleChoiceField(EduFieldEntry.objects.all(),
         label=_('field of study'), required=False,
         help_text=_("choose field of study' (no selection = all fields)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     pro_field = forms.ModelMultipleChoiceField(ProFieldEntry.objects.all(),
         label=_('sector of work'), required=False,
         help_text=_("choose education level (no selection = all levels)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     networks = forms.ModelMultipleChoiceField(NetworkEntry.objects.all().order_by('name'),
         label=_('social networks / services used'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 4,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
 
 class UserProfileExtendedForm(UserProfileForm):
-    first_name = forms.CharField(required=True, label=_('person name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    last_name = forms.CharField(required=True, label=_('family name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    first_name = forms.CharField(required=True, label=_('person name'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    last_name = forms.CharField(required=True, label=_('family name'), widget=forms.TextInput(attrs={'class':'form-control',}))
 
     class Meta(UserProfileForm.Meta):
         fields =  ['first_name', 'last_name',] + UserProfileForm.Meta.fields
@@ -155,22 +155,22 @@ class ProjectForm(forms.ModelForm):
         # exclude = ('group', 'forum',)
         exclude = ('slug', 'group', 'forum', 'folders',)
 
-    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
     proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), widget=forms.HiddenInput())
     chat_type = forms.ChoiceField(required=True, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.Select(attrs={'class':'form-control',}))
     chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
-    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
-    info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
+    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
     # state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 class DocumentForm(forms.Form):
-    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'span3 form-control',}))
+    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'form-control',}))
     docfile = forms.FileField(
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
@@ -181,7 +181,7 @@ class FolderDocumentForm(forms.ModelForm):
         exclude = ('folder', 'document', 'user',)
 
     order = forms.IntegerField(required=True, label=_('sort order'))
-    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 class RepoForm(forms.ModelForm):
@@ -190,16 +190,16 @@ class RepoForm(forms.ModelForm):
         # fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
         fields = ('name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
 
-    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     repo_type = forms.ModelChoiceField(required=True, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
-    description = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
-    url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'span8 form-control'}))
-    features = forms.ModelMultipleChoiceField(required=False, label=_('repository features'), queryset=RepoFeature.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
-    languages = forms.ModelMultipleChoiceField(required=False, label=_('languages of documents'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository includes a relevant number of contents in many languages"), "."))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 12,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository is not focused on specific subjects"), "."))
-    info = forms.CharField(required=False, label=string_concat(_('longer description'), " / ", _('search suggestions')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 16,}))
-    eval = forms.CharField(required=False, label=string_concat(_('comments'), " / ", _('evaluation')), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 10,}))
+    description = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
+    features = forms.ModelMultipleChoiceField(required=False, label=_('repository features'), queryset=RepoFeature.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
+    languages = forms.ModelMultipleChoiceField(required=False, label=_('languages of documents'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository includes a relevant number of contents in many languages"), "."))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 12,}), help_text=string_concat(_("do not select any"), ", ", _("if the repository is not focused on specific subjects"), "."))
+    info = forms.CharField(required=False, label=string_concat(_('longer description'), " / ", _('search suggestions')), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
+    eval = forms.CharField(required=False, label=string_concat(_('comments'), " / ", _('evaluation')), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 10,}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -220,22 +220,22 @@ class RepoSearchForm(forms.Form):
     """
     q = forms.CharField(
         label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
     repo_type = forms.ModelMultipleChoiceField(RepoType.objects.all(),
         label=_('repository type'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 5,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 5,}))
     features = forms.ModelMultipleChoiceField(RepoFeature.objects.all(),
         label=_('repository features'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 10,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 14,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
 
 
 class OerMetadataForm(forms.ModelForm):
@@ -270,23 +270,23 @@ class OerForm(forms.ModelForm):
         # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
-    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
-    # description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
-    description = forms.CharField(label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 3, 'cols': 80,}), help_text=_('one or two lines are enough here'))
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    # description = forms.CharField(required=False, label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    description = forms.CharField(label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'cols': 80,}), help_text=_('one or two lines are enough here'))
     oer_type = forms.ChoiceField(required=True, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('metadata are just descriptive and classification data'))
     source_type = forms.ChoiceField(required=True, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('is this OER a reference to, or a copy of, an external resource? was it derived from other OERs catalogued by CommonSpaces? or it is a brand new resource?'))
-    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 2,}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
-    # oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=OersSelect2MultipleWidget(attrs={'class':'span3 form-control', 'size': 3}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
+    oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 2,}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
+    # oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=OersSelect2MultipleWidget(attrs={'class':'form-control', 'size': 3}), help_text=_('if derived from other OERs, please specify them by selecting one or more'))
     source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('if the source type is "catalogued source", please specify the source'))
-    url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'span8 form-control'}), help_text=_('you should fill this field if the OER type is "metadata and online reference"'))
-    reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
-    embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
+    url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'form-control'}), help_text=_('you should fill this field if the OER type is "metadata and online reference"'))
+    reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
+    embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
     material = forms.ModelChoiceField(required=True, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('the type of (education) material refers to the function, not the physical aspect'))
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('"CC" stands for "Creative Commons"'))
-    levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
-    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'span8 form-control'}), help_text=_('click to add or remove a tag'))
-    languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+    levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
+    languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
@@ -317,7 +317,7 @@ class OerSearchForm(forms.Form):
     """
     q = forms.CharField(
         label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
     oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
         label=_('OER type'), required=False,
@@ -335,18 +335,18 @@ class OerSearchForm(forms.Form):
     # levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control',}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 7,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(queryset=MediaEntry.objects.all(),
         label=_('media formats'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
@@ -371,7 +371,7 @@ class OerEvaluationForm(forms.ModelForm):
 
     oer = forms.ModelChoiceField(queryset=OER.objects.all(), widget=forms.HiddenInput())
     overall_score = forms.ChoiceField(required=True, choices=QUALITY_SCORE_CHOICES, label=_('overall quality assessment'), widget=forms.Select(attrs={'class':'form-control',}))
-    review = forms.CharField(required=False, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 4, 'cols': 80,}))
+    review = forms.CharField(required=False, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 
@@ -386,14 +386,14 @@ class LpForm(forms.ModelForm):
         exclude = ('slug', 'group',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
-    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'span8 form-control',}))
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
-    levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
-    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
-    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'span3 form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
+    levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
     tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
-    short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}))
-    long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'span8 form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
+    short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
+    long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
     project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the Learning Path has been created'))
     """
     group = LpGroupChoiceField(required=False, queryset=Group.objects.filter(lp_group__isnull=False).distinct(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
@@ -425,21 +425,21 @@ class LpSearchForm(forms.Form):
     """
     q = forms.CharField(
         label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'span8 form-control', 'placeholder':_("enter search string")}))
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
     path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
         label=_('learning path type'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 8,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control', 'size': 13,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'span3 form-control',}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control',}))
 
 class PathNodeForm(forms.ModelForm):
     class Meta:
@@ -448,9 +448,9 @@ class PathNodeForm(forms.ModelForm):
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
-    label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'span4 form-control',}))
-    oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'span8 form-control',}))
-    range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'span8 form-control',}), help_text=_('possibly specify document and page display range'))
+    label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
+    range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('possibly specify document and page display range'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
@@ -463,7 +463,7 @@ class MessageComposeForm(ComposeForm):
     A customized form for private messages.
     """
     recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
-    subject = forms.CharField(label=_(u"Subject"), max_length=120, widget=forms.TextInput(attrs={'class':'span8 form-control'}),)
+    subject = forms.CharField(label=_(u"Subject"), max_length=120, widget=forms.TextInput(attrs={'class':'form-control'}),)
     body = forms.CharField(label=_(u"Body"),
         widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
 
@@ -483,6 +483,6 @@ class ForumForm(forms.ModelForm):
         model = Forum
         fields = ['name', 'headline',]
  
-    name = forms.CharField(label=_('name'), widget=forms.TextInput(attrs={'class':'span4 form-control',}), help_text=_('please, replace the automatically generated name with an appropriate one'))
-    headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'span8 form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
+    name = forms.CharField(label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('please, replace the automatically generated name with an appropriate one'))
+    headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
 

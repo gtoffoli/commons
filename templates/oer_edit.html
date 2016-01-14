@@ -4,22 +4,30 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if oer %}{% trans "edit OER"|capfirst %}: &nbsp;{{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if oer %}{% trans "edit OER"|capfirst %}: {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}{% endblock %}
 
+{% block extra_style %}
+	<link href="{% static "css/taggit_labels.css" %}" rel="stylesheet">
+{% endblock %}
 {% block extra_head %}
+{% comment %}
 	{% tinymce_preview "preview-content" %}
-    <link href="{% static "css/taggit_labels.css" %}" rel="stylesheet">
-	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
-	<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+{% endcomment %}
+  
+	<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+	<script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/taggit_labels.js" %}"></script>
+{% comment %}	
 	<script type="text/javascript" src="{% static "django_select2/django_select2.js" %}"></script>
+{% endcomment %}
 <script type="text/javascript">
 //Copyright: CodePug.com 2009
 //Do not REMOVE these comments
 //Usage: setReadonly('mySelect');
-function setReadonly( selectElementId ){
+//function setReadonly( selectElementId ){
+function setDisabled( selectElementId, elementHelpId ){	
 	var selectElement = document.getElementById(selectElementId);
-	if (selectElement){		
+	if (selectElement){
 		var parent = selectElement.parentElement;
 		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
 		if (!parent){
@@ -27,69 +35,79 @@ function setReadonly( selectElementId ){
 			textValue = selectElement.options[selectElement.options.selectedIndex].text;
 		}
 		var input = document.createElement("input");
-		input.setAttribute("id",selectElement.id);
+		// input.setAttribute("id",selectElement.id);
+		input.setAttribute("id",selectElement.id+'1');
 		input.setAttribute("type","text");
 		input.setAttribute("value",textValue);
 		input.setAttribute("class","form-control");
-		input.style.background="#eeeeee";
-		input.readOnly = true;
-		parent.appendChild(input);
+		/*input.style.background="#eeeeee";
+		input.readOnly = true;*/
+		input.disabled = true;
+		//parent.appendChild(input);
+		$(input).insertBefore("#"+elementHelpId);
 	}
 	selectElement.style.display="none";
-}</script>
-{% endblock %}
+}
 
+</script>
+{% endblock %}
+{% block body_class %}oer_edit{% endblock %}
 {% block body %}
-<div class="container">
-  <div class="col-sm-12">
-    <section>
-       <h2 class="text-center">{% if oer %}{% trans "edit OER"|capfirst %}: <i>{{ oer.title }}</i>{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+  <h1>{% if oer %}<small>{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}</i>{% else %}{% trans "add OER"|capfirst %}{% endif %}</h1>
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-9">
     <form method="post" action="{{ action }}" id="oer_edit_form" class="form-horizontal">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
-	{% csrf_token %}
-	{% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}" />{% endif %}
+    {% csrf_token %}
+    {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 1 or i == 2 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 or i == 18 or i == 19 %}8{% else %}5{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
-		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
+    <div class="form-group">
+      <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+      <span class="txt-error">{{ field.errors }}</span>{{ field }}
+      {% comment %}
 		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
-	</div>
-	</div>
+      {% endcomment %}
+      {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+    </div>
+
     {% endwith %}{% endfor %}
 
-	<input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS"></input>
-	<input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS"></input>
-	<input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS"></input>
-	<div class="row" style="margin-top: 0; margin-bottom: 0;"><div class="form-group col-lg-8"><label style="margin-bottom: 0;">{% trans "additional metadata"|capfirst %}</label></div></div>
-	<div class="row"><div class="form-group col-lg-8">
+    <input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS">
+    <input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS">
+    <input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS">
+    <div class="form-group">
+    	<label>{% trans "additional metadata"|capfirst %}</label>
 	<table style="border-collapse: separate; border-spacing: 1.5em 0.1em;">
     {% for fm in metadata_formset %}
     {% if forloop.first %}<thead><tr style="margin: 0;">{% for field in fm.visible_fields %}<td>{{ field.label|capfirst}}</th>{% endfor %}</td></thead><tbody>{% endif %}  
     <tr>{% for field in fm.hidden_fields %}{{ field }}{% endfor %}
-    	{% for field in fm.visible_fields %}<td><span style="color: red;">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
+    	{% for field in fm.visible_fields %}<td><span class="txt-error">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
     {% endfor %}
    	</tbody></table>
-   	</div></div>
-		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if oer %} {% trans "changes" %}{% endif %}</button>&nbsp;
-		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and continue"|capfirst %}</button>&nbsp;
-		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+    </div>
+    <div class="form-group">
+      <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if oer %} {% trans "changes" %}{% endif %}</button>&nbsp;
+      <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
+      <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+    </div>
     </form>
-    </section>
+  </div>
   </div>
 {% endblock %}
 
 {% block extra_script %}
 {% if oer %}
 <script type="text/javascript">
-	setReadonly('id_project');
+	setDisabled('id_project','projecthelpBlock');
 </script>
 {% endif %}
+{% comment %}
 {% if not user.is_superuser %}
 <script type="text/javascript">
 	setReadonly('id_state');
 </script>
 {% endif %}
+{% endcomment %}
 {% include "_tinymce_init.html" %}
 {% endblock %}
