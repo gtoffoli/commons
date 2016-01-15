@@ -123,7 +123,9 @@ PUBLICATION_LINK_DICT = {
   UN_PUBLISHED: 'Red',
 }
 
-class Publishable():
+class Publishable(object):
+    class Meta:
+        abstract = True
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
@@ -382,11 +384,11 @@ MEMBERSHIP_STATE_CHOICES = (
     (3, _('membership suspended')),)
 MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
-class Project(models.Model):
+class ProjectBase(models.Model):
+    class Meta:
+        abstract = True
+
     group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
-    """
-    slug = SlugField(editable=True)
-    """
     # name = models.CharField(max_length=100, verbose_name=_('name'))
     name = models.CharField(max_length=50, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
@@ -403,10 +405,10 @@ class Project(models.Model):
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
 
-    class Meta:
-        verbose_name = _('project / community')
-        verbose_name_plural = _('projects')
-
+    def propose(self, request):
+        if self.can_propose(request.user):
+            self.state = PROJECT_SUBMITTED
+            self.save()
     def open(self, request):
         if self.can_open(request.user):
             self.state = PROJECT_OPEN
@@ -414,6 +416,14 @@ class Project(models.Model):
     def close(self, request):
         if self.can_close(request.user):
             self.state = PROJECT_CLOSED
+            self.save()
+    def mark_deleted(self, request):
+        if self.can_delete(request.user):
+            self.state = PROJECT_DELETED
+            self.save()
+    def undelete(self, request):
+        if self.can_delete(request.user):
+            self.state = PROJECT_DRAFT
             self.save()
 
     def create_folder(self):
@@ -497,11 +507,14 @@ class Project(models.Model):
             return False
         return user.is_superuser or self.can_accept_member(user)
 
+    def can_propose(self, user):
+        return self.state in (PROJECT_DRAFT,) and self.is_admin(user)
     def can_open(self, user):
-        return self.state!=PROJECT_OPEN and (self.is_admin(user) or self.get_parent().is_admin(user)) 
-
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,) and (self.is_admin(user) or self.get_parent().is_admin(user)) 
     def can_close(self, user):
-        return self.state==PROJECT_OPEN and (self.is_admin(user) or self.get_parent().is_admin(user))
+        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or self.get_parent().is_admin(user))
+    def can_delete(self, user):
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or self.get_parent().is_admin(user))
 
     def can_chat(self, user):
         if not (user.is_authenticated() and self.is_member(user)) :
@@ -635,6 +648,13 @@ class Project(models.Model):
 
     def get_oer_evaluations(self, order_by='-modified'):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
+
+# class Project(models.Model):
+class Project(ProjectBase):
+
+    class Meta:
+        verbose_name = _('project / community')
+        verbose_name_plural = _('projects')
 
 def forum_get_project(self):
     try:

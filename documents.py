@@ -22,7 +22,9 @@ LANGUAGE_CHOICES = settings.LANGUAGES
 FILESTORAGE_LOCATION = os.path.join(settings.MEDIA_ROOT, 'document_storage')
 
 HASH_FUNCTION = lambda x: hashlib.sha256(x).hexdigest()  # document image cache name hash function
-UUID_FUNCTION = lambda: unicode(uuid.uuid4())
+# UUID_FUNCTION = lambda: unicode(uuid.uuid4())
+def UUID_FUNCTION(*args, **kwargs):
+    return unicode(uuid.uuid4())
 logger = logging.getLogger(__name__)
 
 VIEWABLE_MIMETYPES = (
@@ -151,7 +153,8 @@ class Document(models.Model):
     Defines a single document with it's fields and properties
     """
 
-    uuid = models.CharField(default=lambda: UUID_FUNCTION(), max_length=48, editable=False)
+    # uuid = models.CharField(default=lambda: UUID_FUNCTION(), max_length=48, editable=False)
+    uuid = models.CharField(default=UUID_FUNCTION, max_length=48, editable=False)
     document_type = models.ForeignKey(DocumentType, verbose_name=_('Document type'), related_name='documents')
     label = models.CharField(max_length=255, default=_('Uninitialized document'), db_index=True, help_text=_('The name of the document'), verbose_name=_('Label'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
@@ -400,7 +403,8 @@ class DocumentVersion(models.Model):
 
     # File related fields
     # file = models.FileField(upload_to=lambda instance, filename: UUID_FUNCTION(), storage=storage_backend, verbose_name=_('File'))
-    file = models.FileField(upload_to=lambda instance, filename: UUID_FUNCTION(), storage=storage_backend, verbose_name=_('File'), null=True, blank=True)
+    # file = models.FileField(upload_to=lambda instance, filename: UUID_FUNCTION(), storage=storage_backend, verbose_name=_('File'), null=True, blank=True)
+    file = models.FileField(storage=storage_backend, upload_to=UUID_FUNCTION, verbose_name=_('File'))
     mimetype = models.CharField(max_length=255, null=True, blank=True, editable=False)
     encoding = models.CharField(max_length=64, null=True, blank=True, editable=False)
 
