@@ -384,16 +384,26 @@ MEMBERSHIP_STATE_CHOICES = (
     (3, _('membership suspended')),)
 MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
+"""
 class ProjectBase(models.Model):
     class Meta:
         abstract = True
+
+class Project(ProjectBase):
+"""
+class Project(models.Model):
+
+    class Meta:
+        verbose_name = _('project / community')
+        verbose_name_plural = _('projects')
 
     group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
     # name = models.CharField(max_length=100, verbose_name=_('name'))
     name = models.CharField(max_length=50, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
-    chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
+    # chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
+    chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
     chat_room = models.ForeignKey(Room, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     forum = models.ForeignKey(Forum, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
@@ -490,9 +500,10 @@ class ProjectBase(models.Model):
         else:
             return None
 
-    def get_children(self):
+    def get_children(self, proj_type_name=None):
         children_groups = self.group.get_children()
-        return Project.objects.filter(group__in=children_groups).order_by('group__name')
+        # return Project.objects.filter(group__in=children_groups).order_by('group__name')
+        return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
 
     def admin_name(self):
         if self.get_project_type() == 'com':
@@ -510,7 +521,7 @@ class ProjectBase(models.Model):
     def can_propose(self, user):
         return self.state in (PROJECT_DRAFT,) and self.is_admin(user)
     def can_open(self, user):
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,) and (self.is_admin(user) or self.get_parent().is_admin(user)) 
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or self.get_parent().is_admin(user)) 
     def can_close(self, user):
         return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or self.get_parent().is_admin(user))
     def can_delete(self, user):
@@ -619,7 +630,7 @@ class ProjectBase(models.Model):
 
     def need_create_room(self):
         # return self.chat_type in [1] and not self.chat_room
-        return self.chat_type in [1] and not self.chat_room and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
+        return self.chat_type in [1] and not self.chat_room and self.state==PROJECT_OPEN and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
 
     def is_room_member(self, user):
         if not user.is_active:
@@ -649,12 +660,25 @@ class ProjectBase(models.Model):
     def get_oer_evaluations(self, order_by='-modified'):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
 
-# class Project(models.Model):
-class Project(ProjectBase):
+    def get_roll_of_mentors(self):
+        rolls = self.get_children(proj_type_name='roll')
+        return rolls and rolls[0] or None
 
-    class Meta:
-        verbose_name = _('project / community')
-        verbose_name_plural = _('projects')
+    def get_mentor(self, state=None):
+        if self.proj_type.name == 'ment':
+            members = self.get_memberships(state=state)
+            for member in members:
+                if self.admin(member):
+                    return member
+        return None
+
+    def get_mentee(self, state=None):
+        if self.proj_type.name == 'ment':
+            members = self.get_memberships(state=state)
+            for member in members:
+                if not self.admin(member):
+                    return member
+        return None
 
 def forum_get_project(self):
     try:

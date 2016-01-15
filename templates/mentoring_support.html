@@ -1,0 +1,25 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "mentoring support"|capfirst %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+
+            <h1 class="text-center">{% trans "mentoring support"|capfirst %}</h1>
+<section class="view-card">
+    {% if rolls %}
+            <h3>{% trans "rolls of mentors"|capfirst %}</h3>
+	<ul class="list-unstyled">
+        {% for roll in rolls %}
+        <li><a href="/project/{{ roll.slug }}/">{{ roll.name }}</a>        </li>
+        {% endfor %}
+	</ul>
+    {% else %}
+    	{% trans "no mentoring activity started yet"|capfirst %}
+    {% endif %}
+</section>
+
+{% endblock %}

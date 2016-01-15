@@ -54,7 +54,7 @@
 {% block body_class %}project_detail{% endblock %}
 {% block body %}
     {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
-            <h1 class="text-center" style="color: {{ project.get_title_color }};">{% if project.proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}:
+            <h1 class="text-center" style="color: {{ project.get_title_color }};">{% if proj_type.name = 'roll' %}{% elif proj_type.name = 'com' %}{% trans "community"|capfirst %}:{% else %}{% trans "project"|capfirst %}:{% endif %}
 			<i>{{ project.get_name }}</i>&nbsp;
 			{% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h1>
@@ -93,7 +93,8 @@
 			{% if request.user.is_authenticated %}
 			<hr />
 			{% if can_apply %}
-			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join project"|capfirst %}</a> -</div>
+			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
+			       {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join project"|capfirst %}{% endif %}</a> -</div>
 			{% elif membership %}
 				{% if membership.state == 0 %}					
 				<div><i>{% trans "your application is waiting for acceptation by the " %} {{ project.admin_name }}</i></div>
@@ -108,7 +109,7 @@
             <ul class="list-unstyled">
 		{% endif %}
 		{% if not project.forum %}
-            	<li>- <a href="/project/{{ project.id }}/create_forum/">{% trans "create"|capfirst %} {% trans "project forum" %}</a> -</li>
+            	<li>- <a href="/project/{{ project.id }}/create_forum/">{% trans "create"|capfirst %} {% if proj_type.name == 'com' %}{% trans "community forum" %}{% elif proj_type.name == 'roll' %}{% trans "forum" %}{% else %}{% trans "project forum" %}{% endif %}</a> -</li>
 		{% endif %}
 		{% if proj_type.name == 'com' %}
             	<li>- <a href="/project/{{ project.id }}/create_forum/?thematic=true">{% trans "create"|capfirst %} {% trans "thematic forum" %}</a> -</li>
@@ -129,7 +130,7 @@
             </ul>
 		{% endif %}
 		{% endif %}
-		{% if project.get_children or can_edit and not project_no_children%}
+		{% if project.get_children or can_edit and not project_no_children and not proj_type.name == 'roll' %}
    			<h4>{% if project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</h4>
 			{% if project.get_children %}
 	            <ul class="list-unstyled">
@@ -144,9 +145,19 @@
 					<li>- <a href="/project/{{ project.slug }}/project_new/{{ proj_type.name }}/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
 						{% if project.get_level == 1 %}{% trans "project" %}{% else %}{% trans "project" %}{% endif %}: {{ proj_type.description }}</a> -</li>
 	            	{% endfor %}
+					{% if can_add_roll %}
+					<li>- <a href="/project/{{ project.slug }}/project_new/roll/" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %}
+						{% trans "roll of mentors"|capfirst %}</a> -</li>
+					{% endif %}
 	            </ul>
 			{% endif %}
 		{% endif %}
+        {% with roll=project.get_roll_of_mentors %}{% if roll %}
+   			<h4>{% trans "mentoring"|capfirst %}</h4>
+	            <ul class="list-unstyled">
+	            	<li><a href="/project/{{ roll.slug }}/" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a></li>
+	            </ul>
+		{% endif %}{% endwith %}
   </div>
   <div class="col-sm-6 col-md-6">
 <section>
@@ -228,7 +239,7 @@
 	            <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
 			{% endif %}
         {% else %}
-            <i>{% trans "no chatroom has has been created for this project"|capfirst %}</i>
+            <i>{% if project.need_create_room and proj_type.name == 'oer' or proj_type.name == 'lp' %}{% trans "no chatroom has has been created for this project"|capfirst %}{% endif %}</i>
         {% endif %}  
         {% endif %}
     </section>

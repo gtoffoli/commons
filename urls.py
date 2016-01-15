@@ -142,6 +142,7 @@ urlpatterns = patterns('',
     url(r"^lps/search/$", 'commons.views.lps_search', name="lps_search"),
     url(r"^resources/contributors/$", 'commons.views.resource_contributors', name="resource_contributors"),
     url(r"^resources_by/(?P<username>[\w\.-]+)/$", 'commons.views.resources_by', name="resources_by"),
+    url(r"^mentoring/$", 'commons.views.mentoring', name="mentoring"),
 )  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """

@@ -33,8 +33,8 @@
 				<i>{{ user.get_display_name }}</i>
 			</h2>
     </section>
-{% if profile %}
     <section>
+{% if profile %}
         <h3 class="text-center">{% trans "personal resources"|capfirst %}</h3>
 	    {% if my_lps %}
 		<h4>{% trans "learning paths"|capfirst %}</h4>
@@ -49,6 +49,15 @@
 		{% trans "you must fill your profile to enable your dashboard"|capfirst %}.
 {% endif %}
     </section>
+{% with rels=mentoring_rels %}{% if rels %}
+    <section>
+        <h3 class="text-center">{% trans "mentoring relationships"|capfirst %}</h3>
+		<ul class="list-unstyled">
+	        {% for rel in rels %}
+	        <li><a href="/project/{{ rel.project.slug }}/" style="color: {{ rel.get_link_color }};">{{ rel.project.name }}</a></li>
+        	{% endfor %}
+        </ul>
+{% endif %}{% endwith %}
   </div>
   <div class="col-sm-3"  style="margin-top: 4.0em;">
     {% if repos %}

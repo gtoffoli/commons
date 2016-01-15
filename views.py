@@ -121,21 +121,25 @@ def my_profile(request):
 
 def my_dashboard(request):
     MAX_REPOS = MAX_OERS = MAX_LP = 5
-    user = request.user
-    memberships = ProjectMember.objects.filter(user=user, state=1)
-    applications = ProjectMember.objects.filter(user=user, state=0)
+    var_dict = {}
+    var_dict['user'] = user = request.user
+    var_dict['profile'] = profile = user.get_profile()
+    var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
+    var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
+    var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
+    print 'mentoring_rels : ', mentoring_rels
     repos = Repo.objects.filter(creator=user).order_by('-created')
-    more_repos = repos.count() > MAX_REPOS
-    repos = repos[:MAX_REPOS]
+    var_dict['more_repos'] = more_repos = repos.count() > MAX_REPOS
+    var_dict['repos'] = repos = repos[:MAX_REPOS]
     oers = OER.objects.filter(creator=user).order_by('-created')
-    more_oers = oers.count() > MAX_OERS
-    oers = oers[:MAX_REPOS]
-    # lps = LearningPath.objects.filter(creator=user).exclude(group__isnull=True).order_by('-created')
+    var_dict['more_oers'] = more_oers = oers.count() > MAX_OERS
+    var_dict['oers'] = oers = oers[:MAX_OERS]
     lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('-created')
-    more_lps = lps.count() > MAX_LP
-    lps = lps[:MAX_LP]
-    my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
-    return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
+    var_dict['more_lps'] = more_lps = lps.count() > MAX_LP
+    var_dict['lps'] = lps = lps[:MAX_LP]
+    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
+    # return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
+    return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
  
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
@@ -294,6 +298,7 @@ def project_detail(request, project_id, project=None):
         var_dict['is_admin'] = project.is_admin(user)
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
+        var_dict['can_add_roll'] = project.get_project_type()=='com' and project.can_edit(user) and is_open and not project.get_roll_of_mentors()
         var_dict['can_add_repo'] = project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -327,13 +332,17 @@ def project_detail(request, project_id, project=None):
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['lps'] = lps
-    return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
+    if proj_type.name == 'ment':
+        return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
+    else:
+        return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
 # def project_edit(request, project_id=None, parent_id=None):
+# def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
     project_id: edit existent project
@@ -353,8 +362,13 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     elif parent_id:
         if parent.can_edit(user):
             # form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
+            proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
-            return render_to_response('project_edit.html', {'form': form, 'parent': parent,}, context_instance=RequestContext(request))
+            initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
+            if proj_type.name == 'roll':
+                initial['name'] = string_concat(capfirst(_('roll of mentors')), ' ', _('for'), ' ', parent.name)
+            form = ProjectForm(initial=initial)
+            return render_to_response('project_edit.html', {'form': form, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
@@ -626,6 +640,10 @@ def repo_list(request):
         n = len(oers)
         repo_list.append([repo, n])
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list,}, context_instance=RequestContext(request))
+
+def mentoring(request):
+    rolls = Project.objects.filter(proj_type__name='roll', state=PROJECT_OPEN)
+    return render_to_response('mentoring_support.html', {'rolls': rolls,}, context_instance=RequestContext(request))
 
 def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)

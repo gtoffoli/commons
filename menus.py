@@ -45,6 +45,10 @@ def projects_children(request):
          capfirst(_("top contributors")),
          url='/resources/contributors/',
         ))
+    children.append (MenuItem(
+         capfirst(_("mentoring support")),
+         url='/mentoring/',
+        ))
     return children
 
 def search_children(request):
