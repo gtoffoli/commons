@@ -19,9 +19,9 @@ class Migration(migrations.Migration):
         ('taggit', '0001_initial'),
         ('dmuc', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('pybb', '0005_auto_20160115_1014'),
     ]
     #   ('auth', '0007_auto_20160115_1014'),
+    #   ('pybb', '0005_auto_20160115_1014'),
 
     operations = [
         migrations.CreateModel(
