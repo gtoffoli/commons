@@ -23,7 +23,7 @@
 		<ul class="list-unstyled" style="font-size: smaller;">
 		{% with users=project.members %}{% for u in users %}
 	          	<li><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}">{{ u.0.get_display_name }}</a>
-	          		{% if u.1 %}&nbsp; <i>{{ project.admin_name }}</i>{% endif %}
+	          		{% if u.1 %}&nbsp; <i>{{ project.admin_name }}</i>{% else %}{% trans "mentee"|capfirst %}{% endif %}
 	          	</li>
 		{% endfor %}{% endwith %}
 		{% if can_accept_member %}
@@ -73,6 +73,10 @@
             <p class="lead">
 			{% if project.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ project.description }}</div>{% endif %}
             <div><strong>{% trans "project type"|capfirst %}</strong>: {{ proj_type.description }}</div>
+			{% if parent %}
+            <div><strong>{% if parent.proj_type.name == 'com' %}{% trans "parent community"|capfirst %}{% else %}{% trans "parent project"|capfirst %}{% endif %}</strong>:
+            	<a href="/project/{{ parent.slug }}/" title="parent">{{ parent.get_name }}</a></div>
+			{% endif %}
     		{% if project.info %}
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>

@@ -6,7 +6,7 @@
 	{% load conversejs %}
 {% endif %}
 
-{% block head_title %}{% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block extra_head %}
 {% if project.has_chat_room and can_chat %}
@@ -54,7 +54,7 @@
 {% block body_class %}project_detail{% endblock %}
 {% block body %}
     {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
-            <h1 class="text-center" style="color: {{ project.get_title_color }};">{% if proj_type.name = 'roll' %}{% elif proj_type.name = 'com' %}{% trans "community"|capfirst %}:{% else %}{% trans "project"|capfirst %}:{% endif %}
+            <h1 class="text-center" style="color: {{ project.get_title_color }};">{% if proj_type.name == 'roll' %}{% elif proj_type.name = 'com' %}{% trans "community"|capfirst %}:{% else %}{% trans "project"|capfirst %}:{% endif %}
 			<i>{{ project.get_name }}</i>&nbsp;
 			{% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
 			</h1>
@@ -94,7 +94,7 @@
 			<hr />
 			{% if can_apply %}
 			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
-			       {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join project"|capfirst %}{% endif %}</a> -</div>
+			       {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% elif proj_type.name == 'com' %}{% trans "join the community"|capfirst %}{% else %}{% trans "join the project"|capfirst %}{% endif %}</a> -</div>
 			{% elif membership %}
 				{% if membership.state == 0 %}					
 				<div><i>{% trans "your application is waiting for acceptation by the " %} {{ project.admin_name }}</i></div>
@@ -164,12 +164,10 @@
             <p class="lead">
 			{% if project.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ project.description }}</div>{% endif %}
             <div><strong>{% trans "project type"|capfirst %}</strong>: {{ proj_type.description }}</div>
-		{% with parent=project.get_parent %}
 			{% if parent %}
             <div><strong>{% if parent.proj_type.name == 'com' %}{% trans "parent community"|capfirst %}{% else %}{% trans "parent project"|capfirst %}{% endif %}</strong>:
             	<a href="/project/{{ parent.slug }}/" title="parent">{{ parent.get_name }}</a></div>
 			{% endif %}
-		{% endwith %}
     		{% if project.info %}
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
@@ -241,6 +239,12 @@
         {% else %}
             <i>{% if project.need_create_room and proj_type.name == 'oer' or proj_type.name == 'lp' %}{% trans "no chatroom has has been created for this project"|capfirst %}{% endif %}</i>
         {% endif %}  
+        {% endif %}
+        {% if can_request_mentor %}
+  	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.slug }}/project_new/ment/" method="post">
+	{% csrf_token %}
+    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "request a mentor"|capfirst %} -">
+	</form>
         {% endif %}
     </section>
 	{% endif %}

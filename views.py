@@ -315,7 +315,12 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
-        var_dict['can_apply'] = not membership and not project_no_apply and (is_open or is_submitted)
+        var_dict['parent'] = parent = project.get_parent()
+        can_apply = not membership and not project_no_apply and (is_open or is_submitted)
+        if parent and not proj_type.public:
+            can_apply = can_apply and parent.is_member(user)
+        var_dict['can_apply'] = can_apply
+        var_dict['can_request_mentor'] = is_open and is_member and proj_type.name=='com' and not project.get_mentoring(user)
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       
@@ -367,6 +372,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
             if proj_type.name == 'roll':
                 initial['name'] = string_concat(capfirst(_('roll of mentors')), ' ', _('for'), ' ', parent.name)
+            elif proj_type.name == 'ment':
+                initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             form = ProjectForm(initial=initial)
             return render_to_response('project_edit.html', {'form': form, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
         else:
@@ -402,19 +409,21 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.creator = user
                     project.editor = user
                     project.save()
+                    proj_type_name = project.get_type_name()
                     role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
                     membership = project.add_member(user)
                     project.accept_application(request, membership)
-                    role_admin = Role.objects.get(name='admin')
-                    add_local_role(project, user, role_admin)
-                    if project.get_project_type() == 'oer':
+                    if not proj_type_name == 'ment':
+                        role_admin = Role.objects.get(name='admin')
+                        add_local_role(project, user, role_admin)
+                    if proj_type_name == 'oer':
                         grant_permission(project, role_member, 'add-repo')
                         grant_permission(project, role_member, 'add-oer')
-                    elif project.get_project_type() == 'lp':
+                    elif proj_type_name == 'lp':
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
-                    elif project.get_project_type() == 'ment':
+                    elif proj_type_name == 'ment':
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
                 else:

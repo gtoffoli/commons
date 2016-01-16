@@ -482,6 +482,9 @@ class Project(models.Model):
     def get_project_type(self):
         return self.proj_type.name
 
+    def get_type_name(self):
+        return self.proj_type.name
+
     def get_state(self):
         return PROJECT_STATE_DICT[self.state]
 
@@ -502,8 +505,10 @@ class Project(models.Model):
 
     def get_children(self, proj_type_name=None):
         children_groups = self.group.get_children()
-        # return Project.objects.filter(group__in=children_groups).order_by('group__name')
-        return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
+        if proj_type_name:
+            return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
+        else:
+            return Project.objects.filter(group__in=children_groups).order_by('group__name')
 
     def admin_name(self):
         if self.get_project_type() == 'com':
@@ -516,7 +521,7 @@ class Project(models.Model):
     def can_edit(self, user):
         if not user.is_authenticated():
             return False
-        return user.is_superuser or self.can_accept_member(user)
+        return user.is_superuser or self.can_accept_member(user) or (self.get_type_name()=='ment' and self.is_member(user))
 
     def can_propose(self, user):
         return self.state in (PROJECT_DRAFT,) and self.is_admin(user)
@@ -678,6 +683,13 @@ class Project(models.Model):
             for member in members:
                 if not self.admin(member):
                     return member
+        return None
+
+    def get_mentoring(self, user):
+        children = self.get_children()
+        for child in children:
+            if child.get_type_name() == 'ment' and child.get_memberships(user=user):
+                return child
         return None
 
 def forum_get_project(self):
