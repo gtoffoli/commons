@@ -71,6 +71,7 @@ INSTALLED_APPS = (
     'compressor',
     # 'corsheaders',
     # 'djcelery',
+    'filebrowser',
     'filetransfers',
     'mptt',
     # 'rest_framework',

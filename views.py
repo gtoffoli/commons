@@ -1164,7 +1164,8 @@ def oer_edit(request, oer_id=None, project_id=None):
     if oer_id:
         oer = get_object_or_404(OER, pk=oer_id)
         action = '/oer/%s/edit/' % oer.slug
-        if not user.can_edit(request):
+        # if not user.can_edit(request):
+        if not oer.can_edit(user):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if request.POST:
         oer_id = request.POST.get('id', '')
@@ -1588,7 +1589,8 @@ def lp_edit(request, lp_id=None, project_id=None):
     if lp_id:
         lp = get_object_or_404(LearningPath, pk=lp_id)
         action = '/lp/%s/edit/' % lp.slug
-        if not user.can_edit(request):
+        # if not user.can_edit(request):
+        if not lp.can_edit(request):
             return HttpResponseRedirect('/lp/%s/' % lp.slug)
     if request.POST:
         lp_id = request.POST.get('id', '')

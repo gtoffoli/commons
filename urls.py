@@ -5,6 +5,7 @@ from django.contrib import admin
 admin.autodiscover()
 
 from django.conf.urls.static import static
+from filebrowser.sites import site
 from commons import settings
 from commons.forms import MessageComposeForm
 
@@ -22,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^datatrans/', include('datatrans.urls')),
     url(r'', include('taggit_live.urls')),
     url(r'^accounts/', include('allauth.urls')),
+    url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),
     # url(r'^select2/', include('django_select2.urls')),
     url(r'^my_mail/compose/', 'django_messages.views.compose', {'form_class': MessageComposeForm,}, name='messages_compose'),
