@@ -83,6 +83,7 @@
 			{% endif %}
             <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}
 			{% if can_edit %}            
+ 				{% if can_propose %}&nbsp; <a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default btn-sm"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i> {% trans "submit request" %}</a>{% endif %}
                 {% if can_open %}&nbsp; <a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "open" %}</a>{% endif %}
                 {% if can_close %}&nbsp; <a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "close" %}</a>{% endif %}
 			{% endif %}

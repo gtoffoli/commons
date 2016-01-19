@@ -508,7 +508,8 @@ class Project(models.Model):
         if proj_type_name:
             return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
         else:
-            return Project.objects.filter(group__in=children_groups).order_by('group__name')
+            # return Project.objects.filter(group__in=children_groups).order_by('group__name')
+            return Project.objects.filter(group__in=children_groups, proj_type__public=True).order_by('group__name')
 
     def admin_name(self):
         if self.get_project_type() == 'com':
@@ -524,7 +525,7 @@ class Project(models.Model):
         return user.is_superuser or self.can_accept_member(user) or (self.get_type_name()=='ment' and self.is_member(user))
 
     def can_propose(self, user):
-        return self.state in (PROJECT_DRAFT,) and self.is_admin(user)
+        return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
     def can_open(self, user):
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or self.get_parent().is_admin(user)) 
     def can_close(self, user):

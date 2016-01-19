@@ -289,6 +289,7 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     is_open = project.state==PROJECT_OPEN
     is_submitted = project.state==PROJECT_SUBMITTED
+    roll = project.get_roll_of_mentors()
     var_dict = {'project': project, 'proj_type': proj_type,}
     var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     user = request.user
@@ -308,6 +309,7 @@ def project_detail(request, project_id, project=None):
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
         var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_open'] = project.can_open(user)
+        var_dict['can_propose'] = project.can_propose(user)
         var_dict['can_close'] = project.can_close(user)
         var_dict['can_chat'] = project.can_chat(user) and is_open
         var_dict['xmpp_server'] = settings.XMPP_SERVER
@@ -320,7 +322,7 @@ def project_detail(request, project_id, project=None):
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
-        var_dict['can_request_mentor'] = is_open and is_member and proj_type.name=='com' and not project.get_mentoring(user)
+        var_dict['can_request_mentor'] = is_open and is_member and proj_type.name=='com' and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user)
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       
@@ -356,6 +358,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
+    proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if project_id:
         if project.can_edit(user):
             if not project.name:
@@ -365,9 +368,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
-        if parent.can_edit(user):
+        if parent.can_edit(user) or (proj_type and proj_type.name=='ment'):
             # form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
-            proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
             initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
             if proj_type.name == 'roll':
@@ -424,8 +426,10 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
                     elif proj_type_name == 'ment':
+                        """
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
+                        """
                 else:
                     project.editor = user
                     project.save()
@@ -455,6 +459,10 @@ def project_new_by_slug(request, project_slug, type_name):
     proj_type = get_object_or_404(ProjType, name=type_name)
     return project_edit(request, parent_id=project.id, proj_type_id=proj_type.id)
 
+def project_propose(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    project.propose(request)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_open(request, project_id):
     project = Project.objects.get(pk=project_id)
     project.open(request)
