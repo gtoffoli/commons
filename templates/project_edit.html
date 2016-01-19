@@ -15,7 +15,7 @@
 {% block body_class %}project_edit{% endblock %}
 {% block body %}
   <h1>{% if project %}<small>{% trans "edit"|capfirst %} {% trans "project" %}:</small> {{ project.get_name }}
-      {% else %}{{ parent.get_name }}: {% trans "add"|capfirst %} {% if proj_type and proj_type.name == 'roll'%}{% trans "roll of mentors" %}{% else %}{% trans "child project" %}{% endif %}
+      {% else %}{{ parent.get_name }}: <small>{% trans "add"|capfirst %} {% if proj_type and proj_type.name == 'roll'%}{% trans "roll of mentors" %}{% else %}{% trans "child project" %}</small>{% endif %}
       {% endif %}</h1>
   <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-9">
