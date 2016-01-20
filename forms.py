@@ -450,7 +450,7 @@ class PathNodeForm(forms.ModelForm):
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    oer = forms.ModelChoiceField(label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
+    oer = forms.ModelChoiceField(required=True,label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
     range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('possibly specify document and page display range'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())

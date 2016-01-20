@@ -73,9 +73,9 @@ function setDisabled( selectElementId ){
     </div>
     {% endwith %}{% endfor %}
     <div class="form-group">
-      <button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
-      <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and continue"|capfirst %}</button>&nbsp;
-      <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+      <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
+      <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
+      <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
     </div>
     </form>
   </div>
