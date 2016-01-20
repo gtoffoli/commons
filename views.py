@@ -287,19 +287,20 @@ def project_detail(request, project_id, project=None):
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
+    type_name = proj_type.name
     is_open = project.state==PROJECT_OPEN
     is_submitted = project.state==PROJECT_SUBMITTED
-    roll = project.get_roll_of_mentors()
     var_dict = {'project': project, 'proj_type': proj_type,}
     var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     user = request.user
     if user.is_authenticated():
         var_dict['membership'] = membership = project.get_membership(user)
         var_dict['is_member'] = is_member = project.is_member(user)
-        var_dict['is_admin'] = project.is_admin(user)
+        var_dict['is_admin'] = is_admin = project.is_admin(user)
+        var_dict['parent'] = parent = project.get_parent()
+        var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
-        var_dict['can_add_roll'] = project.get_project_type()=='com' and project.can_edit(user) and is_open and not project.get_roll_of_mentors()
         var_dict['can_add_repo'] = project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -317,12 +318,19 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
-        var_dict['parent'] = parent = project.get_parent()
         can_apply = not membership and not project_no_apply and (is_open or is_submitted)
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
-        var_dict['can_request_mentor'] = is_open and is_member and proj_type.name=='com' and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user)
+        if type_name=='com':
+            var_dict['roll'] = roll = project.get_roll_of_mentors()
+            var_dict['mentoring_projects'] = is_admin and project.get_mentoring_projects()
+            var_dict['mentoring'] = project.get_mentoring(user=user)
+            var_dict['can_add_roll'] = is_open and is_admin and not roll
+            var_dict['can_request_mentor'] = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user=user)
+        elif type_name=='ment':
+            var_dict['parent_roll'] = parent_roll = parent.get_roll_of_mentors()
+            var_dict['can_match_mentor'] = is_parent_admin and parent.get_memberships(state=1)
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       
@@ -494,7 +502,8 @@ def accept_application(request, username, project_slug):
         if project.can_accept_member(request.user):
             application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
             project.accept_application(request, application)
-    return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
+    # return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)

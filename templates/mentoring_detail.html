@@ -34,17 +34,6 @@
            {% endfor %}{% endwith %}
 		{% endif %}
 		</ul>
-		{% if request.user.is_authenticated %}
-			<hr />
-			{% if can_apply %}
-			<div>- <a href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
-			       {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join project"|capfirst %}{% endif %}</a> -</div>
-			{% elif membership %}
-				{% if membership.state == 0 %}					
-				<div><i>{% trans "your application is waiting for acceptation by the " %} {{ project.admin_name }}</i></div>
-				{% endif %}
-			{% endif %}
-		{% endif %}
 
 		{% if is_admin and not project.forum %}
    			<h4>{% trans "forum"|capfirst %}</h4>
@@ -81,38 +70,21 @@
             <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
 				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
 			{% endif %}
-            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}
-			{% if can_edit %}            
- 				{% if can_propose %}&nbsp; <a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default btn-sm"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i> {% trans "submit request" %}</a>{% endif %}
-                {% if can_open %}&nbsp; <a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "open" %}</a>{% endif %}
-                {% if can_close %}&nbsp; <a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "close" %}</a>{% endif %}
-			{% endif %}
+            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}           
+			{% if can_propose %}&nbsp; <a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default btn-sm"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i> {% trans "submit request" %}</a>{% endif %}
+			{% if can_open and project.get_mentor %}&nbsp; <a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "open" %}</a>{% endif %}
+			{% if can_close %}&nbsp; <a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "close" %}</a>{% endif %}
             </div>
             </p>
     </section>
-    {% if can_add_repo or can_add_oer or can_add_lp %}
+
+    {% if is_parent_admin and can_match_mentor %}
     <section>
-        <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
-		<ul class="list-unstyled">
-    	{% if can_add_repo %}
-    	<li style="margin-top: 0em;"><a href="/repo/new/" class="btn btn-default btn-primary btn-sm">{% trans "classify external repository"|capfirst %}</a></li>
-    	{% endif %}
-    	{% if can_add_oer %}
-    	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default btn-primary btn-sm">{% trans "classify OER"|capfirst %}</a></li>
-	    	{% if cut_oers %}{% for oer in cut_oers %}
-    		<li style="margin-top: 0.2em;"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "paste OER"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-	    	{% endfor %}{% endif %}
-    	{% endif %}
-    	{% if can_add_lp %}
-    	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default btn-primary btn-sm">{% trans "create learning path"|capfirst %}</a></li>
-	    	{% if cut_lps %}{% for lp in cut_lps %}
-    		<li style="margin-top: 0.2em;"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "paste LP"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-	    	{% endfor %}{% endif %}
-    	{% endif %}
-		<ul>
+        <h4 class="text-center">{% trans "match mentor"|capfirst %}</h4>
     </section>
 	{% endif %}
-    {% if user.is_authenticated %}
+
+    {% if is_member %}
     <section>
         <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
         {% if is_member or user.is_superuser %}

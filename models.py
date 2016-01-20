@@ -522,7 +522,9 @@ class Project(models.Model):
     def can_edit(self, user):
         if not user.is_authenticated():
             return False
-        return user.is_superuser or self.can_accept_member(user) or (self.get_type_name()=='ment' and self.is_member(user))
+        if self.get_type_name()=='ment':
+            return self.get_parent().is_admin(user) or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) 
+        return user.is_superuser or self.can_accept_member(user)
 
     def can_propose(self, user):
         return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
@@ -686,10 +688,13 @@ class Project(models.Model):
                     return member
         return None
 
-    def get_mentoring(self, user):
-        children = self.get_children()
+    def get_mentoring_projects(self):
+        return self.get_children(proj_type_name='ment')
+
+    def get_mentoring(self, user=None):
+        children = self.get_children(proj_type_name='ment')
         for child in children:
-            if child.get_type_name() == 'ment' and child.get_memberships(user=user):
+            if child.get_type_name()=='ment' and child.get_memberships(user=user):
                 return child
         return None
 
