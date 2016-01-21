@@ -529,11 +529,14 @@ class Project(models.Model):
     def can_propose(self, user):
         return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
     def can_open(self, user):
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or self.get_parent().is_admin(user)) 
+        parent = self.get_parent()
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and ((parent and parent.is_admin(user)) or self.get_parent().is_admin(user)) 
     def can_close(self, user):
-        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or self.get_parent().is_admin(user))
+        parent = self.get_parent()
+        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
     def can_delete(self, user):
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or self.get_parent().is_admin(user))
+        parent = self.get_parent()
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
 
     def can_chat(self, user):
         if not (user.is_authenticated() and self.is_member(user)) :
