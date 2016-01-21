@@ -7,8 +7,7 @@
 {% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_style %}
-	<link href="{% static "css/taggit_labels.css" %}" rel="stylesheet">
-	<link href="{% static "commons/jquery/jquery-ui-1-11-4.core-autocomplete.css" %}" rel="stylesheet">
+
 {% endblock %}
 
 {% block extra_head %}
@@ -21,9 +20,6 @@
 	<script type="text/javascript" src="/static/taggit_live/js/taggit_live.js"></script>
 {% endcomment %}	
 
-		<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
-	<script type="text/javascript" src="{% static "commons/jquery/jquery-ui-1-11-4.core-autocomplete.js" %}"></script>
-	<script type="text/javascript" src="{% static "js/taggit_labels.js" %}"></script>
 <script type="text/javascript">
 {% comment %}
 //Copyright: CodePug.com 2009
@@ -69,7 +65,7 @@ function setDisabled( selectElementId){
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     <div class="form-group">
-     <label for="{{ field.name }}" {% if field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+     <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
       <span class="txt-error">{{ field.errors }}</span>{{ field }}
       {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
     </div>
