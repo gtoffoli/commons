@@ -107,13 +107,19 @@ def help_children(request):
          url='/info/learn/',
         ))
     children.append (MenuItem(
+         capfirst(_("mentoring")),
+         url='/help/mentoring/',
+        ))
+    children.append (MenuItem(
          capfirst(_("translations of the user interface")),
          url='/info/translation/',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("the site administration interface")),
          url='/help/backoffice/',
         ))
+    """
     return children
 
 # Add a few items to our main menu
