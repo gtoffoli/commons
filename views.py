@@ -29,7 +29,7 @@ from models import LP_COLLECTION, LP_SEQUENCE
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
-from forms import ProjectMessageComposeForm, ForumForm
+from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
@@ -330,7 +330,16 @@ def project_detail(request, project_id, project=None):
             var_dict['can_request_mentor'] = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user=user)
         elif type_name=='ment':
             var_dict['parent_roll'] = parent_roll = parent.get_roll_of_mentors()
-            var_dict['can_match_mentor'] = is_parent_admin and parent.get_memberships(state=1)
+            if is_parent_admin:
+                var_dict['candidate_mentors'] = candidate_mentors = project.get_candidate_mentors()
+                var_dict['mentor'] = mentor = project.get_mentor()
+                if candidate_mentors:
+                    if mentor:
+                        form = MatchMentorForm(initial={'project': project_id, 'mentor': mentor.user.username})
+                    else:
+                        form = MatchMentorForm(initial={'project': project_id })
+                    form.fields['mentor'].queryset = User.objects.filter(username__in=[mentor.username for mentor in candidate_mentors])
+                    var_dict['match_mentor_form'] = form
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       
@@ -523,6 +532,19 @@ def project_toggle_supervisor_role(request, project_id):
         project.save
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
+def project_set_mentor(request):
+    if request.POST:
+        project_id = request.POST.get('project')
+        project = get_object_or_404(Project, id=project_id)
+        mentor_id = request.POST.get('mentor', None)
+        print 'mentor_id : ', mentor_id
+        if mentor_id:
+            mentor_user = get_object_or_404(User, id=mentor_id)
+            mentor_member = project.add_member(mentor_user, state=1)
+            role_admin = Role.objects.get(name='admin')
+            add_local_role(project, mentor_user, role_admin)
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
+        
 def project_paste_oer(request, project_id, oer_id):
     oer_id = int(oer_id)
     cut_oers = get_clipboard(request, key='cut_oers') or []

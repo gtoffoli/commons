@@ -1,12 +1,16 @@
 {% extends "commons_base.html" %}
 
 {% load i18n %}
-{% if project.has_chat_room and can_chat %}
-	{% load static from staticfiles %}
-	{% load conversejs %}
-{% endif %}
 
 {% block head_title %}{% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    form label  { display: inline; }
+    ul#id_mentor { list-style-type: none; }
+    ul#id_mentor li label { font-weight: normal;  font-size: 12px; }
+</style>
+{% endblock %}
 
 {% block body_class %}mentoring_detail{% endblock %}
 {% block body %}
@@ -20,10 +24,10 @@
   		<div class="col-sm-3 col-md-3">
 
 		<h4>{% trans "members"|capfirst %}</h4>
-		<ul class="list-unstyled" style="font-size: smaller;">
+		<ul class="list-unstyled">
 		{% with users=project.members %}{% for u in users %}
 	          	<li><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}">{{ u.0.get_display_name }}</a>
-	          		{% if u.1 %}&nbsp; <i>{{ project.admin_name }}</i>{% else %}{% trans "mentee"|capfirst %}{% endif %}
+	          		&nbsp; <i>{% if u.1 %}{{ project.admin_name }}{% else %}{% trans "mentee" %}{% endif %}</i>
 	          	</li>
 		{% endfor %}{% endwith %}
 		{% if can_accept_member %}
@@ -78,9 +82,21 @@
             </p>
     </section>
 
-    {% if is_parent_admin and can_match_mentor %}
+    {% if is_parent_admin and not mentor and candidate_mentors %}
     <section>
-        <h4 class="text-center">{% trans "match mentor"|capfirst %}</h4>
+        <h4 class="text-center">{% trans "mentee-mentor matching"|capfirst %}</h4>
+		<h5><i>{% trans "candidate mentors"|capfirst %}</i></h5>
+		<form method="post" action="/set_mentor/">
+	    {% csrf_token %}
+	    {% for hidden in match_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
+		{% for field in match_mentor_form.visible_fields %}
+		    <div class="fieldWrapper">
+		        {{ field.errors }}
+		        {{ field.label_tag }} {{ field }}
+		    </div>
+		{% endfor %}
+    	<input type="submit" class="btn btn-default" value="{% trans "assign mentee to selected mentor"|capfirst %}" id="match_mentor">		
+		</form>
     </section>
 	{% endif %}
 

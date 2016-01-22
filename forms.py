@@ -487,3 +487,13 @@ class ForumForm(forms.ModelForm):
     name = forms.CharField(label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('please, replace the automatically generated name with an appropriate one'))
     headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
 
+class UserChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        return obj.get_display_name()
+
+class MatchMentorForm(forms.Form):
+    def label_from_instance(self, obj):
+        return obj.get_display_name()
+
+    project = forms.IntegerField(widget=forms.HiddenInput())
+    mentor = UserChoiceField(required=True, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect())

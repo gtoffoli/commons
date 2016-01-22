@@ -679,7 +679,7 @@ class Project(models.Model):
         if self.proj_type.name == 'ment':
             members = self.get_memberships(state=state)
             for member in members:
-                if self.admin(member):
+                if self.is_admin(member.user):
                     return member
         return None
 
@@ -687,7 +687,7 @@ class Project(models.Model):
         if self.proj_type.name == 'ment':
             members = self.get_memberships(state=state)
             for member in members:
-                if not self.admin(member):
+                if not self.is_admin(member.user):
                     return member
         return None
 
@@ -700,6 +700,11 @@ class Project(models.Model):
             if child.get_type_name()=='ment' and child.get_memberships(user=user):
                 return child
         return None
+
+    def get_candidate_mentors(self):
+        roll = self.get_parent().get_roll_of_mentors()
+        return roll and roll.members(user_only=True)
+            
 
 def forum_get_project(self):
     try:
