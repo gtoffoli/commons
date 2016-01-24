@@ -445,8 +445,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     elif proj_type_name == 'ment':
                         """
                         grant_permission(project, role_member, 'add-oer')
-                        grant_permission(project, role_member, 'add-lp')
                         """
+                        grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user
                     project.save()
@@ -540,7 +540,8 @@ def project_set_mentor(request):
         print 'mentor_id : ', mentor_id
         if mentor_id:
             mentor_user = get_object_or_404(User, id=mentor_id)
-            mentor_member = project.add_member(mentor_user, state=1)
+            mentor_member = project.add_member(mentor_user)
+            project.accept_application(request, mentor_member)
             role_admin = Role.objects.get(name='admin')
             add_local_role(project, mentor_user, role_admin)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
