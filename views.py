@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
+from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from actstream import action, registry
 
@@ -284,6 +285,7 @@ def project_folder(request, project_slug):
 def project_detail(request, project_id, project=None):
     MAX_OERS = 10
     MAX_EVALUATIONS = 10
+    MAX_MESSAGES = 5
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
@@ -329,10 +331,24 @@ def project_detail(request, project_id, project=None):
             var_dict['can_add_roll'] = is_open and is_admin and not roll
             var_dict['can_request_mentor'] = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user=user)
         elif type_name=='ment':
+            var_dict['mentor'] = mentor = project.get_mentor()
+            var_dict['mentee'] = mentee = project.get_mentee()
+            mentor_user = mentor and mentor.user
+            mentee_user = mentee and mentee.user
+            if is_open and is_member:
+                if user==mentor_user:
+                    inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
+                    outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
+                elif user==mentee_user:
+                    inbox = Message.objects.filter(recipient=user, sender=mentor_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
+                    outbox = Message.objects.filter(recipient=mentor_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
+                var_dict['n_inbox'] = inbox.count()
+                var_dict['n_outbox'] = outbox.count()
+                var_dict['inbox'] = inbox[:MAX_MESSAGES]
+                var_dict['outbox'] = outbox[:MAX_MESSAGES]
             var_dict['parent_roll'] = parent_roll = parent.get_roll_of_mentors()
             if is_parent_admin:
                 var_dict['candidate_mentors'] = candidate_mentors = project.get_candidate_mentors()
-                var_dict['mentor'] = mentor = project.get_mentor()
                 if candidate_mentors:
                     if mentor:
                         form = MatchMentorForm(initial={'project': project_id, 'mentor': mentor.user.username})
@@ -665,7 +681,8 @@ def project_sync_xmppaccounts(request, project_id):
 def project_compose_message(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     members = project.members(user_only=True)
-    recipient_filter = [member.username for member in members]
+    # recipient_filter = [member.username for member in members]
+    recipient_filter = [member.username for member in members if not member==request.user]
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):

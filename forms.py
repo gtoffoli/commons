@@ -478,6 +478,7 @@ class ProjectMessageComposeForm(MessageComposeForm):
         queryset = User.objects.filter(username__in=recipient_filter).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name')
         self.fields['recipient'].widget = forms.SelectMultiple(attrs={'class':'form-control', 'size': queryset.count(),})
         self.fields['recipient'].queryset = queryset
+        self.fields['recipient'].help_text=_('please, explicitly select the receiver(s)')
 
 class ForumForm(forms.ModelForm):
     class Meta:
