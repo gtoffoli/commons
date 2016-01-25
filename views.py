@@ -459,9 +459,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
                     elif proj_type_name == 'ment':
-                        """
                         grant_permission(project, role_member, 'add-oer')
-                        """
                         grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user

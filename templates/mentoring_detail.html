@@ -104,6 +104,12 @@
     <section>
         <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
 		<ul class="list-unstyled">
+    	{% if can_add_oer %}
+    	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default btn-primary btn-sm">{% trans "classify OER"|capfirst %}</a></li>
+	    	{% if cut_oers %}{% for oer in cut_oers %}
+    		<li style="margin-top: 0.2em;"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "paste OER"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+	    	{% endfor %}{% endif %}
+    	{% endif %}
     	{% if can_add_lp %}
     	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default btn-primary btn-sm">{% trans "create learning path"|capfirst %}</a></li>
 	    	{% if cut_lps %}{% for lp in cut_lps %}
@@ -143,16 +149,27 @@
   </div>
 
   <div class="col-sm-3 col-md-3">
-    {% if lps %}
     <section>
+    {% if lps %}
 		<h4>{% trans "recent learning paths"|capfirst %}</h4>
 		<ul class="list-unstyled" style="font-size: smaller;">
 	        {% for lp in lps %}
 	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
         	{% endfor %}
         </ul>
-    </section>
 	{% endif %}
+    {% if oers or n_oers %}
+		<h4>{% trans "recent OERs"|capfirst %}</h4>
+		<ul class="list-unstyled" style="font-size: smaller; margin-bottom: 20px">
+	        {% for oer in oers %}
+	        <li><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></li>
+        	{% endfor %}
+        	{% if n_oers > oers.count %}
+	        <li style="padding-top:8px"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4; font-size: 12px" href="/project/{{ project.slug }}/project_results/">{% trans "read more" %}</a></li>
+        	{% endif %}
+        </ul>
+	{% endif %}
+    </section>
     <section>
 		<h4>{% trans "messages"|capfirst %}</h4>
     {% if inbox %}
