@@ -96,17 +96,18 @@
      {% if can_accept_member %}
        {% with applications=project.get_applications %}{% if applications|length > 0 %}
        <div {% if applications|length > 20 %} class="box-scroll" style="height:340px" {% endif %}>
-       <p style="font-size:15px, font-weight:600">{% trans "applications"|capfirst %}</p>
+       <div style=" font-weight:700; padding:5px 10px">{% trans "applications"|capfirst %}</div>
        <ul class="list-unstyled" style="padding:5px 10px;">
        {% for application in applications %}
-         <li style="line-height:1.1em"><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; - <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}">accept</a> -</li>
+         <li style="line-height:1.1em"><small><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; - <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}">accept</a> -</small></li>
        {% endfor %}
        </ul>
+     </div>
        {% endif %}{% endwith %}
      {% endif %}
      {% if request.user.is_authenticated %}
         {% if can_apply %}
-          <div class="text-right" style="margin:10px 20px 10px;"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4;" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}"><small>
+          <div style="margin:10px 20px 10px;"><a class="btn" style="width:100%; padding:2px 6px; color: #2e6da4; border-color: #2e6da4;" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}"><small>
           {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% elif proj_type.name == 'com' %}{% trans "join the community"|capfirst %}{% else %}{% trans "join the project"|capfirst %}{% endif %}</small></a></div>
           {% elif membership %}
             {% if membership.state == 0 %}
