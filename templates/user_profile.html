@@ -8,9 +8,9 @@
 
 {% block body %}
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-3" style="margin-top: 3.0em;">
 		{% if user == profile_user %}
-   			<h4  style="margin-top: 4.0em;">{% trans "tools"|capfirst %}</h4>
+   			<h4>{% trans "tools"|capfirst %}</h4>
            	<ul class="list-unstyled">
             	<li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
             	<li><a href="/my_dashboard/">{% trans "dashboard"|capfirst %}</a></li>
@@ -22,10 +22,10 @@
    			<h4>{% trans "membership"|capfirst %}</h4>
             <ul class="list-unstyled">
             {% for membership in memberships %}
-            	<li><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a></li>
+            	<li><small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a></small></li>
             {% endfor %}
             {% for application in applications %}
-            	<li><a href="/project/{{ application.project.slug }}/">{{ application.project.get_name }}</a> &nbsp;<i>{% trans "application pending" %}</i>
+            	<li><small><a href="/project/{{ application.project.slug }}/">{{ application.project.get_name }}</a> &nbsp;<i>{% trans "application pending" %}</small></i>
             	</li>
             {% endfor %}
             </ul>
@@ -126,7 +126,29 @@
 {% endif %}
     </section>
   </div>
-  <div class="col-sm-3"  style="margin-top: 4.0em;">
+  <div class="col-sm-3" style="margin-top: 3.0em;">
+		{% if likes %}
+   			<h4>{% trans "similar members"|capfirst %}</h4>
+           	<ul class="list-unstyled">
+			{% for like in likes %}
+				{% if like.0 > 0.5 or forloop.counter < 6 %}
+           		<li><small>{{ like.0|floatformat:2 }} <a href="/profile/{{like.1.username }}/" title="{% trans "view user profile" %}">{{ like.1.get_display_name }}</a></small></li>
+				{% endif %}
+			{% endfor %}
+           	</ul>
+		{% endif %}
+   			<h4>{% trans "suggested mentors"|capfirst %}</h4>
+			{% if best_mentors %}
+           	<ul class="list-unstyled">
+			{% for mentor in best_mentors %}
+				{% if like.0 > 0.5 or forloop.counter < 6 %}
+           		<li><small>{{ mentor.0|floatformat:2 }} <a href="/profile/{{mentor.1.username }}/" title="{% trans "view user profile" %}">{{ mentor.1.get_display_name }}</a></small></li>
+				{% endif %}
+			{% endfor %}
+           	</ul>
+			{% else %}
+            <div><small><i>{% trans "no fit mentors were found in the communities of which you are member"|capfirst %}</i></small></div>
+			{% endif %}
   </div>
 </div>
 {% endblock %}

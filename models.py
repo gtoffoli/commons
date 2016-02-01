@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-"""
+
+from math import sqrt
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
@@ -247,6 +250,25 @@ EMAIL_NOTIFICATION_CHOICES = (
 )
 EMAIL_NOTIFICATION_DICT = dict(EMAIL_NOTIFICATION_CHOICES)
 
+# the key of each dict item is the name of a field of the UserProfile model
+# the value is a number or a callable that will get in input a list of matches
+userprofile_similarity_metrics = {
+    'pro_status': 1,
+    'edu_level': 1,
+    'edu_field': 1.5,
+    'pro_field': 1,
+    'subjects': 1.5,
+    'languages': 1,
+}
+
+mentor_fitness_metrics = {
+    'pro_status': 2,
+    'pro_field': 1,
+    'edu_field': 1,
+    'subjects': 1.5,
+    'languages': 1.5,
+}
+
 class UserProfile(models.Model):
     # user = models.OneToOneField(User, unique=True)
     user = models.OneToOneField(User, primary_key=True, related_name='profile')
@@ -290,6 +312,110 @@ class UserProfile(models.Model):
         if user.first_name and user.last_name and self.dob and self.country and self.edu_level and self.pro_status and self.short:
             level = 1
         return level
+
+    def get_likes(self):
+        likes = []
+        for user in User.objects.all():
+            """
+            if user == self.user:
+                continue
+            """
+            score, matches = self.get_similarity(user)
+            if score > 0.5:
+                likes.append([score, user])
+        likes = sorted(likes, key=lambda x: x[0], reverse=True)
+        return likes
+
+    # da vedere se è possibile ottimizzare usando come traccia
+    # http://stackoverflow.com/questions/4584020/django-orm-queryset-intersection-by-a-field
+    def get_similarity(self, user):
+        max_score = 0
+        matches = {}
+        score = 0.0
+        profile_2 = user.get_profile()
+        if not profile_2:
+            return score, matches
+        for field_name, weight in userprofile_similarity_metrics.iteritems():
+            max_score += weight
+            field_score = 0
+            field = UserProfile._meta.get_field(field_name)
+            value_1 = getattr(self, field_name)
+            if value_1:                    
+                if str(field.get_internal_type()) == 'ForeignKey':
+                    value_2 = getattr(profile_2, field_name)
+                    if field_name == 'edu_level' and value_2:
+                        dist = abs(min(value_2.id, 3) - min(value_1.id, 3))
+                        field_score = weight * (1 - float(dist)/2)
+                        score += field_score
+                        matches[field_name] = value_2
+                    else:
+                        if value_1 == value_2:
+                            field_score = weight
+                            score += field_score
+                            matches[field_name] = value_1
+                else: # field type is models.ManyToManyField
+                    value_1 = value_1.all()
+                    value_2 = getattr(profile_2, field_name).all()
+                    if value_2:
+                        n_1 = value_1.count()
+                        n_2 = value_2.count()
+                        matches[field_name] = [value for value in value_1 if value in value_2]
+                        field_score =  weight * sqrt(2.0 * len(matches[field_name]) / (n_1+n_2))
+                        score += field_score
+        return score/max_score, matches
+
+    def get_best_mentors(self, threshold=0.5):
+        best_mentors = []
+        memberships = ProjectMember.objects.filter(user=self.user, state=1)
+        for membership in memberships:
+            project = membership.project
+            if project.get_type_name() == 'com':
+                roll = project.get_roll_of_mentors()
+                mentors = roll and roll.members(user_only=True) or []
+                for mentor in mentors:
+                    if mentor == self.user:
+                        continue
+                    score, matches = self.get_mentor_fitness(mentor)
+                    print score, matches
+                    if score > threshold:
+                        best_mentors.append([score, mentor])
+        return best_mentors
+
+    def get_mentor_fitness(self, user):
+        max_score = 0
+        matches = {}
+        score = 0.0
+        profile_2 = user.get_profile()
+        if not self.pro_status or not profile_2 or not profile_2.pro_status:
+            return score, matches
+        for field_name, weight in mentor_fitness_metrics.iteritems():
+            max_score += weight
+            field = UserProfile._meta.get_field(field_name)
+            value_1 = getattr(self, field_name)
+            if value_1:
+                value_2 = getattr(profile_2, field_name)
+                if field_name == 'pro_status':
+                    pro_status_1 = value_1.id
+                    pro_status_2 = value_2.id
+                    if pro_status_1 in [2,3,5,6,7] and pro_status_2 in [8,9,10]:
+                        score += weight
+                        matches[field_name] = value_2
+                    elif pro_status_1 in [2,3] and pro_status_2 > pro_status_1:
+                        score += weight
+                        matches[field_name] = value_2
+                elif str(field.get_internal_type()) == 'ForeignKey':
+                    if value_1 == getattr(profile_2, field_name):
+                        score += weight
+                        matches[field_name] = value_1
+                else: # field type is models.ManyToManyField
+                    value_1 = value_1.all()
+                    value_2 = getattr(profile_2, field_name).all()
+                    if value_2:
+                        n_1 = value_1.count()
+                        n_2 = value_2.count()
+                        matches[field_name] = [value for value in value_1 if value in value_2]
+                        score += weight * sqrt(2.0 * len(matches[field_name]) / (n_1+n_2))
+        return score/max_score, matches
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -660,7 +786,6 @@ class Project(models.Model):
             return False
         users = self.members(user_only=True)
         for user in users:
-            print user, self.is_room_member(user)
             if user.is_active and not self.is_room_member(user):
                 return True
         return False
@@ -1269,7 +1394,6 @@ class LearningPath(models.Model, Publishable):
         ordered = [node]
         while True:
             children = node.children.all()
-            print 'node, children = ', node, children
             if not children:
                 assert len(ordered) == len(nodes)
                 return ordered

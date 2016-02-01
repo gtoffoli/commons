@@ -96,9 +96,10 @@ def user_profile(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
         return HttpResponseRedirect('/')
     MAX_REPOS = MAX_OERS = 5
+    MAX_LIKES = 10
     if not user:
         user = get_object_or_404(User, username=username)
-    memberships = ProjectMember.objects.filter(user=user, state=1)
+    memberships = ProjectMember.objects.filter(user=user, state=1).order_by('project__proj_type__name')
     if user.is_authenticated() and user==request.user:
         can_edit = True
         applications = ProjectMember.objects.filter(user=user, state=0)
@@ -114,7 +115,11 @@ def user_profile(request, username, user=None):
     more_oers = oers.count() > MAX_OERS
     oers = oers[:MAX_REPOS]
     profile = user.get_profile()
-    return render_to_response('user_profile.html', {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}, context_instance=RequestContext(request))
+    var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}
+    if profile and profile.get_completeness():
+        var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
+        var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
+    return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
 def my_profile(request):
     user = request.user
