@@ -498,3 +498,8 @@ class MatchMentorForm(forms.Form):
 
     project = forms.IntegerField(widget=forms.HiddenInput())
     mentor = UserChoiceField(required=True, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect())
+
+from dal import autocomplete
+class UserSearchForm(forms.Form):
+    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))
+    # user = forms.ModelChoiceField(queryset=User.objects.all())

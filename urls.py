@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 from filebrowser.sites import site
 from commons import settings
 from commons.forms import MessageComposeForm
+from commons.views import UserAutocomplete
 
 # from .wizards import DocumentCreateWizard
 
@@ -147,6 +148,25 @@ urlpatterns = patterns('',
     url(r"^resources/contributors/$", 'commons.views.resource_contributors', name="resource_contributors"),
     url(r"^resources_by/(?P<username>[\w\.-]+)/$", 'commons.views.resources_by', name="resources_by"),
     url(r"^mentoring/$", 'commons.views.mentoring', name="mentoring"),
+    url(r"^testlive/$", 'commons.views.testlive', name="testlive"),
+    url('user-autocomplete/$', UserAutocomplete.as_view(), name='user-autocomplete',),
 )  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
+
+if settings.USE_HAYSTACK:
+    # urlpatterns += patterns('', url(r'^haystack/', include('haystack.urls')),
+    from haystack.views import SearchView
+    # from haystack.forms import ModelSearchForm
+    from commons.search_indexes import commonsModelSearchForm
+    from haystack.query import SearchQuerySet
+    sqs = SearchQuerySet()
+    urlpatterns += patterns('haystack.views',
+        url(r'^cercaveloce/', SearchView(
+                template='search/search.html',
+                searchqueryset=sqs,
+                form_class=commonsModelSearchForm,
+                results_per_page=100,
+                load_all=False
+            ), name='haystack_search'),
+    )

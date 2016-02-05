@@ -1983,3 +1983,24 @@ def lps_search(request):
     else:
         form = LpSearchForm()
     return render_to_response('search_lps.html', {'lps': lps, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+
+from dal import autocomplete
+class UserAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        """
+        # Don't forget to filter out results depending on the visitor !
+        if not self.request.is_authenticated():
+            return Country.objects.none()
+        """
+        qs = User.objects.all()
+        if self.q:
+            qs = qs.filter(username__istartswith=self.q)
+        # return self.q
+        return qs
+
+from commons.forms import UserSearchForm
+def testlive(request):
+    var_dict = {}
+    form = UserSearchForm()
+    var_dict['form'] = form
+    return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))

@@ -20,6 +20,9 @@ else:
     DEBUG = True
     # TEMPLATE_STRING_IF_INVALID = '%s'
 
+PROJECT_ROOT = os.path.dirname(__file__)
+PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
+
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
 ACCOUNT_USERNAME_REQUIRED = False # True
 ACCOUNT_EMAIL_REQUIRED = True # False
@@ -53,6 +56,7 @@ if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
 
 INSTALLED_APPS = (
+    'haystack',
     # 3rd party
     'suit',
     # Django
@@ -100,6 +104,9 @@ INSTALLED_APPS = (
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
     'tinymce',
+    # django-autocomplete-light
+    'dal',
+    'dal_select2',
     # from pinax project
     "pinax_theme_bootstrap",
     "bootstrapform",
@@ -264,7 +271,7 @@ PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = '/' 
 
-LANGUAGE_CODE = 'en-gb'
+LANGUAGE_CODE = 'en'
 LANGUAGES = (
     ('en', _('English')),
     ('it', _('Italian')),
@@ -419,3 +426,12 @@ CONVERSEJS_ENABLED = True
 CONVERSEJS_HIDE_MUC_SERVER = True
 CONVERSEJS_ALLOW_CONTACT_REQUESTS = False
 
+USE_HAYSTACK = True
+SEARCH_BACKEND = "whoosh"
+if SEARCH_BACKEND == 'whoosh':
+    HAYSTACK_CONNECTIONS = {
+        'default': {
+            'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+            'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
+        },
+    }

@@ -234,7 +234,6 @@ admin.site.register(LearningPath, LearningPathAdmin)
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.forms import FlatpageForm
 from django.contrib.flatpages.models import FlatPage
-from tinymce.widgets import TinyMCE
 
 class PageForm(FlatpageForm):
 

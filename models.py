@@ -27,6 +27,8 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
+# indexable_models = [UserProfile, Project, OER, LearningPath]
+
 """
 # 150402 Giovanni.Toffoli - see django-extensions and django-organizations
 CreationDateTimeField(_('created')).contribute_to_class(Group, 'created')

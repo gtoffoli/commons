@@ -20,6 +20,8 @@
             {% comment %}<link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">{% endcomment %}
             <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
             <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+            <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
+            <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
             {% block plus_style %}{% endblock %}
             {% block extra_style %}{% endblock %}
         {% endblock %}
@@ -31,6 +33,10 @@
             <![endif]-->
         {% endblock %}
         <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
+        <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
+        <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
+        <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
         {% block extra_head_base %}
             {% block extra_head %}{% endblock %}
         {% endblock %}
