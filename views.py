@@ -458,7 +458,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         role_admin = Role.objects.get(name='admin')
                         add_local_role(project, user, role_admin)
                     if proj_type_name == 'oer':
-                        grant_permission(project, role_member, 'add-repo')
+                        grant_permission(project, role_member, 'add-repository')
                         grant_permission(project, role_member, 'add-oer')
                     elif proj_type_name == 'lp':
                         grant_permission(project, role_member, 'add-oer')
