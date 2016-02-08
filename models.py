@@ -631,13 +631,24 @@ class Project(models.Model):
         else:
             return None
 
-    def get_children(self, proj_type_name=None):
+    def get_children(self, proj_type_name=None, states=None):
         children_groups = self.group.get_children()
+        """
         if proj_type_name:
             return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
         else:
             # return Project.objects.filter(group__in=children_groups).order_by('group__name')
             return Project.objects.filter(group__in=children_groups, proj_type__public=True).order_by('group__name')
+        """
+        qs = Project.objects.filter(group__in=children_groups)
+        if proj_type_name:
+            qs = qs.filter(proj_type__name=proj_type_name)
+        else:
+            qs = qs.filter(proj_type__public=True)
+        if states:
+            qs = qs.filter(state__in=states)
+        return qs.order_by('group__name')
+
 
     def admin_name(self):
         if self.get_project_type() == 'com':
@@ -798,8 +809,12 @@ class Project(models.Model):
     def get_oer_evaluations(self, order_by='-modified'):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
 
+    """
     def get_roll_of_mentors(self):
         rolls = self.get_children(proj_type_name='roll')
+    """
+    def get_roll_of_mentors(self, states=None):
+        rolls = self.get_children(proj_type_name='roll', states=states)
         return rolls and rolls[0] or None
 
     def get_mentor(self, state=None):
@@ -818,13 +833,22 @@ class Project(models.Model):
                     return member
         return None
 
+    """
     def get_mentoring_projects(self):
         return self.get_children(proj_type_name='ment')
+    """
+    def get_mentoring_projects(self, states=None):
+        return self.get_children(proj_type_name='ment', states=states)
 
+    """
     def get_mentoring(self, user=None):
         children = self.get_children(proj_type_name='ment')
+    """
+    def get_mentoring(self, user=None, states=None):
+        children = self.get_children(proj_type_name='ment', states=states)
         for child in children:
-            if child.get_type_name()=='ment' and child.get_memberships(user=user):
+            # if child.get_type_name()=='ment' and child.get_memberships(user=user):
+            if child.get_memberships(user=user):
                 return child
         return None
 
