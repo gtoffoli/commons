@@ -49,7 +49,7 @@ class ProjTypeAdmin(admin.ModelAdmin):
 
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
-    list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
+    list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['description', 'proj_type',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},

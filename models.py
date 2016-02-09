@@ -537,6 +537,7 @@ class Project(models.Model):
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
+    reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
