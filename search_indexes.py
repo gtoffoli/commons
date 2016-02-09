@@ -24,7 +24,7 @@ class UserProfileIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
     name = indexes.CharField(model_attr='get_display_name', indexed=False)
-    short = indexes.CharField(model_attr='short', indexed=False)
+    slug = indexes.CharField(model_attr='get_username', indexed=False)
 
     def get_model(self):
         activate('en')
@@ -37,7 +37,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name', indexed=False)
-    description = indexes.CharField(model_attr='description', indexed=False)
+    slug = indexes.CharField(model_attr='slug', indexed=False)
 
     def get_model(self):
         activate('en')
@@ -50,7 +50,7 @@ class RepoIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name', indexed=False)
-    description = indexes.CharField(model_attr='description', indexed=False)
+    slug = indexes.CharField(model_attr='slug', indexed=False)
 
     def get_model(self):
         activate('en')
@@ -62,8 +62,8 @@ class RepoIndex(indexes.SearchIndex, indexes.Indexable):
 class OERIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
-    title = indexes.CharField(model_attr='title', indexed=False)
-    description = indexes.CharField(model_attr='description', indexed=False)
+    name = indexes.CharField(model_attr='title', indexed=False)
+    slug = indexes.CharField(model_attr='slug', indexed=False)
 
     def get_model(self):
         activate('en')
@@ -75,8 +75,8 @@ class OERIndex(indexes.SearchIndex, indexes.Indexable):
 class LearningPathIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
-    title = indexes.CharField(model_attr='title', indexed=False)
-    short = indexes.CharField(model_attr='short', indexed=False)
+    name = indexes.CharField(model_attr='title', indexed=False)
+    slug = indexes.CharField(model_attr='slug', indexed=False)
 
     def get_model(self):
         activate('en')
@@ -93,3 +93,32 @@ class commonsModelSearchForm(ModelSearchForm):
         super(ModelSearchForm, self).__init__(*args, **kwargs)
         # self.fields['models'] = forms.MultipleChoiceField(choices=model_choices(), required=False, label=_('Search In'), widget=forms.CheckboxSelectMultiple)
         self.fields['models'] = forms.MultipleChoiceField(choices=model_choices(), required=False, label=_('In'), widget=forms.CheckboxSelectMultiple)
+
+from collections import defaultdict
+from django.shortcuts import render
+
+q_extra = ['(', ')', '[', ']', '"']
+def clean_q(q):
+    for c in q_extra:
+        q = q.replace(c, '')
+    return q
+
+def navigation_autocomplete(request, template_name='autocomplete.html'):
+    q = request.GET.get('q', '')
+    q = clean_q(q)
+    context = {'q': q}
+
+    if settings.USE_HAYSTACK:
+        from haystack.query import SearchQuerySet
+        MAX = 16
+        results = SearchQuerySet().filter(text=q)
+        if results.count()>MAX:
+            results = results[:MAX]
+            context['more'] = True
+        queries = defaultdict(list)
+        for result in results:
+            klass = result.model.__name__
+            values_list = [result.get_stored_fields()['name'], result.get_stored_fields()['slug']]
+            queries[klass].append(values_list)
+    context.update(queries)
+    return render(request, template_name, context)

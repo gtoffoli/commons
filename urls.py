@@ -149,6 +149,7 @@ urlpatterns = patterns('',
     url(r"^resources_by/(?P<username>[\w\.-]+)/$", 'commons.views.resources_by', name="resources_by"),
     url(r"^mentoring/$", 'commons.views.mentoring', name="mentoring"),
     url(r"^testlive/$", 'commons.views.testlive', name="testlive"),
+    url(r'^navigation_autocomplete$', 'commons.search_indexes.navigation_autocomplete', name='navigation_autocomplete'),
     url('user-autocomplete/$', UserAutocomplete.as_view(), name='user-autocomplete',),
 )  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

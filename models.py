@@ -27,6 +27,8 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
+from commons.utils import filter_empty_words
+
 # indexable_models = [UserProfile, Project, OER, LearningPath]
 
 """
@@ -301,12 +303,18 @@ class UserProfile(models.Model):
     def get_notification_choice(self):
         return EMAIL_NOTIFICATION_DICT[self.enable_email_notifications]
 
+    def get_username(self):
+        return self.user.username
+
     def get_display_name(self):
         user = self.user
         display_name = user.username
         if user.first_name and user.last_name:
             display_name = '%s %s' % (user.first_name, user.last_name)
         return display_name
+
+    def indexable_text(self):
+        return filter_empty_words(self.short)
 
     def get_completeness(self):
         level = 0
@@ -543,6 +551,9 @@ class Project(models.Model):
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
+
+    def indexable_text(self):
+        return filter_empty_words(self.description)
 
     def propose(self, request):
         if self.can_propose(request.user):
@@ -949,6 +960,9 @@ class Repo(models.Model, Publishable):
     def __unicode__(self):
         return self.name
 
+    def indexable_text(self):
+        return filter_empty_words(self.description)
+
     def type_description(self):
         return self.repo_type.description
 
@@ -1046,6 +1060,9 @@ class OER(models.Model, Publishable):
 
     def __unicode__(self):
         return self.title
+
+    def indexable_text(self):
+        return filter_empty_words(self.description)
 
     def get_type(self):
         return OER_TYPE_DICT[self.oer_type]
@@ -1335,6 +1352,9 @@ class LearningPath(models.Model, Publishable):
 
     def __unicode__(self):
         return self.title
+
+    def indexable_text(self):
+        return filter_empty_words(self.short)
 
     def get_principal(self):
         """Returns the principal.

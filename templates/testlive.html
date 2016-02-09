@@ -1,10 +1,11 @@
 {% extends "commons_base.html" %}
 
-{% load staticfiles%}
 {% load i18n %}
 
 {% block body %}
-  <h1>Test DAL</h1>
+  <h1>Test live search</h1>
+  
+{% comment %}
   <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-9">
     <form action="" method="post">
@@ -13,5 +14,24 @@
         <input type="submit" />
     </form>  </div>
   </div>
+{% endcomment %}
+
+<div class="navbar-search">
+<input class="inputLabel search-query" type="text" name="q" id="navigation_autocomplete" size="32">
+</div>
 {% endblock %}
 
+{% block extra_script %}
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#navigation_autocomplete').yourlabsAutocomplete({
+        url: '{% url 'navigation_autocomplete' %}',
+        choiceSelector: 'a',
+        minimumCharacters: 3,
+        placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+    }).input.bind('selectChoice', function(e, choice, autocomplete) {
+        document.location.href = choice.attr('href');
+    });
+});
+</script>
+{% endblock %}

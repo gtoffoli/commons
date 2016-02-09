@@ -75,4 +75,9 @@ def get_pdf_pages(i_stream, o_stream, pageranges):
     file = open("page3", "wb")
     writer.write(file)
     file.close
-            
+
+empty_words = ('and', 'the',)
+
+def filter_empty_words(text):
+    for word in empty_words:
+        text = text.replace(' %s ' % word, ' ')
