@@ -663,16 +663,18 @@ class Project(models.Model):
             return False
         if self.get_type_name()=='ment':
             return self.get_parent().is_admin(user) or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) 
-        return user.is_superuser or self.can_accept_member(user)
+        # return user.is_superuser or self.can_accept_member(user)
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user) or user.is_superuser) 
+        
 
     def can_propose(self, user):
         return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
     def can_open(self, user):
         parent = self.get_parent()
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and ((parent and parent.is_admin(user)) or self.get_parent().is_admin(user)) 
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser) 
     def can_close(self, user):
         parent = self.get_parent()
-        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
+        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser)
     def can_delete(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
