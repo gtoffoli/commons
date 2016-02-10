@@ -1,3 +1,3 @@
-﻿{{ object.title }}
-{{ object.title }}
+﻿{{ object.indexable_title }}
+{{ object.indexable_title }}
 {{ object.indexable_text }}

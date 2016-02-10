@@ -81,6 +81,7 @@ empty_words = ('and', 'the', 'not', 'non',)
 def filter_empty_words(text):
     for word in empty_words:
         text = text.replace(' %s ' % word, ' ')
+    return text
 
 from lxml import html
 TO_DROP_TAGS = [

@@ -313,6 +313,8 @@ class UserProfile(models.Model):
             display_name = '%s %s' % (user.first_name, user.last_name)
         return display_name
 
+    def indexable_title(self):
+        return filter_empty_words(self.get_display_name())
     def indexable_text(self):
         return filter_empty_words(self.short)
 
@@ -552,6 +554,8 @@ class Project(models.Model):
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
 
+    def indexable_title(self):
+        return filter_empty_words(self.name)
     def indexable_text(self):
         return filter_empty_words(self.description)
 
@@ -960,6 +964,8 @@ class Repo(models.Model, Publishable):
     def __unicode__(self):
         return self.name
 
+    def indexable_title(self):
+        return filter_empty_words(self.name)
     def indexable_text(self):
         return filter_empty_words(self.description)
 
@@ -1061,6 +1067,8 @@ class OER(models.Model, Publishable):
     def __unicode__(self):
         return self.title
 
+    def indexable_title(self):
+        return filter_empty_words(self.title)
     def indexable_text(self):
         return filter_empty_words(self.description)
 
@@ -1353,6 +1361,8 @@ class LearningPath(models.Model, Publishable):
     def __unicode__(self):
         return self.title
 
+    def indexable_title(self):
+        return filter_empty_words(self.title)
     def indexable_text(self):
         return filter_empty_words(self.short)
 
