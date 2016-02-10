@@ -3,15 +3,16 @@ Created on 08/lug/2014
 @author: giovanni
 '''
 
-from haystack import indexes
-from commons.models import UserProfile, Project, Repo, OER, LearningPath
-from commons.models import PROJECT_OPEN, SUBMITTED, PUBLISHED
-
 from django.utils import translation
+from django.utils.translation import activate
 from django.conf import settings
+
+from haystack import indexes
 from haystack.fields import EdgeNgramField
 
-from django.utils.translation import get_language, activate
+from commons.models import UserProfile, Project, Repo, OER, LearningPath
+from commons.models import PROJECT_OPEN, SUBMITTED, PUBLISHED
+from commons.utils import strings_from_html
 
 # vedi https://github.com/toastdriven/django-haystack/issues/609
 class L10NEdgeNgramFieldField(EdgeNgramField):
@@ -44,7 +45,7 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return Project
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(state__in=[PROJECT_OPEN,])
+        return self.get_model().objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,])
 
 class RepoIndex(indexes.SearchIndex, indexes.Indexable):
 
@@ -84,6 +85,25 @@ class LearningPathIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+
+from django.contrib.flatpages.models import FlatPage
+def flatpage_indexable_text(self):
+    strings = strings_from_html(self.content, fragment=True)
+    return ' '.join(strings)
+FlatPage.indexable_text = flatpage_indexable_text
+
+class FlatPageIndex(indexes.SearchIndex, indexes.Indexable):
+
+    text = indexes.EdgeNgramField(document=True, use_template=True)
+    name = indexes.CharField(model_attr='title', indexed=False)
+    slug = indexes.CharField(model_attr='url', indexed=False)
+
+    def get_model(self):
+        activate('en')
+        return FlatPage
+
+    def index_queryset(self, using=None):
+        return self.get_model().objects.filter(url__icontains='help')
 
 from django.utils.translation import ugettext_lazy as _
 from django import forms

@@ -81,3 +81,50 @@ empty_words = ('and', 'the', 'not', 'non',)
 def filter_empty_words(text):
     for word in empty_words:
         text = text.replace(' %s ' % word, ' ')
+
+from lxml import html
+TO_DROP_TAGS = [
+    'link', 'script', 'style','iframe',
+]
+BLOCK_TAGS = [
+   'body', 'header', 'hgroup', 'main',  'aside', 'footer',
+   'address', 'article', 'field', 'section', 'nav',
+   'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'dl', 'dt', 'dd',
+   'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td',
+   'a', 'blockquote', 'pre', 'noscript',
+   'img', 'figure', 'figcaption', 'canvas', 'video',
+   'form', 'fieldset', 'input', 'button', 'select', 'option', 'textarea', 'output',
+]
+# http://stackoverflow.com/questions/4624062/get-all-text-inside-a-tag-in-lxml
+# from wip.utils
+def strings_from_block(block):
+    block_children = [child for child in block.getchildren() if child.tag in BLOCK_TAGS]
+    if block_children:
+        text = block.text
+        if text: text = text.strip()
+        if text: yield text
+        for child in block_children:
+            for el in strings_from_block(child):
+                yield el
+        tail = block.tail
+        if tail: tail = tail.strip()
+        if tail: yield tail
+    else:
+        content = block.text_content()
+        if content: content = content.strip()
+        if content: yield content
+
+# from wip.utils
+def strings_from_html(string, fragment=False):
+    doc = html.fromstring(string)
+    if fragment:
+        body = doc
+    else:
+        body = doc.find('body')
+    for tag in TO_DROP_TAGS:
+        els = body.findall(tag)
+        for el in els:
+            el.getparent().remove(el) 
+    for s in strings_from_block(body):
+        if s:
+            yield s

@@ -2010,9 +2010,11 @@ class UserAutocomplete(autocomplete.Select2QuerySetView):
         # return self.q
         return qs
 
-from commons.forms import UserSearchForm
+# from commons.forms import UserSearchForm
 def testlive(request):
     var_dict = {}
+    """
     form = UserSearchForm()
     var_dict['form'] = form
+    """
     return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))
