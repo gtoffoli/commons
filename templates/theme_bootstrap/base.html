@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 {% load url from future %}
 {% load menu %}
 {% generate_menu %}
@@ -20,8 +21,10 @@
             {% comment %}<link href="{% static "pinax/css/theme.css" %}" rel="stylesheet">{% endcomment %}
             <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
             <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
-            <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
-            <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
+{% comment %}
+            <!--link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
+            <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet"-->
+{% endcomment %}
             {% block plus_style %}{% endblock %}
             {% block extra_style %}{% endblock %}
         {% endblock %}
@@ -33,11 +36,13 @@
             <![endif]-->
         {% endblock %}
         <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
+{% comment %}
         <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
-        <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
-        <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
+        <!--script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script-->
+        <!--script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
         <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
-        <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+        <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script-->
+{% endcomment %}
         {% block extra_head_base %}
             {% block extra_head %}{% endblock %}
         {% endblock %}
@@ -85,6 +90,7 @@
             {% block body_base %}
                 <section id="content_body">
                     <div class="container">
+                    	
                         {% comment %}{% include "_messages.html" %}{% endcomment %}
                         {% block body %}
                         {% endblock %}
@@ -104,6 +110,19 @@
         {% block script_base %}
             <script src="{% static "js/bootstrap.min.js" %}"></script>
             <script src="{% static "pinax/js/theme.js" %}"></script>
+            <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
+            <script type="text/javascript">
+               $(document).ready(function() {
+                $('#navigation_autocomplete').yourlabsAutocomplete({
+                  url: '{% url 'navigation_autocomplete' %}',
+                  choiceSelector: 'a',
+                  minimumCharacters: 3,
+                  placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+                }).input.bind('selectChoice', function(e, choice, autocomplete) {
+                  document.location.href = choice.attr('href');
+                });
+               });
+            </script>
             {% block extra_script %}{% endblock %}
         {% endblock %}
 

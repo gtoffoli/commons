@@ -16,22 +16,6 @@
   </div>
 {% endcomment %}
 
-<div class="navbar-search">
-<input class="inputLabel search-query" type="text" name="q" id="navigation_autocomplete" size="32">
-</div>
 {% endblock %}
 
-{% block extra_script %}
-<script type="text/javascript">
-$(document).ready(function() {
-    $('#navigation_autocomplete').yourlabsAutocomplete({
-        url: '{% url 'navigation_autocomplete' %}',
-        choiceSelector: 'a',
-        minimumCharacters: 3,
-        placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
-    }).input.bind('selectChoice', function(e, choice, autocomplete) {
-        document.location.href = choice.attr('href');
-    });
-});
-</script>
-{% endblock %}
+

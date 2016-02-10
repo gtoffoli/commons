@@ -637,3 +637,18 @@ a.btn-yellow:hover,
 a.btn-yellow:focus {
 	color:white;
 }
+
+/* search */
+.yourlabs-autocomplete {
+	position: absolute;
+	z-index:1001;
+	background:white;
+	border: 1px solid white;
+	top: 48px !important;
+	left: 15px !important;
+	font-size: 12px;
+	padding: 1px;
+	border-radius:3px;
+	box-shadow: 6px 6px 8px #e3e4e4;
+	width:96%;
+}

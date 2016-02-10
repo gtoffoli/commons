@@ -17,7 +17,13 @@
 {% endcomment %}
 
 {% block nav %}
-	{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left" style="margin-left:-15px">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
+		{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left" style="margin-left:-15px">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
+		<ul class="nav navbar-nav navbar-right" style="margin-right:30px"><li style="padding-left:15px">
+			<div class="navbar-search" style="padding-top:8px; padding-bottom:10px;">
+				<label for="search-input" style="position:absolute; left:24px; top:14px; font-size:12px;"><i class="fa fa-search"></i></label>
+				<input class="form-control bc-demigray" style="padding-left:30px; padding-right:10px; font-size:12px; height:30px;" size="32" type="text" name="q" id="navigation_autocomplete">
+			</div>
+		</li></ul>
 {% endblock %}
 
 {% block footer %}
