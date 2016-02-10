@@ -23,7 +23,7 @@ from documents import DocumentType, Document
 from models import UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import LearningPath, PathNode
 from models import PUBLISHED
-from models import PROJECT_SUBMITTED, PROJECT_OPEN
+from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 
@@ -295,10 +295,13 @@ def project_detail(request, project_id, project=None):
         project = get_object_or_404(Project, pk=project_id)
     proj_type = project.proj_type
     type_name = proj_type.name
-    is_open = project.state==PROJECT_OPEN
-    is_submitted = project.state==PROJECT_SUBMITTED
     var_dict = {'project': project, 'proj_type': proj_type,}
     var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
+    var_dict['is_draft'] = is_draft = project.state==PROJECT_DRAFT
+    var_dict['is_submitted'] = is_submitted = project.state==PROJECT_SUBMITTED
+    var_dict['is_open'] = is_open = project.state==PROJECT_OPEN
+    var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
+    var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
     user = request.user
     if user.is_authenticated():
         var_dict['membership'] = membership = project.get_membership(user)
@@ -306,20 +309,27 @@ def project_detail(request, project_id, project=None):
         var_dict['is_admin'] = is_admin = project.is_admin(user)
         var_dict['parent'] = parent = project.get_parent()
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
+        if is_admin or is_parent_admin or user.is_superuser:
+            var_dict['project_children'] = project.get_children
+        else:
+            var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         var_dict['can_accept_member'] = project.can_accept_member(user)
-        var_dict['can_add_repo'] = project.can_add_repo(user) and is_open
-        var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user) and is_open
+        var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
+        var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
             var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
-        var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user) and is_open
+        var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
         var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_open'] = project.can_open(user)
         var_dict['can_propose'] = project.can_propose(user)
         var_dict['can_close'] = project.can_close(user)
-        var_dict['can_chat'] = project.can_chat(user) and is_open
+        var_dict['view_shared_folder'] = is_member or user.is_superuser
+        var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and  is_open
+        var_dict['can_chat'] = can_chat = project.can_chat(user) and is_open
+        var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
         var_dict['xmpp_server'] = settings.XMPP_SERVER
         var_dict['room_label'] = project.slug
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
@@ -328,7 +338,7 @@ def project_detail(request, project_id, project=None):
         can_apply = not membership and not project_no_apply and (is_open or is_submitted)
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
-        var_dict['can_apply'] = can_apply
+        var_dict['can_apply'] = not user.is_superuser and can_apply
         if type_name=='com':
             var_dict['roll'] = roll = project.get_roll_of_mentors()
             var_dict['mentoring_projects'] = is_admin and project.get_mentoring_projects()
@@ -361,6 +371,8 @@ def project_detail(request, project_id, project=None):
                         form = MatchMentorForm(initial={'project': project_id })
                     form.fields['mentor'].queryset = User.objects.filter(username__in=[mentor.username for mentor in candidate_mentors])
                     var_dict['match_mentor_form'] = form
+    else:
+        var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
         oers = OER.objects.filter(project_id=project_id).order_by('-created')       

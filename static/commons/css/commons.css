@@ -606,3 +606,34 @@ table.grid-table td {
 table.grid-table td:last-child {
 	padding:0 0 5px 0;
 }
+
+/* BUTTON */
+.btn-green,
+a.btn-green {
+width:100%;
+background:white;
+padding:2px 6px;
+color: #333;
+border-color: #AFCB08;
+text-transform:uppercase;
+font-weight:600;
+}
+a.btn-green:hover,
+a.btn-green:focus {
+	color:white;
+}
+
+.btn-yellow,
+a.btn-yellow {
+width:100%;
+background: #888; /*#FABE66*/;
+padding:2px 6px;
+color: #efefef; /*#666;*/
+border-color: #888; /*#FABE66;*/
+text-transform:uppercase;
+font-weight:600;
+}
+a.btn-yellow:hover,
+a.btn-yellow:focus {
+	color:white;
+}

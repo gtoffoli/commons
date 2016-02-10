@@ -1,6 +1,7 @@
 {% extends "commons_base.html" %}
 
 {% load i18n %}
+{% load account_tags %}
 
 {% comment %}
 {% if project.has_chat_room and can_chat %}
@@ -63,22 +64,299 @@
 {% endif %}
 {% endblock %}
 {% block body_class %}project_detail{% endblock %}
+
 {% block body %}
 {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
-  <h1 class="text-center" style="color: {{ project.get_title_color }};"><small>{% if proj_type.name == 'roll' %}{% elif proj_type.name = 'com' %}{% trans "community"|capfirst %}:{% else %}{% trans "project"|capfirst %}:{% endif %}</small>
-  {{ project.get_name }}&nbsp;
-  {% if can_edit %}&nbsp;<a href="/project/{{ project.slug }}/edit/" title="show edit view"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
-  </h1>
-<div class="row marginB20">
-  <div class="col-sm-3 col-md-3 col-lg-3">
+ <h1>{{ project.get_name }}</h1>
+ <p>
+    {% if is_closed %}
+      <span class="fa fa-lock" style="color: #666"></span>
+    {% endif %}	
+    {% if is_draft %}
+      <span class="fa fa-group" style="color: orange"></span>
+    {% elif is_submitted %}
+      <span class="fa fa-group" style="color: LimeGreen;"></span>
+    {% elif is_open or is_closed %}
+      <span class="fa fa-group" style="color: #666"></span>
+    {% elif is_deleted %}
+      <span class="fa fa-group" style="color: red"></span>
+    {% endif %}
+    {{ proj_type.description }}
+    {% if project.get_level > 1 %}
+      {% if project.get_level == 2 %}
+        {% with parent=project.get_parent %}
+           &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+        {% endwith %}
+      {% elif project.get_level == 3 %}
+        {% with parent=project.get_parent %}
+           &nbsp; - &nbsp;{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+           &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="parent">{{ parent.get_parent.get_name }}</a>
+        {% endwith %}
+      {% endif %}
+    {% endif %}
+ </p>
+ <div class="row marginB20">
+   <div class="col-sm-7 col-md-7 col-lg-8">
+     <article class="view-list">
+       {% if project.description %}<p style="font-size:16px"><i>{{ project.description }}</i></p>{% endif %}
+       {% if project.info %}<div class="clearfix">{{ project.info|safe }}</div>{% endif %}
+     </article> 
+     {% if project_children %}
+        <div class="panel" style="background:white">
+          <div class="panel-heading" style="padding:5px 10px; background:#FABE66; font-size:15px; font-weight:600">{% if project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
+            <ul class="list-inline" style="padding:10px 10px 5px 10px">
+             {% with subprojects=project_children %}{% for subproject in subprojects %}
+                {% if subproject.state == 2 %}
+                   {% comment %} open {% endcomment %}
+                   <li style="padding-right:10px; border-right:1px solid #FABE66"><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 3 %}
+                   {% comment %} closed {% endcomment %}
+                   <li style="padding-right:10px; border-right:1px solid #FABE66"><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><span class="fa fa-lock" style="color:#666"></span> {{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 0%}
+                   {% comment %} draft {% endcomment %}
+                   <li style="padding-right:10px; border-right:1px solid #FABE66"><span class="fa fa-group" style="color:orange"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 4 %}
+                  {% comment %} deleted {% endcomment %}
+                  <li style="padding-right:10px; border-right:1px solid #FABE66"><span class="fa fa-group" style="color:red"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 1 %}
+                  {% comment %} submitted {% endcomment %}
+                  <li style="padding-right:10px; border-right:1px solid #FABE66"><span class="fa fa-group" style="color: LimeGreen"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                {% endif %}
+             {% endfor %}{% endwith %}
+             </ul>
+        </div>
+     {% endif %}
+
+     {% if user.is_authenticated %}
+{% comment %} AMMINISTRAZIONE {% endcomment %}
+        {% if can_edit or can_open or can_close or is_admin %}
+          <div>
+            <ul class="list-inline" style="padding:10px 10px 5px 10px">
+              <li style="background:#FABE66; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                 <ul class="list-inline">
+                    <li><div style="margin-bottom:5px; font-weight:600">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %} {% endif %}</div>
+                       <ul class="list-inline">
+                       {% if can_edit %}<li><a href="/project/{{ project.slug }}/edit/" title="show edit view" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
+                       {% if can_open %}<li><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
+                       {% if can_close %}<li><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
+                       </ul>
+                    </li>
+                 </ul>
+              </li>
+
+              {% if can_edit and not project_no_children and not user.is_superuser%}
+                <li style="background:#FABE66; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                   <ul class="list-inline">
+                     <li><div style="margin-bottom:5px; font-weight:600">{% if proj_type.name == 'com' %} {% trans "new projects"|capfirst %} {% else %} {% trans "new child projects"|capfirst %} {% endif %}</div>
+                     <ul class="list-inline">
+                     {% for proj_type in proj_types %}
+                        <li><a href="/project/{{ project.slug }}/project_new/{{ proj_type.name }}/" title="{% trans "create child project" %}" class="btn btn-default"><span class="fa fa-group" style="color:orange"></span> {{ proj_type.description }}</a></li>
+                     {% endfor %}
+                     </ul>
+                     </li>
+                   </ul>
+                </li>
+              {% endif %}
+            </ul>
+            
+            {% if is_admin and is_open %}
+              {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
+                <ul class="list-inline" style="padding:10px 10px 5px 10px">
+                  {% if not project.forum or proj_type.name == 'com' %}
+                    <li style="background:#555; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                       <ul class="list-inline">
+                         <li><div style="color:white; margin-bottom:5px; font-weight:600">{% trans "new forum"|capfirst %}</div>
+                            <ul class="list-inline">
+                              {% if not project.forum %}
+                                <li><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o"></i> {% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
+                              {% endif %}
+                              {% if proj_type.name == 'com' %}
+                                <li><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o"></i> {% trans "thematic" %}</a></li>
+                              {% endif %}
+                            </ul>
+                         </li>
+                       </ul>
+                    </li>
+                  {% endif %}
+                  {% if project.need_create_room or project.need_sync_xmppaccounts %}
+                    <li style="background:#555; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                       <ul class="list-inline">
+                         <li><div style="color:white; margin-bottom:5px; font-weight:600">{% trans "chatroom"|capfirst %}</div>
+                            <ul class="list-inline">
+                              {% if project.need_create_room %}
+                                <li><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create" %}</a></li>
+                              {% endif %}
+                              {% if project.need_sync_xmppaccounts %}
+                                <li><a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts"|capfirst %}</a></li>
+                              {% endif %}
+                            </ul>
+                         </li> 
+                       </ul>
+                    </li>
+                  {% endif %}
+                </ul>
+              {% endif %}
+            {% endif %}
+          </div>
+        {% endif %}
+
+{% comment %} INTERAGISCI {% endcomment %}
+        {% if view_shared_folder or can_send_message or project.forum or view_chat %}
+        <div>
+          <ul class="list-inline" style="padding:10px 10px 5px 10px;">
+             <li style="background:#555; padding-top:10px; padding-bottom:5px;">
+                <ul class="list-inline">
+                {% if view_shared_folder %}
+                  <li style="padding-bottom:5px;"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a></li>
+                {% endif %}
+                {% if can_send_message %}
+                    <li style="padding-bottom:5px;">
+                       <form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/compose_message/" method="post">
+                       {% csrf_token %}
+                       <div class="btn btn-default"><i class="fa fa-envelope-o"></i>  <input type="submit" style="border:none; background:transparent; padding:0; margin:0" value="{% trans "message to members"|capfirst %}"></div>
+                       </form>
+                    </li>
+                {% endif %}
+                {% if project.forum %}
+{% comment %} MMR {% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view the project forum"|capfirst %}{% endif %} {% endcomment %}
+                  <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><i class="fa fa-comment-o"></i> {% trans "forum"|capfirst %}</a></li>
+                {% endif %}
+                {% if view_chat %}
+                  
+{% comment %}
+<i>{% trans "you are"|capfirst %} {% trans "member of the project chatroom" %}</i>
+<div style="margin-top: 270px;"></div>
+{% conversejs_chatpanel %}
+{% conversejs_initialize %}
+{% endcomment %}
+
+                   <li style="padding-bottom:5px;"><a href="/my_chat/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "chatroom"|capfirst %}</a></li>
+                  
+                {% endif %}
+                </ul>
+             </li>
+           </ul>
+        </div>
+        {% endif %}
+{% comment %} MMR
+                {% elif is_member %}
+                  <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chatroom" %}</i>
+                {% else %}
+                  <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
+                {% endif %}
+              {% else %}
+                <i>{% if project.need_create_room and proj_type.name == 'oer' or proj_type.name == 'lp' %}{% trans "no chatroom has has been created for this project"|capfirst %}{% endif %}</i>
+              {% endif %}
+            {% endif %}
+{% endcomment %}
+
+{% comment %} CONTRIBUISCI {% endcomment %}
+        {% if can_add_repo or can_add_oer or can_add_lp %}
+          <div>
+            <ul class="list-inline" style="padding:10px 10px 5px 10px;">
+              {% if can_add_repo %}
+                <li style="background:#A65C45; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                   <ul class="list-inline">
+                      <li><div style="color:white; margin-bottom:5px; font-weight:600">{% trans "external repository"|capfirst %}</div>
+                         <ul class="list-inline">
+                            <li style="padding-bottom:5px"><a href="/repo/new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
+                         </ul>
+                      </li>
+                   </ul>
+                </li>
+              {% endif %}
+              {% if can_add_oer %}
+                <li style="background:#008BD2; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                   <ul class="list-inline">
+                      <li><div style="color:white; margin-bottom:5px; font-weight:600">{% trans "OER" %}</div>
+                         <ul class="list-inline">
+                            <li style="padding-bottom:5px"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
+                            {% if cut_oers %}{% for oer in cut_oers %}
+                              <li style="padding-bottom:5px"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+                         </ul>
+                      </li>
+                   </ul>
+                </li>
+              {% endif %}
+              {% if can_add_lp %}
+                <li style="background:#CB4F98;  padding-top:10px; padding-bottom:5px; margin-bottom:5px">
+                   <ul class="list-inline">
+                      <li><div style="color:white; margin-bottom:5px; font-weight:600">{% trans "LP" %}</div>
+                         <ul class="list-inline">
+                            <li style="padding-bottom:5px"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
+                            {% if cut_lps %}{% for lp in cut_lps %}
+                              <li style="padding-bottom:5px"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+                         </ul>
+                      </li>
+                   </ul>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        {% endif %}
+{% comment %} MENTORING {% endcomment %}
+        {% if proj_type.name == 'com' %}
+            <div class="panel">
+              <h4 class="text-center">{% trans "mentoring"|capfirst %}</h4>
+              <ul class="list-unstyled">
+                {% with roll=project.get_roll_of_mentors %}
+                  <li><a href="/project/{{ roll.slug }}/" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a></li>
+                {% endwith %}
+                {% if mentoring %}
+                  <li><a href="/project/{{ mentoring.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ mentoring.get_title_color }};">{{ mentoring.get_name }}</a></li>
+                {% endif %}
+                {% if can_request_mentor %}
+                  <li><form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.slug }}/project_new/ment/" method="post">
+                  {% csrf_token %}
+                  <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "request a mentor"|capfirst %} -">
+                  </form></li>
+                {% endif %}
+                {% if is_admin %}
+                  {% if can_add_roll %}
+                    <li>- <a href="/project/{{ project.slug }}/project_new/roll/" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %}
+                     {% trans "roll of mentors"|capfirst %}</a> -</li>
+                  {% endif %}
+                {% endif %}
+              </ul>
+              {% if is_admin %}
+                 {% if mentoring_projects %}
+                    <h5>{% trans "mentoring requests"|capfirst %}</h5>
+                    <ul class="list-unstyled" style="font-size: smaller;">
+                    {% for proj in mentoring_projects %}
+                       <li><a href="/project/{{ proj.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ proj.get_title_color }};">{{ proj.get_name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+              {% endif %}
+            </div>
+        {% endif %}
+     {% endif %}
+   </div>
+
+   <div class="col-sm-5 col-md-5 col-lg-4">
+     {% if request.user.is_authenticated %}
+       {% if can_apply %}
+          <div style="margin-bottom:10px"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
+           {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
+       {% elif membership %}
+          {% if membership.state == 0 %}
+             <div class="panel" style="background:white"><div style="padding:5px 10px;">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div></div>
+          {% endif %}
+       {% endif %}
+     {% endif %}
+
+
    {% if project.group.level > 0 %}
+
    <div class="panel" style="background:white">
-     <div class="panel-heading" style="padding:5px 10px; background:#67AE73; color:white; font-size:15px; font-weight:600">{% trans "members"|capfirst %}</div>
+     <div class="panel-heading" style="padding:5px 10px; background:#AFCB08; color:white; font-size:15px; font-weight:600">{% trans "members"|capfirst %}</div>
      {% with users=project.members %}{% if users|length > 0 %}
      <div {% if users|length > 20 %} class="box-scroll" style="height:340px" {% endif %}>
      <ul class="list-unstyled" style="padding:5px 10px;">
      {% for u in users %}
-       <li style="line-height:1.1em"><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if u.1 %}<small>, <i>{{ project.admin_name }}</i></small>
+       <li style="min-height:24px"><img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small" style="height:22px; width:auto"> <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if u.1 %}<small>, <i>{{ project.admin_name }}</i></small>
           {% if can_delegate and u.0 != user %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
           {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
           <input type="submit" class="btn-link" style="padding:0; font-weight:bold" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
@@ -91,7 +369,8 @@
         {% endif %}
        </li>
      {% endfor %}
-     </ul></div>
+     </ul>
+     </div>
      {% endif %}{% endwith %}
      {% if can_accept_member %}
        {% with applications=project.get_applications %}{% if applications|length > 0 %}
@@ -102,185 +381,12 @@
          <li style="line-height:1.1em"><small><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; - <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}">accept</a> -</small></li>
        {% endfor %}
        </ul>
-     </div>
+       </div>
        {% endif %}{% endwith %}
      {% endif %}
-     {% if request.user.is_authenticated %}
-        {% if can_apply %}
-          <div style="margin:10px 20px 10px;"><a class="btn" style="width:100%; padding:2px 6px; color: #2e6da4; border-color: #2e6da4;" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}"><small>
-          {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% elif proj_type.name == 'com' %}{% trans "join the community"|capfirst %}{% else %}{% trans "join the project"|capfirst %}{% endif %}</small></a></div>
-          {% elif membership %}
-            {% if membership.state == 0 %}
-              <div><i>{% trans "your application is waiting for acceptation by the " %} {{ project.admin_name }}</i></div>
-            {% endif %}
-          {% endif %}
-        {% endif %}
-     {% endif %}
-</div>
-		{% if is_admin %}
-		{% if proj_type.name == 'com' or not project.forum %}
-   			<h4>{% trans "forum"|capfirst %}</h4>
-            <ul class="list-unstyled">
-		{% endif %}
-		{% if not project.forum %}
-            	<li>- <a href="/project/{{ project.id }}/create_forum/">{% trans "create"|capfirst %} {% if proj_type.name == 'com' %}{% trans "community forum" %}{% elif proj_type.name == 'roll' %}{% trans "forum" %}{% else %}{% trans "project forum" %}{% endif %}</a> -</li>
-		{% endif %}
-		{% if proj_type.name == 'com' %}
-            	<li>- <a href="/project/{{ project.id }}/create_forum/?thematic=true">{% trans "create"|capfirst %} {% trans "thematic forum" %}</a> -</li>
-		{% endif %}
-            </ul>
-		{% endif %}
-
-		{% if can_accept_member %}
-		{% if project.need_create_room or project.need_sync_xmppaccounts %}
-   			<h4>{% trans "chatroom"|capfirst %}</h4>
-            <ul class="list-unstyled">
-			{% if project.need_create_room %}
-            	<li>- <a href="/project/{{ project.id }}/create_room/">{% trans "create"|capfirst %} {% trans "chatroom" %}</a> -</li>
-			{% endif %}
-			{% if project.need_sync_xmppaccounts %}
-            	<li>- <a href="/project/{{ project.id }}/sync_xmpp/">{% trans "add missing accounts"|capfirst %}</a> -</li>
-			{% endif %}
-            </ul>
-		{% endif %}
-		{% endif %}
-		
-  {% if project.get_children or can_edit and not project_no_children and not proj_type.name == 'roll' %}
-   <div class="panel" style="background:white">
-     <div class="panel-heading" style="padding:5px 10px; background:#FABE66; font-size:15px; font-weight:600">{% if project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
-			{% if project.get_children %}
-	            <ul class="list-unstyled" style="padding:5px 10px;">
-				{% with subprojects=project.get_children %}{% for subproject in subprojects %}
-	            	<li style="line-height:1.1em"><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><small>{{ subproject.get_name }}</small></a></li>
-	            {% endfor %}{% endwith %}
-	            </ul>
-			{% endif %}
-			{% if can_edit and not project_no_children %}
-	            <ul class="list-unstyled">
-					{% for proj_type in proj_types %}
-					<li>- <a href="/project/{{ project.slug }}/project_new/{{ proj_type.name }}/" title="{% trans "create child project" %}">{% trans "create"|capfirst %}
-						{% if project.get_level == 1 %}{% trans "project" %}{% else %}{% trans "project" %}{% endif %}: {{ proj_type.description }}</a> -</li>
-	            	{% endfor %}
-	            </ul>
-			{% endif %}
-		</div>
-   {% endif %}
-  </div>
-
-  <div class="col-sm-6 col-md-6 col-lg-6">
-    <article class="view-list">
-    <p class="lead">
-			{% if project.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ project.description }}</div>{% endif %}
-            <div><strong>{% trans "project type"|capfirst %}</strong>: {{ proj_type.description }}</div>
-			{% if project.get_level > 1 %}
-            <div><strong>{% if parent.proj_type.name == 'com' %}{% trans "parent community"|capfirst %}{% else %}{% trans "parent project"|capfirst %}{% endif %}</strong>:
-            	<a href="/project/{{ parent.slug }}/" title="parent">{{ parent.get_name }}</a></div>
-			{% endif %}
-    		{% if project.info %}
-            <div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
-				<div style="margin-left: 1.5em;">{{ project.info|safe }}</div></div>
-			{% endif %}
-            <div><strong>{% trans "project state"|capfirst %}</strong>: {{ project.get_state }}
-                {% if can_open %}&nbsp; <a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "open" %}</a>{% endif %}
-                {% if can_close %}&nbsp; <a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "close" %}</a>{% endif %}
-            </div>
-            </p>
-    {% if can_add_repo or can_add_oer or can_add_lp %}
-        <h4 class="text-center">{% trans "contribute"|capfirst %}</h4>
-		<ul class="list-unstyled">
-    	{% if can_add_repo %}
-    	<li style="margin-top: 0em;"><a href="/repo/new/" class="btn btn-default btn-primary btn-sm">{% trans "classify external repository"|capfirst %}</a></li>
-    	{% endif %}
-    	{% if can_add_oer %}
-    	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default btn-primary btn-sm">{% trans "classify OER"|capfirst %}</a></li>
-	    	{% if cut_oers %}{% for oer in cut_oers %}
-    		<li style="margin-top: 0.2em;"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "paste OER"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-	    	{% endfor %}{% endif %}
-    	{% endif %}
-    	{% if can_add_lp %}
-    	<li style="margin-top: 0.4em;"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default btn-primary btn-sm">{% trans "create learning path"|capfirst %}</a></li>
-	    	{% if cut_lps %}{% for lp in cut_lps %}
-    		<li style="margin-top: 0.2em;"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "paste LP"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-	    	{% endfor %}{% endif %}
-    	{% endif %}
-		<ul>
-	{% endif %}
-    {% if user.is_authenticated %}
-        <h4 class="text-center">{% trans "interact"|capfirst %}</h4>
-        {% if is_member or user.is_superuser %}
-			<div style="margin-bottom: 5px;"><a href="/project/{{ project.slug }}/folder/">- {% trans "view the shared folder"|capfirst %} -</a></div>
-		{% endif %}
-        {% if user.is_authenticated and project.forum %}
-			<div style="margin-bottom: 5px;"><a href="{{ project.forum.get_absolute_url }}">-
-			{% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view the project forum"|capfirst %}{% endif %}
-			-</a></div>
-		{% endif %}
-   		{% if user.is_authenticated and not proj_type.name == 'com' %}
-        {% if is_member %}
-			<div style="margin-bottom: 5px;">
-  	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.id }}/compose_message/" method="post">
-	{% csrf_token %}
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "send message to members"|capfirst %} -">
-	</form>
-			</div>
-		{% endif %}
-        {% if project.has_chat_room %}
-	        {% if can_chat %}
-{% comment %}
-	            <i>{% trans "you are"|capfirst %} {% trans "member of the project chatroom" %}</i>
-	            <div style="margin-top: 270px;"></div>
-		      	{% conversejs_chatpanel %}
-		        {% conversejs_initialize %}
-{% endcomment %}
-				<div style="margin-bottom: 5px;"><a href="/my_chat/">- {% trans "view the project chatroom"|capfirst %} -</a></div>
-	        {% elif is_member %}
-	            <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chatroom" %}</i>
-	        {% else %}
-	            <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
-			{% endif %}
-        {% else %}
-            <i>{% if project.need_create_room and proj_type.name == 'oer' or proj_type.name == 'lp' %}{% trans "no chatroom has has been created for this project"|capfirst %}{% endif %}</i>
-        {% endif %}  
-        {% endif %}
-
-   	{% if proj_type.name == 'com' %}
-		<h4 class="text-center">{% trans "mentoring"|capfirst %}</h4>
-            <ul class="list-unstyled">
-	        {% with roll=project.get_roll_of_mentors %}
-            	<li><a href="/project/{{ roll.slug }}/" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a></li>
-			{% endwith %}
-            {% if mentoring %}
-            	<li><a href="/project/{{ mentoring.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ mentoring.get_title_color }};">{{ mentoring.get_name }}</a></li>
-			{% endif %}
-        {% if can_request_mentor %}
-  	<form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.slug }}/project_new/ment/" method="post">
-	{% csrf_token %}
-    <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "request a mentor"|capfirst %} -">
-	</form>
-        {% endif %}
-    	{% if is_admin %}
-			{% if can_add_roll %}
-			<li>- <a href="/project/{{ project.slug }}/project_new/roll/" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %}
-				{% trans "roll of mentors"|capfirst %}</a> -</li>
-			{% endif %}
-            </ul>
-            {% if mentoring_projects %}
-			<h5>{% trans "mentoring requests"|capfirst %}</h5>
-            <ul class="list-unstyled" style="font-size: smaller;">
-				{% for proj in mentoring_projects %}
-	            	<li><a href="/project/{{ proj.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ proj.get_title_color }};">{{ proj.get_name }}</a></li>
-	            {% endfor %}
-            </ul>
-			{% endif %}
-		{% endif %}
-	{% endif %}
-
-	{% endif %}
-</article>
-  </div>
-
-  <div class="col-sm-3 col-md-3 col-lg-3">
-  {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
+   </div>
+   
+   {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
     {% if lps %}
       <div class="panel" style="background:white">
       <div class="panel-heading" style="padding:5px 10px; background:#CB4F98; color:white; font-size:15px; font-weight:600">{% trans "recent learning paths"|capfirst %}</div>
@@ -317,7 +423,8 @@
       </ul>
       </div>
     {% endif %}
-  {% endif %}
-  </div>
+   {% endif %}
+   {% endif %}
+ </div>
 </div>
 {% endblock %}
