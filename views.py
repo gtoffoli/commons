@@ -21,15 +21,13 @@ from commons import settings
 from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, LP_TYPE_DICT
 from models import PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
-from taggit.models import Tag
-
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
@@ -44,7 +42,7 @@ from dmuc.middleware import create_xmpp_account
 
 from roles.utils import add_local_role, remove_local_role, grant_permission
 from roles.models import Role
-from taggit.models import Tag
+# from taggit.models import Tag
 from filetransfers.api import serve_file
 from notification import models as notification
 # from pinax.notifications import models as notification
@@ -78,7 +76,7 @@ def home(request):
     wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
     wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
     wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
-    wall_dict['projects'] = Project.objects.filter(state=2).order_by('-created')[:MAX_PROJECTS]
+    wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
     wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
     wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
     wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]

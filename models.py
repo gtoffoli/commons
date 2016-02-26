@@ -9,13 +9,18 @@ from django.db.models.signals import post_save
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
 from roles.utils import get_roles, has_permission
+"""
+from taggit.models import Tag
 from taggit.managers import TaggableManager
+"""
 from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from conversejs.models import XMPPAccount
@@ -104,6 +109,17 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
+class Tag(models.Model):
+    name = models.CharField(verbose_name=_('Name'), unique=True, max_length=100)
+    slug = AutoSlugField(unique=True, populate_from='name')
+
+    class Meta:
+        db_table = 'taggit_tag'
+        verbose_name = _("Tag")
+        verbose_name_plural = _("Tags")
+
+    def __unicode__(self):
+        return self.name
 
 DRAFT = 1
 SUBMITTED = 2
@@ -1043,7 +1059,8 @@ class OER(models.Model, Publishable):
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
+    # tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
+    tags = models.ManyToManyField(Tag, through='TaggedOER', blank=True, verbose_name='tags')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
@@ -1166,7 +1183,7 @@ class OER(models.Model, Publishable):
         next.save()
         self.editor = request.user
         self.save()
-
+   
 """
 class oer_documents(models.Model):
     ""
@@ -1332,7 +1349,8 @@ LP_TYPE_CHOICES = (
     (LP_COLLECTION, _('simple collection')),
     (LP_SEQUENCE, _('sequence')),
     (LP_DAG, _('directed graph')),
-    (LP_SCRIPTED_DAG, _('scripted directed graph')),)
+    # (LP_SCRIPTED_DAG, _('scripted directed graph')),
+    )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
 class LearningPath(models.Model, Publishable):
@@ -1341,7 +1359,8 @@ class LearningPath(models.Model, Publishable):
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
+    # tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
+    tags = models.ManyToManyField(Tag, through='TaggedLP', blank=True, verbose_name='tags')
     short = models.TextField(blank=True, verbose_name=_('objectives'))
     long = models.TextField(blank=True, verbose_name=_('description'))
     # project = models.ForeignKey(Project, verbose_name=_('project'))
@@ -1680,6 +1699,50 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     class Meta:
         verbose_name = _('path edge')
         verbose_name_plural = _('path edges')
+
+# Cannot set values on a ManyToManyField which specifies an intermediary model. 
+# Use commons.TaggedOER's Manager instead.
+#   tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
+class TaggedOER(models.Model):
+    content_type = models.ForeignKey(ContentType, default='84')
+    object = models.ForeignKey('OER')
+    tag = models.ForeignKey(Tag)
+ 
+    class Meta:
+        db_table = 'taggit_taggeditem'
+        auto_created = True
+        verbose_name = _('Tagged OER')
+        verbose_name_plural = _('Tagged OERs')
+
+# Cannot set values on a ManyToManyField which specifies an intermediary model. 
+# Use commons.TaggedLP's Manager instead.
+#   tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
+class TaggedLP(models.Model):
+    content_type = models.ForeignKey(ContentType, default='118')
+    object = models.ForeignKey('LearningPath')
+    tag = models.ForeignKey(Tag)
+ 
+    class Meta:
+        db_table = 'taggit_taggeditem'
+        auto_created = True
+        verbose_name = _('Tagged LP')
+        verbose_name_plural = _('Tagged LPss')
+
+"""
+Con la versione generica NON PARTE NEANCHE !!!
+class TaggedResource(models.Model):
+    tag = models.ForeignKey(Tag)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):              # __unicode__ on Python 2
+        return self.tag
+    class Meta:
+        db_table = 'taggit_taggeditem'
+        verbose_name = _('Tagged resource')
+        verbose_name_plural = _('Tagged resources')
+"""
 
 # from commons.metadata_models import *
 from translations import *

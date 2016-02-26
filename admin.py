@@ -10,10 +10,12 @@ from django.contrib.auth.models import User
 from mptt.admin import MPTTModelAdmin
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
+"""
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
+"""
 
-from .models import UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import Tag, UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm
 from .metadata import QualityFacet
@@ -132,7 +134,8 @@ class OERAdmin(admin.ModelAdmin):
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},
-       TagField: {'widget': LabelWidget()},}
+       # TagField: {'widget': LabelWidget()},
+       }
 
     class Media:
         css = {'all': ('/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.css',)}
@@ -178,7 +181,8 @@ class LearningPathAdmin(admin.ModelAdmin):
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},
-       TagField: {'widget': LabelWidget()},}
+       # TagField: {'widget': LabelWidget()},
+       }
 
     def save_model(self, request, obj, form, change):
         if not change:

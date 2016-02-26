@@ -14,11 +14,12 @@ from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
 from datetimewidget.widgets import DateWidget
 # from django_select2.forms import Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
+"""
 from taggit.models import Tag
 from taggit.forms import TagField
-# from taggit_live.forms import LiveTagField, TaggitLiveWidget
 from taggit_labels.widgets import LabelWidget
-
+"""
+from models import Tag
 from django_messages.forms import ComposeForm
 from django_messages.fields import CommaSeparatedUserField
 from pybb.models import Forum
@@ -290,7 +291,8 @@ class OerForm(forms.ModelForm):
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('"CC" stands for "Creative Commons"'))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
-    tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
+    # tags = TagField(required=False, label=_('tags'), widget=LabelWidget(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
+    tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
@@ -303,8 +305,8 @@ class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER
         fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'metadata',]
-    # tags = LiveTagField()
-    tags = TagField(required=False, widget=LabelWidget())
+    # tags = TagField(required=False, widget=LabelWidget())
+    tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 
 class OerSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
@@ -403,8 +405,8 @@ class LpForm(forms.ModelForm):
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
-    # tags = LiveTagField(required=False, label=_('tags'), widget=TaggitLiveWidget(attrs={'class':'form-control',}), help_text=_('Comma-separated strings. Please consider suggestions for using existing tags.'))
-    tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
+    # tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
+    tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
     short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
     project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the Learning Path has been created'))
@@ -420,7 +422,8 @@ class LpChangeForm(forms.ModelForm):
         model = LearningPath
         fields = ['slug', 'title', 'path_type', 'levels', 'subjects', 'tags', 'project', 'group', 'state',]
 
-    tags = TagField(required=False, widget=LabelWidget())
+    # tags = TagField(required=False, widget=LabelWidget())
+    tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 
 class LpSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):

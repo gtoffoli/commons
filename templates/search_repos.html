@@ -26,7 +26,7 @@
       {% if repos %}
         <p><small><span class"demiBold">{{ n_repos }} {% trans "results"|capfirst %}</span>
           {% if criteria %}
-            <br><span class"demiBold">{% trans "criteria"|capfirst %}:</span> 
+            <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
             {% for c in criteria %}
               {{ c|safe }}
               {% if not forloop.last %}
@@ -39,7 +39,7 @@
       {% elif query %}
         <p><small><span class"demiBold">{% trans "no results were found"|capfirst %}</span>
           {% if criteria %}
-            <br><span class"demiBold">{% trans "criteria"|capfirst %}:</span> 
+            <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
             {% for c in criteria %}
               {{ c|safe }}
               {% if not forloop.last %}

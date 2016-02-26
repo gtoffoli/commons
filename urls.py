@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
     # Import urls from app datatrans
     url(r'^datatrans/', include('datatrans.urls')),
-    url(r'', include('taggit_live.urls')),
+    # url(r'', include('taggit_live.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^admin/filebrowser/', include(site.urls)),
     url(r'^admin/', include(admin.site.urls)),

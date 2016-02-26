@@ -6,6 +6,7 @@ Created on 10/feb/2016
 from django.utils.translation import activate
 activate('en')
 
+import os
 from roles.utils import grant_permission
 from roles.models import Role
 from models import Project
@@ -21,5 +22,4 @@ def project_fix_member_permissions():
     for project in projects:
         grant_permission(project, role_member, 'add-oer')
         grant_permission(project, role_member, 'add-lp')
-        
         
