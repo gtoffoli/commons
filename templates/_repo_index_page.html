@@ -1,0 +1,7 @@
+{% load staticfiles i18n %}
+{% load endless %}
+{% paginate repos %}
+{% for repo in repos %}
+    {% include "_repo_card.html" %}
+{% endfor %}
+{% show_more %}

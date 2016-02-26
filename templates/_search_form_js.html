@@ -1,0 +1,51 @@
+{% comment %} search form js {% endcomment %}
+{% load staticfiles i18n %}
+
+<script type="text/javascript" src="{% static "endless_pagination/js/endless-pagination.js" %}"></script>
+{{ block.super }}
+<script type="text/javascript">
+$(document).ready(function (){
+	// pagination
+	$.endlessPaginate({
+   paginateOnScroll: true,
+   // paginateOnScrollMargin: 20
+   paginateOnScrollChunkSize: 5
+	});
+	
+	$('.expand-description').on('click', function(event){
+		event.preventDefault();
+		var parent=$(this).parent().parent();
+		parent.children("p:first").css( "display", "none" );
+		parent.children("p:last").css( "display", "inline-block");
+	});
+	$('.restrict-description').on('click', function(event){
+		event.preventDefault();
+		var parent=$(this).parent().parent();
+		parent.children("p:first").css( "display", "inline-block");
+		parent.children("p:last").css( "display", "none");
+	});
+	$( "input:reset" ).click(function( event ) {
+		event.preventDefault();
+			$('#search_form').find('input:text,select').val('');
+			$('#search_form').find('input:checkbox').prop('checked', false);
+			$("#search_form").submit();
+	});
+	$('label a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent();
+		var accordionContent = accordion.next('.field-content');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+    		accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+    	} else {
+    		accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+    	}
+	});
+	$('label a.helpIcon').on('click', function(event){
+		event.preventDefault();
+		console.log('help');
+	});
+});
+</script>

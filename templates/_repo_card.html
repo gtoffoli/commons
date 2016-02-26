@@ -4,10 +4,20 @@
 
 <article class="view-card">
 	<p class="title-card"><a href="/repo/{{ repo.slug }}/" style="color: {{ repo.get_link_color }}">{{ repo.name }}</a></p>
-	{% if repo.description.description|length > 80 %}
-	    <p style="display:none" class="text-card short-description"><i>{{ repo.description|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
-	    <p style="display:inline-block" class="text-card full-description"><i>{{ repo.description }}</i><br><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
+	{% if repo.description|length > 140 %}
+	<div>
+		<p style="display:inline-block" class="text-card short-description"><i>{{ repo.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+		<p style="display:none" class="text-card full-description"><i>{{ repo.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
+	</div>
 	{% else %}
-	    <p style="display:inline-block" class="text-card full-description"><i>{{ repo.description }}</i></p>
+		<p style="display:inline-block" class="text-card full-description"><i>{{ repo.description }}</i></p>
+	{% endif %}
+	{% if repo.subjects.all %}
+	    <dl class="list-inline">
+	      <dt>{% trans "subject areas"|capfirst %}</dt>
+	        {% for subject in repo.subjects.all %}
+	            <dd><form action="/repos/search/" method="post" id="repo_{{ subject.id }}">{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}"><input type="submit" class="btn-link" value="{{ subject.option_label|safe }}"></form></dd>
+	        {% endfor %}
+	    </dl>
 	{% endif %}
 </article>

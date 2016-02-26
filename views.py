@@ -18,14 +18,17 @@ from django_messages.views import compose as message_compose
 from actstream import action, registry
 
 from commons import settings
+from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
-from models import LearningPath, PathNode
+from models import RepoType, RepoFeature
+from models import LearningPath, PathNode, LP_TYPE_DICT
 from models import PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
-from models import OER_TYPE_DICT, QUALITY_SCORE_DICT
+from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
+from taggit.models import Tag
 
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
@@ -48,6 +51,8 @@ from notification import models as notification
 from pybb.models import Forum, Category
 from zinnia.models import Entry
 
+from endless_pagination.decorators import page_template
+
 registry.register(Project)
 registry.register(Forum)
 registry.register(Room)
@@ -66,13 +71,15 @@ def group_has_project(group):
 def home(request):
     MAX_MEMBERS = 10
     MAX_FORUMS = 5
-    MAX_ARTICLES = 5
-    MAX_OERS = 10
-    MAX_REPOS = 5
+    MAX_ARTICLES = 6
+    MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
     wall_dict = {}
+    user = request.user
     wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
     wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
     wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+    wall_dict['projects'] = Project.objects.filter(state=2).order_by('-created')[:MAX_PROJECTS]
+    wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
     wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
     wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
@@ -1868,6 +1875,7 @@ def project_add_lp(request, project_id):
 def user_add_lp(request):
     return lp_edit(request, project_id=0) 
 
+"""
 def repos_search(request):
     query = qq = []
     repos = []
@@ -1901,6 +1909,59 @@ def repos_search(request):
     else:
         form = RepoSearchForm()
     return render_to_response('search_repos.html', {'repos': repos, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+"""
+@page_template('_repo_index_page.html')
+def repos_search(request, template='search_repos.html', extra_context=None):
+    query = qq = []
+    repos = []
+    criteria = []
+    include_all = ''
+    if request.method == 'POST': # If the form has been submitted...
+        form = RepoSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            include_all = request.POST.get('include_all')
+            repo_types = request.POST.getlist('repo_type')
+            if repo_types:
+                qq.append(Q(repo_type_id__in=repo_types))
+                for repo_type in repo_types:
+                   criteria.append(str(RepoType.objects.get(pk=repo_type).name))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                for subject in subjects: 
+                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+            languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                for language in languages:
+                   criteria.append(str(Language.objects.get(pk=language).name))
+            repo_features = request.POST.getlist('features')
+            if repo_features:
+                qq.append(Q(features__in=repo_features))
+                for repo_feature in repo_features:
+                   criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
+            if qq:
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = Q(state=PUBLISHED)
+                for q in qq:
+                    query = query & q
+            else:
+                query = Q(state=PUBLISHED)
+                
+            repos = Repo.objects.filter(query).distinct().order_by('name')
+    else:
+        form = RepoSearchForm()
+        query = Q(state=PUBLISHED)
+        repos = Repo.objects.filter(query).distinct().order_by('name')
+        
+    context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 q_extra = ['(', ')', '[', ']', '"']
 def clean_q(q):
@@ -1911,6 +1972,7 @@ def clean_q(q):
 def search_by_string(request, q, subjects=[], languages=[]):
     pass
 
+"""
 def oers_search(request):
     query = qq = []
     oers = []
@@ -1994,7 +2056,149 @@ def lps_search(request):
                 lps = LearningPath.objects.filter(query).distinct().order_by('title')
     else:
         form = LpSearchForm()
+        user = request.user
+        lps = LearningPath.objects
+        if not user.is_authenticated():
+           lps = lps.filter(state=PUBLISHED)
+        lps = lps.distinct().order_by('title')
+
     return render_to_response('search_lps.html', {'lps': lps, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
+"""
+@page_template('_oer_index_page.html')
+def oers_search(request, template='search_oers.html', extra_context=None):
+    query = qq = []
+    oers = []
+    criteria = []
+    include_all = ''
+    if request.method == 'POST': # If the form has been submitted...
+        form = OerSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            include_all = request.POST.get('include_all')
+            oer_types = request.POST.getlist('oer_type')
+            if oer_types:
+                qq.append(Q(oer_type__in=oer_types))
+                for oer_type in oer_types:
+                    criteria.append(str(OER_TYPE_DICT.get(int(oer_type))))
+            source_types = request.POST.getlist('source_type')
+            if source_types:
+                qq.append(Q(source_type__in=source_types))
+                for source_type in source_types: 
+                   criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
+            materials = request.POST.getlist('material')
+            if materials:
+                qq.append(Q(material__in=materials))
+                for material in materials: 
+                   criteria.append(str(MaterialEntry.objects.get(pk=material).name))
+            licenses = request.POST.getlist('license')
+            if licenses:
+                qq.append(Q(license__in=licenses))
+                for license in licenses: 
+                   criteria.append(str(LicenseNode.objects.get(pk=license).name))
+            levels = request.POST.getlist('levels')
+            if levels:
+                qq.append(Q(levels__in=levels))
+                for level in levels: 
+                   criteria.append(str(LevelNode.objects.get(pk=level).name))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                for subject in subjects: 
+                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+            tags = request.POST.getlist('tags')
+            if tags:
+                qq.append(Q(tags__in=tags))
+                for tag in tags: 
+                   criteria.append(str(Tag.objects.get(pk=tag).name))
+            languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                for language in languages:
+                   criteria.append(str(Language.objects.get(pk=language).name))
+            media = request.POST.getlist('media')
+            if media:
+                qq.append(Q(media__in=media))
+                for medium in media:
+                   criteria.append(str(MediaEntry.objects.get(pk=medium).name))
+            acc_features = request.POST.getlist('accessibility')
+            if acc_features:
+                qq.append(Q(accessibility__in=acc_features))
+                for acc_feature in acc_features:
+                   criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
+            if qq:
+               if include_all:
+                  query = qq.pop()
+               else:
+                  query = (Q(state=PUBLISHED))
+               for q in qq:
+                query = query & q
+            else:
+                query = Q(state=PUBLISHED)
+            oers = OER.objects.filter(query).distinct().order_by('title')
+    else:
+        form = OerSearchForm()
+        query = Q(state=PUBLISHED)
+        oers = OER.objects.filter(query).distinct().order_by('title')
+
+    context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render_to_response(template, context, context_instance=RequestContext(request))
+
+@page_template('_lp_index_page.html')
+def lps_search(request, template='search_lps.html', extra_context=None):
+    query = qq = []
+    lps = []
+    criteria = []
+    include_all = ''
+    if request.method == 'POST': # If the form has been submitted...
+        form = LpSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            qq.append(Q(project__isnull=False))
+            include_all = request.POST.get('include_all')
+            path_types = request.POST.getlist('path_type')
+            if path_types:
+                qq.append(Q(path_type__in=path_types))
+                for path_type in path_types:
+                    criteria.append(str(LP_TYPE_DICT.get(int(path_type))))
+            levels = request.POST.getlist('levels')
+            if levels:
+                qq.append(Q(levels__in=levels))
+                for level in levels: 
+                   criteria.append(str(LevelNode.objects.get(pk=level).name))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                for subject in subjects: 
+                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+            tags = request.POST.getlist('tags')
+            if tags:
+                qq.append(Q(tags__in=tags))
+                for tag in tags: 
+                   criteria.append(str(Tag.objects.get(pk=tag).name))
+            if qq:
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = Q(state=PUBLISHED)
+                for q in qq:
+                    query = query & q
+                lps = LearningPath.objects.filter(query).distinct().order_by('title')
+    else:
+        form = LpSearchForm()
+        qq.append(Q(project__isnull=False))
+        query = Q(state=PUBLISHED)
+        for q in qq:
+           query = query & q
+        lps = LearningPath.objects.filter(query).distinct().order_by('title')
+
+    context = {'lps': lps, 'n_lps': len(lps), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 from dal import autocomplete
 class UserAutocomplete(autocomplete.Select2QuerySetView):
@@ -2018,3 +2222,5 @@ def testlive(request):
     var_dict['form'] = form
     """
     return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))
+
+# 

@@ -225,18 +225,22 @@ class RepoSearchForm(forms.Form):
     """
     repo_type = forms.ModelMultipleChoiceField(RepoType.objects.all(),
         label=_('repository type'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 5,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 5,}))
     features = forms.ModelMultipleChoiceField(RepoFeature.objects.all(),
         label=_('repository features'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
 
 
 class OerMetadataForm(forms.ModelForm):
@@ -322,39 +326,47 @@ class OerSearchForm(forms.Form):
     """
     oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
         label=_('OER type'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 3,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 3,}))
     source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
         label=_('source type'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     material = forms.ModelMultipleChoiceField(queryset=MaterialEntry.objects.all(),
         label=_('type of material'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     # license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.filter(level=0),
     license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.all(),
         label=_('terms of use'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+        widget=forms.CheckboxSelectMultiple())
+         # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     # levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control',}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(queryset=MediaEntry.objects.all(),
         label=_('media formats'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(
         queryset=AccessibilityEntry.objects.all(),
         label=_('accessibility features'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
 
 class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(required=True,
@@ -430,17 +442,21 @@ class LpSearchForm(forms.Form):
     """
     path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
         label=_('learning path type'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control',}))
+        widget=forms.SelectMultiple(attrs={'class':'form-control','size': 8,}))
+        # widget=forms.CheckboxSelectMultiple())
 
 class PathNodeForm(forms.ModelForm):
     class Meta:

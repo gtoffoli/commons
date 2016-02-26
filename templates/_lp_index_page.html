@@ -1,0 +1,7 @@
+{% load staticfiles i18n %}
+{% load endless %}
+{% paginate lps %}
+{% for lp in lps %}
+    {% include "_lp_card.html" %}
+{% endfor %}
+{% show_more %}
