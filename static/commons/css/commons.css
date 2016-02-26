@@ -540,6 +540,9 @@ article.view-list1 li input.btn-link {
 .panel {
 	background: #EBEDED;
 }
+.panel-white {
+	background: white;
+}
 .panel-green {
 	border: 1px solid #AFCB08;
 }
@@ -604,7 +607,8 @@ select.form-control {
 	width:100%;
 	font-size:12px;
 }
-#search_form ul {
+
+#search_form ul{
 	list-style: none;
 	padding:0 12px;
 }
@@ -638,7 +642,6 @@ font-weight:600;
   width: 16px;
   height: 16px;
 }
-
 .help-block {
 	margin-top: 3px;
 	margin-bottom: 0;
@@ -661,6 +664,11 @@ table.grid-table td:last-child {
 }
 
 /* BUTTON */
+#edit_form .btn-group .btn {
+ margin-right:5px;
+ margin-bottom:5px;
+ font-size: 13px;
+}
 .btn-green,
 a.btn-green {
 width:100%;

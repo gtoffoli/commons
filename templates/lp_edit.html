@@ -6,10 +6,11 @@
 
 {% block head_title %}{% if lp %}{% trans "edit learning path"|capfirst %}: {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}{% endblock %}
 
+{% comment %}
 {% block extra_style %}
 	<link href="{% static "css/taggit_labels.css" %}" rel="stylesheet">
 {% endblock %}
-
+{% endcomment %}
 
 {% block extra_head %}
 {% comment %}
@@ -17,8 +18,10 @@
 {% endcomment %}
 
 	<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
+{% comment %}
 	<script type="text/javascript" src="{% static "admin/js/jquery.init.js" %}"></script>
 	<script type="text/javascript" src="{% static "js/taggit_labels.js" %}"></script>
+{% endcomment %}
 <script type="text/javascript">
 {% comment %}
 //Copyright: CodePug.com 2009
@@ -60,18 +63,33 @@ function setDisabled( selectElementId ){
   <h1>{% if lp %}<small>{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }}{% else %}<small>{% trans "add learning path"|capfirst %}</small>{% endif %}</h1>
   <div class="row">
   <div class="col-xs-12 col-sm-12 col-md-9">
-    <form method="post" action="{{ action }}" id="lp_edit_form" class="form-horizontal">
+    <form method="post" action="{{ action }}" id="edit_form">
     {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
     {% csrf_token %}
     {% if lp %}<input type="hidden" id="id" name="id" value="{{ lp.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="form-group">
-      <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
-      <span class="txt-error">{{ field.errors }}</span>{{ field }}
-      {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
-    </div>
-    {% endwith %}{% endfor %}
+    {% if field.name == 'tags' %}
+      <div class="form-group">
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>
+        <div class="btn-group" id="{{ field.name }}" data-toggle="buttons">
+        {% for checkbox in field %}
+          <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
+           {{ checkbox.tag }} {{ checkbox.choice_label }}
+          </label>
+        {% endfor %}
+        </div>
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+      </div>
+    {% else %}
+      <div class="form-group">
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+      </div>
+    {% endif %}{% endwith %}{% endfor %}
+    
     <div class="form-group">
       <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
