@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 from filebrowser.sites import site
 from commons import settings
 from commons.forms import MessageComposeForm
-from commons.views import UserAutocomplete
+from commons.views import UserAutocomplete # , OerAutocomplete
 
 # from .wizards import DocumentCreateWizard
 
@@ -151,7 +151,10 @@ urlpatterns = patterns('',
     url(r"^testlive/$", 'commons.views.testlive', name="testlive"),
     url(r'^navigation_autocomplete$', 'commons.search_indexes.navigation_autocomplete', name='navigation_autocomplete'),
     url('user-autocomplete/$', UserAutocomplete.as_view(), name='user-autocomplete',),
-)  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # url('oer-autocomplete/$', OerAutocomplete.as_view(), name='oer-autocomplete',),
+    url('repo-autocomplete/$', 'commons.views.repo_autocomplete', name='repo-autocomplete',),
+    url('oer-autocomplete/$', 'commons.views.oer_autocomplete', name='oer-autocomplete',),
+    ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
 

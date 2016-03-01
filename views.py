@@ -3,6 +3,7 @@ Created on 02/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
+import json
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -18,7 +19,7 @@ from django_messages.views import compose as message_compose
 from actstream import action, registry
 
 from commons import settings
-from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
+from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
@@ -2221,4 +2222,27 @@ def testlive(request):
     """
     return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))
 
-# 
+
+def repo_autocomplete(request):
+    MIN_CHARS = 2
+    q = request.GET.get('q', None)
+    create_option = []
+    results = []
+    if request.user.is_authenticated():
+        if q and len(q) >= MIN_CHARS:
+            qs = Repo.objects.filter(state=PUBLISHED, name__icontains=q).order_by('name')
+            results = [{'id': repo.id, 'text': repo.name[:80]} for repo in qs] + create_option
+            body = json.dumps({ 'results': results, 'more': False, })
+            return HttpResponse(body, content_type='application/json')
+
+def oer_autocomplete(request):
+    MIN_CHARS = 2
+    q = request.GET.get('q', None)
+    create_option = []
+    results = []
+    if request.user.is_authenticated():
+        if q and len(q) >= MIN_CHARS:
+            qs = OER.objects.filter(state=PUBLISHED, title__icontains=q).order_by('title')
+            results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
+            body = json.dumps({ 'results': results, 'more': False, })
+            return HttpResponse(body, content_type='application/json')

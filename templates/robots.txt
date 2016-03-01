@@ -1,5 +1,6 @@
 User-agent: *
-Disallow: /
+Disallow: /admin
+Disallow: /accounts
 Crawl-delay: 12
 User-agent: BUbiNG
 Disallow: /

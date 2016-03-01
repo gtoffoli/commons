@@ -1022,15 +1022,6 @@ OER_TYPE_CHOICES = (
     (3, _('Metadata and document(s)')),)
 OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
-"""
-SOURCE_TYPE_CHOICES = (
-    (1, _('catalogued source: select source repository')),
-    (2, _('non-catalogued source')),
-    (3, _('derived-translated: select original')),
-    (4, _('derived-adapted: select original')),
-    (5, _('derived-remixed: select original(s)')),
-    (6, _('none (brand new OER)')),)
-"""
 SOURCE_TYPE_CHOICES = (
     (1, _('Catalogued source')),
     (2, _('Non-catalogued source')),
@@ -1044,18 +1035,18 @@ class OER(models.Model, Publishable):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
+    url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
-    oer_type = models.IntegerField(choices=OER_TYPE_CHOICES,  validators=[MinValueValidator(1)], verbose_name='OER type')
-    source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='source type')
+    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
+    oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='OER type')
+    source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='source type')
     # documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
     documents = models.ManyToManyField(Document, through='OerDocument', related_name='oer_document', blank=True, verbose_name='attached documents')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
-    url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed the OER view in an HTML page'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
-    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
