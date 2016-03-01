@@ -2232,8 +2232,8 @@ def repo_autocomplete(request):
         if q and len(q) >= MIN_CHARS:
             qs = Repo.objects.filter(state=PUBLISHED, name__icontains=q).order_by('name')
             results = [{'id': repo.id, 'text': repo.name[:80]} for repo in qs] + create_option
-            body = json.dumps({ 'results': results, 'more': False, })
-            return HttpResponse(body, content_type='application/json')
+    body = json.dumps({ 'results': results, 'more': False, })
+    return HttpResponse(body, content_type='application/json')
 
 def oer_autocomplete(request):
     MIN_CHARS = 2
@@ -2244,5 +2244,5 @@ def oer_autocomplete(request):
         if q and len(q) >= MIN_CHARS:
             qs = OER.objects.filter(state=PUBLISHED, title__icontains=q).order_by('title')
             results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
-            body = json.dumps({ 'results': results, 'more': False, })
-            return HttpResponse(body, content_type='application/json')
+    body = json.dumps({ 'results': results, 'more': False, })
+    return HttpResponse(body, content_type='application/json')
