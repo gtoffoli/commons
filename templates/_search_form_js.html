@@ -8,22 +8,10 @@ $(document).ready(function (){
 	// pagination
 	$.endlessPaginate({
    paginateOnScroll: true,
-   // paginateOnScrollMargin: 20
+   //paginateOnScrollMargin: 20
    paginateOnScrollChunkSize: 5
 	});
 	
-	$('.expand-description').on('click', function(event){
-		event.preventDefault();
-		var parent=$(this).parent().parent();
-		parent.children("p:first").css( "display", "none" );
-		parent.children("p:last").css( "display", "inline-block");
-	});
-	$('.restrict-description').on('click', function(event){
-		event.preventDefault();
-		var parent=$(this).parent().parent();
-		parent.children("p:first").css( "display", "inline-block");
-		parent.children("p:last").css( "display", "none");
-	});
 	$( "input:reset" ).click(function( event ) {
 		event.preventDefault();
 			$('#search_form').find('input:text,select').val('');

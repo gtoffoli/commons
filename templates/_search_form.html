@@ -12,10 +12,10 @@
  <fieldset class="borderTBdotted">
    {% if user.is_authenticated %}
       <div class="form-group">
-        <input type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> {% trans "include non published items" %}
+        <div class="font12"><input type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> {% trans "include non published items" %}</div>
       </div>
    {% else %}
-      <input type="hidden" name="include" value="">
+      <input type="hidden" name="include_all" value="">
    {% endif %}
    {% for field in form.visible_fields %}
      <div class="form-group">

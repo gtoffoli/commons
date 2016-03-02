@@ -8,53 +8,51 @@
 
 {% block body %}
 	<h1 class="text-center">{% trans "search people"|capfirst %}</h1>
-<div class="row">
-	    <div class="col-md-6">
-  	<form style="margin: 0;" action="/people/search/" method="post" id="search_form">
-	{% csrf_token %}
-	<table style="border-collapse: separate; border-spacing: 0 .5em;"">
-	<tr><th style="vertical-align: top"><h4>{% trans "new search"|capfirst %}</h4></th></tr>
-   	<tr><td></td><td style="vertical-align: middle; padding-bottom: .5em;"><input type="submit" value="{% trans "apply the search criteria below"|capfirst %}"></td></tr>
-	{% for field in form.visible_fields %}
-       <tr style="vertical-align: top;">
-	   		<th style="margin-top: .5em; font-weight: bold; text-align: right; vertical-align: middle;">{% if field.help_text %}<img src="{% static "admin/img/icon-unknown.gif" %}" Title="{{ field.help_text }}" style="cursor: pointer; float:right; margin:5px;">{% endif %}
-	   		{{ field.label_tag|capfirst }} &nbsp;</th>
-	   		<td><div class="checkbox-multiple">{{ field }}</div></td>
-   		</tr>
-	{% endfor %}
-	</table>
-	</form>
-	    </div>
-		    <div class="col-md-6">
-		    				<h4>{% trans "search results"|capfirst %}</h4>
-			{% if profiles %}
-				{% for profile in profiles %}
-       				{% include "_people_card.html" %}
-				{% endfor %}
-			{% elif query %}
-       			<p><i>{% trans "no results were found"|capfirst %}.</i></p>
-			{% endif %}
-	    </div>    
-</div>
-
-
-{% comment %}
-	<table style="border-collapse: separate; border-spacing: 0 .0em;">
-	<tr><th style="vertical-align: top"><h4>{% trans "search results"|capfirst %}</h4></th></tr>
-	{% if profiles %}
-	{% for profile in profiles %}
-       <tr><td><a href="/profile/{{ profile.user.username }}/" >{{ profile.user.get_display_name }}</a></td></tr>
-	{% endfor %}
-	{% elif query %}
-       <tr><td><i>{% trans "no results were found"|capfirst %}.</i></td></tr>
-	{% else %}
-       <tr><td><i>{% trans "no query has been specified"|capfirst %}.</i></td></tr>
-	{% endif %}
-	</table>
-
-
-	</div>
-	</div>
-	{% endcomment %}
+  <div class="row marginTB20">
+    <div class="col-sm-6 col-md-5 col-lg-5">
+      <div class="search-header">
+        {% trans "search"|capfirst %} 
+        <button class="search-toggle" data-toggle="collapse" data-target=".search-collapse">
+          <span class="fa fa-bars"></span>
+        </button>
+      </div>
+      <div class="collapse search-collapse search-responsive-collapse">
+        <form action="/people/search/" method="post" id="search_form">
+          {% include "_search_form.html" %}
+        </form>
+      </div>
+    </div>
+    <div class="col-sm-6 col-md-7 col-lg-7">
+      {% if profiles %}
+        <p><small><span class"demiBold">{{ n_profiles }} {% trans "results"|capfirst %}</span>
+          {% if criteria %}
+            <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
+            {% for c in criteria %}
+              {{ c|safe }}
+              {% if not forloop.last %}
+                -
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </small></p>
+        {% include page_template %}
+      {% elif query %}
+        <p><small><span class"demiBold">{% trans "no results were found"|capfirst %}</span>
+          {% if criteria %}
+            <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
+            {% for c in criteria %}
+              {{ c|safe }}
+              {% if not forloop.last %}
+                -
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </small></p>
+      {% endif %}
+    </div>
+  </div>
 {% endblock %}
 
+{% block extra_script %}
+  {% include "_search_form_js.html" %} 
+{% endblock %}

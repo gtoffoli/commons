@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load staticfiles i18n %}
 
 <article class="view-card">
 	<p class="user-card">
@@ -11,11 +11,15 @@
         {% endif %}
 		</span></a>
 		<a href="/profile/{{ profile.user.username }}/">{{ profile.user.get_display_name }}</a>
-	</p>
-	{% if profile.short|length > 80 %}
-		<p style="display:none" class="text-card short-description"><i>{{ profile.short|truncatechars:80 }}</i> <a href="" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
-		<p style="display:inline-block" class="text-card full-description"><i>{{ profile.short }}</i><a style="display:none" href="" class="hide-description"><span class="fa fa-minus-circle"></span></a></p>
-	{% endif %}	
+	</p>	
+	{% if  profile.short|length > 140 %}
+	<div>
+		<p style="display:inline-block" class="text-card short-description"><i>{{ profile.short|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+		<p style="display:none" class="text-card full-description"><i>{{ profile.short }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
+	</div>
+	{% else %}
+		<p style="display:inline-block" class="text-card full-description"><i>{{ profile.short }}</i></p>
+	{% endif %}
 	{% if profile.languages.all or profile.other_languages %}
 	<dl class="list-inline">
 		<dt>{% trans "languages"|capfirst %}</dt>

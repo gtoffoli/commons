@@ -20,6 +20,7 @@ from actstream import action, registry
 
 from commons import settings
 from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
+from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
@@ -1091,7 +1092,7 @@ def browse(request):
         repos_browse_list.append([field_name, field_label, entries])
     return render_to_response('browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
 
-
+"""
 def people_search(request):
     query = qq = []
     profiles = []
@@ -1131,6 +1132,81 @@ def people_search(request):
     else:
         form = PeopleSearchForm()
     return render_to_response('search_people.html', {'profiles': profiles, 'query': query, 'form': form,}, context_instance=RequestContext(request))
+"""
+@page_template('_people_index_page.html')
+def people_search(request, template='search_people.html', extra_context=None):
+    query = qq = []
+    criteria = []
+    profiles = new_profiles = []
+    if request.method == 'POST': # If the form has been submitted...
+        form = PeopleSearchForm(request.POST) # A form bound to the POST data
+        if form.is_valid(): # All validation rules pass
+            countries = request.POST.getlist('country')
+            if countries:
+                qq.append(Q(country__in=countries))
+                for country in countries: 
+                   criteria.append(str(CountryEntry.objects.get(pk=country).name))
+            edu_levels = request.POST.getlist('edu_level')
+            if edu_levels:
+                qq.append(Q(edu_level__in=edu_levels))
+                for edu_level in edu_levels: 
+                   criteria.append(str(EduLevelEntry.objects.get(pk=edu_level).name))
+            pro_statuses = request.POST.getlist('pro_status')
+            if pro_statuses:
+                qq.append(Q(pro_status__in=pro_statuses))
+                for pro_status in pro_statuses: 
+                   criteria.append(str(ProStatusNode.objects.get(pk=pro_status).name))
+            edu_fields = request.POST.getlist('edu_field')
+            if edu_fields:
+                qq.append(Q(edu_field__in=edu_fields))
+                for edu_field in edu_fields: 
+                   criteria.append(str(EduFieldEntry.objects.get(pk=edu_field).name))
+            pro_fields = request.POST.getlist('pro_field')
+            if pro_fields:
+                qq.append(Q(pro_field__in=pro_fields))
+                for pro_field in pro_fields: 
+                   criteria.append(str(ProFieldEntry.objects.get(pk=pro_field).name))
+            subjects = request.POST.getlist('subjects')
+            if subjects:
+                qq.append(Q(subjects__in=subjects))
+                for subject in subjects: 
+                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+            languages = request.POST.getlist('languages')
+            if languages:
+                qq.append(Q(languages__in=languages))
+                for language in languages:
+                   criteria.append(str(Language.objects.get(pk=language).name))
+            networks = request.POST.getlist('networks')
+            if networks:
+                qq.append(Q(networks__in=networks))
+                for network in networks:
+                   criteria.append(str(NetworkEntry.objects.get(pk=network).name))
+            if qq:
+                query = qq.pop()
+                for q in qq:
+                    query = query & q
+                # profiles = UserProfile.objects.filter(query).distinct().order_by('title')
+                profiles = UserProfile.objects.filter(query).distinct()
+            else:
+                profiles = UserProfile.objects.distinct()
+                for profile in profiles:
+                   if profile.get_completeness():
+                      new_profiles.append(profile)
+                profiles = new_profiles
+    else:
+        form = PeopleSearchForm()
+        profiles = UserProfile.objects.distinct()
+        for profile in profiles:
+           if profile.get_completeness():
+              new_profiles.append(profile)
+        profiles = new_profiles
+
+    context = {'profiles': profiles, 'n_profiles': len(profiles), 'criteria': criteria, 'query': query, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 def browse_people(request):
     form = PeopleSearchForm

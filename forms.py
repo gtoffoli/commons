@@ -115,11 +115,13 @@ class PeopleSearchForm(forms.Form):
     country = forms.ModelMultipleChoiceField(CountryEntry.objects.all(),
         label=_('country'), required=False,
         help_text=_("choose country (no selection = all countries)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     edu_level = forms.ModelMultipleChoiceField(EduLevelEntry.objects.all(),
         label=_('education level'), required=False,
         help_text=_("choose education level (no selection = all levels)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
     pro_status = forms.ModelMultipleChoiceField(ProStatusNode.objects.all(),
         label=_('study or work status'), required=False,
         help_text=_("choose status (no selection = all statuses)"),
@@ -135,14 +137,17 @@ class PeopleSearchForm(forms.Form):
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
     networks = forms.ModelMultipleChoiceField(NetworkEntry.objects.all().order_by('name'),
         label=_('social networks / services used'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
+        widget=forms.CheckboxSelectMultiple())
+        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
 
 class UserProfileExtendedForm(UserProfileForm):
     first_name = forms.CharField(required=True, label=_('person name'), widget=forms.TextInput(attrs={'class':'form-control',}))
