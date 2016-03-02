@@ -304,13 +304,18 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
-    var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
+    # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
+    user = request.user
+    # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
+    proj_types = ProjType.objects.filter(public=True)
+    if not user.is_superuser:
+        proj_types = proj_types.exclude(name='com') 
+    var_dict['proj_types'] = proj_types
     var_dict['is_draft'] = is_draft = project.state==PROJECT_DRAFT
     var_dict['is_submitted'] = is_submitted = project.state==PROJECT_SUBMITTED
     var_dict['is_open'] = is_open = project.state==PROJECT_OPEN
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
-    user = request.user
     if user.is_authenticated():
         var_dict['membership'] = membership = project.get_membership(user)
         var_dict['is_member'] = is_member = project.is_member(user)
@@ -1991,8 +1996,11 @@ def repos_search(request):
 """
 @page_template('_repo_index_page.html')
 def repos_search(request, template='search_repos.html', extra_context=None):
+    """
     query = qq = []
     repos = []
+    """
+    qq = []
     criteria = []
     include_all = ''
     if request.method == 'POST': # If the form has been submitted...
@@ -2022,6 +2030,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
                 qq.append(Q(features__in=repo_features))
                 for repo_feature in repo_features:
                     criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
+            """
             if qq:
                 if include_all:
                     query = qq.pop()
@@ -2033,12 +2042,19 @@ def repos_search(request, template='search_repos.html', extra_context=None):
                 query = Q(state=PUBLISHED)
                 
             repos = Repo.objects.filter(query).distinct().order_by('name')
+            """
+            qs = Repo.objects.all()
+            for q in qq:
+                qs = qs.filter(q)
+            if not include_all:
+                qs = qs.filter(state=PUBLISHED)
+            repos = qs.distinct().order_by('name')
     else:
         form = RepoSearchForm()
-        query = Q(state=PUBLISHED)
-        repos = Repo.objects.filter(query).distinct().order_by('name')
+        repos = Repo.objects.filter(state=PUBLISHED).distinct().order_by('name')
         
-    context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+    # context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+    context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -2148,8 +2164,11 @@ def lps_search(request):
 """
 @page_template('_oer_index_page.html')
 def oers_search(request, template='search_oers.html', extra_context=None):
+    """
     query = qq = []
     oers = []
+    """
+    qq = []
     criteria = []
     include_all = ''
     if request.method == 'POST': # If the form has been submitted...
@@ -2157,7 +2176,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         if form.is_valid(): # All validation rules pass
             include_all = request.POST.get('include_all')
             if include_all:
-               criteria.append(_('include non published items'))
+                criteria.append(_('include non published items'))
             oer_types = request.POST.getlist('oer_type')
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -2212,6 +2231,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                 qq.append(Q(accessibility__in=acc_features))
                 for acc_feature in acc_features:
                     criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
+            """
             if qq:
                 if include_all:
                     query = qq.pop()
@@ -2222,12 +2242,19 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             else:
                 query = Q(state=PUBLISHED)
             oers = OER.objects.filter(query).distinct().order_by('title')
+            """
+            qs = OER.objects.all()
+            for q in qq:
+                qs = qs.filter(q)
+            if not include_all:
+                qs = qs.filter(state=PUBLISHED)
+            oers = qs.distinct().order_by('title')
     else:
         form = OerSearchForm()
-        query = Q(state=PUBLISHED)
-        oers = OER.objects.filter(query).distinct().order_by('title')
+        oers = OER.objects.filter(state=PUBLISHED).distinct().order_by('title')
 
-    context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+    # context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+    context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)

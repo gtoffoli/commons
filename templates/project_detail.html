@@ -144,7 +144,7 @@
                  </ul>
               </li>
 
-              {% if can_edit and not project_no_children and not user.is_superuser%}
+              {% if can_edit and not project_no_children %}
                 <li style="background:#FABE66; padding-top:10px; padding-bottom:5px; margin-bottom:5px">
                    <ul class="list-inline">
                      <li><div style="margin-bottom:5px; font-weight:600">{% if proj_type.name == 'com' %} {% trans "new projects"|capfirst %} {% else %} {% trans "new child projects"|capfirst %} {% endif %}</div>

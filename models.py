@@ -665,13 +665,6 @@ class Project(models.Model):
 
     def get_children(self, proj_type_name=None, states=None):
         children_groups = self.group.get_children()
-        """
-        if proj_type_name:
-            return Project.objects.filter(group__in=children_groups, proj_type__name=proj_type_name).order_by('group__name')
-        else:
-            # return Project.objects.filter(group__in=children_groups).order_by('group__name')
-            return Project.objects.filter(group__in=children_groups, proj_type__public=True).order_by('group__name')
-        """
         qs = Project.objects.filter(group__in=children_groups)
         if proj_type_name:
             qs = qs.filter(proj_type__name=proj_type_name)
@@ -680,7 +673,6 @@ class Project(models.Model):
         if states:
             qs = qs.filter(state__in=states)
         return qs.order_by('group__name')
-
 
     def admin_name(self):
         if self.get_project_type() == 'com':
@@ -693,13 +685,13 @@ class Project(models.Model):
     def can_edit(self, user):
         if not user.is_authenticated():
             return False
+        if user.is_superuser: return True
         if self.get_type_name()=='ment':
             return self.get_parent().is_admin(user) or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) 
-        # return user.is_superuser or self.can_accept_member(user)
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user) or user.is_superuser) 
-        
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user)) 
 
     def can_propose(self, user):
+        if user.is_superuser: return True
         return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
     def can_open(self, user):
         parent = self.get_parent()
