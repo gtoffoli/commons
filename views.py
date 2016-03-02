@@ -1999,6 +1999,8 @@ def repos_search(request, template='search_repos.html', extra_context=None):
         form = RepoSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             include_all = request.POST.get('include_all')
+            if include_all:
+               criteria.append(_('include non published items'))
             repo_types = request.POST.getlist('repo_type')
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
@@ -2154,6 +2156,8 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         form = OerSearchForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
             include_all = request.POST.get('include_all')
+            if include_all:
+               criteria.append(_('include non published items'))
             oer_types = request.POST.getlist('oer_type')
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -2241,6 +2245,8 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         if form.is_valid(): # All validation rules pass
             qq.append(Q(project__isnull=False))
             include_all = request.POST.get('include_all')
+            if include_all:
+               criteria.append(_('include non published items'))
             path_types = request.POST.getlist('path_type')
             if path_types:
                 qq.append(Q(path_type__in=path_types))
@@ -2266,6 +2272,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
             if qq:
                 if include_all:
                     query = qq.pop()
+                    print 'qui'
                 else:
                     query = Q(state=PUBLISHED)
                 for q in qq:
