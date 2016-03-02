@@ -46,6 +46,18 @@ class VocabularyNode(MPTTModel, VocabularyEntry):
         # return self.name
         return self.option_label()
 
+def expand_to_descendants(klass, pk_list):
+    """ klass must be a subclass of VocabularyNode. Return pk_list expanded to all descendants """
+    expanded = []
+    for pk in pk_list:
+        expanded.append(pk)
+        node = klass.objects.get(pk=pk)
+        for d in node.get_descendants():
+            pk = d.pk
+            if not pk in expanded:
+                expanded.append(pk)
+    return expanded
+
 class CodedEntry(models.Model):
     """
     Abstract class for classification entries with control on key

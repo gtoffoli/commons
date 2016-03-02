@@ -19,14 +19,15 @@ from django_messages.views import compose as message_compose
 from actstream import action, registry
 
 from commons import settings
-from commons.vocabularies import LevelNode, SubjectNode, LicenseNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
-from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
+from vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
+from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
+from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, LP_TYPE_DICT
-from models import PUBLISHED
+from models import DRAFT, PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
@@ -1145,42 +1146,44 @@ def people_search(request, template='search_people.html', extra_context=None):
             if countries:
                 qq.append(Q(country__in=countries))
                 for country in countries: 
-                   criteria.append(str(CountryEntry.objects.get(pk=country).name))
+                    criteria.append(str(CountryEntry.objects.get(pk=country).name))
             edu_levels = request.POST.getlist('edu_level')
             if edu_levels:
                 qq.append(Q(edu_level__in=edu_levels))
                 for edu_level in edu_levels: 
-                   criteria.append(str(EduLevelEntry.objects.get(pk=edu_level).name))
+                    criteria.append(str(EduLevelEntry.objects.get(pk=edu_level).name))
             pro_statuses = request.POST.getlist('pro_status')
             if pro_statuses:
-                qq.append(Q(pro_status__in=pro_statuses))
+                # qq.append(Q(pro_status__in=pro_statuses))
+                qq.append(Q(pro_status__in=expand_to_descendants(ProStatusNode, pro_statuses)))
                 for pro_status in pro_statuses: 
-                   criteria.append(str(ProStatusNode.objects.get(pk=pro_status).name))
+                    criteria.append(str(ProStatusNode.objects.get(pk=pro_status).name))
             edu_fields = request.POST.getlist('edu_field')
             if edu_fields:
                 qq.append(Q(edu_field__in=edu_fields))
                 for edu_field in edu_fields: 
-                   criteria.append(str(EduFieldEntry.objects.get(pk=edu_field).name))
+                    criteria.append(str(EduFieldEntry.objects.get(pk=edu_field).name))
             pro_fields = request.POST.getlist('pro_field')
             if pro_fields:
                 qq.append(Q(pro_field__in=pro_fields))
                 for pro_field in pro_fields: 
-                   criteria.append(str(ProFieldEntry.objects.get(pk=pro_field).name))
+                    criteria.append(str(ProFieldEntry.objects.get(pk=pro_field).name))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__in=subjects))
+                # qq.append(Q(subjects__in=subjects))
+                qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
-                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
             languages = request.POST.getlist('languages')
             if languages:
                 qq.append(Q(languages__in=languages))
                 for language in languages:
-                   criteria.append(str(Language.objects.get(pk=language).name))
+                    criteria.append(str(Language.objects.get(pk=language).name))
             networks = request.POST.getlist('networks')
             if networks:
                 qq.append(Q(networks__in=networks))
                 for network in networks:
-                   criteria.append(str(NetworkEntry.objects.get(pk=network).name))
+                    criteria.append(str(NetworkEntry.objects.get(pk=network).name))
             if qq:
                 query = qq.pop()
                 for q in qq:
@@ -1190,15 +1193,15 @@ def people_search(request, template='search_people.html', extra_context=None):
             else:
                 profiles = UserProfile.objects.distinct()
                 for profile in profiles:
-                   if profile.get_completeness():
-                      new_profiles.append(profile)
+                    if profile.get_completeness():
+                        new_profiles.append(profile)
                 profiles = new_profiles
     else:
         form = PeopleSearchForm()
         profiles = UserProfile.objects.distinct()
         for profile in profiles:
-           if profile.get_completeness():
-              new_profiles.append(profile)
+            if profile.get_completeness():
+                new_profiles.append(profile)
         profiles = new_profiles
 
     context = {'profiles': profiles, 'n_profiles': len(profiles), 'criteria': criteria, 'query': query, 'form': form,}
@@ -1371,7 +1374,8 @@ def oer_edit(request, oer_id=None, project_id=None):
         form = OerForm(instance=oer)
         metadata_formset = OerMetadataFormSet(instance=oer)
     else:
-        form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+        # form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+        form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id, 'oer_type': 2, 'source_type': 2, 'state': DRAFT,})
         metadata_formset = OerMetadataFormSet()
     return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action}, context_instance=RequestContext(request))
 
@@ -1999,22 +2003,23 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
                 for repo_type in repo_types:
-                   criteria.append(str(RepoType.objects.get(pk=repo_type).name))
+                    criteria.append(str(RepoType.objects.get(pk=repo_type).name))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                qq.append(Q(subjects__isnull=True) | Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
-                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
             languages = request.POST.getlist('languages')
             if languages:
                 qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
                 for language in languages:
-                   criteria.append(str(Language.objects.get(pk=language).name))
+                    criteria.append(str(Language.objects.get(pk=language).name))
             repo_features = request.POST.getlist('features')
             if repo_features:
                 qq.append(Q(features__in=repo_features))
                 for repo_feature in repo_features:
-                   criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
+                    criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
             if qq:
                 if include_all:
                     query = qq.pop()
@@ -2158,54 +2163,58 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             if source_types:
                 qq.append(Q(source_type__in=source_types))
                 for source_type in source_types: 
-                   criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
+                    criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
             materials = request.POST.getlist('material')
             if materials:
                 qq.append(Q(material__in=materials))
                 for material in materials: 
-                   criteria.append(str(MaterialEntry.objects.get(pk=material).name))
+                    criteria.append(str(MaterialEntry.objects.get(pk=material).name))
             licenses = request.POST.getlist('license')
             if licenses:
-                qq.append(Q(license__in=licenses))
+                # qq.append(Q(license__in=licenses))
+                qq.append(Q(license__in=expand_to_descendants(LicenseNode, licenses)))
                 for license in licenses: 
-                   criteria.append(str(LicenseNode.objects.get(pk=license).name))
+                    criteria.append(str(LicenseNode.objects.get(pk=license).name))
             levels = request.POST.getlist('levels')
             if levels:
-                qq.append(Q(levels__in=levels))
+                # qq.append(Q(levels__in=levels))
+                qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
                 for level in levels: 
-                   criteria.append(str(LevelNode.objects.get(pk=level).name))
+                    criteria.append(str(LevelNode.objects.get(pk=level).name))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
-                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
             tags = request.POST.getlist('tags')
             if tags:
                 qq.append(Q(tags__in=tags))
                 for tag in tags: 
-                   criteria.append(str(Tag.objects.get(pk=tag).name))
+                    criteria.append(str(Tag.objects.get(pk=tag).name))
             languages = request.POST.getlist('languages')
             if languages:
-                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                qq.append(Q(languages__in=languages))
                 for language in languages:
-                   criteria.append(str(Language.objects.get(pk=language).name))
+                    criteria.append(str(Language.objects.get(pk=language).name))
             media = request.POST.getlist('media')
             if media:
                 qq.append(Q(media__in=media))
                 for medium in media:
-                   criteria.append(str(MediaEntry.objects.get(pk=medium).name))
+                    criteria.append(str(MediaEntry.objects.get(pk=medium).name))
             acc_features = request.POST.getlist('accessibility')
             if acc_features:
                 qq.append(Q(accessibility__in=acc_features))
                 for acc_feature in acc_features:
-                   criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
+                    criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
             if qq:
-               if include_all:
-                  query = qq.pop()
-               else:
-                  query = (Q(state=PUBLISHED))
-               for q in qq:
-                query = query & q
+                if include_all:
+                    query = qq.pop()
+                else:
+                    query = (Q(state=PUBLISHED))
+                for q in qq:
+                    query = query & q
             else:
                 query = Q(state=PUBLISHED)
             oers = OER.objects.filter(query).distinct().order_by('title')
@@ -2239,19 +2248,21 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                     criteria.append(str(LP_TYPE_DICT.get(int(path_type))))
             levels = request.POST.getlist('levels')
             if levels:
-                qq.append(Q(levels__in=levels))
+                # qq.append(Q(levels__in=levels))
+                qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
                 for level in levels: 
-                   criteria.append(str(LevelNode.objects.get(pk=level).name))
+                    criteria.append(str(LevelNode.objects.get(pk=level).name))
             subjects = request.POST.getlist('subjects')
             if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
-                   criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
             tags = request.POST.getlist('tags')
             if tags:
                 qq.append(Q(tags__in=tags))
                 for tag in tags: 
-                   criteria.append(str(Tag.objects.get(pk=tag).name))
+                    criteria.append(str(Tag.objects.get(pk=tag).name))
             if qq:
                 if include_all:
                     query = qq.pop()
@@ -2265,7 +2276,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         qq.append(Q(project__isnull=False))
         query = Q(state=PUBLISHED)
         for q in qq:
-           query = query & q
+            query = query & q
         lps = LearningPath.objects.filter(query).distinct().order_by('title')
 
     context = {'lps': lps, 'n_lps': len(lps), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
