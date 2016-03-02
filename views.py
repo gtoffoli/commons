@@ -1996,64 +1996,73 @@ def repos_search(request):
 """
 @page_template('_repo_index_page.html')
 def repos_search(request, template='search_repos.html', extra_context=None):
-    """
-    query = qq = []
-    repos = []
-    """
     qq = []
     criteria = []
     include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = RepoSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include_all')
-            if include_all:
-               criteria.append(_('include non published items'))
-            repo_types = request.POST.getlist('repo_type')
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET':
+            form = None
+            post_dict = request.session.get('post_dict', None)
+            repo_types = post_dict.get('repo_type', [])
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
-                for repo_type in repo_types:
-                    criteria.append(str(RepoType.objects.get(pk=repo_type).name))
-            subjects = request.POST.getlist('subjects')
+            subjects = post_dict.get('subjects', [])
             if subjects:
-                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
-                for subject in subjects: 
-                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
-            languages = request.POST.getlist('languages')
+                qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
+            languages = post_dict.get('languages', [])
             if languages:
-                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
-                for language in languages:
-                    criteria.append(str(Language.objects.get(pk=language).name))
-            repo_features = request.POST.getlist('features')
+                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                qq.append(Q(languages__in=languages))
+            repo_features = post_dict.get('features', [])
             if repo_features:
                 qq.append(Q(features__in=repo_features))
-                for repo_feature in repo_features:
-                    criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
-            """
-            if qq:
+            include_all = post_dict.get('include_all', False)
+        else:
+            post = request.POST
+            form = RepoSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
+                repo_types = post.getlist('repo_type')
+                if repo_types:
+                    qq.append(Q(repo_type_id__in=repo_types))
+                    for repo_type in repo_types:
+                        criteria.append(str(RepoType.objects.get(pk=repo_type).name))
+                post_dict['repo_type'] = repo_types
+                subjects = post.getlist('subjects')
+                if subjects:
+                    qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
+                    for subject in subjects: 
+                        criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                post_dict['subjects'] = subjects
+                languages = post.getlist('languages')
+                if languages:
+                    # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                    qq.append(Q(languages__in=languages))
+                    for language in languages:
+                        criteria.append(str(Language.objects.get(pk=language).name))
+                post_dict['languages'] = languages
+                repo_features = request.POST.getlist('features')
+                if repo_features:
+                    qq.append(Q(features__in=repo_features))
+                    for repo_feature in repo_features:
+                        criteria.append(str(RepoFeature.objects.get(pk=repo_feature).name))
+                post_dict['features'] = repo_features
+                include_all = post.get('include_all')
                 if include_all:
-                    query = qq.pop()
-                else:
-                    query = Q(state=PUBLISHED)
-                for q in qq:
-                    query = query & q
-            else:
-                query = Q(state=PUBLISHED)
-                
-            repos = Repo.objects.filter(query).distinct().order_by('name')
-            """
-            qs = Repo.objects.all()
-            for q in qq:
-                qs = qs.filter(q)
-            if not include_all:
-                qs = qs.filter(state=PUBLISHED)
-            repos = qs.distinct().order_by('name')
+                    criteria.append(_('include non published items'))
+                post_dict['include_all'] = include_all
+                request.session['post_dict'] = post_dict
+        qs = Repo.objects.all()
+        for q in qq:
+            qs = qs.filter(q)
+        if not include_all:
+            qs = qs.filter(state=PUBLISHED)
+        repos = qs.distinct().order_by('name')
     else:
         form = RepoSearchForm()
         repos = Repo.objects.filter(state=PUBLISHED).distinct().order_by('name')
-        
-    # context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+        request.session["post_dict"] = {}
+                
     context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
@@ -2171,7 +2180,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         if request.method == 'GET':
             form = None
             post_dict = request.session.get('post_dict', None)
-            print post_dict
             oer_types = post_dict.get('oer_type', [])
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -2290,6 +2298,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         request.session["post_dict"] = {}
 
     context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+
     if extra_context is not None:
         context.update(extra_context)
 
@@ -2301,35 +2310,62 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     lps = []
     criteria = []
     include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = LpSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            qq.append(Q(project__isnull=False))
-            include_all = request.POST.get('include_all')
-            if include_all:
-               criteria.append(_('include non published items'))
-            path_types = request.POST.getlist('path_type')
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET':
+            form = None
+            post_dict = request.session.get('post_dict', None)
+            path_types = post_dict.get('path_type', [])
             if path_types:
                 qq.append(Q(path_type__in=path_types))
-                for path_type in path_types:
-                    criteria.append(str(LP_TYPE_DICT.get(int(path_type))))
-            levels = request.POST.getlist('levels')
+            levels = post_dict.get('levels')
             if levels:
-                # qq.append(Q(levels__in=levels))
                 qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
-                for level in levels: 
-                    criteria.append(str(LevelNode.objects.get(pk=level).name))
-            subjects = request.POST.getlist('subjects')
+            subjects = post_dict.get('subjects')
             if subjects:
-                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
                 qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
-                for subject in subjects: 
-                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
-            tags = request.POST.getlist('tags')
+            tags = post_dict.get('tags')
             if tags:
                 qq.append(Q(tags__in=tags))
-                for tag in tags: 
-                    criteria.append(str(Tag.objects.get(pk=tag).name))
+            qq.append(Q(project__isnull=False))
+            include_all = post_dict.get('include_all', False)
+        else:
+            post = request.POST
+            form = LpSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
+                path_types = post.getlist('path_type')
+                if path_types:
+                    qq.append(Q(path_type__in=path_types))
+                    for path_type in path_types:
+                        criteria.append(str(LP_TYPE_DICT.get(int(path_type))))
+                post_dict['path_type'] = path_types
+                levels = post.getlist('levels')
+                if levels:
+                    # qq.append(Q(levels__in=levels))
+                    qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
+                    for level in levels: 
+                        criteria.append(str(LevelNode.objects.get(pk=level).name))
+                post_dict['levels'] = levels
+                subjects = post.getlist('subjects')
+                if subjects:
+                    # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                    qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
+                    for subject in subjects: 
+                        criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                post_dict['subjects'] = subjects
+                tags = post.getlist('tags')
+                if tags:
+                    qq.append(Q(tags__in=tags))
+                    for tag in tags: 
+                        criteria.append(str(Tag.objects.get(pk=tag).name))
+                post_dict['tags'] = tags
+                qq.append(Q(project__isnull=False))
+                include_all = post.get('include_all')
+                if include_all:
+                    criteria.append(_('include non published items'))
+                post_dict['include_all'] = include_all
+                request.session['post_dict'] = post_dict
+            """    
             if qq:
                 if include_all:
                     query = qq.pop()
@@ -2339,6 +2375,13 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                 for q in qq:
                     query = query & q
                 lps = LearningPath.objects.filter(query).distinct().order_by('title')
+            """
+        qs = LearningPath.objects.all()
+        for q in qq:
+            qs = qs.filter(q)
+        if not include_all:
+            qs = qs.filter(state=PUBLISHED)
+        lps = qs.distinct().order_by('title')
     else:
         form = LpSearchForm()
         qq.append(Q(project__isnull=False))
@@ -2346,8 +2389,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         for q in qq:
             query = query & q
         lps = LearningPath.objects.filter(query).distinct().order_by('title')
+        request.session["post_dict"] = {}
 
-    context = {'lps': lps, 'n_lps': len(lps), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
+    context = {'lps': lps, 'n_lps': len(lps), 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
