@@ -2164,98 +2164,132 @@ def lps_search(request):
 """
 @page_template('_oer_index_page.html')
 def oers_search(request, template='search_oers.html', extra_context=None):
-    """
-    query = qq = []
-    oers = []
-    """
     qq = []
     criteria = []
     include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = OerSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include_all')
-            if include_all:
-                criteria.append(_('include non published items'))
-            oer_types = request.POST.getlist('oer_type')
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET':
+            form = None
+            post_dict = request.session.get('post_dict', None)
+            print post_dict
+            oer_types = post_dict.get('oer_type', [])
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
-                for oer_type in oer_types:
-                    criteria.append(str(OER_TYPE_DICT.get(int(oer_type))))
-            source_types = request.POST.getlist('source_type')
+            source_types = post_dict.get('source_type', [])
             if source_types:
                 qq.append(Q(source_type__in=source_types))
-                for source_type in source_types: 
-                    criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
-            materials = request.POST.getlist('material')
+            materials = post_dict.get('material', [])
             if materials:
                 qq.append(Q(material__in=materials))
-                for material in materials: 
-                    criteria.append(str(MaterialEntry.objects.get(pk=material).name))
-            licenses = request.POST.getlist('license')
+            licenses = post_dict.get('license', [])
             if licenses:
-                # qq.append(Q(license__in=licenses))
                 qq.append(Q(license__in=expand_to_descendants(LicenseNode, licenses)))
-                for license in licenses: 
-                    criteria.append(str(LicenseNode.objects.get(pk=license).name))
-            levels = request.POST.getlist('levels')
+            levels = post_dict.get('levels', [])
             if levels:
-                # qq.append(Q(levels__in=levels))
                 qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
-                for level in levels: 
-                    criteria.append(str(LevelNode.objects.get(pk=level).name))
-            subjects = request.POST.getlist('subjects')
+            subjects = post_dict.get('subjects', [])
             if subjects:
-                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
                 qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
-                for subject in subjects: 
-                    criteria.append(str(SubjectNode.objects.get(pk=subject).name))
-            tags = request.POST.getlist('tags')
+            tags = post_dict.get('tags', [])
             if tags:
                 qq.append(Q(tags__in=tags))
-                for tag in tags: 
-                    criteria.append(str(Tag.objects.get(pk=tag).name))
-            languages = request.POST.getlist('languages')
+            languages = post_dict.get('languages', [])
             if languages:
                 # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
                 qq.append(Q(languages__in=languages))
-                for language in languages:
-                    criteria.append(str(Language.objects.get(pk=language).name))
-            media = request.POST.getlist('media')
+            media = post_dict.get('media', [])
             if media:
                 qq.append(Q(media__in=media))
-                for medium in media:
-                    criteria.append(str(MediaEntry.objects.get(pk=medium).name))
-            acc_features = request.POST.getlist('accessibility')
+            acc_features = post_dict.get('accessibility', [])
             if acc_features:
                 qq.append(Q(accessibility__in=acc_features))
-                for acc_feature in acc_features:
-                    criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
-            """
-            if qq:
+            include_all = post_dict.get('include_all', False)
+        else:
+            post = request.POST
+            form = OerSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
+                oer_types = post.getlist('oer_type')
+                if oer_types:
+                    qq.append(Q(oer_type__in=oer_types))
+                    for oer_type in oer_types:
+                        criteria.append(str(OER_TYPE_DICT.get(int(oer_type))))
+                post_dict['oer_type'] = oer_types
+                source_types = post.getlist('source_type')
+                if source_types:
+                    qq.append(Q(source_type__in=source_types))
+                    for source_type in source_types: 
+                        criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
+                post_dict['source_type'] = source_types
+                materials = post.getlist('material')
+                if materials:
+                    qq.append(Q(material__in=materials))
+                    for material in materials: 
+                        criteria.append(str(MaterialEntry.objects.get(pk=material).name))
+                post_dict['material'] = materials
+                licenses = post.getlist('license')
+                if licenses:
+                    # qq.append(Q(license__in=licenses))
+                    qq.append(Q(license__in=expand_to_descendants(LicenseNode, licenses)))
+                    for license in licenses: 
+                        criteria.append(str(LicenseNode.objects.get(pk=license).name))
+                post_dict['license'] = licenses
+                levels = post.getlist('levels')
+                if levels:
+                    # qq.append(Q(levels__in=levels))
+                    qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
+                    for level in levels: 
+                        criteria.append(str(LevelNode.objects.get(pk=level).name))
+                post_dict['level'] = levels
+                subjects = post.getlist('subjects')
+                if subjects:
+                    # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
+                    qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
+                    for subject in subjects: 
+                        criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+                post_dict['subjects'] = subjects
+                tags = post.getlist('tags')
+                if tags:
+                    qq.append(Q(tags__in=tags))
+                    for tag in tags: 
+                        criteria.append(str(Tag.objects.get(pk=tag).name))
+                post_dict['tags'] = tags
+                languages = post.getlist('languages')
+                if languages:
+                    # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
+                    qq.append(Q(languages__in=languages))
+                    for language in languages:
+                        criteria.append(str(Language.objects.get(pk=language).name))
+                post_dict['languages'] = languages
+                media = post.getlist('media')
+                if media:
+                    qq.append(Q(media__in=media))
+                    for medium in media:
+                        criteria.append(str(MediaEntry.objects.get(pk=medium).name))
+                post_dict['media'] = media
+                acc_features = post.getlist('accessibility')
+                if acc_features:
+                    qq.append(Q(accessibility__in=acc_features))
+                    for acc_feature in acc_features:
+                        criteria.append(str(AccessibilityEntry.objects.get(pk=acc_feature).name))
+                post_dict['accessibility'] = acc_features
+                include_all = post.get('include_all')
                 if include_all:
-                    query = qq.pop()
-                else:
-                    query = (Q(state=PUBLISHED))
-                for q in qq:
-                    query = query & q
-            else:
-                query = Q(state=PUBLISHED)
-            oers = OER.objects.filter(query).distinct().order_by('title')
-            """
-            qs = OER.objects.all()
-            for q in qq:
-                qs = qs.filter(q)
-            if not include_all:
-                qs = qs.filter(state=PUBLISHED)
-            oers = qs.distinct().order_by('title')
+                    criteria.append(_('include non published items'))
+                post_dict['include_all'] = include_all
+                request.session['post_dict'] = post_dict
+        qs = OER.objects.all()
+        for q in qq:
+            qs = qs.filter(q)
+        if not include_all:
+            qs = qs.filter(state=PUBLISHED)
+        oers = qs.distinct().order_by('title')
     else:
         form = OerSearchForm()
         oers = OER.objects.filter(state=PUBLISHED).distinct().order_by('title')
+        request.session["post_dict"] = {}
 
-    # context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'query': query, 'include_all': include_all, 'form': form,}
     context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'include_all': include_all, 'form': form,}
-
     if extra_context is not None:
         context.update(extra_context)
 
