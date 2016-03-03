@@ -31,6 +31,16 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
 ACCOUNT_ADAPTER = 'commons.adapter.MyAccountAdapter'
 
+SOCIALACCOUNT_PROVIDERS = \
+    {'linkedin':
+      {'SCOPE': ['r_emailaddress'],
+       'PROFILE_FIELDS': ['id',
+                         'first-name',
+                         'last-name',
+                         'email-address',
+                         'picture-url',
+                         'public-profile-url']}}
+
 # EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 import os
@@ -103,6 +113,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount',
     # ... include the providers you want to enable:
     'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.linkedin_oauth2',
     'tinymce',
     # django-autocomplete-light
     'dal',
@@ -143,24 +154,6 @@ INSTALLED_APPS = (
 )
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
-
-"""
-TEMPLATE_CONTEXT_PROCESSORS = (
-    'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.i18n',
-    'django.core.context_processors.request',
-    'django.contrib.messages.context_processors.messages',
-    # theme (from pinax project)
-    "pinax_theme_bootstrap.context_processors.theme",
-    "allauth.account.context_processors.account",
-    "allauth.socialaccount.context_processors.socialaccount",
-)
-
-TEMPLATE_DIRS = (
-    os.path.join(BASE_DIR, "commons", "templates"),
-)
-"""
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
