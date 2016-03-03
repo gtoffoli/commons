@@ -31,6 +31,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
 ACCOUNT_ADAPTER = 'commons.adapter.MyAccountAdapter'
 
+"""
 SOCIALACCOUNT_PROVIDERS = \
     {'linkedin':
       {'SCOPE': ['r_emailaddress'],
@@ -40,7 +41,7 @@ SOCIALACCOUNT_PROVIDERS = \
                          'email-address',
                          'picture-url',
                          'public-profile-url']}}
-
+"""
 # EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 import os
