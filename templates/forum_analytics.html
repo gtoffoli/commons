@@ -1,0 +1,39 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "forum analytics"|capfirst %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+
+            <h1 class="text-center">{% trans "forum analytics"|capfirst %}</h1>
+			<div style="text-align: center; font-style: italic; font-size: larger;">Total number of posts: {{ total }}</div>
+<section>
+
+	<h3>{% trans "forums with topics by posts"|capfirst %}</h4>
+
+	<ul class="list-unstyled">
+        {% for forum, num_posts, topics_list in forum_topics_list %}
+        <li><span style="font-weight: bold;">{{ num_posts }} - {{ forum.name}}</span>
+		<ul class="list-unstyled" style="margin-left: 20px;">
+	        {% for n, topic in  topics_list %}
+	        <li>{{ n }} - {{ topic.name }}</li>
+	        {% endfor %}
+		</ul>
+        </li>
+        {% endfor %}
+	</ul>
+
+
+	<h3>{% trans "forum topics by posts"|capfirst %}</h4>
+
+	<ul class="list-unstyled">
+        {% for topic in topics %}
+        <li>{{ topic.num_posts }} - {{ topic.name }} <i>({{ topic.forum.name }})</i></li>
+        {% endfor %}
+	</ul>	
+
+    </section>
+{% endblock %}

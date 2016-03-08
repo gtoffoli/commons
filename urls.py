@@ -155,6 +155,7 @@ urlpatterns = patterns('',
     # url('oer-autocomplete/$', OerAutocomplete.as_view(), name='oer-autocomplete',),
     url('repo-autocomplete/$', 'commons.views.repo_autocomplete', name='repo-autocomplete',),
     url('oer-autocomplete/$', 'commons.views.oer_autocomplete', name='oer-autocomplete',),
+    url(r"^analytics/forums/$", 'commons.analytics.forum_analytics', name="forum_analytics"),
     ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
