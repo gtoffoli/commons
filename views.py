@@ -1141,75 +1141,112 @@ def people_search(request):
 """
 @page_template('_people_index_page.html')
 def people_search(request, template='search_people.html', extra_context=None):
-    query = qq = []
+    qq = []
     criteria = []
-    profiles = new_profiles = []
-    if request.method == 'POST': # If the form has been submitted...
-        form = PeopleSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
+    profiles = []
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET' and request.session.get('post_dict', None):
+            form = None
+            post_dict = request.session.get('post_dict', None)
+            countries = post_dict.get('country', [])
+            if countries:
+                qq.append(Q(country__in=countries))
+            edu_levels = post_dict.get('edu_level', [])
+            if edu_levels:
+                qq.append(Q(edu_level__in=edu_levels))
+            pro_statuses = post_dict.get('pro_status', [])
+            if pro_statuses:
+                qq.append(Q(pro_status__in=expand_to_descendants(ProStatusNode, pro_statuses)))
+            edu_fields = post_dict.get('edu_field', [])
+            if edu_fields:
+                qq.append(Q(edu_field__in=edu_fields))
+            pro_fields = post_dict.get('pro_field', [])
+            if pro_fields:
+                qq.append(Q(pro_field__in=pro_fields))
+            subjects = post_dict.get('subjects', [])
+            if subjects:
+                qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
+            languages = post_dict.get('languages', [])
+            if languages:
+                qq.append(Q(languages__in=languages))
+            networks = post_dict.get('networks', [])
+            if networks:
+                qq.append(Q(networks__in=networks))
+        elif request.method == 'POST':
+            post = request.POST
+            form = PeopleSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
             countries = request.POST.getlist('country')
             if countries:
                 qq.append(Q(country__in=countries))
                 for country in countries: 
                     criteria.append(str(CountryEntry.objects.get(pk=country).name))
+            post_dict['country'] = countries
             edu_levels = request.POST.getlist('edu_level')
             if edu_levels:
                 qq.append(Q(edu_level__in=edu_levels))
                 for edu_level in edu_levels: 
                     criteria.append(str(EduLevelEntry.objects.get(pk=edu_level).name))
+            post_dict['edu_level'] = edu_levels
             pro_statuses = request.POST.getlist('pro_status')
             if pro_statuses:
                 # qq.append(Q(pro_status__in=pro_statuses))
                 qq.append(Q(pro_status__in=expand_to_descendants(ProStatusNode, pro_statuses)))
                 for pro_status in pro_statuses: 
                     criteria.append(str(ProStatusNode.objects.get(pk=pro_status).name))
+            post_dict['pro_status'] = pro_statuses
             edu_fields = request.POST.getlist('edu_field')
             if edu_fields:
                 qq.append(Q(edu_field__in=edu_fields))
                 for edu_field in edu_fields: 
                     criteria.append(str(EduFieldEntry.objects.get(pk=edu_field).name))
+            post_dict['edu_field'] = edu_fields
             pro_fields = request.POST.getlist('pro_field')
             if pro_fields:
                 qq.append(Q(pro_field__in=pro_fields))
                 for pro_field in pro_fields: 
                     criteria.append(str(ProFieldEntry.objects.get(pk=pro_field).name))
+            post_dict['pro_field'] = pro_fields
             subjects = request.POST.getlist('subjects')
             if subjects:
                 # qq.append(Q(subjects__in=subjects))
                 qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
                     criteria.append(str(SubjectNode.objects.get(pk=subject).name))
+            post_dict['subjects'] = subjects
             languages = request.POST.getlist('languages')
             if languages:
                 qq.append(Q(languages__in=languages))
                 for language in languages:
                     criteria.append(str(Language.objects.get(pk=language).name))
+            post_dict['languages'] = languages
             networks = request.POST.getlist('networks')
             if networks:
                 qq.append(Q(networks__in=networks))
                 for network in networks:
                     criteria.append(str(NetworkEntry.objects.get(pk=network).name))
-            if qq:
-                query = qq.pop()
-                for q in qq:
-                    query = query & q
-                # profiles = UserProfile.objects.filter(query).distinct().order_by('title')
-                profiles = UserProfile.objects.filter(query).distinct()
-            else:
-                profiles = UserProfile.objects.distinct()
-                for profile in profiles:
-                    if profile.get_completeness():
-                        new_profiles.append(profile)
-                profiles = new_profiles
+            post_dict['networks'] = networks
+            request.session['post_dict'] = post_dict
+        else:
+            form = PeopleSearchForm()
+            request.session["post_dict"] = {}
+        qs = UserProfile.objects.all()
+        for q in qq:
+            qs = qs.filter(q)
+        qs = qs.distinct()
+        for profile in qs:
+            if profile.get_completeness():
+                profiles.append(profile)
     else:
         form = PeopleSearchForm()
-        profiles = UserProfile.objects.distinct()
-        for profile in profiles:
+        qs = UserProfile.objects.distinct()
+        for profile in qs:
             if profile.get_completeness():
-                new_profiles.append(profile)
-        profiles = new_profiles
+                profiles.append(profile)
+        request.session["post_dict"] = {}
 
-    context = {'profiles': profiles, 'n_profiles': len(profiles), 'criteria': criteria, 'query': query, 'form': form,}
+    context = {'profiles': profiles, 'n_profiles': len(profiles), 'criteria': criteria, 'include all': None, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -1279,7 +1316,52 @@ def oers_by_project(request):
             project_list.append([project, n])
     return render_to_response('oers_by_project.html', {'project_list': project_list,}, context_instance=RequestContext(request))
 """
+def oer_view(request, oer_id, oer=None):
+    if not oer:
+        oer_id = int(oer_id)
+        oer = get_object_or_404(OER, pk=oer_id)
+    elif not oer_id:
+        oer_id = oer.id
+    var_dict = { 'oer': oer, }
+    url = oer.url
+    var_dict['oer_url'] = oer.url
+    print url
+    youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
+    if youtube:
+        if youtube.count('embed'):
+            pass
+            print 1, youtube
+        elif youtube.count('youtu.be/'):
+            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
+            print 2, youtube
+        elif youtube.count('watch?v='):
+            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+            print 3, youtube
+        # youtube = YOUTUBE_TEMPLATE % youtube
+        var_dict['oer_url'] = youtube
+    var_dict['youtube'] = youtube
+    ted_talk = url and url.count('www.ted.com/talks/') and url or ''
+    if ted_talk:
+        if ted_talk.count('?'):
+            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
+        else:
+            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
+        # ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
+        ted_talk = (language, ted_talk)
+        var_dict['oer_url'] = ted_talk
+    var_dict['ted_talk'] = ted_talk
+    reference = oer.reference
+    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
+    if slideshare:
+        slideshare = SLIDESHARE_TEMPLATE % slideshare
+    var_dict['slideshare'] = slideshare
+    # var_dict['embed_code'] = oer.embed_code
+    return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
 
+def oer_view_by_slug(request, oer_slug):
+    oer = OER.objects.get(slug=oer_slug)
+    return oer_view(request, oer.id, oer)
+    
 def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer_id = int(oer_id)
@@ -2000,7 +2082,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
-        if request.method == 'GET':
+        if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
             repo_types = post_dict.get('repo_type', [])
@@ -2017,7 +2099,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             if repo_features:
                 qq.append(Q(features__in=repo_features))
             include_all = post_dict.get('include_all', False)
-        else:
+        elif request.method == 'POST':
             post = request.POST
             form = RepoSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
@@ -2052,6 +2134,9 @@ def repos_search(request, template='search_repos.html', extra_context=None):
                     criteria.append(_('include non published items'))
                 post_dict['include_all'] = include_all
                 request.session['post_dict'] = post_dict
+        else:
+            form = RepoSearchForm()
+            request.session["post_dict"] = {}
         qs = Repo.objects.all()
         for q in qq:
             qs = qs.filter(q)
@@ -2059,6 +2144,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             qs = qs.filter(state=PUBLISHED)
         repos = qs.distinct().order_by('name')
     else:
+        print 'altro'
         form = RepoSearchForm()
         repos = Repo.objects.filter(state=PUBLISHED).distinct().order_by('name')
         request.session["post_dict"] = {}
@@ -2177,7 +2263,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
-        if request.method == 'GET':
+        if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
             oer_types = post_dict.get('oer_type', [])
@@ -2212,7 +2298,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             if acc_features:
                 qq.append(Q(accessibility__in=acc_features))
             include_all = post_dict.get('include_all', False)
-        else:
+        elif request.method == 'POST':
             post = request.POST
             form = OerSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
@@ -2286,6 +2372,9 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                     criteria.append(_('include non published items'))
                 post_dict['include_all'] = include_all
                 request.session['post_dict'] = post_dict
+        else:
+            form = OerSearchForm()
+            request.session["post_dict"] = {}
         qs = OER.objects.all()
         for q in qq:
             qs = qs.filter(q)
@@ -2311,7 +2400,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
-        if request.method == 'GET':
+        if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
             path_types = post_dict.get('path_type', [])
@@ -2328,7 +2417,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                 qq.append(Q(tags__in=tags))
             qq.append(Q(project__isnull=False))
             include_all = post_dict.get('include_all', False)
-        else:
+        elif request.method == 'POST':
             post = request.POST
             form = LpSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
@@ -2365,17 +2454,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                     criteria.append(_('include non published items'))
                 post_dict['include_all'] = include_all
                 request.session['post_dict'] = post_dict
-            """    
-            if qq:
-                if include_all:
-                    query = qq.pop()
-                    print 'qui'
-                else:
-                    query = Q(state=PUBLISHED)
-                for q in qq:
-                    query = query & q
-                lps = LearningPath.objects.filter(query).distinct().order_by('title')
-            """
+        else:
+            form = LpSearchForm()
+            request.session["post_dict"] = {}
         qs = LearningPath.objects.all()
         for q in qq:
             qs = qs.filter(q)

@@ -1,0 +1,23 @@
+{% extends "commons_base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}OER: {{ oer.title }}{% endblock %}
+
+{% block body_class %}oer_view{% endblock %}
+
+{% block nav %}
+<h4 style="padding-top:6px"><a href="/oer/{{ oer.slug }}" style="font-size:16px; color:#333;"><i class="fa fa-arrow-left"></i></a> {{ oer.title }} <!--small>{{ oer.url|safe }}</small--></h4>
+{% endblock %}
+
+{% block body_base %}
+<div class="container-fluid" style="margin:0; padding:0">
+<div class="iframe-container">
+{% if oer_url %}
+<iframe src="{{ oer_url }}"  allowfullscreen></iframe>
+{% endif %}
+</div>
+</div>
+{% endblock %}
+
+

@@ -15,6 +15,9 @@ h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 h1 {
 	font-size: 26px;
 }
+h2 {
+	font-size: 24px;
+}
 
 /* FOOTER FIXED */
 .wrapper {
@@ -471,17 +474,27 @@ dl.list-inline dt {
 dl.list-inline dt:after {
 	content: ": ";
 }
+dl.list-inline dt.with_icon:after {
+	content: " ";
+}
 dl.list-inline dd:after {
 	content: ", ";
 }
 dl.list-inline dd:last-child:after {
-	content: ". ";
+	content: " ";
 }
 dl.list-inline dd input.btn-link,
+dl.list-inline dd button.btn-link,
 article.view-list li input.btn-link,
 article.view-list1 li input.btn-link {
 	padding: 0;
 	margin: 0;
+	text-decoration: none;
+}
+dl.list-inline dd button.btn-link {
+	background:white;
+	border:none;
+	text-align:left;
 }
 
 /* AVATAR */

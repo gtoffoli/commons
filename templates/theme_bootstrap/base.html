@@ -112,16 +112,18 @@
             <script src="{% static "pinax/js/theme.js" %}"></script>
             <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
             <script type="text/javascript">
-               $(document).ready(function() {
-                $('#navigation_autocomplete').yourlabsAutocomplete({
-                  url: '{% url 'navigation_autocomplete' %}',
-                  choiceSelector: 'a',
-                  minimumCharacters: 3,
-                  placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
-                }).input.bind('selectChoice', function(e, choice, autocomplete) {
-                  document.location.href = choice.attr('href');
-                });
-               });
+              $(document).ready(function() {
+               	if ($('#navigation_autocomplete').length > 0) {
+                  $('#navigation_autocomplete').yourlabsAutocomplete({
+                    url: '{% url 'navigation_autocomplete' %}',
+                    choiceSelector: 'a',
+                    minimumCharacters: 3,
+                    placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+                  }).input.bind('selectChoice', function(e, choice, autocomplete) {
+                    document.location.href = choice.attr('href');
+                  });
+                }
+              });
             </script>
             {% block extra_script %}{% endblock %}
         {% endblock %}

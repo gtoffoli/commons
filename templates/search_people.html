@@ -36,7 +36,7 @@
           {% endif %}
         </small></p>
         {% include page_template %}
-      {% elif query %}
+      {% else %}
         <p><small><span class"demiBold">{% trans "no results were found"|capfirst %}</span>
           {% if criteria %}
             <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 

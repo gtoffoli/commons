@@ -1,6 +1,9 @@
 User-agent: *
 Disallow: /admin
 Disallow: /accounts
+Disallow: /my_dashboard
+Disallow: /oer/*/view
+Disallow: /lp/*/play
 Crawl-delay: 12
 User-agent: BUbiNG
 Disallow: /

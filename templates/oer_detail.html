@@ -1,5 +1,5 @@
 {% extends "commons_base.html" %}
-
+{% load staticfiles %}
 {% load i18n %}
 
 {% block head_title %}OER: {{ oer.title }}{% endblock %}
@@ -7,198 +7,255 @@
 {% block body_class %}oer_detail{% endblock %}
 
 {% block body %}
-            <h1 class="text-center" style="color: {{ oer.get_title_color }};">OER: <i>{{ oer.title }}</i>
-                {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if user.is_authenticated and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut" style="font-size: 0.7em;""></i></a>{% endif %}
-            </h1>
-<section class="view-card">
-            <p class="lead">
-            <div><strong>{% trans "title"|capfirst %}</strong>: {{ oer.title }}</div>
-            {% if oer.description %}<div><strong>{% trans "description"|capfirst %}</strong>: {{ oer.description }}</div>{% endif %}
-            {% if oer.material %}<div><strong>{% trans "type of material"|capfirst %}</strong>: 
-  	<form class="form-inline" style="display: inline;" action="/oers/search/" method="post" id="material">
-	{% csrf_token %}<input type="hidden" name="material" value="{{ oer.material.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ oer.material.name }}">
-    </form>
-            </div>{% endif %}
-            {% with oers=oer.oers.all %}{% if oers %}
-	        <div><strong>{% trans "derived from"|capfirst %}</strong>:
-	        <ul class="root">
-            {% for item in oers %}
-				<li><a href="/oer/{{ item.slug }}">{{ item.title }}</a></li>
-			{% endfor %}   
-			</ul>    
-	        </div>
-	        {% endif %}
-	        {% endwith %}
-	        {% if oer.source %}<div><strong>{% trans "source repository"|capfirst %}</strong>: <a href="/repo/{{ oer.source.slug }}/" title="Source repository">{{ oer.source.name }}</a></div>{% endif %}
-	        {% if oer.url %}<div><strong>URL</strong>: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></div>{% endif %}
-            {% if oer.reference %}<div><strong>{% trans "reference info"|capfirst %}</strong>: {{ oer.reference }}</div>{% endif %}
-	        {% if oer.embed_code %}<div><strong>{% trans "embed code"|capfirst %}</strong>: <span style="font-size: smaller;">{{ oer.embed_code }}</span></div>{% endif %}
-	        {% if oer.license %}<div><strong>{% trans "terms of use"|capfirst %}</strong>:
-	        {% comment %}{{ oer.license.name }}{% endcomment %}
-  	<form class="form-inline" style="display: inline;" action="/oers/search/" method="post" id="license">
-	{% csrf_token %}<input type="hidden" name="license" value="{{ oer.license.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ oer.license.name }}">
-    </form>
-			</div>{% endif %}
-    		{% if oer.levels.all %}
-    		<div><strong>{% trans "target audience"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for level in oer.levels.all %}
-		        {% comment %}<li>{{ level.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ level.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="levels" value="{{ level.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ level.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if oer.tags.all %}
-    		<div><strong>{% trans "tags"|capfirst %}</strong>:
-			<div style="margin-left: 2.0em;">
-		        {% for tag in oer.tags.all %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ tag.id }}">
-	<li style="padding:0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ tag.name }}">
-	</li></form>
-		        {% endfor %}
-			</div>
-			</div>
-		    {% endif %}
-    		{% if oer.subjects.all %}
-    		<div><strong>{% trans "subject areas"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for subject in oer.subjects.all %}
-		        {% comment %}<li>{{ subject.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ subject.id }}">
-	<li style="padding:0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if oer.languages.all %}
-    		<div><strong>{% trans "OER languages"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for language in oer.languages.all %}
-		        {% comment %}<li>{{ language.code }} - {{ language.name }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="oers_{{ language.code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ language.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if oer.media.all %}
-    		<div><strong>{% trans "media formats"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for medium in oer.media.all %}
-		        {% comment %}<li>{{ medium.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="media_{{ medium.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="media" value="{{ medium.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ medium.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if oer.accessibility.all %}
-    		<div><strong>{% trans "accessibility features"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for feature in oer.accessibility.all %}
-		        {% comment %}<li>{{ feature.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/oers/search/" method="post" id="accessibility_{{ feature.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="accessibility" value="{{ feature.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ feature.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if oer.get_more_metadata %}
-    		<div><strong>{% trans "other metadata"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for metadatum in oer.get_more_metadata %}
-		        <li><i>{{ metadatum.metadata_type.name }}</i>: {{ metadatum.value }}</li>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    <div><strong>{% trans "OER type"|capfirst %}</strong>: {{ type }}</div>
-    		{% if oer.documents.all or oer.oer_type == 3 and can_edit %}
-    		<div><strong>{% trans "attached documents"|capfirst %}</strong></div>
-			<ol class="root">
-		    {% for document in oer.get_sorted_documents %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-  	{% csrf_token %}
- 	{% if can_edit %}<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;
- 	{% if not forloop.first or not forloop.last %}
-        {% if forloop.first %}&nbsp;&nbsp;{% else %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up" style="font-size: 0.7em;"></i></a>{% endif %}
-        {% if forloop.last %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down" style="font-size: 0.7em;"></i></a>&nbsp;{% endif %}
-	{% endif %}
-	{% endif %}
-	<input type="hidden" name="id" value="{{ document.id }}"><i>{{ document.label }}</i>
-   	{% comment %}<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ document.label }}">{% endcomment %}
-    &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
-    {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
-	</li></form>
-		    {% endfor %}
-			</ol>
-    		{% if oer.oer_type == 3 and can_edit %}
-    		<div style="margin-bottom: 0.5em;">
-    		<div><i>{% trans "add document"|capfirst %}</i></div>
-    		<form enctype="multipart/form-data" method="POST" id="add_document" action="/oer/add_document/">
-				{% csrf_token %}
-				<input type="hidden" id="id" name="id" value="{{ oer.id }}" />
-	            <div>{{ form.non_field_errors }}</div>
-	            <div><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}
-				<button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}' style="margin-left: 1.0em; padding: 0 1.5em;">{% trans "add"|capfirst %}</button>
-				{% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="padding: 0 1.5em;">Cancel</button>{% endif %}
-				</div>
-    		</form>
-    		</div>
-		    {% endif %}
-	    {% endif %}
-{% if user.is_authenticated %}            
-            <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span>
+<article class="panel-white text-left" style="margin: 30px 0;">
+  <div class="navbar" style="min-height:10px; border-top-left-radius:4px; border-top-right-radius:4px; padding:10px 20px; background:#008BD2; color:white; font-size:15px; font-weight:600">
+    <h2 class="pull-left" style="margin:5px 0">{{ oer.title }}</h2>
+    <p class="pull-right" style="font-size:26px; margin:0">
+      {% if can_edit %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
+      {% if can_evaluate %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o" style="font-size: 0.7em;""></i></a>{% endif %}
+      {% if user.is_authenticated and not in_bookmarked_oers %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o" style="font-size: 0.7em;""></i></a>{% endif %}
+      {% if can_delete and not in_cut_oers %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut" style="font-size: 0.7em;""></i></a>{% endif %}
+    </p>
+  </div>
+  <section class="view-card" style="border:0;">
+    <div class="row">
+      <div class="col-lg-9">
+      <div class=" clearfix" style="margin-bottom: 10px;">
+      {% if oer.url and oer.description %}
+        <div class="hidden-xs">
+           <div style="position:relative">
+              <div style="float:left; padding:60px 30px; margin-right:10px; background: #EBEDED" ><a href="/oer/{{ oer.slug }}/view" class="btn" style="background:#008BD2; color:white; font-weight:600;" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+              <p>{{ oer.description }}</p>
+           </div>
+        </div>
+        <div class="visible-xs">
+           <p style="padding:60px 30px; margin-right:10px; background: #EBEDED; text-align:center" ><a href="/oer/{{ oer.slug }}/view" class="btn" style="background:#008BD2; color:white; font-weight:600;" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
+           <p>{{ oer.description }}</p>
+        </div>
+      {% elif oer.description %}
+        <p>{{ oer.description }}</p>
+      {% endif %}
+
+      {% if oer.material %}
+        <dl class="list-inline" style="font-size:14px;">
+           <dt>{% trans "type of material"|capfirst %}</dt>
+           <dd><form action="/oers/search/" method="post" id="material">{% csrf_token %}<button type="submit" class="btn-link" name="material" value="{{ oer.material.id }}">{{ oer.material.name }}</button></form></dd>
+        </dl>
+      {% endif %}
+      
+      <dl class="list-inline" style="font-size:14px;">
+         <dt>{% trans "terms of use"|capfirst %}</dt>
+         <dd><form action="/oers/search/" method="post" id="license">{% csrf_token %}<button type="submit" name="license" class="btn-link" value="{{ oer.license.id }}">{{ oer.license.name }}</button></form></dd>
+      </dl>
+      
+      {% if oer.reference or oer.embed_code %}
+        <dl class="list-inline" style="font-size:14px;">
+           {% if oer.reference %}
+              <dt class="with_icon">{% trans "reference info"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+              <dd class="field-content" style="display:none"><pre style="border-radius: 0; background: white">{{ oer.reference }}</pre></dd>
+           {% endif %}
+           {% if oer.embed_code %}
+              <dt class="with_icon">{% trans "embed code"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+              <dd class="field-content" style="display:none"><pre style="border-radius: 0; background: white">{{ oer.embed_code }}</pre></dd>
+           {% endif %}
+        </dl>
+      {% endif %}
+      </div>
+
+      {% if oer.levels.all %}
+        <dl class="list-inline" style="font-size:14px; margin-bottom:10px">
+           <dt>{% trans "target audience"|capfirst %}</dt>
+           {% for level in oer.levels.all %}
+              <dd><form action="/oers/search/" method="post" id="oers_{{ level.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="levels" value="{{ level.id }}"">{{ level.option_label|safe }}</button></form></dd>
+           {% endfor %}
+        </dl>
+      {% endif %}
+
+      {% if oer.subjects.all and oer.tags.all %}
+        <div class="row">
+           <div class="col-sm-6 col-md-6 col-lg-6" style="padding-bottom:10px; padding-right:0">
+              <dl class="list-inline" style="font-size:14px">
+                 <dt>{% trans "subject areas"|capfirst %}</dt>
+                 {% for subject in oer.subjects.all %}
+                       <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
+                 {% endfor %}
+              </dl>
+           </div>
+           <div class="col-sm-6 col-md-6 col-lg-6" style="padding-bottom:10px">
+              <dl class="list-inline" style="font-size:14px">
+                 <dt>{% trans "tags"|capfirst %}</dt>
+                 {% for tag in oer.tags.all %}
+                    <dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
+                 {% endfor %}
+              </dl>
+           </div>
+        </div>
+      {% elif oer.subjects.all %}
+        <div style="padding-bottom:10px">
+           <dl class="list-inline" style="font-size:14px">
+              <dt>{% trans "subject areas"|capfirst %}</dt>
+              {% for subject in oer.subjects.all %}
+                    <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
+              {% endfor %}
+           </dl>
+        </div>
+      {% elif oer.tags.all %}
+        <div style="padding-bottom:10px">
+           <dl class="list-inline" style="font-size:14px">
+              <dt>{% trans "tags"|capfirst %}</dt>
+              {% for tag in oer.tags.all %}
+                <dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
+              {% endfor %}
+           </dl>
+        </div>
+      {% endif %}
+
+      <div style="margin-bottom:10px">
+         {% if oer.languages.all %}
+           <dl class="list-inline" style="font-size:14px;">
+              <dt>{% trans "languages"|capfirst %}</dt>
+              {% for language in oer.languages.all %}
+                <dd><form action="/oers/search/" method="post" id="oers_{{ language.code }}">{% csrf_token %}<button type="submit" class="btn-link" name="languages" value="{{ language.code }}">{{ language.option_label|safe }}</button></form></dd>
+              {% endfor %}
+           </dl>
+         {% endif %}
+         {% if oer.media.all %}
+           <dl class="list-inline" style="font-size:14px;">
+              <dt>{% trans "media formats"|capfirst %}</dt>
+              {% for medium in oer.media.all %}
+                <dd><form action="/oers/search/" method="post" id="media_{{ medium.id }}">{% csrf_token %}<input type="hidden" ><button type="submit" class="btn-link" name="media" value="{{ medium.id }}">{{ medium.option_label|safe }}</button></form></dd>
+              {% endfor %}
+           </dl>
+         {% endif %}
+         {% if oer.accessibility.all %}
+           <dl class="list-inline" style="font-size:14px;">
+              <dt>{% trans "accessibility features"|capfirst %}</dt>
+              {% for feature in oer.accessibility.all %}
+                <dd><form action="/oers/search/" method="post" id="accessibility_{{ feature.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="accessibility" value="{{ feature.id }}">{{ feature.option_label|safe }}</button></form></dd>
+              {% endfor %}
+           </dl>
+         {% endif %}
+      </div>
+
+      {% if oer.get_more_metadata %}
+        <dl style="font-size:14px; margin-bottom:10px">
+           <dt style="font-weight:600">{% trans "other metadata"|capfirst %}</dt>
+           {% for metadatum in oer.get_more_metadata %}
+             <dd><i>{{ metadatum.metadata_type.name }}</i>: {{ metadatum.value }}</dd>
+           {% endfor %}
+        </dl>
+      {% endif %}
+
+      <dl class="list-inline" style="font-size:14px; margin-bottom:10px">
+         <dt>{% trans "OER type"|capfirst %}</dt>
+         <dd>{{ type }}</dd>
+      </dl>
+
+      {% if oer.source %}
+        <dl class="list-inline" style="font-size:14px; margin-bottom: 10px">
+           <dt>{% trans "source repository"|capfirst %}</dt>
+           <dd><a class="btn-link" href="/repo/{{ oer.source.slug }}/" title="{% trans "source repository"|capfirst %}">{{ oer.source.name }}</a></dd>
+        </dl>
+      {% endif %}
+
+      {% if oer.documents.all %}
+        <dl style="font-size:14px; margin-bottom: 10px">
+           <dt style="font-weight:600">{% trans "attached documents"|capfirst %}</dt>
+           {% for document in oer.get_sorted_documents %}
+             <dd><form action="/document/download/" method="post" id="doc_{{ document.id }}">{% csrf_token %}
+                 {% if can_edit %}<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle" style="color:red"></i></a>&nbsp;&nbsp;
+                   {% if not forloop.first or not forloop.last %}<span style="font-size:12px">
+                     {% if forloop.first %}&nbsp;&nbsp;{% else %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a>{% endif %}
+                     {% if forloop.last %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a>&nbsp;{% endif %}
+                   </span>{% endif %}
+                 {% endif %}
+                 <input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
+                 &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+                 {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+             </form></dd>
+           {% endfor %}
+        </dl>
+      {% endif %}
+      {% if oer.oer_type == 3 and can_edit %}
+        <dl style="font-size:14px; margin-bottom: 10px">
+           <dt style="font-weight:600">{% trans "add document"|capfirst %}</dt>
+           <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/oer/add_document/">{% csrf_token %}
+               <input type="hidden" id="id" name="id" value="{{ oer.id }}">
+               <div>{{ form.non_field_errors }}</div>
+               <div class="form-group"><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+               <div class="form-group"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
+                  {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
+               </div>
+               </form></dd>
+        </dl>
+      {% endif %}
+      </div>
+      <div class="col-lg-3">
+         <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a><br>
+            <span class="demiBold">{% trans "on" %}</span> {{ oer.created|date:"d/m/Y" }} <br>
+            <span class="demiBold">{% trans "in project" %}</span> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>
+         </p>
+        {% if user.is_authenticated %}
+          <p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span>
                 {% if can_submit %}&nbsp; <a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default btn-sm"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i> {% trans "submit for publication" %}</a>{% endif %}
                 {% if can_withdraw %}&nbsp; <a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default btn-sm"><i class="fa fa-reply" style="font-size: 0.7em;""></i> {% trans "withdraw" %}</a>{% endif %}
                 {% if can_reject %}&nbsp; <a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default btn-sm"><i class="fa fa-reply" style="font-size: 0.7em;""></i> {% trans "reject" %}</a>{% endif %}
                 {% if can_publish %}&nbsp; <a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default btn-sm"><i class="fa fa-check" style="font-size: 0.7em;""></i> {% trans "publish" %}</a>{% endif %}
                 {% if can_un_publish %}&nbsp; <a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default btn-sm"><i class="fa fa-lock" style="font-size: 0.7em;""></i> {% trans "unpublish" %}</a>{% endif %}
-            </div>
-{% endif %}
-        	<div><strong>{% trans "submitted by"|capfirst %}</strong> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a> <strong>{% trans "on" %}</strong> {{ oer.created|date:"d-m-Y" }} <strong>{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a></div>
-        	<div><strong>{% trans "last updated"|capfirst %}</strong> {% if not oer.editor.id = oer.creator.id %} <strong>{% trans "by" %}</strong> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <strong>{% trans "on" %}</strong> {{ oer.modified|date:"d-m-Y" }}</div>
-    		{% if evaluations %}
-    			<div><strong>{% trans "evaluated by"|capfirst %}</strong>:
-			<ul class="root">
-	        {% for evaluation in evaluations %}
-				<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-					<a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
-					<strong>{{ evaluation.overall_score }}</strong>/5 <i class="fa fa-star-o" style="font-size: 0.7em;""></i></a>
-					{% if evaluation.get_quality_metadata %}
-					<span style="font-size: smaller;"> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
-						{{ qm.value }}/5{% if not forloop.last %}, {% endif %}{% endfor %})</span>{% endif %}
-				</li>
-	        {% endfor %}
-			</ul>
-			            </div>
-   			{% endif %}
+          </p>
+        {% endif %}
+         <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}</spon> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ oer.modified|date:"d/m/Y" }}</p>
+ 
+        {% if evaluations %}
+          <dl style="font-size:14px; margin-bottom:10px">
+             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
+             {% with stars=oer.get_stars %}
+             {% for i in stars.full %} <span class="fa fa-star c-green"></span>{% endfor %}
+             {% if stars.half %} <span class="fa fa-star-half-o c-green"></span>{% endif %}
+             {% for i in stars.empty %} <span class="fa fa-star-o c-green"></span>{% endfor %}
+             {% endwith %}
+             {% for evaluation in evaluations %}
+               <dd><a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
+                   <strong>{{ evaluation.overall_score }}</strong>/5 <small><i class="fa fa-star-o"></i></small></a>
+                   {% if evaluation.get_quality_metadata %}
+                     <small> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
+                      {{ qm.value }}/5{% if not forloop.last %}, {% endif %}{% endfor %})</small>
+                   {% endif %}
+               </dd>
+             {% endfor %}
+          </dl>
+        {% endif %}
 
-</p>
-    </section>
+        {% if oer.oers.all %}
+        <dl class="list-inline" style="font-size:14px;">
+           <dt>{% trans "derived from"|capfirst %}</dt>
+            {% for item in oer.oers.all %}
+              <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
+            {% endfor %}
+        </dl>
+      {% endif %}
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+	$(document).ready(function (){
+$('dt a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent();
+		var accordionContent = accordion.next('.field-content');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+    		accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+    	} else {
+    		accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+    	}
+	});
+});
+</script>
 {% endblock %}

@@ -181,7 +181,7 @@ class DocumentForm(forms.Form):
     language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'form-control',}))
     docfile = forms.FileField(
         label=_('select a file'),
-        widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
+        widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
 
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
@@ -379,7 +379,7 @@ class OerSearchForm(forms.Form):
 class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(required=True,
         label=_('select a file'),
-        widget=forms.FileInput(attrs={'class': 'btn btn-sm',}))
+        widget=forms.FileInput(attrs={'class': 'btn',}))
 
 
 OerQualityFormSet = inlineformset_factory(OerEvaluation, OerQualityMetadata, fields=('quality_facet', 'value',), can_delete=True, min_num=4, max_num=4)
