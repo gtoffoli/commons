@@ -11,58 +11,19 @@
     <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
 {% endblock %}
 
-{% block extra_head %}
-{% comment %}
-	<script type="text/javascript" src="{% static "admin/js/jquery.js" %}"></script>
-{% endcomment %}
-<script type="text/javascript">
-{% comment %}	
-//Copyright: CodePug.com 2009
-//Do not REMOVE these comments
-//Usage: setReadonly('mySelect');
-
-function setReadonly( selectElementId ){
-	var selectElement = document.getElementById(selectElementId);
-	if (selectElement){
-		var parent = selectElement.parentElement;
-		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
-		if (!parent){
-			parent=selectElement.parentNode;
-			textValue = selectElement.options[selectElement.options.selectedIndex].text;
-		}
-		var input = document.createElement("input");
-		input.setAttribute("id",selectElement.id);
-		input.setAttribute("type","text");
-		input.setAttribute("value",textValue);
-		input.setAttribute("class","form-control");
-		input.style.background="#eeeeee";
-		input.readOnly = true;
-		parent.appendChild(input);
-	}
-	selectElement.style.display="none";
-}
-{% endcomment %}
-
-function setDisabled( selectElementId){
-	if($('select[id="'+selectElementId+'"]').length > 0) {
-		var txtValue = $('select[id="'+selectElementId+'"] option:selected').text();
-		$("#"+selectElementId).css("display","none");
-		$('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
-	}
-}
-
-</script>
-{% endblock %}
 {% block body_class %}oer_edit{% endblock %}
 {% block body %}
-  <h1>{% if oer %}<small>{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}{% else %}<small>{% trans "add OER"|capfirst %}</small>{% endif %}</h1>
-  <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-9">
-    <form method="post" action="{{ action }}" id="edit_form" >
-    {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
+<div class="panel text-left" style="margin: 30px 0;">
+	<div class="panel-header" style=" border-top-left-radius:4px; border-top-right-radius:4px; padding:10px 20px; background:#008BD2; color:white; font-weight:600">
+    <h2 style="margin:5px 0;">{% if oer %}<small style="color: white">{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+  </div>
+  <!--div class="row">
+  <div class="col-xs-12 col-sm-12 col-lg-9"-->
+    <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
     {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    <fieldset style="padding:10px 20px; border-left:1px solid #008BD2; border-right:1px solid #008BD2">
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     {% if field.name == 'tags' %}
       <div class="form-group">
@@ -105,13 +66,14 @@ function setDisabled( selectElementId){
       {% endif %}
       {% endfor %}
     </div>
-    <div class="form-group">
+    </fieldset>
+<div style=" border-radius:0; padding:10px 20px; background:#008BD2; color:white; font-weight:600">
       <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if oer %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
       <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
-    </div>
-    </form>
   </div>
+    </form>
+  <!--/div-->
   </div>
 {% endblock %}
 
@@ -119,24 +81,20 @@ function setDisabled( selectElementId){
    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script-->
+   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
 {% if oer %}
 <script type="text/javascript">
-	$(document).ready(function() {
-	  setDisabled('id_project');
-	})
-	{% comment %}
-	setReadonly('id_project');
-	{% endcomment %}
-	
+  function setDisabled( selectElementId){
+    if($('select[id="'+selectElementId+'"]').length > 0) {
+      var txtValue = $('select[id="'+selectElementId+'"] option:selected').text();
+      $("#"+selectElementId).css("display","none");
+      $('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
+    }
+  }
+  $(document).ready(function() {
+   setDisabled('id_project');
+  })
 </script>
 {% endif %}
-{% comment %}
-{% if not user.is_superuser %}
-<script type="text/javascript">
-	setReadonly('id_state');
-</script>
-{% endif %}
-{% endcomment %}
 {% include "_tinymce_init.html" %}
 {% endblock %}

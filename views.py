@@ -839,7 +839,7 @@ def resources_by(request, username):
     oer_evaluations = OerEvaluation.objects.filter(user=user)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
     repos = Repo.objects.filter(creator=user, state=PUBLISHED)
-    return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
+    return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user}, context_instance=RequestContext(request))
 
 def project_results(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
