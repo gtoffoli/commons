@@ -1,0 +1,25 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load nvd3_tags %}
+
+{% block head_title %}{% trans "messages analytics"|capfirst %}{% endblock %}
+
+{% block extra_head %}
+    {% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+{% endblock extra_head %}
+
+{% block body_class %}home{% endblock %}
+
+{% block body %}
+
+            <h1 class="text-center">{% trans "messages analytics"|capfirst %}</h1>
+            
+			<div style="text-align: center; font-style: italic; font-size: larger;">Total number of messages: {{ total }}</div>
+
+	<section>
+	<h4>{% trans "messages by month"|capfirst %}</h4>
+    {% include_container chartcontainer 400 600 %}
+    </section>
+{% endblock %}

@@ -152,9 +152,18 @@ INSTALLED_APPS = (
     # https://django-activity-stream.readthedocs.org/en/latest/installation.html
     'actstream',
     'endless_pagination',
+    'djangobower',
+    'django_nvd3',
 )
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
+
+BOWER_INSTALLED_APPS = (
+    # 'd3#3.3.13',
+    # 'nvd3#1.7.1',
+    'd3#3.5.16',
+    'nvd3#1.8.1',
+)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -194,6 +203,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
+    'djangobower.finders.BowerFinder',
 )
 
 # in development, disable template caching
@@ -291,6 +301,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "commons", "static"),
     os.path.join(BASE_DIR, "pinax", "static"),
 )
+BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 # --------- TEMPORARY_DIRECTORY ----------------
 if os.name == 'nt':
