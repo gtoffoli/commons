@@ -251,6 +251,7 @@
 {% endcomment %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
+{% if is_member %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline" style="padding:10px 10px 5px 10px;">
@@ -296,6 +297,7 @@
             </ul>
           </div>
         {% endif %}
+{% endif %}
 {% comment %} MENTORING {% endcomment %}
         {% if proj_type.name == 'com' %}
             <div class="panel">

@@ -14,6 +14,7 @@
 
 {% block body_class %}lp_detail{% endblock %}
 {% block body %}
+{% comment %}
             <h1 class="text-center" style="color: {{ lp.get_title_color }};">{% trans "learning path"|capfirst %}: <i>{{ lp.title }}</i>
                 {% if can_play %}&nbsp; <a href="/lp/{{ lp.slug }}/play/" title="{% trans "show player view" %}"><i class="fa fa-youtube-play" style="font-size: 0.7em;"></i></a>{% endif %}
                 {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>{% endif %}
@@ -25,75 +26,102 @@
 	</form>
 				{% endif %}
             </h1>
-<section class="view-card">
-            <div><strong>{% trans "title"|capfirst %}</strong>: {{ lp.title }}</div>
+{% endcomment %}
+<article class="panel-white text-left" style="margin: 30px 0;">
+  <div class="navbar" style="min-height:10px; border-top-left-radius:4px; border-top-right-radius:4px; padding:10px 20px; background:#CB4F98; color:white; font-size:15px; font-weight:600">
+    <h2 class="pull-left" style="margin:5px 0">
+    	{% if can_delete %}<form style="display:inline-block" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle" style="color:white"></i></button></form>{% endif %} {{ lp.title }}</h2>
+    <p class="pull-right" style="font-size:26px; margin:0">
+       {% if can_edit %}&nbsp; <a style="color:white" href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em"></i></a>{% endif %}
+       {% if can_delete and not in_cut_lps %}&nbsp; <a style="color:white" href="/lp/{{ lp.slug }}/?cut=true" title="{% trans "mark this LP as a candidate for cut & paste" %}"><i class="fa fa-cut font07em"></i></a>{% endif %}
+    </p>
+  </div>
+  <section class="view-card" style="border:0;">
+    <div class="row">
+      <div class="col-md-9 col-lg-9">
+        <div class="marginB10 clearfix">
+      {% if can_play %}
+        <div class="hidden-xs">
+           <div style="position:relative">
+              <div class="bg_play" style="float:left;"><a href="/lp/{{ lp.slug }}/play/"  title="{% trans "show player view" %}"><i class="fa fa-youtube-play" style="font-size:52px; color:white; background:#CB4F98; padding:2px 10px;"></i></a></div>
+              {% if lp.long %}<p>{{ lp.long|safe }}</p>{% endif %}
+              <dl class="list-inline font14 marginB10">
+                 <dt>{% trans "objectives"|capfirst %}</dt>
+                 <dd>{{ lp.short|safe }}</dd>
+               </dl>
+           </div>
+        </div>
+        <div class="visible-xs">
+           <p class="bg_play"><a href="/lp/{{ lp.slug }}/play/" title="{% trans "show player view" %}"><i class="fa fa-youtube-play" style="font-size:52px; color:white; background:#CB4F98; padding:2px 10px;"></i></a></p>
+           {% if lp.long %}<p>{{ lp.long|safe }}</p>{% endif %}
+              <dl class="list-inline font14 marginB10">
+                 <dt>{% trans "objectives"|capfirst %}</dt>
+                 <dd>{{ lp.short|safe }}</dd>
+              </dl>
+        </div>
+      {% else %}
+        {% if lp.long %}<p>{{ lp.long|safe }}</p>{% endif %}
+        <dl class="list-inline font14  marginB10">
+           <dt>{% trans "objectives"|capfirst %}</dt>
+           <dd>{{ lp.short|safe }}</dd>
+        </dl>
+      {% endif %}
 
-            <div><strong>{% trans "type of learning path"|capfirst %}</strong>: 
-  	<form class="form-inline" style="display: inline;" action="/lps/search/" method="post" id="path_type">
-	{% csrf_token %}<input type="hidden" name="path_type" value="{{ lp.path_type }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ lp.get_type }}">
-    </form>
-            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain" style="font-size: 0.7em;"></i></a>{% endif %}
-            </div>
-    		{% if lp.levels.all %}
-    		<div><strong>{% trans "target audience"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for level in lp.levels.all %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ level.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="levels" value="{{ level.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ level.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if lp.tags.all %}
-    		<div><strong>{% trans "tags"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for tag in lp.tags.all %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="lps_{{ tag.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ tag.name }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		{% if lp.subjects.all %}
-    		<div><strong>{% trans "subject areas"|capfirst %}</strong>:
-			<ul class="root">
-		        {% for subject in lp.subjects.all %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/lps/search/" method="post" id="oers_{{ subject.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-            {% if lp.short %}<div><strong>{% trans "objectives"|capfirst %}</strong>: {{ lp.short }}</div>{% endif %}
-    		{% if lp.long %}
-            <div style="margin-top: 0.5em;"><strong>{% trans "description"|capfirst %}</strong>
-				<div style="margin-left: 1.5em;">{{ lp.long|safe }}</div></div>
-			{% endif %}
+        <dl class="list-inline font14">
+           <dt>{% trans "type of learning path"|capfirst %}</dt> 
+           <dd><form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>
+               {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain font07"></i></a>{% endif %}
+           </dd>
+        </dl>
+        </div>
+        
+      {% if lp.levels.all %}
+        <dl class="list-inline font14 marginB10">
+           <dt>{% trans "target audience"|capfirst %}</dt>
+           {% for level in lp.levels.all %}
+              <dd><form action="/lps/search/" method="post" id="lps_{{ level.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="levels" value="{{ level.id }}"">{{ level.option_label|safe }}</button></form></dd>
+           {% endfor %}
+        </dl>
+      {% endif %}
+ 
+      {% if lp.subjects.all and lp.tags.all %}
+        <div class="row">
+           <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
+              <dl class="list-inline font14">
+                 <dt>{% trans "subject areas"|capfirst %}</dt>
+                 {% for subject in lp.subjects.all %}
+                       <dd><form action="/lps/search/" method="post" id="lps_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
+                 {% endfor %}
+              </dl>
+           </div>
+           <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
+              <dl class="list-inline font14">
+                 <dt>{% trans "tags"|capfirst %}</dt>
+                 {% for tag in lp.tags.all %}
+                    <dd><form action="/lps/search/" method="post" id="lps_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
+                 {% endfor %}
+              </dl>
+           </div>
+        </div>
+      {% elif lp.subjects.all %}
+         <dl class="list-inline font14 marginB10">
+            <dt>{% trans "subject areas"|capfirst %}</dt>
+            {% for subject in lp.subjects.all %}
+                <dd><form action="/lps/search/" method="post" id="lps_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
+            {% endfor %}
+         </dl>
+      {% elif lp.tags.all %}
+         <dl class="list-inline font14 marginB10">
+            <dt>{% trans "tags"|capfirst %}</dt>
+            {% for tag in lp.tags.all %}
+                <dd><form action="/lps/search/" method="post" id="lps_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
+            {% endfor %}
+         </dl>
+      {% endif %}
 
-            <div><strong>{% trans "submitted by"|capfirst %}</strong> &nbsp;<a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>
-				 {% if project %}<strong>&nbsp;{% trans "in project" %}</strong>&nbsp;<a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a>{% endif %}
-		    </div>
-{% if user.is_authenticated %}            
-            <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span>
-                {% if can_submit %}&nbsp; <a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;"></i></a>{% endif %}
-                {% if can_withdraw %}&nbsp; <a href="/lp/{{ lp.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;"></i></a>{% endif %}
-                {% if can_reject %}&nbsp; <a href="/lp/{{ lp.id }}/reject/" title="{% trans "reject" %}"><i class="fa fa-reply" style="font-size: 0.7em;"></i></a>{% endif %}
-                {% if can_publish %}&nbsp; <a href="/lp/{{ lp.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;"></i></a>{% endif %}
-                {% if can_un_publish %}&nbsp; <a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;"></i></a>{% endif %}
-            </div>
-{% endif %}
 
-    		{% if lp.get_nodes or can_edit %}
+{% comment %}
+      {% if lp.get_nodes or can_edit %}
     		<div><strong>{% trans "path nodes"|capfirst %}</strong></div>
 			{% if lp.path_type == 2 %}<ol class="root">{% else %}<ul class="root">{% endif %}
 		    {% for node in lp.get_ordered_nodes %}
@@ -104,6 +132,8 @@
             	<a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
 		    {% endfor %}
 			{% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
+
+
     		{% if can_edit %}
 			<ul class="list-unstyled" style="margin-left: 1.5em;">
     			<li style="margin-top: 0em;"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default btn-primary btn-sm">{% trans "add node"|capfirst %}</a></li>
@@ -113,5 +143,75 @@
 			</ul>
 		    {% endif %}
 		    {% endif %}
-		  </section>
+{% endcomment %}
+
+      {% if lp.get_nodes or can_edit %}
+        <dl class="font14 marginB10">
+           <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
+             <dd style="margin-bottom:16px">{% if lp.path_type == 2 %}<ol style="padding-left:14px">{% else %}<ul style="padding-left:16px">{% endif %}
+                 {% for node in lp.get_ordered_nodes %}
+                   <li><div style="padding-left:3px">{% if can_edit %}<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
+                       {% if lp.get_ordered_nodes|length > 1 %}
+                       <span style="font-size:12px">
+                          {% if not node.is_root and not node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                          {% elif node.is_root %}<i class="fa fa-arrow-up" style="color:white"></i> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                          {% elif node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down" style="color:white"></i> &nbsp;
+                          {% endif %}
+                       </span>{% endif %}{% endif %}
+                     <a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></div></li>
+                 {% endfor %}
+                 {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}</dd>
+             {% if can_edit %}
+    			<dd style="margin-bottom:16px"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
+		    	{% if bookmarked_oers %}{% for oer in bookmarked_oers %}
+	    		<dd style="margin-bottom:6px"><a id="{{ oer.id }}" href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default add_node_oer">{% trans "add node with OER"|capfirst %}: <span class="demiBold">{{ oer.title|truncatewords:5 }}</span></a></dd>
+		    	{% endfor %}{% endif %}
+			</dd>
+			{% endif %}
+        </dl>
+      {% endif %}
+      </div>
+      <div class="col-md-3 col-lg-3">
+         <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>
+            {% comment %}<span class="demiBold">{% trans "on" %}</span> {{ lp.created|date:"d/m/Y" }}{% endcomment %}
+            {% if project %}<br><span class="demiBold">{% trans "in project" %}</span> <a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a>{% endif %}
+         </p>
+
+        {% if user.is_authenticated %}
+          <p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span>
+                {% if can_submit %}&nbsp; <a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a>{% endif %}
+                {% if can_withdraw %}&nbsp; <a href="/lp/{{ lp.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</a>{% endif %}
+                {% if can_reject %}&nbsp; <a href="/lp/{{ lp.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a>{% endif %}
+                {% if can_publish %}&nbsp; <a href="/lp/{{ lp.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a>{% endif %}
+                {% if can_un_publish %}&nbsp; <a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a>{% endif %}
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</article>
 {% endblock %}
+
+{% comment %}
+{% block extra_script %}
+<script type="text/javascript">
+  $(document).ready(function() {
+  	if ($('dd a').hasClass('add_node_oer')) {
+  		$('dd a.add_node_oer').on('click', function(event){
+  				event.preventDefault();
+  		console.log($(this).attr('id'));
+  		var this = $(this);
+  		var oer_id = this.attr('id');
+  		
+  		$.ajax({
+						url: "/lp/{{ lp.slug }}/pathnode_add/"+oer_id+"/",
+						success: function(){
+							console.log(this);
+						}
+					});
+      });
+    }
+  });
+</script>
+{% endblock %}
+{% endcomment %}

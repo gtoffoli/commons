@@ -335,33 +335,6 @@ margin-right:0;
 }
 
 /* PADDING E MARGIN */
-.paddingTB5 {
-	 padding-top: 5px;
-	 padding-bottom: 5px;
-
-}
-
-.paddingTB20 {
-	padding-top:20px;
-	padding-bottom:20px;
-}
-
-.paddingT20 {
-	padding-top:20px;
-}
-
-.paddingB20 {
-	padding-bottom:20px;
-}
-.marginB0 {
-	margin-bottom: 0;
-}
-.marginT10 {
-	margin-top:10px;
-}
-.marginB20 {
-	margin-bottom: 20px;
-}
 .paddingLR15 {
 	padding-left:15px;
 	padding-right:15px;
@@ -369,13 +342,52 @@ margin-right:0;
 .paddingL20 {
 	padding-left:20px;
 }
+.paddingR0 {
+	padding-right:0;
+}
+.paddingT20 {
+	padding-top:20px;
+}
+.paddingB10 {
+	padding-bottom:10px;
+}
+.paddingB20 {
+	padding-bottom:20px;
+}
+.paddingTB5 {
+	 padding-top: 5px;
+	 padding-bottom: 5px;
+}
+.paddingTB20 {
+	padding-top:20px;
+	padding-bottom:20px;
+}
+.marginT10 {
+	margin-top:10px;
+}
+.marginB0 {
+	margin-bottom: 0;
+}
+.marginB10 {
+	margin-bottom: 10px;
+}
+.marginB20 {
+	margin-bottom: 20px;
+}
+
 .marginTB20 {
 	margin-top:20px;
 	margin-bottom:20px;
 }
 /* STILI FONT */
+.font07em {
+	font-size:0.7em;
+}
 .font12 {
 	font-size: 12px;
+}
+.font14 {
+	font-size: 14px;
 }
 .largerDemiBold {
 	font-size: larger;
@@ -497,6 +509,12 @@ dl.list-inline dd button.btn-link {
 	text-align:left;
 }
 
+dl.list-inline.font14 {
+	font-size:14px;
+}
+dl.list-inline.marginB10 {
+	margin-bottom:10px;
+}
 /* AVATAR */
 .avatar-small {
 	width:20px;
@@ -668,7 +686,8 @@ font-weight:600;
 	margin-bottom: 0;
 }
 
-.txt-error {
+.txt-error,
+.red {
 	color: red;
 }
 .required:after {
@@ -843,3 +862,17 @@ text-decoration: none;
 .grid-item--width2 { width: 40%; }
 .gutter-sizer { width: 1.5%; }
 
+/* ================== */
+.bg_play {
+	padding:42px 62px;
+	text-align:center;
+	margin-right:10px;
+	background: #EBEDED url('../img/lp_bg.png') no-repeat center center;
+}
+
+.bg_view {
+	padding:62px 32px;
+	text-align:center;
+	margin-right:10px;
+	background: #EBEDED url('../img/oer_bg.png') no-repeat center center;
+}
