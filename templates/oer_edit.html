@@ -13,17 +13,15 @@
 
 {% block body_class %}oer_edit{% endblock %}
 {% block body %}
-<div class="panel text-left" style="margin: 30px 0;">
-	<div class="panel-header" style=" border-top-left-radius:4px; border-top-right-radius:4px; padding:10px 20px; background:#008BD2; color:white; font-weight:600">
-    <h2 style="margin:5px 0;">{% if oer %}<small style="color: white">{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+<div class="panel panel-c2 text-left marginTB30">
+  <div class="panel-heading-c2 padding1020">
+    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
   </div>
-  <!--div class="row">
-  <div class="col-xs-12 col-sm-12 col-lg-9"-->
-    <form method="post" action="{{ action }}" id="edit_form">
+  <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
     {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    <fieldset style="padding:10px 20px; border-left:1px solid #008BD2; border-right:1px solid #008BD2">
+    <fieldset class="padding1020">
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     {% if field.name == 'tags' %}
       <div class="form-group">
@@ -46,34 +44,32 @@
       </div>
     {% endif %}{% endwith %}{% endfor %}
 
-    <input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS">
-    <input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS">
-    <input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS">
-    <div class="form-group">
-      <label>{% trans "additional metadata"|capfirst %}</label>
-      
-      {% for fm in metadata_formset %}
-      {% if forloop.first %}
-        <table class="grid-table">
-        <thead><tr>{% for field in fm.visible_fields %}<td><small>{{ field.label|capfirst}}</small></td>{% endfor %}</tr></thead>
-        <tbody>
-      {% endif %}
-        <tr>{% for field in fm.hidden_fields %}{{ field }}{% endfor %}
-        {% for field in fm.visible_fields %}<td><span class="txt-error">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
-      {% if forloop.last %}
-        </tbody>
-        </table>
-      {% endif %}
-      {% endfor %}
-    </div>
+      <input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS">
+      <input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS">
+      <input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS">
+      <div class="form-group">
+        <label>{% trans "additional metadata"|capfirst %}</label>
+        {% for fm in metadata_formset %}
+        {% if forloop.first %}
+          <table class="grid-table">
+          <thead><tr>{% for field in fm.visible_fields %}<td><small>{{ field.label|capfirst}}</small></td>{% endfor %}</tr></thead>
+          <tbody>
+        {% endif %}
+          <tr>{% for field in fm.hidden_fields %}{{ field }}{% endfor %}
+          {% for field in fm.visible_fields %}<td><span class="txt-error">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
+        {% if forloop.last %}
+          </tbody>
+          </table>
+        {% endif %}
+        {% endfor %}
+      </div>
     </fieldset>
-<div style=" border-radius:0; padding:10px 20px; background:#008BD2; color:white; font-weight:600">
+    <div class="panel-footer-c2 padding1020">
       <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if oer %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
       <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
-  </div>
+     </div>
     </form>
-  <!--/div-->
   </div>
 {% endblock %}
 

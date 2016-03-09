@@ -362,6 +362,9 @@ margin-right:0;
 	padding-top:20px;
 	padding-bottom:20px;
 }
+.padding1020 {
+	padding:10px 20px;
+}
 .marginT10 {
 	margin-top:10px;
 }
@@ -374,10 +377,17 @@ margin-right:0;
 .marginB20 {
 	margin-bottom: 20px;
 }
-
+.marginTB5 {
+	 margin-top: 5px;
+	 margin-bottom: 5px;
+}
 .marginTB20 {
 	margin-top:20px;
 	margin-bottom:20px;
+}
+.marginTB30 {
+	margin-top:30px;
+	margin-bottom:30px;
 }
 /* STILI FONT */
 .font07em {
@@ -400,6 +410,9 @@ margin-right:0;
 	font-weight:700;
 }
 /* forecolor backcolor  border */
+.c-white {
+	color: white;
+}
 .c-green {
 	color: green;
 }
@@ -621,7 +634,24 @@ dl.list-inline.marginB10 {
 	color: white;
 	text-decoration: none !important;
 }
-
+.panel-heading-c1,
+.panel-footer-c1 {
+  color: #fff;
+  background-color: #CB4F98;
+  border-color: #CB4F98;
+}
+.panel-heading-c2,
+.panel-footer-c2 {
+  color: #fff;
+  background-color: #008BD2;
+  border-color: #008BD2;
+}
+.panel-heading-c3,
+.panel-footer-c3 {
+  color: #fff;
+  background-color: #A65C45;
+  border-color: #A65C45;
+}
 .box-scroll {
   overflow: auto;
 }
