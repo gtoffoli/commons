@@ -122,6 +122,20 @@ def help_children(request):
     """
     return children
 
+def admin_children(request):
+    children = []
+    user = request.user
+    if user.is_superuser or (user.is_authenticated() and user.is_community_manager()):
+        children.append (MenuItem(
+             capfirst(_("forums")),
+             url='/analytics/forums/',
+            ))
+        children.append (MenuItem(
+             capfirst(_("messages")),
+             url='/analytics/messages/',
+            ))
+    return children
+
 # Add a few items to our main menu
 Menu.add_item("main", MenuItem(capfirst(_("community")),
                                url='/p',
@@ -146,4 +160,10 @@ Menu.add_item("main", MenuItem(capfirst(_("help")),
                                weight=30,
                                check=True,
                                children=help_children,
+                               separator=True))
+Menu.add_item("main", MenuItem(capfirst(_("analytics")),
+                               url='/p',
+                               weight=30,
+                               check=admin_children,
+                               children=admin_children,
                                separator=True))

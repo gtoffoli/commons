@@ -92,6 +92,15 @@ def user_can_add_repo(self, request):
     return False
 User.can_add_repo = user_can_add_repo
 
+def user_is_community_manager(self):
+    if self.is_authenticated():
+        root_groups = Group.objects.filter(level=0)
+        if root_groups.count() == 1:
+            root_project = root_groups[0].project
+            return root_project and root_project.is_admin(self)
+    return False
+User.is_community_manager = user_is_community_manager
+
 def user_has_xmpp_account(self):
     return XMPPAccount.objects.filter(user=self)
 User.has_xmpp_account = user_has_xmpp_account
