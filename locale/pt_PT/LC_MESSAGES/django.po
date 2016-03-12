@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-03-09 17:03+0100\n"
-"PO-Revision-Date: 2016-03-09 16:07+0000\n"
-"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
+"PO-Revision-Date: 2016-03-11 15:52+0000\n"
+"Last-Translator: Inês Araújo <ines.araujo@ipleiria.pt>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -355,7 +355,7 @@ msgstr "derivado de"
 msgid ""
 "if derived from other OERs, please specify them by selecting one or more - "
 "enter a few chars to get suggestions"
-msgstr ""
+msgstr "se deriva de outros REA, por favor especifique-os selecionando um ou mais - insira alguns caracteres para receber sugestões"
 
 #: .\forms.py:294 .\models.py:1047 .\templates\oer_core.html:37
 #: .\templates\oer_detail.html:152 .\templates\oer_detail.html.py:153
@@ -647,7 +647,7 @@ msgstr "ajuda"
 
 #: .\menus.py:164
 msgid "analytics"
-msgstr ""
+msgstr "análise"
 
 #: .\metadata.py:23
 msgid "Do not use python reserved words, or spaces."
@@ -695,7 +695,7 @@ msgstr "aspetos de qualidade"
 
 #: .\models.py:127
 msgid "Tag"
-msgstr ""
+msgstr "Tag"
 
 #: .\models.py:128 .\templates\zinnia\_entry_detail_base.html:112
 #: .\templates\zinnia\base.html:50
@@ -1152,19 +1152,19 @@ msgstr "limites do percurso"
 
 #: .\models.py:1706
 msgid "Tagged OER"
-msgstr ""
+msgstr "REA com tag"
 
 #: .\models.py:1707
 msgid "Tagged OERs"
-msgstr ""
+msgstr "REA's com tag"
 
 #: .\models.py:1720
 msgid "Tagged LP"
-msgstr ""
+msgstr "PA com tag"
 
 #: .\models.py:1721
 msgid "Tagged LPss"
-msgstr ""
+msgstr "PAs com tag"
 
 #: .\search_indexes.py:115
 msgid "In"
@@ -1274,20 +1274,20 @@ msgstr "recurso avaliado por"
 #: .\templates\search_people.html.py:42 .\templates\search_repos.html:29
 #: .\templates\search_repos.html.py:42
 msgid "search criteria"
-msgstr ""
+msgstr "critério de pesquisa"
 
 #: .\templates\_search_form.html:9 .\templates\_search_form.html.py:31
 msgid "Apply"
-msgstr ""
+msgstr "Aplicar"
 
 #: .\templates\_search_form.html:10 .\templates\_search_form.html.py:32
 msgid "Reset"
-msgstr ""
+msgstr "Reiniciar"
 
 #: .\templates\_search_form.html:17 .\views.py:2134 .\views.py:2372
 #: .\views.py:2454
 msgid "include non published items"
-msgstr ""
+msgstr "inclui itens não publicados"
 
 #: .\templates\autocomplete.html:4 .\templates\mentoring_detail.html:26
 #: .\templates\project_detail.html:367 .\templates\search_results.html:13
@@ -1658,15 +1658,15 @@ msgstr "editar o documento na pasta"
 
 #: .\templates\forum_analytics.html:5 .\templates\forum_analytics.html:11
 msgid "forum analytics"
-msgstr ""
+msgstr "análise do forúm"
 
 #: .\templates\forum_analytics.html:15
 msgid "forums with topics by posts"
-msgstr ""
+msgstr "fóruns com tópicos por mensagens"
 
 #: .\templates\forum_analytics.html:30
 msgid "forum topics by posts"
-msgstr ""
+msgstr "fóruns com tópicos por mensagens"
 
 #: .\templates\forum_edit.html:7 .\templates\forum_edit.html.py:13
 msgid "edit forum"
@@ -1731,12 +1731,12 @@ msgstr "aprender juntos"
 #: .\templates\homepage.html:77 .\templates\homepage.html.py:119
 #: .\templates\homepage.html:141
 msgid "remix resources"
-msgstr ""
+msgstr "recursos remixados"
 
 #: .\templates\homepage.html:83 .\templates\homepage.html.py:126
 #: .\templates\homepage.html:146
 msgid "explore library"
-msgstr ""
+msgstr "explorar a biblioteca"
 
 #: .\templates\homepage.html:90 .\templates\homepage.html.py:91
 #: .\templates\homepage.html:113 .\templates\homepage.html.py:137
@@ -1754,11 +1754,11 @@ msgstr "ler mais"
 
 #: .\templates\homepage.html:231 .\templates\search_repos.html:10
 msgid "repositories"
-msgstr ""
+msgstr "repositórios"
 
 #: .\templates\homepage.html:277
 msgid "learn more"
-msgstr ""
+msgstr "aprender mais"
 
 #: .\templates\livesearch.html:10 .\templates\theme_bootstrap\base.html:126
 msgid "Search ... (enter at least 3 characters)"
@@ -2058,11 +2058,11 @@ msgstr "nenhuma atividade de mentorado iniciada"
 
 #: .\templates\message_analytics.html:6 .\templates\message_analytics.html:17
 msgid "messages analytics"
-msgstr ""
+msgstr "análise de mensagens"
 
 #: .\templates\message_analytics.html:22
 msgid "messages by month"
-msgstr ""
+msgstr "mensagens por mês"
 
 #: .\templates\notification\email_body.txt:1
 #: .\templates\pinax_notifications\email_body.txt:1
@@ -2155,7 +2155,7 @@ msgstr "marcar este REA como candidato a cortar & colar"
 
 #: .\templates\oer_detail.html:27 .\templates\oer_detail.html.py:32
 msgid "view resource"
-msgstr ""
+msgstr "ver recurso"
 
 #: .\templates\oer_detail.html:54
 msgid "reference info"
@@ -2163,7 +2163,7 @@ msgstr "informação da referência"
 
 #: .\templates\oer_detail.html:207
 msgid "evaluations"
-msgstr ""
+msgstr "avaliações"
 
 #: .\templates\oer_edit.html:7 .\templates\oer_edit.html.py:18
 msgid "edit OER"
@@ -2604,7 +2604,7 @@ msgstr "Procurar"
 #: .\templates\search_lps.html:27 .\templates\search_oers.html:27
 #: .\templates\search_people.html:27 .\templates\search_repos.html:27
 msgid "results"
-msgstr ""
+msgstr "resultados"
 
 #: .\templates\search_lps.html:40 .\templates\search_oers.html:40
 #: .\templates\search_people.html:40 .\templates\search_repos.html:40
@@ -2748,12 +2748,12 @@ msgstr "não foram encontrados mentores adequados nas comunidades em que é memb
 
 #: .\templates\zinnia\_entry_detail_base.html:17
 msgid "Written by"
-msgstr ""
+msgstr "Escrito por"
 
 #: .\templates\zinnia\_entry_detail_base.html:21
 #, python-format
 msgid "Show all %(author)s's entries"
-msgstr ""
+msgstr "Apresentar todas as entradas criadas por %(author)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:23
 #: .\templates\zinnia\entry_detail_base.html:109
@@ -2764,63 +2764,63 @@ msgstr "ligar"
 
 #: .\templates\zinnia\_entry_detail_base.html:25
 msgid "Written on"
-msgstr ""
+msgstr "Escrito em"
 
 #: .\templates\zinnia\_entry_detail_base.html:35
 msgid "in"
-msgstr ""
+msgstr "dentro"
 
 #: .\templates\zinnia\_entry_detail_base.html:38
 #, python-format
 msgid "Show all entries in %(category)s"
-msgstr ""
+msgstr "Mostrar todas as entradas dentro de %(category)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:46
 msgid "Last update on"
-msgstr ""
+msgstr "Última atualização em"
 
 #: .\templates\zinnia\_entry_detail_base.html:98
 #, python-format
 msgid "%(percent)s%% of %(object)s still remains to read."
-msgstr ""
+msgstr "%(percent)s%% de %(object)s que ainda estão por ler."
 
 #: .\templates\zinnia\_entry_detail_base.html:100
 msgid "Continue reading"
-msgstr ""
+msgstr "Continuar a leitura"
 
 #: .\templates\zinnia\_entry_detail_base.html:116
 #, python-format
 msgid "Show all entries tagged by %(tag)s"
-msgstr ""
+msgstr "Apresentar todas as entradas com tag por %(tag)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:119
 msgid "No tags"
-msgstr ""
+msgstr "Sem tag"
 
 #: .\templates\zinnia\_entry_detail_base.html:125
 msgid "Short url"
-msgstr ""
+msgstr "Url curto"
 
 #: .\templates\zinnia\_entry_detail_base.html:127
 #, python-format
 msgid "Short URL to %(object)s"
-msgstr ""
+msgstr "URL curto para %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:135
 msgid "Discussions"
-msgstr ""
+msgstr "Discussões"
 
 #: .\templates\zinnia\_entry_detail_base.html:142
 #, python-format
 msgid "Comments on %(object)s"
-msgstr ""
+msgstr "Comentário sobre %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:143
 #, python-format
 msgid "%(comment_count)s comment"
 msgid_plural "%(comment_count)s comments"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%(comment_count)s commentários"
+msgstr[1] "%(comment_count)s commentários"
 
 #: .\templates\zinnia\_entry_detail_base.html:147
 #: .\templates\zinnia\entry_detail_base.html:231
@@ -2830,11 +2830,11 @@ msgstr "Ainda sem comentários"
 #: .\templates\zinnia\_entry_detail_base.html:149
 #, python-format
 msgid "Leave a comment on %(object)s"
-msgstr ""
+msgstr "Deixe um comentário em %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:150
 msgid "Be first to comment!"
-msgstr ""
+msgstr "Seja o primeiro a comentar"
 
 #: .\templates\zinnia\_entry_detail_base.html:153
 #: .\templates\zinnia\entry_detail_base.html:227
@@ -2845,7 +2845,7 @@ msgstr "A possibilidade de comentar terminou"
 #: .\templates\zinnia\_entry_detail_base.html:161
 #, python-format
 msgid "Pingbacks on %(object)s"
-msgstr ""
+msgstr "Pingbacks sobre %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:162
 #, python-format
@@ -2857,7 +2857,7 @@ msgstr[1] ""
 #: .\templates\zinnia\_entry_detail_base.html:170
 #, python-format
 msgid "Trackbacks on %(object)s"
-msgstr ""
+msgstr "Trackbacks sobre %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:171
 #, python-format
