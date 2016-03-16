@@ -317,7 +317,6 @@ def project_detail(request, project_id, project=None):
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
     if user.is_authenticated():
-        var_dict['membership'] = membership = project.get_membership(user)
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
         var_dict['parent'] = parent = project.get_parent()
@@ -348,10 +347,13 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
-        can_apply = not membership and not project_no_apply and (is_open or is_submitted)
+        var_dict['membership'] = membership = project.get_membership(user)
+        profile = user.get_profile()
+        # can_apply = not membership and not project_no_apply and (is_open or is_submitted)
+        can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
-        var_dict['can_apply'] = not user.is_superuser and can_apply
+        var_dict['can_apply'] = can_apply
         if type_name=='com':
             var_dict['roll'] = roll = project.get_roll_of_mentors()
             var_dict['mentoring_projects'] = is_admin and project.get_mentoring_projects()
