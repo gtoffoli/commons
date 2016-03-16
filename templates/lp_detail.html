@@ -150,15 +150,21 @@
            <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
              <dd style="margin-bottom:16px">{% if lp.path_type == 2 %}<ol style="padding-left:14px">{% else %}<ul style="padding-left:16px">{% endif %}
                  {% for node in lp.get_ordered_nodes %}
-                   <li><div style="padding-left:3px">{% if can_edit %}<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
-                       {% if lp.get_ordered_nodes|length > 1 %}
-                       <span style="font-size:12px">
-                          {% if not node.is_root and not node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                          {% elif node.is_root %}<i class="fa fa-arrow-up" style="color:white"></i> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                          {% elif node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down" style="color:white"></i> &nbsp;
-                          {% endif %}
-                       </span>{% endif %}{% endif %}
-                     <a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></div></li>
+                   <li><div style="padding-left:3px">
+                       {% if can_edit %}<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
+                         {% if lp.get_ordered_nodes|length > 1 %}
+                           {% if not node.is_island %} 
+                             <span style="font-size:12px">
+                               {% if not node.is_root and not node.is_leaf %}a <a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                               {% elif node.is_root %}b <i class="fa fa-arrow-up" style="color:white"></i> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                               {% elif node.is_leaf %}c <a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down" style="color:white"></i> &nbsp;
+                               {% endif %}
+                             </span>
+                           {% endif %}
+                         {% endif %}
+                       {% endif %}
+                     <a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></div>
+                   </li>
                  {% endfor %}
                  {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}</dd>
              {% if can_edit %}
