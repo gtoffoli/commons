@@ -2458,6 +2458,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                 request.session['post_dict'] = post_dict
         else:
             form = LpSearchForm()
+            qq.append(Q(project__isnull=False))
             request.session["post_dict"] = {}
         qs = LearningPath.objects.all()
         for q in qq:
