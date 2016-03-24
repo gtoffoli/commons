@@ -7,29 +7,29 @@
 {% block body_class %}oer_detail{% endblock %}
 
 {% block body %}
-<article class="panel-white text-left" style="margin: 30px 0;">
-  <div class="navbar" style="min-height:10px; border-top-left-radius:4px; border-top-right-radius:4px; padding:10px 20px; background:#008BD2; color:white; font-size:15px; font-weight:600">
-    <h2 class="pull-left" style="margin:5px 0">{{ oer.title }}</h2>
-    <p class="pull-right" style="font-size:26px; margin:0">
-      {% if can_edit %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em"></i></a>{% endif %}
-      {% if can_evaluate %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em"></i></a>{% endif %}
-      {% if user.is_authenticated and not in_bookmarked_oers %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em"></i></a>{% endif %}
-      {% if can_delete and not in_cut_oers %}&nbsp; <a style="color:white" href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em"></i></a>{% endif %}
+<article class="panel-white text-left marginTB30">
+  <div class="navbar panel-c2 panel-heading-c2 padding1020">
+    <h2 class="pull-left marginTB5">{{ oer.title }}</h2>
+    <p class="pull-right marginB0 font26">
+      {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+      {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
+      {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
+      {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
     </p>
   </div>
-  <section class="view-card" style="border:0;">
+  <section class="view-card-details">
     <div class="row">
       <div class="col-md-9 col-lg-9">
       <div class="marginB10 clearfix">
       {% if oer.url and oer.description %}
         <div class="hidden-xs">
-           <div style="position:relative">
-              <div class="bg_view" style="float:left;" ><a href="/oer/{{ oer.slug }}/view/" class="btn" style="background:#008BD2; color:white; font-weight:600;" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+           <div class="posRel">
+              <div class="bg_view floatL"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
         </div>
         <div class="visible-xs">
-           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn" style="background:#008BD2; color:white; font-weight:600;" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
+           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
            <p>{{ oer.description }}</p>
         </div>
       {% elif oer.description %}
@@ -52,11 +52,11 @@
         <dl class="list-inline font14">
            {% if oer.reference %}
               <dt class="with_icon">{% trans "reference info"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
-              <dd class="field-content" style="display:none"><pre style="border-radius: 0; background: white">{{ oer.reference }}</pre></dd>
+              <dd class="field-content" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.reference }}</pre></dd>
            {% endif %}
            {% if oer.embed_code %}
               <dt class="with_icon">{% trans "embed code"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
-              <dd class="field-content" style="display:none"><pre style="border-radius: 0; background: white">{{ oer.embed_code }}</pre></dd>
+              <dd class="field-content" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.embed_code }}</pre></dd>
            {% endif %}
         </dl>
       {% endif %}
@@ -159,15 +159,19 @@
            <dt class="demiBold">{% trans "attached documents"|capfirst %}</dt>
            {% for document in oer.get_sorted_documents %}
              <dd><form action="/document/download/" method="post" id="doc_{{ document.id }}">{% csrf_token %}
-                 {% if can_edit %}<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a>&nbsp;&nbsp;
-                   {% if not forloop.first or not forloop.last %}<span style="font-size:12px">
-                     {% if forloop.first %}&nbsp;&nbsp;{% else %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a>{% endif %}
-                     {% if forloop.last %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a>&nbsp;{% endif %}
-                   </span>{% endif %}
+               {% if can_edit %}<a href="/document/{{ document.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
+                 {% if oer.get_sorted_documents|length > 1 %}
+                   <span class="font12">
+                     {% if not forloop.first and not forloop.last %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                     {% elif forloop.first %}<i class="fa fa-arrow-up c-white"></i> &nbsp; <a href="/document/{{ document.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                     {% elif forloop.last %}<a href="/document/{{ document.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down c-white"></i> &nbsp;
+                     {% endif %}
+                   </span>
                  {% endif %}
-                 <input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
-                 &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
-                 {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+               {% endif %}
+               <input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
+               &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+               {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
              </form></dd>
            {% endfor %}
         </dl>
@@ -178,8 +182,8 @@
            <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/oer/add_document/">{% csrf_token %}
                <input type="hidden" id="id" name="id" value="{{ oer.id }}">
                <div>{{ form.non_field_errors }}</div>
-               <div class="form-group"><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-               <div class="form-group"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
+               <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
                   {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
                </div>
                </form></dd>
@@ -187,49 +191,49 @@
       {% endif %}
       </div>
       <div class="col-md-3 col-lg-3">
-         <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a><br>
-            <span class="demiBold">{% trans "on" %}</span> {{ oer.created|date:"d/m/Y" }} <br>
-            <span class="demiBold">{% trans "in project" %}</span> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>
-         </p>
+        <p><span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a><br>
+           <span class="demiBold">{% trans "on" %}:</span> {{ oer.created|date:"d/m/Y" }} <br>
+           <span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>
+        </p>
         {% if user.is_authenticated %}
-          <p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span>
-                {% if can_submit %}&nbsp; <a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a>{% endif %}
-                {% if can_withdraw %}&nbsp; <a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</a>{% endif %}
-                {% if can_reject %}&nbsp; <a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a>{% endif %}
-                {% if can_publish %}&nbsp; <a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a>{% endif %}
-                {% if can_un_publish %}&nbsp; <a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a>{% endif %}
-          </p>
+          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>{% endif %}
+          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
+            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>{% endif %}
+            <ul class="list-inline">
+                {% if can_submit %}<li class="marginB5"><a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
+                {% if can_withdraw %}<li class="marginB5"><a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</li></a>{% endif %}
+                {% if can_reject %}<li class="marginB5"><a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
+                {% if can_publish %}<li class="marginB5"><a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
+                {% if can_un_publish %}<li class="marginB5"><a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
+            </ul>
+          {% endif %}
         {% endif %}
-         <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}</span> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ oer.modified|date:"d/m/Y" }}</p>
- 
-        {% if evaluations %}
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ oer.modified|date:"d/m/Y" }}</p>
+        {% if is_published %}
           <dl class="font14 marginB10">
-             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
-             {% with stars=oer.get_stars %}
-             {% for i in stars.full %} <span class="fa fa-star c-green"></span>{% endfor %}
-             {% if stars.half %} <span class="fa fa-star-half-o c-green"></span>{% endif %}
-             {% for i in stars.empty %} <span class="fa fa-star-o c-green"></span>{% endfor %}
-             {% endwith %}
-             {% for evaluation in evaluations %}
-               <dd><a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
-                   <strong>{{ evaluation.overall_score }}</strong>/5 <small><i class="fa fa-star-o"></i></small></a>
-                   {% if evaluation.get_quality_metadata %}
-                     <small> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
-                      {{ qm.value }}/5{% if not forloop.last %}, {% endif %}{% endfor %})</small>
-                   {% endif %}
-               </dd>
-             {% endfor %}
+            <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
+            {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" %}</dd>{% endwith %}
+            {% if evaluations %}
+              {% for evaluation in evaluations %}
+                <dd><a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
+                    <strong>{{ evaluation.overall_score }}</strong>/5 <small><i class="fa fa-star-o"></i></small></a>
+                    {% if evaluation.get_quality_metadata %}
+                      <small> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
+                       {{ qm.value }}/5{% if not forloop.last %}, {% endif %}{% endfor %})</small>
+                    {% endif %}
+                </dd>
+              {% endfor %}
+            {% endif %}
           </dl>
         {% endif %}
-
         {% if oer.oers.all %}
-        <dl class="list-inline font14 marginB10">
-           <dt>{% trans "derived from"|capfirst %}</dt>
+          <dl class="list-inline font14 marginB10">
+            <dt>{% trans "derived from"|capfirst %}</dt>
             {% for item in oer.oers.all %}
               <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
             {% endfor %}
-        </dl>
-      {% endif %}
+          </dl>
+        {% endif %}
       </div>
     </div>
   </section>

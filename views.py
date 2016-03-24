@@ -298,6 +298,7 @@ def project_folder(request, project_slug):
 def project_detail(request, project_id, project=None):
     MAX_OERS = 10
     MAX_EVALUATIONS = 10
+    MAX_LPS = 10
     MAX_MESSAGES = 5
     if not project:
         project = get_object_or_404(Project, pk=project_id)
@@ -403,7 +404,8 @@ def project_detail(request, project_id, project=None):
     # lps = LearningPath.objects.filter(group=project.group).order_by('-created')
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
-    var_dict['lps'] = lps
+    var_dict['n_lps'] = len(lps)
+    var_dict['lps'] = lps[:MAX_LPS]
     if proj_type.name == 'ment':
         return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
     else:
@@ -1325,9 +1327,23 @@ def oer_view(request, oer_id, oer=None):
     elif not oer_id:
         oer_id = oer.id
     var_dict = { 'oer': oer, }
-    url = oer.url
     var_dict['oer_url'] = oer.url
-    print url
+    var_dict['is_published'] = oer.state == PUBLISHED
+    user = request.user
+    if user.is_authenticated():
+        profile = user.get_profile()
+        add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
+    else:
+        add_bookmarked = None
+    if add_bookmarked and request.GET.get('copy', ''):
+        bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
+        if not oer_id in bookmarked_oers:
+            set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
+    var_dict['add_bookmarked'] = add_bookmarked
+    var_dict['in_bookmarked_oers'] = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
+    var_dict['can_evaluate'] = oer.can_evaluate(request.user)
+    var_dict['evaluations'] = oer.get_evaluations()
+    url = oer.url
     youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
     if youtube:
         if youtube.count('embed'):
@@ -1352,11 +1368,6 @@ def oer_view(request, oer_id, oer=None):
         ted_talk = (language, ted_talk)
         var_dict['oer_url'] = ted_talk
     var_dict['ted_talk'] = ted_talk
-    reference = oer.reference
-    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
-    if slideshare:
-        slideshare = SLIDESHARE_TEMPLATE % slideshare
-    var_dict['slideshare'] = slideshare
     # var_dict['embed_code'] = oer.embed_code
     return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
 
@@ -1372,13 +1383,21 @@ def oer_detail(request, oer_id, oer=None):
         oer_id = oer.id
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
-    if request.user.is_authenticated() and request.GET.get('copy', ''):
+    var_dict['is_published'] = oer.state == PUBLISHED
+    user = request.user
+    if user.is_authenticated():
+        profile = user.get_profile()
+        add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
+    else:
+        add_bookmarked = None
+    if add_bookmarked and request.GET.get('copy', ''):
         bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
         if not oer_id in bookmarked_oers:
             set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
+    var_dict['add_bookmarked'] = add_bookmarked
     var_dict['in_bookmarked_oers'] = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
-    var_dict['can_edit'] = can_edit = oer.can_edit(request.user)
-    var_dict['can_delete'] = can_delete = oer.can_delete(request.user)
+    var_dict['can_edit'] = can_edit = oer.can_edit(user)
+    var_dict['can_delete'] = can_delete = oer.can_delete(user)
     if can_delete and request.GET.get('cut', ''):
         cut_oers = get_clipboard(request, key='cut_oers') or []
         if not oer_id in cut_oers:
@@ -1389,7 +1408,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_reject'] = oer.can_reject(request)
     var_dict['can_publish'] = oer.can_publish(request)
     var_dict['can_un_publish'] = oer.can_un_publish(request)
-    var_dict['can_evaluate'] = oer.can_evaluate(request.user)
+    var_dict['can_evaluate'] = oer.can_evaluate(user)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
@@ -1722,6 +1741,7 @@ def lp_detail(request, lp_id, lp=None):
     user = request.user
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
+    var_dict['is_published'] = lp.state == PUBLISHED
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
     var_dict['can_delete'] = can_delete = lp.can_delete(request)
@@ -2146,11 +2166,10 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             qs = qs.filter(state=PUBLISHED)
         repos = qs.distinct().order_by('name')
     else:
-        print 'altro'
         form = RepoSearchForm()
         repos = Repo.objects.filter(state=PUBLISHED).distinct().order_by('name')
         request.session["post_dict"] = {}
-                
+
     context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:

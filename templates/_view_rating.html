@@ -1,0 +1,7 @@
+{% if stars.stars %}
+   {% for i in stars.full %} <span class="fa fa-star c-green"></span>{% endfor %}
+   {% if stars.half %} <span class="fa fa-star-half-o c-green"></span>{% endif %}
+   {% for i in stars.empty %} <span class="fa fa-star-o c-green"></span>{% endfor %}
+{% else %}
+   {% for i in "11111" %} <span class="fa fa-star c-grey"></span>{% endfor %}
+{% endif %}

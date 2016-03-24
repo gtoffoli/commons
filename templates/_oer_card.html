@@ -6,13 +6,7 @@
 	<p class="title-card"><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></p>
 	<p class="text-card">Rating &nbsp;
 		{% with stars=oer.get_stars %}
-		  {% if stars.stars %}
-		    {% for i in stars.full %} <span class="fa fa-star c-green"></span>{% endfor %}
-		    {% if stars.half %} <span class="fa fa-star-half-o c-green"></span>{% endif %}
-		    {% for i in stars.empty %} <span class="fa fa-star-o c-green"></span>{% endfor %}
-		  {% else %}
-		    {% for i in "11111" %} <span class="fa fa-star c-grey"></span>{% endfor %}
-		  {% endif %}
+       {% include "_view_rating.html" %}
 		{% endwith %} 	    
 	</p>
 	

@@ -1340,7 +1340,7 @@ LP_SCRIPTED_DAG = 4
 LP_TYPE_CHOICES = (
     (LP_COLLECTION, _('simple collection')),
     (LP_SEQUENCE, _('sequence')),
-    (LP_DAG, _('directed graph')),
+    # (LP_DAG, _('directed graph')),
     # (LP_SCRIPTED_DAG, _('scripted directed graph')),
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)

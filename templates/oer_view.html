@@ -7,18 +7,34 @@
 {% block body_class %}oer_view{% endblock %}
 
 {% block nav %}
-<h4 style="padding-top:6px"><a href="/oer/{{ oer.slug }}" style="font-size:16px; color:#333;"><i class="fa fa-arrow-left"></i></a> {{ oer.title }} <!--small>{{ oer.url|safe }}</small--></h4>
+<table class="table table-responsive nav-table">
+  <tbody>
+    <td style="width:2%"><a href="/oer/{{ oer.slug }}"><i class="fa fa-arrow-left font16"></i></a></td>
+    <td><div class="font18">{% if not is_published %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %} {{ oer.title }}</div>
+        {% if is_published %}
+          <div class="font12">
+            {% with stars=oer.get_stars %}
+              {% include "_view_rating.html" %}
+            {% endwith %}
+          </div>
+         {% endif %}
+    </td>
+    <td class="font16">
+      {% if can_evaluate %}<a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o"></i></a> &nbsp;{% endif %}
+      {% if add_bookmarked and not in_bookmarked_oers %}<a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o"></i></a> &nbsp;{% endif %}
+    	</td>
+  </tbody>
+</table>
 {% endblock %}
 
 {% block body_base %}
-<div class="container-fluid" style="margin:0; padding:0">
-	<p class="text-center marginT10">Url: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
-<div class="iframe-container">
-{% if oer_url %}
-<iframe src="{{ oer_url }}"  allowfullscreen></iframe>
-{% endif %}
-</div>
+<div class="container-fluid margin0 padding0">
+  <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+  <div class="iframe-container">
+  {% if oer_url %}
+    <iframe src="{{ oer_url }}" id="iframe" allowfullscreen></iframe>
+  {% endif %}
+  </div>
 </div>
 {% endblock %}
-
 
