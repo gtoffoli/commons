@@ -18,12 +18,14 @@ h1 {
 h2 {
 	font-size: 24px;
 }
-a:hover,
-a:focus {
-  color: black;
+a:hover {
+  color: #23527c;
   text-decoration: none;
 }
-
+a:focus {
+  color: #337ab7;
+  text-decoration: none;
+}
 
 /* FOOTER FIXED */
 .wrapper {
@@ -595,7 +597,9 @@ dl.list-inline dd button.btn-link {
 	border:none;
 	text-align:left;
 }
-
+dl.list-inline dd button.btn-link:focus {
+	outline:0;
+}
 dl.list-inline.font14 {
 	font-size:14px;
 }
@@ -859,7 +863,7 @@ ul.list-inline > li.list-back-c3 {
   overflow: auto;
 }
 .box-medium {
-height:330px;
+height:250px;
 }
 .panel-navbar {
 	min-height:10px;
@@ -896,7 +900,7 @@ height:330px;
 
 #search_form ul{
 	list-style: none;
-	padding:0 12px;
+	padding:0 4px;
 }
 #search_form ul li label {
   display: inline;
@@ -908,9 +912,29 @@ height:330px;
 	padding-right:10px;
 	font-size:18px;
 }
-#search_form label a.questionIcon {
-	color:#555;
-	padding-left:10px;
+
+#search_form label i.infoIcon {
+	color:#888;
+	font-size:14px;
+	cursor: default;
+}
+.tooltip-inner {
+  background-color: #333;
+  color:white;
+  font-size:13px;
+  font-weight: 500;
+}
+.tooltip.top .tooltip-arrow {
+		 border-top-color: #333;
+}
+.tooltip.right .tooltip-arrow {
+	border-right-color: #333;
+}
+.tooltip.left .tooltip-arrow {
+	border-left-color: #333;
+}
+.tooltip.bottom .tooltip-arrow {
+	 border-bottom-color: #333;
 }
 #search_form input[type="submit"],
 #search_form input[type="reset"] {
@@ -1174,4 +1198,7 @@ text-decoration: none;
 }
 .neutral {
 	color: #666;
+}
+.width-full {
+	width: 100%;
 }

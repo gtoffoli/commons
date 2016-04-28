@@ -3,7 +3,7 @@
  {% load i18n %}
 
 <article class="view-card">
-	<p class="title-card"><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }}">{{ lp.title }}</a></p>
+	<p class="title-card">{% if lp.state != 3 %}<small style="color: {{lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></p>
 
 	{% if lp.short|length > 140 %}
 	<div>
@@ -14,19 +14,9 @@
 		<p style="display:inline-block" class="text-card full-description"><i>{{ lp.short }}</i></p>
 	{% endif %}
 	{% if lp.subjects.all %}
-		<dl class="list-inline">
-			<dt>{% trans "subject areas"|capfirst %}</dt>
-			{% for subject in lp.subjects.all %}
-				<dd><form action="/lps/search/" method="post" id="lp_{{ subject.id }}">{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}"><input type="submit" class="btn-link" value="{{ subject.option_label|safe }}"></form></dd>
-			{% endfor %}
-		</dl>
+		{% include "_data_all.html" with data=lp.subjects.all data_class="" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
 	{% endif %}
 	{% if lp.tags.all %}
-		<dl class="list-inline">
-			<dt>{% trans "tags"|capfirst %}</dt>
-			{% for tag in lp.tags.all %}
-				<dd><form action="/lps/search/" method="post" id="lps_{{ tag.id }}">{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}"><input type="submit" class="btn-link" value="{{ tag.name }}"></form></dd>
-			{% endfor %}
-		</dl>
+		{% include "_data_all.html" with data=lp.tags.all data_class="" label_data="tags" action="/lps/search/" type_data="tags" %}
 	{% endif %}
 </article>

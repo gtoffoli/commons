@@ -1,6 +1,6 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load staticfiles i18n %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
 
@@ -17,13 +17,13 @@
   </div>
   <section class="view-card-details">
     <div class="row">
-      <div class="col-md-9 col-lg-9">
+      <div class="col-sm-9 col-md-9 col-lg-9">
         <div class="marginB10 clearfix">
           {% if can_play %}
             <div class="hidden-xs">
               <div class="posRel">
                 <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/"  title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
-                {% if lp.long %} <div class="marginB10">{{ lp.long|safe }}</div>{% endif %}
+                {% if lp.long %}<div class="marginB10">{{ lp.long|safe }}</div>{% endif %}
                 <dl class="list-inline font14 marginB10">
                   <dt>{% trans "objectives"|capfirst %}</dt>
                   <dd>{{ lp.short|safe }}</dd>
@@ -48,47 +48,22 @@
         </div>
 
         {% if lp.levels.all %}
-          <dl class="list-inline font14 marginB10">
-            <dt>{% trans "target audience"|capfirst %}</dt>
-            {% for level in lp.levels.all %}
-              <dd><form action="/lps/search/" method="post" id="lps_{{ level.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="levels" value="{{ level.id }}"">{{ level.option_label|safe }}</button></form></dd>
-            {% endfor %}
-          </dl>
+          {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
         {% endif %}
 
         {% if lp.subjects.all and lp.tags.all %}
           <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
-              <dl class="list-inline font14">
-                <dt>{% trans "subject areas"|capfirst %}</dt>
-                {% for subject in lp.subjects.all %}
-                  <dd><form action="/lps/search/" method="post" id="lps_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
-                {% endfor %}
-              </dl>
+              {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
-              <dl class="list-inline font14">
-                <dt>{% trans "tags"|capfirst %}</dt>
-                {% for tag in lp.tags.all %}
-                  <dd><form action="/lps/search/" method="post" id="lps_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
-                {% endfor %}
-              </dl>
+              {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
             </div>
           </div>
         {% elif lp.subjects.all %}
-          <dl class="list-inline font14 marginB10">
-            <dt>{% trans "subject areas"|capfirst %}</dt>
-            {% for subject in lp.subjects.all %}
-              <dd><form action="/lps/search/" method="post" id="lps_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
-            {% endfor %}
-          </dl>
+          {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
         {% elif lp.tags.all %}
-          <dl class="list-inline font14 marginB10">
-            <dt>{% trans "tags"|capfirst %}</dt>
-            {% for tag in lp.tags.all %}
-              <dd><form action="/lps/search/" method="post" id="lps_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
-            {% endfor %}
-          </dl>
+          {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
         {% endif %}
 
         <dl class="list-inline font14 marginB10">
@@ -158,7 +133,7 @@
 {% endcomment %}      
       
       </div>
-      <div class="col-md-3 col-lg-3">
+      <div class="col-sm-3 col-md-3 col-lg-3">
          <p><span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>
             {% comment %}<span class="demiBold">{% trans "on" %}:</span> {{ lp.created|date:"d/m/Y" }}{% endcomment %}
             {% if project %}<br><span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a>{% endif %}

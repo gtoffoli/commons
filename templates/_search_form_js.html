@@ -4,12 +4,49 @@
 <script type="text/javascript" src="{% static "endless_pagination/js/endless-pagination.js" %}"></script>
 {{ block.super }}
 <script type="text/javascript">
+	function selected_field (id_args) {
+		for (var a=0; a < id_args.length; a++) {
+			var selectElement = 'select#'+id_args[a];
+			if ($('#search_form '+selectElement)) {
+				var selected=$('#search_form').find(selectElement).val();
+				if (selected) {
+					for (var i=0; i < selected.length; i++){
+						$('#search_form '+ selectElement+' option[value="'+selected[i]+'"]').prop('selected', true);
+					}
+					var content = $('#search_form '+selectElement).parent();
+					var accordion = $(content).prev();
+					var accordionToggleIcon= $(accordion).children('a.toggleIcon');
+					accordion.toggleClass("open");
+					$(content).removeAttr('style');
+					accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+				}
+			}
+		}
+	}
+	
 $(document).ready(function (){
+
+	selected_field (['id_material','id_pro_status','id_edu_field','id_pro_field','id_tags']);
+
+	var checkbox = $('#search_form').find('input:checkbox');
+	for (var i=0; i < checkbox.length; i++) {
+		if($(checkbox[i]).attr('checked')) {
+			var content = $(checkbox[i]).parent().parent().parent().parent();
+			var accordion = $(content).prev();
+			var accordionToggleIcon= $(accordion).children('a.toggleIcon');
+			accordion.toggleClass("open");
+			$(content).removeAttr('style');
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		}
+	}
+
+	$('[data-toggle="tooltip"]').tooltip(); 
+    
 	// pagination
 	$.endlessPaginate({
-   paginateOnScroll: true,
-   //paginateOnScrollMargin: 20
-   paginateOnScrollChunkSize: 5
+		paginateOnScroll: true,
+		//paginateOnScrollMargin: 20
+		paginateOnScrollChunkSize: 5
 	});
 	
 	$( "input:reset" ).click(function( event ) {
@@ -18,6 +55,7 @@ $(document).ready(function (){
 			$('#search_form').find('input:checkbox').prop('checked', false);
 			$("#search_form").submit();
 	});
+	
 	$('label a.toggleIcon').on('click', function(event){
 		event.preventDefault();
 		var accordion = $(this).parent();
@@ -26,14 +64,11 @@ $(document).ready(function (){
 		accordion.toggleClass("open");
 		accordionContent.slideToggle(250);
 		if (accordion.hasClass("open")) {
-    		accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
-    	} else {
-    		accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
-    	}
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+		}
 	});
-	$('label a.helpIcon').on('click', function(event){
-		event.preventDefault();
-		console.log('help');
-	});
+
 });
 </script>

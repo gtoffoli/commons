@@ -1,0 +1,8 @@
+{% load staticfiles i18n %}
+
+  <dl class="list-inline {{data_class}}">
+    <dt>{% trans "languages"|capfirst %}</dt>
+    {% for language in data %}
+      <dd><form action="{{ action }}" method="post">{% csrf_token %}<button type="submit" class="btn-link" name="languages" value="{{ language.code }}">{{ language.only_name|safe }}</button></form></dd>
+    {% endfor %}
+  </dl>

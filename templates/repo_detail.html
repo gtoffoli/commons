@@ -1,87 +1,58 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load staticfiles i18n %}
 
 {% block head_title %}{% trans "repository"|capfirst %}: {{ repo.name }}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}repo_detail{% endblock %}
 
 {% block body %}
-    <section>
-        <div class="container">
-            <h2 class="text-center" style="color: {{ repo.get_title_color }};">{% trans "repository"|capfirst %}:
-            	<i>{{ repo.name }}</i>
-                &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list" style="font-size: 0.7em;""></i></a>
-                {% if can_edit %}&nbsp; <a href="/repo/{{ repo.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit" style="font-size: 0.7em;""></i></a>{% endif %}
-            </h2>
-            <p class="lead">
-			{% if repo.description %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ repo.description }}</div>{% endif %}
-            <div><strong>Type</strong>: {% comment %}{{ repo_type.description }}{% endcomment %}
-	<form class="form-inline" style="display: inline;" action="/repos/search/" method="post" id="repos_{{ repo_type.id }}">
-	{% csrf_token %}<input type="hidden" name="repo_type" value="{{ repo_type.id }}">
-   	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ repo_type.description }}">
-	</form>
-			</div>
-            <div><strong>URL</strong>: <a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></div>
-    		{% if repo.features.all %}
-    		<div style="margin-top: 0.5em;"><strong>Features</strong>:
-			<ul class="root">
-		        {% for feature in repo.features.all %}
-		        {% comment %}<li>{{ feature.name }}</li>{% endcomment %}
-	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ feature.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="features" value="{{ feature.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ feature.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-			</div>
-		    {% endif %}
-    		<div><strong>Subject areas</strong>:
-    		{% if repo.subjects.all %}
- 			<ul class="root">
-		        {% for subject in repo.subjects.all %}
-		        {% comment %}<li>{{ subject.option_label|safe }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ subject.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-		    {% else %}
-				<div style="margin-left: 1.5em;"><i>Any</i></div>
-		    {% endif %}
-			</div>
-    		<div><strong>OER languages</strong>:
-    		{% if repo.languages.all %}
-			<ul class="root">
-		        {% for language in repo.languages.all %}
-		        {% comment %}<li>{{ language.code }} - {{ language.name }}</li>{% endcomment %}
-  	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="repos_{{ language.code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-	{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}">
-    <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ language.option_label|safe }}">
-	</li></form>
-		        {% endfor %}
-			</ul>
-		    {% else %}
-				<div style="margin-left: 1.5em;"><i>{% trans "any"|capfirst %}</i></div>
-		    {% endif %}
-			</div>
-    		{% if repo.info %}
-    		<div style="margin-top: 0.5em;"><strong>{% trans "additional information"|capfirst %}</strong>:
-				<div style="margin-left: 1.5em;">{{ repo.info|safe }}</div>
-			</div>
-		    {% endif %}
-    		{% if repo.eval %}
-    		<div style="margin-top: 0.5em;"><strong>{% trans "comments / evaluation"|capfirst %}</strong>:
-				<div style="margin-left: 1.5em;">{{ repo.eval|safe }}</div>
-			</div>
-		    {% endif %}
-        	<div><strong>{% trans "submitted by"|capfirst %}</strong> <a href="/resources_by/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a> <strong>{% trans "on" %}</strong> {{ repo.created|date:"d-m-Y" }}</div>
-        	<div><strong>{% trans "last updated"|capfirst %}</strong> {% if not repo.editor.id = repo.creator.id %} <strong>{% trans "by" %}</strong> <a href="/resources_by/{{ repo.editor.username }}">{{ repo.editor.get_full_name }}</a>{% endif %} <strong>{% trans "on" %}</strong> {{ repo.modified|date:"d-m-Y" }}</div>
-{% if user.is_authenticated %}            
+<article class="panel-white text-left marginTB30">
+  <div class="navbar panel-c3 panel-heading-c3 padding1020">
+    <h2 class="pull-left marginTB5">{{ repo.name }}</h2>
+    <p class="pull-right marginB0 font26">
+      {% if can_edit %}&nbsp; <a href="/repo/{{ repo.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+      &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list font07em c-white"></i></a>
+    </p>
+  </div>
+  <section class="view-card-details">
+    <div class="row">
+      <div class="col-sm-9 col-md-9 col-lg-9">
+        {% if repo.description %}<p>{{ repo.description }}</p>{% endif %}
+        <dl class="list-inline font14 marginB10">
+          <dt class="demiBold">URL</dt>
+          <dd><a href="{{ repo.url }}" target="_blank">{{ repo.url }}</a></dd>
+        </dl>
+        {% if repo.features.all %}
+          {% include "_data_all.html" with data=repo.features.all data_class=" font14 marginB10" label_data="features" action="/repos/search/" type_data="features" %}
+        {% endif %}
+        {% if repo.subjects.all %}
+          {% include "_data_all.html" with data=repo.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/repos/search/" type_data="subjects" %}
+        {% endif %}
+        {% if repo.languages.all %}
+          {% include "_data_languages.html" with data=repo.languages.all data_class=" font14 marginB10" action="/repos/search/" %}
+        {% endif %}
+        {% include "_data.html" with data=repo_type data_class=" font14 marginB10" label_data="type" action="/repos/search/" type_data="repo_type" desc_data="desc" %}
+        {% if repo.info %}
+          <dl class="list-inline font14 marginB10">
+            <dt class="with_icon open">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-minus-circle"></i></a></dt>
+            <dd class="field-content width-full" style="display:block"><blockquote class="font14">{{ repo.info|safe }}</blockquote></dd>
+          </dl>
+        {% endif %}
+        {% if repo.eval %}
+          <dl class="list-inline font14 marginB10">
+            <dt class="with_icon open">{% trans "comments / evaluation"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-minus-circle"></i></a></dt>
+            <dd class="field-content width-full" style="display:block"><blockquote class="font14">{{ repo.eval|safe }}</blockquote></dd>
+          </dl>
+        {% endif %}
+      </div>
+      <div class="col-sm-3 col-md-3 col-lg-3">
+        <p>
+          <span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/resources_by/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a><br>
+          <span class="demiBold">{% trans "on" %}:</span> {{ repo.created|date:"d/m/Y" }}
+        </p>
+{% comment %}
+        {% if user.is_authenticated %}            
             <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span>
                 {% if can_submit %}&nbsp; <a href="/repo/{{ repo.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i></a>{% endif %}
                 {% if can_withdraw %}&nbsp; <a href="/repo/{{ repo.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
@@ -89,7 +60,49 @@
                 {% if can_publish %}&nbsp; <a href="/repo/{{ repo.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;""></i></a>{% endif %}
                 {% if can_un_publish %}&nbsp; <a href="/repo/{{ repo.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
             </div>
-{% endif %}
-        </div>
-    </section>
+        {% endif %}
+{% endcomment %}
+        {% if user.is_authenticated %}
+          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span></div>{% endif %}
+          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
+            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span></div>{% endif %}
+            <ul class="list-inline">
+                {% if can_submit %}<li class="marginB5"><a href="/repo/{{ repo.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
+                {% if can_withdraw %}<li class="marginB5"><a href="/repo/{{ repo.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</li></a>{% endif %}
+                {% if can_reject %}<li class="marginB5"><a href="/repo/{{ repo.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
+                {% if can_publish %}<li class="marginB5"><a href="/repo/{{ repo.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
+                {% if can_un_publish %}<li class="marginB5"><a href="/repo/{{repo.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
+            </ul>
+          {% endif %}
+        {% endif %}
+        
+        
+        
+        
+        
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span>{% if repo.editor.id != repo.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ repo.editor.username }}">{{ repo.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ repo.modified|date:"d/m/Y" }}</p>
+      </div>
+    </div>
+  </section>
+</article>
+{% endblock %}
+
+{% block extra_script %}
+<script type="text/javascript">
+	$(document).ready(function (){
+$('dt a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent();
+		var accordionContent = accordion.next('.field-content');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+    		accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+    	} else {
+    		accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+    	}
+	});
+});
+</script>
 {% endblock %}

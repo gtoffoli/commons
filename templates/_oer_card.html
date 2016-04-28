@@ -1,50 +1,36 @@
  {% comment %} items OER {% endcomment %}
 
- {% load i18n %}
+ {% load staticfiles i18n %}
 
 <article class="view-card">
-	<p class="title-card"><a href="/oer/{{ oer.slug }}/" style="color: {{ oer.get_link_color }};">{{ oer.title }}</a></p>
-	<p class="text-card">Rating &nbsp;
-		{% with stars=oer.get_stars %}
-       {% include "_view_rating.html" %}
-		{% endwith %} 	    
-	</p>
-	
-	{% if oer.description|length > 140 %}
-	<div>
-		<p style="display:inline-block" class="text-card short-description"><i>{{ oer.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
-		<p style="display:none" class="text-card full-description"><i>{{ oer.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
-	</div>
-	{% else %}
-		<p style="display:inline-block" class="text-card full-description"><i>{{ oer.description }}</i></p>
-	{% endif %}
-	
-	{% if oer.subjects.all %}
-	    <dl class="list-inline">
-	      <dt>{% trans "subject areas"|capfirst %}</dt>
-	        {% for subject in oer.subjects.all %}
-	            <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}"><input type="submit" class="btn-link" value="{{ subject.option_label|safe }}"></form></dd>
-	        {% endfor %}
-	    </dl>
-	{% endif %}
-	 {% if oer.tags.all %}
-	    <dl class="list-inline">
-    		<dt>{% trans "tags"|capfirst %}</dt>
-		    {% for tag in oer.tags.all %}
-	        	<dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<input type="hidden" name="tags" value="{{ tag.id }}"><input type="submit" class="btn-link" value="{{ tag.name }}"></form></dd>
-		    {% endfor %}
-		</dl>
-	{% endif %}
-	{% if oer.material %}
-	    <dl class="list-inline">
-	        <dt>{% trans "type of material"|capfirst %}</dt>
-  	        <dd><form action="/oers/search/" method="post" id="material">{% csrf_token %}<input type="hidden" name="material" value="{{ oer.material.id }}"><input type="submit" class="btn-link" value="{{ oer.material.name }}"></form></dd>
-  	    </dl>
-    {% endif %}
-    {% if oer.license %}
-        <dl class="list-inline">
-            <dt>{% trans "terms of use"|capfirst %}</dt>
-            <dd><form action="/oers/search/" method="post" id="license">{% csrf_token %}<input type="hidden" name="license" value="{{ oer.license.id }}"> <input type="submit" class="btn-link" value="{{ oer.license.name }}"></form></dd>
-        </dl>
-  	{% endif %}
+  <p class="title-card">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></p>
+  <p class="text-card">Rating &nbsp;
+    {% with stars=oer.get_stars %}
+      {% include "_view_rating.html" %}
+    {% endwith %}
+  </p>
+
+  {% if oer.description|length > 140 %}
+    <div>
+      <p style="display:inline-block" class="text-card short-description"><i>{{ oer.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+      <p style="display:none" class="text-card full-description"><i>{{ oer.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
+    </div>
+  {% else %}
+    <p style="display:inline-block" class="text-card full-description"><i>{{ oer.description }}</i></p>
+  {% endif %}
+  {% if oer.documents.all %}
+    <p class="font13"><i class="fa fa-file" style="color:#888;" aria-hidden="true"></i> {% trans "attached documents"|capfirst %}</p>
+  {% endif %}
+  {% if oer.subjects.all %}
+    {% include "_data_all.html" with data=oer.subjects.all data_class="" label_data="subject areas" action="/oers/search/" type_data="subjects" %}
+  {% endif %}
+  {% if oer.tags.all %}
+    {% include "_data_all.html" with data=oer.tags.all data_class="" label_data="tags" action="/oers/search/" type_data="tags"%}
+  {% endif %}
+  {% if oer.material %}
+    {% include "_data.html" with data=oer.material data_class="" label_data="type of material" action="/oers/search/" type_data="material" %}
+  {% endif %}
+  {% if oer.license %}
+    {% include "_data.html" with data=oer.license data_class="" label_data="terms of use" action="/oers/search/" type_data="license" %}
+  {% endif %}
 </article>

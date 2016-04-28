@@ -21,8 +21,8 @@
    {% endif %}
    {% for field in form.visible_fields %}
      <div class="form-group">
-       <label for="{{ field.id_for_label }}" class="open font13 marginB0"><a href="#" class="toggleIcon"><i class="fa fa-minus-square-o" ></i></a>{{ field.label|capfirst }}{% if field.help_text %}<a class="questionIcon" href="#" title="{{ field.help_text }}"><i class="fa fa-question-circle"></i></a>{% endif %}</label>
-       <div class="field-content font12 paddingL20">{{ field }}</div>
+       <label for="{{ field.id_for_label }}" class="font13 marginB0">{%if field.level %}{{ field.level }}{% endif %}<a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a>{{ field.label|capfirst }}{% if field.help_text %} <i class="infoIcon fa fa-info-circle" aria-hidden="true" data-original-title="{{ field.help_text }}" data-toggle="tooltip"></i>{% endif %}</label>
+       <div class="field-content font12 paddingL20" style="display:none">{{ field }}</div>
      </div>
    {% endfor %}
  </fieldset>

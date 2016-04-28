@@ -1,6 +1,5 @@
 {% extends "commons_base.html" %}
-{% load staticfiles %}
-{% load i18n %}
+{% load staticfiles i18n %}
 
 {% block head_title %}OER: {{ oer.title }}{% endblock %}
 
@@ -19,7 +18,7 @@
   </div>
   <section class="view-card-details">
     <div class="row">
-      <div class="col-md-9 col-lg-9">
+      <div class="col-sm-9 col-md-9 col-lg-9">
       <div class="marginB10 clearfix">
       {% if oer.url and oer.description %}
         <div class="hidden-xs">
@@ -35,24 +34,17 @@
       {% elif oer.description %}
         <p>{{ oer.description }}</p>
       {% endif %}
-
       {% if oer.material %}
-        <dl class="list-inline font14">
-           <dt>{% trans "type of material"|capfirst %}</dt>
-           <dd><form action="/oers/search/" method="post" id="material">{% csrf_token %}<button type="submit" class="btn-link" name="material" value="{{ oer.material.id }}">{{ oer.material.name }}</button></form></dd>
-        </dl>
+        {% include "_data.html" with data=oer.material data_class=" font14" label_data="type of material" action="/oers/search/" type_data="material" %}
       {% endif %}
-      
-      <dl class="list-inline font14">
-         <dt>{% trans "terms of use"|capfirst %}</dt>
-         <dd><form action="/oers/search/" method="post" id="license">{% csrf_token %}<button type="submit" name="license" class="btn-link" value="{{ oer.license.id }}">{{ oer.license.name }}</button></form></dd>
-      </dl>
-      
+      {% if oer.license %}
+        {% include "_data.html" with data=oer.license data_class=" font14" label_data="terms of use" action="/oers/search/" type_data="license" %}
+      {% endif %}
       {% if oer.reference or oer.embed_code %}
         <dl class="list-inline font14">
            {% if oer.reference %}
               <dt class="with_icon">{% trans "reference info"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
-              <dd class="field-content" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.reference }}</pre></dd>
+              <dd class="field-content width-full" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.reference }}</pre></dd>
            {% endif %}
            {% if oer.embed_code %}
               <dt class="with_icon">{% trans "embed code"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
@@ -63,73 +55,33 @@
       </div>
 
       {% if oer.levels.all %}
-        <dl class="list-inline font14 marginB10">
-           <dt>{% trans "target audience"|capfirst %}</dt>
-           {% for level in oer.levels.all %}
-              <dd><form action="/oers/search/" method="post" id="oers_{{ level.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="levels" value="{{ level.id }}"">{{ level.option_label|safe }}</button></form></dd>
-           {% endfor %}
-        </dl>
+        {% include "_data_all.html" with data=oer.levels.all data_class=" font14  marginB10" label_data="target audience" action="/oers/search/" type_data="levels" %}
       {% endif %}
 
       {% if oer.subjects.all and oer.tags.all %}
         <div class="row">
            <div class="col-sm-6 col-md-6 col-lg-6 paddingB10 paddingR0">
-              <dl class="list-inline font14">
-                 <dt>{% trans "subject areas"|capfirst %}</dt>
-                 {% for subject in oer.subjects.all %}
-                       <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
-                 {% endfor %}
-              </dl>
+             {% include "_data_all.html" with data=oer.subjects.all data_class=" font14" label_data="subject areas" action="/oers/search/" type_data="subjects" %}
            </div>
            <div class="col-sm-6 col-md-6 col-lg-6 paddingB10 ">
-              <dl class="list-inline font14">
-                 <dt>{% trans "tags"|capfirst %}</dt>
-                 {% for tag in oer.tags.all %}
-                    <dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
-                 {% endfor %}
-              </dl>
+             {% include "_data_all.html" with data=oer.tags.all data_class=" font14" label_data="tags" action="/oers/search/" type_data="tags" %}
            </div>
         </div>
       {% elif oer.subjects.all %}
-        <dl class="list-inline font14 marginB10">
-           <dt>{% trans "subject areas"|capfirst %}</dt>
-           {% for subject in oer.subjects.all %}
-                <dd><form action="/oers/search/" method="post" id="oers_{{ subject.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="subjects" value="{{ subject.id }}">{{ subject.option_label|safe }}</button></form></dd>
-           {% endfor %}
-        </dl>
+        {% include "_data_all.html" with data=oer.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/oers/search/" type_data="subjects" %}
       {% elif oer.tags.all %}
-        <dl class="list-inline font14 marginB10">
-           <dt>{% trans "tags"|capfirst %}</dt>
-           {% for tag in oer.tags.all %}
-                <dd><form action="/oers/search/" method="post" id="oers_{{ tag.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="tags" value="{{ tag.id }}">{{ tag.name }}</button></form></dd>
-           {% endfor %}
-        </dl>
+        {% include "_data_all.html" with data=oer.tags.all data_class=" font14 marginB10" label_data="tags" action="/oers/search/" type_data="tags" %}
       {% endif %}
 
       <div class="marginB10">
          {% if oer.languages.all %}
-           <dl class="list-inline font14">
-              <dt>{% trans "languages"|capfirst %}</dt>
-              {% for language in oer.languages.all %}
-                <dd><form action="/oers/search/" method="post" id="oers_{{ language.code }}">{% csrf_token %}<button type="submit" class="btn-link" name="languages" value="{{ language.code }}">{{ language.option_label|safe }}</button></form></dd>
-              {% endfor %}
-           </dl>
+           {% include "_data_languages.html" with data=oer.languages.all data_class=" font14" action="/oers/search/" %}
          {% endif %}
          {% if oer.media.all %}
-           <dl class="list-inline font14">
-              <dt>{% trans "media formats"|capfirst %}</dt>
-              {% for medium in oer.media.all %}
-                <dd><form action="/oers/search/" method="post" id="media_{{ medium.id }}">{% csrf_token %}<input type="hidden" ><button type="submit" class="btn-link" name="media" value="{{ medium.id }}">{{ medium.option_label|safe }}</button></form></dd>
-              {% endfor %}
-           </dl>
+           {% include "_data_all.html" with data=oer.media.all data_class=" font14" label_data="media formats" action="/oers/search/" type_data="media" %}
          {% endif %}
          {% if oer.accessibility.all %}
-           <dl class="list-inline font14">
-              <dt>{% trans "accessibility features"|capfirst %}</dt>
-              {% for feature in oer.accessibility.all %}
-                <dd><form action="/oers/search/" method="post" id="accessibility_{{ feature.id }}">{% csrf_token %}<button type="submit" class="btn-link" name="accessibility" value="{{ feature.id }}">{{ feature.option_label|safe }}</button></form></dd>
-              {% endfor %}
-           </dl>
+           {% include "_data_all.html" with data=oer.accessibility.all data_class=" font14" label_data="accessibility features" action="/oers/search/" type_data="accessibility" %}
          {% endif %}
       </div>
 
@@ -148,10 +100,7 @@
       </dl>
 
       {% if oer.source %}
-        <dl class="list-inline font14 marginB10">
-           <dt>{% trans "source repository"|capfirst %}</dt>
-           <dd><a class="btn-link" href="/repo/{{ oer.source.slug }}/" title="{% trans "source repository"|capfirst %}">{{ oer.source.name }}</a></dd>
-        </dl>
+        {% include "_data.html" with data=oer.source data_class=" font14 marginB10" label_data="source repository" action="/repo/"|add:oer.source.slug|add:"/" type_data="source_repository" %}
       {% endif %}
 
       {% if oer.documents.all %}
@@ -190,7 +139,7 @@
         </dl>
       {% endif %}
       </div>
-      <div class="col-md-3 col-lg-3">
+      <div class="col-sm-3 col-md-3 col-lg-3">
         <p><span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a><br>
            <span class="demiBold">{% trans "on" %}:</span> {{ oer.created|date:"d/m/Y" }} <br>
            <span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>

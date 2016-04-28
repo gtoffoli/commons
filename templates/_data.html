@@ -1,0 +1,8 @@
+{% load staticfiles i18n %}
+
+  <dl class="list-inline {{data_class}}">
+    <dt>{% trans label_data|capfirst %}</dt>
+    <dd><form action="{{ action }}" method="post">{% csrf_token %}<button type="submit" class="btn-link" name="{{ type_data }}" value="{{ data.id }}">{% if desc_data %}{{ data.description|safe }}{% else %}{{ data.name|safe }}{% endif %}</button></form></dd>
+  </dl>
+
+

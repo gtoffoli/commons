@@ -296,9 +296,9 @@ def project_folder(request, project_slug):
     return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail(request, project_id, project=None):
-    MAX_OERS = 10
-    MAX_EVALUATIONS = 10
-    MAX_LPS = 10
+    MAX_OERS = 5
+    MAX_EVALUATIONS = 5
+    MAX_LPS = 5
     MAX_MESSAGES = 5
     if not project:
         project = get_object_or_404(Project, pk=project_id)
@@ -903,7 +903,8 @@ def repo_save(request, repo=None):
                 print form.errors
                 return render_to_response('repo_edit.html', {'repo': repo, 'form': form,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/repo/%s/' % request.POST.get('slug', ''))
+            # return HttpResponseRedirect('/repo/%s/' % request.POST.get('slug', ''))
+            return HttpResponseRedirect('/repo/%s/' % repo.slug)
     else:
         return repo_new(request)
 
