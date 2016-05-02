@@ -3,6 +3,7 @@
  {% load i18n staticfiles %}
 
 <article class="view-card">
+	<p class="title-card">{% if project.state != 2 %}<small style="color: {{project.get_link_color }};">[{{ project.get_state }}]</small> {% endif %}<a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
 	{% if project.description|length > 140 %}
 	<div>
 		<p style="display:inline-block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>

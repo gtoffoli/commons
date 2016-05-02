@@ -31,7 +31,7 @@ from models import DRAFT, PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
-from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, FolderDocumentForm
+from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
@@ -240,6 +240,47 @@ def projects(request):
             if project and project.proj_type.public and project.state==PROJECT_OPEN:
                 filtered_nodes.append(node)
     return render_to_response('projects.html', {'nodes': filtered_nodes,}, context_instance=RequestContext(request))
+
+@page_template('_project_index_page.html')
+def projects_search(request, template='search_projects.html', extra_context=None):
+    query = qq = []
+    projects = []
+    criteria = []
+    include_all = ''
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET' and request.session.get('post_dict', None):
+            form = None
+        elif request.method == 'POST':
+            post = request.POST
+            form = ProjectSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
+                include_all = post.get('include_all')
+                if include_all:
+                    criteria.append(_('include non published items'))
+                post_dict['include_all'] = include_all
+                request.session['post_dict'] = post_dict
+        else:
+            form = ProjectSearchForm()
+            request.session["post_dict"] = {}
+        qs = Project.objects.filter(proj_type_id__in=[2,3])
+        for q in qq:
+            qs = qs.filter(q)
+        if not include_all:
+            qs = qs.filter(state=PROJECT_OPEN)
+        projects = qs.distinct().order_by('name')
+    else:
+        form = ProjectSearchForm()
+        qs = Project.objects.filter(proj_type_id__in=[2,3])
+        projects = qs.filter(state=PROJECT_OPEN).distinct().order_by('name')
+        request.session["post_dict"] = {}
+
+    context = {'projects': projects, 'n_projects': len(projects), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    return render_to_response(template, context, context_instance=RequestContext(request))
 
 def project_add_document(request):
     project_id = request.POST.get('id', '')
