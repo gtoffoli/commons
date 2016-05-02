@@ -159,8 +159,8 @@ class UserProfileExtendedForm(UserProfileForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        # exclude = ('group', 'forum',)
-        exclude = ('slug', 'group', 'forum', 'folders',)
+        # exclude = ('slug', 'group', 'forum', 'folders',)
+        exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -294,7 +294,8 @@ class OerForm(forms.ModelForm):
 
     class Meta:
         model = OER
-        exclude = ('slug', 'documents', 'metadata')
+        # exclude = ('slug', 'documents', 'metadata')
+        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image',)
         # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -420,8 +421,8 @@ class LpGroupChoiceField(forms.ModelChoiceField):
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
-        # exclude = ('slug', 'project',)
-        exclude = ('slug', 'group',)
+        # exclude = ('slug', 'group',)
+        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
@@ -487,7 +488,8 @@ class LpSearchForm(forms.Form):
 class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
-        exclude = ('children',)
+        # exclude = ('children',)
+        exclude = ('children', 'text', 'file', 'mimetype',)
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))

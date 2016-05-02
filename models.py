@@ -847,16 +847,25 @@ class Project(Resource):
                 return True
         return False
 
+    """
     def get_oers(self, order_by='-created'):
         return OER.objects.filter(project=self.id).order_by(order_by)
+    """
+    def get_oers(self, states=[3], order_by='-created'):
+        qs = OER.objects.filter(project=self.id)
+        if states:
+            qs = qs.filter(state__in=states)
+        return qs.order_by(order_by)
 
     def get_oer_evaluations(self, order_by='-modified'):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
 
-    """
-    def get_roll_of_mentors(self):
-        rolls = self.get_children(proj_type_name='roll')
-    """
+    def get_lps(self, states=[3], order_by='-created'):
+        qs = LearningPath.objects.filter(project=self.id)
+        if states:
+            qs = qs.filter(state__in=states)
+        return qs.order_by(order_by)
+
     def get_roll_of_mentors(self, states=None):
         rolls = self.get_children(proj_type_name='roll', states=states)
         return rolls and rolls[0] or None
@@ -1067,7 +1076,7 @@ class OER(Resource, Publishable):
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
-    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'))
+    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
@@ -1366,7 +1375,7 @@ class LearningPath(Resource, Publishable):
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     tags = models.ManyToManyField(Tag, through='TaggedLP', blank=True, verbose_name='tags')
     long = models.TextField(blank=True, verbose_name=_('description'))
-    project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True)
+    project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True, related_name='lp_project')
     # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
     group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
