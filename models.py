@@ -29,7 +29,7 @@ from dmuc.models import Room, RoomMember
 from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from commons.documents import DocumentType, Document, DocumentVersion
+from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words
@@ -129,6 +129,14 @@ class Tag(models.Model):
 
     def __unicode__(self):
         return self.name
+
+class Resource(models.Model):
+    class Meta:
+        abstract = True
+
+    deleted = models.BooleanField(default=False, verbose_name=_('deleted'))
+    small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
+    big_image = models.ImageField('big image', upload_to='images/resources/', null=True, blank=True)
 
 DRAFT = 1
 SUBMITTED = 2
@@ -554,7 +562,8 @@ class ProjectBase(models.Model):
 
 class Project(ProjectBase):
 """
-class Project(models.Model):
+# class Project(models.Model):
+class Project(Resource):
 
     class Meta:
         verbose_name = _('project / community')
@@ -956,7 +965,8 @@ class RepoType(models.Model):
     def natural_key(self):
         return (self.name,)
 
-class Repo(models.Model, Publishable):
+# class Repo(models.Model, Publishable):
+class Repo(Resource, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
@@ -1032,7 +1042,8 @@ SOURCE_TYPE_CHOICES = (
     (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 
-class OER(models.Model, Publishable):
+# class OER(models.Model, Publishable):
+class OER(Resource, Publishable):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
@@ -1345,17 +1356,16 @@ LP_TYPE_CHOICES = (
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
-class LearningPath(models.Model, Publishable):
+# class LearningPath(models.Model, Publishable):
+class LearningPath(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     short = models.TextField(blank=True, verbose_name=_('objectives'))
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    # tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
     tags = models.ManyToManyField(Tag, through='TaggedLP', blank=True, verbose_name='tags')
     long = models.TextField(blank=True, verbose_name=_('description'))
-    # project = models.ForeignKey(Project, verbose_name=_('project'))
     project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True)
     # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
     group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
@@ -1623,6 +1633,9 @@ class PathNode(node_factory('PathEdge')):
     label = models.TextField(blank=True, verbose_name=_('label'))
     oer = models.ForeignKey(OER, verbose_name=_('stands for'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
+    text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
+    file = models.FileField(storage=storage_backend, upload_to='files/pathnodes/', null=True, blank=True, verbose_name=_('own file content'))
+    mimetype = models.CharField(max_length=50, null=True, blank=True, editable=False)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathnode_creator')
