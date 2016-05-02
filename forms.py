@@ -176,7 +176,24 @@ class ProjectForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
-class DocumentForm(forms.Form):
+class ProjectSearchForm (forms.Form):
+    def __init__(self, *args, **kwargs):
+        q = kwargs.get('q', '')
+        if q:
+            kwargs.pop('q')
+        super(ProjectSearchForm, self).__init__(*args,**kwargs)
+        if q:
+            self.fields['q'].initial = q
+        for fieldname in self.fields:
+            self.fields[fieldname].help_text = ''
+
+    nodes = Group.objects.filter(level=0)
+    root = nodes[0]
+    communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1).order_by('name'),
+        label=_('communities'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+
+class DocumentForm(forms.Form): 
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'form-control',}))
     docfile = forms.FileField(

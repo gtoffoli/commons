@@ -25,6 +25,35 @@
        <div class="field-content font12 paddingL20" style="display:none">{{ field }}</div>
      </div>
    {% endfor %}
+   {% if other_fields %}
+     <div class="form-group">
+       <label for="n_oers" class="font13 marginB0"><a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a>OER catalogati</label>
+       <div class="field-content font12 paddingL20" style="display:none"><ul id="n_oers">
+         <li><label for="n_oers_0"><input id="n_oers_0" name="n_oers" type="checkbox" value="1"> &lt;= 50</label></li>
+         <li><label for="n_oers_1"><input id="n_oers_1" name="n_oers" type="checkbox" value="2"> &gt; 50 e &lt;= 100</label></li>
+         <li><label for="n_oers_2"><input id="n_oers_2" name="n_oers" type="checkbox" value="3"> &gt; 100</label></li>
+         </ul>
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="n_lps" class="font13 marginB0"><a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a>LP creati</label>
+       <div class="field-content font12 paddingL20" style="display:none"><ul id="n_lps">
+         <li><label for="n_lps_0"><input id="n_lps_0" name="n_lps" type="checkbox" value="1"> &lt;= 50</label></li>
+         <li><label for="n_lps_1"><input id="n_lps_1" name="n_lps" type="checkbox" value="2"> &gt; 50 e &lt;= 100</label></li>
+         <li><label for="n_lps_2"><input id="n_lps_2" name="n_lps" type="checkbox" value="3"> &gt; 100</label></li>
+         </ul>
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="n_members" class="font13 marginB0"><a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a>Membri</label>
+       <div class="field-content font12 paddingL20" style="display:none"><ul id="n_lps">
+         <li><label for="n-members_0"><input id="n_members_0" name="n_members" type="checkbox" value="1"> &lt;= 50</label></li>
+         <li><label for="n_members_1"><input id="n_members_1" name="n_members" type="checkbox" value="2"> &gt; 50 e &lt;= 100</label></li>
+         <li><label for="n_members_2"><input id="n_members_2" name="n_members" type="checkbox" value="3"> &gt; 100</label></li>
+         </ul>
+       </div>
+     </div>
+   {% endif %}
  </fieldset>
  <div class="form-group">
    <div class="font12"><input type="submit" value="{% trans "Apply" %}" name="invia1"> 

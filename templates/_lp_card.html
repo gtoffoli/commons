@@ -1,6 +1,6 @@
  {% comment %} items LP {% endcomment %}
 
- {% load i18n %}
+ {% load staticfiles i18n %}
 
 <article class="view-card">
 	<p class="title-card">{% if lp.state != 3 %}<small style="color: {{lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></p>

@@ -10,6 +10,7 @@ from django.contrib import admin
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from mptt.admin import MPTTModelAdmin
+from django.utils.html import format_html
 
 # ABSTRACT CLASSES
 
@@ -37,14 +38,14 @@ class VocabularyNode(MPTTModel, VocabularyEntry):
     def option_label(self):
         indent = ''
         for i in range(self.level):
-            indent += '-'
+            indent += '&nbsp; &nbsp; &nbsp;'
         if self.level:
             indent += ' '
         return '%s%s' % (indent, self.name)
 
     def __unicode__(self):
-        # return self.name
-        return self.option_label()
+        #return self.name
+        return format_html(self.option_label())
 
 def expand_to_descendants(klass, pk_list):
     """ klass must be a subclass of VocabularyNode. Return pk_list expanded to all descendants """

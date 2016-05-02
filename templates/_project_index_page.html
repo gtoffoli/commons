@@ -1,0 +1,8 @@
+{% load staticfiles i18n %}
+{% load endless %}
+{% paginate projects %}
+{% for project in projects %}
+    {% include "_project_card.html" %}
+{% endfor %}
+{% show_more %}
+{% include "_search_index_page_js.html" %}

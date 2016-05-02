@@ -1,0 +1,22 @@
+ {% comment %} items Project {% endcomment %}
+
+ {% load i18n staticfiles %}
+
+<article class="view-card">
+	{% if project.description|length > 140 %}
+	<div>
+		<p style="display:inline-block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+		<p style="display:none" class="text-card full-description"><i>{{ project.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
+	</div>
+	{% else %}
+		<p style="display:inline-block" class="text-card full-description"><i>{{ project.description }}</i></p>
+	{% endif %}
+{% comment %}
+	{% if lp.subjects.all %}
+		{% include "_data_all.html" with data=lp.subjects.all data_class="" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+	{% endif %}
+	{% if lp.tags.all %}
+		{% include "_data_all.html" with data=lp.tags.all data_class="" label_data="tags" action="/lps/search/" type_data="tags" %}
+	{% endif %}
+{% endcomment %}
+</article>
