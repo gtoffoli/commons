@@ -35,6 +35,7 @@ from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, Pr
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
+from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
@@ -243,10 +244,15 @@ def projects(request):
 
 @page_template('_project_index_page.html')
 def projects_search(request, template='search_projects.html', extra_context=None):
-    query = qq = []
+    N_MEMBERS_LIMITS = [item[1] for item in N_MEMBERS_CHOICES[1:]]
+    N_OERS_LIMITS = [item[1] for item in N_OERS_CHOICES[1:]]
+    N_LPS_LIMITS = [item[1] for item in N_LPS_CHOICES[1:]]
+    post = None
+    qq = []
     projects = []
     criteria = []
     include_all = ''
+    min_oers = min_lps = min_members = 0
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -255,6 +261,20 @@ def projects_search(request, template='search_projects.html', extra_context=None
             form = ProjectSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+                communities = post.getlist('communities')
+                if communities:
+                    comm_objects = Project.objects.filter(id__in=communities)
+                    comm_groups = [comm.group for comm in comm_objects]
+                    proj_groups = []
+                    for comm_group in comm_groups:
+                        proj_groups.extend(comm_group.get_descendants())
+                    """
+                    proj_groups = [item for sublist in [comm_group.get_descendants()] for item in sublist]
+                    """
+                    qq.append(Q(group__in=proj_groups))
+                    for community in comm_objects: 
+                        criteria.append(community.name)
+                post_dict['communities'] = communities
                 include_all = post.get('include_all')
                 if include_all:
                     criteria.append(_('include non published items'))
@@ -268,7 +288,32 @@ def projects_search(request, template='search_projects.html', extra_context=None
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PROJECT_OPEN)
+        if post:
+            n_oers = int(post.get('n_oers', 0))
+            n_members = int(post.get('n_members', 0))
+            if n_members:
+                min_members = int(N_MEMBERS_LIMITS[n_members-1])
+                qs = qs.annotate(num_members=Count('member_project'))
+            n_lps = int(post.get('n_lps', 0))
+            if n_lps:
+                min_lps = int(N_LPS_LIMITS[n_lps-1])
+                qs = qs.annotate(num_lps=Count('lp_project'))
+            if n_oers:
+                min_oers = int(N_OERS_LIMITS[n_oers-1])
+                qs = qs.annotate(num_oers=Count('oer_project'))
+            if min_members:
+                qs = qs.filter(num_members__gt=min_members-1)
+            if min_lps:
+                qs = qs.filter(num_lps__gt=min_lps-1)
+            if min_oers:
+                qs = qs.filter(num_oers__gt=min_oers-1)
         projects = qs.distinct().order_by('name')
+        if n_members:
+            projects = [p for p in projects if min_members <= p.get_memberships(state=1).count()]
+        if n_lps:
+            projects = [p for p in projects if min_lps <= p.get_lps().count()]
+        if n_oers:
+            projects = [p for p in projects if min_oers <= p.get_oers().count()]
     else:
         form = ProjectSearchForm()
         qs = Project.objects.filter(proj_type_id__in=[2,3])

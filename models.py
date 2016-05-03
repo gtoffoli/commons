@@ -918,7 +918,7 @@ def forum_get_project(self):
 Forum.get_project = forum_get_project
    
 class ProjectMember(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'))
+    project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'), related_name='member_project')
     user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
     state = models.IntegerField(choices=MEMBERSHIP_STATE_CHOICES, default=0, null=True, verbose_name='membership state')
     created = CreationDateTimeField(_('request created'))
