@@ -253,9 +253,39 @@ def projects_search(request, template='search_projects.html', extra_context=None
     criteria = []
     include_all = ''
     min_oers = min_lps = min_members = 0
+    n_members = n_lps = n_oers = 0
+    qs = Project.objects.exclude(state=PROJECT_DELETED).filter(proj_type_id__in=[2,3])
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
+            post_dict = request.session.get('post_dict', None)
+            communities = post_dict.get('communities', [])
+            if communities:
+                comm_objects = Project.objects.filter(id__in=communities)
+                comm_groups = [comm.group for comm in comm_objects]
+                proj_groups = []
+                for comm_group in comm_groups:
+                    proj_groups.extend(comm_group.get_descendants())
+                    qq.append(Q(group__in=proj_groups))
+            n_members = post_dict.get('n_members', 0)
+            if n_members:
+                min_members = int(N_MEMBERS_LIMITS[n_members-1])
+                qs = qs.annotate(num_members=Count('member_project'))
+                if min_members:
+                  qs = qs.filter(num_members__gt=min_members-1)
+            n_lps = post_dict.get('n_lps', 0)
+            if n_lps:
+                min_lps = int(N_LPS_LIMITS[n_lps-1])
+                qs = qs.annotate(num_lps=Count('lp_project'))
+                if min_lps:
+                    qs = qs.filter(num_lps__gt=min_lps-1)
+            n_oers = post_dict.get('n_oers', 0)
+            if n_oers:
+                min_oers = int(N_OERS_LIMITS[n_oers-1])
+                qs = qs.annotate(num_oers=Count('oer_project'))
+                if min_oers:
+                    qs = qs.filter(num_oers__gt=min_oers-1)
+            include_all = post_dict.get('include_all', False)
         elif request.method == 'POST':
             post = request.POST
             form = ProjectSearchForm(post) # A form bound to the POST data
@@ -275,6 +305,30 @@ def projects_search(request, template='search_projects.html', extra_context=None
                     for community in comm_objects: 
                         criteria.append(community.name)
                 post_dict['communities'] = communities
+                n_members = int(post.get('n_members', 0))
+                if n_members:
+                    min_members = int(N_MEMBERS_LIMITS[n_members-1])
+                    qs = qs.annotate(num_members=Count('member_project'))
+                    if min_members:
+                        qs = qs.filter(num_members__gt=min_members-1)
+                        criteria.append(str(_('minimum number of members'))+' '+str(min_members))
+                post_dict['n_members'] = n_members
+                n_lps = int(post.get('n_lps', 0))
+                if n_lps:
+                    min_lps = int(N_LPS_LIMITS[n_lps-1])
+                    qs = qs.annotate(num_lps=Count('lp_project'))
+                    if min_lps:
+                        qs = qs.filter(num_lps__gt=min_lps-1)
+                        criteria.append(str(_('minimum number of LPs'))+' '+str(min_lps))
+                post_dict['n_lps'] = n_lps
+                n_oers = int(post.get('n_oers', 0))
+                if n_oers:
+                    min_oers = int(N_OERS_LIMITS[n_oers-1])
+                    qs = qs.annotate(num_oers=Count('oer_project'))
+                    if min_oers:
+                        qs = qs.filter(num_oers__gt=min_oers-1)
+                        criteria.append(str(_('minimum number of OERs'))+' '+str(min_oers))
+                post_dict['n_oers'] = n_oers
                 include_all = post.get('include_all')
                 if include_all:
                     criteria.append(_('include non published items'))
@@ -283,11 +337,11 @@ def projects_search(request, template='search_projects.html', extra_context=None
         else:
             form = ProjectSearchForm()
             request.session["post_dict"] = {}
-        qs = Project.objects.filter(proj_type_id__in=[2,3])
         for q in qq:
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PROJECT_OPEN)
+        """
         if post:
             n_oers = int(post.get('n_oers', 0))
             n_members = int(post.get('n_members', 0))
@@ -307,6 +361,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
                 qs = qs.filter(num_lps__gt=min_lps-1)
             if min_oers:
                 qs = qs.filter(num_oers__gt=min_oers-1)
+        """
         projects = qs.distinct().order_by('name')
         if n_members:
             projects = [p for p in projects if min_members <= p.get_memberships(state=1).count()]
@@ -316,7 +371,6 @@ def projects_search(request, template='search_projects.html', extra_context=None
             projects = [p for p in projects if min_oers <= p.get_oers().count()]
     else:
         form = ProjectSearchForm()
-        qs = Project.objects.filter(proj_type_id__in=[2,3])
         projects = qs.filter(state=PROJECT_OPEN).distinct().order_by('name')
         request.session["post_dict"] = {}
 
@@ -2032,6 +2086,7 @@ def lp_delete(request, lp_id):
 
 def lp_add_node(request, lp_slug):
     path = get_object_or_404(LearningPath, slug=lp_slug)
+    print request
     return pathnode_edit(request, path_id=path.id) 
 
 def lp_add_oer(request, lp_slug, oer_id):
@@ -2273,98 +2328,6 @@ def clean_q(q):
 def search_by_string(request, q, subjects=[], languages=[]):
     pass
 
-"""
-def oers_search(request):
-    query = qq = []
-    oers = []
-    include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = OerSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include_all')
-            oer_types = request.POST.getlist('oer_type')
-            if oer_types:
-                qq.append(Q(oer_type__in=oer_types))
-                print 'oer_types = ', oer_types
-            source_types = request.POST.getlist('source_type')
-            if source_types:
-                qq.append(Q(source_type__in=source_types))
-            materials = request.POST.getlist('material')
-            if materials:
-                qq.append(Q(material__in=materials))
-            licenses = request.POST.getlist('license')
-            if licenses:
-                qq.append(Q(license__in=licenses))
-            levels = request.POST.getlist('levels')
-            if levels:
-                qq.append(Q(levels__in=levels))
-            subjects = request.POST.getlist('subjects')
-            if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
-            tags = request.POST.getlist('tags')
-            if tags:
-                qq.append(Q(tags__in=tags))
-            languages = request.POST.getlist('languages')
-            if languages:
-                qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
-            media = request.POST.getlist('media')
-            if media:
-                qq.append(Q(media__in=media))
-            acc_features = request.POST.getlist('accessibility')
-            if acc_features:
-                qq.append(Q(accessibility__in=acc_features))
-            if qq:
-                if include_all:
-                    query = qq.pop()
-                else:
-                    query = Q(state=PUBLISHED)
-                for q in qq:
-                    query = query & q
-                oers = OER.objects.filter(query).distinct().order_by('title')
-    else:
-        form = OerSearchForm()
-    return render_to_response('search_oers.html', {'oers': oers, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
-
-def lps_search(request):
-    query = qq = []
-    lps = []
-    include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = LpSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            qq.append(Q(project__isnull=False))
-            include_all = request.POST.get('include_all')
-            path_types = request.POST.getlist('path_type')
-            if path_types:
-                qq.append(Q(path_type__in=path_types))
-                print 'path_types = ', path_types
-            levels = request.POST.getlist('levels')
-            if levels:
-                qq.append(Q(levels__in=levels))
-            subjects = request.POST.getlist('subjects')
-            if subjects:
-                qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
-            tags = request.POST.getlist('tags')
-            if tags:
-                qq.append(Q(tags__in=tags))
-            if qq:
-                if include_all:
-                    query = qq.pop()
-                else:
-                    query = Q(state=PUBLISHED)
-                for q in qq:
-                    query = query & q
-                lps = LearningPath.objects.filter(query).distinct().order_by('title')
-    else:
-        form = LpSearchForm()
-        user = request.user
-        lps = LearningPath.objects
-        if not user.is_authenticated():
-           lps = lps.filter(state=PUBLISHED)
-        lps = lps.distinct().order_by('title')
-
-    return render_to_response('search_lps.html', {'lps': lps, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
-"""
 @page_template('_oer_index_page.html')
 def oers_search(request, template='search_oers.html', extra_context=None):
     qq = []

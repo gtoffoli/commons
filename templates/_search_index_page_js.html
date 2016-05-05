@@ -2,7 +2,6 @@
 $(document).ready(function (){
 	$('.expand-description').on('click', function(event){
 		event.preventDefault();
-		console.log('test');
 		var parent=$(this).parent().parent();
 		parent.children("p:first").css( "display", "none" );
 		parent.children("p:last").css( "display", "inline-block");

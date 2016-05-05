@@ -3,21 +3,65 @@
  {% load i18n staticfiles %}
 
 <article class="view-card">
-	<p class="title-card">{% if project.state != 2 %}<small style="color: {{project.get_link_color }};">[{{ project.get_state }}]</small> {% endif %}<a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
-	{% if project.description|length > 140 %}
-	<div>
-		<p style="display:inline-block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
-		<p style="display:none" class="text-card full-description"><i>{{ project.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
-	</div>
-	{% else %}
-		<p style="display:inline-block" class="text-card full-description"><i>{{ project.description }}</i></p>
-	{% endif %}
-{% comment %}
-	{% if lp.subjects.all %}
-		{% include "_data_all.html" with data=lp.subjects.all data_class="" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
-	{% endif %}
-	{% if lp.tags.all %}
-		{% include "_data_all.html" with data=lp.tags.all data_class="" label_data="tags" action="/lps/search/" type_data="tags" %}
-	{% endif %}
-{% endcomment %}
+  <p class="title-card"><a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
+  <p class="text-card">
+    {% if project.state == 3 %}
+      <span class="fa fa-lock neutral"></span>
+    {% endif %}
+    {% if project.state == 0 %}
+      <span class="fa fa-group orange"></span>
+    {% elif project.state == 1 %}
+      <span class="fa fa-group limegreen"></span>
+    {% elif project.state == 2 or project.state == 3 %}
+      <span class="fa fa-group neutral"></span>
+    {% endif %}
+    {{ project.proj_type }}, {% trans "number of members" %}: {{ project.members|length }}
+    {% if project.get_level > 1 %}
+    {% if project.get_level == 2 %}
+        {% with parent=project.get_parent %}
+          <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+        {% endwith %}
+      {% elif project.get_level == 3 %}
+        {% with parent=project.get_parent %}
+            <span style="padding:0 4px 0 6px">-</span>{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+            <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="{% trans "parent" %}">{{ parent.get_parent.get_name }}</a>
+        {% endwith %}
+      {% endif %}
+    {% endif %}
+  </p>
+  {% if project.description|length > 140 %}
+  <div>
+    <p style="display:inline-block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+    <p style="display:none" class="text-card full-description"><i>{{ project.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
+  </div>
+  {% else %}
+  <p style="display:inline-block" class="text-card full-description"><i>{{ project.description }}</i></p>
+  {% endif %}
+
+  {% if project.get_lps and project.get_oers %}
+    <ul class="list-inline">
+      <li>
+        <dl class="list-inline">
+          <dt>{% trans "number of learning paths"|capfirst %}</dt>
+          <dd><a href="/project/{{ project.slug }}/project_results/#p_lps" title="{% trans "project results"|capfirst %}: LPs">{{ project.get_lps.count }}</a></dd>
+        </dl>
+      </li>
+      <li>
+        <dl class="list-inline">
+          <dt>{% trans "number of OERs"|capfirst %}</dt>
+          <dd><a href="/project/{{ project.slug }}/project_results/#p_oers" title="{% trans "project results"|capfirst %}: OERs">{{ project.get_oers.count }}</a></dd>
+        </dl>
+      </li>
+    </ul>
+  {% elif project.get_lps %}
+    <dl class="list-inline">
+      <dt>{% trans "number of learning paths"|capfirst %}</dt>
+      <dd><a href="/project/{{ project.slug }}/project_results/#p_lps" title="{% trans "project results"|capfirst %}: LPs">{{ project.get_lps.count }}</a></dd>
+    </dl>
+  {% elif project.get_oers %}
+    <dl class="list-inline">
+      <dt>{% trans "number of OERs"|capfirst %}</dt>
+      <dd><a href="/project/{{ project.slug }}/project_results/#p_oers" title="{% trans "project results"|capfirst %}: OERs">{{ project.get_oers.count }}</a></dd>
+    </dl>
+  {% endif %}
 </article>

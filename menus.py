@@ -38,8 +38,8 @@ def community_children(request):
 def projects_children(request):
     children = []
     children.append (MenuItem(
-         capfirst(_("all projects")),
-         url='/projects/',
+         capfirst(_("projects")),
+         url='/projects/search',
         ))
     children.append (MenuItem(
          capfirst(_("top contributors")),

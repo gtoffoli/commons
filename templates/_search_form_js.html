@@ -6,13 +6,22 @@
 <script type="text/javascript">
 	function selected_field (id_args) {
 		for (var a=0; a < id_args.length; a++) {
+
 			var selectElement = 'select#'+id_args[a];
 			if ($('#search_form '+selectElement)) {
 				var selected=$('#search_form').find(selectElement).val();
 				if (selected) {
+					var go = true;
 					for (var i=0; i < selected.length; i++){
-						$('#search_form '+ selectElement+' option[value="'+selected[i]+'"]').prop('selected', true);
+						if (selected[i] != '0') {
+							$('#search_form '+ selectElement+' option[value="'+selected[i]+'"]').prop('selected', true);
+						}
+						else {
+							go = false;
+							break;
+						}
 					}
+					if (go) {
 					var content = $('#search_form '+selectElement).parent();
 					var accordion = $(content).prev();
 					var accordionToggleIcon= $(accordion).children('a.toggleIcon');
@@ -20,13 +29,22 @@
 					$(content).removeAttr('style');
 					accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
 				}
+				}
 			}
 		}
 	}
 	
 $(document).ready(function (){
-
-	selected_field (['id_material','id_pro_status','id_edu_field','id_pro_field','id_tags']);
+	
+{% if search == 'search_projects' %}
+	selected_field (['id_n_members','id_n_lps','id_n_oers']);
+{% elif search == 'search_lps' %}
+	selected_field (['id_tags']);
+{% elif search == 'search_oers' %}
+	selected_field (['id_material','id_tags']);
+{% elif search == 'search_peoples' %}
+	selected_field (['id_pro_status','id_edu_field','id_pro_field']);
+{% endif %}
 
 	var checkbox = $('#search_form').find('input:checkbox');
 	for (var i=0; i < checkbox.length; i++) {

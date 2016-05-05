@@ -1202,3 +1202,10 @@ text-decoration: none;
 .width-full {
 	width: 100%;
 }
+
+a.anchor {
+    display: block;
+    position: relative;
+    top: -200px;
+    visibility: hidden;
+}

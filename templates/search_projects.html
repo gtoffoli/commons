@@ -7,7 +7,7 @@
 {% block body_class %}search_projects{% endblock %}
 
 {% block body %}
-  <h1 class="text-center">{% trans "Projects"|capfirst %}</h1>
+  <h1 class="text-center">{% trans "projects"|capfirst %}</h1>
   <div class="row marginTB20">
     <div class="col-sm-6 col-md-5 col-lg-5">
       <div class="search-header">
@@ -54,5 +54,5 @@
 {% endblock %}
 
 {% block extra_script %}
-  {% include "_search_form_js.html" %}
+  {% include "_search_form_js.html"  with search='search_projects' %}
 {% endblock %}
