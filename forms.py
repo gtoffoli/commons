@@ -208,9 +208,7 @@ class ProjectSearchForm (forms.Form):
     communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1).order_by('name'),
         label=_('communities'), required=False,
         widget=forms.CheckboxSelectMultiple())
-    n_members = forms.ChoiceField(required=False, choices=N_MEMBERS_CHOICES, label=_('# of members'), widget=forms.Select())
-    n_lps = forms.ChoiceField(required=False, choices=N_LPS_CHOICES, label=_('# of learning paths'), widget=forms.Select())
-    n_oers = forms.ChoiceField(required=False, choices=N_OERS_CHOICES, label=_('# of oers'), widget=forms.Select())
+    n_members = forms.ChoiceField(required=False, choices=N_MEMBERS_CHOICES, label=_('minimum number of members'), widget=forms.Select())
 
 class DocumentForm(forms.Form): 
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
@@ -508,7 +506,7 @@ class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
         # exclude = ('children',)
-        exclude = ('children', 'text', 'file', 'mimetype',)
+        exclude = ('children', 'text', 'document',)
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
