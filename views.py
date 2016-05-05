@@ -16,6 +16,7 @@ from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
+from django.contrib.flatpages.models import FlatPage
 from actstream import action, registry
 
 from commons import settings
@@ -98,6 +99,8 @@ def my_chat(request):
                 rooms.append(room)
     chat_dict = {}
     chat_dict['rooms'] = rooms
+    info = FlatPage.objects.get(url='/info/chatrooms/').content
+    chat_dict['info'] = info
     return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
 
 def user_profile(request, username, user=None):

@@ -193,6 +193,7 @@ TEMPLATES = [
                 'django_messages.context_processors.inbox',
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
+                'dmuc.context_processors.rooms',
                 'commons.context_processors.sitename',
             ],
         },
@@ -431,7 +432,6 @@ COMMONS_PROJECTS_NO_CHAT = ('com',)
 
 CONVERSEJS_ENABLED = True
 CONVERSEJS_HIDE_MUC_SERVER = True
-CONVERSEJS_ALLOW_CONTACT_REQUESTS = False
 
 USE_HAYSTACK = True
 SEARCH_BACKEND = "whoosh"
