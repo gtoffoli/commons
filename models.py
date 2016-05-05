@@ -1640,11 +1640,14 @@ class LearningPath(Resource, Publishable):
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))
     label = models.TextField(blank=True, verbose_name=_('label'))
-    oer = models.ForeignKey(OER, verbose_name=_('stands for'))
+    oer = models.ForeignKey(OER, blank=True, null=True, verbose_name=_('stands for'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
     text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
+    """
     file = models.FileField(storage=storage_backend, upload_to='files/pathnodes/', null=True, blank=True, verbose_name=_('own file content'))
     mimetype = models.CharField(max_length=50, null=True, blank=True, editable=False)
+    """
+    document = models.ForeignKey(Document, blank=True, null=True, related_name='pathnode_document', verbose_name=_('document'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathnode_creator')
