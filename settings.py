@@ -359,14 +359,17 @@ LOGGING = {
         'dmuc': {
             'handlers': ['stream'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'filters': ['require_debug_false'],
         },
         'conversejs': {
             'handlers': ['stream'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'filters': ['require_debug_false'],
         },
         'sleekxmpp': {
             'handlers': ['stream'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
+            'filters': ['require_debug_false'],
         },
     }
 }
