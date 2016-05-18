@@ -13,7 +13,6 @@
     <h2 class="marginTB5">{% if lp %}<small class="c-white">{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
-    {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
     {% csrf_token %}
     {% if lp %}<input type="hidden" id="id" name="id" value="{{ lp.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
@@ -61,16 +60,12 @@
   }
   $(document).ready(function() {
     setDisabled( 'id_path_type' )
+    
+    {% if not user.is_superuser %}
+      setDisabled( 'id_project' )
+    {% endif %}
   })
 </script>
-
-{% if not user.is_superuser %}
-<script type="text/javascript">
-  $(document).ready(function() {
-    setDisabled( 'id_project' )
-  })
-</script>
-{% endif %}
 {% endif %}
 
 {% include "_tinymce_init.html" %}

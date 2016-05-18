@@ -1,0 +1,33 @@
+{% extends "commons_base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}{% if node %}{% trans _("node")|capfirst %}: {{ node.label }} [{% trans _("document") %}]{% elif oer %}OER: {{ oer.title }} [{% trans _("document") %}]{% endif %}{% endblock %}
+{% block body_class %}document_view{% endblock %}
+
+{% block nav %}
+  <div class="navbar">
+  {% if node %}
+    <h5 class="pull-left c-mulberry"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ node.label }}</h5>
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/pathnode/{{ node.id }}"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
+    </p>
+  {% elif oer %}
+    <h5 class="pull-left c-pacific-blue">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small>{% endif %}{{ oer.title }}</h5>
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/oer/{{ oer.slug }}"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
+    </p>
+  {% endif %}
+  </div>
+{% endblock %}
+
+{% block body_base %}
+  <div class="container-fluid margin0 padding0">
+    <div class="iframe-container">
+    {% if url %}
+      <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+    {% endif %}
+    </div>
+  </div>
+{% endblock %}
+

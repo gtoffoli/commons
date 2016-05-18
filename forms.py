@@ -508,16 +508,42 @@ class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
         # exclude = ('children',)
-        exclude = ('children', 'text', 'document',)
+        fields = ('id', 'path', 'label', 'oer', 'range', 'new_document', 'document', 'text', 'creator', 'editor', )
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
-    path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
+    # path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
+    path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), widget=forms.HiddenInput())
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    oer = forms.ModelChoiceField(required=True,label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
+    # oer = forms.ModelChoiceField(required=True,label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
+    oer = forms.ModelChoiceField(required=False,label=_('OER'), queryset=OER.objects.all().order_by('title'), widget=autocomplete.ModelSelect2(url='oer-autocomplete', attrs={'style': 'width: 100%;'}))
     range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('possibly specify document and page display range'))
+    document = forms.ModelChoiceField(required=False, label='',queryset=Document.objects.all(), widget=forms.TextInput(attrs={'style':'display:none'}))
+    new_document = forms.FileField(required=False,
+        label = _('document'),
+        widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
+    text = forms.CharField(required=False, label=_('text'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
+
+    def clean(self):
+        cd = self.cleaned_data
+        print '============ verifica dati ==================='
+        label = cd.get('label')
+        oer = cd.get('oer')
+        text = cd.get('text')
+        document = cd.get('document')
+        new_document = self.files
+
+        if (oer == None) & (document == None) & (len(new_document) == 0) & (len(text) == 0):
+            raise forms.ValidationError(_("e' richiesto un campo fra OER documento testo"))
+
+        if (oer == None) & (len(label) == 0):
+            raise forms.ValidationError(_("e' richiesta l'etichetta"))
+
+        return cd
+
+    
 class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return obj.get_display_name()

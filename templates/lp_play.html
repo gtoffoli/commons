@@ -1,99 +1,74 @@
-{% extends "commons_core.html" %}
-
-{% load i18n %}
-{% load static from staticfiles %}
-
-{% block extra_head %}
-<style>
-#resource {
-    position: absolute; # relative
-    top: 150px; # 0px
-    left: 0px;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    transition-property: all;
-    transition-duration: 0.3s;
-}
-.flex-video.widescreen { padding-bottom: 57.25%; }
-.flex-video.vimeo { padding-top: 0; }
- 
-.flex-video iframe,
-.flex-video object,
-.flex-video embed {
-  position: absolute;
-  top: 150;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-</style>
-{% endblock extra_head %}
-
-{% block topbar_base %}
-    <header>
-	<div class="navbar navbar-inverse navbar-fixed-top">
-		<div class="container">
-			<div class="navbar-header pull-left">
-	            <a  class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
-	            <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
-			</div>
-		</div>
-	</div>
-    </header>
-{% endblock topbar_base %}
+{% extends "commons_base.html" %}
+{% load i18n staticfiles %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
 
-{% block body_class %}lp_viewer{% endblock %}
+{% block body_class %}lp_viewer paddingT60{% endblock %}
 {% block body %}
-<div style="padding-top: 64px;">
-    <div style="font-weigth: bold; font-size: large;">{% trans "LP" %}:&nbsp;&nbsp;<span><a {% comment %}style="color: {{ lp.get_title_color }};"{% endcomment %} href="/lp/{{ lp.slug }}/">{{ lp.title }}</span></a> &nbsp;
-    	<span style="font-style: italic;">{{ lp.short }}</span></div>
-    <div style="font-size: 12px; line-height: 1;"">
-        <ul class="pagination pagination-sm" style="margin: 0; padding: 0;">
-            <li class="prev {% if i_node == 0 %}disabled{% endif %}">
-                <a href="{% if i_node > 0 %}/lp/{{ lp.slug }}/play/?node={{ i_node|add:"-1" }}{% endif %}" {% if i_node > 0 %}title='{% trans "previous node" %}'{% endif %}><span class="fa fa-chevron-left"></span></a>
-            </li>
-            {% for node in nodes %}
-                {% if forloop.counter0 == i_node %}
-                    <li class="active">
-                       <a href="/pathnode/{{ node.id }}/" class="page">{{ forloop.counter }}</a>
-                    </li>
-                {% else %}
-                    <li>
-                       <a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="{{ node.label }}">{{ forloop.counter }}</a>
-                    </li>
-                {% endif %}
-            {% endfor %}
-            <li class="next {% if i_node == max_node %}disabled{% endif %}">
-                <a href="{% if i_node < max_node %}/lp/{{ lp.slug }}/play/?node={{ i_node|add:1 }}{% endif %}" {% if i_node < max_node %} title='{% trans "next page" %}'{% endif %}><span class="fa fa-chevron-right"></span></a>
-            </li>
-        </ul>
+{% block navbar_base %}
+{% endblock %}
+{% block body_base %}
+<div class="container-fluid margin0 padding0">
+<div class="row margin0">
+  <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0">
+  	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
+    <div class="clearfix">
+    <h5 class="pull-left c-mulberry" style="margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
+    <p class="pull-right paddingT10 paddingLR5"  style="margin-bottom:5px">
+      <a href="/lp/{{ lp.slug }}"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
+    </p>
     </div>
-    <div>{% trans "node"|capfirst %} (<a href="/oer/{{ oer.slug }}/" title='{% trans "view OER" %}'>{% trans "OER" %}</a>):&nbsp;&nbsp;<a href="/pathnode/{{ current_node.id }}/">{{ current_node.label }}</a></div>
+    <p class="font12">{{ lp.short|safe }}</p>
     </div>
+    {% if lp.get_nodes %}
+    	<dl class="panel panel-col panel-white" >
+        <dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt>
+        <dd><ul class="nodes-unlisted font14">
+        {% for pathnode in lp.get_ordered_nodes %}
+          <li class="paddingB10">
+          {% if i_node == forloop.counter0 %} 
+            <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
+          {% else %}
+            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+          {% endif %}
+          </li>
+        {% endfor %}
+        </ul></dd>
+      </dl>
+    {% endif %}
 </div>
-
-{% comment %}
-<div style="width: 100%; height: 100%; z-index: 10; position: absolute; left: 0; top: 150px;;"></div>
-{% endcomment %}
- 
-    <div style="width: 100%; height: 100%;">
-{% if document_view %}
-	{{ document_view|safe }}
-{% elif embed_code %}
-	{{ embed_code|safe }}
-{% elif youtube %}
-	{{ youtube|safe }}
-{% elif ted_talk %}
-	{{ ted_talk|safe }}
-{% elif slideshare %}
-	{{ slideshare|safe }}
+<div class="col-sm-9 col-md-9 col-lg-10">
+	{% if oer.url %}
+  <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+  {% endif %}
+  <div class="iframe-container">
+{% if oer.url %}
+	{% if document_view %}
+    {{ document_view|safe }}
+  {% elif youtube %}
+    {{ youtube|safe }}
+  {% elif ted_talk %}
+    {{ ted_talk|safe }}
+  {% elif slideshare %}
+    {{ slideshare|safe }}
+  {% elif embed_code %}
+    {{ embed_code|safe }}
+  {% else %}
+    <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+  {% endif %}
 {% else %}
-    <iframe id="resource" width="100%" height="100%" src="{% if oer_url %}{{ oer_url }}{% else %}/oer/{{ oer.slug }}/?core=true{% endif %}"></iframe>
+  {% if document_view %}
+    {{ document_view|safe }}
+  {% elif text_view %}
+    {{ text_view|safe }}
+  {% endif %}
 {% endif %}
-    </div>
-{% endblock  %}
+  </div>
+</div>
+</div>
+</div>
+{% endblock %}
+{% endblock %}
 
-{% block footer_base %}{% endblock %}
+
+

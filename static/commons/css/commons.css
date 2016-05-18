@@ -18,6 +18,18 @@ h1 {
 h2 {
 	font-size: 24px;
 }
+h3 {
+	font-size: 22px;
+}
+h4 {
+	font-size: 20px;
+}
+h5 {
+	font-size: 18px;
+}
+h6 {
+	font-size: 16px;
+}
 a:hover {
   color: #23527c;
   text-decoration: none;
@@ -26,7 +38,6 @@ a:focus {
   color: #337ab7;
   text-decoration: none;
 }
-
 /* FOOTER FIXED */
 .wrapper {
 	min-height: 100%;
@@ -365,11 +376,22 @@ margin-right:0;
 .paddingR0 {
 	padding-right:0;
 }
+.paddingLR5 {
+	padding-left:5px;
+	padding-right:5px;
+}
 .paddingT6 {
 	padding-top:6px;
 }
+.paddingT10 {
+	padding-top:10px;
+}
+
 .paddingT20 {
 	padding-top:20px;
+}
+.paddingT60 {
+	padding-top:57px;
 }
 .paddingB10 {
 	padding-bottom:10px;
@@ -380,6 +402,10 @@ margin-right:0;
 .paddingTB5 {
 	 padding-top: 5px;
 	 padding-bottom: 5px;
+}
+.paddingTB10 {
+	 padding-top: 10px;
+	 padding-bottom: 10px;
 }
 .paddingTB20 {
 	padding-top:20px;
@@ -457,7 +483,7 @@ margin-right:0;
 	font-size: 16px;
 }
 .font18 {
-	font-size: 16px;
+	font-size: 18px;
 }
 .font26 {
 	font-size: 26px;
@@ -475,6 +501,12 @@ margin-right:0;
 /* forecolor backcolor  border */
 .c-white {
 	color: white;
+}
+.c-mulberry {
+	color: #CB4F98;
+}
+.c-pacific-blue {
+	color: #008BD2;
 }
 .c-green {
 	color: green;
@@ -859,6 +891,13 @@ ul.list-inline > li.list-back-c3 {
 	color: #ebeded;
 }
 
+.panel-col {
+	border-top-left-radius:0; 
+	border-top-right-radius:0;
+	border-bottom-left-radius:0;
+	padding:10px 10px 0 20px;
+}
+
 .box-scroll {
   overflow: auto;
 }
@@ -1121,6 +1160,7 @@ text-decoration: none;
 .view-url {
 	padding-top:20px;
 	text-align: center;
+	font-size: 12px;
 }
 @media all and (max-width:767px) {
 .view-url {
@@ -1208,4 +1248,55 @@ a.anchor {
     position: relative;
     top: -200px;
     visibility: hidden;
+}
+
+ul.nodes-unlisted {
+list-style-type: none;
+padding-left: 20px;
+padding-right: 5px;
+}
+ul.nodes-unlisted li:before {    
+font-family: 'FontAwesome';
+content: "\f192";
+margin:0 5px 0 -20px;
+color: #666;
+}
+
+ul.nodes-unlisted div {
+	display:inline;
+	width:100%;
+  font-weight: 600;
+}
+ul.nodes-unlisted a:hover {
+	color: #CB4F98;
+}
+section.view-node-details {
+   padding: 10px 20px 10px 0px;
+   background: transparent;
+}
+.section-node-header h3 {
+	margin-top: 5px;
+	margin-bottom: 5px;
+	color: #CB4F98;
+	font-size:22px;
+}
+.section-node-header h3.h3-left {
+	float:left;
+	width:90%;
+}
+.section-node-header div {
+	float: right;
+	font-size: 26px;
+}
+.section-node-header a {
+	color: #CB4F98;
+}
+.section-node-content {
+	border-top: 1px dotted #CB4F98;
+		border-bottom: 1px dotted #CB4F98;
+	margin-left:-29px;
+	padding-left:29px;
+	margin-right:-19px;
+	padding-right:19px;
+	padding-top:10px;
 }

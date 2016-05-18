@@ -10,7 +10,7 @@ from django.db.models import Q
 # from django.db import transaction
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render_to_response, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
@@ -1836,12 +1836,21 @@ def document_download_range(request, document_id, page_range):
 
 def document_view(request, document_id, return_url=False):
     document = get_object_or_404(Document, pk=document_id)
+    node_doc = request.GET.get('node', '')
     if document.viewerjs_viewable:
-        url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
-        if return_url:
-            return url
-        else:
-            return HttpResponseRedirect(url)
+       if node_doc:
+           node = PathNode.objects.get(document_id=document_id)
+           oer = 0
+       else:
+           node = 0
+           oer_document = OerDocument.objects.get(document_id=document_id)
+           oer = OER.objects.get(pk = oer_document.oer_id)
+       url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
+       if return_url:
+           return url
+       else:
+            # return HttpResponseRedirect(url)
+           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, }, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(
@@ -1909,6 +1918,8 @@ def lp_detail_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
     return lp_detail(request, lp.id, lp)
 
+TEXT_VIEW_TEMPLATE= """<div>%s</div>"""
+
 DOCUMENT_VIEW_TEMPLATE = """<div class="flex-video widescreen">
 <iframe src="%s" frameborder="0" allowfullscreen="">
 </iframe>
@@ -1928,6 +1939,7 @@ TED_TALK_TEMPLATE = """<div class="flex-video widescreen">
 </div>
 """
 
+"""
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
@@ -1988,6 +2000,95 @@ def lp_play(request, lp_id, lp=None):
     i_page = i_page.isdigit() and int(i_page) or 0
     var_dict['i_page'] = i_page
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
+"""
+
+TEXT_VIEW_TEMPLATE= """<div style="padding:30px 20px 20px 20px; background: white; border: 1px solid #ccc">%s</div>"""
+
+DOCUMENT_VIEW_TEMPLATE = """
+<iframe src="%s" id="iframe" allowfullscreen>
+</iframe>
+"""
+YOUTUBE_TEMPLATE = """
+<iframe src="%s?autoplay=1" id="iframe" allowfullscreen>
+</iframe>
+"""
+SLIDESHARE_TEMPLATE = """
+%s
+"""
+TED_TALK_TEMPLATE = """
+<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
+"""
+
+def lp_play(request, lp_id, lp=None):
+    if not lp:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
+    language = request.LANGUAGE_CODE
+    var_dict = { 'lp': lp, }
+    var_dict['project'] = lp.project
+    var_dict['is_published'] = lp.state == PUBLISHED
+    nodes = lp.get_ordered_nodes()
+    n_nodes = len(nodes)
+    var_dict['nodes'] = nodes
+    var_dict['max_node'] = n_nodes-1
+    var_dict['node_range'] = range(n_nodes)
+    i_node = request.GET.get('node', '')
+    i_node = i_node.isdigit() and int(i_node) or 0
+    var_dict['i_node'] = i_node
+    current_node = nodes[i_node]
+    var_dict['current_node'] = current_node
+    oer = current_node.oer
+    current_document = current_node.document
+    current_text = current_node.text
+    if oer:
+        documents = oer.get_sorted_documents()
+        page_range = current_node.range
+        if documents:
+            document = documents[0]
+            if page_range:
+                url = document_view_range(request, document.id, page_range)
+            else:
+                url = document_view(request, document.id, return_url=True)
+            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+        var_dict['oer'] = oer
+        url = oer.url
+        var_dict['oer_url'] = oer.url
+        youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
+        if youtube:
+            if youtube.count('embed'):
+                pass
+                print 1, youtube
+            elif youtube.count('youtu.be/'):
+                youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
+                print 2, youtube
+            elif youtube.count('watch?v='):
+                youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+                print 3, youtube
+            youtube = YOUTUBE_TEMPLATE % youtube
+        var_dict['youtube'] = youtube
+        ted_talk = url and url.count('www.ted.com/talks/') and url or ''
+        if ted_talk:
+            if ted_talk.count('?'):
+                ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
+            else:
+                ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
+            ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
+        var_dict['ted_talk'] = ted_talk
+        reference = oer.reference
+        slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
+        if slideshare:
+            slideshare = SLIDESHARE_TEMPLATE % slideshare
+        var_dict['slideshare'] = slideshare
+        var_dict['embed_code'] = oer.embed_code
+    elif current_document:
+        url = document_view(request, current_document.id, return_url=True)
+        var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+    elif current_text:
+        var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
+    i_page = request.GET.get('page', '')
+    i_page = i_page.isdigit() and int(i_page) or 0
+    var_dict['i_page'] = i_page
+    return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
+
 
 def lp_play_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
@@ -2117,6 +2218,12 @@ def pathnode_detail(request, node_id, node=None):
         node = get_object_or_404(PathNode, pk=node_id)
     var_dict = { 'node': node, }
     var_dict['lp'] = node.path
+    nodes = get_object_or_404(LearningPath, pk=node.path_id)
+    nodes = nodes.get_ordered_nodes()
+    var_dict['nodes'] = nodes
+    i_node = request.GET.get('node', '')
+    i_node = i_node.isdigit() and int(i_node) or 0
+    var_dict['i_node'] = i_node
     var_dict['can_edit'] = node.can_edit(request)
     return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
 
@@ -2137,15 +2244,25 @@ def pathnode_edit(request, node_id=None, path_id=None):
             return HttpResponseRedirect('/lp/%s/' % path.slug)
     if request.POST:
         node_id = request.POST.get('id', '')
+        path_id = request.POST.get('path', '')
+        if path_id:
+           path = get_object_or_404(LearningPath, id=path_id)
         if node_id:
             node = get_object_or_404(PathNode, id=node_id)
             action = '/pathnode/%d/edit/' % node.id
-            path = node.path
-        form = PathNodeForm(request.POST, instance=node)
+        form = PathNodeForm(request.POST, request.FILES, instance=node)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
+                try:
+                    uploaded_file = request.FILES['new_document']
+                except:
+                    uploaded_file = 0
                 node = form.save(commit=False)
                 node.editor = user
+                if (uploaded_file):
+                    version = handle_uploaded_file(uploaded_file)
+                    document = version.document
+                    node.document = document
                 node.save()
                 form.save_m2m()
                 node = get_object_or_404(PathNode, id=node.id)
@@ -2161,7 +2278,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     return HttpResponseRedirect('/pathnode/%d/' % node.id)
             else:
                 print form.errors
-            return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action,}, context_instance=RequestContext(request))
+            return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if node:
                 node_id = node.id
@@ -2178,7 +2295,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
         form = PathNodeForm(instance=node)
     else:
         form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
-    return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action}, context_instance=RequestContext(request))
+    return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }, context_instance=RequestContext(request))
 
 def pathnode_edit_by_id(request, node_id):
     return pathnode_edit(request, node_id=node_id)
@@ -2187,16 +2304,22 @@ def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     path = node.path
     path.remove_node(node, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return lp_detail(request, path.id, lp=path)
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     path = node.path
     path.node_up(node, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return lp_detail(request, path.id, lp=path)
 def pathnode_down(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     path = node.path
     path.node_down(node, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return lp_detail(request, path.id, lp=path)
 
 def project_add_lp(request, project_id):

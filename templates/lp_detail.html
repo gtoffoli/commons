@@ -80,19 +80,20 @@
               {% for node in lp.get_ordered_nodes %}
                 <li>
                   <div class="paddingL3">
-                    {% if can_edit %}<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
+                  	{% comment %} /pathnode/{{ node.id }}/delete/ {% endcomment %}
+                    {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% if lp.get_ordered_nodes|length > 1 %}
                         {% if not node.is_island %} 
                           <span class="font12">
-                            {% if not node.is_root and not node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                            {% elif node.is_root %}<i class="fa fa-arrow-up c-white"></i> &nbsp; <a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                            {% elif node.is_leaf %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down c-white"></i> &nbsp;
+                            {% if not node.is_root and not node.is_leaf %}<a class="upNode" id="u_{{ node.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a class="downNode" id="d_{{ node.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                            {% elif node.is_root %}<i class="fa fa-arrow-up c-white"></i> &nbsp; <a class="downNode" id="d_{{ node.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                            {% elif node.is_leaf %}<a class="upNode" id="u_{{ node.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down c-white"></i> &nbsp;
                             {% endif %}
                           </span>
                         {% endif %}
                       {% endif %}
                     {% endif %}
-                    <a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a>
+                    <a href="/pathnode/{{ node.id }}/?node={{forloop.counter0}}" title="path node">{{ node.label }}</a>
                   </div>
                 </li>
               {% endfor %}
@@ -165,24 +166,49 @@
       return confirm('{% trans "do you really want to delete" %} {% trans "this learning path" %}?');
     }
   {% endif %}
-/*
-  $(document).ready(function() {
-  	if ($('dd a').hasClass('add_node_oer')) {
-  		$('dd a.add_node_oer').on('click', function(event){
-  				event.preventDefault();
-  		console.log($(this).attr('id'));
-  		var this = $(this);
-  		var oer_id = this.attr('id');
-  		
-  		$.ajax({
-						url: "/lp/{{ lp.slug }}/pathnode_add/"+oer_id+"/",
-						success: function(){
-							console.log(this);
-						}
-					});
-      });
-    }
-  });
-*/
+	$(document).ready(function() {
+		if ($('li div a').hasClass('deleteNode')) {
+			$('li div a.deleteNode').on('click', function(event){
+				event.preventDefault();
+				var node_id = $(this).attr('id');
+				node_id = node_id.substr(2);
+				$.ajax({
+					url: "/pathnode/"+node_id+"/delete/",
+					success: function(json){
+						if (json.data == 'ok')
+							location.reload();
+					}
+				});
+			});
+		}
+		if ($('li div a').hasClass('upNode')) {
+			$('li div a.upNode').on('click', function(event){
+				event.preventDefault();
+				var node_id = $(this).attr('id');
+				node_id = node_id.substr(2);
+				$.ajax({
+					url: "/pathnode/"+node_id+"/up/",
+					success: function(json){
+						if (json.data == 'ok')
+							location.reload();
+					}
+				});
+			});
+		}
+		if ($('li div a').hasClass('downNode')) {
+			$('li div a.downNode').on('click', function(event){
+				event.preventDefault();
+				var node_id = $(this).attr('id');
+				node_id = node_id.substr(2);
+				$.ajax({
+					url: "/pathnode/"+node_id+"/down/",
+					success: function(json){
+						if (json.data == 'ok')
+							location.reload();
+					}
+				});
+			});
+		}
+	});
 </script>
 {% endblock %}

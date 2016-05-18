@@ -36,12 +36,14 @@ VIEWABLE_MIMETYPES = (
   'pdf',
   'opendocument.text',
   'opendocument.spreadsheet',
+  'opendocument.presentation',
 )
 
 VIEWERJS_MIMETYPES = (
   'pdf',
   'opendocument.text',
   'opendocument.spreadsheet',
+  'opendocument.presentation',
 )
 
 class FileBasedStorage(FileSystemStorage):

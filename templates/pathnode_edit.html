@@ -4,89 +4,67 @@
 {% load i18n %}
 {% load tinymce_tags %}
 
-{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: {{ node.label }}{% else %}{% trans "add node"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_style %}
-
+    <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
+    <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
 {% endblock %}
 
-{% block extra_head %}
-{% comment %}
-	{% tinymce_preview "preview-content" %}
-	<link href="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.css" type="text/css" media="all" rel="stylesheet" />
-	<link href="/static/taggit_live/css/taggit_live.css" type="text/css" media="all" rel="stylesheet" />
-	<script type="text/javascript" src="/static/admin/js/jquery.js"></script>
-	<script type="text/javascript" src="/static/commons/jquery/jquery-ui-1-11-4.core-autocomplete.js"></script>
-	<script type="text/javascript" src="/static/taggit_live/js/taggit_live.js"></script>
-{% endcomment %}	
-
-<script type="text/javascript">
-{% comment %}
-//Copyright: CodePug.com 2009
-//Do not REMOVE these comments
-//Usage: setReadonly('mySelect');
-function setReadonly( selectElementId ){
-	var selectElement = document.getElementById(selectElementId);
-	if (selectElement){		
-		var parent = selectElement.parentElement;
-		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
-		if (!parent){
-			parent=selectElement.parentNode;
-			textValue = selectElement.options[selectElement.options.selectedIndex].text;
-		}
-		var input = document.createElement("input");
-		input.setAttribute("id",selectElement.id);
-		input.setAttribute("type","text");
-		input.setAttribute("value",textValue);
-		input.setAttribute("class","form-control");
-		input.style.background="#eeeeee";
-		input.readOnly = true;
-		parent.appendChild(input);
-	}
-	selectElement.style.display="none";
-}
-{% endcomment %}
-function setDisabled( selectElementId){
-	if($('select[id="'+selectElementId+'"]').length > 0) {
-		var txtValue = $('select[id="'+selectElementId+'"] option:selected').text();
-		$("#"+selectElementId).css("display","none");
-		$('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
-	}
-}
-</script>
-{% endblock %}
 {% block body_class %}pathnode_edit{% endblock %}
 {% block body %}
-  <h1>{% if node %}<small>{% trans "edit learning path node"|capfirst %}:</small> {{ node.label }}{% else %}<small>{% trans "add learning path node"|capfirst %}</small>{% endif %}</h1>
-  <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-9">
-    <form method="post" action="{{ action }}" id="pathnode_edit_form" class="form-horizontal">
-    {% csrf_token %}
-    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="form-group">
-     <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
-      <span class="txt-error">{{ field.errors }}</span>{{ field }}
-      {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+<div class="panel panel-c1 text-left marginTB30">
+  <div class="navbar panel-c1 panel-heading-c1 padding1020">
+    <h3 class="pull-left marginTB5">{{ name_lp }}</h3>
+    <p class="pull-right marginB0 font26">
+      <a href="/lp/{{ slug_lp }}/" title="{% trans "show learning path" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
+    </p>
+    <div style="clear:both;">
+      <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> <i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %} <i class="fa fa-dot-circle-o" aria-hidden="true"></i>{% endif %}</h2>
     </div>
+  </div>
+  <p class="padding1020 demiBold font12">In questa scheda e' possibile inserire tre tipi di risorse: 1) un OER; 2) un documento creato appositamente da te per questo Learning Path; 3) una casella di testo formattato. Nel momento in cui il tuo Learning Path verra' visualizzato, la piattaforma ne rendera' visibile solo una. Se inserirai un OER, questo sara' visualizzato automaticamente. In assenza di OER sara' visualizzato il documento allegato. In assenza di documento sara' visualizzato il testo formattato.</p>
+  <form method="POST" action="{{ action }}" id="edit_form" enctype="multipart/form-data">{% csrf_token %}
+    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    <fieldset class="padding1020">
+    {% if form.errors %}
+      {% if form.non_field_errors %}
+      <div class="txt-error demiBold" style="margin-left:-20px">
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+    {% endif %}
+    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+      <div class="form-group">
+        {% if field.label %}
+          <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        {% endif %}
+        {% if  field.name  == 'document' %} 
+          {% if node.document_id > 0 %}
+            <div><i class="fa fa-times-circle red"></i> {{ node.document.label }}</div>
+          {% endif %}
+           <div>{{ field }}</div>
+        {% else %}
+          <span class="txt-error">{{ field.errors }}</span>{{ field }}
+          {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+        {% endif %}
+      </div>
     {% endwith %}{% endfor %}
-    <div class="form-group">
-      <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
+    </fieldset>
+    <div class="panel-footer-c1 padding1020">
+      <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if node %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
       <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
     </div>
-    </form>
-  </div>
-  </div>
+  </form>
+</div>
 {% endblock %}
 
 {% block extra_script %}
-{% comment %}{% if node %}{% endcomment %}
-<script type="text/javascript">
-	{% comment %}
-	setReadonly('id_path');
-	{% endcomment %}
-		setDisabled( 'id_path' )
-</script>
-{% comment %}{% endif %}{% endcomment %}
+   <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
+   <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
+   <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
+   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+
+{% include "_tinymce_init.html" with data='extend' %}
 {% endblock %}

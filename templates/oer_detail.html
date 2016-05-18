@@ -120,7 +120,7 @@
                {% endif %}
                <input type="hidden" name="id" value="{{ document.id }}">{{ document.label }}
                &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
-               {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" target="_blank" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+               {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
              </form></dd>
            {% endfor %}
         </dl>

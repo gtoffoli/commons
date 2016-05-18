@@ -7,24 +7,22 @@
 {% block body_class %}oer_view{% endblock %}
 
 {% block nav %}
-<table class="table table-responsive nav-table">
-  <tbody>
-    <td style="width:2%"><a href="/oer/{{ oer.slug }}"><i class="fa fa-arrow-left font16"></i></a></td>
-    <td><div class="font18">{% if not is_published %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %} {{ oer.title }}</div>
-        {% if is_published %}
-          <div class="font12">
-            {% with stars=oer.get_stars %}
-              {% include "_view_rating.html" %}
-            {% endwith %}
-          </div>
-         {% endif %}
-    </td>
-    <td class="font16">
-      {% if can_evaluate %}<a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o"></i></a> &nbsp;{% endif %}
-      {% if add_bookmarked and not in_bookmarked_oers %}<a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o"></i></a> &nbsp;{% endif %}
-    	</td>
-  </tbody>
-</table>
+  <div class="navbar">
+    <div class="pull-left">
+      <h5 class="c-pacific-blue marginB0">{% if not is_published %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small>{% endif %}{{ oer.title }}</h5>
+      {% if is_published %}
+        <div class="font12">
+          {% with stars=oer.get_stars %}
+            {% include "_view_rating.html" %}
+          {% endwith %}
+        </div>
+      {% endif %}
+    </div>
+    <p class="pull-right paddingT10 paddingLR5">
+      <a href="/oer/{{ oer.slug }}"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
+      {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font18 c-pacific-blue"></i></a>{% endif %}
+      {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font18 c-pacific-blue"></i></a>{% endif %}
+    </p>
 {% endblock %}
 
 {% block body_base %}
