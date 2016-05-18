@@ -19,9 +19,11 @@
 		</div>
 	</div>
 </div>
+
+{% comment %}
 {% if rooms_count %}
-	<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection" />
-    <script type="text/javascript" src="{% static 'converse.js/converse.min.js' %}"></script>
+	<link rel="stylesheet" href="{% static 'converse.js/converse.css' %}" type="text/css" media="screen, projection" />
+    <script type="text/javascript" src="{% static 'converse.js/converse.js' %}"></script>
 	<style>
 		form.add-chatroom { display: none; }
 		a.s { display: none; }
@@ -29,3 +31,5 @@
 	{% dmuc_conversejs_initialize %}
 	<div id="conversejs"></div>
 {% endif %}
+{% endcomment %}
+
