@@ -521,7 +521,7 @@ class PathNodeForm(forms.ModelForm):
     new_document = forms.FileField(required=False,
         label = _('document'),
         widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
-    text = forms.CharField(required=False, label=_('text'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
+    text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
@@ -536,10 +536,10 @@ class PathNodeForm(forms.ModelForm):
         new_document = self.files
 
         if (oer == None) & (document == None) & (len(new_document) == 0) & (len(text) == 0):
-            raise forms.ValidationError(_("e' richiesto un campo fra OER documento testo"))
+            raise forms.ValidationError(_("the OER, the document attachment and the text content cannot be all missing"))
 
         if (oer == None) & (len(label) == 0):
-            raise forms.ValidationError(_("e' richiesta l'etichetta"))
+            raise forms.ValidationError(_("the node label is required"))
 
         return cd
 

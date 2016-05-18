@@ -23,7 +23,7 @@
       <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> <i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %} <i class="fa fa-dot-circle-o" aria-hidden="true"></i>{% endif %}</h2>
     </div>
   </div>
-  <p class="padding1020 demiBold font12">In questa scheda e' possibile inserire tre tipi di risorse: 1) un OER; 2) un documento creato appositamente da te per questo Learning Path; 3) una casella di testo formattato. Nel momento in cui il tuo Learning Path verra' visualizzato, la piattaforma ne rendera' visibile solo una. Se inserirai un OER, questo sara' visualizzato automaticamente. In assenza di OER sara' visualizzato il documento allegato. In assenza di documento sara' visualizzato il testo formattato.</p>
+  <p class="padding1020 demiBold font12">{% trans "In this form you can specify 3 types of resources: 1) an OER; 2) a document tailored to the needs of this learning path (LP); 3) a formatted text. When playing the LP, the platform will visualize only one of them: the OER, if present, otherwise the document or the formatted text as the last choice." %}</p>
   <form method="POST" action="{{ action }}" id="edit_form" enctype="multipart/form-data">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
@@ -41,7 +41,7 @@
         {% endif %}
         {% if  field.name  == 'document' %} 
           {% if node.document_id > 0 %}
-            <div><i class="fa fa-times-circle red"></i> {{ node.document.label }}</div>
+            <div>{{ node.document.label }}</div>
           {% endif %}
            <div>{{ field }}</div>
         {% else %}
