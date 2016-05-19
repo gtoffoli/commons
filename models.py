@@ -1064,6 +1064,8 @@ class OER(Resource, Publishable):
     # documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
     documents = models.ManyToManyField(Document, through='OerDocument', related_name='oer_document', blank=True, verbose_name='attached documents')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
+    translated = models.BooleanField(default=False, verbose_name=_('translated'))
+    remixed = models.BooleanField(default=False, verbose_name=_('adapted / remixed'))
     source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed the OER view in an HTML page'))
@@ -1195,6 +1197,20 @@ class OER(Resource, Publishable):
         next.save()
         self.editor = request.user
         self.save()
+
+def update_oer_type(sender, **kwargs):
+    oer = kwargs['instance']
+    if oer.documents.all():
+        oer_type = 3
+    elif oer.url:
+        oer_type = 2
+    else:
+        oer_type = 1
+    if not oer.oer_type == oer_type:
+        oer.oer_type = oer_type
+        oer.save()        
+
+post_save.connect(update_oer_type, sender=OER)
    
 """
 class oer_documents(models.Model):

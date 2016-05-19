@@ -9,7 +9,7 @@ activate('en')
 import os
 from roles.utils import grant_permission
 from roles.models import Role
-from models import Project
+from models import Project, OER
 
 
 def project_fix_member_permissions():
@@ -23,3 +23,30 @@ def project_fix_member_permissions():
         grant_permission(project, role_member, 'add-oer')
         grant_permission(project, role_member, 'add-lp')
         
+def oer_fix_oer_type():
+    oers = OER.objects.all()
+    for oer in oers:
+        if oer.documents.all():
+            oer_type = 3
+        elif oer.url:
+            oer_type = 2
+        else:
+            oer_type = 1
+        if not oer.oer_type == oer_type:
+            print oer.oer_type, '->', oer_type
+            oer.oer_type = oer_type
+            oer.save()        
+
+def oer_init_remix():
+    oers = OER.objects.all()
+    for oer in oers:
+        if oer.source_type==3:
+            oer.translated = True
+            oer.save()
+            print 'translated'
+        elif oer.source_type in [4, 5]:
+            oer.remixed = True
+            oer.save()
+            print 'remixed'
+
+    
