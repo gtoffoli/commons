@@ -10,7 +10,7 @@
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
 <div class="row margin0">
-  <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0">
+  <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0" id="list_nodes">
   	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
     <div class="clearfix">
     <h5 class="pull-left c-mulberry" style="margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
@@ -22,7 +22,7 @@
     </div>
     {% if lp.get_nodes %}
     	<dl class="panel panel-col panel-white" >
-        <dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt>
+        {% comment %}<dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt>{% endcomment %}
         <dd><ul class="nodes-unlisted font14">
         {% for pathnode in lp.get_ordered_nodes %}
           <li class="paddingB10">
@@ -37,13 +37,18 @@
       </dl>
     {% endif %}
 </div>
-<div class="col-sm-9 col-md-9 col-lg-10">
-	{% if oer.url %}
-  <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
-  {% endif %}
+<div class="col-sm-9 col-md-9 col-lg-10" style="background:white;" id="right">
+  <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
+    <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
+    <div class="text-center" style="float:left; width:80%">{{ current_node.label }}</div>
+    <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
+  </div>
+{% if oer.url %}
+  <p class="view-url" style="padding-top:10px; border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+{% endif %}
   <div class="iframe-container">
 {% if oer.url %}
-	{% if document_view %}
+  {% if document_view %}
     {{ document_view|safe }}
   {% elif youtube %}
     {{ youtube|safe }}
@@ -63,6 +68,10 @@
     {{ text_view|safe }}
   {% endif %}
 {% endif %}
+  </div>
+  <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
+    <div class="pull-left">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
+    <div class="pull-right">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
 </div>
 </div>

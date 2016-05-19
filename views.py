@@ -2002,7 +2002,7 @@ def lp_play(request, lp_id, lp=None):
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 """
 
-TEXT_VIEW_TEMPLATE= """<div style="padding:30px 20px 20px 20px; background: white; border: 1px solid #ccc">%s</div>"""
+TEXT_VIEW_TEMPLATE= """<div style="padding:30px 20px 20px 20px; background: white;">%s</div>"""
 
 DOCUMENT_VIEW_TEMPLATE = """
 <iframe src="%s" id="iframe" allowfullscreen>
@@ -2029,11 +2029,16 @@ def lp_play(request, lp_id, lp=None):
     nodes = lp.get_ordered_nodes()
     n_nodes = len(nodes)
     var_dict['nodes'] = nodes
+    """
     var_dict['max_node'] = n_nodes-1
     var_dict['node_range'] = range(n_nodes)
+    """
+    max_node = n_nodes-1
     i_node = request.GET.get('node', '')
     i_node = i_node.isdigit() and int(i_node) or 0
     var_dict['i_node'] = i_node
+    var_dict['i_node_prev'] = i_node > 0 and (i_node - 1) or 0
+    var_dict['i_node_next'] = i_node < max_node and (i_node + 1) or i_node
     current_node = nodes[i_node]
     var_dict['current_node'] = current_node
     oer = current_node.oer
@@ -2084,9 +2089,11 @@ def lp_play(request, lp_id, lp=None):
         var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
+    """
     i_page = request.GET.get('page', '')
     i_page = i_page.isdigit() and int(i_page) or 0
     var_dict['i_page'] = i_page
+    """
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
 
@@ -2220,9 +2227,14 @@ def pathnode_detail(request, node_id, node=None):
     var_dict['lp'] = node.path
     nodes = get_object_or_404(LearningPath, pk=node.path_id)
     nodes = nodes.get_ordered_nodes()
+    i_node = 0
+    count = 0
+    while (count < len(nodes)):       
+        if int(nodes[count].id) == int(node_id):
+            i_node = count
+            break
+        count = count + 1
     var_dict['nodes'] = nodes
-    i_node = request.GET.get('node', '')
-    i_node = i_node.isdigit() and int(i_node) or 0
     var_dict['i_node'] = i_node
     var_dict['can_edit'] = node.can_edit(request)
     return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
@@ -2274,8 +2286,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 # if path.path_type==LP_SEQUENCE and not node.parents():
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
-                if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/pathnode/%d/' % node.id)
+                if request.POST.get('save', ''):
+                    return HttpResponseRedirect('/pathnode/%d/' % node.id )
             else:
                 print form.errors
             return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug}, context_instance=RequestContext(request))

@@ -1,4 +1,4 @@
-{% load i18n staticfiles dmuc %}
+{% load i18n staticfiles  %}
 <div class="row">
 	<div class="col-sm-4 col-md-4">
 		<div class="footer-box">&copy; 2015 <a href="http://www.commonspaces.eu/" target="_blank">{% trans "the CommonS Consortium" %}</a><br>
@@ -19,17 +19,3 @@
 		</div>
 	</div>
 </div>
-
-{% comment %}
-{% if rooms_count %}
-	<link rel="stylesheet" href="{% static 'converse.js/converse.css' %}" type="text/css" media="screen, projection" />
-    <script type="text/javascript" src="{% static 'converse.js/converse.js' %}"></script>
-	<style>
-		form.add-chatroom { display: none; }
-		a.s { display: none; }
-	</style>
-	{% dmuc_conversejs_initialize %}
-	<div id="conversejs"></div>
-{% endif %}
-{% endcomment %}
-

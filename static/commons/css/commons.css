@@ -1175,6 +1175,8 @@ text-decoration: none;
     height: 0; 
     padding-bottom: 56.25%; /* 16:9 */
     position: relative;
+    border: 1px solid #ccc;
+    background:#EBEDED;
 }
 
 .iframe-container iframe { 

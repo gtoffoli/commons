@@ -27,7 +27,7 @@
           {% if node.id == pathnode.id %} 
             <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ node.label }}</div>
           {% else %}
-            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/pathnode/{{ pathnode.id }}/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/pathnode/{{ pathnode.id }}/" title="path node">{{ pathnode.label }}</a>
           {% endif %}
 {% comment %}
                   <div class="paddingL3">
