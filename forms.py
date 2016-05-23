@@ -266,24 +266,20 @@ class RepoSearchForm(forms.Form):
         label=_("text in title and description"), required=False,
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
-    repo_type = forms.ModelMultipleChoiceField(RepoType.objects.all(),
-        label=_('repository type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 5,}))
-    features = forms.ModelMultipleChoiceField(RepoFeature.objects.all(),
-        label=_('repository features'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
     languages = forms.ModelMultipleChoiceField(Language.objects.all().order_by('name'),
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    repo_type = forms.ModelMultipleChoiceField(RepoType.objects.all(),
+        label=_('repository type'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    features = forms.ModelMultipleChoiceField(RepoFeature.objects.all(),
+        label=_('repository features'), required=False,
+        widget=forms.CheckboxSelectMultiple())
 
 
 class OerMetadataForm(forms.ModelForm):
@@ -325,8 +321,8 @@ class OerForm(forms.ModelForm):
     # oer_type = forms.ChoiceField(required=False, choices=OER_TYPE_CHOICES, label=_('OER type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('metadata are just descriptive and classification data'))
     # source_type = forms.ChoiceField(required=False, choices=SOURCE_TYPE_CHOICES, label=_('source type'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('is this OER a reference to, or a copy of, an external resource? was it derived from other OERs catalogued by CommonSpaces? or it is a brand new resource?'))
     oers = forms.ModelMultipleChoiceField(required=False, label=_('derived from'), queryset=OER.objects.all().order_by('title'), widget=autocomplete.ModelSelect2Multiple(url='oer-autocomplete', attrs={'class': 'select2-width'}), help_text=_('if derived from other OERs, please specify them by selecting one or more - enter a few chars to get suggestions'))
-    translated = forms.BooleanField(required=False, label=_('translated'), help_text=_('specify whether the derivation of this OER has involved language translation'))
-    remixed = forms.BooleanField(required=False, label=_('adapted/remixed'), help_text=_('specify whether the derivation of this OER has involved adaptation/remixing of the original content(s)'))
+    translated = forms.BooleanField(required=False, label=_('translated'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('specify whether the derivation of this OER has involved language translation'))
+    remixed = forms.BooleanField(required=False, label=_('adapted/remixed'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('specify whether the derivation of this OER has involved adaptation/remixing of the original content(s)'))
     source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=autocomplete.ModelSelect2(url='repo-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('if the source type is "catalogued source", please specify the source'))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
     embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
@@ -349,14 +345,27 @@ class OerChangeForm(forms.ModelForm):
     # tags = TagField(required=False, widget=LabelWidget())
     tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 
+
+ORIGIN_TYPE_CHOICES = (
+    (1, _('Catalogued source')),
+    (2, _('Non-catalogued source')),)
+ORIGIN_TYPE_DICT = dict(ORIGIN_TYPE_CHOICES)
+
+DERIVED_TYPE_CHOICES = (
+    (1, _('Translated')),
+    (2, _('Adapted/Remixed')),)
+DERIVED_TYPE_DICT = dict(DERIVED_TYPE_CHOICES)
+
 class OerSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         q = kwargs.get('q', '')
         if q:
             kwargs.pop('q')
         super(OerSearchForm, self).__init__(*args,**kwargs)
+        """
         for fieldname in ('material','license','levels','media','accessibility',):
             self.fields[fieldname].empty_label = None
+        """
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
         if q:
@@ -367,32 +376,10 @@ class OerSearchForm(forms.Form):
         label=_("text in title and description"), required=False,
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
-    oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
-        label=_('OER type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 3,}))
-    source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
-        label=_('source type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 6,}))
-    material = forms.ModelMultipleChoiceField(queryset=MaterialEntry.objects.all(),
-        label=_('type of material'), required=False,
-        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
-    # license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.filter(level=0),
-    license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.all(),
-        label=_('terms of use'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-         # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
-    # levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.filter(level=0),
-    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
-        label=_('levels'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
@@ -400,16 +387,37 @@ class OerSearchForm(forms.Form):
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
+        label=_('OER type'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    """
+    source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
+        label=_('source type'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    """
+
+    origin_type = forms.MultipleChoiceField(choices=ORIGIN_TYPE_CHOICES,
+        label=_('source type'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    derived = forms.MultipleChoiceField(choices=DERIVED_TYPE_CHOICES,
+        label=_('derivazione'),required=False,
+        widget=forms.CheckboxSelectMultiple())
+    material = forms.ModelMultipleChoiceField(queryset=MaterialEntry.objects.all(),
+        label=_('type of material'), required=False,
+        widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    license = forms.ModelMultipleChoiceField(queryset=LicenseNode.objects.all(),
+        label=_('terms of use'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
+        label=_('levels'), required=False,
+        widget=forms.CheckboxSelectMultiple())
     media = forms.ModelMultipleChoiceField(queryset=MediaEntry.objects.all(),
         label=_('media formats'), required=False,
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}))
     accessibility = forms.ModelMultipleChoiceField(
         queryset=AccessibilityEntry.objects.all(),
         label=_('accessibility features'), required=False,
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
 
 class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(required=True,
@@ -484,23 +492,20 @@ class LpSearchForm(forms.Form):
         label=_("text in title and description"), required=False,
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
     """
-    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
-        label=_('learning path type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 4,}))
-    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
-        label=_('levels'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-        # widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control','size': 8,}))
-        # widget=forms.CheckboxSelectMultiple())
+    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
+        label=_('learning path type'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
+        label=_('levels'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+
 
 class PathNodeForm(forms.ModelForm):
     class Meta:
@@ -526,13 +531,11 @@ class PathNodeForm(forms.ModelForm):
 
     def clean(self):
         cd = self.cleaned_data
-        print '============ verifica dati ==================='
         label = cd.get('label')
         oer = cd.get('oer')
         text = cd.get('text')
         document = cd.get('document')
         new_document = self.files
-
         if (oer == None) & (document == None) & (len(new_document) == 0) & (len(text) == 0):
             raise forms.ValidationError(_("the OER, the document attachment and the text content cannot be all missing"))
 

@@ -36,7 +36,7 @@ from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, Pr
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
-from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES
+from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
@@ -1867,16 +1867,22 @@ def document_delete(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.remove_document(oer_document.document, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 def document_up(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.document_up(oer_document.document, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 def document_down(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.document_down(oer_document.document, request)
+    if request.is_ajax():
+        return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 
 def project_add_oer(request, project_id):
@@ -2478,9 +2484,22 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             oer_types = post_dict.get('oer_type', [])
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
+            """
             source_types = post_dict.get('source_type', [])
             if source_types:
                 qq.append(Q(source_type__in=source_types))
+            """
+            derived_types = post_dict['derived_types']
+            n_derived_types = len(derived_types)
+            if n_derived_types > 0:
+                if n_derived_types == 1:
+                    if int(derived_types[0]) == 1:
+                        qq.append(Q(translated=1))
+                    else:
+                        qq.append(Q(remixed=1))
+                elif n_derived_types == 2:
+                    qq.append(Q(translated=1))
+                    qq.append(Q(remixed=1))
             materials = post_dict.get('material', [])
             if materials:
                 qq.append(Q(material__in=materials))
@@ -2518,12 +2537,30 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                     for oer_type in oer_types:
                         criteria.append(str(OER_TYPE_DICT.get(int(oer_type))))
                 post_dict['oer_type'] = oer_types
-                source_types = post.getlist('source_type')
-                if source_types:
-                    qq.append(Q(source_type__in=source_types))
-                    for source_type in source_types: 
-                        criteria.append(str(SOURCE_TYPE_DICT.get(int(source_type))))
-                post_dict['source_type'] = source_types
+                origin_types = post.getlist('origin_type')
+                n_origin_types = len(origin_types)
+                if n_origin_types > 0:
+                    if n_origin_types == 1:
+                        if int(origin_types[0]) == 1:
+                            qq.append(Q(source__isnull=False))
+                        else:
+                            qq.append(Q(source__isnull=True))
+                for origin in origin_types: 
+                    criteria.append(str(ORIGIN_TYPE_DICT.get(int(origin))))
+                derived_types = post.getlist('derived')
+                n_derived_types = len(derived_types)
+                if n_derived_types > 0:
+                    if n_derived_types == 1:
+                        if int(derived_types[0]) == 1:
+                            qq.append(Q(translated=True))
+                        else:
+                            qq.append(Q(remixed=True))
+                    elif n_derived_types == 2:
+                        qq.append(Q(translated=True))
+                        qq.append(Q(remixed=True))
+                for derived in derived_types: 
+                    criteria.append(str(DERIVED_TYPE_DICT.get(int(derived))))
+                post_dict['derived_types'] = derived_types
                 materials = post.getlist('material')
                 if materials:
                     qq.append(Q(material__in=materials))
@@ -2532,21 +2569,18 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                 post_dict['material'] = materials
                 licenses = post.getlist('license')
                 if licenses:
-                    # qq.append(Q(license__in=licenses))
                     qq.append(Q(license__in=expand_to_descendants(LicenseNode, licenses)))
                     for license in licenses: 
                         criteria.append(str(LicenseNode.objects.get(pk=license).name))
                 post_dict['license'] = licenses
                 levels = post.getlist('levels')
                 if levels:
-                    # qq.append(Q(levels__in=levels))
                     qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
                     for level in levels: 
                         criteria.append(str(LevelNode.objects.get(pk=level).name))
                 post_dict['level'] = levels
                 subjects = post.getlist('subjects')
                 if subjects:
-                    # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
                     qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                     for subject in subjects: 
                         criteria.append(str(SubjectNode.objects.get(pk=subject).name))
@@ -2559,7 +2593,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                 post_dict['tags'] = tags
                 languages = post.getlist('languages')
                 if languages:
-                    # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
                     qq.append(Q(languages__in=languages))
                     for language in languages:
                         criteria.append(str(Language.objects.get(pk=language).name))
