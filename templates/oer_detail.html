@@ -125,7 +125,8 @@
            {% endfor %}
         </dl>
       {% endif %}
-      {% if oer.oer_type == 3 and can_edit %}
+      {% comment %}{% if oer.oer_type == 3 and can_edit %}{% endcomment %}
+      {% if can_edit %}
         <dl class="font14 marginB10">
            <dt class="demiBold">{% trans "add document"|capfirst %}</dt>
            <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/oer/add_document/">{% csrf_token %}

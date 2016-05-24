@@ -1770,6 +1770,7 @@ def oer_add_document(request):
             # oer.documents.add(version.document)
             oer_document = OerDocument(oer=oer, document=version.document)
             oer_document.save()
+            oer.save()
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
         else:
             can_edit = oer.can_edit(request.user)
