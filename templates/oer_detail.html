@@ -105,13 +105,11 @@
             {% for item in oer.oers.all %}
               <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
             {% endfor %}
+     	{% if oer.translated and oer.remixed %}<dd>{% trans "through translation and adaptation / remixing" %}</dd>
+     	{% elif oer.translated %}<dd>{% trans "through translation" %}</dd>
+     	{% elif oer.remixed %}<dd>{% trans "through adaptation / remixing" %}</dd>
+      	{% endif %}
           </dl>
-      {% endif %}
-      {% if oer.translated %}
-        <p>tradotto</p>
-      {% endif %}
-      {% if oer.remixed %}
-        <p>adattato</p>
       {% endif %}
 
       {% if oer.source %}

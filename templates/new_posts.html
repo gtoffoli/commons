@@ -1,0 +1,30 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load mptt_tags %}
+
+{% block head_title %}{% trans "new posts in your forums"|capfirst %}{% endblock %}
+
+{% block body %}
+   <h1 class="text-center">{% trans "new posts in my forums"|capfirst %} (*)</h1>
+   <div style="text-align: center; font-style: italic;">{% trans "posts added to topics after you last viewed them"|capfirst %} (**)</div>
+   <section class="view-card">
+   {% if unviewed_posts %}
+   {% for category, forums in unviewed_posts %}
+   		<h3>{{ category.name }}</h3>
+	   {% for forum, topics in forums %}
+	   	<h5>{{ forum.name }}</h5>
+	   		<ul>
+		    {% for topic, last_viewed, n_posts in topics %}
+		   		<div>{{ n_posts }} &#8226; <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></div>
+		    {% endfor %}
+		    </ul>
+	   {% endfor %}
+   {% endfor %}
+   {% else %}
+       	<p>{% trans "no new posts are present"|capfirst %}.</p>
+   {% endif %}
+   <div>(*) forums of your community and or projects + thematic forums</div>
+   <div>(**) topic views are being tracked since May 25 only</div>
+      </section>
+{% endblock %}

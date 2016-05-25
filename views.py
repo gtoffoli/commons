@@ -40,6 +40,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
+from analytics import unviewed_posts
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -210,6 +211,14 @@ def edit_preferences(request):
     else:
         form = UserPreferencesForm(instance=profile)
     return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+
+def new_posts(request, username):
+    user = request.user
+    if not (user.username == username) and (not user.is_staff):
+        return HttpResponseRedirect('/')
+    var_dict = {}
+    var_dict['unviewed_posts'] = unviewed_posts(user, count_only=False)
+    return render_to_response('new_posts.html', var_dict, context_instance=RequestContext(request))
 
 def cops_tree(request):
     """
@@ -2499,17 +2508,26 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             if source_types:
                 qq.append(Q(source_type__in=source_types))
             """
-            derived_types = post_dict['derived_types']
+            # origin_types = post_dict['origin_types']
+            origin_types = post_dict.get('origin_types', [])
+            n_origin_types = len(origin_types)
+            if n_origin_types > 0:
+                if n_origin_types == 1:
+                    if int(origin_types[0]) == 1:
+                        qq.append(Q(source__isnull=False))
+                    else:
+                        qq.append(Q(source__isnull=True))
+            derived_types = post_dict.get('derived_types', [])
             n_derived_types = len(derived_types)
             if n_derived_types > 0:
                 if n_derived_types == 1:
                     if int(derived_types[0]) == 1:
-                        qq.append(Q(translated=1))
+                        qq.append(Q(translated=True))
                     else:
-                        qq.append(Q(remixed=1))
+                        qq.append(Q(remixed=True))
                 elif n_derived_types == 2:
-                    qq.append(Q(translated=1))
-                    qq.append(Q(remixed=1))
+                    qq.append(Q(translated=True))
+                    qq.append(Q(remixed=True))
             materials = post_dict.get('material', [])
             if materials:
                 qq.append(Q(material__in=materials))
@@ -2557,6 +2575,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                             qq.append(Q(source__isnull=True))
                 for origin in origin_types: 
                     criteria.append(str(ORIGIN_TYPE_DICT.get(int(origin))))
+                post_dict['origin_types'] = origin_types
                 derived_types = post.getlist('derived')
                 n_derived_types = len(derived_types)
                 if n_derived_types > 0:

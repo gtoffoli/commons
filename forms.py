@@ -345,7 +345,7 @@ class OerForm(forms.ModelForm):
         remixed = cd.get('remixed')
 
         if (len(oers) == 0) & (translated) | (remixed):
-            raise forms.ValidationError(_("necessario OER"))
+            raise forms.ValidationError(_("the OER(s) from which this one has been translated or remixed cannot be missing"))
 
         return cd
 

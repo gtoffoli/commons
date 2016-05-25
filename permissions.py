@@ -4,13 +4,23 @@ Created on 03/set/2015
 '''
 from pybb.permissions import DefaultPermissionHandler
 from pybb import defaults
-from commons.models import Project
 from django.db.models import Q
+
+from actstream import action, registry
+from pybb.models import Topic
+registry.register(Topic)
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
     classdocs
     '''
+
+    def filter_forums(self, user, qs):
+        """ return a queryset with forums `user` is allowed to see """
+        # return qs.filter(Q(hidden=False) & Q(category__hidden=False)) if not user.is_staff else qs
+        print 'filter_forums'
+        return qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(Q(category_id=2) | Q(topic_count__gt=0))) if not user.is_staff else qs
+    
     def may_view_forum(self, user, forum):
         """ return True if user may view this forum, False if not """
         return user.is_authenticated() or not forum.get_project()
@@ -32,6 +42,9 @@ class ForumPermissionHandler(DefaultPermissionHandler):
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
         # return user.is_authenticated() or not topic.forum.get_project()
+        print 'may_view_topic: ', user.username, topic.name
+        action.send(user, verb='View', action_object=topic)
+
         forum = topic.forum
         project = forum.get_project()
         if project:

@@ -18,9 +18,7 @@
 				{% endif %}<span class="hidden-xs"> {{ user.get_display_name }}</span>
 			    </a></li>
 		    	<li><a href="/my_mail/" title="{% trans "my messages"|capfirst %}"><div class="fa fa-envelope">{% if user.inbox_count %}<div class="txt-over">{{ user.inbox_count}}</div>{% endif %}</div></a></li>
-			  {% if user.has_xmpp_account %}
-		    	<li><a href="/my_chat/" title="{% trans "chat"|capfirst %}"><span class="fa fa-comments"></span></a></li>
-        {% endif %}
+		    	<li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><div class="fa fa-comment">{% with posts_count=user.posts_count %}{% if posts_count %}<div class="txt-over">{{ posts_count}}</div>{% endif %}{% endwith %}</div></a></li>
 		    	<li class="dropdown">
 		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 		    			<span class="fa fa-cog"></span>

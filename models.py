@@ -33,6 +33,7 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words
+from analytics import unviewed_posts
 
 # indexable_models = [UserProfile, Project, OER, LearningPath]
 
@@ -105,7 +106,11 @@ def user_has_xmpp_account(self):
     return XMPPAccount.objects.filter(user=self)
 User.has_xmpp_account = user_has_xmpp_account
 
-User.inbox_count = inbox_count_for   
+User.inbox_count = inbox_count_for
+
+def user_posts_count(self):
+    return unviewed_posts(self)
+User.posts_count = user_posts_count
 
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
