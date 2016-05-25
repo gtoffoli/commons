@@ -1499,8 +1499,7 @@ def oer_view(request, oer_id, oer=None):
         elif youtube.count('watch?v='):
             youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
             print 3, youtube
-        # youtube = YOUTUBE_TEMPLATE % youtube
-        var_dict['oer_url'] = youtube
+        youtube = YOUTUBE_TEMPLATE % youtube
     var_dict['youtube'] = youtube
     ted_talk = url and url.count('www.ted.com/talks/') and url or ''
     if ted_talk:
@@ -1508,11 +1507,14 @@ def oer_view(request, oer_id, oer=None):
             ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
         else:
             ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
-        # ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
-        ted_talk = (language, ted_talk)
-        var_dict['oer_url'] = ted_talk
+        ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
     var_dict['ted_talk'] = ted_talk
-    # var_dict['embed_code'] = oer.embed_code
+    reference = oer.reference
+    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
+    if slideshare:
+        slideshare = SLIDESHARE_TEMPLATE % slideshare
+    var_dict['slideshare'] = slideshare
+    var_dict['embed_code'] = oer.embed_code
     return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
 
 def oer_view_by_slug(request, oer_slug):
@@ -2141,6 +2143,12 @@ def lp_edit(request, lp_id=None, project_id=None):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
             else:
+                project_id = project_id or request.POST.get('project')
+                if project_id :
+                    return HttpResponseRedirect('/project/%s/' % project.slug)
+                else:
+                    return my_dashboard(request)
+                """
                 if project_id:
                     project = get_object_or_404(Project, id=project_id)
                 else:
@@ -2152,6 +2160,7 @@ def lp_edit(request, lp_id=None, project_id=None):
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else:
                     return my_dashboard(request)
+                """
     elif lp:
         form = LpForm(instance=lp)
     else:

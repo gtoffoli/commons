@@ -15,13 +15,20 @@
 {% block body %}
 <div class="panel panel-c2 text-left marginTB30">
   <div class="panel-heading-c2 padding1020">
-    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit OER"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
     {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
+        {% if form.errors %}
+      {% if form.non_field_errors %}
+      <div class="txt-error demiBold" style="margin-left:-20px">
+        {{ form.non_field_errors }}
+      </div>
+      {% endif %}
+    {% endif %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
     {% if field.name == 'tags' %}
       <div class="form-group">
@@ -78,7 +85,7 @@
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
-{% if oer %}
+
 <script type="text/javascript">
   function setDisabled( selectElementId){
     if($('select[id="'+selectElementId+'"]').length > 0) {
@@ -87,10 +94,10 @@
       $('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
     }
   }
-  $(document).ready(function() {
+ $(document).ready(function() {
    setDisabled('id_project');
-  })
+ })
 </script>
-{% endif %}
+
 {% include "_tinymce_init.html" %}
 {% endblock %}

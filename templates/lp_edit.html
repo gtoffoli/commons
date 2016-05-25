@@ -49,7 +49,6 @@
 {% endblock %}
 
 {% block extra_script %}
-{% if lp %}
 <script type="text/javascript">
   function setDisabled( selectElementId ){
     if($('select[id="'+selectElementId+'"]').length > 0) {
@@ -59,14 +58,16 @@
     }
   }
   $(document).ready(function() {
+  	{% if lp %}
     setDisabled( 'id_path_type' )
+    {% endif %}
     
     {% if not user.is_superuser %}
       setDisabled( 'id_project' )
     {% endif %}
   })
 </script>
-{% endif %}
+
 
 {% include "_tinymce_init.html" %}
 {% endblock %}

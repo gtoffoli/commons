@@ -1257,13 +1257,18 @@ list-style-type: none;
 padding-left: 20px;
 padding-right: 5px;
 }
-ul.nodes-unlisted li:before {    
+ul.node-oer li:before {
 font-family: 'FontAwesome';
 content: "\f192";
 margin:0 5px 0 -20px;
 color: #666;
 }
-
+ul.node-no-oer li:before {
+font-family: 'FontAwesome';
+content: "\f096";
+margin:0 5px 0 -20px;
+color: #333;
+}
 ul.nodes-unlisted div {
 	display:inline;
 	width:100%;

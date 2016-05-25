@@ -20,7 +20,7 @@
       <a href="/lp/{{ slug_lp }}/" title="{% trans "show learning path" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
     </p>
     <div style="clear:both;">
-      <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> <i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %} <i class="fa fa-dot-circle-o" aria-hidden="true"></i>{% endif %}</h2>
+      <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
     </div>
   </div>
   <p class="padding1020 demiBold font12">{% trans "In this form you can specify 3 types of resources: 1) an OER; 2) a document tailored to the needs of this learning path (LP); 3) a formatted text. When playing the LP, the platform will visualize only one of them: the OER, if present, otherwise the document or the formatted text as the last choice." %}</p>

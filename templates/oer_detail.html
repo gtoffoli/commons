@@ -98,6 +98,21 @@
          <dt>{% trans "OER type"|capfirst %}</dt>
          <dd>{{ type }}</dd>
       </dl>
+      
+      {% if oer.oers.all %}
+          <dl class="list-inline font14 marginB10">
+            <dt>{% trans "derived from"|capfirst %}</dt>
+            {% for item in oer.oers.all %}
+              <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
+            {% endfor %}
+          </dl>
+      {% endif %}
+      {% if oer.translated %}
+        <p>tradotto</p>
+      {% endif %}
+      {% if oer.remixed %}
+        <p>adattato</p>
+      {% endif %}
 
       {% if oer.source %}
         {% include "_data.html" with data=oer.source data_class=" font14 marginB10" label_data="source repository" action="/repo/"|add:oer.source.slug|add:"/" type_data="source_repository" %}
@@ -174,14 +189,6 @@
                 </dd>
               {% endfor %}
             {% endif %}
-          </dl>
-        {% endif %}
-        {% if oer.oers.all %}
-          <dl class="list-inline font14 marginB10">
-            <dt>{% trans "derived from"|capfirst %}</dt>
-            {% for item in oer.oers.all %}
-              <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
-            {% endfor %}
           </dl>
         {% endif %}
       </div>

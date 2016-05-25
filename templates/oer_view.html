@@ -27,10 +27,20 @@
 
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
-  <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+  <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer_url }}</a></p>
   <div class="iframe-container">
   {% if oer_url %}
-    <iframe src="{{ oer_url }}" id="iframe" allowfullscreen></iframe>
+    {% if youtube %}
+      {{ youtube|safe }}
+    {% elif ted_talk %}
+      {{ ted_talk|safe }}
+    {% elif slideshare %}
+      {{ slideshare|safe }}
+    {% elif embed_code %}
+      {{ embed_code|safe }}
+    {% else %}
+      <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+    {% endif %}
   {% endif %}
   </div>
 </div>

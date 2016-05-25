@@ -333,10 +333,21 @@ class OerForm(forms.ModelForm):
     languages = forms.ModelMultipleChoiceField(required=False, label=_('languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     media = forms.ModelMultipleChoiceField(required=False, queryset=MediaEntry.objects.all(), label=_('media formats'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 10,}), help_text=_('the options have been taken from www.oercommons.org'))
     accessibility = forms.ModelMultipleChoiceField(required=False, queryset=AccessibilityEntry.objects.all(), label=_('accessibility features'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}), help_text=_('features making easier the use of the OER also to impaired people; the options have been taken from www.oercommons.org; a help page is being prepared'))
-    project = forms.ModelChoiceField(required=True, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
+    project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+    
+    def clean(self):
+        cd = self.cleaned_data
+        oers = cd.get('oers')
+        translated = cd.get('translated')
+        remixed = cd.get('remixed')
+
+        if (len(oers) == 0) & (translated) | (remixed):
+            raise forms.ValidationError(_("necessario OER"))
+
+        return cd
 
 class OerChangeForm(forms.ModelForm):
     class Meta:

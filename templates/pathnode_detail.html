@@ -20,35 +20,20 @@
     <div class="col-sm-3 col-md-3 col-lg-3">
     {% if nodes %}
       <dl class="panel panel-col font14">
-        <dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt>
-        <dd><ul class="nodes-unlisted">
-        {% for pathnode in nodes%}
-          <li class="paddingB10">
-          {% if node.id == pathnode.id %} 
-            <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ node.label }}</div>
-          {% else %}
-            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/pathnode/{{ pathnode.id }}/" title="path node">{{ pathnode.label }}</a>
-          {% endif %}
-{% comment %}
-                  <div class="paddingL3">
-                    {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
-                      {% if nodes|length > 1 %}
-                        {% if not node.is_island %} 
-                          <span class="font12">
-                            {% if not node.is_root and not node.is_leaf %}<a class="upNode" id="u_{{ node.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a class="downNode" id="d_{{ node.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                            {% elif node.is_root %}<i class="fa fa-arrow-up c-white"></i> &nbsp; <a class="downNode" id="d_{{ node.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
-                            {% elif node.is_leaf %}<a class="upNode" id="u_{{ node.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down c-white"></i> &nbsp;
-                            {% endif %}
-                          </span>
-                        {% endif %}
-                      {% endif %}
-                    {% endif %}
-                    <a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a>
-                  </div>
-{% endcomment %}
-          </li>
+{% comment %} <dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt> {% endcomment %}
+        <dd>
+        {% for pathnode in nodes %}
+          <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-no-oer {% endif %}">
+            <li>
+            {% if node.id == pathnode.id %} 
+              <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ node.label }}</div>
+            {% else %}
+              {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/pathnode/{{ pathnode.id }}/" title="path node">{{ pathnode.label }}</a>
+            {% endif %}
+            </li>
+          </ul>
         {% endfor %}
-        </ul></dd>
+        </dd>
       </dl>
     {% endif %}
     </div>

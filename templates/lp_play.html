@@ -13,27 +13,28 @@
   <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0" id="list_nodes">
   	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
     <div class="clearfix">
-    <h5 class="pull-left c-mulberry" style="margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
-    <p class="pull-right paddingT10 paddingLR5"  style="margin-bottom:5px">
+    <h5 class="pull-left c-mulberry" style="width: 90%; margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
+<p class="pull-right paddingT10 paddingLR5" style="width: 10%; margin-bottom:5px; ">
       <a href="/lp/{{ lp.slug }}"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
     </p>
     </div>
     <p class="font12">{{ lp.short|safe }}</p>
     </div>
-    {% if lp.get_nodes %}
-    	<dl class="panel panel-col panel-white" >
-        {% comment %}<dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt>{% endcomment %}
-        <dd><ul class="nodes-unlisted font14">
-        {% for pathnode in lp.get_ordered_nodes %}
-          <li class="paddingB10">
-          {% if i_node == forloop.counter0 %} 
-            <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
-          {% else %}
-            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
-          {% endif %}
-          </li>
+    {% if nodes %}
+    	<dl class="panel panel-col panel-white">
+        <dd>
+        {% for pathnode in nodes %}
+          <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-no-oer {% endif %} font14">
+            <li>
+            {% if i_node == forloop.counter0 %} 
+              <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }} {{ pathnode.oer_id }}</div>
+            {% else %}
+              {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+            {% endif %}
+            </li>
+          </ul>
         {% endfor %}
-        </ul></dd>
+        </dd>
       </dl>
     {% endif %}
 </div>
