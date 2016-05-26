@@ -13,7 +13,7 @@
    {% for category, forums in unviewed_posts %}
    		<h3>{{ category.name }}</h3>
 	   {% for forum, topics in forums %}
-	   	<h5>{{ forum.name }}</h5>
+	   	<h5><a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a></h5>
 	   		<ul>
 		    {% for topic, last_viewed, n_posts in topics %}
 		   		<div>{{ n_posts }} &#8226; <a href="{{ topic.get_absolute_url }}">{{ topic.name }}</a></div>

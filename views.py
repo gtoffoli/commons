@@ -40,7 +40,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import unviewed_posts
+from analytics import unviewed_posts, post_views_by_user
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -217,7 +217,8 @@ def new_posts(request, username):
     if not (user.username == username) and (not user.is_staff):
         return HttpResponseRedirect('/')
     var_dict = {}
-    var_dict['unviewed_posts'] = unviewed_posts(user, count_only=False)
+    # var_dict['unviewed_posts'] = unviewed_posts(user, count_only=False)
+    var_dict['unviewed_posts'] = post_views_by_user(user, count_only=False)
     return render_to_response('new_posts.html', var_dict, context_instance=RequestContext(request))
 
 def cops_tree(request):

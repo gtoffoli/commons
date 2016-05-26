@@ -19,7 +19,7 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         """ return a queryset with forums `user` is allowed to see """
         # return qs.filter(Q(hidden=False) & Q(category__hidden=False)) if not user.is_staff else qs
         print 'filter_forums'
-        return qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(Q(category_id=2) | Q(topic_count__gt=0))) if not user.is_staff else qs
+        return qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(Q(category_id=2) | Q(topic_count__gt=0))) if not user.is_superuser else qs
     
     def may_view_forum(self, user, forum):
         """ return True if user may view this forum, False if not """

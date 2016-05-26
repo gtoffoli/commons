@@ -2,48 +2,10 @@
 
 {% load staticfiles i18n %}
 {% load account_tags %}
-
-{% comment %}
-{% if project.has_chat_room and can_chat %}
-	{% load static from staticfiles %}
-	{% load conversejs %}
-{% endif %}
-{% endcomment %}
+{% load commons_tags %}
 
 {% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
-{% comment %}
-{% block extra_style %}
-{% if project.has_chat_room and can_chat %}
-	<link rel="stylesheet" href="{% static 'converse.js/converse.min.css' %}" type="text/css" media="screen, projection">
-<style>
-		dl.add-converse-contact {
-		    display: none;
-		}
-		a.toggle-online-users {
-		    display: none;
-		}
-		a.change-xmpp-status-message {
-		    display: none  !important;
-		}
-		form.add-chatroom label {
-		    display: none;
-		}
-		form.add-chatroom input {
-		    display: none;
-		}
-		div.button-group input.left {
-		    display: none !important;
-		    width: 100% !important;
-		}
-		div.button-group input.right {
-		    display: block !important;
-		    width: 100% !important;
-		}
-	</style>
-{% endif %}
-{% endblock %}
-{% endcomment %}
 {% block extra_head %}
 {% comment %}
 {% if project.has_chat_room and can_chat %}
@@ -205,7 +167,6 @@
           </div>
         {% endif %}
 
-{% comment %} INTERAGISCI {% endcomment %}
         {% if view_shared_folder or can_send_message or project.forum or view_chat %}
         <div>
           <ul class="list-inline marginLB020">
@@ -223,20 +184,14 @@
                    </li>
                 {% endif %}
                 {% if project.forum %}
-{% comment %} MMR {% if proj_type.name = 'com' %}{% trans "view the community forum"|capfirst %}{% else %}{% trans "view the project forum"|capfirst %}{% endif %} {% endcomment %}
-                  <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><i class="fa fa-comment-o"></i> {% trans "forum"|capfirst %}</a></li>
+                  <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><i class="fa fa-comment-o">
+                  	  {% if is_member %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if unviewed_posts_count %}<span class="txt-over">{{ unviewed_posts_count}}</span>{% endif %}</i> {% trans "forum"|capfirst %}</a>{% endwith %}{% endif %}</li>
                 {% endif %}
-                {% if view_chat %}
-                  
 {% comment %}
-<i>{% trans "you are"|capfirst %} {% trans "member of the project chatroom" %}</i>
-<div style="margin-top: 270px;"></div>
-{% conversejs_chatpanel %}
-{% conversejs_initialize %}
-{% endcomment %}
-
+                {% if view_chat %}
                    <li><a href="/my_chat/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "chatroom"|capfirst %}</a></li>
                 {% endif %}
+{% endcomment %}
                 </ul>
              </li>
            </ul>

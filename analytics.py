@@ -152,3 +152,62 @@ def unviewed_posts(user, count_only=True):
             categories_list.append(category_entry)
     print '%d unread posts in %d topics' % (n_posts, n_topics)
     return categories_list
+
+def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_only=True):
+    if count_only:
+        posts_count = 0
+        if topic and unviewed_only:
+            posts = Post.objects.filter(topic=topic)
+            last_viewed = topic_last_viewed(topic, user=user)
+            if last_viewed:
+                posts = posts.filter(created__gt=last_viewed)
+            return posts.count()
+        elif forum:
+            forums = [forum]
+        else:
+            forums = Forum.objects.filter(Q(project_forum__isnull=True, topic_count__gt=0) | Q(project_forum__member_project__user=user, topic_count__gt=0)).order_by('-updated')
+        topics = Topic.objects.filter(forum__in=forums)
+        for topic in topics:
+            posts = Post.objects.filter(topic=topic)
+            if unviewed_only:
+                last_viewed = topic_last_viewed(topic, user=user)
+                if last_viewed:
+                    posts = posts.filter(created__gt=last_viewed)
+            posts_count += posts.count()
+        return posts_count
+    n_topics = n_posts = 0
+    categories_list = []
+    if forum:
+        category = forum.category
+        forums = [forum]
+        # ...
+    else:
+        categories = Category.objects.all().order_by('position')
+        thematic_forums = Forum.objects.filter(category=categories[0], topic_count__gt=0).order_by('name')
+        project_forums = Forum.objects.filter(category=categories[1], project_forum__member_project__user=user, topic_count__gt=0).order_by('name')
+        category_forums = [[categories[0], thematic_forums], [categories[1], project_forums],]
+        for category, forums in category_forums:
+            forums_list = []
+            for forum in forums:
+                topics_list = []
+                topics = Topic.objects.filter(forum=forum, post_count__gt=0).order_by('-updated')
+                for topic in topics:
+                    posts = Post.objects.filter(topic=topic)
+                    if unviewed_only:
+                        last_viewed = topic_last_viewed(topic, user=user)
+                        if last_viewed:
+                            posts = posts.filter(created__gt=last_viewed)
+                    posts_count = posts.count()
+                    if posts_count:
+                        topic_entry = [topic, last_viewed, posts_count]
+                        topics_list.append(topic_entry)
+                        n_topics += 1
+                        n_posts += posts_count
+                if topics_list:
+                    forum_entry = [forum, topics_list]
+                    forums_list.append(forum_entry)
+            if forums_list:
+                category_entry = [category, forums_list]
+                categories_list.append(category_entry)
+    print '%d unread posts in %d topics' % (n_posts, n_topics)
+    return categories_list
