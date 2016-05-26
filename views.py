@@ -1186,7 +1186,8 @@ def browse(request):
         if entries:
             lps_browse_list.append([field_name, field_label, entries])
     form = OerSearchForm
-    field_names = ['oer_type', 'source_type', 'levels', 'material', 'languages', 'subjects', 'tags', 'media', 'accessibility', 'license', ]
+    # field_names = ['oer_type', 'source_type', 'levels', 'material', 'languages', 'subjects', 'tags', 'media', 'accessibility', 'license', ]
+    field_names = ['subjects', 'tags', 'languages', 'levels', 'accessibility', 'oer_type', 'material', 'media', 'license']
     oers_browse_list = []
     base_fields = form.base_fields
     for field_name in field_names:
