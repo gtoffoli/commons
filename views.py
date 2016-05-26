@@ -2508,7 +2508,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             if source_types:
                 qq.append(Q(source_type__in=source_types))
             """
-            # origin_types = post_dict['origin_types']
             origin_types = post_dict.get('origin_types', [])
             n_origin_types = len(origin_types)
             if n_origin_types > 0:
@@ -2526,8 +2525,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                     else:
                         qq.append(Q(remixed=True))
                 elif n_derived_types == 2:
-                    qq.append(Q(translated=True))
-                    qq.append(Q(remixed=True))
+                    qq.append(Q(translated=True) | Q(remixed=True))
             materials = post_dict.get('material', [])
             if materials:
                 qq.append(Q(material__in=materials))
@@ -2585,8 +2583,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                         else:
                             qq.append(Q(remixed=True))
                     elif n_derived_types == 2:
-                        qq.append(Q(translated=True))
-                        qq.append(Q(remixed=True))
+                        qq.append(Q(translated=True) | Q(remixed=True))
                 for derived in derived_types: 
                     criteria.append(str(DERIVED_TYPE_DICT.get(int(derived))))
                 post_dict['derived_types'] = derived_types

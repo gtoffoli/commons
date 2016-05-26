@@ -27,7 +27,7 @@
           <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-no-oer {% endif %} font14">
             <li>
             {% if i_node == forloop.counter0 %} 
-              <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }} {{ pathnode.oer_id }}</div>
+              <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
             {% else %}
               {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
             {% endif %}
