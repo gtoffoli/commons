@@ -38,6 +38,7 @@ def community_children(request):
 def projects_children(request):
     children = []
     children.append (MenuItem(
+         # string_concat(capfirst(_("projects")), ' - ', _("advanced search")),
          capfirst(_("projects")),
          url='/projects/search',
         ))
@@ -59,15 +60,18 @@ def search_children(request):
          url='/browse/',
         ))
     children.append (MenuItem(
-         string_concat(capfirst(_("learning paths")), ' - ', _("advanced search")),
+         # string_concat(capfirst(_("learning paths")), ' - ', _("advanced search")),
+         capfirst(_("learning paths")),
          url='/lps/search/',
         ))
     children.append (MenuItem(
-         string_concat(capfirst(_("open resources")), ' - ', _("advanced search")),
+         # string_concat(capfirst(_("open resources")), ' - ', _("advanced search")),
+         capfirst(_("open resources")),
          url='/oers/search/',
         ))
     children.append (MenuItem(
-         string_concat(capfirst(_("source repositories")), ' - ', _("advanced search")),
+         # string_concat(capfirst(_("source repositories")), ' - ', _("advanced search")),
+         capfirst(_("source repositories")),
          url='/repos/search/',
         ))
     return children

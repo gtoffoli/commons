@@ -3,6 +3,7 @@ Created on 02/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
+import re
 import json
 from django.template import RequestContext
 from django.db.models import Count
@@ -272,6 +273,11 @@ def projects_search(request, template='search_projects.html', extra_context=None
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['name', 'description',]))
+
             communities = post_dict.get('communities', [])
             if communities:
                 comm_objects = Project.objects.filter(id__in=communities)
@@ -304,6 +310,13 @@ def projects_search(request, template='search_projects.html', extra_context=None
             form = ProjectSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['name', 'description',]))
+                post_dict['term'] = term
+                # criteria.append(...)
+
                 communities = post.getlist('communities')
                 if communities:
                     comm_objects = Project.objects.filter(id__in=communities)
@@ -1307,6 +1320,11 @@ def people_search(request, template='search_people.html', extra_context=None):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['user__first_name', 'user__last_name', 'short',]))
+
             countries = post_dict.get('country', [])
             if countries:
                 qq.append(Q(country__in=countries))
@@ -1336,6 +1354,13 @@ def people_search(request, template='search_people.html', extra_context=None):
             form = PeopleSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['user__first_name', 'user__last_name', 'short',]))
+                post_dict['term'] = term
+                # criteria.append(...)
+
             countries = request.POST.getlist('country')
             if countries:
                 qq.append(Q(country__in=countries))
@@ -2414,6 +2439,11 @@ def repos_search(request, template='search_repos.html', extra_context=None):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['name', 'description',]))
+
             repo_types = post_dict.get('repo_type', [])
             if repo_types:
                 qq.append(Q(repo_type_id__in=repo_types))
@@ -2433,6 +2463,13 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             form = RepoSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['name', 'description',]))
+                post_dict['term'] = term
+                # criteria.append(...)
+
                 repo_types = post.getlist('repo_type')
                 if repo_types:
                     qq.append(Q(repo_type_id__in=repo_types))
@@ -2484,14 +2521,18 @@ def repos_search(request, template='search_repos.html', extra_context=None):
 
     return render_to_response(template, context, context_instance=RequestContext(request))
 
-q_extra = ['(', ')', '[', ']', '"']
-def clean_q(q):
-    for c in q_extra:
-        q = q.replace(c, '')
-    return q
+def clean_term(term):
+    return re.sub('[\(\)\[\]\"]', '', term)
 
-def search_by_string(request, q, subjects=[], languages=[]):
-    pass
+def term_query(term, text_fields):
+    query = None         
+    for field_name in text_fields:
+        q = Q(**{"%s__icontains" % field_name: term})
+        if query is None:
+            query = q
+        else:
+            query = query | q
+    return query
 
 @page_template('_oer_index_page.html')
 def oers_search(request, template='search_oers.html', extra_context=None):
@@ -2502,6 +2543,11 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['title', 'description',]))
+ 
             oer_types = post_dict.get('oer_type', [])
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
@@ -2559,6 +2605,13 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             form = OerSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['title', 'description',]))
+                post_dict['term'] = term
+                # criteria.append(...)
+
                 oer_types = post.getlist('oer_type')
                 if oer_types:
                     qq.append(Q(oer_type__in=oer_types))
@@ -2673,6 +2726,11 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['title', 'short',]))
+ 
             path_types = post_dict.get('path_type', [])
             if path_types:
                 qq.append(Q(path_type__in=path_types))
@@ -2692,6 +2750,13 @@ def lps_search(request, template='search_lps.html', extra_context=None):
             form = LpSearchForm(post) # A form bound to the POST data
             if form.is_valid(): # All validation rules pass
                 post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['title', 'short',]))
+                post_dict['term'] = term
+                # criteria.append(...)
+
                 path_types = post.getlist('path_type')
                 if path_types:
                     qq.append(Q(path_type__in=path_types))

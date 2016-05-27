@@ -101,17 +101,15 @@ class UserPreferencesForm(forms.ModelForm):
 
 class PeopleSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        q = kwargs.get('q', '')
-        if q:
-            kwargs.pop('q')
         super(PeopleSearchForm, self).__init__(*args,**kwargs)
         for fieldname in []:
             self.fields[fieldname].empty_label = None
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
-        if q:
-            self.fields['q'].initial = q
 
+    term = forms.CharField(
+        label=_("text in name and short presentation"), required=False,
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     country = forms.ModelMultipleChoiceField(CountryEntry.objects.all(),
         label=_('country'), required=False,
         help_text=_("choose country (no selection = all countries)"),
@@ -194,15 +192,13 @@ N_LPS_CHOICES = (
 
 class ProjectSearchForm (forms.Form):
     def __init__(self, *args, **kwargs):
-        q = kwargs.get('q', '')
-        if q:
-            kwargs.pop('q')
         super(ProjectSearchForm, self).__init__(*args,**kwargs)
-        if q:
-            self.fields['q'].initial = q
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
 
+    term = forms.CharField(
+        label=_("text in name and short description"), required=False,
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     nodes = Group.objects.filter(level=0)
     root = nodes[0]
     communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1).order_by('name'),
@@ -250,22 +246,15 @@ class RepoForm(forms.ModelForm):
 
 class RepoSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        q = kwargs.get('q', '')
-        if q:
-            kwargs.pop('q')
         super(RepoSearchForm, self).__init__(*args,**kwargs)
-        if q:
-            self.fields['q'].initial = q
         for fieldname in ('repo_type',):
             self.fields[fieldname].empty_label = None
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
 
-    """
-    q = forms.CharField(
-        label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
-    """
+    term = forms.CharField(
+        label=_("text in name and short description"), required=False,
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
@@ -369,24 +358,13 @@ DERIVED_TYPE_DICT = dict(DERIVED_TYPE_CHOICES)
 
 class OerSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        q = kwargs.get('q', '')
-        if q:
-            kwargs.pop('q')
         super(OerSearchForm, self).__init__(*args,**kwargs)
-        """
-        for fieldname in ('material','license','levels','media','accessibility',):
-            self.fields[fieldname].empty_label = None
-        """
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
-        if q:
-            self.fields['q'].initial = q
 
-    """
-    q = forms.CharField(
+    term = forms.CharField(
         label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
-    """
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
@@ -487,22 +465,15 @@ class LpChangeForm(forms.ModelForm):
 
 class LpSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
-        q = kwargs.get('q', '')
-        if q:
-            kwargs.pop('q')
         super(LpSearchForm, self).__init__(*args,**kwargs)
         for fieldname in ('levels',):
             self.fields[fieldname].empty_label = None
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
-        if q:
-            self.fields['q'].initial = q
 
-    """
-    q = forms.CharField(
-        label=_("text in title and description"), required=False,
-        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search string")}))
-    """
+    term = forms.CharField(
+        label=_("text in title and objectives"), required=False,
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     subjects = forms.ModelMultipleChoiceField(SubjectNode.objects.all(),
         label=_('subject areas'), required=False,
         help_text=_("choose subject areas (no selection = all areas)"),
