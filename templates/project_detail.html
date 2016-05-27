@@ -167,7 +167,8 @@
           </div>
         {% endif %}
 
-        {% if view_shared_folder or can_send_message or project.forum or view_chat %}
+{% comment %} or view_chat{% endcomment %}
+        {% if view_shared_folder or can_send_message or project.forum %}
         <div>
           <ul class="list-inline marginLB020">
              <li class="list-back-black">
@@ -183,9 +184,10 @@
                      </form>
                    </li>
                 {% endif %}
+
                 {% if project.forum %}
-                  <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><i class="fa fa-comment-o">
-                  	  {% if is_member %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if unviewed_posts_count %}<span class="txt-over">{{ unviewed_posts_count}}</span>{% endif %}</i> {% trans "forum"|capfirst %}</a>{% endwith %}{% endif %}</li>
+              <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
+                  	   {% trans "forum"|capfirst %} {% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
                 {% endif %}
 {% comment %}
                 {% if view_chat %}
