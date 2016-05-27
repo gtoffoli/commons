@@ -34,13 +34,13 @@
         {% endif %}
         {% include "_data.html" with data=repo_type data_class=" font14 marginB10" label_data="type" action="/repos/search/" type_data="repo_type" desc_data="desc" %}
         {% if repo.info %}
-          <dl class="list-inline font14 marginB10">
+          <dl class="list-inline font14 marginB10 clearfix">
             <dt class="with_icon open">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-minus-circle"></i></a></dt>
             <dd class="field-content width-full" style="display:block"><blockquote class="font14">{{ repo.info|safe }}</blockquote></dd>
           </dl>
         {% endif %}
         {% if repo.eval %}
-          <dl class="list-inline font14 marginB10">
+          <dl class="list-inline font14 marginB10 clearfix">
             <dt class="with_icon open">{% trans "comments / evaluation"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-minus-circle"></i></a></dt>
             <dd class="field-content width-full" style="display:block"><blockquote class="font14">{{ repo.eval|safe }}</blockquote></dd>
           </dl>

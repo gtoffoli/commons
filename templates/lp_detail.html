@@ -23,50 +23,82 @@
             <div class="hidden-xs">
               <div class="posRel">
                 <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/"  title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
-                {% if lp.long %}<div class="marginB10">{{ lp.long|safe }}</div>{% endif %}
                 <dl class="list-inline font14 marginB10">
                   <dt>{% trans "objectives"|capfirst %}</dt>
                   <dd>{{ lp.short|safe }}</dd>
                 </dl>
+                {% if lp.levels.all %}
+                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+                {% endif %}
+                {% if lp.subjects.all and lp.tags.all %}
+                  {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                  {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
+                {% elif lp.subjects.all %}
+                  {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                {% elif lp.tags.all %}
+                  {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
+                {% endif %}
               </div>
             </div>
             <div class="visible-xs">
               <p class="bg_play"><a href="/lp/{{ lp.slug }}/play/" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></p>
-              {% if lp.long %} <div class="marginB10">{{ lp.long|safe }}</div>{% endif %}
               <dl class="list-inline font14 marginB10">
                 <dt>{% trans "objectives"|capfirst %}</dt>
                 <dd>{{ lp.short|safe }}</dd>
               </dl>
+              {% if lp.levels.all %}
+                {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+              {% endif %}
+              {% if lp.subjects.all and lp.tags.all %}
+                <div class="row">
+                  <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
+                    {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                  </div>
+                  <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
+                    {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
+                  </div>
+                </div>
+                {% elif lp.subjects.all %}
+                  {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                {% elif lp.tags.all %}
+                  {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
+                {% endif %}
             </div>
           {% else %}
-            {% if lp.long %} <div class="marginB10">{{ lp.long|safe }}</div>{% endif %}
-            <dl class="list-inline font14">
+            <dl class="list-inline font14 marginB10">
               <dt>{% trans "objectives"|capfirst %}</dt>
               <dd>{{ lp.short|safe }}</dd>
             </dl>
+            {% if lp.levels.all %}
+              {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+            {% endif %}
+            {% if lp.subjects.all and lp.tags.all %}
+              <div class="row">
+                <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
+                  {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                </div>
+                <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
+                  {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
+                </div>
+              </div>
+            {% elif lp.subjects.all %}
+              {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+            {% elif lp.tags.all %}
+              {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
+            {% endif %}
           {% endif %}
         </div>
-
-        {% if lp.levels.all %}
-          {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+        {% if lp.long %}
+          <dl class="list-inline font14 marginB10 clearfix">
+            <dt class="with_icon">{% trans "description"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+            <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ lp.long|safe }}</blockquote></dd>
+          </dl>
         {% endif %}
 
-        {% if lp.subjects.all and lp.tags.all %}
-          <div class="row">
-            <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
-              {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
-            </div>
-            <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
-              {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
-            </div>
-          </div>
-        {% elif lp.subjects.all %}
-          {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
-        {% elif lp.tags.all %}
-          {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
-        {% endif %}
 
-        <dl class="list-inline font14 marginB10">
+
+
+        <dl class="list-inline font14 ">
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
           <dd><form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>
             {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain font07"></i></a>{% endif %}
@@ -167,6 +199,21 @@
     }
   {% endif %}
 	$(document).ready(function() {
+
+		$('dt a.toggleIcon').on('click', function(event){
+			event.preventDefault();
+			var accordion = $(this).parent();
+			var accordionContent = accordion.next('.field-content');
+			var accordionToggleIcon = $(this);
+			accordion.toggleClass("open");
+			accordionContent.slideToggle(250);
+			if (accordion.hasClass("open")) {
+				accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+			} else {
+				accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+			}
+		});
+
 		if ($('li div a').hasClass('deleteNode')) {
 			$('li div a.deleteNode').on('click', function(event){
 				event.preventDefault();
