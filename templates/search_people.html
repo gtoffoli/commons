@@ -24,7 +24,10 @@
     </div>
     <div class="col-sm-6 col-md-7 col-lg-7">
       {% if profiles %}
-        <p><small><span class"demiBold">{{ n_profiles }} {% trans "results"|capfirst %}</span>
+        <p><small><span class"demiBold">{{ n_profiles }} {% if n_profiles > 1 %}{% trans "results" %}{% else %}{% trans "result" %}{% endif %}</span>
+          {% if term %}
+            <br><span class"demiBold">{% trans "search text"|capfirst %}:</span> {{ term }}
+          {% endif %}
           {% if criteria %}
             <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
             {% for c in criteria %}
@@ -38,6 +41,9 @@
         {% include page_template %}
       {% else %}
         <p><small><span class"demiBold">{% trans "no results were found"|capfirst %}</span>
+          {% if term %}
+            <br><span class"demiBold">{% trans "search text"|capfirst %}:</span> {{ term }}
+          {% endif %}
           {% if criteria %}
             <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
             {% for c in criteria %}

@@ -264,6 +264,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
     post = None
     qq = []
     projects = []
+    term = ''
     criteria = []
     include_all = ''
     min_oers = min_lps = min_members = 0
@@ -400,7 +401,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
         projects = qs.filter(state=PROJECT_OPEN).distinct().order_by('name')
         request.session["post_dict"] = {}
 
-    context = {'projects': projects, 'n_projects': len(projects), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+    context = {'projects': projects, 'n_projects': len(projects), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -1314,6 +1315,7 @@ def people_search(request):
 @page_template('_people_index_page.html')
 def people_search(request, template='search_people.html', extra_context=None):
     qq = []
+    term= ''
     criteria = []
     profiles = []
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
@@ -1359,7 +1361,6 @@ def people_search(request, template='search_people.html', extra_context=None):
                 if term:
                     qq.append(term_query(term, ['user__first_name', 'user__last_name', 'short',]))
                 post_dict['term'] = term
-                # criteria.append(...)
 
             countries = request.POST.getlist('country')
             if countries:
@@ -1430,7 +1431,7 @@ def people_search(request, template='search_people.html', extra_context=None):
                 profiles.append(profile)
         request.session["post_dict"] = {}
 
-    context = {'profiles': profiles, 'n_profiles': len(profiles), 'criteria': criteria, 'include all': None, 'form': form,}
+    context = {'profiles': profiles, 'n_profiles': len(profiles), 'term': term, 'criteria': criteria, 'include all': None, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -2433,6 +2434,7 @@ def repos_search(request):
 @page_template('_repo_index_page.html')
 def repos_search(request, template='search_repos.html', extra_context=None):
     qq = []
+    term = ''
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
@@ -2452,7 +2454,6 @@ def repos_search(request, template='search_repos.html', extra_context=None):
                 qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
             languages = post_dict.get('languages', [])
             if languages:
-                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
                 qq.append(Q(languages__in=languages))
             repo_features = post_dict.get('features', [])
             if repo_features:
@@ -2468,7 +2469,6 @@ def repos_search(request, template='search_repos.html', extra_context=None):
                 if term:
                     qq.append(term_query(term, ['name', 'description',]))
                 post_dict['term'] = term
-                # criteria.append(...)
 
                 repo_types = post.getlist('repo_type')
                 if repo_types:
@@ -2514,7 +2514,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
         repos = Repo.objects.filter(state=PUBLISHED).distinct().order_by('name')
         request.session["post_dict"] = {}
 
-    context = {'repos': repos, 'n_repos': len(repos), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+    context = {'repos': repos, 'n_repos': len(repos), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -2537,6 +2537,7 @@ def term_query(term, text_fields):
 @page_template('_oer_index_page.html')
 def oers_search(request, template='search_oers.html', extra_context=None):
     qq = []
+    term = ''
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
@@ -2610,7 +2611,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                 if term:
                     qq.append(term_query(term, ['title', 'description',]))
                 post_dict['term'] = term
-                # criteria.append(...)
 
                 oer_types = post.getlist('oer_type')
                 if oer_types:
@@ -2709,7 +2709,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         oers = OER.objects.filter(state=PUBLISHED).distinct().order_by('title')
         request.session["post_dict"] = {}
 
-    context = {'oers': oers, 'n_oers': len(oers), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+    context = {'oers': oers, 'n_oers': len(oers), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)
@@ -2720,6 +2720,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 def lps_search(request, template='search_lps.html', extra_context=None):
     query = qq = []
     lps = []
+    term= ''
     criteria = []
     include_all = ''
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
@@ -2755,7 +2756,6 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                 if term:
                     qq.append(term_query(term, ['title', 'short',]))
                 post_dict['term'] = term
-                # criteria.append(...)
 
                 path_types = post.getlist('path_type')
                 if path_types:
@@ -2808,7 +2808,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         lps = LearningPath.objects.filter(query).distinct().order_by('title')
         request.session["post_dict"] = {}
 
-    context = {'lps': lps, 'n_lps': len(lps), 'criteria': criteria, 'include_all': include_all, 'form': form,}
+    context = {'lps': lps, 'n_lps': len(lps), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:
         context.update(extra_context)

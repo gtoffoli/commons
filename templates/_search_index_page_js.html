@@ -1,5 +1,38 @@
 <script type="text/javascript">
+	var highlightTermsIn = function(jQueryElements, terms) {
+		if (typeof(terms) != 'undefined') {
+			var wrapper = ">$1<span style='background:yellow'>$2</span>$3<";
+			for (var i = 0; i < terms.length; i++) {
+				var regex = new RegExp(">([^<]*)?("+terms[i]+")([^>]*)?<","ig");
+				jQueryElements.each(function(i) {
+					$(this).html($(this).html().replace(regex, wrapper));
+				});
+			};
+		}
+ 	}
+
+	var parseSearchTerms = function(value) {
+		if (value != '') {
+			var splitRegex = /(\u0022[^\u0022]*\u0022)|([^\u0022\s]+(\s|$))/g;
+			var rawTerms = value.match(splitRegex);
+			var terms = [];
+			for (var i = 0; i < rawTerms.length; i++) {
+				var term = rawTerms[i].replace(/^[\s\u0022\u0027+-][\s\u0022\u0027+-]*/, '').replace(/[\s*~\u0022\u0027][\s*~\u0022\u0027]*$/, '').toLowerCase();
+				terms[terms.length] = term;
+		}
+		return terms;
+	}
+	}
+	
 $(document).ready(function (){
+	quickSearch = '{{ term }}';
+	if (quickSearch.length > 0) {
+		quickSearch = '"'+quickSearch+'"';
+		highlightTermsIn($("p.title-card"), parseSearchTerms(quickSearch));
+		highlightTermsIn($("p.user-card"), parseSearchTerms(quickSearch));
+		highlightTermsIn($("p.text-card"), parseSearchTerms(quickSearch));
+	}
+
 	$('.expand-description').on('click', function(event){
 		event.preventDefault();
 		var parent=$(this).parent().parent();

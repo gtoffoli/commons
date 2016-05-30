@@ -35,7 +35,16 @@
 	}
 	
 $(document).ready(function (){
-	
+
+if ($('#search_form input[type=text]').val != '') {
+	var content = $('#search_form input[type=text]').parent();
+	var accordion = $(content).prev();
+	var accordionToggleIcon= $(accordion).children('a.toggleIcon');
+	accordion.toggleClass("open");
+	$(content).removeAttr('style');
+	accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+}
+
 {% if search == 'search_projects' %}
 	selected_field (['id_n_members','id_n_lps','id_n_oers']);
 {% elif search == 'search_lps' %}

@@ -24,7 +24,10 @@
     </div>
     <div class="col-sm-6 col-md-7 col-lg-7">
       {% if oers %}
-        <p><small><span class"demiBold">{{ n_oers }} {% trans "results"|capfirst %}</span>
+        <p><small><span class"demiBold">{{ n_oers }} {% if n_oers > 1 %}{% trans "results" %}{% else %}{% trans "result" %}{% endif %}</span>
+          {% if term %}
+            <br><span class"demiBold">{% trans "search text"|capfirst %}:</span> {{ term }}
+          {% endif %}
           {% if criteria %}
             <br><span class"demiBold">{% trans "search criteria"|capfirst %}:</span> 
             {% for c in criteria %}
