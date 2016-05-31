@@ -1,0 +1,39 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load commons_tags %}
+
+{% block head_title %}{% trans "recent activity"|capfirst %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block extra_head %}
+<style>
+	th, td { padding: 0 1em }
+</style>
+{% endblock extra_head %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h2 class="text-center">{% trans "recent activity"|capfirst %}</h2>
+			{% if actions %}
+			<table id="stream" style="padding: 1;">
+			<thead><th>{% trans "time" %}</th><th>{% trans "actor" %}</th><th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object name" %}</th>
+			</thead>
+			<tbody>
+		        {% for action in actions %}<tr>
+		        <td>{{ action.timestamp }}</td>
+		        <td>{{ action.actor.get_display_name }}</td>
+		        <td style="text-align: center;">{{ action.verb }}</td>
+		        <td style="text-align: center;">{% if action.action_object %}{{ action.action_object|object_class }}{% else %}{{ action.description }}{% endif %}</td>
+		        <td>{% if action.action_object.name %}{{ action.action_object.name }}{% elif action.action_object.title %}{{ action.action_object.title }}{% elif action.action_object.label %}{{ action.action_object.label }}{% endif %}</td>
+		        </tr>{% endfor %}
+			</tbody>
+			</table>
+			{% else %}
+				<div style="margin-left: 1.5em;"><i>{% trans "no actions were found"|capfirst %}.</i></div>
+			{% endif %}
+        </div>
+    </section>
+{% endblock %}

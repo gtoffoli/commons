@@ -102,6 +102,16 @@ def user_is_community_manager(self):
     return False
 User.is_community_manager = user_is_community_manager
 
+def user_is_manager(self, level=0):
+    if self.is_authenticated():
+        groups = Group.objects.filter(level__lt=level+1)
+        for group in groups:
+            project = group.project
+            if project and project.is_admin(self):
+                return True
+    return False
+User.is_manager = user_is_manager
+
 def user_has_xmpp_account(self):
     return XMPPAccount.objects.filter(user=self)
 User.has_xmpp_account = user_has_xmpp_account

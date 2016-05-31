@@ -129,7 +129,12 @@ def help_children(request):
 def admin_children(request):
     children = []
     user = request.user
-    if user.is_superuser or (user.is_authenticated() and user.is_community_manager()):
+    # if user.is_superuser or (user.is_authenticated() and user.is_community_manager()):
+    if user.is_superuser or user.is_manager(1):
+        children.append (MenuItem(
+             capfirst(_("activity stream")),
+             url='/analytics/activity_stream/',
+            ))
         children.append (MenuItem(
              capfirst(_("forums")),
              url='/analytics/forums/',

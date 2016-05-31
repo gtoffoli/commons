@@ -58,9 +58,14 @@ from zinnia.models import Entry
 
 from endless_pagination.decorators import page_template
 
+registry.register(UserProfile)
 registry.register(Project)
 registry.register(Forum)
 registry.register(Room)
+registry.register(Repo)
+registry.register(OER)
+registry.register(LearningPath)
+registry.register(PathNode)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -133,6 +138,10 @@ def user_profile(request, username, user=None):
     if profile and profile.get_completeness():
         var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
         var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
+
+    if request.user.is_authenticated():
+        if not profile or not request.user == profile.user:
+            action.send(user, verb='View', action_object=profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
 def my_profile(request):
@@ -406,6 +415,9 @@ def projects_search(request, template='search_projects.html', extra_context=None
     if extra_context is not None:
         context.update(extra_context)
 
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated():
+        action.send(user, verb='Search', description='project')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def project_add_document(request):
@@ -576,6 +588,9 @@ def project_detail(request, project_id, project=None):
     if proj_type.name == 'ment':
         return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
     else:
+        if user.is_authenticated():
+            if project.state == PROJECT_OPEN and not user == project.creator:
+                action.send(user, verb='View', action_object=project)
         return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -935,6 +950,11 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['can_reject'] = repo.can_reject(request)
     var_dict['can_publish'] = repo.can_publish(request)
     var_dict['can_un_publish'] = repo.can_un_publish(request)
+
+    user = request.user
+    if user.is_authenticated():
+        if not user == repo.creator:
+            action.send(user, verb='View', action_object=repo)
     return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
 
 def repo_detail_by_slug(request, repo_slug):
@@ -1436,6 +1456,9 @@ def people_search(request, template='search_people.html', extra_context=None):
     if extra_context is not None:
         context.update(extra_context)
 
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated():
+        action.send(user, verb='Search', description='user')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def browse_people(request):
@@ -1598,6 +1621,9 @@ def oer_detail(request, oer_id, oer=None):
     if request.GET.get('core', ''):
         return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
     else:
+        if user.is_authenticated():
+            if oer.state == PUBLISHED and not user == oer.creator:
+                action.send(user, verb='View', action_object=oer)
         return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
@@ -1958,6 +1984,10 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_chain'] = lp.can_chain(request)
     if can_edit:
         var_dict['bookmarked_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
+
+    if user.is_authenticated():
+        if lp.state == PUBLISHED and not user == lp.creator:
+            action.send(user, verb='View', action_object=lp)
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -2081,6 +2111,7 @@ def lp_play(request, lp_id, lp=None):
     """
     max_node = n_nodes-1
     i_node = request.GET.get('node', '')
+    from_start = not i_node
     i_node = i_node.isdigit() and int(i_node) or 0
     var_dict['i_node'] = i_node
     var_dict['i_node_prev'] = i_node > 0 and (i_node - 1) or 0
@@ -2140,8 +2171,12 @@ def lp_play(request, lp_id, lp=None):
     i_page = i_page.isdigit() and int(i_page) or 0
     var_dict['i_page'] = i_page
     """
+    user = request.user
+    if user.is_authenticated():
+        if from_start:
+            action.send(user, verb='Play', action_object=lp)
+        action.send(user, verb='Play', action_object=current_node)
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
-
 
 def lp_play_by_slug(request, lp_slug):
     lp = LearningPath.objects.get(slug=lp_slug)
@@ -2519,6 +2554,9 @@ def repos_search(request, template='search_repos.html', extra_context=None):
     if extra_context is not None:
         context.update(extra_context)
 
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated():
+        action.send(user, verb='Search', description='repo')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def clean_term(term):
@@ -2714,6 +2752,9 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     if extra_context is not None:
         context.update(extra_context)
 
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated():
+        action.send(user, verb='Search', description='oer')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 @page_template('_lp_index_page.html')
@@ -2813,6 +2854,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     if extra_context is not None:
         context.update(extra_context)
 
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated():
+        action.send(user, verb='Search', description='learningpath')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 from dal import autocomplete

@@ -18,3 +18,7 @@ def topic_unviewed_posts_count(topic, user):
     Return the number of posts in forum unviewed by user
     """
     return post_views_by_user(user, topic=topic)
+
+@register.filter
+def object_class(obj):
+    return obj and obj.__class__.__name__ or ''

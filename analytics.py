@@ -211,3 +211,12 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
                 categories_list.append(category_entry)
     print '%d unread posts in %d topics' % (n_posts, n_topics)
     return categories_list
+
+def activity_stream(request):
+    actions = []
+    user = request.user
+    if user.is_superuser or user.is_manager(1):
+        actions = Action.objects.all().order_by('-timestamp')
+    var_dict = {}
+    var_dict['actions'] = actions[:100]
+    return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
