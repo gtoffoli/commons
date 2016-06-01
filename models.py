@@ -349,6 +349,9 @@ class UserProfile(models.Model):
         # return u'%s profile' % self.user.username
         return u'profile of %s %s' % (self.user.first_name, self.user.last_name)
 
+    def get_absolute_url(self):
+        return '/profile/%s/' % self.user.username
+
     def get_notification_choice(self):
         return EMAIL_NOTIFICATION_DICT[self.enable_email_notifications]
 
@@ -603,6 +606,9 @@ class Project(Resource):
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
+
+    def get_absolute_url(self):
+        return '/project/%s/' % self.slug
 
     def indexable_title(self):
         return filter_empty_words(self.name)
@@ -1016,6 +1022,9 @@ class Repo(Resource, Publishable):
     def __unicode__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return '/repo/%s/' % self.slug
+
     def indexable_title(self):
         return filter_empty_words(self.name)
     def indexable_text(self):
@@ -1113,6 +1122,9 @@ class OER(Resource, Publishable):
 
     def __unicode__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return '/oer/%s/' % self.slug
 
     def indexable_title(self):
         return filter_empty_words(self.title)
@@ -1423,6 +1435,9 @@ class LearningPath(Resource, Publishable):
     def __unicode__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return '/lp/%s/' % self.slug
+
     def indexable_title(self):
         return filter_empty_words(self.title)
     def indexable_text(self):
@@ -1688,6 +1703,9 @@ class PathNode(node_factory('PathEdge')):
     class Meta:
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
+
+    def get_absolute_url(self):
+        return '/pathnode/%s/' % self.id
 
     def can_edit(self, request):
         return self.path.can_edit(request)
