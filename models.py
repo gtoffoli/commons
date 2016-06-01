@@ -364,6 +364,8 @@ class UserProfile(models.Model):
         if user.first_name and user.last_name:
             display_name = '%s %s' % (user.first_name, user.last_name)
         return display_name
+    def name(self):
+        return self.get_display_name()
 
     def indexable_title(self):
         return filter_empty_words(self.get_display_name())

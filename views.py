@@ -141,7 +141,7 @@ def user_profile(request, username, user=None):
 
     if request.user.is_authenticated():
         if not profile or not request.user == profile.user:
-            action.send(user, verb='View', action_object=profile)
+            action.send(request.user, verb='View', action_object=profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
 def my_profile(request):
