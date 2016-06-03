@@ -18,7 +18,7 @@ from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage
-from actstream import action, registry
+import actstream
 
 from commons import settings
 from vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
@@ -41,7 +41,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import unviewed_posts, post_views_by_user
+from analytics import track_action, unviewed_posts, post_views_by_user
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -58,14 +58,14 @@ from zinnia.models import Entry
 
 from endless_pagination.decorators import page_template
 
-registry.register(UserProfile)
-registry.register(Project)
-registry.register(Forum)
-registry.register(Room)
-registry.register(Repo)
-registry.register(OER)
-registry.register(LearningPath)
-registry.register(PathNode)
+actstream.registry.register(UserProfile)
+actstream.registry.register(Project)
+actstream.registry.register(Forum)
+actstream.registry.register(Room)
+actstream.registry.register(Repo)
+actstream.registry.register(OER)
+actstream.registry.register(LearningPath)
+actstream.registry.register(PathNode)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -141,7 +141,7 @@ def user_profile(request, username, user=None):
 
     if request.user.is_authenticated():
         if not profile or not request.user == profile.user:
-            action.send(request.user, verb='View', action_object=profile)
+            actstream.action.send(request.user, verb='View', action_object=profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
 def my_profile(request):
@@ -184,6 +184,7 @@ def profile_edit(request, username):
                 user.first_name = request.POST.get('first_name', '')
                 user.last_name = request.POST.get('last_name', '')
                 user.save()
+                track_action(user, 'Edit', profile, latency=0)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/profile/%s/' % username)
                 else: 
@@ -417,7 +418,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        action.send(user, verb='Search', description='project')
+        actstream.action.send(user, verb='Search', description='project')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def project_add_document(request):
@@ -430,6 +431,7 @@ def project_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
         folderdocument.save()
+        track_action(request.user, 'Upload', folderdocument)
         return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     else:
         # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
@@ -590,7 +592,7 @@ def project_detail(request, project_id, project=None):
     else:
         if user.is_authenticated():
             if project.state == PROJECT_OPEN and not user == project.creator:
-                action.send(user, verb='View', action_object=project)
+                actstream.action.send(user, verb='View', action_object=project)
         return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -660,6 +662,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.creator = user
                     project.editor = user
                     project.save()
+                    track_action(request.user, 'Create', project)
                     proj_type_name = project.get_type_name()
                     role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
@@ -680,6 +683,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 else:
                     project.editor = user
                     project.save()
+                    track_action(request.user, 'Edit', project)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
@@ -818,7 +822,7 @@ def project_create_forum(request, project_id):
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
     forum.save()
-    action.send(user, verb='Create', action_object=forum, target=project)
+    actstream.action.send(user, verb='Create', action_object=forum, target=project)
     if type_name == 'com' and request.GET.get('thematic', ''):
         forum.moderators.add(user)
         return HttpResponseRedirect('/forum/forum/%d/' % forum.id)    
@@ -865,10 +869,11 @@ def project_create_room(request, project_id):
     title = project.get_name()
     room = Room(name=name, title=title)
     room.save()
+    track_action(request.user, 'Create', room)
     project.chat_room = room
     project.editor = request.user
     project.save()
-    action.send(request.user, verb='Create', action_object=room, target=project)
+    actstream.action.send(request.user, verb='Create', action_object=room, target=project)
     return project_detail(request, project_id, project=project)    
 
 def project_sync_xmppaccounts(request, project_id):
@@ -954,7 +959,7 @@ def repo_detail(request, repo_id, repo=None):
     user = request.user
     if user.is_authenticated():
         if not user == repo.creator:
-            action.send(user, verb='View', action_object=repo)
+            actstream.action.send(user, verb='View', action_object=repo)
     return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
 
 def repo_detail_by_slug(request, repo_slug):
@@ -1082,6 +1087,7 @@ def repo_save(request, repo=None):
                     repo.creator = user
                 repo.editor = user
                 repo.save()
+                track_action(request.user, 'Edit', repo)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/repo/%s/' % repo.slug)
                 else:
@@ -1458,7 +1464,7 @@ def people_search(request, template='search_people.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        action.send(user, verb='Search', description='user')
+        actstream.action.send(user, verb='Search', description='user')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def browse_people(request):
@@ -1623,7 +1629,7 @@ def oer_detail(request, oer_id, oer=None):
     else:
         if user.is_authenticated():
             if oer.state == PUBLISHED and not user == oer.creator:
-                action.send(user, verb='View', action_object=oer)
+                actstream.action.send(user, verb='View', action_object=oer)
         return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
@@ -1669,6 +1675,7 @@ def oer_edit(request, oer_id=None, project_id=None):
                             metadata_form.save()
                         except:
                             pass
+                track_action(request.user, 'Edit', oer)
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -1987,7 +1994,7 @@ def lp_detail(request, lp_id, lp=None):
 
     if user.is_authenticated():
         if lp.state == PUBLISHED and not user == lp.creator:
-            action.send(user, verb='View', action_object=lp)
+            actstream.action.send(user, verb='View', action_object=lp)
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -2174,8 +2181,8 @@ def lp_play(request, lp_id, lp=None):
     user = request.user
     if user.is_authenticated():
         if from_start:
-            action.send(user, verb='Play', action_object=lp)
-        action.send(user, verb='Play', action_object=current_node)
+            actstream.action.send(user, verb='Play', action_object=lp)
+        actstream.action.send(user, verb='Play', action_object=current_node)
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
 def lp_play_by_slug(request, lp_slug):
@@ -2556,7 +2563,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        action.send(user, verb='Search', description='repo')
+        actstream.action.send(user, verb='Search', description='repo')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def clean_term(term):
@@ -2754,7 +2761,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        action.send(user, verb='Search', description='oer')
+        actstream.action.send(user, verb='Search', description='oer')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 @page_template('_lp_index_page.html')
@@ -2856,7 +2863,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        action.send(user, verb='Search', description='learningpath')
+        actstream.action.send(user, verb='Search', description='learningpath')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 from dal import autocomplete

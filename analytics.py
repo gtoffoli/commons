@@ -4,6 +4,7 @@ Created on 08/mar/2016
 '''
 
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
@@ -11,7 +12,10 @@ from django.db.models import Count, Q
 from django.template import RequestContext
 from django.db import connection
 from django.db.models import Sum, Count
+from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
+import actstream
 from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
@@ -212,11 +216,43 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
     print '%d unread posts in %d topics' % (n_posts, n_topics)
     return categories_list
 
-def activity_stream(request):
+def track_action(actor, verb, action_object, latency=0):
+    try:
+        if not (actor and verb and object):
+            return
+        if latency:
+            min_time = timezone.now()-timedelta(days=latency)
+            actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
+            if actions.count():
+                return
+        actstream.action.send(actor, verb=verb, action_object=action_object)
+    except:
+        pass
+
+def user_actions(user=None, max_age=1, max_actions=None):
+    actions = Action.objects
+    if user:
+        actions = actions.filter(actor_object_id=user.id)
+    if max_age:
+        min_time = timezone.now()-timedelta(days=max_age)
+        actions = actions.filter(timestamp__gt=min_time)
+    actions = actions.order_by('-timestamp')
+    if max_actions:
+        actions = actions[:max_actions]
+    return actions
+
+def activity_stream(request, user=None, max_actions=100, max_age=1):
     actions = []
-    user = request.user
-    if user.is_superuser or user.is_manager(1):
-        actions = Action.objects.all().order_by('-timestamp')
+    if user==request.user or request.user.is_superuser or request.user.is_manager(1):
+        actions = user_actions(user=user, max_age=max_age, max_actions=max_actions)
     var_dict = {}
-    var_dict['actions'] = actions[:100]
+    var_dict['actor'] = user
+    var_dict['actions'] = actions
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
+
+def user_activity(request, username):
+    user = request.user
+    if user.is_authenticated():
+        if username and (user.is_superuser or user.is_manager(1)):
+            user = get_object_or_404(User, username=username)
+    return activity_stream(request, user=user, max_age=7)
