@@ -17,6 +17,12 @@
     <p class="pull-right paddingT10 paddingLR5">
        <a href="/oer/{{ oer.slug }}"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
     </p>
+  {% elif project %}
+    <h5 class="pull-left ">Cartella condivisa: {{ project.name }}</h5>
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/project/{{ project.slug }}/folder"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
+    </p>
+
   {% endif %}
   </div>
 {% endblock %}

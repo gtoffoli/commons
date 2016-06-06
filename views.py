@@ -1908,14 +1908,17 @@ def document_download_range(request, document_id, page_range):
     return response
 
 def document_view(request, document_id, return_url=False):
+    node = oer = project = 0
     document = get_object_or_404(Document, pk=document_id)
     node_doc = request.GET.get('node', '')
+    proj = request.GET.get('proj', '')
     if document.viewerjs_viewable:
        if node_doc:
            node = PathNode.objects.get(document_id=document_id)
-           oer = 0
+       elif proj:
+           folder_document = FolderDocument.objects.get(document_id=document_id)
+           project = Project.objects.get(pk = proj)
        else:
-           node = 0
            oer_document = OerDocument.objects.get(document_id=document_id)
            oer = OER.objects.get(pk = oer_document.oer_id)
        url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
@@ -1923,7 +1926,7 @@ def document_view(request, document_id, return_url=False):
            return url
        else:
             # return HttpResponseRedirect(url)
-           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, }, context_instance=RequestContext(request))
+           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, 'project': project}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(

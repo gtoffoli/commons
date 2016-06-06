@@ -116,8 +116,8 @@
                    <ul class="list-inline">
                      <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "new projects"|capfirst %} {% else %} {% trans "new child projects"|capfirst %} {% endif %}</div>
                      <ul class="list-inline list-last">
-                     {% for proj_type in proj_types %}
-                        <li><a href="/project/{{ project.slug }}/project_new/{{ proj_type.name }}/" title="{% trans "create child project" %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ proj_type.description }}</a></li>
+                     {% for projType in proj_types %}
+                        <li><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if proj_type.name == 'com' %}{% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
                      {% endfor %}
                      </ul>
                      </li>

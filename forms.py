@@ -32,6 +32,7 @@ from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNod
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
+from models import PROJECT_OPEN, PROJECT_CLOSED
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
@@ -201,7 +202,7 @@ class ProjectSearchForm (forms.Form):
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     nodes = Group.objects.filter(level=0)
     root = nodes[0]
-    communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1).order_by('name'),
+    communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1, state__in=(PROJECT_OPEN,PROJECT_CLOSED)).order_by('name'),
         label=_('communities'), required=False,
         widget=forms.CheckboxSelectMultiple())
     n_members = forms.ChoiceField(required=False, choices=N_MEMBERS_CHOICES, label=_('minimum number of members'), widget=forms.Select())
