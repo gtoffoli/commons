@@ -1440,7 +1440,7 @@ class LearningPath(Resource, Publishable):
 
     def make_dict(self):
         return { 'id': self.id, 'title': self.title, 'type': self.path_type,
-                'nodes': [node.make_dict() for node in self.get_nodes()],
+                'nodes': [node.make_dict() for node in self.get_ordered_nodes()],
                 'edges': [edge.make_dict() for edge in self.get_edges()],
         }
 

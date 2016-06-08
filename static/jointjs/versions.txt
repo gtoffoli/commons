@@ -1,0 +1,10 @@
+It is highly recommended to use the following versions of all the dependecies (Right-click, and use "Save as"):
+
+    jQuery: 2.0.3
+    Lodash: 3.10.1
+    Backbone: 1.2.1
+
+Development version (0.9.6)
+joint.js joint.css
+Production version (0.9.6)
+joint.min.js joint.min.css

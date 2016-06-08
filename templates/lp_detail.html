@@ -108,6 +108,9 @@
         {% if lp.get_nodes or can_edit %}
           <dl class="font14 marginB10">
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
+{% if lp.path_type == 3 %}
+	<div id="myholder"></div>
+{% endif %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="paddingL16">{% endif %}
               {% for node in lp.get_ordered_nodes %}
                 <li>
@@ -131,6 +134,7 @@
               {% endfor %}
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
             </dd>
+
             {% if can_edit %}
               <dd><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
@@ -258,4 +262,190 @@
 		}
 	});
 </script>
+
+{% if lp.path_type == 2 or lp.path_type == 3 %}
+<link rel="stylesheet" href="{% static "jointjs/joint.css" %}" />
+<!-- <script src="jquery.js"></script>  -->
+<script src="{% static "jointjs/lodash.min.js" %}"></script>
+<script src="{% static "jointjs/backbone-min.js" %}"></script>
+<script src="{% static "jointjs/joint.js" %}"></script>
+
+<script type="text/javascript">
+
+/*
+  var graph = new joint.dia.Graph;
+
+  var paper = new joint.dia.Paper({
+      el: $('#myholder'),
+      width: 600,
+      height: 200,
+      model: graph,
+      gridSize: 1
+  });
+
+  var rect = new joint.shapes.basic.Rect({
+      position: { x: 100, y: 30 },
+      size: { width: 100, height: 30 },
+      attrs: { rect: { fill: 'blue' }, text: { text: 'my box', fill: 'white' } }
+  });
+  var rect2 = rect.clone();
+  rect2.translate(300);
+
+  var link = new joint.dia.Link({
+      source: { id: rect.id },
+      target: { id: rect2.id }
+  });
+
+  graph.addCells([rect, rect2, link]);
+*/
+
+var json_lp = '{{ lp.get_json|safe }}';
+var lp = JSON.parse(json_lp);
+var title = lp['title'];
+var nodes = lp['nodes'];
+var edges = lp['edges'];
+var n_nodes = nodes.length;
+var n_edges = edges.length;
+var cells = [];
+
+var graph = new joint.dia.Graph;
+var paper = new joint.dia.Paper({
+    el: $('#myholder'),
+    width: 600,
+    height: 50 * n_nodes,
+    model: graph,
+    gridSize: 1
+});
+{% if can_edit %}
+    paper.on('cell:pointerup', function (cellView, evt, x, y) {
+    	on_cell_dragged(cellView, x, y);
+    });
+{% endif %}
+
+var rect = new joint.shapes.basic.Rect({
+    size: { width: 300, height: 30 },
+    attrs: { rect: { fill: 'blue', rx: 3, ry: 3 }, text: { fill: 'white', 'font-size': 12 } }
+});
+/*
+graph.on('all', function(eventName, cell) {
+    console.log(arguments);
+});
+*/
+var node, edge;
+var i_node, i_edge;
+var node_rect = rect;
+var link;
+var x = 0, y = 0;
+var x_margin = 50;
+var previous = null;
+var node_cell_dict = {};
+var cell_node_dict = {}
+var half_width = 150;
+var width, height = 30;
+for (i_node = 0; i_node < n_nodes; i_node++) {
+	node = nodes[i_node];
+	node_id = node['id'];
+    node_rect = rect.clone();
+    id = node_rect.id;
+    console.log(id);
+/*
+    node_rect.on('change:position', function(element) {
+        on_node_moved(element);
+    });
+*/
+    label = node['label'];
+    width = label.length * 8;
+    x = x_margin + half_width - width/2;
+    node_rect.attr({text: { text: label }});
+    node_rect.resize(width, 30);
+    node_rect.position(x, y);
+    // graph.addCells([node_rect]);
+    cells.push(node_rect);
+    node_cell_dict[node['id']] = id;
+    cell_node_dict[id] = [node_id, x, y];
+    y = y + 50;
+}
+for (i_edge = 0; i_edge < n_edges; i_edge++) {
+	edge = edges[i_edge];
+	source_id = node_cell_dict[edge['parent']];
+	target_id = node_cell_dict[edge['child']];
+ 	link = new joint.dia.Link({
+      source: { id: source_id },
+      target: { id: target_id }
+    });
+ 	link.attr({
+ 	    '.connection': { stroke: 'blue' },
+ 	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
+ 	});                            
+ 	// graph.addCells([link]);
+    cells.push(link);
+}
+graph.addCells(cells);
+
+for (var key in cell_node_dict) {
+	l = cell_node_dict[key];
+	console.log(key, l[0], l[1], l[2]);
+}
+
+//First, checks if it isn't implemented yet.
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
+function on_node_moved(element) {
+	position = element.get('position');
+	console.log(element.id, ':', position['y']);
+}
+function on_cell_dragged(cellView, x, y) {
+	this_cell_id = cellView.model.id
+	console.log(this_cell_id, ':', x, y);
+	this_node_id = cell_node_dict[this_cell_id][0];
+	previous_y = -10;
+	next_y = 1000;
+	this_node = previous = next = null;
+	for (i_node = 0; i_node < n_nodes; i_node++) {
+		node = nodes[i_node];
+		node_id = node['id'];
+		cell_id = node_cell_dict[node_id];
+		node_y = cell_node_dict[cell_id][2]
+		if (node_id==this_node_id)
+			this_node = i_node;
+		else {
+			if ((node_y<y) && (node_y>previous_y)) {
+				previous = i_node;
+				previous_y = node_y;
+			}
+			if ((node_y>y) && (node_y<next_y)) {
+				next = i_node;
+				next_y = node_y;
+			}
+		}
+	}
+	if ((previous && previous!=(this_node-1)) || (next && next!=(this_node+1))) {
+		msg = 'Do you really want to move this node '
+		if (previous) {
+			msg += 'after node "{0}"'.format(nodes[previous]['label'])
+			console.log('previous: ', previous, previous_y);
+		}
+		if (next) {
+			if (previous)
+				msg += ' and'
+			msg += ' before node "{0}"'.format(nodes[next]['label'])
+			console.log('next: ', next, next_y);
+		}
+		window.confirm(msg);
+	}
+	
+}
+
+</script>
+{% endif %}
+
 {% endblock %}
