@@ -441,7 +441,7 @@ class LpForm(forms.ModelForm):
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
+    path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES[:-1], label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
     # tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
@@ -482,7 +482,7 @@ class LpSearchForm(forms.Form):
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control','size': 8,}))
-    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
+    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES[:-1],
         label=_('learning path type'), required=False,
         widget=forms.CheckboxSelectMultiple())
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),

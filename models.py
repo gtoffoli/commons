@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-"""
 
+import json
 from math import sqrt
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
@@ -1406,7 +1407,7 @@ LP_SCRIPTED_DAG = 4
 LP_TYPE_CHOICES = (
     (LP_COLLECTION, _('simple collection')),
     (LP_SEQUENCE, _('sequence')),
-    # (LP_DAG, _('directed graph')),
+    (LP_DAG, _('directed graph')),
     # (LP_SCRIPTED_DAG, _('scripted directed graph')),
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
@@ -1436,6 +1437,15 @@ class LearningPath(Resource, Publishable):
 
     def __unicode__(self):
         return self.title
+
+    def make_dict(self):
+        return { 'id': self.id, 'title': self.title, 'type': self.path_type,
+                'nodes': [node.make_dict() for node in self.get_nodes()],
+                'edges': [edge.make_dict() for edge in self.get_edges()],
+        }
+
+    def get_json(self):
+        return json.dumps(self.make_dict())
 
     def get_absolute_url(self):
         return '/lp/%s/' % self.slug
@@ -1517,6 +1527,9 @@ class LearningPath(Resource, Publishable):
 
     def get_nodes(self):
         return PathNode.objects.filter(path=self)
+
+    def get_edges(self):
+        return PathEdge.objects.filter(parent__path=self)
     
     def get_ordered_nodes(self):
         nodes = self.get_nodes()
@@ -1706,6 +1719,9 @@ class PathNode(node_factory('PathEdge')):
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
 
+    def make_dict(self):
+        return { 'id': self.id, 'label': self.label, 'oer': self.oer and self.oer.id or None }
+
     def get_absolute_url(self):
         return '/pathnode/%s/' % self.id
 
@@ -1768,6 +1784,9 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     class Meta:
         verbose_name = _('path edge')
         verbose_name_plural = _('path edges')
+
+    def make_dict(self):
+        return { 'id': self.id, 'label': self.label, 'parent': self.parent.id, 'child': self.child.id }
 
 # Cannot set values on a ManyToManyField which specifies an intermediary model. 
 # Use commons.TaggedOER's Manager instead.
