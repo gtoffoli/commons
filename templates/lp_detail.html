@@ -263,7 +263,13 @@
 	});
 </script>
 
-{% if lp.path_type == 2 or lp.path_type == 3 %}
+{% if lp.path_type == 3 %}
+<style>
+.element.basic.Rect {
+    cursor: pointer;
+}
+</style>
+
 <link rel="stylesheet" href="{% static "jointjs/joint.css" %}" />
 <!-- <script src="jquery.js"></script>  -->
 <script src="{% static "jointjs/lodash.min.js" %}"></script>
@@ -271,33 +277,6 @@
 <script src="{% static "jointjs/joint.js" %}"></script>
 
 <script type="text/javascript">
-
-/*
-  var graph = new joint.dia.Graph;
-
-  var paper = new joint.dia.Paper({
-      el: $('#myholder'),
-      width: 600,
-      height: 200,
-      model: graph,
-      gridSize: 1
-  });
-
-  var rect = new joint.shapes.basic.Rect({
-      position: { x: 100, y: 30 },
-      size: { width: 100, height: 30 },
-      attrs: { rect: { fill: 'blue' }, text: { text: 'my box', fill: 'white' } }
-  });
-  var rect2 = rect.clone();
-  rect2.translate(300);
-
-  var link = new joint.dia.Link({
-      source: { id: rect.id },
-      target: { id: rect2.id }
-  });
-
-  graph.addCells([rect, rect2, link]);
-*/
 
 var json_lp = '{{ lp.get_json|safe }}';
 var lp = JSON.parse(json_lp);
@@ -307,6 +286,9 @@ var edges = lp['edges'];
 var n_nodes = nodes.length;
 var n_edges = edges.length;
 var cells = [];
+var node_cells = [];
+var drop_cells = [];
+var edge_cells = [];
 
 var graph = new joint.dia.Graph;
 var paper = new joint.dia.Paper({
@@ -316,16 +298,30 @@ var paper = new joint.dia.Paper({
     model: graph,
     gridSize: 1
 });
-{% if can_edit %}
-    paper.on('cell:pointerup', function (cellView, evt, x, y) {
-    	on_cell_dragged(cellView, x, y);
-    });
-{% endif %}
-
 var rect = new joint.shapes.basic.Rect({
     size: { width: 300, height: 30 },
     attrs: { rect: { fill: 'blue', rx: 3, ry: 3 }, text: { fill: 'white', 'font-size': 12 } }
 });
+var cross = new joint.shapes.basic.Rect({
+    size: { width: cross_size, height: cross_size },
+    attrs: { rect: { fill: 'red' }, text: { text: 'X', fill: 'white', 'font-size': 10 } }
+});
+var got_double_click = false;
+
+{% if can_edit %}
+	paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
+		on_cell_double_clicked(cellView, x, y);
+	});
+    paper.on('cell:pointerup', function (cellView, evt, x, y) {
+    	on_cell_dragged(cellView, x, y);
+    });
+{% endif %}
+{% if True %}
+paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+	on_cell_clicked(cellView, x, y);
+});
+{% endif %}
+
 /*
 graph.on('all', function(eventName, cell) {
     console.log(arguments);
@@ -341,7 +337,11 @@ var previous = null;
 var node_cell_dict = {};
 var cell_node_dict = {}
 var half_width = 150;
-var width, height = 30;
+var node_height = 30
+var half_height = node_height/2;
+var width, height = node_height;
+var cross_size = 20;
+var cross_margin = (node_height-cross_size)/2;
 for (i_node = 0; i_node < n_nodes; i_node++) {
 	node = nodes[i_node];
 	node_id = node['id'];
@@ -357,13 +357,26 @@ for (i_node = 0; i_node < n_nodes; i_node++) {
     width = label.length * 8;
     x = x_margin + half_width - width/2;
     node_rect.attr({text: { text: label }});
-    node_rect.resize(width, 30);
+    node_rect.resize(width, node_height);
     node_rect.position(x, y);
     // graph.addCells([node_rect]);
-    cells.push(node_rect);
+    node_cells.push(node_rect);
     node_cell_dict[node['id']] = id;
-    cell_node_dict[id] = [node_id, x, y];
+    cell_node_dict[id] = [node_id, x, y, i_node];
     y = y + 50;
+    node_drop = cross.clone();
+    node_rect.embed(node_drop);
+    // node_drop.position(width-cross_size-cross_margin, cross_margin);
+    drop_cells.push(node_drop);
+}
+graph.addCells(node_cells);
+graph.addCells(drop_cells);
+for (i_drop = 0; i_drop < n_nodes; i_drop++) {
+	drop_cell = drop_cells[i_drop];
+	parent_cell = drop_cell.getAncestors()[0]
+	parent_width = parent_cell.prop('size')['width']
+	console.log(parent_width)
+    drop_cell.position(width-cross_size-cross_margin, cross_margin, { parentRelative: true});
 }
 for (i_edge = 0; i_edge < n_edges; i_edge++) {
 	edge = edges[i_edge];
@@ -378,9 +391,9 @@ for (i_edge = 0; i_edge < n_edges; i_edge++) {
  	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
  	});                            
  	// graph.addCells([link]);
-    cells.push(link);
+    edge_cells.push(link);
 }
-graph.addCells(cells);
+graph.addCells(edge_cells);
 
 for (var key in cell_node_dict) {
 	l = cell_node_dict[key];
@@ -399,13 +412,42 @@ if (!String.prototype.format) {
     });
   };
 }
+function node_reset_position(node_rect) {
+	var node = cell_node_dict[node_rect.id]
+	node_rect.position(node[1], node[2])
+}
 function on_node_moved(element) {
 	position = element.get('position');
 	console.log(element.id, ':', position['y']);
 }
+function on_cell_clicked(cellView, x, y) {
+	if (got_double_click)
+		got_double_click = false;
+	else {
+		this_cell = cellView.model;
+		this_cell_id = this_cell.id;
+		this_node_id = cell_node_dict[this_cell_id][0];
+		document.location.href = '/pathnode/{0}/'.format(this_node_id);
+	}
+}
+function on_cell_double_clicked(cellView, x, y) {
+	got_double_click = True;
+	this_cell = cellView.model
+	this_cell_id = this_cell.id
+	console.log(this_cell_id, 'double-clicked: ', x, y);
+	this_node = cell_node_dict[this_cell_id]
+	this_node_id = this_node[0];
+	this_node_index = this_node[3];
+	label = nodes[this_node_index]['label']
+	msg = 'Do you really want to remove this node? ' + label;
+	if (window.confirm(msg)) {
+		document.location.href = '/pathnode/{0}/delete/'.format(this_node_id);
+	}
+}
 function on_cell_dragged(cellView, x, y) {
-	this_cell_id = cellView.model.id
-	console.log(this_cell_id, ':', x, y);
+	this_cell = cellView.model
+	this_cell_id = this_cell.id
+	console.log(this_cell_id, 'dragged :', x, y);
 	this_node_id = cell_node_dict[this_cell_id][0];
 	previous_y = -10;
 	next_y = 1000;
@@ -429,20 +471,24 @@ function on_cell_dragged(cellView, x, y) {
 		}
 	}
 	if ((previous && previous!=(this_node-1)) || (next && next!=(this_node+1))) {
-		msg = 'Do you really want to move this node '
+		msg = 'Do you really want to move this node ';
 		if (previous) {
-			msg += 'after node "{0}"'.format(nodes[previous]['label'])
+			msg += 'after node "{0}"'.format(nodes[previous]['label']);
 			console.log('previous: ', previous, previous_y);
 		}
 		if (next) {
 			if (previous)
-				msg += ' and'
-			msg += ' before node "{0}"'.format(nodes[next]['label'])
+				msg += ' and';
+			msg += ' before node "{0}"'.format(nodes[next]['label']);
 			console.log('next: ', next, next_y);
 		}
-		window.confirm(msg);
+		if (window.confirm(msg))
+		    i = 0;
+		else
+			node_reset_position(this_cell);
 	}
-	
+	else
+		node_reset_position(this_cell);
 }
 
 </script>
