@@ -82,6 +82,7 @@ def group_has_project(group):
 
 def home(request):
     wall_dict = {}
+    wall_dict['PRODUCTION'] = PRODUCTION
     if PRODUCTION:
         MAX_MEMBERS = 10
         MAX_FORUMS = 5
