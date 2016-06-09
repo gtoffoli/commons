@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     # url(r'^blog/', include('blog.urls')),
 
     url(r'^robots.txt$', 'commons.views.robots', name='robots'),
+    url(r'^error/$', 'commons.views.error', name='error'),
     url(r'^dmuc$', TemplateView.as_view(template_name='dmuc/home.html')),
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
     # Import urls from app datatrans

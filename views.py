@@ -74,6 +74,9 @@ def robots(request):
     response['Content-Type'] = 'text/plain; charset=utf-8'
     return response
 
+def error(request):
+    assert False
+
 def group_has_project(group):
     try:
         return group.project
