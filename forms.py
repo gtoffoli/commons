@@ -202,7 +202,7 @@ class ProjectSearchForm (forms.Form):
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
     nodes = Group.objects.filter(level=0)
     root = nodes[0]
-    communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1, state__in=(PROJECT_OPEN,PROJECT_CLOSED)).order_by('name'),
+    communities = forms.ModelMultipleChoiceField(Project.objects.exclude(group_id=root.id).filter(proj_type_id=1, state=PROJECT_OPEN).order_by('name'),
         label=_('communities'), required=False,
         widget=forms.CheckboxSelectMultiple())
     n_members = forms.ChoiceField(required=False, choices=N_MEMBERS_CHOICES, label=_('minimum number of members'), widget=forms.Select())
@@ -219,11 +219,11 @@ class DocumentForm(forms.Form):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        exclude = ('folder', 'document', 'user',)
+        exclude = ('order', 'folder', 'document', 'user', 'state')
 
-    order = forms.IntegerField(required=True, label=_('sort order'))
-    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    # order = forms.IntegerField(required=True, label=_('sort order'))
+    label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    # state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 class RepoForm(forms.ModelForm):
     class Meta:

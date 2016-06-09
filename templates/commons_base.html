@@ -1,31 +1,246 @@
-{% extends "theme_bootstrap/base.html" %}
-{% load staticfiles %}
+{% load staticfiles dmuc %}
 {% load i18n %}
+{% load url from future %}
+{% load menu %}
+{% generate_menu %}
 
-{% block plus_style %}
-    <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
-{% comment %}
-{% block user %}{% if user.is_authenticated %}{% else %}{% include "_access_bar.html" %}{% endif %}{% endblock user %}
+    {% block viewport %}
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% endblock %}
 
+     <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
+     <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" type="image/png" %}">
 
-{% block navbar_class %}marginB0 paddingTB5{% endblock %}
+     {% block style_base %}
+       <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+       <link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
+       <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
+       <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
+       <style>
+       ul.ul-left {
+         margin-left:-15px;
+       }
+       ul.ul-right {
+         margin-right:30px;
+       }
+       ul.ul-right li {
+         padding-left:15px;
+       }
+       div.navbar-search {
+         padding-top:8px; padding-bottom:10px;
+       }
+       div.navbar-search label {
+         position:absolute; left:24px; top:14px; font-size:12px;
+       }
+       div.navbar-search input.input-search  {
+         padding-left:30px; padding-right:10px; font-size:12px; height:30px;
+       }
+       </style>
+       {% block extra_style %}{% endblock %}
+     {% endblock %}
 
-{% block site_brand %}{% if user.is_authenticated %}<a href="/"><img src="{% static "commons/img/LogoPerSito.png" %}" class="img-responsive" /></a>{% else %}{% endif %}{% endblock site_brand %}
-{% endcomment %}
+     <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
 
-{% block nav %}
-		{% with menu=menus.main %}<ul class="nav navbar-nav navbar-left" style="margin-left:-15px">{% include "bootstrap-navbar.html" %}</ul>{% endwith %}
-		<ul class="nav navbar-nav navbar-right" style="margin-right:30px"><li style="padding-left:15px">
-			<div class="navbar-search" style="padding-top:8px; padding-bottom:10px;">
-				<label for="search-input" style="position:absolute; left:24px; top:14px; font-size:12px;"><i class="fa fa-search"></i></label>
-				<input class="form-control bc-demigray" style="padding-left:30px; padding-right:10px; font-size:12px; height:30px;" size="32" type="text" name="q" id="navigation_autocomplete">
-			</div>
-		</li></ul>
-{% endblock %}
+     {% block extra_head_base %}
+       {% block extra_head %}{% endblock %}
+     {% endblock %}
+  </head>
 
-{% block footer %}
-    {% include "_footer.html" %}
-{% endblock %}
+  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+    <div class="{% block wrapper_class %}wrapper{% endblock %}">
+      {% block topbar_base %}
+        <header>
+          <div class="navbar-fixed-top">
+            {% block user %} {% include "_access_bar.html" %} {% endblock user %}
+            {% block navbar_base %}
+              <div class="navbar navbar-default">
+                <div class="container">
+                  {% block topbar %}
+                    <div class="navbar-header">
+                      <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="fa fa-bars"></span>
+                      </button>
+                    </div>
+                    <div class="collapse navbar-collapse navbar-responsive-collapse">
+                      {% block nav %}
+                        {% with menu=menus.main %}<ul class="nav navbar-nav navbar-left ul-left">
+                          {% for item in menu %}
+                            <li class="{% if item.children %} dropdown{% endif %}" id="top-menu-{{ item.slug }}">
+                            {% if item.children %}
+                              <a href="#" class="dropdown-toggle" data-hover="dropdown" data-toggle="dropdown">{% if item.icon %}<i class="icon-{{ item.icon }} icon-white"></i>&nbsp;{% endif %}{{ item.title }}&nbsp;<b class="caret"></b></a>
+                              <ul class="dropdown-menu">
+                                {% for child in item.children %}
+                                  {% if child.selected %}
+                                    <script type="text/javascript">
+                                      $("#top-menu-"+"{{item.slug }}").addClass('active');
+                                    </script>
+                                  {% endif %}
+                                  <li {% if child.selected %}class="active"{% endif %}><a href="{{ child.url }}">{{ classe }} {{ child.title }}</a></li>
+                                {% endfor %}
+                              </ul>
+                            {% else %}
+                              <a href="{{ item.url }}">{% if item.icon %}<i class="icon-{{ item.icon }} icon-white"></i>&nbsp;{% endif %}{{ item.title }}</a>
+                            {% endif %}
+                            </li>
+                          {% endfor %}
+                        </ul>{% endwith %}
+                          <ul class="nav navbar-nav navbar-right ul-right"><li>
+                            <div class="navbar-search">
+                             <label for="search-input"><i class="fa fa-search"></i></label>
+                             <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
+                            </div>
+                          </li></ul>
+                        {% endblock nav %}
+                    </div>
+                  {% endblock topbar %}
+                </div>
+              </div>
+            {% endblock navbar_base %}
+          </div>
+        </header>
+        {% block login_model %}{% include "_login_model.html" %}{% endblock %}
+      {% endblock %}
+
+      {% block body_base %}
+        <section id="content_body">
+          <div class="container">
+           {% comment %}{% include "_messages.html" %}{% endcomment %}
+           {% block body %}{% endblock %}
+          </div>
+        </section>
+      {% endblock %}
+    </div>
+
+    {% block footer_base %}
+      <footer class="footer-fixed">
+        <div class="container">
+         {% block footer %}
+           <div class="row">
+             <div class="col-sm-4 col-md-4">
+               <div class="footer-box">&copy; 2015 <a href="http://www.commonspaces.eu/" target="_blank">{% trans "the CommonS Consortium" %}</a><br>
+                 {% trans "built by"|capfirst %} <a href="http://www.linkroma.it" target="_blank">LINK srl</a>
+                 {% trans "with" %} <a href="https://www.python.org/" target="_blank"><i>Python</i></a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank"><i>Django</i></a>
+               </div>
+             </div>
+             <div class="col-sm-4 col-md-4">
+               <ul class="footer-box list-unstyled">
+                <li><small><span class="fa fa-chevron-right fa-grey"></span></small> <a href="/info/privacy/">{% trans "privacy policy"|capfirst %}</a></li>
+               </ul>
+             </div>
+             <div class="col-sm-4 col-md-4">
+               <div class="footer-box">
+                 {% trans "The CommonS Project is co-funded by Programme" %}
+                 <img src="{%static "commons/img/logo_erasmus_plus.png" %}" class="img-responsive" title="EU Erasmus+">
+               </div>
+             </div>
+           </div>
+         {% endblock %}
+        </div>
+      </footer>
+    {% endblock %}
+
+    {% block script_base %}
+      <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+      <script type="text/javascript" src="{% static "pinax/js/theme.js" %}"></script>
+      <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
+      <script type="text/javascript">
+        $(document).ready(function() {
+          if ($('#navigation_autocomplete').length > 0) {
+            $('#navigation_autocomplete').yourlabsAutocomplete({
+              url: '{% url 'navigation_autocomplete' %}',
+              choiceSelector: 'a',
+              minimumCharacters: 3,
+              placeholder: '{% trans "Search ... (enter at least 3 characters)" %}',
+            }).input.bind('selectChoice', function(e, choice, autocomplete) {
+             document.location.href = choice.attr('href');
+            });
+          }
+        });
+      </script>
+      {% block extra_script %}{% endblock %}
+    {% endblock %}
+
+    {% block extra_body_base %}
+      {% block extra_body %}{% endblock %}
+      {% if rooms_count %}
+        <link rel="stylesheet" href="{% static 'converse.js/css/converse.css' %}" type="text/css" >
+
+        <script type="text/javascript" src="{% static 'converse.js/components/jquery.browser/dist/jquery.browser.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/typeahead.js/index.js' %}"></script>
+
+        <!-- BEGIN OTR: Off-the-record encryption stuff. Can be omitted if OTR is not used. -->
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/build/dep/salsa20.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/src/bigint.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/core.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/enc-base64.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/crypto-js-evanvosberg/src/md5.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/crypto-js-evanvosberg/src/evpkdf.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/cipher-core.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/aes.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/sha1.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/sha256.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/hmac.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/pad-nopadding.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/vendor/cryptojs/mode-ctr.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/otr/build/dep/eventemitter.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/src/otr.js' %}"></script>
+        <!-- END OTR -->
+
+        <!-- BEGIN STROPHE -->
+        <script type="text/javascript" src="{% static 'converse.js/components/strophejs/strophe.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/strophejs-plugins/vcard/strophe.vcard.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/strophejs-plugins/disco/strophe.disco.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/strophejs-plugins/rsm/strophe.rsm.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/src/strophe.ping.js' %}"></script>
+        <!-- END STROPHE -->
+
+        <!-- BEGIN BACKBONE -->
+        <script type="text/javascript" src="{% static 'converse.js/components/underscore/underscore.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/backbone/backbone.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/backbone.browserStorage/backbone.browserStorage.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/components/backbone.overview/backbone.overview.js' %}"></script>
+        <!-- END BACKBONE -->
+
+        <!-- BEGIN I18N -->
+        <!-- These files can be removed if you don't want to include any
+             translations for converse.js.
+             If you want to modify which translations are included, you can modify
+             src/locales.js to remove those you don't need, and then run `make
+             build` to generates a new dist/locales.js file.
+        -->
+        <script type="text/javascript" src="{% static 'converse.js/components/jed/jed.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/locales.js' %}"></script>
+        <!-- END I18N -->
+
+        <script type="text/javascript" src="{% static 'converse.js/components/momentjs/min/moment-with-locales.js' %}"></script>
+        <script type="text/javascript" src="{% static 'converse.js/converse-no-dependencies.js' %}"></script>
+
+        <style>
+          form.add-chatroom { display: none; }
+          a.s { display: none; }
+        </style>
+        
+        {% dmuc_conversejs_initialize %}
+        <div id="conversejs"></div>
+      {% endif %}
+
+      {% if request.get_host == 'www.commonspaces.eu' %}
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-16920937-11', 'auto');
+          ga('send', 'pageview');
+        </script>
+      {% endif %}
+    {% endblock %}
+  </body>
+</html>

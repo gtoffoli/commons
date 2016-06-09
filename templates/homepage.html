@@ -7,11 +7,83 @@
 
 {% block extra_style %}
 	<link href='http://fonts.googleapis.com/css?family=Biryani:400,600,700,800,900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+{% if not PRODUCTION %}
+<style>
+.back-banner-home {
+	background: url({% static 'commons/img/backgroundblend.png' %}) no-repeat center center;
+}
+.font-prop {
+	font-family: 'Biryani', sans-serif; 
+	font-weight: 700; 
+	font-size:40px;
+	color:#fff;
+	text-shadow:0 1px 2px rgba(0,0,0,0.6);
+}
+.font-prop small {
+	color:#fefefe;
+}
+@media (min-width:640px) {
+	.row-height {
+		display: table;
+		table-layout: fixed;
+		height: 100%;
+		width: 100%;
+	}
+	.col-height {
+		display:table-cell;
+		height:100%;
+		float:none;
+	}
+	.col-middle {
+		vertical-align:middle; 
+	}
+}
+@media (max-width:767px) {
+	.font-prop {
+			font-size: 20px;
+	}
+	.back-banner-home {
+		background-size: cover
+	}
+}
+@media (min-width:768px) and (max-width:991px) {
+	.font-prop {
+		font-size: 22px;
+	}
+	.back-banner-home {
+		background-size: cover
+	}
+}
+@media (min-width:992px) and (max-width:1199px) {
+	.font-prop {
+		font-size: 26px;
+	}
+	.back-banner-home {
+		background-size: cover
+	}
+}
+@media (min-width:1200px) and (max-width:1367px) {
+	.font-prop {
+		font-size: 28px;
+	}
+	.back-banner-home {
+		background-size: cover
+	}
+}
+
+@media (min-width:1368px) and (max-width:1499px) {
+	.font-prop {
+		font-size: 30px;
+	}
+}
+</style>
+{% endif %}
 {% endblock %}
 
 {% block body_class %}home{% endblock %}
 
 {% block body_base %}
+{% if PRODUCTION %}
 {% comment %} SLIDESHOW {% endcomment %}
     <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
 {% comment %} SEQUENCE SLIDE WITH CAPTION {% endcomment %}
@@ -288,7 +360,211 @@
         {% endfor %}
     </div>
 {% endif %}
+{% else %}
+    <div class="container-fluid" style="background: #67AE73;">
+      <div class="row row-height marginLB0 marginTB30">
+        <div class="hidden-xs hidden-sm col-md-1 col-height">&nbsp;</div>
+        <div class="col-xs-12 col-sm-6 col-md-4 col-height">
+          <div class="iframe-banner">
+            <iframe class="padding8" src="https://www.youtube.com/embed/JesxltSJ5DQ" allowfullscreen></iframe>
+          </div>
+        </div>
+        <div class="col-xs-12 col-sm-6 col-md-6 col-height col-middle back-banner-home">
+            <h1 class="text-center font-prop">CommonSpaces<br>
+              <small>{% trans "are spaces where you can" %}</small><br>
+              <small>{% trans "learn together in online communities of practice" %}</small><br>
+              <small>{% trans "reuse resources to build learning paths" %}</small><br>
+              <small>{% trans "browse collections in our library of OER" %}</small>
+            </h1>
+        </div>
+        <div class="hidden-xs hidden-sm col-md-1 col-height">&nbsp;</div>
+      </div>
+    </div>
+{% comment %} MAIN CTA {% endcomment %}
+    <div class="container-fluid bc-white" style="padding:50px 15px;">
+        <div class="row hidden-xs hidden-lg visible-sm visible-md">
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 style="color:#FABE66; font-weight:600; margin:30px 0 50px 0">{% trans "learn together"|capfirst %}</h3>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 style="color:#CB4F98; font-weight:600; margin:30px 0 50px 0">{% trans "remix resources"|capfirst %}</h3>
+               </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 style="color:#008BD2; font-weight:600; margin:30px 0 50px 0">{% trans "explore library"|capfirst %}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="row hidden-xs hidden-lg visible-sm visible-md">
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm bold btn" href="/cops/" style="background:#FABE66; color:white; font-weight:600; width:280px">{% trans "communities"|capfirst %}</a>
+                 <a class="visible-sm bold btn" href="/cops/" style="background:#FABE66; color:white; font-weight:600; padding-left:10px; padding-right:10px">{% trans "communities"|capfirst %}</a>
+               </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm bold btn" href="/lps/search/" style="background:#CB4F98; color:white; width:280px">{% trans "learning paths"|capfirst %}</a>
+                 <a class="visible-sm bold btn" href="/lps/search/" style="background:#CB4F98; color:white; padding-left:10px; padding-right:10px">{% trans "learning paths"|capfirst %}</a>
+               </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm bold btn" href="/browse/" style="background:#008BD2; color:white; width:280px">{% trans "educational library"|capfirst %}</a>
+                 <a class="visible-sm bold btn" href="/browse/" style="background:#008BD2; color:white; padding-left:10px; padding-right:10px">{% trans "educational library"|capfirst %}</a>
+               </div>
+            </div>
+        </div>
+        
+        <div class="row hidden-xs hidden-sm hidden-md visible-lg">
+            <div class="col-lg-4" style="padding-bottom:10px">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 style="color:#FABE66; font-weight:600; margin:30px 0 50px 0">{% trans "learn together"|capfirst %}</h3>
+                 <div><a href="/cops/" class="btn" style="background:#FABE66; color:white; font-weight:600; width:300px">{% trans "communities"|capfirst %}</a></div>
+               </div>
+            </div>
+            <div class="col-lg-4" style="padding-bottom:10px">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 style="color:#CB4F98; font-weight:600; margin:30px 0 50px 0">{% trans "remix resources"|capfirst %}</h3>
+                 <div><a href="/lps/search/" class="bold btn" style="background:#CB4F98; color:white; width:300px">{% trans "learning paths"|capfirst %}</a></div>
+               </div>
+            </div>
+            <div class="col-lg-4" style="padding-bottom:10px">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 style="color:#008BD2; font-weight:600; margin:30px 0 50px 0">{% trans "explore library"|capfirst %}</h3>
+                 <div><a href="/browse/" class="bold btn" style="background:#008BD2; color:white; width:300px">{% trans "educational library"|capfirst %}</a></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row hidden-sm hidden-lg hidden-md visible-xs">
+            <div class="col-xs-12" >
+               <div class="text-center" style="padding-bottom:50px">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 style="color:#FABE66; font-weight:600; margin:30px 0 50px 0">{% trans "learn together"|capfirst %}</h3>
+                 <div><a href="/cops/" class="btn" style="background:#FABE66; color:white; font-weight:600; width:280px">{% trans "communities"|capfirst %}</a></div>
+               </div>
+               <div class="text-center" style="padding-bottom:50px">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 style="color:#CB4F98; font-weight:600; margin:30px 0 50px 0">{% trans "remix resources"|capfirst %}</h3>
+                 <div><a href="/lps/search/" class="bold btn" style="background:#CB4F98; color:white; width:280px">{% trans "learning paths"|capfirst %}</a></div>
+               </div>
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 style="color:#008BD2; font-weight:600; margin:30px 0 50px 0">{% trans "explore library"|capfirst %}</h3>
+                 <div><a href="/browse/" class="bold btn" style="background:#008BD2; color:white; width:280px">{% trans "educational library"|capfirst %}</a></div>
+               </div>
+            </div>
+        </div>
+    </div>
+    
+<div class="container-fluid" style="background: red;">
+	<div class="row">
+		<div class="col-md-3 col-lg-3">
+			<P>FEATURED</P>
+		</div>
+		<div class="col-md-9 col-lg-9">
+						<P>CONTENT</P>
 
+			<div class="grid">
+				<div class="gutter-sizer"></div>
+        <div class="grid-sizer"></div>
+
+        <div class="grid-item">
+
+            <div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
+            	<div class="panel-white text-left">
+                    <div class="panel-heading" style="padding:6px 12px; background:#FABE66; color:white; font-size:15px; font-weight:600">{% trans "projects"|capfirst %}</div>
+                    <ul class="list-unstyled" style="padding:6px 12px;">
+                    {% for project in projects %}
+	                      <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/project/{{ project.slug }}/"><small>{{ project.name }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                    <div class="panel-footer text-center" style="padding:6px 12px; background:#FABE66; border-top-color:#FABE66; font-size:12px; font-weight:600;"><a style="color:white" href="/projects/">{% trans "read more"|upper %}</a></div>
+                </div>
+              </div>
+        </div>
+        <div class="grid-item">
+                	<div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
+                                <div class="panel-white text-left">
+                    <div class="panel-heading" style="padding:6px 12px; background:#008BD2; color:white; font-size:15px; font-weight:600">{% trans "OERs"|capfirst %}</div>
+                    <ul class="list-unstyled" style="padding:6px 12px;">
+                    {% for oer in oers %}
+                        <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/oer/{{ oer.slug }}/"><small>{{ oer.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                    <div class="panel-footer text-center" style="padding:6px 12px; background:#008BD2; border-top-color:#008BD2; font-size:12px; font-weight:600;"><a style="color:white"  href="oers/search/">{% trans "read more"|upper %}</a></div>
+                </div>
+              </div>
+        </div>
+        <div class="grid-item">
+                	<div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
+                		               <div class="panel-white text-left">
+                    <div class="panel-heading" style="padding:6px 12px; background:#CB4F98; color:white; font-size:15px; font-weight:600">{% trans "learning paths"|capfirst %}</div>
+                    <ul class="list-unstyled" style="padding:6px 12px;">
+                    {% for lp in lps %}
+                        <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                    <div class="panel-footer text-center" style="padding:6px 12px; background:#CB4F98; border-top-color:#CB4F98; font-size:12px; font-weight:600;"><a style="color:white"  href="lps/search/">{% trans "read more"|upper %}</a></div>
+                </div>
+                	</div>
+        </div>
+
+        {% for article in articles %}
+        <div class="grid-item">
+                <div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
+                <h4 class="demiBold">{{ article.title }}</h4>
+                
+                <div style="border-radius:4px; background:white; padding:10px">
+                    <p style="font-size:16px; font-weight:600">{{ article.lead|safe }}</p>
+                    <div class="row">
+                    {% if article.image %}
+                         <div class="col-lg-4">
+                             <img src="/media/{{ article.image }}" style="max-width:100%; height:auto">
+                         </div>
+                         <div class="col-lg-8">
+                            <div>{{ article.html_content|safe|truncatechars_html:140 }}
+                                  <div class="text-right"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4; font-size: 12px" href="{{ article.get_absolute_url }}">{% trans "learn more" %}</a></div>
+                             </div>
+                           </div>
+                    {% else %}
+                         <div class="col-lg-12">
+                             <div>{{ article.html_content|safe|truncatechars_html:140 }}
+                                  <div class="text-right"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4; font-size: 12px" href="{{ article.get_absolute_url }}">{% trans "learn more" %}</a></div>
+                             </div>
+                         </div>
+                         {% endif %}
+                    </div>
+                </div>
+                <p style="margin-top:5px; margin-bottom:0; font-size:12px">{% with authors=article.authors.all %}{% if authors|length %}
+                {% for author in authors %}
+                    <a href="{{ author.get_absolute_url }}">{{ author }}</a>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                {% endif %} {% endwith %}
+                | {{ article.creation_date|date }}
+                </p>
+                       
+            </div>
+        </div>
+        {% endfor %}
+
+			</div>
+
+		</div>
+	</div>
+</div>
+{% endif %}
 {% endblock %}
 
 {% block extra_script %}

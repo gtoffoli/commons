@@ -5,6 +5,7 @@ Created on 02/apr/2015
 
 import re
 import json
+
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -21,6 +22,7 @@ from django.contrib.flatpages.models import FlatPage
 import actstream
 
 from commons import settings
+from commons.settings import PRODUCTION
 from vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
 from vocabularies import expand_to_descendants
@@ -76,22 +78,28 @@ def group_has_project(group):
     try:
         return group.project
     except:
-        return None  
+        return None
 
 def home(request):
-    MAX_MEMBERS = 10
-    MAX_FORUMS = 5
-    MAX_ARTICLES = 6
-    MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
     wall_dict = {}
-    user = request.user
-    wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
-    wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
-    wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
-    wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
-    wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
-    wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
-    wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
+    if PRODUCTION:
+        MAX_MEMBERS = 10
+        MAX_FORUMS = 5
+        MAX_ARTICLES = 6
+        MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
+        user = request.user
+        wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
+        wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
+        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
+        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
+        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
+        wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
+    else:
+        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:2]
+        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:2]
+        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
+
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 def my_chat(request):
@@ -148,7 +156,9 @@ def my_profile(request):
     user = request.user
     return user_profile(request, None, user=user)
 
-def my_dashboard(request):
+def user_dashboard(request, username, user=None):
+    if not username and (not user or not user.is_authenticated()):
+        return HttpResponseRedirect('/')
     MAX_REPOS = MAX_OERS = MAX_LP = 5
     var_dict = {}
     var_dict['user'] = user = request.user
@@ -169,7 +179,11 @@ def my_dashboard(request):
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
     # return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
- 
+
+def my_home(request):
+    user = request.user
+    return user_dashboard(request, None, user=user)
+
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
@@ -1624,13 +1638,15 @@ def oer_detail(request, oer_id, oer=None):
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
+    """
     if request.GET.get('core', ''):
         return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
     else:
-        if user.is_authenticated():
-            if oer.state == PUBLISHED and not user == oer.creator:
-                actstream.action.send(user, verb='View', action_object=oer)
-        return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
+    """
+    if user.is_authenticated():
+        if oer.state == PUBLISHED and not user == oer.creator:
+            actstream.action.send(user, verb='View', action_object=oer)
+    return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
     # oer = get_object_or_404(OER, slug=oer_slug)

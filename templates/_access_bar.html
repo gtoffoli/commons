@@ -1,121 +1,101 @@
 {% load socialaccount %}
 {% load staticfiles %}
 {% load i18n %}
-<div class="navbar navbar-inverse">
-	<div class="container">
-		<div class="navbar-header pull-left">
-            <a  class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
-            <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
-		</div>
 
-        {% if user.is_authenticated %}
-		    <ul class="nav navbar-nav pull-right my-navbar-user-auth">
-		        <li><a href="{% url "account_settings" %}" title="{% trans "my profile"|capfirst %}">
-				{% if user.profile.avatar %}
-				    <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
-				{% else %}
-				    <img src="/media/images/avatars/anonymous.png" class="avatar-small">
-				{% endif %}<span class="hidden-xs"> {{ user.get_display_name }}</span>
-			    </a></li>
-		    	<li><a href="/my_mail/" title="{% trans "my messages"|capfirst %}"><div class="fa fa-envelope">{% if user.inbox_count %}<div class="txt-over">{{ user.inbox_count}}</div>{% endif %}</div></a></li>
-		    	<li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><div class="fa fa-comment">{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<div class="txt-over">{{ unviewed_posts_count}}</div>{% endif %}{% endwith %}</div></a></li>
-		    	<li class="dropdown">
-		    		<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-		    			<span class="fa fa-cog"></span>
-		    			<b class="caret"></b>
-		    		</a>
-		    		<ul class="dropdown-menu">
-		    		    <li><a href="{% url "user_dashboard" %}">{% trans "my dashboard"|capfirst %}</a></li>
-		    		{% if request.user.is_staff %}
-                        <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}">{% trans "admin"|capfirst %}</a></li>
-                    {% endif %}
-		    		</ul>
-                 </li>
-                <li>
-                	<form method="post" action="{% url 'account_logout' %}" class="form-logout">
-  						{% csrf_token %}
- 					    {% if redirect_field_value %}
-                            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                        {% endif %}
-                        <button type="submit" class="btn btn-logout"><span class="fa fa-power-off"></span></button>
-                    </form>
-                </li>
-            </ul>
-    	{% else %}
-			<!-- Login hidden on mobile -->
-            <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/" method="post" name="form-login" id="form-login">
-                {% csrf_token %}
-				<div class="form-group">
-					<span id="form-login-username">
-                        <input name="login" id="id_login" type="email" size="15" class="form-control" placeholder="{% trans "email address"|capfirst %}">
-					</span>
-					<span id="form-login-password">
-                        <input name="password" id="id_password" type="password" size="15" class="form-control" placeholder="{% trans "password"|capfirst %}">
-					</span>
-                    <a data-placement="bottom" style="color:#ccc" title="{% trans "Forgot Password?" %}" href="/accounts/password/reset/" class="button secondaryAction">
-						<span class="fa fa-question-circle"></span>
-					</a>
-				</div>
-				<label id="form-login-remember">
-					<span for="remember">
-                        {% trans "Remember Me" %}: <input class="checkbox" type="checkbox" name="remember" id="id_remember" value="yes">
-					</span>
-				</label>
-                <button type="submit" name="Submit" class="btn btn-sm btn-primary primaryAction">
-                    {% trans "Log in" %}
-                </button>
+  <div class="navbar navbar-inverse">
+    <div class="container">
+     <div class="navbar-header pull-left">
+       <a class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
+       <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
+     </div>
 
-				<a class="btn btn-sm btn-accent" href="/accounts/signup/">
-                    {% trans "sign up"|capfirst %}
-				</a>
-<!--fb-login-button-->
-				<div class="social-login">
-					<a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}">
-						<img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
-					<a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}">
-						<img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
-				</div>
-
-<script type="text/javascript">
-$(document).ready(function(event) {
-	$("#form-login").submit( function () {
-		email = $.trim($("#id_login").val());
-		pwd = $.trim($("#id_password").val());
-		if (email != '' && pwd != '') {
-			$("#id_login").val(email);
-			$("#id_password").val(pwd);
-			return true;
-		}
-	   return false;
-    })
-})
-</script>
-
-            </form>
-            <div class="navbar-form pull-right mylogin-xs visible-xs">
-			<!-- MOBILE LOGIN BUTTON -->
-				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
-				    <i class="fa fa-sign-in"></i>
-					{% trans "Log in" %}
-				</button>
-				<a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
-            </div>
-
-             <div class="navbar-form pull-right mylogin-xs visible-sm">
-				<!-- MOBILE LOGIN SOCIAL LOGIN BUTTON-->             	
-				<button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
-				    <i class="fa fa-sign-in"></i>
-					{% trans "Log in" %}
-				</button>
-				<a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
-
-            <!--fb-login-button-->
-				<div class="social-login">
-					<a id="sc_fblogin" href="/accounts/facebook/login/?process=login">
-						<img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
-					</span>
-				</div>           
-            </div>
-    	{% endif %}
+     {% if user.is_authenticated %}
+       <ul class="nav navbar-nav pull-right my-navbar-user-auth">
+         <li>{% if user.is_completed_profile %}<a href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}">{% else %}<a href="{% url "account_settings" %}" title="{% trans "my profile"|capfirst %}">{% endif %}
+           {% if user.profile.avatar %}
+             <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
+           {% else %}
+             <img src="/media/images/avatars/anonymous.png" class="avatar-small">
+           {% endif %}{% if not user.is_completed_profile %}<sup class="fa fa-exclamation-triangle" style="border-top-left-radius:10px; background:#222; margin-left:-10px; font-size:13px; color:yellow;" aria-hidden="true"></sup>{% endif %} <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
+         </a></li>
+         <li><a href="/my_mail/" title="{% trans "my messages" %}"><div class="fa fa-envelope">{% if user.inbox_count %}<div class="txt-over">{{ user.inbox_count}}</div>{% endif %}</div></a></li>
+         <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><div class="fa fa-comment">{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<div class="txt-over">{{ unviewed_posts_count}}</div>{% endif %}{% endwith %}</div></a></li>
+         {% if request.user.is_staff %}
+           <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog"></span></a></li>
+         {% endif %}
+         <li>
+           <form method="post" action="{% url 'account_logout' %}" class="form-logout">{% csrf_token %}
+             {% if redirect_field_value %}
+               <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
+             {% endif %}
+             <button type="submit" class="btn btn-logout" title="{% trans "Log out" %}"><span class="fa fa-power-off"></span></button>
+           </form>
+         </li>
+       </ul>
+     {% else %}
+       <!-- Login hidden on mobile -->
+       <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/" method="post" name="form-login" id="form-login">{% csrf_token %}
+         <div class="form-group">
+           <span id="form-login-username">
+             <input name="login" id="id_login" type="email" size="15" class="form-control" placeholder="{% trans "email address"|capfirst %}">
+           </span>
+           <span id="form-login-password">
+             <input name="password" id="id_password" type="password" size="15" class="form-control" placeholder="{% trans "password"|capfirst %}">
+           </span>
+           <a data-placement="bottom" style="color:#ccc" title="{% trans "Forgot Password?" %}" href="/accounts/password/reset/" class="button secondaryAction">
+             <span class="fa fa-question-circle"></span>
+           </a>
+         </div>
+         <label id="form-login-remember">
+           <span for="remember">
+             {% trans "Remember Me" %}: <input class="checkbox" type="checkbox" name="remember" id="id_remember" value="yes">
+           </span>
+         </label>
+         <button type="submit" name="Submit" class="btn btn-sm btn-primary primaryAction">{% trans "Log in" %}</button>
+         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+         <div class="social-login">
+           <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}">
+             <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
+           <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}">
+             <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+         </div>
+         <script type="text/javascript">
+           $(document).ready(function(event) {
+             $("#form-login").submit( function () {
+               email = $.trim($("#id_login").val());
+               pwd = $.trim($("#id_password").val());
+               if (email != '' && pwd != '') {
+                 $("#id_login").val(email);
+                 $("#id_password").val(pwd);
+                   return true;
+               }
+               return false;
+             })
+           })
+         </script>
+       </form>
+       <div class="navbar-form pull-right mylogin-xs visible-xs">
+       <!-- MOBILE LOGIN BUTTON -->
+         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
+           <i class="fa fa-sign-in"></i>
+             {% trans "Log in" %}
+         </button>
+         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+       </div>
+       <div class="navbar-form pull-right mylogin-xs visible-sm">
+       <!-- MOBILE LOGIN SOCIAL LOGIN BUTTON-->
+         <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
+           <i class="fa fa-sign-in"></i>
+           {% trans "Log in" %}
+         </button>
+         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+         <div class="social-login">
+           <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}">
+             <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
+           <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}">
+             <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+         </div>
+       </div>
+     {% endif %}
     </div>
-</div>
+  </div>

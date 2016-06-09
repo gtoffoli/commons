@@ -67,6 +67,15 @@ def user_get_profile(self):
     return profiles and profiles[0] or None
 User.get_profile = user_get_profile
 
+def user_is_completed_profile(self):
+    profile = self.get_profile()
+    if not profile:
+        return False
+    if not profile.get_completeness():
+        return False
+    return True
+User.is_completed_profile = user_is_completed_profile
+
 def user_is_full_member(self):
     """ user is full member of CommonSpaces if has a complete profile
     and is member of a Community (Project membership is not enough """

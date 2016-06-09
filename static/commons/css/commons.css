@@ -357,6 +357,9 @@ margin-right:0;
 .padding0 {
 	padding: 0;
 }
+.padding8 {
+	padding: 8px;
+}
 .paddingLR15 {
 	padding-left:15px;
 	padding-right:15px;
@@ -465,6 +468,10 @@ margin-right:0;
 .marginTB30 {
 	margin-top:30px;
 	margin-bottom:30px;
+}
+.marginLB0 {
+	 margin-left:0;
+	 margin-right:0;
 }
 /* FONT */
 .font07em {
@@ -1178,8 +1185,18 @@ text-decoration: none;
     border: 1px solid #ccc;
     background:#EBEDED;
 }
+.iframe-banner {
+	width:100%; 
+	height: 0; 
+	padding-bottom: 56.25%; /* 16:9 */
+	position: relative;
+	border:0;
+	border-radius:8px;
+	background:rgb(34,34,34);
+}
 
-.iframe-container iframe { 
+.iframe-container iframe,
+.iframe-banner iframe { 
     width: 100%; 
     height: 100%; 
     position: absolute; 
@@ -1187,6 +1204,8 @@ text-decoration: none;
     top: 0;
     border:0
 }
+
+
 
 /* GRID MASONRY */
 .grid {

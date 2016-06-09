@@ -101,19 +101,13 @@
       
       {% if oer.oers.all %}
           <dl class="list-inline font14 marginB10">
-            <dt>{% trans "derived"|capfirst %}{% if oer.translated and oer.remixed %}, {% trans "through translation and adaptation / remixing" %},
-            {% elif oer.translated %}, {% trans "through translation" %},
-            {% elif oer.remixed %}, {% trans "through adaptation / remixing" %},
-            {% endif %} {% trans "from" %}</dt>
+            <dt>{% if oer.translated and oer.remixed %}{% trans "derived, through translation and adaptation / remixing, from"|capfirst %}
+            {% elif oer.translated %}{% trans "derived, through translation, from"|capfirst %}
+            {% elif oer.remixed %}{% trans "derived, through adaptation / remixing, from"|capfirst %}
+            {% endif %}</dt>
             {% for item in oer.oers.all %}
               <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
             {% endfor %}
-{% comment %}
-     	{% if oer.translated and oer.remixed %}<dd>{% trans "through translation and adaptation / remixing" %}</dd>
-     	{% elif oer.translated %}<dd>{% trans "through translation" %}</dd>
-     	{% elif oer.remixed %}<dd>{% trans "through adaptation / remixing" %}</dd>
-      	{% endif %}
-{% endcomment %}
           </dl>
       {% endif %}
 

@@ -1,77 +1,66 @@
 {% load staticfiles %}
+{% load socialaccount %}
 {% load i18n %}
 
-
-	<div class="modal modal-login fade" id="modal-login" role="dialog" aria-labelledby="modal-login" aria-hidden="true" style="display: none;">
-		<div class="modal-dialog">
-			<div class="modal-content mymodal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="fa fa-close"></span></button>
-					<h4 class="modal-title">{% trans "Log in" %}</h4>
-				</div>
-				<div class="modal-body">
-                     <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/">
-                        {% csrf_token %}
-						<fieldset class="userdata">
-							<div id="form-login-e-mail" class="form-group">
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="fa fa-user"></i>
-									</span>
-                                    <input id="modlgn-id_login" type="text" name="login" class="input form-control" tabindex="0" size="15" placeholder="{% trans "email address"|capfirst %}">
-								</div>
-							</div>
-							<div id="form-login-password" class="form-group">
-								<div class="input-group">
-									<span class="input-group-addon">
-										<i class="fa fa-lock tip"></i>
-									</span>
-                                    <input id="modlgn-id_password" type="password" name="password" class="input form-control" tabindex="0" size="15" placeholder="{% trans "password"|capfirst %}">
-								</div>
-							</div>
-					
-							<div id="form-login-remember" class="form-group">
-								<label for="modlgn-remember">
-									{% trans "Remember Me" %}: <input id="modlgn-remember" type="checkbox" name="remember"  value="yes"> 
-								</label>
-							</div>
-							<div class="form-group">
-								<input type="submit" name="Submit" class="btn btn-primary" value="{% trans "Log in" %}">
-							</div>
-
-							<ul class="list-unstyled">
-								<li>
-									<a href="/accounts/signup/">Create an account <span class="fa fa-arrow-right"></span></a>
-								</li>
-								<li>
-                                    <a href="/accounts/password/reset/">{% trans "Forgot Password?" %}</a>
-								</li>
-							</ul>
-						</fieldset>
-					</form>
-
-<script type="text/javascript">
-$(document).ready(function(event) {
-	$("#form-login-modal").submit( function () {
-		 email = $.trim($("#modlgn-id_login").val());
-		 pwd = $.trim($("#modlgn-id_password").val());
-		if (email != '' && pwd != '') {
-			$("#modlgn-id_login").val(email);
-			$("#modlgn-id_password").val(pwd);
-			return true;
-		}
-	   return false;
-    })
-})
-</script>
-
-				</div>
-				<div class="modal-footer visible-xs">
-				    <div class="social-login">
-					    <a id="sc_fblogin" href="/accounts/facebook/login/?process=login">
-						    <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
-				    </div>
-			    </div>
-			</div>
-		</div>
-	</div> 
+  <div class="modal modal-login fade" id="modal-login" role="dialog" aria-labelledby="modal-login" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog">
+      <div class="modal-content mymodal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" class="fa fa-close"></span></button>
+          <h4 class="modal-title">{% trans "Log in" %}</h4>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/">{% csrf_token %}
+            <fieldset class="userdata">
+              <div id="form-login-e-mail" class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                  <input id="modlgn-id_login" type="text" name="login" class="input form-control" tabindex="0" size="15" placeholder="{% trans "email address"|capfirst %}">
+                </div>
+              </div>
+              <div id="form-login-password" class="form-group">
+                <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-lock tip"></i></span>
+                  <input id="modlgn-id_password" type="password" name="password" class="input form-control" tabindex="0" size="15" placeholder="{% trans "password"|capfirst %}">
+                </div>
+              </div>
+              <div id="form-login-remember" class="form-group">
+                <label for="modlgn-remember">
+                  {% trans "Remember Me" %}: <input id="modlgn-remember" type="checkbox" name="remember"  value="yes"> 
+                </label>
+              </div>
+              <div class="form-group">
+                <input type="submit" name="Submit" class="btn btn-primary" value="{% trans "Log in" %}">
+              </div>
+              <ul class="list-unstyled">
+                <li><a href="/accounts/signup/">Create an account <span class="fa fa-arrow-right"></span></a></li>
+                <li><a href="/accounts/password/reset/">{% trans "Forgot Password?" %}</a></li>
+              </ul>
+            </fieldset>
+          </form>
+          <script type="text/javascript">
+            $(document).ready(function(event) {
+              $("#form-login-modal").submit( function () {
+                email = $.trim($("#modlgn-id_login").val());
+                pwd = $.trim($("#modlgn-id_password").val());
+                if (email != '' && pwd != '') {
+                  $("#modlgn-id_login").val(email);
+                  $("#modlgn-id_password").val(pwd);
+                  return true;
+                }
+                return false;
+              })
+            })
+          </script>
+        </div>
+        <div class="modal-footer visible-xs">
+          <div class="social-login">
+            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}">
+              <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
+            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}">
+              <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> 
