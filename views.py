@@ -2438,6 +2438,21 @@ def pathnode_delete(request, node_id):
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return lp_detail(request, path.id, lp=path)
+
+def pathnode_move_before(request, node_id, other_node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    other_node = get_object_or_404(PathNode, id=other_node_id)
+    path = node.path
+    path.move_node_before(node, other_node, request)
+    return lp_detail(request, path.id, lp=path)
+
+def pathnode_move_after(request, node_id, other_node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    other_node = get_object_or_404(PathNode, id=other_node_id)
+    path = node.path
+    path.move_node_after(node, other_node, request)
+    return lp_detail(request, path.id, lp=path)
+
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     path = node.path

@@ -265,7 +265,7 @@
 
 {% if lp.path_type == 3 %}
 <style>
-.element.basic.Rect {
+.element.basic.Rect, .element.basic.Circle {
     cursor: pointer;
 }
 </style>
@@ -302,82 +302,63 @@ var rect = new joint.shapes.basic.Rect({
     size: { width: 300, height: 30 },
     attrs: { rect: { fill: 'blue', rx: 3, ry: 3 }, text: { fill: 'white', 'font-size': 12 } }
 });
-var cross = new joint.shapes.basic.Rect({
+var cross = new joint.shapes.basic.Circle({
     size: { width: cross_size, height: cross_size },
-    attrs: { rect: { fill: 'red' }, text: { text: 'X', fill: 'white', 'font-size': 10 } }
+    attrs: { circle: { fill: 'red' }, text: { text: 'x', fill: 'white', 'font-size': 12 } }
 });
-var got_double_click = false;
 
+paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+	on_cell_clicked(cellView, x, y);
+});
 {% if can_edit %}
-	paper.on('cell:pointerdblclick', function (cellView, evt, x, y) {
-		on_cell_double_clicked(cellView, x, y);
-	});
     paper.on('cell:pointerup', function (cellView, evt, x, y) {
     	on_cell_dragged(cellView, x, y);
     });
 {% endif %}
-{% if True %}
-paper.on('cell:pointerclick', function (cellView, evt, x, y) {
-	on_cell_clicked(cellView, x, y);
-});
-{% endif %}
 
-/*
-graph.on('all', function(eventName, cell) {
-    console.log(arguments);
-});
-*/
 var node, edge;
 var i_node, i_edge;
-var node_rect = rect;
+var node_rec;
 var link;
 var x = 0, y = 0;
 var x_margin = 50;
 var previous = null;
 var node_cell_dict = {};
 var cell_node_dict = {}
-var half_width = 150;
+var max_width = 300;
+var half_max_width = max_width/2;
+var y_step = 50;
 var node_height = 30
 var half_height = node_height/2;
-var width, height = node_height;
-var cross_size = 20;
+var width, height;
+var node_padding = 50
+var cross_size = 16;
 var cross_margin = (node_height-cross_size)/2;
 for (i_node = 0; i_node < n_nodes; i_node++) {
 	node = nodes[i_node];
 	node_id = node['id'];
-    node_rect = rect.clone();
-    id = node_rect.id;
+    node_cell = rect.clone();
+    id = node_cell.id;
     console.log(id);
-/*
-    node_rect.on('change:position', function(element) {
-        on_node_moved(element);
-    });
-*/
     label = node['label'];
-    width = label.length * 8;
-    x = x_margin + half_width - width/2;
-    node_rect.attr({text: { text: label }});
-    node_rect.resize(width, node_height);
-    node_rect.position(x, y);
-    // graph.addCells([node_rect]);
-    node_cells.push(node_rect);
+    width = label.length * 5 + node_padding * 2;
+    x = x_margin + half_max_width - width/2;
+    node_cell.attr({text: { text: label }});
+    node_cell.resize(width, node_height);
+    node_cell.position(x, y);
+    node_cells.push(node_cell);
     node_cell_dict[node['id']] = id;
     cell_node_dict[id] = [node_id, x, y, i_node];
-    y = y + 50;
-    node_drop = cross.clone();
-    node_rect.embed(node_drop);
-    // node_drop.position(width-cross_size-cross_margin, cross_margin);
-    drop_cells.push(node_drop);
-}
-graph.addCells(node_cells);
-graph.addCells(drop_cells);
-for (i_drop = 0; i_drop < n_nodes; i_drop++) {
-	drop_cell = drop_cells[i_drop];
-	parent_cell = drop_cell.getAncestors()[0]
-	parent_width = parent_cell.prop('size')['width']
-	console.log(parent_width)
+    drop_cell = cross.clone();
+    drop_cell.resize(cross_size, cross_size);
+    node_cell.embed(drop_cell);
+    graph.addCells([node_cell, drop_cell])
     drop_cell.position(width-cross_size-cross_margin, cross_margin, { parentRelative: true});
+    drop_cell.toFront();
+    drop_cells.push(drop_cell);
+    y = y + y_step;
 }
+
 for (i_edge = 0; i_edge < n_edges; i_edge++) {
 	edge = edges[i_edge];
 	source_id = node_cell_dict[edge['parent']];
@@ -395,11 +376,6 @@ for (i_edge = 0; i_edge < n_edges; i_edge++) {
 }
 graph.addCells(edge_cells);
 
-for (var key in cell_node_dict) {
-	l = cell_node_dict[key];
-	console.log(key, l[0], l[1], l[2]);
-}
-
 //First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
   String.prototype.format = function() {
@@ -412,42 +388,32 @@ if (!String.prototype.format) {
     });
   };
 }
-function node_reset_position(node_rect) {
-	var node = cell_node_dict[node_rect.id]
-	node_rect.position(node[1], node[2])
+function node_reset_position(node_cell) {
+	var node = cell_node_dict[node_cell.id]
+	node_cell.position(node[1], node[2])
 }
 function on_node_moved(element) {
 	position = element.get('position');
-	console.log(element.id, ':', position['y']);
 }
 function on_cell_clicked(cellView, x, y) {
-	if (got_double_click)
-		got_double_click = false;
-	else {
-		this_cell = cellView.model;
-		this_cell_id = this_cell.id;
-		this_node_id = cell_node_dict[this_cell_id][0];
-		document.location.href = '/pathnode/{0}/'.format(this_node_id);
-	}
-}
-function on_cell_double_clicked(cellView, x, y) {
-	got_double_click = True;
-	this_cell = cellView.model
-	this_cell_id = this_cell.id
-	console.log(this_cell_id, 'double-clicked: ', x, y);
-	this_node = cell_node_dict[this_cell_id]
-	this_node_id = this_node[0];
-	this_node_index = this_node[3];
-	label = nodes[this_node_index]['label']
-	msg = 'Do you really want to remove this node? ' + label;
-	if (window.confirm(msg)) {
-		document.location.href = '/pathnode/{0}/delete/'.format(this_node_id);
-	}
+	var cell = cellView.model;
+	var cell_id = cell.id;
+    var parent_id = cell.get('parent');
+    if (parent_id) { // click on cross: remove the parent?
+		i_node = cell_node_dict[parent_id][3]
+		label = nodes[i_node]['label']
+		msg = 'Do you really want to remove this node? ' + label;
+		if (window.confirm(msg)) {
+			document.location.href = '/pathnode/{0}/delete/'.format(this_node_id);
+		}
+    } else { // click on node cell: view the 
+    	var node_id = cell_node_dict[cell_id][0];
+		document.location.href = '/pathnode/{0}/'.format(node_id);
+    }
 }
 function on_cell_dragged(cellView, x, y) {
 	this_cell = cellView.model
 	this_cell_id = this_cell.id
-	console.log(this_cell_id, 'dragged :', x, y);
 	this_node_id = cell_node_dict[this_cell_id][0];
 	previous_y = -10;
 	next_y = 1000;
@@ -457,7 +423,7 @@ function on_cell_dragged(cellView, x, y) {
 		node_id = node['id'];
 		cell_id = node_cell_dict[node_id];
 		node_y = cell_node_dict[cell_id][2]
-		if (node_id==this_node_id)
+		if (node_id == this_node_id)
 			this_node = i_node;
 		else {
 			if ((node_y<y) && (node_y>previous_y)) {
@@ -470,26 +436,34 @@ function on_cell_dragged(cellView, x, y) {
 			}
 		}
 	}
-	if ((previous && previous!=(this_node-1)) || (next && next!=(this_node+1))) {
+	if ((previous!== null && previous!=(this_node-1)) || (next!==null && next!=(this_node+1))) {
 		msg = 'Do you really want to move this node ';
-		if (previous) {
+		if (previous !== null) {
 			msg += 'after node "{0}"'.format(nodes[previous]['label']);
-			console.log('previous: ', previous, previous_y);
 		}
-		if (next) {
-			if (previous)
+		if (next !== null) {
+			if (previous !== null)
 				msg += ' and';
 			msg += ' before node "{0}"'.format(nodes[next]['label']);
-			console.log('next: ', next, next_y);
 		}
-		if (window.confirm(msg))
-		    i = 0;
-		else
+		if (window.confirm(msg)) {
+			if (previous === null)
+				document.location.href = '/pathnode/{0}/move_before/{1}/'.format(node_id, nodes[next]['id'])
+			else
+				document.location.href = '/pathnode/{0}/move_after/{1}/'.format(node_id, nodes[previous]['id'])
+		} else
 			node_reset_position(this_cell);
 	}
 	else
 		node_reset_position(this_cell);
 }
+
+graph.on('change:position', function(cell) {
+    var parentId = cell.get('parent');
+    if (!parentId) return;
+    // Revert the child position.
+    cell.set('position', cell.previous('position'));
+});
 
 </script>
 {% endif %}

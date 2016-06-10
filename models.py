@@ -1639,7 +1639,18 @@ class LearningPath(Resource, Publishable):
         self.save()
         return edge
 
-    def remove_node(self, node, request):
+    def add_edge(self, parent, child, request):
+        assert parent.path == self
+        assert child.path == self
+        assert not PathEdge.objects.filter(parent=parent, child=child)
+        edge = PathEdge(parent=parent, child=child, creator=request.user, editor=request.user)
+        edge.save()
+        self.editor = request.user
+        self.save()
+        return edge
+
+    # def remove_node(self, node, request):
+    def disconnect_node(self, node, request, delete=False):
         assert self.can_edit(request)
         assert node.path == self
         if not node.is_island():
@@ -1656,9 +1667,43 @@ class LearningPath(Resource, Publishable):
                 parent_edge.child = child
                 parent_edge.save(disable_circular_check=True)
                 child_edge.delete()
-        node.delete()
         self.editor = request.user
         self.save()
+        if delete:
+            node.delete()
+
+    def remove_node(self, node, request):
+        self.disconnect_node(node, request, delete=True)
+
+    def insert_node_before(self, node, other_node, request):
+        if not other_node.is_root():
+            parent_edge = PathEdge.objects.get(child=other_node)
+            parent_edge.child = node
+            parent_edge.save()
+        self.add_edge(node, other_node, request)
+
+    def move_node_before(self, node, other_node, request):
+        assert self.is_node_sequence()
+        assert node.path == self
+        assert other_node.path == self
+        assert not other_node in node.children.all()
+        self.disconnect_node(node, request)
+        self.insert_node_before(node, other_node, request)
+
+    def insert_node_after(self, node, other_node, request):
+        if not other_node.is_leaf():
+            child_edge = PathEdge.objects.get(parent=other_node)
+            child_edge.parent = node
+            child_edge.save()
+        self.add_edge(other_node, node, request)
+
+    def move_node_after(self, node, other_node, request):
+        assert self.is_node_sequence()
+        assert node.path == self
+        assert other_node.path == self
+        assert not node in other_node.children.all()
+        self.disconnect_node(node, request)
+        self.insert_node_after(node, other_node, request)
 
     def node_up(self, node, request):
         assert self.is_node_sequence()
