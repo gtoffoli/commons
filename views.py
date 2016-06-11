@@ -2433,40 +2433,44 @@ def pathnode_edit_by_id(request, node_id):
 
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
-    path = node.path
-    path.remove_node(node, request)
+    lp = node.path
+    lp.remove_node(node, request)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    return lp_detail(request, path.id, lp=path)
+    # return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_move_before(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
-    path = node.path
-    path.move_node_before(node, other_node, request)
-    return lp_detail(request, path.id, lp=path)
-
+    lp = node.path
+    lp.move_node_before(node, other_node, request)
+    # return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_move_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
-    path = node.path
-    path.move_node_after(node, other_node, request)
-    return lp_detail(request, path.id, lp=path)
+    lp = node.path
+    lp.move_node_after(node, other_node, request)
+    # return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
-    path = node.path
-    path.node_up(node, request)
+    lp = node.path
+    lp.node_up(node, request)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    return lp_detail(request, path.id, lp=path)
+    # return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_down(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
-    path = node.path
-    path.node_down(node, request)
+    lp = node.path
+    lp.node_down(node, request)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    return lp_detail(request, path.id, lp=path)
+    #return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def project_add_lp(request, project_id):
     project = get_object_or_404(Project, id=project_id)

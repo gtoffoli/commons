@@ -1544,7 +1544,8 @@ class LearningPath(Resource, Publishable):
         nodes = self.get_nodes()
         if not nodes:
             return []
-        if self.path_type == LP_COLLECTION:
+        # if self.path_type == LP_COLLECTION:
+        if not self.path_type == LP_SEQUENCE:
             return nodes.order_by('created')
         node = nodes[0]
         if nodes.count()>1 and not node.is_root():
@@ -1676,11 +1677,14 @@ class LearningPath(Resource, Publishable):
         self.disconnect_node(node, request, delete=True)
 
     def insert_node_before(self, node, other_node, request):
-        if not other_node.is_root():
+        if other_node.is_root():
+            self.add_edge(node, other_node, request)
+        else:
             parent_edge = PathEdge.objects.get(child=other_node)
-            parent_edge.child = node
+            parent = parent_edge.parent
+            parent_edge.parent = node
             parent_edge.save()
-        self.add_edge(node, other_node, request)
+            self.add_edge(parent, node, request)
 
     def move_node_before(self, node, other_node, request):
         assert self.is_node_sequence()
@@ -1691,11 +1695,14 @@ class LearningPath(Resource, Publishable):
         self.insert_node_before(node, other_node, request)
 
     def insert_node_after(self, node, other_node, request):
-        if not other_node.is_leaf():
+        if other_node.is_leaf():
+            self.add_edge(other_node, node, request)
+        else:
             child_edge = PathEdge.objects.get(parent=other_node)
-            child_edge.parent = node
+            child = child_edge.child
+            child_edge.child = node
             child_edge.save()
-        self.add_edge(other_node, node, request)
+            self.add_edge(node, child, request)
 
     def move_node_after(self, node, other_node, request):
         assert self.is_node_sequence()

@@ -110,7 +110,7 @@
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
 {% if lp.path_type == 3 %}
 	<div id="myholder"></div>
-{% endif %}
+{% else %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="paddingL16">{% endif %}
               {% for node in lp.get_ordered_nodes %}
                 <li>
@@ -134,7 +134,7 @@
               {% endfor %}
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
             </dd>
-
+{% endif %}
             {% if can_edit %}
               <dd><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
@@ -401,10 +401,11 @@ function on_cell_clicked(cellView, x, y) {
     var parent_id = cell.get('parent');
     if (parent_id) { // click on cross: remove the parent?
 		i_node = cell_node_dict[parent_id][3]
-		label = nodes[i_node]['label']
+    	node = nodes[i_node]
+		label = node['label']
 		msg = 'Do you really want to remove this node? ' + label;
 		if (window.confirm(msg)) {
-			document.location.href = '/pathnode/{0}/delete/'.format(this_node_id);
+			document.location.href = '/pathnode/{0}/delete/'.format(node['id']);
 		}
     } else { // click on node cell: view the 
     	var node_id = cell_node_dict[cell_id][0];
@@ -414,6 +415,8 @@ function on_cell_clicked(cellView, x, y) {
 function on_cell_dragged(cellView, x, y) {
 	this_cell = cellView.model
 	this_cell_id = this_cell.id
+	if (!(this_cell_id in cell_node_dict))
+		return;
 	this_node_id = cell_node_dict[this_cell_id][0];
 	previous_y = -10;
 	next_y = 1000;
@@ -448,9 +451,9 @@ function on_cell_dragged(cellView, x, y) {
 		}
 		if (window.confirm(msg)) {
 			if (previous === null)
-				document.location.href = '/pathnode/{0}/move_before/{1}/'.format(node_id, nodes[next]['id'])
+				document.location.href = '/pathnode/{0}/move_before/{1}/'.format(this_node_id, nodes[next]['id'])
 			else
-				document.location.href = '/pathnode/{0}/move_after/{1}/'.format(node_id, nodes[previous]['id'])
+				document.location.href = '/pathnode/{0}/move_after/{1}/'.format(this_node_id, nodes[previous]['id'])
 		} else
 			node_reset_position(this_cell);
 	}
