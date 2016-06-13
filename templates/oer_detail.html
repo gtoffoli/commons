@@ -187,6 +187,14 @@
               {% endfor %}
             {% endif %}
           </dl>
+          {% if lps %}
+            <dl class="font14 marginB10">
+              <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
+                {% for lp in lps %}
+                  <dd><a href="/lp/{{ lp.slug }}/">{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}</a></dd>
+                {% endfor %}
+            </dl>
+          {% endif %}
         {% endif %}
       </div>
     </div>

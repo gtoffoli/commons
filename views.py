@@ -624,6 +624,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     project_id: edit existent project
     parent_id: create sub-project
     """
+    action = '/project/edit/'
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
@@ -633,7 +634,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             if not project.name:
                 project.name = project.group.name
             form = ProjectForm(instance=project)
-            return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
+            return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
@@ -646,7 +647,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             elif proj_type.name == 'ment':
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             form = ProjectForm(initial=initial)
-            return render_to_response('project_edit.html', {'form': form, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
+            return render_to_response('project_edit.html', {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
@@ -654,10 +655,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         parent_id = request.POST.get('parent', '')
         if project_id:
             project = get_object_or_404(Project, id=project_id)
-            form = ProjectForm(request.POST, instance=project)
+            # form = ProjectForm(request.POST, instance=project)
+            form = ProjectForm(request.POST, request.FILES, instance=project)
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
-            form = ProjectForm(request.POST)
+            # form = ProjectForm(request.POST)
+            form = ProjectForm(request.POST, request.FILES)
             name = request.POST.get('name', '')
         else:
             raise
@@ -706,11 +709,11 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
                     form = ProjectForm(request.POST, instance=project) # togliere ?
-                    return render_to_response('project_edit.html', {'form': form, 'project': project,}, context_instance=RequestContext(request))
+                    return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
             else:
                 print form.errors
                 # return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent_id': parent_id,}, context_instance=RequestContext(request))
-                return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent': parent,}, context_instance=RequestContext(request))
+                return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project, 'parent': parent,}, context_instance=RequestContext(request))
     else:
         raise
 

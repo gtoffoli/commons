@@ -160,7 +160,10 @@ class ProjectForm(forms.ModelForm):
         model = Project
         # exclude = ('slug', 'group', 'forum', 'folders',)
         exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
+        # fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'small_image', 'name', 'description', 'big_image', 'info', 'reserved',)
 
+
+    # small_image = forms.ImageField(required=False, label=_('logo'), widget=forms.ClearableFileInput)
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -169,6 +172,7 @@ class ProjectForm(forms.ModelForm):
     chat_type = forms.ChoiceField(required=False, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.HiddenInput())
     chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    # big_image = forms.ImageField(required=False, label=_('image'), widget=forms.ClearableFileInput)
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
     # state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=False, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
@@ -219,11 +223,11 @@ class DocumentForm(forms.Form):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        exclude = ('order', 'folder', 'document', 'user', 'state')
-
-    # order = forms.IntegerField(required=True, label=_('sort order'))
+        exclude = ('folder', 'document', 'user')
+        
+    order = forms.IntegerField(required=True, label=_('sort order'))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    # state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 class RepoForm(forms.ModelForm):
     class Meta:

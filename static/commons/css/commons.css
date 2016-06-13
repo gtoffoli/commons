@@ -506,6 +506,9 @@ margin-right:0;
 	font-weight:700;
 }
 /* forecolor backcolor  border */
+.c-black {
+	color: black;
+}
 .c-white {
 	color: white;
 }
@@ -814,6 +817,9 @@ ul.list-inline > li.list-back-c3 {
 }
 .panel-c3 {
   border:1px solid #A65C45;
+}
+.panel-c4 {
+  border-color: #FABE66;
 }
 .panel-c3 > .panel-heading {
   color: #fff;
