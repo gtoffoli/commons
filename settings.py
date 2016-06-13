@@ -194,7 +194,7 @@ TEMPLATES = [
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
                 'dmuc.context_processors.rooms',
-                'commons.context_processors.sitename',
+                'commons.context_processors.processor',
             ],
         },
     },

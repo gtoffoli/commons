@@ -1642,7 +1642,7 @@ def oer_detail(request, oer_id, oer=None):
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
-    var_dict['lps'] = oer.get_referring_lps()
+    var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
     """
     if request.GET.get('core', ''):
         return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
