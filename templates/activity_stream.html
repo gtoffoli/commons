@@ -29,7 +29,7 @@
 		        {% if not actor %}<td><a href="/profile/{{ action.actor.username }}/">{{ action.actor.get_display_name }}</a></td>{% endif %}
 		        <td style="text-align: center;">{{ action.verb }}</td>
 		        <td style="text-align: center;">{% if action.action_object %}{{ action.action_object|object_class }}{% elif action.description %}{{ action.description }}s{% endif %}</td>
-		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name }}{% elif action.action_object.title %}{{ action.action_object.title }}{% elif action.action_object.label %}{{ action.action_object.label }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
+		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name|truncatechars:80 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:80 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:80 }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
 		    </tr>{% endfor %}
 			</tbody>
 			</table>

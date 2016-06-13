@@ -293,7 +293,7 @@ var edge_cells = [];
 var graph = new joint.dia.Graph;
 var paper = new joint.dia.Paper({
     el: $('#myholder'),
-    width: 600,
+    width: 800,
     height: 50 * n_nodes,
     model: graph,
     gridSize: 1
@@ -349,16 +349,15 @@ for (i_node = 0; i_node < n_nodes; i_node++) {
     node_cells.push(node_cell);
     node_cell_dict[node['id']] = id;
     cell_node_dict[id] = [node_id, x, y, i_node];
+    graph.addCell(node_cell)
 {% if can_edit %}
     drop_cell = cross.clone();
-    drop_cell.resize(cross_size, cross_size);
     node_cell.embed(drop_cell);
-    graph.addCells([node_cell, drop_cell])
-    drop_cell.position(width-cross_size-cross_margin, cross_margin, { parentRelative: true});
-    drop_cell.toFront();
+    graph.addCell(drop_cell);
+    drop_cell.resize(cross_size, cross_size);
+     drop_cell.position(width-cross_size-cross_margin, cross_margin, { parentRelative: true});
+    // drop_cell.toFront();
     drop_cells.push(drop_cell);
-{% else %}
-	graph.addCells([node_cell])
 {% endif %}
     y = y + y_step;
 }
@@ -465,12 +464,14 @@ function on_cell_dragged(cellView, x, y) {
 		node_reset_position(this_cell);
 }
 
+/*
 graph.on('change:position', function(cell) {
     var parentId = cell.get('parent');
     if (!parentId) return;
     // Revert the child position.
     cell.set('position', cell.previous('position'));
 });
+*/
 
 </script>
 {% endif %}
