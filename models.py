@@ -1194,6 +1194,9 @@ class OER(Resource, Publishable):
             return False
         return ProjectMember.objects.filter(user=user, state=1)
 
+    def get_referring_lps(self):
+        return LearningPath.objects.filter(path_node__oer=self).distinct().order_by('title')
+
     def get_sorted_documents(self):
         # return self.documents.all().order_by('date_added')
         oer_documents = OerDocument.objects.filter(oer=self).order_by('order', 'document__date_added')
@@ -1761,7 +1764,7 @@ class LearningPath(Resource, Publishable):
         self.save()
 
 class PathNode(node_factory('PathEdge')):
-    path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'))
+    path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
     label = models.TextField(blank=True, verbose_name=_('label'))
     oer = models.ForeignKey(OER, blank=True, null=True, verbose_name=_('stands for'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
