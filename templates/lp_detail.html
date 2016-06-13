@@ -349,6 +349,7 @@ for (i_node = 0; i_node < n_nodes; i_node++) {
     node_cells.push(node_cell);
     node_cell_dict[node['id']] = id;
     cell_node_dict[id] = [node_id, x, y, i_node];
+{% if can_edit %}
     drop_cell = cross.clone();
     drop_cell.resize(cross_size, cross_size);
     node_cell.embed(drop_cell);
@@ -356,6 +357,9 @@ for (i_node = 0; i_node < n_nodes; i_node++) {
     drop_cell.position(width-cross_size-cross_margin, cross_margin, { parentRelative: true});
     drop_cell.toFront();
     drop_cells.push(drop_cell);
+{% else %}
+	graph.addCells([node_cell])
+{% endif %}
     y = y + y_step;
 }
 
