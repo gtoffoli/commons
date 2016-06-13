@@ -1542,28 +1542,42 @@ class LearningPath(Resource, Publishable):
 
     def get_edges(self):
         return PathEdge.objects.filter(parent__path=self)
-    
+  
+    def get_roots(self, nodes=[]):
+        if not nodes:
+            nodes = self.get_nodes()
+        return [node for node in nodes if node.is_root()]
+  
+    def get_islands(self, nodes=[]):
+        if not nodes:
+            nodes = self.get_nodes()
+        return [node for node in nodes if node.is_island()]
+
     def get_ordered_nodes(self):
-        nodes = self.get_nodes()
+        nodes = PathNode.objects.filter(path=self)
+        print 'nodes: ', nodes
         if not nodes:
             return []
-        # if self.path_type == LP_COLLECTION:
-        if not self.path_type == LP_SEQUENCE:
+        if self.path_type == LP_COLLECTION:
             return nodes.order_by('created')
-        node = nodes[0]
-        if nodes.count()>1 and not node.is_root():
-            roots = list(node.get_roots())
-            assert len(roots) == 1
-            node = roots[0]
+        roots = self.get_roots(nodes=nodes)
+        assert len(roots) == 1
+        node = roots[0]
         ordered = [node]
         while True:
             children = node.children.all()
             if not children:
-                assert len(ordered) == len(nodes)
-                return ordered
+                break
             assert len(children) == 1
             node = children[0]
             ordered.append(node)
+        print 'ordered: ', ordered
+        if self.path_type == LP_SEQUENCE:
+            assert len(ordered) == len(nodes)
+        else:
+            islands = self.get_islands(nodes=nodes)
+            ordered.extend(islands)
+        return ordered
 
     def is_pure_collection(self):
         nodes = self.get_nodes()
@@ -1690,7 +1704,7 @@ class LearningPath(Resource, Publishable):
             self.add_edge(parent, node, request)
 
     def move_node_before(self, node, other_node, request):
-        assert self.is_node_sequence()
+        # assert self.is_node_sequence()
         assert node.path == self
         assert other_node.path == self
         assert not other_node in node.children.all()
@@ -1708,7 +1722,7 @@ class LearningPath(Resource, Publishable):
             self.add_edge(node, child, request)
 
     def move_node_after(self, node, other_node, request):
-        assert self.is_node_sequence()
+        # assert self.is_node_sequence()
         assert node.path == self
         assert other_node.path == self
         assert not node in other_node.children.all()
