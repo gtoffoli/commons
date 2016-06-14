@@ -115,6 +115,10 @@ def help_children(request):
          url='/help/mentoring/',
         ))
     children.append (MenuItem(
+         capfirst(_("analytics")),
+         url='/help/analytics/',
+        ))
+    children.append (MenuItem(
          capfirst(_("translations of the user interface")),
          url='/info/translation/',
         ))
