@@ -2,12 +2,7 @@
 
 {% load staticfiles%}
 {% load i18n %}
-{% load image_tags %}
 {% load tinymce_tags %}
-
-{% comment %}
-{% block head_title %}{% if proj_type.name == 'com' %}{% trans "edit"|capfirst %} {% trans "community" %}: {{ project.get_name }}{% else %}{{ parent.get_name }}: {% trans "add child project"|capfirst %}{% endif %}{% endblock %}
-{% endcomment %}
 
 {% block head_title %}
 {% if project %}{% trans "edit"|capfirst %}: {{ project.get_name }}
