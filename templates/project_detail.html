@@ -350,7 +350,11 @@
        {% endif %}{% endwith %}
      {% endif %}
    </div>
-   
+
+   {% if recent_actions %}
+   <div class="panel-white"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
+   {% endif %}
+
    {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
     {% if lps %}
       <div class="panel-white">

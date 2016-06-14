@@ -34,7 +34,7 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words
-from analytics import unviewed_posts, post_views_by_user
+from analytics import filter_actions, post_views_by_user
 
 # indexable_models = [UserProfile, Project, OER, LearningPath]
 
@@ -942,7 +942,9 @@ class Project(Resource):
     def get_candidate_mentors(self):
         roll = self.get_parent().get_roll_of_mentors()
         return roll and roll.members(user_only=True)
-            
+
+    def recent_actions(self, max_age=7, max_actions=100):
+        return filter_actions(project=self, max_age=max_age, max_actions=max_actions)
 
 def forum_get_project(self):
     try:

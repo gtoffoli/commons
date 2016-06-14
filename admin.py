@@ -77,6 +77,7 @@ class ProjAdmin(admin.ModelAdmin):
 class ProjectMemberAdmin(admin.ModelAdmin):
     # fieldsets = []
     list_display = ('id', 'project', 'user_fullname', 'state', 'created', 'accepted', 'modified', 'editor', 'history',)
+    search_fields = ['project__name', 'user__username',]
 
     def user_fullname(self, obj):
         return obj.user.get_full_name()

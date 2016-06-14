@@ -14,12 +14,13 @@ from django.db import connection
 from django.db.models import Sum, Count
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import User
 import actstream
 from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
+
+verbs = ['Accept', 'Apply', 'Create', 'Edit', 'Play', 'Search', 'Send', 'Upload', 'View',]
 
 def forum_analytics(request):
     var_dict = {}
@@ -78,7 +79,7 @@ def message_analytics(request):
         }
     }
     data['total'] = total
-    print data
+    # print data
     return render_to_response('message_analytics.html', data, context_instance=RequestContext(request))
 
 def topic_readmarks(topic, user=None, since=None):
@@ -91,7 +92,7 @@ def topic_readmarks(topic, user=None, since=None):
 
 def topic_last_marked(topic, user=None):
     qs = topic_views(topic, user=user)
-    print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
+    # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
     if qs.count():
         return qs[0].time_stamp
     else:
@@ -108,10 +109,10 @@ def topic_views(topic, user=None, since=None):
 def topic_last_viewed(topic, user=None):
     qs = topic_views(topic, user=user)
     if qs.count():
-        print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count(), qs[0].timestamp
+        # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count(), qs[0].timestamp
         return qs[0].timestamp
     else:
-        print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
+        # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
         return None
 
 def unviewed_posts(user, count_only=True):
@@ -216,7 +217,7 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
     print '%d unread posts in %d topics' % (n_posts, n_topics)
     return categories_list
 
-def track_action(actor, verb, action_object, latency=0):
+def track_action(actor, verb, action_object, target=None, description=None, latency=0):
     try:
         if not (actor and verb and object):
             return
@@ -225,14 +226,17 @@ def track_action(actor, verb, action_object, latency=0):
             actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
             if actions.count():
                 return
-        actstream.action.send(actor, verb=verb, action_object=action_object)
+        actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
     except:
         pass
 
-def user_actions(user=None, max_age=1, max_actions=None):
+def filter_actions(user=None, project=None, max_age=1, max_actions=None):
     actions = Action.objects
     if user:
         actions = actions.filter(actor_object_id=user.id)
+    if project:
+        project_content_type = ContentType.objects.get_for_model(project)
+        actions = actions.filter(Q(Q(action_object_content_type=project_content_type) & Q(action_object_object_id=project.id)) | Q(Q(target_content_type=project_content_type) & Q(target_object_id=project.id)))
     if max_age:
         min_time = timezone.now()-timedelta(days=max_age)
         actions = actions.filter(timestamp__gt=min_time)
@@ -244,15 +248,8 @@ def user_actions(user=None, max_age=1, max_actions=None):
 def activity_stream(request, user=None, max_actions=100, max_age=1):
     actions = []
     if user==request.user or request.user.is_superuser or request.user.is_manager(1):
-        actions = user_actions(user=user, max_age=max_age, max_actions=max_actions)
+        actions = filter_actions(user=user, max_age=max_age, max_actions=max_actions)
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
-
-def user_activity(request, username):
-    user = request.user
-    if user.is_authenticated():
-        if username and (user.is_superuser or user.is_manager(1)):
-            user = get_object_or_404(User, username=username)
-    return activity_stream(request, user=user, max_age=7)

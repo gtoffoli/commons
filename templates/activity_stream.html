@@ -3,7 +3,7 @@
 {% load i18n %}
 {% load commons_tags %}
 
-{% block head_title %}{% if actor %}{% trans "recent activity by"|capfirst %} {{ actor.get_display_name }}{% else %}{% trans "recent activity"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if actor %}{% trans "recent activity by"|capfirst %} {{ actor.get_display_name }}{% elif project %}{% trans "recent activity in"|capfirst %} {{ project.name }}{% else %}{% trans "recent activity"|capfirst %}{% endif %}{% endblock %}
 
 {% block body_class %}home{% endblock %}
 
@@ -16,20 +16,24 @@
 {% block body %}
     <section>
         <div class="container">
-            <h2 class="text-center">{% if actor %}{% trans "recent activity by"|capfirst %} {{ actor.get_display_name }}{% else %}{% trans "recent activity"|capfirst %}{% endif %}</h2>
+            <h1 class="marginT30">{% if actor %}{% trans "recent activity by"|capfirst %} {{ actor.get_display_name }}{% elif project %}{% trans "recent activity in"|capfirst %} <a href="/project/{{ project.slug }}/">{{ project.name }}</a>{% else %}{% trans "recent activity"|capfirst %}{% endif %}</h1>
 			{% if actions %}
 			<table id="stream" style="padding: 1;">
-			<thead>
+			<thead><tr class="panel-white">
 				<th>{% trans "time" %}</th>{% if not actor %}<th>{% trans "actor" %}</th>{% endif %}
-			    <th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object" %}</th>
-			</thead>
+			    <th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object or target" %}</th>
+			</tr></thead>
 			<tbody>
 		    {% for action in actions %}<tr>
 		        <td>{{ action.timestamp|date:"d.m.Y H:i" }}</td>
 		        {% if not actor %}<td><a href="/profile/{{ action.actor.username }}/">{{ action.actor.get_display_name }}</a></td>{% endif %}
 		        <td style="text-align: center;">{{ action.verb }}</td>
-		        <td style="text-align: center;">{% if action.action_object %}{{ action.action_object|object_class }}{% elif action.description %}{{ action.description }}s{% endif %}</td>
+		        <td style="text-align: center;">{% if action.description %}{{ action.description }}s{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}</td>
+				{% if action.target %}
+		        <td><a href="{{ action.target.get_absolute_url }}">{{ action.target.name|truncatechars:80 }}</a></td>
+				{% else %}
 		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name|truncatechars:80 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:80 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:80 }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
+				{% endif %}
 		    </tr>{% endfor %}
 			</tbody>
 			</table>

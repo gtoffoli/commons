@@ -43,7 +43,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import track_action, unviewed_posts, post_views_by_user
+from analytics import track_action, filter_actions, post_views_by_user
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -62,6 +62,8 @@ from endless_pagination.decorators import page_template
 
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)
+actstream.registry.register(ProjectMember)
+actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
 actstream.registry.register(Room)
 actstream.registry.register(Repo)
@@ -236,7 +238,7 @@ def edit_preferences(request):
             else:
                 return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/my_dashboard/')
+            return HttpResponseRedirect('/my_home/')
     else:
         form = UserPreferencesForm(instance=profile)
     return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
@@ -249,6 +251,17 @@ def new_posts(request, username):
     # var_dict['unviewed_posts'] = unviewed_posts(user, count_only=False)
     var_dict['unviewed_posts'] = post_views_by_user(user, count_only=False)
     return render_to_response('new_posts.html', var_dict, context_instance=RequestContext(request))
+
+def user_activity(request, username):
+    user = request.user
+    if user.is_authenticated():
+        if username and (user.is_superuser or user.is_manager(1)):
+            user = get_object_or_404(User, username=username)
+    actions = filter_actions(user=user, max_age=7, max_actions=100)
+    var_dict = {}
+    var_dict['actor'] = user
+    var_dict['actions'] = actions
+    return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
 
 def cops_tree(request):
     """
@@ -548,6 +561,7 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
         var_dict['membership'] = membership = project.get_membership(user)
+        var_dict['recent_actions'] = project.recent_actions()
         profile = user.get_profile()
         # can_apply = not membership and not project_no_apply and (is_open or is_submitted)
         can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
@@ -749,6 +763,7 @@ def apply_for_membership(request, username, project_slug):
     user = get_object_or_404(User, username=username)
     if user.id == request.user.id:
         membership = project.add_member(user)
+        track_action(user, 'Apply', project)
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
@@ -759,13 +774,14 @@ def apply_for_membership(request, username, project_slug):
 
 def accept_application(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    membership = project.get_membership(request.user)
+    # membership = project.get_membership(request.user)
     users = User.objects.filter(username=username)
     if users and users.count()==1:
         applicant = users[0]
         if project.can_accept_member(request.user):
             application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
             project.accept_application(request, application)
+            track_action(request.user, 'Accept', application, target=project)
     # return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
@@ -923,6 +939,7 @@ def project_compose_message(request, project_id):
     members = project.members(user_only=True)
     # recipient_filter = [member.username for member in members]
     recipient_filter = [member.username for member in members if not member==request.user]
+    track_action(request.user, 'Send', project)
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):
@@ -1071,6 +1088,13 @@ def project_results(request, project_slug):
     oer_evaluations = project.get_oer_evaluations()
     var_dict['oer_evaluations'] = oer_evaluations
     return render_to_response('project_results.html', var_dict, context_instance=RequestContext(request))
+
+def project_activity(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    var_dict = {}
+    var_dict['project'] = project
+    var_dict['actions'] = project.recent_actions()
+    return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
 
 def repo_oers(request, repo_id, repo=None):
     if not repo:
@@ -1485,7 +1509,7 @@ def people_search(request, template='search_people.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='user')
+        actstream.action.send(user, verb='Search', description='message')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def browse_people(request):
@@ -2254,7 +2278,7 @@ def lp_edit(request, lp_id=None, project_id=None):
                 if project_id :
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else:
-                    return my_dashboard(request)
+                    return my_home(request)
                 """
                 if project_id:
                     project = get_object_or_404(Project, id=project_id)
