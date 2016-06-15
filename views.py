@@ -2372,8 +2372,11 @@ def pathnode_detail(request, node_id, node=None):
         node = get_object_or_404(PathNode, pk=node_id)
     var_dict = { 'node': node, }
     var_dict['lp'] = node.path
+    """
     nodes = get_object_or_404(LearningPath, pk=node.path_id)
     nodes = nodes.get_ordered_nodes()
+    """
+    nodes = node.path.get_ordered_nodes()
     i_node = 0
     count = 0
     while (count < len(nodes)):       

@@ -4,6 +4,7 @@ import json
 from math import sqrt
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.db import models
 from django.db.models import Max
 from django.db.models.signals import post_save
@@ -1557,9 +1558,12 @@ class LearningPath(Resource, Publishable):
 
     def get_ordered_nodes(self):
         nodes = PathNode.objects.filter(path=self)
-        print 'nodes: ', nodes
+        """
         if not nodes:
             return []
+        """
+        if nodes.count() <= 1:
+            return nodes
         if self.path_type == LP_COLLECTION:
             return nodes.order_by('created')
         roots = self.get_roots(nodes=nodes)
@@ -1911,6 +1915,63 @@ class TaggedResource(models.Model):
         verbose_name = _('Tagged resource')
         verbose_name_plural = _('Tagged resources')
 """
+
+class Featured(models.Model):
+    ANY = 0
+    GLOBAL = 1
+    PROJECT = 2
+    SCOPE_CHOICES = ((ANY, _('any')),
+                     (GLOBAL, _('global')),
+                     (PROJECT, _('project')),)
+    class Meta:
+        verbose_name = _('featured item')
+        verbose_name_plural = _('featured items')
+
+    lead = models.BooleanField(default=False, verbose_name=_('is lead entry'))
+    group_name = models.CharField(blank=True, null=True, max_length=50, verbose_name=_('group name'), help_text=_('Entries can be aggregated by group name.'))
+    sort_order = models.IntegerField(default=0, verbose_name=_('sort order'), help_text=_('Used to sort in ascending order, not to filter.'))
+    priority = models.IntegerField(default=0, verbose_name=_('priority'), help_text=_('Used to filter, not to sort, possibly combined with other attributes. A large number means high priority.'))
+    text = models.TextField(blank=True, null=True, verbose_name=_('optional text'), help_text=_('In the case of a "lead" entry, probably you will provide this text.'))
+    scope = models.IntegerField(_('scope'), choices=SCOPE_CHOICES, default=ANY)
+
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Optional reference to a project, a resource, an article or a post.')
+    object_id = models.PositiveIntegerField(blank=True, null=True)
+    featured_object = GenericForeignKey('content_type', 'object_id')
+
+    status = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name=_('publication state'))
+    start_publication = models.DateTimeField(_('start publication'), blank=True, null=True, help_text=_('Optional start date of publication.'))
+    end_publication = models.DateTimeField(_('end publication'), blank=True, null=True, help_text=_('Optional end date of publication.'))
+
+    user = models.ForeignKey(User, verbose_name=_('User'), blank=True, null=True)
+    created = CreationDateTimeField(_('created'))
+    modified = ModificationDateTimeField(_('modified'))
+
+    @property
+    def publication_date(self):
+        """
+        Return the publication date of the entry.
+        """
+        return self.start_publication or self.created
+
+    @property
+    def is_actual(self):
+        """
+        Checks if an entry is within his publication period.
+        """
+        now = timezone.now()
+        if self.start_publication and now < self.start_publication:
+            return False
+
+        if self.end_publication and now >= self.end_publication:
+            return False
+        return True
+
+    @property
+    def is_visible(self):
+        """
+        Checks if an entry is visible and published.
+        """
+        return self.is_actual and self.status == PUBLISHED
 
 # from commons.metadata_models import *
 from translations import *
