@@ -1453,14 +1453,18 @@ class LearningPath(Resource, Publishable):
     def __unicode__(self):
         return self.title
 
+    """
     def make_dict(self):
         return { 'id': self.id, 'title': self.title, 'type': self.path_type,
                 'nodes': [node.make_dict() for node in self.get_ordered_nodes()],
                 'edges': [edge.make_dict() for edge in self.get_edges()],
         }
-
     def get_json(self):
         return json.dumps(self.make_dict())
+    """
+    def make_json(self):
+        return json.dumps({ 'cells': [node.make_json() for node in self.get_ordered_nodes()] + [edge.make_json() for edge in self.get_edges()]})
+
 
     def get_absolute_url(self):
         return '/lp/%s/' % self.slug
@@ -1802,9 +1806,13 @@ class PathNode(node_factory('PathEdge')):
     class Meta:
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
-
+    """
     def make_dict(self):
         return { 'id': self.id, 'label': self.label, 'oer': self.oer and self.oer.id or None }
+    """
+    def make_json(self):
+        # return {'type': 'basic.Rect', 'id': 'node-%06d' % self.id, 'attrs': {'text': {'text': self.label }}}
+        return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label }}}
 
     def get_absolute_url(self):
         return '/pathnode/%s/' % self.id
@@ -1868,9 +1876,13 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     class Meta:
         verbose_name = _('path edge')
         verbose_name_plural = _('path edges')
-
+    """
     def make_dict(self):
         return { 'id': self.id, 'label': self.label, 'parent': self.parent.id, 'child': self.child.id }
+    """
+    def make_json(self):
+        # return {'type': 'link', 'id': 'edge-%06d' % self.id, 'source': {'id': 'node-%06d' % self.parent.id}, 'target': {'id': 'node-%06d' % self.child.id}}
+        return {'type': 'link', 'id': 'edge-%d' % self.id, 'source': {'id': 'node-%d' % self.parent.id}, 'target': {'id': 'node-%d' % self.child.id}}
 
 # Cannot set values on a ManyToManyField which specifies an intermediary model. 
 # Use commons.TaggedOER's Manager instead.

@@ -2042,8 +2042,10 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_chain'] = lp.can_chain(request)
     if can_edit:
         var_dict['bookmarked_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
+    """
     if lp.path_type >= LP_SEQUENCE:
         var_dict['json'] = lp.get_json()
+    """
     if user.is_authenticated():
         if lp.state == PUBLISHED and not user == lp.creator:
             actstream.action.send(user, verb='View', action_object=lp)
