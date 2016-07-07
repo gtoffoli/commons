@@ -333,6 +333,7 @@ mentor_fitness_metrics = {
     'languages': 1.5,
 }
 
+from awesome_avatar.fields import AvatarField
 class UserProfile(models.Model):
     # user = models.OneToOneField(User, unique=True)
     user = models.OneToOneField(User, primary_key=True, related_name='profile')
@@ -353,7 +354,8 @@ class UserProfile(models.Model):
     long = models.TextField(blank=True, verbose_name=_('longer presentation'))
     url = models.CharField(max_length=200, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
     networks = models.ManyToManyField(NetworkEntry, blank=True, verbose_name=_('online networks / services used'))
-    avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
+    # avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
+    avatar = AvatarField('', upload_to='images/avatars/', width=100, height=100)
     enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
 
     def __unicode__(self):
@@ -399,7 +401,8 @@ class UserProfile(models.Model):
             """
             score, matches = self.get_similarity(user)
             if score > 0.5:
-                likes.append([score, user])
+                avatar = user.get_profile().avatar
+                likes.append([score, user, avatar])
         likes = sorted(likes, key=lambda x: x[0], reverse=True)
         return likes
 
@@ -455,7 +458,8 @@ class UserProfile(models.Model):
                     score, matches = self.get_mentor_fitness(mentor)
                     print score, matches
                     if score > threshold:
-                        best_mentors.append([score, mentor])
+                        avatar = mentor.get_profile().avatar
+                        best_mentors.append([score, mentor, avatar])
         return best_mentors
 
     def get_mentor_fitness(self, user):

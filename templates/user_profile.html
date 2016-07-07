@@ -4,9 +4,155 @@
 
 {% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}profile{% endblock %}
 
 {% block body %}
+<article class="panel text-left marginTB30 panel-c0">
+
+  <div class="navbar panel-heading-c0 padding10">
+    {% if complete_profile %}
+	  <div class="pull-left">
+      {% if profile.avatar %}
+        <img src="/media/{{ profile.avatar }}">
+      {% else %}
+        <img src="/media/images/avatars/anonymous.png">
+      {% endif %}
+      {% if can_edit %}<div style="margin-top:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
+      </div>
+	{% endif %}
+	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  profile_user.get_display_name }}</h2>
+    {% if can_edit and complete_profile %}
+      <ul class="pull-right marginT20 marginB0 font16">
+        <li><a href="/my_home/">{% trans "my home"|capfirst %}</a></li>
+        <li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
+      </ul>
+    {% endif %}
+  </div>
+  
+  <section class="padding10">
+    <div class="row">
+      <div class="col-sm-9 col-md-9 col-lg-9">
+        <div class="panel-white">
+          {% if can_edit and not complete_profile %}
+            <p class="text-center font18 txt-error paddingT10">{% trans "please, complete your profile"|capfirst %}!  &nbsp; <a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit"></i></a></p>
+          {% endif %}
+          <div class="padding10">
+            {% if profile.short %}<p class="marginB10">{{ profile.short }}</p>{% endif %}
+            <div class="clearfix marginB10">
+              <dl class="pull-left list-inline font14 paddingR20">
+                <dt>{% trans "username"|capfirst %}</dt>
+                <dd>{{ profile_user.username }}</dd>
+              </dl>
+              <dl class="pull-left list-inline font14 paddingR20">
+                <dt>{% trans "email"|capfirst %}</dt>
+                <dd>{{ profile_user.email }}</dd>
+              </dl>
+              {% if profile.country %}
+                <dl class="pull-left list-inline font14 paddingR20">
+                  <dt>{% trans "country"|capfirst %}</dt>
+                  <dd><form action="/people/search/" method="post">{% csrf_token %}<button type="submit" class="btn-link" name="country" value="{{ profile.country.code }}">{{ profile.country.only_name|safe }}</button></form></dd>
+                </dl>
+              {% endif %}
+              {% if profile.city %}
+                <dl class="pull-left list-inline font14 paddingR20">
+                  <dt>{% trans "city"|capfirst %}</dt>
+                  <dd>{{ profile.city }}</dd>
+                </dl>
+              {% endif %}
+            </div>
+            <div class="marginB10">
+              <div class="clearfix">
+                {% if profile.edu_level %}
+                  {% include "_data.html" with data=profile.edu_level data_class=" pull-left font14 paddingR20" label_data="education" action="/people/search/" type_data="edu_level" %}
+                {% endif %}
+                {% if profile.pro_status %}
+                  {% include "_data.html" with data=profile.pro_status data_class=" pull-left font14 paddingR20" label_data="status" action="/people/search/" type_data="pro_status" %} 
+                {% endif %}
+              </div>
+              <div class="clearfix">
+                {% if profile.edu_field %}
+                  {% include "_data.html" with data=profile.edu_field data_class=" pull-left font14 paddingR20" label_data="field of study" action="/people/search/" type_data="edu_field" %}
+                {% endif %}
+                {% if profile.pro_field %}
+                  {% include "_data.html" with data=profile.pro_field data_class=" pull-left font14 paddingR20" label_data="sector of work" action="/people/search/" type_data="pro_field" %} 
+                {% endif %}
+              </div>
+              {% if profile.position %}
+                <dl class="list-inline font14">
+                  <dt>{% trans "position"|capfirst %}</dt>
+                  <dd>{{ profile.position }}</dd>
+                </dl>
+              {% endif %}
+            </div>
+            {% if profile.subjects.all %}
+              {% include "_data_all.html" with data=profile.subjects.all data_class=" font14 marginB10" label_data="subjects of interest" action="/people/search/" type_data="subjects" %}
+            {% endif %}
+            {% if profile.languages.all or profile.other_languages %}
+              <div class="clearfix marginB10">
+                {% if profile.languages.all %}
+                  {% include "_data_languages.html" with data=profile.languages.all data_class=" pull-left font14 paddingR20" action="/people/search/" %}
+                {% endif %}
+                {% if profile.other_languages %}
+                  <dl class="list-inline pull-left font14">
+                    <dt>{% trans "other languages"|capfirst %}</dt>
+                    <dd>{{ profile.other_languages }}</dd>
+                  </dl>
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if profile.url or profile.networks.all %}
+              <div class="clearfix marginB10">
+                {% if profile.url %}
+                  <dl class="list-inline pull-left font14 paddingR20">
+                    <dt>{% trans "web site"|capfirst %}</dt>
+                    <dd><a href="{{ profile.url }}" target="_blank">{{ profile.url }}</a></dd>
+                  </dl>
+                {% endif %}
+                {% if profile.networks.all %}
+                  {% include "_data_all.html" with data=profile.networks.all data_class=" pull-left font14 marginB10" label_data="social networks" action="/people/search/" type_data="networks" %}
+                {% endif %}
+              </div>
+            {% endif %}
+            {% if profile.long %}
+              <dl class="list-inline marginB10">
+                <dd class="field-content width-full"><blockquote class="font14">{{ profile.long|safe }}</blockquote></dd>
+              </dl>
+            {% endif %}
+            {% if can_edit and complete_profile %}
+              <ul class="list-inline">
+                <li class="list-back-c0"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
+ 			  </ul>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3 col-md-3 col-lg-3">
+        {% if likes %}
+          <div class="panel-white">
+            <div class="panel-heading-c0 padding510 demiBold">{% trans "similar members"|capfirst %}</div>
+            <div {% if likes|length > 10 %} class="box-scroll box-medium" {% endif %}>
+              <ul class="list-unstyled my-list-unstyled padding510">
+              {% for like in likes %}
+                {% if like.0 > 0.5 or forloop.counter < 6 %}
+                  <li><small class="demiBold">{{ like.0|floatformat:2 }}</small> &nbsp; <img {% if like.2 %} src="/media/{{ like.2 }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <small><a href="/profile/{{like.1.username }}/" title="{% trans "view user profile" %}">{{ like.1.get_display_name }}</a></small></li>
+                {% endif %}
+              {% endfor %}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+</article>
+
+
+
+
+
+
+
+{% comment %} VISTA PRECEDENTE
 <div class="row">
   <div class="col-sm-3" style="margin-top: 3.0em;">
 		{% if user == profile_user %}
@@ -44,7 +190,7 @@
 				{% endif %}
 			{% endif %}
 			{{ profile_user.get_display_name }}
-			{% if can_edit %}&nbsp;<a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;""></i></a>{% endif %}
+			{% if can_edit %}&nbsp;<a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit" style="font-size: 0.8em;"></i></a>{% endif %}
 			</h2>
 			{% if profile %}
 				{% if profile.short %}<div style="margin-bottom: 0.5em; font-style: italic;">{{ profile.short }}</div>{% endif %}
@@ -55,7 +201,7 @@
 {% endif %}
 {% if profile %}
 			{% if profile.country %}<div><strong>{% trans "country"|capfirst %}</strong>:
-				{% comment %}{{ profile.country }}{% endcomment %}
+				{
 	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_{{ profile.country.code }}">
 	{% csrf_token %}<input type="hidden" name="country" value="{{ profile.country.code }}">
    	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ profile.country.option_label|safe }}">
@@ -63,14 +209,14 @@
 			</div>{% endif %}
 			{% if profile.city %}<div><strong>{% trans "city"|capfirst %}</strong>: {{ profile.city }}</div>{% endif %}
 			{% if profile.edu_level %}<div><strong>{% trans "education"|capfirst %}</strong>:
-				{% comment %}{{ profile.edu_level }}{% endcomment %}
+
 	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_{{ profile.edu_level.id }}">
 	{% csrf_token %}<input type="hidden" name="edu_level" value="{{ profile.edu_level.id }}">
    	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ profile.edu_level.option_label|safe }}">
 	</form>
 			</div>{% endif %}
 			{% if profile.pro_status %}<div><strong>{% trans "status"|capfirst %}</strong>:
-				{% comment %}{{ profile.pro_status }}{% endcomment %}
+
 	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_{{ profile.pro_status.id }}">
 	{% csrf_token %}<input type="hidden" name="pro_status" value="{{ profile.pro_status.id }}">
    	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ profile.pro_status.option_label|safe }}">
@@ -80,14 +226,14 @@
 				{{ profile.position }}
 			</div>{% endif %}
 			{% if profile.edu_field %}<div><strong>{% trans "field of study"|capfirst %}</strong>:
-				{% comment %}{{ profile.edu_field }}{% endcomment %}
+
 	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_edu_field.id">
 	{% csrf_token %}<input type="hidden" name="edu_field" value="{{ profile.edu_field.id }}">
    	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ profile.edu_field.option_label|safe }}">
 	</form>
 			</div>{% endif %}
 			{% if profile.pro_field %}<div><strong>{% trans "sector of work"|capfirst %}</strong>:
-				{% comment %}{{ profile.pro_field }}{% endcomment %}
+
 	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_pro_field">
 	{% csrf_token %}<input type="hidden" name="pro_field" value="{{ profile.pro_field.id }}">
    	<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ profile.pro_field.option_label|safe }}">
@@ -95,7 +241,7 @@
 			</div>{% endif %}
 			{% if profile.languages.all or profile.other_languages %}<div><strong>{% trans "languages"|capfirst %}</strong>:
 				{% for language in profile.languages.all %}
-				{% comment %}{{ language }}{% endcomment %}
+
   	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_language_{{ language.code }}">
 	{% csrf_token %}<input type="hidden" name="languages" value="{{ language.code }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ language.option_label|safe }}">{% if not forloop.last %},{% endif %}
@@ -105,7 +251,7 @@
 			</div>{% endif %}
 			{% if profile.subjects.all %}<div><strong>{% trans "subjects of interest"|capfirst %}</strong>:
 				{% for subject in profile.subjects.all %}
-				{% comment %}{{ subject }}{% endcomment %}
+
   	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_subject_{{ subject.id }}">
 	{% csrf_token %}<input type="hidden" name="subjects" value="{{ subject.id }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ subject.option_label|safe }}">{% if not forloop.last %},{% endif %}
@@ -115,7 +261,7 @@
 			{% if profile.url %}<div><strong>{% trans "web site"|capfirst %}</strong>: <a href="{{ profile.url }}" target="_blank">{{ profile.url }}</a></div>{% endif %}
 			{% if profile.networks.all %}<div><strong>{% trans "social networks"|capfirst %}</strong>:
 				{% for network in profile.networks.all %}
-				{% comment %}{{ network }}{% endcomment %}
+
   	<form class="form-inline" style="display: inline;" action="/people/search/" method="post" id="people_network_{{ network.id }}">
 	{% csrf_token %}<input type="hidden" name="networks" value="{{ network.id }}">
     <input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ network.option_label|safe }}">{% if not forloop.last %},{% endif %}
@@ -151,4 +297,5 @@
 			{% endif %}
   </div>
 </div>
+{% endcomment %}
 {% endblock %}

@@ -3,31 +3,34 @@
 {% load staticfiles%}
 {% load i18n %}
 
-{% block head_title %}{% trans "edit"|capfirst %}: {{ preferences }}{% endblock %}
 
+{% block head_title %}{% trans "upload foto"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+
+{% block body_class %}avatar_profile_upload{% endblock %}
 {% block body %}
   <div class="panel panel-c0 text-left marginTB30">
     <div class="panel-heading-c0 padding1020">
       <h2 class="marginTB5">
-        <small class="c-white">{% trans "edit"|capfirst %}:</small> {{ preferences }}
+        <small class="c-white">{% trans "upload foto"|capfirst %}:</small> {{ user.get_display_name }}
       </h2>
     </div>
-    <form method="post" id="edit_form">{% csrf_token %}
+    <form method="post" action="{{ action }}" id="upload_form" enctype="multipart/form-data">{% csrf_token %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       <fieldset class="padding1020">
         {% for field in form.visible_fields %}{% with i=forloop.counter %}
           <div class="form-group">
-            <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+            <label for="{{ field.name }}">{{ field.label|capfirst}}</label>
             <span class="txt-error">{{ field.errors }}</span>{{ field }}
             {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
           </div>
         {% endwith %}{% endfor %}
       </fieldset>
       <div class="panel-footer-c0 padding1020">
-        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;
-        <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}</button>&nbsp;
         <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
       </div>
     </form>
-  </div>
+   </div>
 {% endblock %}
+
+

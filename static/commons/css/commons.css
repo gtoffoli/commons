@@ -360,10 +360,10 @@ margin-right:0;
 .padding8 {
 	padding: 8px;
 }
-.paddingLR15 {
-	padding-left:15px;
-	padding-right:15px;
+.padding10 {
+	padding:10px;
 }
+
 .paddingL3 {
 	padding-left:3px;
 }
@@ -382,6 +382,16 @@ margin-right:0;
 .paddingLR5 {
 	padding-left:5px;
 	padding-right:5px;
+}
+.paddingLR15 {
+	padding-left:15px;
+	padding-right:15px;
+}
+.paddingR10 {
+	padding-right:10px;
+}
+.paddingR20 {
+	padding-right:20px;
 }
 .paddingT6 {
 	padding-top:6px;
@@ -414,6 +424,9 @@ margin-right:0;
 	padding-top:20px;
 	padding-bottom:20px;
 }
+.padding105 {
+	padding:10px 5px;
+}
 .padding510 {
 	padding:5px 10px;
 }
@@ -430,11 +443,21 @@ margin-right:0;
 	margin-left:0;
   margin-bottom:20px;
 }
+.marginTB0 {
+	margin-top:0;
+	margin-bottom:0;
+}
 .marginT5 {
 	margin-top:5px;
 }
 .marginT10 {
 	margin-top:10px;
+}
+.marginT15 {
+	margin-top:15px;
+}
+.marginT20 {
+	margin-top:20px;
 }
 .marginT30 {
 	margin-top:30px;
@@ -668,6 +691,14 @@ dl.list-inline.marginB10 {
 
 .my-list-unstyled li:last-child {
 	margin-bottom:0;
+}
+ul.list-inline > li.list-back-c0 {
+	background:#67AE73;
+	margin-right:10px;
+	padding-top:10px;
+	padding-bottom:10px;
+	padding-left:10px;
+	border-radius: 4px;
 }
 
 ul.list-inline > li.list-back-c4 {
@@ -1331,4 +1362,18 @@ section.view-node-details {
 	margin-right:-19px;
 	padding-right:19px;
 	padding-top:10px;
+}
+
+#birth_date {
+	width: auto;
+}
+#birth_date .input-group-addon {
+	float:left;
+	display:inline-block;
+	line-height: 1.42857143;
+	width: auto;
+}
+
+.awesome-avatar-select-area {
+	background:white;
 }

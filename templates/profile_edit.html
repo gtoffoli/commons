@@ -8,45 +8,44 @@
 	{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}
 	{% else %}{{ user.username }}
 	{% endif %}{% endblock %}
-
-{% block body_class %}home{% endblock %}
-
+	
 {% block extra_head %}
 	{{ form.media }}
-	<script src="{% block jquery_src %}{% static "jquery/js/jquery-2.1.3.min.js" %}{% endblock %}"></script>
-	<script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
-	{% tinymce_preview "preview-content" %}
+
 {% endblock %}
 
+{% block body_class %}edit_profile{% endblock %}
+
+
 {% block body %}
-<div class="container">
-  <div class="col-sm-12">
-    <section>
-            <h2 class="text-center">{% trans "edit the profile of"|capfirst %}:
-				{% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
-			</h2>
-    <form enctype="multipart/form-data" method="post" id="edit_form" class="form-horizontal">
-    {% comment %}see http://stackoverflow.com/questions/18539711/input-widths-on-bootstrap-3{% endcomment %}
-	{% csrf_token %}
-    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 3 or i == 4 %}3{% elif i == 9 or i == 15 or i == 16 or i == 17 or i == 19 %}8{% else %}5{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
-		<span style="color: red;">{{ field.errors }}</span> {{ field }}
-		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
-	</div>
-	</div>
-    {% endwith %}{% endfor %}
-		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save changes</button>&nbsp;
-		<button type="submit" name="continue" id="continue" value="continue" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Save and continue</button>&nbsp;
-		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">Cancel (user view)</button>
+  <div class="panel panel-c0 text-left marginTB30">
+    <div class="panel-heading-c0 padding1020">
+      <h2 class="marginTB5">
+        <small class="c-white">{% trans "edit the profile of"|capfirst %}:</small> {% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
+      </h2>
+    </div>
+    <form method="post" id="edit_form">{% csrf_token %}
+      {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+      <fieldset class="padding1020">
+        {% for field in form.visible_fields %}{% with i=forloop.counter %}
+          <div class="form-group">
+            <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+            <span class="txt-error">{{ field.errors }}</span>{{ field }}
+            {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+          </div>
+        {% endwith %}{% endfor %}
+      </fieldset>
+      <div class="panel-footer-c0 padding1020">
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;
+        <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+      </div>
     </form>
-    </section>
   </div>
 {% endblock %}
 
 {% block extra_script %}
-{% include "_tinymce_init.html" %}
+	<script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
+    {% include "_tinymce_init.html" %}
 {% endblock %}
 

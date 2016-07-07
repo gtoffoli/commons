@@ -39,6 +39,7 @@ from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, Pr
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
+from forms import AvatarForm # ProjectLogoForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
@@ -149,6 +150,10 @@ def user_profile(request, username, user=None):
     oers = oers[:MAX_REPOS]
     profile = user.get_profile()
     var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}
+    if profile:
+        var_dict['complete_profile'] = profile.get_completeness()
+    else:
+        var_dict['complete_profile'] = False
     if profile and profile.get_completeness():
         var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
         var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
@@ -169,7 +174,39 @@ def user_dashboard(request, username, user=None):
     var_dict = {}
     var_dict['user'] = user = request.user
     var_dict['profile'] = profile = user.get_profile()
+    var_dict['best_mentors'] = ''
+    if profile:
+        var_dict['complete_profile'] = profile_complete = profile.get_completeness()
+        if profile_complete:
+            var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
+    else:
+    	var_dict['complete_profile'] = False
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
+    com_adminships = []
+    com_only_memberships = []
+    for membership in memberships:
+        if membership.project.is_admin(user):
+            membership.proj_applications = membership.project.get_applications().count()
+            com_adminships.append(membership)
+        else:
+            com_only_memberships.append(membership)
+    var_dict['com_adminships'] = com_adminships
+    var_dict['com_only_memberships'] = com_only_memberships
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp')).order_by('project__state','-project__created')
+    adminships = []
+    only_memberships = []
+    for membership in memberships:
+        if membership.project.is_admin(user):
+            membership.proj_applications = membership.project.get_applications()
+            adminships.append(membership)
+        else:
+            only_memberships.append(membership)
+    var_dict['adminships'] = adminships
+    var_dict['only_memberships'] = only_memberships
+    var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
+    var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
     var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
+    var_dict['accept_members'] = True
     var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
     var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
     print 'mentoring_rels : ', mentoring_rels
@@ -193,11 +230,13 @@ def my_home(request):
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
-        return HttpResponseRedirect('/profile/%s/' % username)
+        # return HttpResponseRedirect('/profile/%s/' % username)
+        return HttpResponseRedirect('/my_profile/')
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
-        form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
+        # form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
+        form = UserProfileExtendedForm(request.POST, instance=profile)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()
@@ -206,19 +245,53 @@ def profile_edit(request, username):
                 user.save()
                 track_action(user, 'Edit', profile, latency=0)
                 if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/profile/%s/' % username)
+                    # return HttpResponseRedirect('/profile/%s/' % username)
+					return HttpResponseRedirect('/my_profile/')
                 else: 
                     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
             else:
                 return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/profile/%s/' % username)
+            # return HttpResponseRedirect('/profile/%s/' % username)
+            return HttpResponseRedirect('/my_profile/')
     elif profile:
         form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name,})
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
 
+def profile_avatar_upload(request, username):
+    user = get_object_or_404(User, username=username)
+    if not user.can_edit(request):
+        return HttpResponseRedirect('/my_profile/')
+    action = '/profile/'+username+'/upload/'
+    profiles = UserProfile.objects.filter(user=user)
+    profile = profiles and profiles[0] or None
+    if request.POST:
+       if request.POST.get('cancel', ''):
+           return HttpResponseRedirect('/my_profile/')
+       else: # Save or Save & continue
+           form = AvatarForm(request.POST, request.FILES, instance=profile)
+           if form.is_valid():
+               form.save()
+               user.save()
+               if request.POST.get('save', ''):
+                   return HttpResponseRedirect('/my_profile/')
+               else: # continue
+                   form = AvatarForm(request.POST,instance=profile)
+                   # return HttpResponseRedirect('/project/%s/upload/' % project.slug)
+                   return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
+
+           else:
+               print form.errors
+    else:
+        if user.can_edit(request):
+            form = AvatarForm(instance=profile)
+            return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/my_profile/')		
+
+	
 def my_preferences(request):
     user = request.user
     return render_to_response('user_preferences.html', {'user': user, 'profile': user.get_profile(),}, context_instance=RequestContext(request))
@@ -758,6 +831,38 @@ def project_close(request, project_id):
     project.close(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
+"""
+from commons.widgets import MyImageInput
+def project_logo_upload(request, project_slug):
+    user = request.user
+    project = get_object_or_404(Project, slug=project_slug)
+    action = '/project/'+project.slug+'/upload/'
+    if request.POST:
+       if request.POST.get('cancel', ''):
+           return HttpResponseRedirect('/project/%s/' % project.slug)
+       else: # Save or Save & continue
+           form = ProjectLogoForm(request.POST,request.FILES, instance=project)
+           if form.is_valid():
+               project = form.save(commit=False)
+               project.editor = user
+               project.save()
+               if request.POST.get('save', ''):
+                   return HttpResponseRedirect('/project/%s/' % project.slug)
+               else: # continue
+                   form = ProjectLogoForm(request.POST,instance=project)
+                   # return HttpResponseRedirect('/project/%s/upload/' % project.slug)
+                   return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
+
+           else:
+               print form.errors
+    else:
+        if project.can_edit(user):
+            form = ProjectLogoForm(instance=project)
+            return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/project/%s/' % project.slug)
+"""
+	
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     user = get_object_or_404(User, username=username)
@@ -769,7 +874,7 @@ def apply_for_membership(request, username, project_slug):
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
-            return my_profile(request)
+            # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def accept_application(request, username, project_slug):

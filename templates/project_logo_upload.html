@@ -1,0 +1,110 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+
+
+{% block head_title %}
+{% if project %}{% trans "upload logo"|capfirst %}: {{ project.get_name }}{% endif %}{% endblock %}
+
+{% block body_class %}logo_project_upload{% endblock %}
+{% block body %}
+  <div class="panel panel-c4 text-left marginTB30">
+    <div class="panel-heading-c4 padding1020">
+      <h2 class="marginTB5">
+      {% if project %}
+        <small class="c-black">{% trans "upload logo"|capfirst %}:</small> {{ project.get_name }}
+      {% endif %}
+      </h2>
+    </div>
+    <form method="post" action="{{ action }}" id="upload_form" enctype="multipart/form-data">{% csrf_token %}
+      {% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}">{% endif %}
+      {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+      <fieldset class="padding1020">
+        {% for field in form.visible_fields %}{% with i=forloop.counter %}
+          <div class="form-group">
+            <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+            <span class="txt-error">{{ field.errors }}</span>{{ field }}
+            {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+          </div>
+          {% if field.name == 'small_image' %}
+            <img class="noresize-image" src="" style="background:#030303; display:none">
+            <div class="component" style="display:none"><div class="overlay"><div class="overlay-inner"></div></div><img id="imglocal" class="resize-image" src="">  <button class="btn-crop js-crop" style="background:red">Crop</button></div>
+          {% endif %}
+        {% endwith %}{% endfor %}
+      </fieldset>
+      <div class="panel-footer-c4 padding1020">
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if project.small_image %} {% trans "changes" %}{% endif %}</button>&nbsp;
+        <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}{% if project %} ({% trans "user view" %}){% endif %}</button>
+      </div>
+    </form>
+   </div>
+{% endblock %}
+
+{% block extra_script %}
+
+  <link rel="stylesheet" href="{% static 'ImageResizeCropCanvas/css/component.css' %}" type="text/css">
+  <style>
+  .component {
+    position: relative;
+    background: white;
+    padding: 4px;
+    height: auto;
+    border: 2px solid #222;
+    max-width: 100%;
+    height: 500px;
+    overflow: hidden;
+    margin: 0 auto;
+    /*text-align: center;*/
+    
+  }
+  </style>
+
+  <script type="text/javascript">
+
+    function readImage (file) {
+
+      var reader = new FileReader();
+
+      reader.addEventListener("load", function () {
+        var image  = new Image();
+        image.addEventListener("load", function () {
+          if (image.width > 180 || image.height > 180) {
+             $('img.noresize-image').css('display','none');
+             $('img.noresize-image').attr('src', '');
+             $('img.resize-image').attr('src', this.src);
+             $("div.component").css('display','block')
+          }
+          else {
+             $("div.component").css('display','none');
+             $('img.resize-image').attr('src', '');
+             $('img.noresize-image').attr('src', this.src);
+             $('img.noresize-image').css('display','block');
+          }
+        });
+        image.src = reader.result;
+      });
+
+      reader.readAsDataURL(file);  
+    }
+
+    $("input[type=file]").change(function(){
+      if (this.files && this.files[0]) {
+        var file = this.files[0];
+        if ( file.size <= 2000000 && (/\.(png|jpeg|jpg|gif)$/i).test(file.name) ) {
+          readImage( file );
+        }
+        else {
+          this.value='';
+          $("div.component").css('display','none')
+          alert("file non puo' essere piu' grande 2MB e/o deve essere .jpg,... ");
+        }
+    }
+  });
+</script>
+
+  <script type="text/javascript" src="{% static 'ImageResizeCropCanvas/js/component.js' %}"></script>
+
+{% endblock %}
+

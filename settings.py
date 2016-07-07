@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     'endless_pagination',
     'djangobower',
     'django_nvd3',
+	'awesome_avatar',
 )
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
@@ -393,10 +394,14 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # TinyMCE settings (from roma APP of RomaPaese project)
+TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
+"""
 TINYMCE_COMPRESSOR = True
+"""
 
 TINYMCE_DEFAULT_CONFIG = {
-    'width': '400', # '640',
+    """
+	'width': '400', # '640',
     'height': '300', # '480',
     'plugins': 'fullscreen,media,preview,paste,table',
     'theme': 'advanced',
@@ -413,6 +418,17 @@ TINYMCE_DEFAULT_CONFIG = {
     'plugin_preview_width' : '800',
     'plugin_preview_height' : '600',
     'paste_auto_cleanup_on_paste': 'true',
+    """
+	'schema': "html5",
+    'resize' : "both",
+	'height': 350,
+	'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
+	'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
+    'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
+	'plugin_preview_width' : 800,
+	'plugin_preview_height' : 600,
+	# 'file_browser_callback' : os.path.join(STATIC_URL,"tinymce/filebrowser.js"),
+
     }
 
 # configure graph_models command of django-extensions

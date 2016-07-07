@@ -2,19 +2,201 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "dashboard of"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+{% block head_title %}{% trans "my home"|capfirst %}: {{ user.get_display_name }}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}my_home{% endblock %}
 
 {% block body %}
+<article class="panel text-left marginTB30 panel-c0">
+  <div class="navbar panel-heading-c0 padding10">
+    {% if complete_profile %}
+	  <div class="pull-left">
+      {% if profile.avatar %}
+        <img src="/media/{{ profile.avatar }}">
+      {% else %}
+        <img src="/media/images/avatars/anonymous.png">
+      {% endif %}
+      </div>
+	{% endif %}
+	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  user.get_display_name }}</h2>
+    {% if complete_profile %}
+      <ul class="pull-right marginT20 marginB0 font16">
+        <li><a href="/my_profile/">{% trans "my profile"|capfirst %}</a></li>
+        <li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
+      </ul>
+    {% endif %}
+  </div>
+  <section class="{% if complete_profile %}padding10{% else %}view-card-details{% endif %}">
+  {% if complete_profile %}
+    <div class="row">
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <div class="panel-white">
+          <ul class="list-inline list-unstyled margin0 padding105">
+            <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if user.inbox_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ user.inbox_count}}</sup>{% endif %}</div></a></li>
+            <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %} <sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
+            <li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>
+          </ul>
+        </div>
+		
+		 {% if com_applications  %}
+		  <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "comunita' a cui hai richiesto di aderire"|capfirst %}</div>
+			<div {% if com_applications|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for application in com_applications %}
+            	<li><a href="/project/{{ application.project.slug }}/"><small>{{ application.project.get_name }}</small></a></li>
+              {% endfor %}
+              </ul>
+			</div>
+          </div>
+        {% endif %}
+		
+        {% if proj_applications  %}
+		  <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "progetti a cui hai richiesto di aderire"|capfirst %}</div>
+			<div {% if proj_applications|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for application in proj_applications %}
+            	<li><a href="/project/{{ application.project.slug }}/"><small>{{ application.project.get_name }}</small></a></li>
+              {% endfor %}
+              </ul>
+			</div>
+          </div>
+        {% endif %}
+		
+        {% if com_adminships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "admin of communities"|capfirst %}</div>
+			<div {% if com_adminships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for membership in com_adminships %}
+			    <li>
+				{% if membership.project.state == 0 %}
+				  <span class="fa fa-group orange"></span> 
+				{% elif memberhip.project.state == 1 %}
+				  <span class="fa fa-group limegreen"></span> 
+				{% elif membership.project.state == 3 %}
+				  <span class="fa fa-lock neutral"></span> 
+				{% endif %}
+				<small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>{% if membership.proj_applications %} [richieste {{ membership.proj_applications }}]{% endif %}</small></li>
+            {% endfor %}
+			  </ul>
+			</div>
+		  </div>
+		{% endif%}
+		
+        {% if adminships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "supervisor of projects"|capfirst %}</div>
+			<div {% if adminships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for membership in adminships %}
+			    <li><small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a></small></li>
+            {% endfor %}
+			  </ul>
+			</div>
+		  </div>
+		{% endif%}
+		
+        {% if com_only_memberships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of communities"|capfirst %}</div>
+			<div {% if only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for membership in com_only_memberships %}
+			    <li>
+				{% if membership.project.state == 0 %}
+				  <span class="fa fa-group orange"></span> 
+				{% elif membership.project.state == 1 %}
+				  <span class="fa fa-group limegreen"></span> 
+				{% elif membership.project.state == 3 %}
+				  <span class="fa fa-lock neutral"></span> 
+				{% endif %}
+				<small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a></small></li>
+            {% endfor %}
+			  </ul>
+			</div>
+		  </div>
+		{% endif%}
+
+        {% if only_memberships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of projects"|capfirst %}</div>
+			<div {% if only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+			  <ul class="list-unstyled my-list-unstyled padding510">
+              {% for membership in only_memberships %}
+			    <li>
+				{% if membership.project.state == 0 %}
+				  <span class="fa fa-group orange"></span> 
+				{% elif membership.project.state == 1 %}
+				  <span class="fa fa-group limegreen"></span> 
+				{% elif membership.project.state == 3 %}
+				  <span class="fa fa-lock neutral"></span> 
+				{% endif %}
+				<small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a></small></li>
+            {% endfor %}
+			  </ul>
+			</div>
+		  </div>
+		{% endif%}
+        {% with rels=mentoring_rels %}{% if rels %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "mentoring relationships"|capfirst %}</div>
+		      <ul class="list-unstyled my-list-unstyled padding510">
+	          {% for rel in rels %}
+	            <li><small><a href="/project/{{ rel.project.slug }}/" style="color: {{ rel.get_link_color }};">{{ rel.project.name }}</a></small></li>
+        	  {% endfor %}
+              </ul>
+            </div>
+        {% endif %}{% endwith %}
+      </div>	
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <div class="panel-white">
+	      {% if my_lps %}
+            <div class="panel-heading-c1 padding510 demiBold">{% trans "i miei LPs privati"|capfirst %}</div>
+            <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
+          	  <ul class="list-unstyled my-list-unstyled padding510">
+          	  {% for lp in my_lps %}
+	            <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+              {% endfor %}
+			  </ul>
+            </div>
+	      {% endif %}
+    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create private learning path"|capfirst %}</a></div>
+        </div>
+      </div>
+      <div class="col-sm-4 col-md-4 col-lg-4">
+        <div class="panel-white">
+          <div class="panel-heading-c0 padding510 demiBold">{% trans "suggested mentors"|capfirst %}</div>
+		  {% if best_mentors %}
+			<div {% if best_mentors|length > 10 %} class="box-scroll box-medium" {% endif %}>
+           	  <ul class="list-unstyled my-list-unstyled padding510">
+			  {% for mentor in best_mentors %}
+				{% if mentor.0 > 0.5 or forloop.counter < 6 %}
+           		  <li><small class="demiBold">{{ mentor.0|floatformat:2 }}</small> &nbsp; <img {% if mentor.2 %} src="/media/{{ mentor.2 }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <a href="/profile/{{mentor.1.username }}/" title='{% trans "view user profile" %}'><small>{{ mentor.1.get_display_name }}</small></a></li>
+				{% endif %}
+			  {% endfor %}
+           	  </ul>
+			</div>
+		  {% else %}
+            <div class="padding510"><small>{% trans "no fit mentors were found in the communities of which you are member"|capfirst %}</small></div>
+		  {% endif %}
+        </div>
+      </div>
+    </div>
+      {% else %}
+        <p class="text-center font18 txt-error">{% trans "please, complete your profile"|capfirst %}! &nbsp; <a href="/profile/{{user}}/edit"><i class="fa fa-edit"></i></a></p>
+
+  {% endif %}
+  </section>
+</article>
+{% comment %} VERSIONE PRECEDENTE 
 <div class="row">
   <div class="col-sm-3">
    			<h4  style="margin-top: 4.0em;">{% trans "tools"|capfirst %}</h4>
            	<ul class="list-unstyled">
-            	<li><a href="/my_profile/">{% trans "profile"|capfirst %}</a></li>
-            	<li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
             	<li><a href="/my_chat/">{% trans "chat"|capfirst %}</a></li>
-            	<li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>
+            	<li><a href="/analytics/user_activity/{{ user.username }}/edit" title="show edit profile">{% trans "recent activity"|capfirst %}</a></li>
             </ul>
    			<h4>{% trans "membership"|capfirst %}</h4>
             <ul class="list-unstyled">
@@ -89,4 +271,5 @@
 	{% endif %}
   </div>
 </div>
+{% endcomment %}
 {% endblock %}

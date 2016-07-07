@@ -4,7 +4,7 @@ Created on 16/apr/2015
 @author: giovanni
 '''
 
-from django.core.files.images import get_image_dimensions
+# from django.core.files.images import get_image_dimensions
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -34,6 +34,7 @@ from models import LearningPath, PathNode
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from models import PROJECT_OPEN, PROJECT_CLOSED
 
+
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
 
@@ -58,7 +59,8 @@ dateTimeOptions = {
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = ['user', 'gender', 'dob', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'short', 'long', 'url', 'networks', 'avatar',]
+        # fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages',  'long', 'url', 'networks', 'avatar',]
+        fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages',  'long', 'url', 'networks', ]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
@@ -78,6 +80,7 @@ class UserProfileForm(forms.ModelForm):
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
 
+    """
     def clean_avatar(self):
         avatar = self.cleaned_data['avatar']
         if avatar:
@@ -94,7 +97,13 @@ class UserProfileForm(forms.ModelForm):
                 raise forms.ValidationError(
                     u'Avatar file size may not exceed 100k.')
         return avatar
+    """
+class AvatarForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('avatar',)
 
+	
 class UserPreferencesForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -159,11 +168,10 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         # exclude = ('slug', 'group', 'forum', 'folders',)
-        exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
-        # fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'small_image', 'name', 'description', 'big_image', 'info', 'reserved',)
+        # exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
+        fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
 
 
-    # small_image = forms.ImageField(required=False, label=_('logo'), widget=forms.ClearableFileInput)
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -171,13 +179,20 @@ class ProjectForm(forms.ModelForm):
     # chat_type = forms.ChoiceField(required=True, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.Select(attrs={'class':'form-control',}))
     chat_type = forms.ChoiceField(required=False, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.HiddenInput())
     chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
-    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, }))
     # big_image = forms.ImageField(required=False, label=_('image'), widget=forms.ClearableFileInput)
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
     # state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=False, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
+"""	
+class ProjectLogoForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('small_image',)
+"""
 
 N_MEMBERS_CHOICES = (
     (0, ''),
