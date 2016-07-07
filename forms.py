@@ -39,6 +39,8 @@ class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
 
 class UserProfileChangeForm(forms.ModelForm):
+    class Meta:
+        exclude = ('avatar',)
     long = forms.CharField(required=False, label='Longer presentation', widget=TinyMCE(attrs={'rows': 5}))
 
 class RepoChangeForm(forms.ModelForm):
