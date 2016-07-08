@@ -2608,6 +2608,13 @@ def pathnode_move_after(request, node_id, other_node_id):
     # return lp_detail(request, path.id, lp=lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
+def pathnode_link_after(request, node_id, other_node_id):
+    node = get_object_or_404(PathNode, id=node_id)
+    other_node = get_object_or_404(PathNode, id=other_node_id)
+    lp = node.path
+    lp.link_node_after(node, other_node, request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path

@@ -1575,7 +1575,7 @@ class LearningPath(Resource, Publishable):
         if self.path_type == LP_COLLECTION:
             return nodes.order_by('created')
         roots = self.get_roots(nodes=nodes)
-        assert len(roots) == 1
+        # assert len(roots) == 1
         node = roots[0]
         ordered = [node]
         while True:
@@ -1742,6 +1742,12 @@ class LearningPath(Resource, Publishable):
         assert not node in other_node.children.all()
         self.disconnect_node(node, request)
         self.insert_node_after(node, other_node, request)
+
+    def link_node_after(self, node, other_node, request):
+        assert node.path == self
+        assert other_node.path == self
+        assert not node in other_node.children.all()
+        self.add_edge(other_node, node, request)
 
     def node_up(self, node, request):
         assert self.is_node_sequence()
