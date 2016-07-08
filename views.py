@@ -192,7 +192,7 @@ def user_dashboard(request, username, user=None):
             com_only_memberships.append(membership)
     var_dict['com_adminships'] = com_adminships
     var_dict['com_only_memberships'] = com_only_memberships
-    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp')).order_by('project__state','-project__created')
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp','sup',)).order_by('project__state','-project__created')
     adminships = []
     only_memberships = []
     for membership in memberships:

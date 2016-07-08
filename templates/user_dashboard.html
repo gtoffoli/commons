@@ -40,7 +40,7 @@
 		
 		 {% if com_applications  %}
 		  <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "comunita' a cui hai richiesto di aderire"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "pending applications to communities"|capfirst %}</div>
 			<div {% if com_applications|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for application in com_applications %}
@@ -53,7 +53,7 @@
 		
         {% if proj_applications  %}
 		  <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "progetti a cui hai richiesto di aderire"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "pending applications to projects"|capfirst %}</div>
 			<div {% if proj_applications|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for application in proj_applications %}
@@ -66,7 +66,7 @@
 		
         {% if com_adminships %}
           <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "admin of communities"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "admin of the following communities"|capfirst %}</div>
 			<div {% if com_adminships|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for membership in com_adminships %}
@@ -87,7 +87,7 @@
 		
         {% if adminships %}
           <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "supervisor of projects"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "supervisor of the following projects"|capfirst %}</div>
 			<div {% if adminships|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for membership in adminships %}
@@ -100,7 +100,7 @@
 		
         {% if com_only_memberships %}
           <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of communities"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of the following communities"|capfirst %}</div>
 			<div {% if only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for membership in com_only_memberships %}
@@ -121,7 +121,7 @@
 
         {% if only_memberships %}
           <div class="panel-white">
-            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of projects"|capfirst %}</div>
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "member of the following projects"|capfirst %}</div>
 			<div {% if only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
 			  <ul class="list-unstyled my-list-unstyled padding510">
               {% for membership in only_memberships %}
@@ -153,7 +153,7 @@
       <div class="col-sm-4 col-md-4 col-lg-4">
         <div class="panel-white">
 	      {% if my_lps %}
-            <div class="panel-heading-c1 padding510 demiBold">{% trans "i miei LPs privati"|capfirst %}</div>
+            <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
             <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
           	  <ul class="list-unstyled my-list-unstyled padding510">
           	  {% for lp in my_lps %}
@@ -162,7 +162,7 @@
 			  </ul>
             </div>
 	      {% endif %}
-    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create private learning path"|capfirst %}</a></div>
+    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create personal Learning Path"|capfirst %}</a></div>
         </div>
       </div>
       <div class="col-sm-4 col-md-4 col-lg-4">
@@ -227,7 +227,7 @@
         	{% endfor %}
         </ul>
 		{% endif %}
-    	<div><a href="/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create private learning path"|capfirst %}</a></div>
+    	<div><a href="/lp_new/"><i class="fa fa-plus" style="font-size: 0.7em;""></i> {% trans "create personal learning path"|capfirst %}</a></div>
 {% else %}
 		{% trans "you must fill your profile to enable your dashboard"|capfirst %}.
 {% endif %}
@@ -262,7 +262,7 @@
         </ul>
 	{% endif %}
     {% if lps %}
-		<h4>{% trans "recent learning paths"|capfirst %}</h4>
+		<h4>{% trans "recent Learning Paths"|capfirst %}</h4>
 		<ul class="list-unstyled">
 	        {% for lp in lps %}
 	        <li><a href="/lp/{{ lp.slug }}/" style="color: {{ lp.get_link_color }};">{{ lp.title }}</a></li>
