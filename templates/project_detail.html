@@ -6,6 +6,11 @@
 
 {% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
+{% block extra_style %}
+    <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
+    <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
+{% endblock %}
+
 {% block extra_head %}
 {% if can_delegate %}
 	<script>
@@ -348,6 +353,19 @@
        </div>
        </div>
        {% endif %}{% endwith %}
+
+       {% if project.get_project_type == 'sup' %}
+       <div class="borderTdotted">
+       <div class="padding510"><div class="bold" >{% trans "add a member by your initiative"|capfirst %}</div>
+  		<form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
+	      <div class="form-group">{{ add_member_form.user }}</div>
+	      <div>
+	        <button type="submit" name="add" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button>&nbsp;
+		  </div>
+		</form>
+       </div>
+       </div>
+       {% endif %}
      {% endif %}
    </div>
 
@@ -403,7 +421,12 @@
 {% endblock %}
 
 {% block extra_script %}
-<script type="text/javascript">
+   <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
+   <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
+   <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
+   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+
+	<script type="text/javascript">
 	$(document).ready(function (){
 		$('dt a.toggleIcon').on('click', function(event){
 			event.preventDefault();

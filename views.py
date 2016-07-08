@@ -6,6 +6,7 @@ Created on 02/apr/2015
 import re
 import json
 
+from django.utils import timezone
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -35,7 +36,7 @@ from models import DRAFT, PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
-from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectSearchForm, FolderDocumentForm
+from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
@@ -612,7 +613,17 @@ def project_detail(request, project_id, project=None):
         else:
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
-        var_dict['can_accept_member'] = project.can_accept_member(user)
+        # var_dict['can_accept_member'] = project.can_accept_member(user)
+        can_accept_member = project.can_accept_member(user)
+        var_dict['can_accept_member'] = can_accept_member
+        if can_accept_member:
+            var_dict['add_member_form'] = ProjectAddMemberForm()
+            if request.POST:
+                user_id = request.POST.get('user')
+                user_to_add = User.objects.get(pk=user_id)
+                if not ProjectMember.objects.filter(project=project, user=user_to_add):
+                    membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
+                    membership.save()
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -3070,6 +3081,16 @@ def testlive(request):
     """
     return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))
 
+def user_fullname_autocomplete(request):
+    MIN_CHARS = 3
+    q = request.GET.get('q', None)
+    create_option = []
+    results = []
+    if q and len(q) >= MIN_CHARS:
+        qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q)).order_by('last_name', 'first_name')
+        results = [{'id': user.id, 'text': user.get_display_name()[:80]} for user in qs if user.is_completed_profile()] + create_option
+    body = json.dumps({ 'results': results, 'more': False, })
+    return HttpResponse(body, content_type='application/json')
 
 def repo_autocomplete(request):
     MIN_CHARS = 2

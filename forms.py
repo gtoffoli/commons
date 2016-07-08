@@ -230,6 +230,9 @@ class ProjectSearchForm (forms.Form):
     n_lps = forms.ChoiceField(required=False, choices=N_LPS_CHOICES, label=_('minimum number of learning paths'), widget=forms.Select())
     n_oers = forms.ChoiceField(required=False, choices=N_OERS_CHOICES, label=_('minimum number of OERs'), widget=forms.Select())
 
+class ProjectAddMemberForm (forms.Form):
+    user = forms.ModelChoiceField(required=False, queryset=User.objects.all(), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
+
 class DocumentForm(forms.Form): 
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'form-control',}))
