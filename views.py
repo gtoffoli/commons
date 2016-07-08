@@ -610,6 +610,8 @@ def project_detail(request, project_id, project=None):
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
         if is_admin or is_parent_admin or user.is_superuser:
             var_dict['project_children'] = project.get_children
+            var_dict['project_support_child'] = project.get_children(proj_type_name='sup')
+            var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
         else:
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
@@ -684,6 +686,8 @@ def project_detail(request, project_id, project=None):
                         form = MatchMentorForm(initial={'project': project_id })
                     form.fields['mentor'].queryset = User.objects.filter(username__in=[mentor.username for mentor in candidate_mentors])
                     var_dict['match_mentor_form'] = form
+        elif type_name=='sup':
+            var_dict['support'] = project
     else:
         var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
     var_dict['repos'] = []

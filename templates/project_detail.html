@@ -64,7 +64,7 @@
          </dl>
        {% endif %}
      </article> 
-     {% if project_children %}
+     {% if not project.get_project_type == 'sup' and project_children %}
         <div class="panel-white">
           <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 0 %} {% trans "communities"|capfirst %} {% elif project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
             <ul class="list-inline padding10510 list-orange">
@@ -75,7 +75,7 @@
                 {% elif subproject.state == 3 %}
                    {% comment %} closed {% endcomment %}
                    <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><span class="fa fa-lock neutral"></span> {{ subproject.get_name }}</a></li>
-                {% elif subproject.state == 0%}
+                {% elif subproject.state == 0 %}
                    {% comment %} draft {% endcomment %}
                    <li><span class="fa fa-group orange"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 4 %}
@@ -89,8 +89,24 @@
              </ul>
         </div>
      {% endif %}
+	 
+
+	 
 
      {% if user.is_authenticated %}
+
+	   {% if is_admin and  proj_type.name == 'com' and project_support_child %}
+	     <div class="panel-white">
+          <div class="panel-heading-c4 padding510 demiBold">{% trans "support projects"|capfirst %}</div>
+            <ul class="list-inline padding10510 list-orange">
+			    {% for proj_sup in project_support_child %}
+                <li><a href="/project/{{ proj_sup.slug }}/" title="{% trans "view project" %}">{{ proj_sup.get_name }}</a></li>
+				{% endfor %}
+				</ul>
+				</div>
+	   {% endif %}
+	 
+	 
 {% comment %} AMMINISTRAZIONE {% endcomment %}
         {% if can_edit or can_open or can_close or is_admin %}
           <div>
@@ -106,7 +122,7 @@
                     </li>
                  </ul>
               </li>
-              {% if not proj_type.name == 'roll' %}
+              {% if not proj_type.name == 'roll' and not project.get_project_type == 'sup' %}
               {% if can_edit and not project_no_children %}
                 <li class="list-back-c4">
                    <ul class="list-inline"><li>
@@ -118,6 +134,9 @@
                               <li><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
                             {% endif %}
                           {% endfor %}
+						  {% if proj_type.name == 'com' %}
+						    <li><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" class="btn btn-default"><span class="fa fa-group orange"></span> {{ proj_type_sup.description }}</a></a></li>
+						  {% endif %}
                         </ul>
                      {% else %}
                         <div class="marginB5 demiBold">{% trans "new community"|capfirst %}</div>
@@ -128,9 +147,10 @@
                      </li>
                    </ul>
                 </li>
+				
               {% endif %}
               {% endif %}
-            </ul>
+			  </ul>
             
             {% if is_admin and is_open %}
               {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
@@ -218,7 +238,7 @@
 {% endcomment %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
-{% if is_member %}
+{% if is_member and not project.get_project_type == 'sup' %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
