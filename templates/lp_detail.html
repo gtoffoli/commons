@@ -275,6 +275,7 @@
 </style>
 
 <link rel="stylesheet" href="{% static "jointjs/joint.css" %}" />
+<link rel="stylesheet" href="{% static "jointjs/autolayout.css" %}" />
 <!-- <script src="jquery.js"></script>  -->
 <script src="{% static "jointjs/lodash.min.js" %}"></script>
 <script src="{% static "jointjs/backbone-min.js" %}"></script>
@@ -282,6 +283,7 @@
 <script src="{% static "jointjs/dagre.js" %}"></script>
 <script src="{% static "jointjs/joint.js" %}"></script>
 <script src="{% static "jointjs/joint.layout.DirectedGraph.js" %}"></script>
+<script src="{% static "jointjs/autolayout.js"" %}"></script>
 
 <script type="text/javascript">
 
@@ -347,31 +349,20 @@ graph.getLinks().forEach(function(link, index) {
 // console.log(JSON.stringify(graph.toJSON()))
 
 graph.resetCells(graph.getCells());
-joint.layout.DirectedGraph.layout(graph, { setLinkVertices: false });
+
+layout_options = {
+		setLinkVertices: false,
+		nodeSep: 50,
+	    edgeSep: 80,
+	    rankDir: "TB"
+}
+function make_layout() {
+	joint.layout.DirectedGraph.layout(graph, layout_options);
+}
+make_layout();
+
 {% if can_edit %}
-graph.getElements().forEach(function(node, index) {
-    label = node.attr('text').text;
-    width = label.length * 5 + node_padding * 2;
-    drop_cell = drop.clone();
-    drop_cell.set('action', 'delete')
-    node.embed(drop_cell);
-    graph.addCell(drop_cell);
-    // drop_cell.position(width-icon_size/2, -icon_size/2, { parentRelative: true});
-    drop_cell.position(width-icon_size, 0, { parentRelative: true});
-    add_before = add.clone();
-    add_before.set('action', 'add_before')
-    node.embed(add_before);
-    graph.addCell(add_before);
-    // add_before.position(-icon_size/2, -icon_size/2, { parentRelative: true});
-    add_before.position(0, 0, { parentRelative: true});
-    add_after = add.clone();
-    add_after.set('action', 'add_after')
-    node.embed(add_after);
-    graph.addCell(add_after);
-    // add_after.position(width-icon_size/2, node_height-icon_size/2, { parentRelative: true});
-    add_after.position(width-icon_size, node_height-icon_size, { parentRelative: true});
-    // node.fitEmbeds()
-})
+// ..
 {% endif %}
 paper.fitToContent();
 
@@ -441,10 +432,39 @@ function on_cell_clicked(cellView, x, y) {
 		document.location.href = '/pathnode/{0}/'.format(id);
 	}
 }
+
 function on_cell_dragged(cellView, x, y) {
 	this_cell = cellView.model
 	this_cell_id = this_cell.id
+
+    // Find the first element below that is not a link nor the dragged element itself.
+    var elementBelow = graph.get('cells').find(function(cell) {
+        if (cell instanceof joint.dia.Link) return false; // Not interested in links.
+        if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+        if (cell.getBBox().containsPoint(g.point(x, y))) {
+            return true;
+        }
+        return false;
+    });
+    
+    // If the two elements are connected already, don't
+    // connect them again (this is application specific though).
+    if (elementBelow && !_.contains(graph.getNeighbors(elementBelow), cellView.model)) {
+
+    	target_id = cellView.model.id;
+    	source_id = elementBelow.id;
+        graph.addCell(new joint.dia.Link({
+            source: { id: source_id }, target: { id: target_id },
+            attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+        }));
+        // Move the element a bit to the side.
+        cellView.model.translate(+200, 0);
+        paper.fitToContent();
+        // make_layout();
+		document.location.href = '/pathnode/{0}/link_after/{1}/'.format(target_id.split('-')[1], source_id.split('-')[1]);
+    }
 }
+
 /*
 graph.on('change:position', function(cell) {
     var parentId = cell.get('parent');
@@ -454,6 +474,31 @@ graph.on('change:position', function(cell) {
 });
 */
 
+{% if can_edit %}
+graph.getElements().forEach(function(node, index) {
+    label = node.attr('text').text;
+    width = label.length * 5 + node_padding * 2;
+
+    drop_cell = drop.clone();
+    drop_cell.set('action', 'delete')
+    node.embed(drop_cell);
+    graph.addCell(drop_cell);
+    drop_cell.position(width-icon_size, 0, { parentRelative: true});
+
+    add_before = add.clone();
+    add_before.set('action', 'add_before')
+    node.embed(add_before);
+    graph.addCell(add_before);
+    add_before.position(0, 0, { parentRelative: true});
+ 
+    add_after = add.clone();
+    add_after.set('action', 'add_after')
+    node.embed(add_after);
+    graph.addCell(add_after);
+    add_after.position(width-icon_size, node_height-icon_size, { parentRelative: true});
+})
+{% endif %}
+paper.fitToContent();
 </script>
 {% endif %}
 

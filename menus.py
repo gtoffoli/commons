@@ -6,8 +6,12 @@ from django.utils.text import capfirst
 def community_children(request):
     children = []
     children.append (MenuItem(
-         capfirst(_("about")),
+         capfirst(_("the CommonS project")),
          url='/info/about/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("press releases")),
+         url='/info/press_releases/',
         ))
     children.append (MenuItem(
          capfirst(_("all communities")),
@@ -150,7 +154,7 @@ def admin_children(request):
     return children
 
 # Add a few items to our main menu
-Menu.add_item("main", MenuItem(capfirst(_("community")),
+Menu.add_item("main", MenuItem(capfirst(_("about")),
                                url='/p',
                                weight=30,
                                check=True,
