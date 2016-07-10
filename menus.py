@@ -153,6 +153,10 @@ def admin_children(request):
             ))
     return children
 
+
+Menu.items = {}
+Menu.sorted = {}
+
 # Add a few items to our main menu
 Menu.add_item("main", MenuItem(capfirst(_("about")),
                                url='/p',

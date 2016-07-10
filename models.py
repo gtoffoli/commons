@@ -1457,18 +1457,8 @@ class LearningPath(Resource, Publishable):
     def __unicode__(self):
         return self.title
 
-    """
-    def make_dict(self):
-        return { 'id': self.id, 'title': self.title, 'type': self.path_type,
-                'nodes': [node.make_dict() for node in self.get_ordered_nodes()],
-                'edges': [edge.make_dict() for edge in self.get_edges()],
-        }
-    def get_json(self):
-        return json.dumps(self.make_dict())
-    """
     def make_json(self):
         return json.dumps({ 'cells': [node.make_json() for node in self.get_ordered_nodes()] + [edge.make_json() for edge in self.get_edges()]})
-
 
     def get_absolute_url(self):
         return '/lp/%s/' % self.slug
@@ -1548,15 +1538,20 @@ class LearningPath(Resource, Publishable):
             self.remove_node(node, request)
         self.delete()
 
-    def get_nodes(self):
-        return PathNode.objects.filter(path=self)
+    def get_nodes(self, order_by=None):
+        # return PathNode.objects.filter(path=self)
+        nodes = PathNode.objects.filter(path=self)
+        if order_by:
+            nodes = nodes.order_by(order_by)
+        return nodes
 
     def get_edges(self):
         return PathEdge.objects.filter(parent__path=self)
   
     def get_roots(self, nodes=[]):
         if not nodes:
-            nodes = self.get_nodes()
+            # nodes = self.get_nodes(order_by='created')
+            nodes = self.get_nodes(order_by='created')
         return [node for node in nodes if node.is_root()]
   
     def get_islands(self, nodes=[]):
@@ -1565,33 +1560,31 @@ class LearningPath(Resource, Publishable):
         return [node for node in nodes if node.is_island()]
 
     def get_ordered_nodes(self):
-        nodes = PathNode.objects.filter(path=self)
-        """
-        if not nodes:
-            return []
-        """
+        nodes = PathNode.objects.filter(path=self).order_by('created')
         if nodes.count() <= 1:
             return nodes
-        if self.path_type == LP_COLLECTION:
-            return nodes.order_by('created')
+        path_type = self.path_type
+        if path_type == LP_COLLECTION:
+            return nodes
         roots = self.get_roots(nodes=nodes)
-        # assert len(roots) == 1
-        node = roots[0]
-        ordered = [node]
-        while True:
-            children = node.children.all()
-            if not children:
-                break
-            assert len(children) == 1
-            node = children[0]
-            ordered.append(node)
-        print 'ordered: ', ordered
-        if self.path_type == LP_SEQUENCE:
-            assert len(ordered) == len(nodes)
-        else:
+        if path_type == LP_SEQUENCE:
+            assert len(roots) == 1
+        visited = []
+        for root in roots:
+            stack = [root]
+            while stack:
+                node = stack.pop()
+                if node not in visited:
+                    visited.append(node)
+                    children = node.children.all()
+                    if path_type == LP_SEQUENCE:
+                        assert len(children) == 1
+                    stack.extend([node for node in children if not node in visited])
+        if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
-            ordered.extend(islands)
-        return ordered
+            visited.extend(islands)
+        assert len(visited) == len(nodes)
+        return visited
 
     def is_pure_collection(self):
         nodes = self.get_nodes()
@@ -1685,20 +1678,32 @@ class LearningPath(Resource, Publishable):
     def disconnect_node(self, node, request, delete=False):
         assert self.can_edit(request)
         assert node.path == self
+        path_type = self.path_type
         if not node.is_island():
             if not node.is_root():
-                parent_edge = PathEdge.objects.get(child=node)
+                # parent_edge = PathEdge.objects.get(child=node)
+                parent_edges = PathEdge.objects.filter(child=node)
+                if path_type == LP_SEQUENCE:
+                    assert len(parent_edges) == 1
             if not node.is_leaf():
-                child_edge = PathEdge.objects.get(parent=node)
-                child = child_edge.child
+                # child_edge = PathEdge.objects.get(parent=node)
+                child_edges = PathEdge.objects.filter(parent=node)
+                if path_type == LP_SEQUENCE:
+                    assert len(child_edges) == 1
+                    child = child_edges[0].child
             if node.is_root():
-                child_edge.delete()
+                # child_edge.delete()
+                child_edges.delete()
             elif node.is_leaf():
-                parent_edge.delete()
+                # parent_edge.delete()
+                parent_edges.delete()
             else:
-                parent_edge.child = child
-                parent_edge.save(disable_circular_check=True)
-                child_edge.delete()
+                if path_type == LP_SEQUENCE:
+                    parent_edge = parent_edges[0]
+                    parent_edge.child = child
+                    parent_edge.save(disable_circular_check=True)
+                # child_edge.delete()
+                child_edges.delete()
         self.editor = request.user
         self.save()
         if delete:

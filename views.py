@@ -31,7 +31,7 @@ from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
-from models import LearningPath, PathNode, LP_TYPE_DICT
+from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
@@ -2630,6 +2630,14 @@ def pathnode_down(request, node_id):
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     #return lp_detail(request, path.id, lp=lp)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
+def pathedge_delete(request, edge_id):
+    edge = get_object_or_404(PathEdge, id=edge_id)
+    parent = edge.parent
+    lp = parent.path
+    assert edge.child.path == lp
+    edge.delete()
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def project_add_lp(request, project_id):

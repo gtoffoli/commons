@@ -268,10 +268,16 @@
 .element.basic.Rect, .element.basic.Circle {
     cursor: pointer;
 }
+/*
 .link-tools .tool-remove .tool-options .marker-vertex-group {
 	display: none;
     user-drag: none;
 }
+*/
+{% if not can_edit %}
+.link-tools .tool-remove { display: none }
+.link-tools .tool-options { display: none }
+{% endif %}
 </style>
 
 <link rel="stylesheet" href="{% static "jointjs/joint.css" %}" />
@@ -305,7 +311,8 @@ var paper = new joint.dia.Paper({
     model: graph,
     gridSize: 1,
 {% if can_edit %}
-    interactive: function(cellView) { return ! cellView.model.isLink(); },
+    // interactive: function(cellView) { return ! cellView.model.isLink(); },
+    interactive: true,
 {% else %}
 	interactive: false,
 {% endif %}
@@ -366,6 +373,12 @@ make_layout();
 {% endif %}
 paper.fitToContent();
 
+/*
+element.on('change:position', function() {
+	alert('element moved');
+});
+*/
+
 paper.on('cell:pointerclick', function (cellView, evt, x, y) {
 	on_cell_clicked(cellView, x, y);
 });
@@ -379,8 +392,14 @@ paper.on('cell:pointerclick', function (cellView, evt, x, y) {
     });
     graph.on('remove', function(cell, collection, opt) {
    	   if (cell.isLink()) {
-   		console.log("A link was removed" + linkView.model.id); // a link was removed  (cell.id contains the ID of the removed link)
-   	   }
+		  	// console.log("A link was removed" + linkView.model.id); // a link was removed  (cell.id contains the ID of the removed link)
+			var msg = 'Do you really want to remove this edge?';
+			if (window.confirm(msg)) {
+			   	id = cell.id.split('-')[1];
+				document.location.href = '/pathedge/{0}/delete/'.format(id);
+	  			console.log("A link was removed: " + cell.id); // a link was removed  (cell.id contains the ID of the removed link)
+			}
+		}
    	})
 {% endif %}
 
@@ -415,7 +434,9 @@ function on_cell_clicked(cellView, x, y) {
 			var msg = 'Do you really want to remove this node? ' + label;
 			if (window.confirm(msg))
 				document.location.href = '/pathnode/{0}/delete/'.format(id);
-		} else if (action == 'add_before') {
+		}
+	   	/*
+		else if (action == 'add_before') {
 			var msg = 'Add a node before this node? ' + label;
 			if (window.confirm(msg))
 				document.location.href = '/pathnode/{0}/add_before/'.format(id);
@@ -424,9 +445,8 @@ function on_cell_clicked(cellView, x, y) {
 			if (window.confirm(msg))
 				document.location.href = '/pathnode/{0}/add_after/'.format(id);
 		}
-	} else if (cell.isLink()) {
-		// console.log('drop link');
-	} else {
+	   	*/
+	} else if (! cell.isLink()) {
 		console.log('node clicked');
 	   	id = cell.id.split('-')[1];
 		document.location.href = '/pathnode/{0}/'.format(id);
@@ -434,7 +454,9 @@ function on_cell_clicked(cellView, x, y) {
 }
 
 function on_cell_dragged(cellView, x, y) {
-	this_cell = cellView.model
+	this_cell = cellView.model;
+	if (this_cell.get('parent'))
+		return;
 	this_cell_id = this_cell.id
 
     // Find the first element below that is not a link nor the dragged element itself.
@@ -444,6 +466,7 @@ function on_cell_dragged(cellView, x, y) {
         if (cell.getBBox().containsPoint(g.point(x, y))) {
             return true;
         }
+        this_cell.set('position', this_cell.previous('position'));
         return false;
     });
     
@@ -475,28 +498,32 @@ graph.on('change:position', function(cell) {
 */
 
 {% if can_edit %}
-graph.getElements().forEach(function(node, index) {
-    label = node.attr('text').text;
-    width = label.length * 5 + node_padding * 2;
-
-    drop_cell = drop.clone();
-    drop_cell.set('action', 'delete')
-    node.embed(drop_cell);
-    graph.addCell(drop_cell);
-    drop_cell.position(width-icon_size, 0, { parentRelative: true});
-
-    add_before = add.clone();
-    add_before.set('action', 'add_before')
-    node.embed(add_before);
-    graph.addCell(add_before);
-    add_before.position(0, 0, { parentRelative: true});
- 
-    add_after = add.clone();
-    add_after.set('action', 'add_after')
-    node.embed(add_after);
-    graph.addCell(add_after);
-    add_after.position(width-icon_size, node_height-icon_size, { parentRelative: true});
-})
+function add_tools(graph) {
+	graph.getElements().forEach(function(node, index) {
+	    label = node.attr('text').text;
+	    width = label.length * 5 + node_padding * 2;
+	
+	    drop_cell = drop.clone();
+	    drop_cell.set('action', 'delete')
+	    node.embed(drop_cell);
+	    graph.addCell(drop_cell);
+	    drop_cell.position(width-icon_size, 0, { parentRelative: true});
+		/*
+	    add_before = add.clone();
+	    add_before.set('action', 'add_before')
+	    node.embed(add_before);
+	    graph.addCell(add_before);
+	    add_before.position(0, 0, { parentRelative: true});
+	 
+	    add_after = add.clone();
+	    add_after.set('action', 'add_after')
+	    node.embed(add_after);
+	    graph.addCell(add_after);
+	    add_after.position(width-icon_size, node_height-icon_size, { parentRelative: true});
+	    */
+	})
+}
+add_tools(graph);
 {% endif %}
 paper.fitToContent();
 </script>
