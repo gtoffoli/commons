@@ -1578,7 +1578,7 @@ class LearningPath(Resource, Publishable):
                     visited.append(node)
                     children = node.children.all()
                     if path_type == LP_SEQUENCE:
-                        assert len(children) == 1
+                        assert len(children) <= 1
                     stack.extend([node for node in children if not node in visited])
         if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
