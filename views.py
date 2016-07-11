@@ -59,6 +59,7 @@ from notification import models as notification
 # from pinax.notifications import models as notification
 from pybb.models import Forum, Category
 from zinnia.models import Entry
+from zinnia.models.author import Author
 
 from endless_pagination.decorators import page_template
 
@@ -72,6 +73,8 @@ actstream.registry.register(Repo)
 actstream.registry.register(OER)
 actstream.registry.register(LearningPath)
 actstream.registry.register(PathNode)
+actstream.registry.register(Entry)
+actstream.registry.register(Author)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -1252,7 +1255,10 @@ def repo_save(request, repo=None):
                     repo.creator = user
                 repo.editor = user
                 repo.save()
-                track_action(request.user, 'Edit', repo)
+                if repo_id:
+                    track_action(request.user, 'Edit', repo)
+                else:
+                    track_action(request.user, 'Create', repo)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/repo/%s/' % repo.slug)
                 else:
@@ -1935,6 +1941,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
                 evaluation.save()
                 form.save_m2m()
                 evaluation = get_object_or_404(OerEvaluation, pk=evaluation.id)
+                track_action(request.user, 'Create', evaluation)
                 n = len(metadata_formset)
                 for i in range(n):
                     if request.POST.get('metadata_set-%d-DELETE' % i, None):
@@ -2386,6 +2393,10 @@ def lp_edit(request, lp_id=None, project_id=None):
                 lp.editor = user
                 lp.save()
                 form.save_m2m()
+                if lp_id:
+                    track_action(request.user, 'Edit', lp)
+                else:
+                    track_action(request.user, 'Create', lp)
                 lp = get_object_or_404(LearningPath, id=lp.id)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2554,6 +2565,10 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     # node.label = slugify(node.oer.title[:50])
                     node.label = node.oer.title
                     node.save()
+                if node_id:
+                    track_action(request.user, 'Edit', node)
+                else:
+                    track_action(request.user, 'Create', node)
                 path = node.path
                 # if path.path_type==LP_SEQUENCE and not node.parents():
                 if path.path_type==LP_SEQUENCE and node.is_island():
@@ -2586,11 +2601,12 @@ def pathnode_edit_by_id(request, node_id):
 
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
+    track_action(request.user, 'Delete', node)
     lp = node.path
     lp.remove_node(node, request)
+    track_action(request.user, 'Edit', lp)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    # return lp_detail(request, path.id, lp=lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_move_before(request, node_id, other_node_id):
@@ -2598,14 +2614,14 @@ def pathnode_move_before(request, node_id, other_node_id):
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.move_node_before(node, other_node, request)
-    # return lp_detail(request, path.id, lp=lp)
+    track_action(request.user, 'Edit', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_move_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.move_node_after(node, other_node, request)
-    # return lp_detail(request, path.id, lp=lp)
+    track_action(request.user, 'Edit', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_link_after(request, node_id, other_node_id):
@@ -2613,23 +2629,24 @@ def pathnode_link_after(request, node_id, other_node_id):
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.link_node_after(node, other_node, request)
+    track_action(request.user, 'Edit', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
     lp.node_up(node, request)
+    track_action(request.user, 'Edit', lp)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    # return lp_detail(request, path.id, lp=lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_down(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
     lp.node_down(node, request)
+    track_action(request.user, 'Edit', lp)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
-    #return lp_detail(request, path.id, lp=lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathedge_delete(request, edge_id):
@@ -2638,6 +2655,7 @@ def pathedge_delete(request, edge_id):
     lp = parent.path
     assert edge.child.path == lp
     edge.delete()
+    track_action(request.user, 'Edit', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def project_add_lp(request, project_id):

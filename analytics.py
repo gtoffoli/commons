@@ -219,7 +219,7 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
 
 def track_action(actor, verb, action_object, target=None, description=None, latency=0):
     try:
-        if not (actor and verb and object):
+        if not (actor and verb and action_object):
             return
         if latency:
             min_time = timezone.now()-timedelta(days=latency)
