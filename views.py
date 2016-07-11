@@ -185,22 +185,8 @@ def user_profile(request, username, user=None):
     print "========================FINE========================="
     if user.is_authenticated() and user==request.user:
         can_edit = True
-        """
-        applications = ProjectMember.objects.filter(user=user, state=0)
-        repos = Repo.objects.filter(creator=user).order_by('-created')
-        oers = OER.objects.filter(creator=user).order_by('-created')
-        """
     else:
         can_edit = False
-        """
-        applications = []
-        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-        oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-    more_repos = repos.count() > MAX_REPOS
-    repos = repos[:MAX_REPOS]
-    more_oers = oers.count() > MAX_OERS
-    oers = oers[:MAX_REPOS]
-    """
     profile = user.get_profile()
 	
     var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'memberships': memberships, }
@@ -216,11 +202,11 @@ def user_profile(request, username, user=None):
             actstream.action.send(request.user, verb='View', action_object=profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
-
 def my_profile(request):
     user = request.user
     return user_profile(request, None, user=user)
 
+"""
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
         return HttpResponseRedirect('/')
@@ -276,6 +262,54 @@ def user_dashboard(request, username, user=None):
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
     # return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
+"""
+
+def user_dashboard(request, username, user=None):
+    if not username and (not user or not user.is_authenticated()):
+        return HttpResponseRedirect('/')
+    MAX_REPOS = MAX_OERS = MAX_LP = 5
+    var_dict = {}
+    var_dict['user'] = user = request.user
+    var_dict['profile'] = profile = user.get_profile()
+    var_dict['best_mentors'] = ''
+    if profile:
+        var_dict['complete_profile'] = profile_complete = profile.get_completeness()
+        if profile_complete:
+            var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
+    else:
+    	var_dict['complete_profile'] = False
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
+    com_adminships = []
+    com_only_memberships = []
+    for membership in memberships:
+        if membership.project.is_admin(user):
+            membership.proj_applications = membership.project.get_applications().count()
+            com_adminships.append(membership)
+        else:
+            com_only_memberships.append(membership)
+    var_dict['com_adminships'] = com_adminships
+    var_dict['com_only_memberships'] = com_only_memberships
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp','sup',)).order_by('project__state','-project__created')
+    adminships = []
+    only_memberships = []
+    for membership in memberships:
+        if membership.project.is_admin(user):
+            membership.proj_applications = membership.project.get_applications()
+            adminships.append(membership)
+        else:
+            only_memberships.append(membership)
+    var_dict['adminships'] = adminships
+    var_dict['only_memberships'] = only_memberships
+    var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
+    var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
+    var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
+    var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
+    var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
+    var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
+    var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
+    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
+	
 
 def my_home(request):
     user = request.user

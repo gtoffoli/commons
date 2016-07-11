@@ -149,23 +149,6 @@
               </ul>
             </div>
         {% endif %}{% endwith %}
-      </div>	
-      <div class="col-sm-4 col-md-4 col-lg-4">
-        <div class="panel-white">
-	      {% if my_lps %}
-            <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
-            <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
-          	  <ul class="list-unstyled my-list-unstyled padding510">
-          	  {% for lp in my_lps %}
-	            <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
-              {% endfor %}
-			  </ul>
-            </div>
-	      {% endif %}
-    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create personal Learning Path"|capfirst %}</a></div>
-        </div>
-      </div>
-      <div class="col-sm-4 col-md-4 col-lg-4">
         <div class="panel-white">
           <div class="panel-heading-c0 padding510 demiBold">{% trans "suggested mentors"|capfirst %}</div>
 		  {% if best_mentors %}
@@ -182,6 +165,45 @@
             <div class="padding510"><small>{% trans "no fit mentors were found in the communities of which you are member"|capfirst %}</small></div>
 		  {% endif %}
         </div>
+      </div>	
+      <div class="col-sm-8 col-md-8 col-lg-8">
+        <div class="panel-white">
+	      {% if my_lps %}
+            <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
+            <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
+          	  <ul class="list-unstyled my-list-unstyled padding510">
+          	  {% for lp in my_lps %}
+	            <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+              {% endfor %}
+			  </ul>
+            </div>
+	      {% endif %}
+    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create personal Learning Path"|capfirst %}</a></div>
+        </div>
+	    {% if oers %}
+		  <div class="panel-white">
+            <div class="panel-heading-c2 padding510 demiBold">{% trans "OERs"|capfirst %}</div>
+            <div {% if oers|length > 10 %} class="box-scroll box-medium" {% endif %}>
+          	  <ul class="list-unstyled my-list-unstyled padding510">
+          	  {% for oer in oers %}
+	            <li>{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{oer.slug }}/"><small>{{ oer.title }}</small></a></li>
+              {% endfor %}
+			  </ul>
+            </div>
+		  </div>
+	    {% endif %}
+		{% if lps %}
+		  <div class="panel-white">
+            <div class="panel-heading-c1 padding510 demiBold">{% trans "learning paths"|capfirst %}</div>
+            <div {% if lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
+          	  <ul class="list-unstyled my-list-unstyled padding510">
+          	  {% for lp in lps %}
+	            <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+              {% endfor %}
+			  </ul>
+            </div>
+		  </div>
+	    {% endif %}
       </div>
     </div>
       {% else %}
