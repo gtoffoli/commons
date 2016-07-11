@@ -57,7 +57,7 @@ from roles.models import Role
 from filetransfers.api import serve_file
 from notification import models as notification
 # from pinax.notifications import models as notification
-from pybb.models import Forum, Category
+from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
 from zinnia.models.author import Author
 
@@ -75,6 +75,8 @@ actstream.registry.register(LearningPath)
 actstream.registry.register(PathNode)
 actstream.registry.register(Entry)
 actstream.registry.register(Author)
+actstream.registry.register(Topic)
+actstream.registry.register(Post)
 
 def robots(request):
     response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
@@ -1933,7 +1935,10 @@ def oer_edit(request, oer_id=None, project_id=None):
                             metadata_form.save()
                         except:
                             pass
-                track_action(request.user, 'Edit', oer)
+                if oer_id:
+                    track_action(request.user, 'Edit', oer)
+                else:
+                    track_action(request.user, 'Create', oer)
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
