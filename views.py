@@ -129,6 +129,7 @@ def my_chat(request):
     chat_dict['info'] = info
     return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
 
+"""
 def user_profile(request, username, user=None):
     # assert username or (user and user.is_authenticated())
     if not username and (not user or not user.is_authenticated()):
@@ -166,6 +167,55 @@ def user_profile(request, username, user=None):
         if not profile or not request.user == profile.user:
             actstream.action.send(request.user, verb='View', action_object=profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
+"""
+
+def user_profile(request, username, user=None):
+    # assert username or (user and user.is_authenticated())
+    if not username and (not user or not user.is_authenticated()):
+        return HttpResponseRedirect('/')
+    MAX_LIKES = 10
+    if not user:
+        user = get_object_or_404(User, username=username)
+    # memberships = ProjectMember.objects.filter(user=user, state=1).order_by('project__proj_type__name')
+
+    com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
+    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
+    print "=======================TEST ====================="
+    print com_memberships
+    print "========================FINE========================="
+    if user.is_authenticated() and user==request.user:
+        can_edit = True
+        """
+        applications = ProjectMember.objects.filter(user=user, state=0)
+        repos = Repo.objects.filter(creator=user).order_by('-created')
+        oers = OER.objects.filter(creator=user).order_by('-created')
+        """
+    else:
+        can_edit = False
+        """
+        applications = []
+        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+        oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    more_repos = repos.count() > MAX_REPOS
+    repos = repos[:MAX_REPOS]
+    more_oers = oers.count() > MAX_OERS
+    oers = oers[:MAX_REPOS]
+    """
+    profile = user.get_profile()
+	
+    var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'memberships': memberships, }
+    if profile:
+        var_dict['complete_profile'] = profile.get_completeness()
+    else:
+        var_dict['complete_profile'] = False
+    if profile and profile.get_completeness():
+        var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
+
+    if request.user.is_authenticated():
+        if not profile or not request.user == profile.user:
+            actstream.action.send(request.user, verb='View', action_object=profile)
+    return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
+
 
 def my_profile(request):
     user = request.user

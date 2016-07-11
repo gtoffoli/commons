@@ -125,6 +125,27 @@
             {% endif %}
           </div>
         </div>
+		{% if com_memberships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "communities"|capfirst %}</div>
+			<ul class="list-inline padding10510 list-orange">
+			{% for membership in com_memberships %}
+              <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view community" %}">{{ membership.project.get_name }}</a></li>
+			{% endfor %}
+			</ul>
+		  </div>
+		{% endif %}
+		{% if memberships %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "projects"|capfirst %}</div>
+			<ul class="list-inline padding10510 list-orange">
+			{% for membership in memberships %}
+              <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view project" %}">{{ membership.project.get_name }}</a></li>
+			{% endfor %}
+			</ul>
+		  </div>
+		{% endif %}
+		
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% if likes %}
