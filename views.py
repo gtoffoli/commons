@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
 # from django.db import transaction
+from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -140,27 +141,34 @@ def home(request):
         recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
         wall_dict['recent_proj'] = []
         for recent_proj in recent_projects:
-          if not recent_proj.reserved:
-              wall_dict['recent_proj'] = recent_proj
-              break
-          else:
-              level = recent_proj.get_level()
-              if level < 3:
-                 wall_dict['recent_proj'] = recent_proj
-                 break
+            if not recent_proj.reserved:
+                wall_dict['recent_proj'] = recent_proj
+                break
+            else:
+                level = recent_proj.get_level()
+                if level < 3:
+                    wall_dict['recent_proj'] = recent_proj
+                    break  
         wall_dict['active_proj'] = []
         for active_proj in recent_projects:
             if active_proj.id != recent_proj.id:
-               wall_dict['active_proj'] = active_proj
-               break
+                wall_dict['active_proj'] = active_proj
+                break
         wall_dict['popular_proj'] = []
         for popular_proj in recent_projects:
             if popular_proj.id != recent_proj.id and popular_proj.id != active_proj.id:
-               wall_dict['popular_proj'] = popular_proj
-               break
+                wall_dict['popular_proj'] = popular_proj
+                break
+        """
         wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:2]
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
-
+        """
+        last_lp = None
+        actions = filter_actions(verb='Approve', object_content_type=ContentType.objects.get_for_model(LearningPath), max_age=90)
+        for action in actions:
+            lp = action.action_object
+            if lp.state == PUBLISHED:
+                wall_dict['last_lp'] = lp
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 
@@ -674,7 +682,8 @@ def project_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
         folderdocument.save()
-        track_action(request.user, 'Upload', folderdocument)
+        # track_action(request.user, 'Upload', folderdocument)
+        track_action(request.user, 'Create', folderdocument)
         return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     else:
         # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
@@ -974,10 +983,12 @@ def project_new_by_slug(request, project_slug, type_name):
 def project_propose(request, project_id):
     project = Project.objects.get(pk=project_id)
     project.propose(request)
+    track_action(request.user, 'Submit', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_open(request, project_id):
     project = Project.objects.get(pk=project_id)
     project.open(request)
+    track_action(request.user, 'Approve', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_close(request, project_id):
     project = Project.objects.get(pk=project_id)
@@ -1015,18 +1026,19 @@ def project_logo_upload(request, project_slug):
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
 """
-	
+
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     user = get_object_or_404(User, username=username)
     if user.id == request.user.id:
         membership = project.add_member(user)
-        track_action(user, 'Apply', project)
+        # track_action(user, 'Apply', project)
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
+            track_action(user, 'Submit', membership)
             # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
@@ -1039,7 +1051,7 @@ def accept_application(request, username, project_slug):
         if project.can_accept_member(request.user):
             application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
             project.accept_application(request, application)
-            track_action(request.user, 'Accept', application, target=project)
+            track_action(request.user, 'Approve', application, target=project)
     # return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
@@ -1441,6 +1453,7 @@ def repo_edit_by_slug(request, repo_slug):
 def repo_submit(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     repo.submit(request)
+    track_action(request.user, 'Submit', repo)
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 def repo_withdraw(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
@@ -1453,6 +1466,7 @@ def repo_reject(request, repo_id):
 def repo_publish(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     repo.publish(request)
+    track_action(request.user, 'Approve', repo)
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 def repo_un_publish(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
@@ -2022,6 +2036,7 @@ def oer_edit_by_slug(request, oer_slug):
 def oer_submit(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     oer.submit(request)
+    track_action(request.user, 'Submit', oer)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_withdraw(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -2034,6 +2049,7 @@ def oer_reject(request, oer_id):
 def oer_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     oer.publish(request)
+    track_action(request.user, 'Approve', oer)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_un_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -2586,6 +2602,7 @@ def lp_edit_by_slug(request, lp_slug):
 def lp_submit(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.submit(request)
+    track_action(request.user, 'Submit', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_withdraw(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
@@ -2598,6 +2615,7 @@ def lp_reject(request, lp_id):
 def lp_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.publish(request)
+    track_action(request.user, 'Approve', lp)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)

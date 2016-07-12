@@ -20,7 +20,7 @@ from actstream.models import Action
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
 
-verbs = ['Accept', 'Apply', 'Create', 'Edit', 'Play', 'Search', 'Send', 'Upload', 'View',]
+verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve',]
 
 def forum_analytics(request):
     var_dict = {}
@@ -230,10 +230,14 @@ def track_action(actor, verb, action_object, target=None, description=None, late
     except:
         pass
 
-def filter_actions(user=None, project=None, max_age=1, max_actions=None):
+def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
     actions = Action.objects
     if user:
         actions = actions.filter(actor_object_id=user.id)
+    if verb:
+        actions = actions.filter(verb=verb)
+    if object_content_type:
+        actions = actions.filter(action_object_content_type=object_content_type)
     if project:
         project_content_type = ContentType.objects.get_for_model(project)
         actions = actions.filter(Q(Q(action_object_content_type=project_content_type) & Q(action_object_object_id=project.id)) | Q(Q(target_content_type=project_content_type) & Q(target_object_id=project.id)))
