@@ -382,7 +382,7 @@
       </div>
     </div>
 {% comment %} MAIN CTA {% endcomment %}
-    <div class="container-fluid bc-white" style="padding:50px 15px;">
+    <div class="container-fluid bc-white" style="padding:50px 15px 20px 15px;">
         <div class="row hidden-xs hidden-lg visible-sm visible-md">
             <div class="col-sm-4 col-md-4">
                <div class="text-center">
@@ -469,13 +469,15 @@
         </div>
     </div>
     
-  <div class="container-fluid" style="background: red;">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-md-3 col-lg-3">
+      	<div class="grid" style="padding-top:20px; background:#f1f2f2">
         <p>FEATURED</p>
       </div>
+      </div>
       <div class="col-md-9 col-lg-9">
-        <div class="grid">
+        <div class="grid" style="padding-top:20px; background:#f1f2f2">
           <div class="gutter-sizer"></div>
           <div class="grid-sizer"></div>
           {% if recent_proj %}
@@ -514,19 +516,30 @@
               </div>
             </div>
           {% endif %}
-        <div class="grid-item">
-                	<div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
-                		               <div class="panel-white text-left">
-                    <div class="panel-heading" style="padding:6px 12px; background:#CB4F98; color:white; font-size:15px; font-weight:600">{% trans "learning paths"|capfirst %}</div>
-                    <ul class="list-unstyled" style="padding:6px 12px;">
-                    {% for lp in lps %}
-                        <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
-                    {% endfor %}
-                    </ul>
-                    <div class="panel-footer text-center" style="padding:6px 12px; background:#CB4F98; border-top-color:#CB4F98; font-size:12px; font-weight:600;"><a style="color:white"  href="lps/search/">{% trans "read more"|upper %}</a></div>
+          {% if last_lp %}
+            <div class="grid-item">
+              <div class="panel-heading-c1" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "last learning path" %}</h3>
+                <div class="bc-white c-black" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ last_lp.title }}</h4>
+                  <p>{{ last_lp.short|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#CB4F98;" href="/lp/{{last_lp.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
-                	</div>
-        </div>
+              </div>
+            </div>
+          {% endif %}
+          {% if popular_lp %}
+            <div class="grid-item">
+              <div class="panel-heading-c1" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "popular learning path" %}</h3>
+                <div class="bc-white c-black" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ popular_lp.title }}</h4>
+                  <p>{{ popular_lp.short|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#CB4F98;" href="/lp/{{popular_lp.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
 
         {% for article in articles %}
         <div class="grid-item">

@@ -7,6 +7,7 @@ import re
 import json
 
 from django.utils import timezone
+from datetime import datetime, timedelta
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -118,7 +119,7 @@ def home(request):
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 """
 
-from datetime import datetime, timedelta
+
 
 def home(request):
     wall_dict = {}
@@ -167,8 +168,16 @@ def home(request):
         actions = filter_actions(verb='Approve', object_content_type=ContentType.objects.get_for_model(LearningPath), max_age=90)
         for action in actions:
             lp = action.action_object
-            if lp.state == PUBLISHED:
+            if lp.state == PUBLISHED and lp.project:
                 wall_dict['last_lp'] = lp
+                break
+        popular_lp = None
+        actions = filter_actions(verb='Play', object_content_type=ContentType.objects.get_for_model(LearningPath), max_age=30)
+        for action in actions:
+            lp = action.action_object
+            if lp.state == PUBLISHED and lp.project and lp.project.proj_type.name == 'lp':
+                wall_dict['popular_lp'] = lp
+                break
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 

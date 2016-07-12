@@ -1260,7 +1260,7 @@ text-decoration: none;
 
 /* fluid 5 columns */
 /* 3 columns by default */
-.grid-sizer { width: 32%; border-top:1px solid red;}
+.grid-sizer { width: 32%; border-top:1px solid transparent;}
 
 .grid-item { width: 32%; height: auto; margin-bottom: 1%;}
 /* 2 columns */
