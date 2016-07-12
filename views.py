@@ -92,6 +92,7 @@ def group_has_project(group):
     except:
         return None
 
+"""
 def home(request):
     wall_dict = {}
     wall_dict['PRODUCTION'] = PRODUCTION
@@ -114,6 +115,54 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
 
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
+"""
+
+from datetime import datetime, timedelta
+
+def home(request):
+    wall_dict = {}
+    wall_dict['PRODUCTION'] = PRODUCTION
+    if PRODUCTION:
+        MAX_MEMBERS = 10
+        MAX_FORUMS = 5
+        MAX_ARTICLES = 6
+        MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
+        user = request.user
+        wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
+        wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
+        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
+        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
+        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
+        wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
+    else:
+        min_time = timezone.now()-timedelta(days=90)
+        recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
+        wall_dict['recent_proj'] = []
+        for recent_proj in recent_projects:
+          if not recent_proj.reserved:
+              wall_dict['recent_proj'] = recent_proj
+              break
+          else:
+              level = recent_proj.get_level()
+              if level < 3:
+                 wall_dict['recent_proj'] = recent_proj
+                 break
+        wall_dict['active_proj'] = []
+        for active_proj in recent_projects:
+            if active_proj.id != recent_proj.id:
+               wall_dict['active_proj'] = active_proj
+               break
+        wall_dict['popular_proj'] = []
+        for popular_proj in recent_projects:
+            if popular_proj.id != recent_proj.id and popular_proj.id != active_proj.id:
+               wall_dict['popular_proj'] = popular_proj
+               break
+        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:2]
+        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
+
+    return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
+
 
 def my_chat(request):
     rooms = []

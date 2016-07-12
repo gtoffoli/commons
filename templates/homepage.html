@@ -361,6 +361,7 @@
     </div>
 {% endif %}
 {% else %}
+{% comment %} DEVELOPMENT {% endcomment %}
     <div class="container-fluid" style="background: #67AE73;">
       <div class="row row-height marginLB0 marginTB30">
         <div class="hidden-xs hidden-sm col-md-1 col-height">&nbsp;</div>
@@ -468,45 +469,51 @@
         </div>
     </div>
     
-<div class="container-fluid" style="background: red;">
-	<div class="row">
-		<div class="col-md-3 col-lg-3">
-			<P>FEATURED</P>
-		</div>
-		<div class="col-md-9 col-lg-9">
-						<P>CONTENT</P>
-
-			<div class="grid">
-				<div class="gutter-sizer"></div>
-        <div class="grid-sizer"></div>
-
-        <div class="grid-item">
-
-            <div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
-            	<div class="panel-white text-left">
-                    <div class="panel-heading" style="padding:6px 12px; background:#FABE66; color:white; font-size:15px; font-weight:600">{% trans "projects"|capfirst %}</div>
-                    <ul class="list-unstyled" style="padding:6px 12px;">
-                    {% for project in projects %}
-	                      <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/project/{{ project.slug }}/"><small>{{ project.name }}</small></a></li>
-                    {% endfor %}
-                    </ul>
-                    <div class="panel-footer text-center" style="padding:6px 12px; background:#FABE66; border-top-color:#FABE66; font-size:12px; font-weight:600;"><a style="color:white" href="/projects/">{% trans "read more"|upper %}</a></div>
+  <div class="container-fluid" style="background: red;">
+    <div class="row">
+      <div class="col-md-3 col-lg-3">
+        <p>FEATURED</p>
+      </div>
+      <div class="col-md-9 col-lg-9">
+        <div class="grid">
+          <div class="gutter-sizer"></div>
+          <div class="grid-sizer"></div>
+          {% if recent_proj %}
+            <div class="grid-item">
+              <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "last project" %}</h3>
+                <div class="bc-white" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ recent_proj.name }}</h4>
+                  <p>{{ recent_proj.description|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#FABE66;" href="/project/{{recent_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
               </div>
-        </div>
-        <div class="grid-item">
-                	<div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
-                                <div class="panel-white text-left">
-                    <div class="panel-heading" style="padding:6px 12px; background:#008BD2; color:white; font-size:15px; font-weight:600">{% trans "OERs"|capfirst %}</div>
-                    <ul class="list-unstyled" style="padding:6px 12px;">
-                    {% for oer in oers %}
-                        <li style="line-height:1.1em; margin-bottom:0.55em"><a href="/oer/{{ oer.slug }}/"><small>{{ oer.title }}</small></a></li>
-                    {% endfor %}
-                    </ul>
-                    <div class="panel-footer text-center" style="padding:6px 12px; background:#008BD2; border-top-color:#008BD2; font-size:12px; font-weight:600;"><a style="color:white"  href="oers/search/">{% trans "read more"|upper %}</a></div>
+            </div>
+          {% endif %}
+          {% if active_proj %}
+            <div class="grid-item">
+              <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "active project" %}</h3>
+                <div class="bc-white" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ active_proj.name }}</h4>
+                  <p>{{ active_proj.description|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#FABE66;" href="/project/{{active_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
               </div>
-        </div>
+            </div>
+          {% endif %}
+          {% if popular_proj %}
+            <div class="grid-item">
+              <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "popular project" %}</h3>
+                <div class="bc-white" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ popular_proj.name }}</h4>
+                  <p>{{ popular_proj.description|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#FABE66;" href="/project/{{popular_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
         <div class="grid-item">
                 	<div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
                 		               <div class="panel-white text-left">
