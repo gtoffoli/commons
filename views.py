@@ -2494,10 +2494,16 @@ def lp_play(request, lp_id, lp=None):
     current_node = nodes[i_node]
     var_dict['current_node'] = current_node
     oer = current_node.oer
+    print "================= OER =================="
+    print oer
+    print "================= FINE ================="
     current_document = current_node.document
     current_text = current_node.text
     if oer:
+        print "============ nodo: OER ==============="
         documents = oer.get_sorted_documents()
+        print "============ DOCUMENTI ==============="
+        print documents
         page_range = current_node.range
         if documents:
             document = documents[0]
@@ -2537,9 +2543,11 @@ def lp_play(request, lp_id, lp=None):
         var_dict['slideshare'] = slideshare
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
+        print "============ nodo: documento ==============="
         url = document_view(request, current_document.id, return_url=True)
         var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     elif current_text:
+        print "============ nodo: testo ==============="
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     """
     i_page = request.GET.get('page', '')

@@ -22,7 +22,7 @@
           {% if can_play %}
             <div class="hidden-xs">
               <div class="posRel">
-                <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/"  title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
+                <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/?node=0" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
                 <dl class="list-inline font14 marginB10">
                   <dt>{% trans "objectives"|capfirst %}</dt>
                   <dd>{{ lp.short|safe }}</dd>

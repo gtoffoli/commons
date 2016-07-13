@@ -557,7 +557,8 @@
               <div class="panel-heading-c2" style="border-radius:4px; padding:10px">
                 <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most popular OER" %}</h3>
                 <div class="bc-white c-black" style="border-radius:4px; padding:10px">
-                  <h4 class="demiBold">{{ popular_oer.title }}</h4>
+                  <h4 class="demiBold" style="margin-bottom:3px">{{ popular_oer.title }}</h4>
+                  {% with stars=oer.get_stars %}<p>{% include "_view_rating.html" %}</p>{% endwith %}
                   <p>{{ popular_oer.description|safe|truncatechars_html:140 }}</p>
                   <div class="text-right"><a style="padding:2px 6px; color:#008BD2;" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
