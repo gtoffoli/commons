@@ -136,6 +136,7 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
         wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     else:
+        MAX_ARTICLES = 3
         min_time = timezone.now()-timedelta(days=90)
         recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
         wall_dict['recent_proj'] = []
@@ -153,14 +154,15 @@ def home(request):
         wall_dict['active_proj'] = None
         for active_proj in active_projects:
             project = Project.objects.get(pk=active_proj[0])
-            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
+            # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
                 wall_dict['active_proj'] = project
                 break
         popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
         wall_dict['popular_proj'] = None
         for popular_proj in popular_projects:
             project = Project.objects.get(pk=popular_proj[0])
-            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
                 wall_dict['popular_proj'] = project
                 break
         wall_dict['last_lp'] = None
@@ -191,6 +193,7 @@ def home(request):
             if oer.state == PUBLISHED and oer.project:
                 wall_dict['popular_oer'] = oer
                 break
+        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 

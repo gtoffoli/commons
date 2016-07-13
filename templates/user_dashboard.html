@@ -12,9 +12,9 @@
     {% if complete_profile %}
 	  <div class="pull-left">
       {% if profile.avatar %}
-        <img src="/media/{{ profile.avatar }}">
+        <img src="/media/{{ profile.avatar }}" class="avatar-large">
       {% else %}
-        <img src="/media/images/avatars/anonymous.png">
+        <img src="/media/images/avatars/anonymous.png" class="avatar-large">
       {% endif %}
       </div>
 	{% endif %}

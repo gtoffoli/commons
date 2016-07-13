@@ -12,9 +12,9 @@
   <div class="navbar panel-heading-c0 padding10">
 	<div class="pull-left">
     {% if profile.avatar %}
-      <img src="/media/{{ profile.avatar }}">
+      <img src="/media/{{ profile.avatar }}" class="avatar-large">
     {% else %}
-      <img src="/media/images/avatars/anonymous.png">
+      <img src="/media/images/avatars/anonymous.png" class="avatar-large">
     {% endif %}
     </div>
 	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  user.get_display_name }}</h2>

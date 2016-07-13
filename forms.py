@@ -105,7 +105,6 @@ class AvatarForm(forms.ModelForm):
         model = UserProfile
         fields = ('avatar',)
 
-	
 class UserPreferencesForm(forms.ModelForm):
     class Meta:
         model = UserProfile
@@ -189,7 +188,7 @@ class ProjectForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
-"""	
+"""
 class ProjectLogoForm(forms.ModelForm):
     class Meta:
         model = Project

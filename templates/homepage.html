@@ -361,7 +361,7 @@
     </div>
 {% endif %}
 {% else %}
-{% comment %} DEVELOPMENT {% endcomment %}
+
     <div class="container-fluid" style="background: #67AE73;">
       <div class="row row-height marginLB0 marginTB30">
         <div class="hidden-xs hidden-sm col-md-1 col-height">&nbsp;</div>
@@ -469,15 +469,15 @@
         </div>
     </div>
     
-  <div class="container-fluid">
+  <div class="container-fluid" >
     <div class="row">
-      <div class="col-md-3 col-lg-3">
-      	<div class="grid" style="padding-top:20px; background:#f1f2f2">
-        <p>FEATURED</p>
-      </div>
+      <div class="col-md-3 col-lg-3" style="padding-right:0">
+        <div style="padding:20px 0px 5px 15px; background:#f1f2f2">
+        	<div class="bc-white" style="min-height:234px; border-radius:4px; padding:5px"><h5>Featured</h5></div>
+        </div>
       </div>
       <div class="col-md-9 col-lg-9">
-        <div class="grid" style="padding-top:20px; background:#f1f2f2">
+        <div class="grid" style="padding-top:20px; padding-bottom:5px; background:#f1f2f2">
           <div class="gutter-sizer"></div>
           <div class="grid-sizer"></div>
           {% if recent_proj %}
@@ -546,7 +546,7 @@
                 <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "newest OER" %}</h3>
                 <div class="bc-white c-black" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ last_oer.title }}</h4>
-                  <p>{{ last_oer.short|safe|truncatechars_html:140 }}</p>
+                  <p>{{ last_oer.description|safe|truncatechars_html:140 }}</p>
                   <div class="text-right"><a style="padding:2px 6px; color:#008BD2;" href="/oer/{{last_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
               </div>
@@ -558,18 +558,25 @@
                 <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most popular OER" %}</h3>
                 <div class="bc-white c-black" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ popular_oer.title }}</h4>
-                  <p>{{ popular_oer.short|safe|truncatechars_html:140 }}</p>
+                  <p>{{ popular_oer.description|safe|truncatechars_html:140 }}</p>
                   <div class="text-right"><a style="padding:2px 6px; color:#008BD2;" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
           {% endif %}
-
+        </div>
+      </div>
+	  </div>
+  </div>
+  
+{% if articles %}
+    <div class="container-fluid grid">
+        <div class="gutter-sizer"></div>
+        <div class="grid-sizer"></div>
         {% for article in articles %}
         <div class="grid-item">
-                <div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
+            <div class="bc-demigray" style="border-radius:4px; padding:5px 10px">
                 <h4 class="demiBold">{{ article.title }}</h4>
-                
                 <div style="border-radius:4px; background:white; padding:10px">
                     <p style="font-size:16px; font-weight:600">{{ article.lead|safe }}</p>
                     <div class="row">
@@ -578,17 +585,13 @@
                              <img src="/media/{{ article.image }}" style="max-width:100%; height:auto">
                          </div>
                          <div class="col-lg-8">
-                            <div>{{ article.html_content|safe|truncatechars_html:140 }}
-                                  <div class="text-right"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4; font-size: 12px" href="{{ article.get_absolute_url }}">{% trans "learn more" %}</a></div>
-                             </div>
-                           </div>
                     {% else %}
                          <div class="col-lg-12">
+                    {% endif %}
                              <div>{{ article.html_content|safe|truncatechars_html:140 }}
                                   <div class="text-right"><a class="btn" style="padding:2px 6px; color: #2e6da4; border-color: #2e6da4; font-size: 12px" href="{{ article.get_absolute_url }}">{% trans "learn more" %}</a></div>
                              </div>
                          </div>
-                         {% endif %}
                     </div>
                 </div>
                 <p style="margin-top:5px; margin-bottom:0; font-size:12px">{% with authors=article.authors.all %}{% if authors|length %}
@@ -598,16 +601,11 @@
                 {% endif %} {% endwith %}
                 | {{ article.creation_date|date }}
                 </p>
-                       
             </div>
         </div>
         {% endfor %}
-
-			</div>
-
-		</div>
-	</div>
-</div>
+    </div>
+{% endif %}
 {% endif %}
 {% endblock %}
 

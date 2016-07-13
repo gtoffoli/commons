@@ -13,9 +13,9 @@
     {% if complete_profile %}
 	  <div class="pull-left">
       {% if profile.avatar %}
-        <img src="/media/{{ profile.avatar }}">
+        <img src="/media/{{ profile.avatar }}" class="avatar-large">
       {% else %}
-        <img src="/media/images/avatars/anonymous.png">
+        <img src="/media/images/avatars/anonymous.png" class="avatar-large">
       {% endif %}
       {% if can_edit %}<div style="margin-top:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
       </div>
