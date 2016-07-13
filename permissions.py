@@ -6,9 +6,12 @@ from pybb.permissions import DefaultPermissionHandler
 from pybb import defaults
 from django.db.models import Q
 
-from actstream import action, registry
 from pybb.models import Topic
+"""
+from actstream import action, registry
 registry.register(Topic)
+"""
+from analytics import track_action
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
@@ -43,10 +46,10 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
-        # return user.is_authenticated() or not topic.forum.get_project()
-        print 'may_view_topic: ', user.username, topic.name
-        action.send(user, verb='View', action_object=topic)
-
+        # print 'may_view_topic: ', user.username, topic.name
+        # action.send(user, verb='View', action_object=topic)
+        if user.is_authenticated():
+            track_action(user, 'View', topic)
         forum = topic.forum
         project = forum.get_project()
         if project:
