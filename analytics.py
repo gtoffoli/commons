@@ -268,10 +268,10 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
         actions = actions[:max_actions]
     return actions
 
-def activity_stream(request, user=None, max_actions=100, max_age=1):
+def activity_stream(request, user=None, max_actions=100, max_days=1):
     actions = []
     if user==request.user or request.user.is_superuser or request.user.is_manager(1):
-        actions = filter_actions(user=user, max_age=max_age, max_actions=max_actions)
+        actions = filter_actions(user=user, max_days=max_days, max_actions=max_actions)
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
@@ -280,7 +280,7 @@ def activity_stream(request, user=None, max_actions=100, max_age=1):
 contenttype_weigth_dict = {
     'project': 1,
     'projectmember': 1,
-    'oer': 1,
+    'oer': 1.5,
     'learningpath': 2,
     'pathnode': 1,
     'forum': 1,
@@ -293,10 +293,10 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
         verbs = ['Send', 'Create', 'Edit', 'Delete', 'Submit', 'Approve',]
         verb_weigth_dict = {
             'Send': 2,
-            'Create': 2,
-            'Edit': 1,
+            'Create': 1,
+            'Edit': 0.5,
             'Delete': 1,
-            'Submit': 2,
+            'Submit': 1.5,
             'Approve': 2,
         }
     else:

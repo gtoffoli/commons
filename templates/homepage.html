@@ -483,7 +483,7 @@
           {% if recent_proj %}
             <div class="grid-item">
               <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
-                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "last project" %}</h3>
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "newest project" %}</h3>
                 <div class="bc-white" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ recent_proj.name }}</h4>
                   <p>{{ recent_proj.description|safe|truncatechars_html:140 }}</p>
@@ -495,7 +495,7 @@
           {% if active_proj %}
             <div class="grid-item">
               <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
-                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "active project" %}</h3>
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most active project" %}</h3>
                 <div class="bc-white" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ active_proj.name }}</h4>
                   <p>{{ active_proj.description|safe|truncatechars_html:140 }}</p>
@@ -507,7 +507,7 @@
           {% if popular_proj %}
             <div class="grid-item">
               <div class="panel-heading-c4" style="border-radius:4px; padding:10px">
-                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "popular project" %}</h3>
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most popular project" %}</h3>
                 <div class="bc-white" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ popular_proj.name }}</h4>
                   <p>{{ popular_proj.description|safe|truncatechars_html:140 }}</p>
@@ -519,7 +519,7 @@
           {% if last_lp %}
             <div class="grid-item">
               <div class="panel-heading-c1" style="border-radius:4px; padding:10px">
-                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "last learning path" %}</h3>
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "newest learning path" %}</h3>
                 <div class="bc-white c-black" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ last_lp.title }}</h4>
                   <p>{{ last_lp.short|safe|truncatechars_html:140 }}</p>
@@ -531,11 +531,35 @@
           {% if popular_lp %}
             <div class="grid-item">
               <div class="panel-heading-c1" style="border-radius:4px; padding:10px">
-                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "popular learning path" %}</h3>
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most popular learning path" %}</h3>
                 <div class="bc-white c-black" style="border-radius:4px; padding:10px">
                   <h4 class="demiBold">{{ popular_lp.title }}</h4>
                   <p>{{ popular_lp.short|safe|truncatechars_html:140 }}</p>
                   <div class="text-right"><a style="padding:2px 6px; color:#CB4F98;" href="/lp/{{popular_lp.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          {% if last_oer %}
+            <div class="grid-item">
+              <div class="panel-heading-c2" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "newest OER" %}</h3>
+                <div class="bc-white c-black" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ last_oer.title }}</h4>
+                  <p>{{ last_oer.short|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#008BD2;" href="/oer/{{last_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          {% if popular_oer %}
+            <div class="grid-item">
+              <div class="panel-heading-c2" style="border-radius:4px; padding:10px">
+                <h3 class="demiBold text-center c-white" style="margin-top:0; font-variant:small-caps">{% trans "most popular OER" %}</h3>
+                <div class="bc-white c-black" style="border-radius:4px; padding:10px">
+                  <h4 class="demiBold">{{ popular_oer.title }}</h4>
+                  <p>{{ popular_oer.short|safe|truncatechars_html:140 }}</p>
+                  <div class="text-right"><a style="padding:2px 6px; color:#008BD2;" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>

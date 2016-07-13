@@ -47,7 +47,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import track_action, filter_actions, post_views_by_user
+from analytics import track_action, filter_actions, post_views_by_user, popular_principals
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -150,33 +150,48 @@ def home(request):
                 if level < 3:
                     wall_dict['recent_proj'] = recent_proj
                     break  
-        wall_dict['active_proj'] = []
-        for active_proj in recent_projects:
-            if active_proj.id != recent_proj.id:
-                wall_dict['active_proj'] = active_proj
+        principal_type_id = ContentType.objects.get_for_model(Project).id
+        active_projects = popular_principals(principal_type_id, active=True, max_days=30)
+        wall_dict['active_proj'] = None
+        for active_proj in active_projects:
+            project = Project.objects.get(pk=active_proj[0])
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
+                wall_dict['active_proj'] = project
                 break
-        wall_dict['popular_proj'] = []
-        for popular_proj in recent_projects:
-            if popular_proj.id != recent_proj.id and popular_proj.id != active_proj.id:
-                wall_dict['popular_proj'] = popular_proj
+        popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
+        wall_dict['popular_proj'] = None
+        for popular_proj in popular_projects:
+            project = Project.objects.get(pk=popular_proj[0])
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
+                wall_dict['popular_proj'] = project
                 break
-        """
-        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:2]
-        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
-        """
-        last_lp = None
+        wall_dict['last_lp'] = None
         actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
         for action in actions:
             lp = action.action_object
             if lp.state == PUBLISHED and lp.project:
                 wall_dict['last_lp'] = lp
                 break
-        popular_lp = None
+        wall_dict['popular_lp'] = None
         actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
         for action in actions:
             lp = action.action_object
-            if lp.state == PUBLISHED and lp.project and lp.project.proj_type.name == 'lp':
+            if lp.state == PUBLISHED and lp.project:
                 wall_dict['popular_lp'] = lp
+                break
+        wall_dict['last_oer'] = None
+        actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
+        for action in actions:
+            oer = action.action_object
+            if oer.state == PUBLISHED and oer.project:
+                wall_dict['last_oer'] = oer
+                break
+        wall_dict['popular_oer'] = None
+        actions = filter_actions(verbs=['View'], object_content_type=ContentType.objects.get_for_model(OER), max_days=30)
+        for action in actions:
+            oer = action.action_object
+            if oer.state == PUBLISHED and oer.project:
+                wall_dict['popular_oer'] = oer
                 break
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
@@ -1377,7 +1392,7 @@ def project_activity(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     var_dict = {}
     var_dict['project'] = project
-    var_dict['actions'] = project.recent_actions()
+    var_dict['actions'] = filter_actions(project=project, max_days=7, max_actions=100)
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
 
 def repo_oers(request, repo_id, repo=None):

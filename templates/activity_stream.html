@@ -21,7 +21,7 @@
 			<table id="stream" style="padding: 1;">
 			<thead><tr class="panel-white">
 				<th>{% trans "time" %}</th>{% if not actor %}<th>{% trans "actor" %}</th>{% endif %}
-			    <th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object or target" %}</th>
+			    <th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object" %}</th><th>{% trans "context" %}</th>
 			</tr></thead>
 			<tbody>
 		    {% for action in actions %}<tr>
@@ -29,10 +29,9 @@
 		        {% if not actor %}<td><a href="/profile/{{ action.actor.username }}/">{{ action.actor.get_display_name }}</a></td>{% endif %}
 		        <td style="text-align: center;">{{ action.verb }}</td>
 		        <td style="text-align: center;">{% if action.description %}{{ action.description }}s{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}</td>
+		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name|truncatechars:60 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:60 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
 				{% if action.target %}
-		        <td><a href="{{ action.target.get_absolute_url }}">{{ action.target.name|truncatechars:80 }}</a></td>
-				{% else %}
-		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name|truncatechars:80 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:80 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:80 }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
+		        <td><a href="{{ action.target.get_absolute_url }}">{{ action.target.name|truncatechars:60 }}</a></td>
 				{% endif %}
 		    </tr>{% endfor %}
 			</tbody>
