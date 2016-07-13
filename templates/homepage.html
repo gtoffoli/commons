@@ -7,7 +7,7 @@
 
 {% block extra_style %}
 	<link href='http://fonts.googleapis.com/css?family=Biryani:400,600,700,800,900&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-{% if not PRODUCTION %}
+{% if True %}
 <style>
 .back-banner-home {
 	background: url({% static 'commons/img/backgroundblend.png' %}) no-repeat center center;
@@ -83,7 +83,7 @@
 {% block body_class %}home{% endblock %}
 
 {% block body_base %}
-{% if PRODUCTION %}
+{% if False %}
 {% comment %} SLIDESHOW {% endcomment %}
     <div id="myCarousel" class="carousel slide carousel-fade" data-ride="carousel">
 {% comment %} SEQUENCE SLIDE WITH CAPTION {% endcomment %}

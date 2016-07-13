@@ -119,12 +119,10 @@ def home(request):
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 """
 
-
-
 def home(request):
     wall_dict = {}
     wall_dict['PRODUCTION'] = PRODUCTION
-    if PRODUCTION:
+    if False: # PRODUCTION:
         MAX_MEMBERS = 10
         MAX_FORUMS = 5
         MAX_ARTICLES = 6
