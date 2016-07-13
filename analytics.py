@@ -3,24 +3,30 @@ Created on 08/mar/2016
 @author: giovanni
 '''
 
+import math
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 from django.db.models import Count, Q
 from django.template import RequestContext
 from django.db import connection
-from django.db.models import Sum, Count
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import User
 import actstream
 from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
+# from models import Project
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve',]
+
+def user_unviewed_posts_count(self):
+    # return unviewed_posts(self)
+    return post_views_by_user(self)
+User.unviewed_posts_count = user_unviewed_posts_count
 
 def forum_analytics(request):
     var_dict = {}
@@ -230,21 +236,34 @@ def track_action(actor, verb, action_object, target=None, description=None, late
     except:
         pass
 
-def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
+# def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
+def filter_actions(user=None, verbs=[], object_content_type=None, project=None, max_days=1, from_time=None, to_time=None, max_actions=None, no_sort=False):
     actions = Action.objects
     if user:
         actions = actions.filter(actor_object_id=user.id)
-    if verb:
-        actions = actions.filter(verb=verb)
+    if verbs:
+        actions = actions.filter(verb__in=verbs)
     if object_content_type:
         actions = actions.filter(action_object_content_type=object_content_type)
     if project:
         project_content_type = ContentType.objects.get_for_model(project)
         actions = actions.filter(Q(Q(action_object_content_type=project_content_type) & Q(action_object_object_id=project.id)) | Q(Q(target_content_type=project_content_type) & Q(target_object_id=project.id)))
+    """
     if max_age:
         min_time = timezone.now()-timedelta(days=max_age)
         actions = actions.filter(timestamp__gt=min_time)
-    actions = actions.order_by('-timestamp')
+    """
+    if from_time:
+        actions = actions.filter(timestamp__gt=from_time)
+        if max_days and not to_time:
+            to_time = to_time+timedelta(days=max_days)
+    if to_time:
+        actions = actions.filter(timestamp__lt=to_time)
+    if not from_time and not to_time and max_days:
+        from_time = timezone.now()-timedelta(days=max_days)
+        actions = actions.filter(timestamp__gt=from_time)
+    if not no_sort:
+        actions = actions.order_by('-timestamp')
     if max_actions:
         actions = actions[:max_actions]
     return actions
@@ -257,3 +276,50 @@ def activity_stream(request, user=None, max_actions=100, max_age=1):
     var_dict['actor'] = user
     var_dict['actions'] = actions
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
+
+contenttype_weigth_dict = {
+    'project': 1,
+    'projectmember': 1,
+    'oer': 1,
+    'learningpath': 2,
+    'pathnode': 1,
+    'forum': 1,
+    'topic': 1,
+    'room': 1,
+}
+
+def popular_principals(principal_type_id, active=False, from_time=None, to_time=None, max_days=7):
+    if active:
+        verbs = ['Send', 'Create', 'Edit', 'Delete', 'Submit', 'Approve',]
+        verb_weigth_dict = {
+            'Send': 2,
+            'Create': 2,
+            'Edit': 1,
+            'Delete': 1,
+            'Submit': 2,
+            'Approve': 2,
+        }
+    else:
+        verbs = ['View', 'Play',]
+        verb_weigth_dict = {
+            'View': 1,
+            'Play': 2,
+        }
+    actions = filter_actions(verbs=verbs, max_days=max_days, from_time=from_time, to_time=to_time)
+    project_activity_dict = defaultdict(float)
+    # principal_type_id = ContentType.objects.get_for_model(Project).id
+    for action in actions:
+        verb_factor = verb_weigth_dict[action.verb]
+        if action.action_object_content_type_id == principal_type_id:
+            project_id = action.action_object_object_id
+            contenttype_factor = contenttype_weigth_dict['project']
+            # print action.verb, 'project'
+        elif action.target_content_type_id == principal_type_id:
+            project_id = action.target_object_id
+            contenttype_factor = contenttype_weigth_dict[action.action_object_content_type.model]
+            # print action.verb, action.action_object_content_type.model
+        else:
+            continue
+        project_activity_dict[project_id] += math.sqrt(verb_factor * contenttype_factor)
+    project_activity_list = sorted(project_activity_dict.items(), key=lambda x: x[1], reverse=True)
+    return project_activity_list

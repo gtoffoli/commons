@@ -35,7 +35,7 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words
-from analytics import filter_actions, post_views_by_user
+# from analytics import filter_actions, post_views_by_user
 
 # indexable_models = [UserProfile, Project, OER, LearningPath]
 
@@ -129,10 +129,12 @@ User.has_xmpp_account = user_has_xmpp_account
 
 User.inbox_count = inbox_count_for
 
+"""
 def user_unviewed_posts_count(self):
     # return unviewed_posts(self)
     return post_views_by_user(self)
 User.unviewed_posts_count = user_unviewed_posts_count
+"""
 
 """ see http://stackoverflow.com/questions/5608001/create-onetoone-instance-on-model-creation
 from django.db.models.signals import post_save
@@ -948,8 +950,10 @@ class Project(Resource):
         roll = self.get_parent().get_roll_of_mentors()
         return roll and roll.members(user_only=True)
 
+    """
     def recent_actions(self, max_age=7, max_actions=100):
         return filter_actions(project=self, max_age=max_age, max_actions=max_actions)
+    """
 
 def forum_get_project(self):
     try:

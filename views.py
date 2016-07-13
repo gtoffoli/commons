@@ -165,14 +165,14 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
         """
         last_lp = None
-        actions = filter_actions(verb='Approve', object_content_type=ContentType.objects.get_for_model(LearningPath), max_age=90)
+        actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
         for action in actions:
             lp = action.action_object
             if lp.state == PUBLISHED and lp.project:
                 wall_dict['last_lp'] = lp
                 break
         popular_lp = None
-        actions = filter_actions(verb='Play', object_content_type=ContentType.objects.get_for_model(LearningPath), max_age=30)
+        actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
         for action in actions:
             lp = action.action_object
             if lp.state == PUBLISHED and lp.project and lp.project.proj_type.name == 'lp':
@@ -267,7 +267,8 @@ def user_profile(request, username, user=None):
 
     if request.user.is_authenticated():
         if not profile or not request.user == profile.user:
-            actstream.action.send(request.user, verb='View', action_object=profile)
+            # actstream.action.send(request.user, verb='View', action_object=profile)
+            track_action(request.user, 'View', profile)
     return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
 
 def my_profile(request):
@@ -345,7 +346,7 @@ def user_dashboard(request, username, user=None):
         if profile_complete:
             var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
     else:
-    	var_dict['complete_profile'] = False
+        var_dict['complete_profile'] = False
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
     com_adminships = []
     com_only_memberships = []
@@ -377,7 +378,6 @@ def user_dashboard(request, username, user=None):
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
-	
 
 def my_home(request):
     user = request.user
@@ -402,7 +402,7 @@ def profile_edit(request, username):
                 track_action(user, 'Edit', profile, latency=0)
                 if request.POST.get('save', ''): 
                     # return HttpResponseRedirect('/profile/%s/' % username)
-					return HttpResponseRedirect('/my_profile/')
+                    return HttpResponseRedirect('/my_profile/')
                 else: 
                     return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
             else:
@@ -486,7 +486,7 @@ def user_activity(request, username):
     if user.is_authenticated():
         if username and (user.is_superuser or user.is_manager(1)):
             user = get_object_or_404(User, username=username)
-    actions = filter_actions(user=user, max_age=7, max_actions=100)
+    actions = filter_actions(user=user, max_days=7, max_actions=100)
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
@@ -562,7 +562,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
                 min_members = int(N_MEMBERS_LIMITS[n_members-1])
                 qs = qs.annotate(num_members=Count('member_project'))
                 if min_members:
-                  qs = qs.filter(num_members__gt=min_members-1)
+                    qs = qs.filter(num_members__gt=min_members-1)
             n_lps = post_dict.get('n_lps', 0)
             if n_lps:
                 min_lps = int(N_LPS_LIMITS[n_lps-1])
@@ -678,7 +678,8 @@ def projects_search(request, template='search_projects.html', extra_context=None
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='project')
+        # actstream.action.send(user, verb='Search', description='project')
+        track_action(user, 'Search', None, description='project')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def project_add_document(request):
@@ -692,7 +693,7 @@ def project_add_document(request):
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
         folderdocument.save()
         # track_action(request.user, 'Upload', folderdocument)
-        track_action(request.user, 'Create', folderdocument)
+        track_action(request.user, 'Create', folderdocument, target=project)
         return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     else:
         # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
@@ -803,7 +804,8 @@ def project_detail(request, project_id, project=None):
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
         var_dict['membership'] = membership = project.get_membership(user)
-        var_dict['recent_actions'] = project.recent_actions()
+        # var_dict['recent_actions'] = project.recent_actions()
+        var_dict['recent_actions'] = filter_actions(project=project, max_days=7, max_actions=100)
         profile = user.get_profile()
         # can_apply = not membership and not project_no_apply and (is_open or is_submitted)
         can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
@@ -868,7 +870,8 @@ def project_detail(request, project_id, project=None):
     else:
         if user.is_authenticated():
             if project.state == PROJECT_OPEN and not user == project.creator:
-                actstream.action.send(user, verb='View', action_object=project)
+                # actstream.action.send(user, verb='View', action_object=project)
+                track_action(user, 'View', project)
         return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
 
 def project_detail_by_slug(request, project_slug):
@@ -1047,7 +1050,7 @@ def apply_for_membership(request, username, project_slug):
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             notification.send(receivers, 'membership_application', extra_content)
-            track_action(user, 'Submit', membership)
+            track_action(user, 'Submit', membership, target=project)
             # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
@@ -1138,7 +1141,8 @@ def project_create_forum(request, project_id):
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
     forum.save()
-    actstream.action.send(user, verb='Create', action_object=forum, target=project)
+    # actstream.action.send(user, verb='Create', action_object=forum, target=project)
+    track_action(user, 'Create', forum, target=project)
     if type_name == 'com' and request.GET.get('thematic', ''):
         forum.moderators.add(user)
         return HttpResponseRedirect('/forum/forum/%d/' % forum.id)    
@@ -1177,7 +1181,7 @@ def forum_edit_by_id(request, forum_id):
     return forum_edit(request, forum_id=forum.id)
 
 def project_create_room(request, project_id):
-    project = get_object_or_404(Project,id=project_id)
+    project = get_object_or_404(Project ,id=project_id)
     # assert project.need_create_room()
     if not project.need_create_room():
         return project_detail(request, project_id, project=project)    
@@ -1185,11 +1189,11 @@ def project_create_room(request, project_id):
     title = project.get_name()
     room = Room(name=name, title=title)
     room.save()
-    track_action(request.user, 'Create', room)
     project.chat_room = room
     project.editor = request.user
     project.save()
-    actstream.action.send(request.user, verb='Create', action_object=room, target=project)
+    # actstream.action.send(request.user, verb='Create', action_object=room, target=project)
+    track_action(request.user, 'Create', room, target=project)
     return project_detail(request, project_id, project=project)    
 
 def project_sync_xmppaccounts(request, project_id):
@@ -1218,7 +1222,7 @@ def project_compose_message(request, project_id):
     members = project.members(user_only=True)
     # recipient_filter = [member.username for member in members]
     recipient_filter = [member.username for member in members if not member==request.user]
-    track_action(request.user, 'Send', project)
+    track_action(request.user, 'Send', None, target=project)
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):
@@ -1276,7 +1280,8 @@ def repo_detail(request, repo_id, repo=None):
     user = request.user
     if user.is_authenticated():
         if not user == repo.creator:
-            actstream.action.send(user, verb='View', action_object=repo)
+            # actstream.action.send(user, verb='View', action_object=repo)
+            track_action(request.user, 'View', repo)
     return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
 
 def repo_detail_by_slug(request, repo_slug):
@@ -1793,7 +1798,8 @@ def people_search(request, template='search_people.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='message')
+        # actstream.action.send(user, verb='Search', description='message')
+        track_action(user, 'Search', None, description='user profile')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def browse_people(request):
@@ -1961,7 +1967,8 @@ def oer_detail(request, oer_id, oer=None):
     """
     if user.is_authenticated():
         if oer.state == PUBLISHED and not user == oer.creator:
-            actstream.action.send(user, verb='View', action_object=oer)
+            # actstream.action.send(user, verb='View', action_object=oer)
+            track_action(user, 'View', oer, target=oer.project)
     return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
@@ -2008,9 +2015,9 @@ def oer_edit(request, oer_id=None, project_id=None):
                         except:
                             pass
                 if oer_id:
-                    track_action(request.user, 'Edit', oer)
+                    track_action(request.user, 'Edit', oer, target=oer.project)
                 else:
-                    track_action(request.user, 'Create', oer)
+                    track_action(request.user, 'Create', oer, target=oer.project)
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -2045,7 +2052,7 @@ def oer_edit_by_slug(request, oer_slug):
 def oer_submit(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     oer.submit(request)
-    track_action(request.user, 'Submit', oer)
+    track_action(request.user, 'Submit', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_withdraw(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -2058,7 +2065,7 @@ def oer_reject(request, oer_id):
 def oer_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     oer.publish(request)
-    track_action(request.user, 'Approve', oer)
+    track_action(request.user, 'Approve', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_un_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -2104,7 +2111,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
                 evaluation.save()
                 form.save_m2m()
                 evaluation = get_object_or_404(OerEvaluation, pk=evaluation.id)
-                track_action(request.user, 'Create', evaluation)
+                track_action(request.user, 'Create', evaluation, target=oer.project)
                 n = len(metadata_formset)
                 for i in range(n):
                     if request.POST.get('metadata_set-%d-DELETE' % i, None):
@@ -2338,7 +2345,8 @@ def lp_detail(request, lp_id, lp=None):
     """
     if user.is_authenticated():
         if lp.state == PUBLISHED and not user == lp.creator:
-            actstream.action.send(user, verb='View', action_object=lp)
+            # actstream.action.send(user, verb='View', action_object=lp)
+            track_action(user, 'View', lp, target=lp.project)
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
@@ -2525,8 +2533,10 @@ def lp_play(request, lp_id, lp=None):
     user = request.user
     if user.is_authenticated():
         if from_start:
-            actstream.action.send(user, verb='Play', action_object=lp)
-        actstream.action.send(user, verb='Play', action_object=current_node)
+            # actstream.action.send(user, verb='Play', action_object=lp)
+            track_action(user, 'Play', lp, target=lp.project)
+        # actstream.action.send(user, verb='Play', action_object=current_node)
+        track_action(user, 'Play', current_node, target=lp.project)
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
 def lp_play_by_slug(request, lp_slug):
@@ -2557,9 +2567,9 @@ def lp_edit(request, lp_id=None, project_id=None):
                 lp.save()
                 form.save_m2m()
                 if lp_id:
-                    track_action(request.user, 'Edit', lp)
+                    track_action(request.user, 'Edit', lp, target=lp.project)
                 else:
-                    track_action(request.user, 'Create', lp)
+                    track_action(request.user, 'Create', lp, target=lp.project)
                 lp = get_object_or_404(LearningPath, id=lp.id)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2611,7 +2621,7 @@ def lp_edit_by_slug(request, lp_slug):
 def lp_submit(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.submit(request)
-    track_action(request.user, 'Submit', lp)
+    track_action(request.user, 'Submit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_withdraw(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
@@ -2624,7 +2634,7 @@ def lp_reject(request, lp_id):
 def lp_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     lp.publish(request)
-    track_action(request.user, 'Approve', lp)
+    track_action(request.user, 'Approve', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
@@ -2730,11 +2740,11 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     # node.label = slugify(node.oer.title[:50])
                     node.label = node.oer.title
                     node.save()
-                if node_id:
-                    track_action(request.user, 'Edit', node)
-                else:
-                    track_action(request.user, 'Create', node)
                 path = node.path
+                if node_id:
+                    track_action(request.user, 'Edit', node, target=path.project)
+                else:
+                    track_action(request.user, 'Create', node, target=path.project)
                 # if path.path_type==LP_SEQUENCE and not node.parents():
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
@@ -2766,10 +2776,10 @@ def pathnode_edit_by_id(request, node_id):
 
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
-    track_action(request.user, 'Delete', node)
     lp = node.path
+    track_action(request.user, 'Delete', node, target=lp.project)
     lp.remove_node(node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2779,14 +2789,14 @@ def pathnode_move_before(request, node_id, other_node_id):
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.move_node_before(node, other_node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_move_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.move_node_after(node, other_node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_link_after(request, node_id, other_node_id):
@@ -2794,14 +2804,14 @@ def pathnode_link_after(request, node_id, other_node_id):
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
     lp.link_node_after(node, other_node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
     lp.node_up(node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2809,7 +2819,7 @@ def pathnode_down(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
     lp.node_down(node, request)
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2820,7 +2830,7 @@ def pathedge_delete(request, edge_id):
     lp = parent.path
     assert edge.child.path == lp
     edge.delete()
-    track_action(request.user, 'Edit', lp)
+    track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def project_add_lp(request, project_id):
@@ -2957,7 +2967,8 @@ def repos_search(request, template='search_repos.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='repo')
+        # actstream.action.send(user, verb='Search', description='repo')
+        track_action(user, 'Search', None, description='repo')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 def clean_term(term):
@@ -3155,7 +3166,8 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='oer')
+        # actstream.action.send(user, verb='Search', description='oer')
+        track_action(user, 'Search', None, description='oer')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 @page_template('_lp_index_page.html')
@@ -3257,7 +3269,8 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated():
-        actstream.action.send(user, verb='Search', description='learningpath')
+        # actstream.action.send(user, verb='Search', description='learningpath')
+        track_action(user, 'Search', None, description='learningpath')
     return render_to_response(template, context, context_instance=RequestContext(request))
 
 from dal import autocomplete
