@@ -31,7 +31,7 @@ from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEnt
 from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import Featured, Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED
@@ -136,6 +136,19 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
         wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     else:
+        lead_featured = Featured.objects.filter(lead=True)
+        print "============== LEAD =================="
+        print lead_featured.count()
+        print "============== fine =================="
+        groups_lead_featured = None
+        for lead in lead_featured:
+            groups_lead_featured = Featured.objects.filter(group_name=lead.group_name)
+            break
+        print "============== LEAD =================="
+        print groups_lead_featured.count()
+        print "============== fine =================="
+        wall_dict['lead_featured'] = lead_featured
+        wall_dict['groups_lead_featured'] = groups_lead_featured
         MAX_ARTICLES = 3
         min_time = timezone.now()-timedelta(days=90)
         recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
@@ -2499,6 +2512,7 @@ def lp_play(request, lp_id, lp=None):
     current_document = current_node.document
     current_text = current_node.text
     if oer:
+        documents = oer.get_sorted_documents()
         page_range = current_node.range
         if documents:
             document = documents[0]
