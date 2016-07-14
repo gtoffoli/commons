@@ -1958,14 +1958,15 @@ class Featured(models.Model):
         verbose_name = _('featured item')
         verbose_name_plural = _('featured items')
 
-    lead = models.BooleanField(default=False, verbose_name=_('is lead entry'))
+    lead = models.BooleanField(default=False, verbose_name=_('is lead item'))
     group_name = models.CharField(blank=True, null=True, max_length=50, verbose_name=_('group name'), help_text=_('Entries can be aggregated by group name.'))
     sort_order = models.IntegerField(default=0, verbose_name=_('sort order'), help_text=_('Used to sort in ascending order, not to filter.'))
     priority = models.IntegerField(default=0, verbose_name=_('priority'), help_text=_('Used to filter, not to sort, possibly combined with other attributes. A large number means high priority.'))
-    text = models.TextField(blank=True, null=True, verbose_name=_('optional text'), help_text=_('In the case of a "lead" entry, probably you will provide this text.'))
+    text = models.TextField(blank=True, null=True, verbose_name=_('optional text'), help_text=_('In the case of a "lead" item, probably you will provide this text.'))
     scope = models.IntegerField(_('scope'), choices=SCOPE_CHOICES, default=ANY)
 
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Optional reference to a project, a resource, an article or a post.')
+    content_type = models.ForeignKey(ContentType, limit_choices_to = models.Q(model__in=('project', 'oer', 'learningpath', 'entry', 'post')),
+         on_delete=models.CASCADE, blank=True, null=True, verbose_name='Optional reference to a project, a resource, an article or a post.')
     object_id = models.PositiveIntegerField(blank=True, null=True)
     featured_object = GenericForeignKey('content_type', 'object_id')
 
@@ -1980,14 +1981,14 @@ class Featured(models.Model):
     @property
     def publication_date(self):
         """
-        Return the publication date of the entry.
+        Return the publication date of the item.
         """
         return self.start_publication or self.created
 
     @property
     def is_actual(self):
         """
-        Checks if an entry is within his publication period.
+        Checks if an item is within his publication period.
         """
         now = timezone.now()
         if self.start_publication and now < self.start_publication:
@@ -2000,7 +2001,7 @@ class Featured(models.Model):
     @property
     def is_visible(self):
         """
-        Checks if an entry is visible and published.
+        Checks if an item is visible and published.
         """
         return self.is_actual and self.status == PUBLISHED
 

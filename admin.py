@@ -7,6 +7,7 @@ from django.db import models
 from django.forms import TextInput, Textarea, Select, SelectMultiple
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
 from mptt.admin import MPTTModelAdmin
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
@@ -16,7 +17,7 @@ from taggit_labels.widgets import LabelWidget
 """
 
 from .models import Tag, UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
-from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath
+from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm
 from .metadata import QualityFacet
 
@@ -218,6 +219,32 @@ class PathEdgeAdmin(admin.ModelAdmin):
             obj.creator = request.user
         obj.editor = request.user
         obj.save()
+
+class FeaturedAdmin(admin.ModelAdmin):
+    list_display = ('id', 'lead', 'group_name', 'sort_order', 'text', 'scope', 'object_type', 'featured_object', 'status', 'start_publication', 'end_publication', 'user',)
+
+    def object_type(self, obj):
+        if obj.featured_object:
+            content_type=ContentType.objects.get_for_model(obj.featured_object)
+            return content_type.model
+        return ''
+
+    def save_model(self, request, obj, form, change):
+        if change:
+            pk = obj.id
+        else:
+            pk = None
+            obj.user = request.user
+        if obj.lead:
+            assert obj.group_name
+        group_name = obj.group_name
+        if group_name:
+            leads = Featured.objects.filter(group_name=group_name, lead=True)
+            if pk:
+                leads = leads.exclude(pk=pk)
+            assert not (obj.lead and leads)
+            assert obj.lead or leads
+        obj.save()
     
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)
@@ -236,6 +263,7 @@ admin.site.register(OerEvaluation, OerEvaluationAdmin)
 admin.site.register(PathNode, PathNodeAdmin)
 admin.site.register(PathEdge, PathEdgeAdmin)
 admin.site.register(LearningPath, LearningPathAdmin)
+admin.site.register(Featured, FeaturedAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.forms import FlatpageForm
