@@ -264,9 +264,6 @@ def user_profile(request, username, user=None):
 
     com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
-    print "=======================TEST ====================="
-    print com_memberships
-    print "========================FINE========================="
     if user.is_authenticated() and user==request.user:
         can_edit = True
     else:
@@ -393,6 +390,8 @@ def user_dashboard(request, username, user=None):
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=7)
+    var_dict['my_last_actions'] = actions
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
 
 def my_home(request):
@@ -2268,14 +2267,17 @@ def document_download_range(request, document_id, page_range):
         response['Content-Length'] = file.len
     return response
 
-def document_view(request, document_id, return_url=False):
+def document_view(request, document_id, node_oer=False, return_url=False):
     node = oer = project = 0
     document = get_object_or_404(Document, pk=document_id)
     node_doc = request.GET.get('node', '')
     proj = request.GET.get('proj', '')
     if document.viewerjs_viewable:
        if node_doc:
-           node = PathNode.objects.get(document_id=document_id)
+           if not node_oer:
+               node = PathNode.objects.get(document_id=document_id)
+           else:
+               oer_document = OerDocument.objects.get(document_id=document_id)
        elif proj:
            folder_document = FolderDocument.objects.get(document_id=document_id)
            project = Project.objects.get(pk = proj)
@@ -2494,23 +2496,16 @@ def lp_play(request, lp_id, lp=None):
     current_node = nodes[i_node]
     var_dict['current_node'] = current_node
     oer = current_node.oer
-    print "================= OER =================="
-    print oer
-    print "================= FINE ================="
     current_document = current_node.document
     current_text = current_node.text
     if oer:
-        print "============ nodo: OER ==============="
-        documents = oer.get_sorted_documents()
-        print "============ DOCUMENTI ==============="
-        print documents
         page_range = current_node.range
         if documents:
             document = documents[0]
             if page_range:
                 url = document_view_range(request, document.id, page_range)
             else:
-                url = document_view(request, document.id, return_url=True)
+                url = document_view(request, document.id, node_oer=True, return_url=True)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
         var_dict['oer'] = oer
         url = oer.url
@@ -2543,11 +2538,9 @@ def lp_play(request, lp_id, lp=None):
         var_dict['slideshare'] = slideshare
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
-        print "============ nodo: documento ==============="
         url = document_view(request, current_document.id, return_url=True)
         var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     elif current_text:
-        print "============ nodo: testo ==============="
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     """
     i_page = request.GET.get('page', '')

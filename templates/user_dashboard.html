@@ -1,6 +1,7 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
+{% load commons_tags %}
 
 {% block head_title %}{% trans "my home"|capfirst %}: {{ user.get_display_name }}{% endblock %}
 
@@ -167,6 +168,26 @@
         </div>
       </div>	
       <div class="col-sm-8 col-md-8 col-lg-8">
+		{% if my_last_actions %}
+		  <div class="panel-white">
+            <div class="panel-heading-c0 padding510 demiBold">{% trans "le mie attivita' degli ultimi 7 giorni"|capfirst %}</div>
+            <div {% if my_last_actions|length > 10 %} class="box-scroll box-medium" {% endif %}>
+          	  <ul class="list-unstyled my-list-unstyled padding510">
+            {% for action in my_last_actions %}
+	            <li><small>{{ action.timestamp|date:"d.m.Y" }} {{ action.verb }} {% if action.description %}{{ action.description }}s{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}: 
+	            	{% if action.action_object.get_absolute_url %}
+	            	<a href="{{ action.action_object.get_absolute_url }}">{% endif %}
+	            		{% if action.action_object.name %}
+	            		{{ action.action_object.name|truncatechars:60 }}
+	            		{% elif action.action_object.title %}
+	            		{{ action.action_object.title|truncatechars:60 }}
+	            		{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% endif %}
+	            		{% if action.action_object %}</a>{% endif %}</small></li>
+            {% endfor %}
+	</ul>
+		  </div>
+		</div>
+		{% endif %}
         <div class="panel-white">
 	      {% if my_lps %}
             <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
@@ -204,7 +225,8 @@
             </div>
 		  </div>
 	    {% endif %}
-      </div>
+
+	</div>
     </div>
       {% else %}
         <p class="text-center font18 txt-error">{% trans "please, complete your profile"|capfirst %}! &nbsp; <a href="/profile/{{user}}/edit"><i class="fa fa-edit"></i></a></p>
