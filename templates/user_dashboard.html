@@ -79,7 +79,7 @@
 				{% elif membership.project.state == 3 %}
 				  <span class="fa fa-lock neutral"></span> 
 				{% endif %}
-				<small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>{% if membership.proj_applications %} [richieste {{ membership.proj_applications }}]{% endif %}</small></li>
+				<small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>{% if membership.proj_applications %} [{{ membership.proj_applications }} {% trans "applications" %}]{% endif %}</small></li>
             {% endfor %}
 			  </ul>
 			</div>
@@ -170,7 +170,7 @@
       <div class="col-sm-8 col-md-8 col-lg-8">
 		{% if my_last_actions %}
 		  <div class="panel-white">
-            <div class="panel-heading-c0 padding510 demiBold">{% trans "le mie attivita' degli ultimi 7 giorni"|capfirst %}</div>
+            <div class="panel-heading-c0 padding510 demiBold">{% trans "my activity of last period"|capfirst %}</div>
             <div {% if my_last_actions|length > 10 %} class="box-scroll box-medium" {% endif %}>
           	  <ul class="list-unstyled my-list-unstyled padding510">
             {% for action in my_last_actions %}

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-07-08 09:34+0200\n"
-"PO-Revision-Date: 2016-07-08 07:49+0000\n"
+"PO-Revision-Date: 2016-07-14 16:52+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -1276,23 +1276,23 @@ msgstr "membro delle seguenti comunità"
 
 #: .\models.py:1944
 msgid "featured items"
-msgstr ""
+msgstr "elementi in evidenza"
 
 #: .\models.py:1946
 msgid "is lead entry"
-msgstr ""
+msgstr "è elemento di testa"
 
 #: .\models.py:1947
 msgid "group name"
-msgstr ""
+msgstr "nome del gruppo"
 
 #: .\models.py:1947
 msgid "Entries can be aggregated by group name."
-msgstr ""
+msgstr "Gli elementi possono essere aggregati per nome di gruppo"
 
 #: .\models.py:1948
 msgid "Used to sort in ascending order, not to filter."
-msgstr ""
+msgstr "Usato per ordinare in senso crescente, non per litrare."
 
 #: .\models.py:1949
 msgid "priority"
@@ -1310,27 +1310,27 @@ msgstr "testo facoltativo"
 
 #: .\models.py:1950
 msgid "In the case of a \"lead\" entry, probably you will provide this text."
-msgstr ""
+msgstr "Nel caso di un item di testa, probabilmente desidererai fornire questo testo."
 
 #: .\models.py:1951
 msgid "scope"
-msgstr ""
+msgstr "ambito"
 
 #: .\models.py:1958
 msgid "start publication"
-msgstr ""
+msgstr "inizio pubblicazione"
 
 #: .\models.py:1958
 msgid "Optional start date of publication."
-msgstr ""
+msgstr "Data opzionale di inizio pubblicazione."
 
 #: .\models.py:1959
 msgid "end publication"
-msgstr ""
+msgstr "fine pubblicazione"
 
 #: .\models.py:1959
 msgid "Optional end date of publication."
-msgstr ""
+msgstr "Data opzonale di fine pubblicazione."
 
 #: .\search_indexes.py:115
 msgid "In"
