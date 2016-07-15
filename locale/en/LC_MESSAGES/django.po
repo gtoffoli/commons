@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-14 18:43+0200\n"
+"POT-Creation-Date: 2016-07-15 15:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -243,7 +243,7 @@ msgstr ""
 msgid "communities"
 msgstr ""
 
-#: .\forms.py:228 .\views.py:626
+#: .\forms.py:228 .\views.py:639
 msgid "minimum number of members"
 msgstr ""
 
@@ -251,7 +251,7 @@ msgstr ""
 msgid "minimum number of learning paths"
 msgstr ""
 
-#: .\forms.py:230 .\views.py:642
+#: .\forms.py:230 .\views.py:655
 msgid "minimum number of OERs"
 msgstr ""
 
@@ -648,7 +648,7 @@ msgstr ""
 msgid "blog"
 msgstr ""
 
-#: .\menus.py:33 .\menus.py:147
+#: .\menus.py:33 .\menus.py:151
 msgid "forums"
 msgstr ""
 
@@ -656,7 +656,7 @@ msgstr ""
 msgid "the platform"
 msgstr ""
 
-#: .\menus.py:46 .\menus.py:167 .\models.py:608 .\templates\homepage.html:261
+#: .\menus.py:46 .\menus.py:171 .\models.py:608 .\templates\homepage.html:261
 #: .\templates\project_detail.html:77 .\templates\search_projects.html:10
 #: .\templates\search_results.html:29 .\templates\user_profile.html:140
 msgid "projects"
@@ -727,32 +727,36 @@ msgstr ""
 msgid "mentoring"
 msgstr ""
 
-#: .\menus.py:122 .\menus.py:185
+#: .\menus.py:122 .\menus.py:189
 msgid "analytics"
 msgstr ""
 
 #: .\menus.py:126
+msgid "editorial tools"
+msgstr ""
+
+#: .\menus.py:130
 msgid "translations of the user interface"
 msgstr ""
 
-#: .\menus.py:143
+#: .\menus.py:147
 msgid "activity stream"
 msgstr ""
 
-#: .\menus.py:151 .\templates\mentoring_detail.html:174
+#: .\menus.py:155 .\templates\mentoring_detail.html:174
 #: .\templates\user_dashboard.html:36
 msgid "messages"
 msgstr ""
 
-#: .\menus.py:161
+#: .\menus.py:165
 msgid "about"
 msgstr ""
 
-#: .\menus.py:173
+#: .\menus.py:177
 msgid "library"
 msgstr ""
 
-#: .\menus.py:179
+#: .\menus.py:183
 msgid "help"
 msgstr ""
 
@@ -1341,18 +1345,6 @@ msgstr ""
 msgid "In"
 msgstr ""
 
-#: .\settings.py:295
-msgid "English"
-msgstr ""
-
-#: .\settings.py:296
-msgid "Italian"
-msgstr ""
-
-#: .\settings.py:297
-msgid "Portuguese"
-msgstr ""
-
 #: .\templates\_access_bar.html:14 .\templates\user_dashboard.html:6
 #: .\templates\user_preferences.html:23 .\templates\user_profile.html:26
 msgid "my home"
@@ -1422,27 +1414,27 @@ msgstr ""
 msgid "log out"
 msgstr ""
 
-#: .\templates\_footer.html:4 .\templates\commons_base.html:127
+#: .\templates\_footer.html:4 .\templates\commons_base.html:136
 msgid "the CommonS Consortium"
 msgstr ""
 
-#: .\templates\_footer.html:5 .\templates\commons_base.html:128
+#: .\templates\_footer.html:5 .\templates\commons_base.html:137
 msgid "built by"
 msgstr ""
 
-#: .\templates\_footer.html:6 .\templates\commons_base.html:129
+#: .\templates\_footer.html:6 .\templates\commons_base.html:138
 msgid "with"
 msgstr ""
 
-#: .\templates\_footer.html:6 .\templates\commons_base.html:129
+#: .\templates\_footer.html:6 .\templates\commons_base.html:138
 msgid "and"
 msgstr ""
 
-#: .\templates\_footer.html:13 .\templates\commons_base.html:134
+#: .\templates\_footer.html:13 .\templates\commons_base.html:143
 msgid "privacy policy"
 msgstr ""
 
-#: .\templates\_footer.html:18 .\templates\commons_base.html:139
+#: .\templates\_footer.html:18 .\templates\commons_base.html:148
 msgid "The CommonS Project is co-funded by Programme"
 msgstr ""
 
@@ -1502,8 +1494,8 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: .\templates\_search_form.html:16 .\views.py:646 .\views.py:2963
-#: .\views.py:3162 .\views.py:3260
+#: .\templates\_search_form.html:16 .\views.py:659 .\views.py:2989
+#: .\views.py:3188 .\views.py:3286
 msgid "include non published items"
 msgstr ""
 
@@ -1611,7 +1603,7 @@ msgstr ""
 msgid "you aren't member of any chatroom"
 msgstr ""
 
-#: .\templates\commons_base.html:160 .\templates\livesearch.html:10
+#: .\templates\commons_base.html:169 .\templates\livesearch.html:10
 #: .\templates\theme_bootstrap\base.html:120
 msgid "Search ... (enter at least 3 characters)"
 msgstr ""
@@ -2042,7 +2034,7 @@ msgstr ""
 msgid "repositories"
 msgstr ""
 
-#: .\templates\homepage.html:349 .\templates\homepage.html.py:597
+#: .\templates\homepage.html:349 .\templates\homepage.html.py:620
 msgid "learn more"
 msgstr ""
 
@@ -2062,31 +2054,31 @@ msgstr ""
 msgid "browse collections in our library of OER"
 msgstr ""
 
-#: .\templates\homepage.html:490
+#: .\templates\homepage.html:513
 msgid "newest project"
 msgstr ""
 
-#: .\templates\homepage.html:502
+#: .\templates\homepage.html:525
 msgid "most active project"
 msgstr ""
 
-#: .\templates\homepage.html:514
+#: .\templates\homepage.html:537
 msgid "most popular project"
 msgstr ""
 
-#: .\templates\homepage.html:526
+#: .\templates\homepage.html:549
 msgid "newest learning path"
 msgstr ""
 
-#: .\templates\homepage.html:538
+#: .\templates\homepage.html:561
 msgid "most popular learning path"
 msgstr ""
 
-#: .\templates\homepage.html:550
+#: .\templates\homepage.html:573
 msgid "newest OER"
 msgstr ""
 
-#: .\templates\homepage.html:562
+#: .\templates\homepage.html:585
 msgid "most popular OER"
 msgstr ""
 
@@ -2719,7 +2711,7 @@ msgid "LP"
 msgstr ""
 
 #: .\templates\project_detail.html:313 .\templates\project_detail.html:327
-#: .\templates\project_edit.html:28 .\views.py:922
+#: .\templates\project_edit.html:28 .\views.py:935
 msgid "roll of mentors"
 msgstr ""
 
@@ -3435,39 +3427,39 @@ msgstr ""
 msgid "Sitemap"
 msgstr ""
 
-#: .\views.py:634
+#: .\views.py:647
 msgid "minimum number of LPs"
 msgstr ""
 
-#: .\views.py:922
+#: .\views.py:935
 msgid "for"
 msgstr ""
 
-#: .\views.py:924
+#: .\views.py:937
 msgid "mentoring request"
 msgstr ""
 
-#: .\views.py:924
+#: .\views.py:937
 msgid "of"
 msgstr ""
 
-#: .\views.py:1066
+#: .\views.py:1079
 msgid "membership application"
 msgstr ""
 
-#: .\views.py:1066
+#: .\views.py:1079
 msgid "has applied for membership in"
 msgstr ""
 
-#: .\views.py:1066
+#: .\views.py:1079
 msgid " "
 msgstr ""
 
-#: .\views.py:1150
+#: .\views.py:1163
 msgid "thematic forum"
 msgstr ""
 
-#: .\views.py:1150
+#: .\views.py:1163
 msgid "please change this name"
 msgstr ""
 
