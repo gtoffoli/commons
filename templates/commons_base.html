@@ -95,6 +95,15 @@
                              <label for="search-input"><i class="fa fa-search"></i></label>
                              <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
                             </div>
+<div class="navbar-search">
+<form action="/i18n/setlang/" method="post" class="navbar-form navbar-right">{% csrf_token %}
+<select name="language" class="sel-language" onchange='this.form.submit()'>
+{% for lang in LANGUAGES %}
+<option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+{% endfor %}
+</select>
+</form>
+</div>
                           </li></ul>
                         {% endblock nav %}
                     </div>
