@@ -473,7 +473,30 @@
     <div class="row">
       <div class="col-md-3 col-lg-3" style="padding-right:0">
         <div style="padding:20px 0px 5px 15px; background:#f1f2f2">
-        	<div class="bc-white" style="min-height:234px; border-radius:4px; padding:5px"><h5>Featured</h5></div>
+        	{% if lead_featured %}
+        	<div class="bc-white" style="min-height:234px; border-radius:4px; padding:10px">
+        		{% if groups_lead_featured %}
+        		{% for group_featured in groups_lead_featured %}
+        		{% if group_featured.text %}
+        		  <p class="demiBold">{{ group_featured.text }}</p>
+        		{% endif %}
+        		{% endfor %}
+        		{% for group_featured in groups_lead_featured %}
+        		{% if group_featured.featured_object %}
+        		<p class="demiBold">{% if group_featured.featured_object.name %} 
+        			<a style="color:#FABE66;" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.name }}</a>
+        		{% else %}
+              {% if group_featured.sort_order == 3 %}
+        			<a style="color:#008BD2;" href="/oer/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.title }}</a>
+              {% else %}
+              <a style="color:#CB4F98;" href="/lp/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.title }}</a>
+        		{% endif %}
+        		{% endif %}</p>
+        		{% endif %}
+        		{% endfor %}
+        		{% endif %}
+        	</div>
+        	{% endif %}
         </div>
       </div>
       <div class="col-md-9 col-lg-9">
