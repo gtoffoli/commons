@@ -90,22 +90,22 @@
                             </li>
                           {% endfor %}
                         </ul>{% endwith %}
-                          <ul class="nav navbar-nav navbar-right ul-right"><li>
-                            <div class="navbar-search">
-                             <label for="search-input"><i class="fa fa-search"></i></label>
-                             <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
-                            </div>
-<div class="navbar-search">
-<form action="/i18n/setlang/" method="post" class="navbar-form navbar-right">{% csrf_token %}
-<select name="language" class="sel-language" onchange='this.form.submit()'>
-{% for lang in LANGUAGES %}
-<option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
-{% endfor %}
-</select>
-</form>
-</div>
-                          </li></ul>
-                        {% endblock nav %}
+                        <ul class="nav navbar-nav navbar-right ul-right" style="display:inline-block">
+                          <li style="padding-right:10px"><div class="navbar-search">
+                            <label for="search-input"><i class="fa fa-search"></i></label>
+                            <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
+                          </div></li>
+                          <li><div class="navbar-search">
+                            <form action="/i18n/setlang/" method="post">{% csrf_token %}
+                              <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
+                              {% for lang in LANGUAGES %}
+                                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+                              {% endfor %}
+                              </select>
+                            </form>
+                          </div></li>
+                        </ul>
+                      {% endblock nav %}
                     </div>
                   {% endblock topbar %}
                 </div>
