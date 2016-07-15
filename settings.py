@@ -291,11 +291,19 @@ USE_TZ = True
 TIME_ZONE = 'Europe/Rome'
 
 LANGUAGE_CODE = 'en'
+"""
 LANGUAGES = (
     ('en', _('English')),
     ('it', _('Italian')),
     ('pt', _('Portuguese')),
 )
+"""
+LANGUAGES = (
+    ('en', 'English'),
+    ('it', 'Italiano'),
+    ('pt', 'Português'),
+)
+
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
