@@ -123,6 +123,10 @@ def help_children(request):
          url='/help/analytics/',
         ))
     children.append (MenuItem(
+         capfirst(_("editorial tools")),
+         url='/help/editorial/',
+        ))
+    children.append (MenuItem(
          capfirst(_("translations of the user interface")),
          url='/info/translation/',
         ))
