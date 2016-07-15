@@ -2311,7 +2311,8 @@ def document_view(request, document_id, node_oer=False, return_url=False):
             content_type=document_version.mimetype
             )
 
-def document_view_range(request, document_id, page_range):
+# def document_view_range(request, document_id, page_range):
+def document_view_range(request, document_id, page_range, node_oer=False, return_url=False): # argomenti non usati !!!!!!!
     url = '/ViewerJS/#http://%s/document/%s/download_range/%s/' % (request.META['HTTP_HOST'], document_id, page_range)
     return url
 
@@ -2517,7 +2518,18 @@ def lp_play(request, lp_id, lp=None):
         if documents:
             document = documents[0]
             if page_range:
-                url = document_view_range(request, document.id, page_range)
+                splitted = page_range.split('.')
+                if len(splitted)==2:
+                    i_document = splitted[0].strip()
+                    page_range = splitted[1].strip()
+                    if i_document.isdigit():
+                        i_document = int(i_document)
+                        if i_document >= 1 and i_document <= len(documents):
+                            document = documents[i_document-1]
+                if page_range:
+                    url = document_view_range(request, document.id, page_range, node_oer=True, return_url=True)
+                else:
+                    url = document_view(request, document.id, node_oer=True, return_url=True)
             else:
                 url = document_view(request, document.id, node_oer=True, return_url=True)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
