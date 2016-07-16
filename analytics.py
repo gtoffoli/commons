@@ -279,6 +279,7 @@ def activity_stream(request, user=None, max_actions=100, max_days=1):
 
 contenttype_weigth_dict = {
     'project': 1,
+    'folderdocument': 0.5,
     'projectmember': 1,
     'oer': 1.5,
     'learningpath': 2,
@@ -309,14 +310,16 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
     project_activity_dict = defaultdict(float)
     # principal_type_id = ContentType.objects.get_for_model(Project).id
     for action in actions:
-        verb_factor = verb_weigth_dict[action.verb]
+        # verb_factor = verb_weigth_dict[action.verb]
+        verb_factor = verb_weigth_dict.get(action.verb, 0)
         if action.action_object_content_type_id == principal_type_id:
             project_id = action.action_object_object_id
             contenttype_factor = contenttype_weigth_dict['project']
             # print action.verb, 'project'
         elif action.target_content_type_id == principal_type_id:
             project_id = action.target_object_id
-            contenttype_factor = contenttype_weigth_dict[action.action_object_content_type.model]
+            # contenttype_factor = contenttype_weigth_dict[action.action_object_content_type.model]
+            contenttype_factor = contenttype_weigth_dict.get(action.action_object_content_type.model, 0)
             # print action.verb, action.action_object_content_type.model
         else:
             continue
