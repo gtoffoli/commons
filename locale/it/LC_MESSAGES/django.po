@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-07-15 15:15+0200\n"
-"PO-Revision-Date: 2016-07-15 13:28+0000\n"
+"POT-Creation-Date: 2016-07-18 16:47+0200\n"
+"PO-Revision-Date: 2016-07-18 14:57+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -237,16 +237,16 @@ msgstr "stato del progetto"
 msgid "text in name and short description"
 msgstr "testo nel nome e nella descrizione breve"
 
-#: .\forms.py:226 .\templates\homepage.html:162
-#: .\templates\homepage.html.py:163 .\templates\homepage.html:185
-#: .\templates\homepage.html.py:209 .\templates\homepage.html:413
-#: .\templates\homepage.html.py:414 .\templates\homepage.html:436
-#: .\templates\homepage.html.py:460 .\templates\project_detail.html:77
+#: .\forms.py:226 .\templates\homepage.html:143
+#: .\templates\homepage.html.py:144 .\templates\homepage.html:166
+#: .\templates\homepage.html.py:190 .\templates\homepage.html:356
+#: .\templates\homepage.html.py:357 .\templates\homepage.html:379
+#: .\templates\homepage.html.py:403 .\templates\project_detail.html:77
 #: .\templates\search_results.html:21 .\templates\user_profile.html:130
 msgid "communities"
 msgstr "comunità"
 
-#: .\forms.py:228 .\views.py:639
+#: .\forms.py:228 .\views.py:683
 msgid "minimum number of members"
 msgstr "numero minimo di membri"
 
@@ -254,7 +254,7 @@ msgstr "numero minimo di membri"
 msgid "minimum number of learning paths"
 msgstr "numero minimo di percorsi di apprendimento"
 
-#: .\forms.py:230 .\views.py:655
+#: .\forms.py:230 .\views.py:699
 msgid "minimum number of OERs"
 msgstr "numero minimo di OER"
 
@@ -630,136 +630,137 @@ msgstr "nessuno"
 msgid "the CommonS project"
 msgstr "il progetto CommonS"
 
-#: .\menus.py:13
+#: .\menus.py:13 .\templates\press_releases.html:5
+#: .\templates\press_releases.html.py:9
 msgid "press releases"
 msgstr "comunicati stampa"
 
-#: .\menus.py:17 .\templates\cops_tree.html:6 .\templates\cops_tree.html.py:10
+#: .\menus.py:18 .\templates\cops_tree.html:6 .\templates\cops_tree.html.py:10
 msgid "all communities"
 msgstr "tutte le comunità"
 
-#: .\menus.py:21
+#: .\menus.py:22
 msgid "browse people"
 msgstr "tutte le persone"
 
-#: .\menus.py:25 .\templates\search_people.html:5
+#: .\menus.py:26 .\templates\search_people.html:5
 #: .\templates\search_people.html.py:10
 msgid "search people"
 msgstr "cerca le persone"
 
-#: .\menus.py:29
+#: .\menus.py:30
 msgid "blog"
 msgstr "blog"
 
-#: .\menus.py:33 .\menus.py:151
+#: .\menus.py:34 .\menus.py:152
 msgid "forums"
 msgstr "i forum"
 
-#: .\menus.py:37
+#: .\menus.py:38
 msgid "the platform"
 msgstr "la piattaforma"
 
-#: .\menus.py:46 .\menus.py:171 .\models.py:608 .\templates\homepage.html:261
+#: .\menus.py:47 .\menus.py:172 .\models.py:608
 #: .\templates\project_detail.html:77 .\templates\search_projects.html:10
 #: .\templates\search_results.html:29 .\templates\user_profile.html:140
 msgid "projects"
 msgstr "progetti"
 
-#: .\menus.py:50 .\templates\contributors.html:11
+#: .\menus.py:51 .\templates\contributors.html:11
 msgid "top contributors"
 msgstr "principali contributori"
 
-#: .\menus.py:54 .\templates\mentoring_support.html:5
+#: .\menus.py:55 .\templates\mentoring_support.html:5
 #: .\templates\mentoring_support.html:11
 msgid "mentoring support"
 msgstr "sostegno di mentoring"
 
-#: .\menus.py:62
+#: .\menus.py:63
 msgid "all resources"
 msgstr "tutte le risorse"
 
-#: .\menus.py:68 .\menus.py:114 .\models.py:1459
-#: .\templates\autocomplete.html:16 .\templates\homepage.html:168
-#: .\templates\homepage.html.py:169 .\templates\homepage.html:192
-#: .\templates\homepage.html.py:214 .\templates\homepage.html:275
-#: .\templates\homepage.html.py:419 .\templates\homepage.html:420
-#: .\templates\homepage.html.py:443 .\templates\homepage.html:465
-#: .\templates\resources_by.html:15 .\templates\search_lps.html:10
-#: .\templates\search_results.html:53 .\templates\user_dashboard.html:218
+#: .\menus.py:69 .\menus.py:115 .\models.py:1459
+#: .\templates\autocomplete.html:16 .\templates\homepage.html:149
+#: .\templates\homepage.html.py:150 .\templates\homepage.html:173
+#: .\templates\homepage.html.py:195 .\templates\homepage.html:362
+#: .\templates\homepage.html.py:363 .\templates\homepage.html:386
+#: .\templates\homepage.html.py:408 .\templates\resources_by.html:15
+#: .\templates\search_lps.html:10 .\templates\search_results.html:53
+#: .\templates\user_dashboard.html:218
 msgid "learning paths"
 msgstr "percorsi di apprendimento"
 
-#: .\menus.py:73
+#: .\menus.py:74
 msgid "open resources"
 msgstr "risorse aperte"
 
-#: .\menus.py:78 .\templates\search_results.html:37
+#: .\menus.py:79 .\templates\search_results.html:37
 msgid "source repositories"
 msgstr "fonti"
 
-#: .\menus.py:86
+#: .\menus.py:87
 msgid "tutorials"
 msgstr "guide introduttive"
 
-#: .\menus.py:90
+#: .\menus.py:91
 msgid "registration and authentication"
 msgstr "registrazione e autenticazione"
 
-#: .\menus.py:94
+#: .\menus.py:95
 msgid "user profile and user roles"
 msgstr "profilo d'utente e ruoli d'utente"
 
-#: .\menus.py:98
+#: .\menus.py:99
 msgid "site navigation"
 msgstr "navigazione nel sito"
 
-#: .\menus.py:102 .\templates\autocomplete.html:7
+#: .\menus.py:103 .\templates\autocomplete.html:7
 msgid "communities and projects"
 msgstr "comunità e progetti"
 
-#: .\menus.py:106
+#: .\menus.py:107
 msgid "searching the catalogued resources"
 msgstr "ricerca delle risorse catalogate"
 
-#: .\menus.py:110
+#: .\menus.py:111
 msgid "cataloguing and evaluating resources"
 msgstr "catalogazione e valutazione delle risorse"
 
-#: .\menus.py:118 .\templates\mentoring_detail.html:17
+#: .\menus.py:119 .\templates\mentoring_detail.html:17
 #: .\templates\project_detail.html:310
 msgid "mentoring"
 msgstr "mentoring"
 
-#: .\menus.py:122 .\menus.py:189
+#: .\menus.py:123 .\menus.py:190
 msgid "analytics"
 msgstr "statistiche"
 
-#: .\menus.py:126
+#: .\menus.py:127
 msgid "editorial tools"
 msgstr "strumenti editoriali"
 
-#: .\menus.py:130
+#: .\menus.py:131
 msgid "translations of the user interface"
 msgstr "traduzioni dell'interfaccia utente"
 
-#: .\menus.py:147
+#: .\menus.py:148
 msgid "activity stream"
 msgstr "activity stream"
 
-#: .\menus.py:155 .\templates\mentoring_detail.html:174
+#: .\menus.py:156 .\templates\mentoring_detail.html:174
 #: .\templates\user_dashboard.html:36
 msgid "messages"
 msgstr "messaggi"
 
-#: .\menus.py:165
+#: .\menus.py:166
 msgid "about"
 msgstr "chi siamo"
 
-#: .\menus.py:177
+#: .\menus.py:178
 msgid "library"
 msgstr "biblioteca"
 
-#: .\menus.py:183
+#: .\menus.py:184
 msgid "help"
 msgstr "guida"
 
@@ -1130,8 +1131,8 @@ msgid "reference"
 msgstr "riferimento"
 
 #: .\models.py:1143 .\templates\autocomplete.html:13
-#: .\templates\homepage.html:289 .\templates\resources_by.html:36
-#: .\templates\search_oers.html:10 .\templates\user_dashboard.html:206
+#: .\templates\resources_by.html:36 .\templates\search_oers.html:10
+#: .\templates\user_dashboard.html:206
 msgid "OERs"
 msgstr "OERs"
 
@@ -1417,27 +1418,27 @@ msgstr "il mio cruscotto"
 msgid "log out"
 msgstr "esci"
 
-#: .\templates\_footer.html:4 .\templates\commons_base.html:136
+#: .\templates\_footer.html:4 .\templates\commons_base.html:144
 msgid "the CommonS Consortium"
 msgstr "Consorzio CommonS"
 
-#: .\templates\_footer.html:5 .\templates\commons_base.html:137
+#: .\templates\_footer.html:5 .\templates\commons_base.html:145
 msgid "built by"
 msgstr "creato da"
 
-#: .\templates\_footer.html:6 .\templates\commons_base.html:138
+#: .\templates\_footer.html:6 .\templates\commons_base.html:146
 msgid "with"
 msgstr "con"
 
-#: .\templates\_footer.html:6 .\templates\commons_base.html:138
+#: .\templates\_footer.html:6 .\templates\commons_base.html:146
 msgid "and"
 msgstr "e"
 
-#: .\templates\_footer.html:13 .\templates\commons_base.html:143
+#: .\templates\_footer.html:13 .\templates\commons_base.html:151
 msgid "privacy policy"
 msgstr "informativa sulla privacy"
 
-#: .\templates\_footer.html:18 .\templates\commons_base.html:148
+#: .\templates\_footer.html:18 .\templates\commons_base.html:156
 msgid "The CommonS Project is co-funded by Programme"
 msgstr "Il Progetto CommonS è co-finanziato dal Programma"
 
@@ -1497,8 +1498,8 @@ msgstr "Esegui"
 msgid "Reset"
 msgstr "Reset"
 
-#: .\templates\_search_form.html:16 .\views.py:659 .\views.py:2989
-#: .\views.py:3188 .\views.py:3286
+#: .\templates\_search_form.html:16 .\views.py:703 .\views.py:3033
+#: .\views.py:3232 .\views.py:3330
 msgid "include non published items"
 msgstr "includi gli elementi non pubblicati"
 
@@ -1562,11 +1563,11 @@ msgstr "nessun elemento"
 msgid "distributions"
 msgstr "distribuzioni"
 
-#: .\templates\browse.html:10 .\templates\homepage.html:174
-#: .\templates\homepage.html.py:175 .\templates\homepage.html:199
-#: .\templates\homepage.html.py:219 .\templates\homepage.html:425
-#: .\templates\homepage.html.py:426 .\templates\homepage.html:450
-#: .\templates\homepage.html.py:470
+#: .\templates\browse.html:10 .\templates\homepage.html:155
+#: .\templates\homepage.html.py:156 .\templates\homepage.html:180
+#: .\templates\homepage.html.py:200 .\templates\homepage.html:368
+#: .\templates\homepage.html.py:369 .\templates\homepage.html:393
+#: .\templates\homepage.html.py:413
 msgid "educational library"
 msgstr "biblioteca di risorse educative"
 
@@ -1606,7 +1607,7 @@ msgstr "le mie stanze"
 msgid "you aren't member of any chatroom"
 msgstr "non sei ancora membro di alcuna chatroom"
 
-#: .\templates\commons_base.html:169 .\templates\livesearch.html:10
+#: .\templates\commons_base.html:177 .\templates\livesearch.html:10
 #: .\templates\theme_bootstrap\base.html:120
 msgid "Search ... (enter at least 3 characters)"
 msgstr "Cerca ... (inserisci almeno 3 caratteri)"
@@ -1912,6 +1913,10 @@ msgstr "Elimina"
 msgid "node"
 msgstr "nodo"
 
+#: .\templates\document_view.html:21 .\templates\project_detail.html:220
+msgid "shared folder"
+msgstr "cartella condivisa"
+
 #: .\templates\edit_preferences.html:6 .\templates\edit_preferences.html:12
 #: .\templates\oer_edit.html:18 .\templates\pathnode_edit.html:23
 #: .\templates\project_edit.html:8 .\templates\project_edit.html.py:23
@@ -1987,101 +1992,71 @@ msgstr "modifica forum"
 msgid "Learn with others, Create, Reuse"
 msgstr "Impara con gli altri, Crea, Riusa"
 
-#: .\templates\homepage.html:96 .\templates\homepage.html.py:102
-#: .\templates\homepage.html:108 .\templates\homepage.html.py:114
-#: .\templates\homepage.html:120 .\templates\homepage.html.py:126
-msgid "are spaces where"
-msgstr "sono spazi in cui"
+#: .\templates\homepage.html:107
+msgid "learning in online communities of practice"
+msgstr "imparare in comunità di pratica online"
 
-#: .\templates\homepage.html:96 .\templates\homepage.html.py:114
-msgid "you can learn together in online communities of practice"
-msgstr "puoi imparare con altri in comunità di pratica online"
+#: .\templates\homepage.html:108
+msgid "reusing resources to build learning paths"
+msgstr "riusare risorse per costruire percorsi di apprendimento"
 
-#: .\templates\homepage.html:102 .\templates\homepage.html.py:120
-msgid "you can reuse resources to build learning paths"
-msgstr "puoi riusare risorse per costruire percorsi di apprendimento"
+#: .\templates\homepage.html:109
+msgid "browsing collections in our library of OERs"
+msgstr "esplorare raccolte di OER nella nostra biblioteca"
 
-#: .\templates\homepage.html:108 .\templates\homepage.html.py:126
-msgid "you can browse collections in our library of OER"
-msgstr "puoi esplorare raccolte di OER nella nostra biblioteca"
+#: .\templates\homepage.html:110
+msgid "register now"
+msgstr "registrati ora"
 
-#: .\templates\homepage.html:143 .\templates\homepage.html.py:184
-#: .\templates\homepage.html:208 .\templates\homepage.html.py:394
-#: .\templates\homepage.html:435 .\templates\homepage.html.py:459
+#: .\templates\homepage.html:124 .\templates\homepage.html.py:165
+#: .\templates\homepage.html:189 .\templates\homepage.html.py:337
+#: .\templates\homepage.html:378 .\templates\homepage.html.py:402
 msgid "learn together"
 msgstr "impara in compagnia"
 
-#: .\templates\homepage.html:149 .\templates\homepage.html.py:191
-#: .\templates\homepage.html:213 .\templates\homepage.html.py:400
-#: .\templates\homepage.html:442 .\templates\homepage.html.py:464
+#: .\templates\homepage.html:130 .\templates\homepage.html.py:172
+#: .\templates\homepage.html:194 .\templates\homepage.html.py:343
+#: .\templates\homepage.html:385 .\templates\homepage.html.py:407
 msgid "remix resources"
 msgstr "riusa le risorse"
 
-#: .\templates\homepage.html:155 .\templates\homepage.html.py:198
-#: .\templates\homepage.html:218 .\templates\homepage.html.py:406
-#: .\templates\homepage.html:449 .\templates\homepage.html.py:469
+#: .\templates\homepage.html:136 .\templates\homepage.html.py:179
+#: .\templates\homepage.html:199 .\templates\homepage.html.py:349
+#: .\templates\homepage.html:392 .\templates\homepage.html.py:412
 msgid "explore library"
 msgstr "esplora la biblioteca"
 
-#: .\templates\homepage.html:267 .\templates\homepage.html.py:281
-#: .\templates\homepage.html:295 .\templates\homepage.html.py:309
-#: .\templates\mentoring_detail.html:168 .\templates\mentoring_detail.html:182
-#: .\templates\mentoring_detail.html:195 .\templates\project_detail.html:425
-#: .\templates\project_detail.html:438 .\templates\project_detail.html:451
-msgid "read more"
-msgstr "vedi ancora"
-
-#: .\templates\homepage.html:303 .\templates\search_repos.html:10
-msgid "repositories"
-msgstr "repository"
-
-#: .\templates\homepage.html:349 .\templates\homepage.html.py:620
-msgid "learn more"
-msgstr "per saperne di più"
-
-#: .\templates\homepage.html:378
-msgid "are spaces where you can"
-msgstr "sono spazi dove puoi"
-
-#: .\templates\homepage.html:379
-msgid "learn together in online communities of practice"
-msgstr "imparare con altri in comunità di pratica online"
-
-#: .\templates\homepage.html:380
-msgid "reuse resources to build learning paths"
-msgstr "riusare risorse per costruire percorsi di apprendimento"
-
-#: .\templates\homepage.html:381
-msgid "browse collections in our library of OER"
-msgstr "esplorare raccolte di OER nella nostra biblioteca"
-
-#: .\templates\homepage.html:513
+#: .\templates\homepage.html:243
 msgid "newest project"
 msgstr "il progetto più recente"
 
-#: .\templates\homepage.html:525
+#: .\templates\homepage.html:255
 msgid "most active project"
 msgstr "il progetto più attivo"
 
-#: .\templates\homepage.html:537
+#: .\templates\homepage.html:267
 msgid "most popular project"
 msgstr "il progetto più popolare"
 
-#: .\templates\homepage.html:549
+#: .\templates\homepage.html:279
 msgid "newest learning path"
 msgstr "il learning path più recente"
 
-#: .\templates\homepage.html:561
+#: .\templates\homepage.html:291
 msgid "most popular learning path"
 msgstr "il learning path più popolare"
 
-#: .\templates\homepage.html:573
+#: .\templates\homepage.html:303
 msgid "newest OER"
-msgstr "il progetto più recente"
+msgstr "l'OER più recente"
 
-#: .\templates\homepage.html:585
+#: .\templates\homepage.html:315
 msgid "most popular OER"
 msgstr "l'OER più popolare"
+
+#: .\templates\homepage.html:439
+msgid "learn more"
+msgstr "per saperne di più"
 
 #: .\templates\lp_detail.html:14 .\templates\oer_detail.html:13
 #: .\templates\oer_detail.old.html:13 .\templates\pathnode_detail.html:47
@@ -2335,6 +2310,12 @@ msgstr "percorsi di apprendimento recenti"
 msgid "recent OERs"
 msgstr "OER recenti"
 
+#: .\templates\mentoring_detail.html:168 .\templates\mentoring_detail.html:182
+#: .\templates\mentoring_detail.html:195 .\templates\project_detail.html:425
+#: .\templates\project_detail.html:438 .\templates\project_detail.html:451
+msgid "read more"
+msgstr "vedi ancora"
+
 #: .\templates\mentoring_detail.html:176
 msgid "last received"
 msgstr "ricevuti ultimamente"
@@ -2414,13 +2395,14 @@ msgstr "altri metadati"
 
 #: .\templates\oer_core.html:161 .\templates\oer_detail.html:134
 #: .\templates\oer_detail.old.html:158 .\templates\pathnode_detail.html:68
-#: .\templates\project_folder.html:27
+#: .\templates\press_releases.html:22 .\templates\project_folder.html:27
 msgid "download"
 msgstr "scarica"
 
 #: .\templates\oer_core.html:162 .\templates\oer_detail.html:135
 #: .\templates\oer_detail.old.html:159 .\templates\pathnode_detail.html:69
-#: .\templates\project_detail.html:313 .\templates\project_folder.html:31
+#: .\templates\press_releases.html:20 .\templates\project_detail.html:313
+#: .\templates\project_folder.html:31
 msgid "view"
 msgstr "visualizza"
 
@@ -2618,6 +2600,14 @@ msgid ""
 "present, otherwise the document or the formatted text as the last choice."
 msgstr "In questo modulo puoi specificare 3 tipi di risorse: 1) un OER; 2) un documento (file) creato in base alle esigenze del percorso di apprendimento (LP): 3) un testo formattato. Durante la fruizione del LP, la piattaforma visualizzerà solo uno di essi: l'OER, se presente, altrimenti il documento o il testo formattato."
 
+#: .\templates\press_releases.html:23
+msgid "loaded on"
+msgstr "caricata in data"
+
+#: .\templates\press_releases.html:46
+msgid "last press release"
+msgstr "ultimo comunicato stampa"
+
 #: .\templates\profile_avatar_upload.html:7
 #: .\templates\profile_avatar_upload.html:14
 msgid "upload foto"
@@ -2693,10 +2683,6 @@ msgstr "nuovo forum"
 msgid "thematic"
 msgstr "tematico"
 
-#: .\templates\project_detail.html:220
-msgid "shared folder"
-msgstr "cartella condivisa"
-
 #: .\templates\project_detail.html:226
 msgid "message to members"
 msgstr "messaggio ai membri"
@@ -2714,7 +2700,7 @@ msgid "LP"
 msgstr "LP"
 
 #: .\templates\project_detail.html:313 .\templates\project_detail.html:327
-#: .\templates\project_edit.html:28 .\views.py:935
+#: .\templates\project_edit.html:28 .\views.py:979
 msgid "roll of mentors"
 msgstr "albo dei mentori"
 
@@ -3089,6 +3075,10 @@ msgstr "ricerca dei progetti"
 msgid "of source repositories"
 msgstr "delle fonti"
 
+#: .\templates\search_repos.html:10
+msgid "repositories"
+msgstr "repository"
+
 #: .\templates\search_results.html:5 .\templates\search_results.html.py:7
 msgid "Search results for"
 msgstr "Cerca risultati per"
@@ -3430,39 +3420,39 @@ msgstr "Indice del blog"
 msgid "Sitemap"
 msgstr "Mappa del blog"
 
-#: .\views.py:647
+#: .\views.py:691
 msgid "minimum number of LPs"
 msgstr "numero minimo di LP"
 
-#: .\views.py:935
+#: .\views.py:979
 msgid "for"
 msgstr "per"
 
-#: .\views.py:937
+#: .\views.py:981
 msgid "mentoring request"
 msgstr "richiesta di mentoring"
 
-#: .\views.py:937
+#: .\views.py:981
 msgid "of"
 msgstr "di"
 
-#: .\views.py:1079
+#: .\views.py:1123
 msgid "membership application"
 msgstr "richiesta di adesione"
 
-#: .\views.py:1079
+#: .\views.py:1123
 msgid "has applied for membership in"
 msgstr "ha presentato la richiesta di adesione"
 
-#: .\views.py:1079
+#: .\views.py:1123
 msgid " "
 msgstr ""
 
-#: .\views.py:1163
+#: .\views.py:1207
 msgid "thematic forum"
 msgstr "forum a tema"
 
-#: .\views.py:1163
+#: .\views.py:1207
 msgid "please change this name"
 msgstr "per favore modifica questo nome"
 
