@@ -1,0 +1,51 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "press releases"|capfirst %}{% endblock %}
+
+{% block body %}
+
+            <h1 class="text-center">{% trans "press releases"|capfirst %}</h1>
+
+<section>
+{% for language_code, language_name, press_releases in language_pr_list %}
+<h4>{{ language_name }}</h4>
+<ul>
+{% for press_release in press_releases %}
+	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
+	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	{% with document=press_release.document %}
+		<a href="/document/{{ document.id }}/view/?proj={{ project.id }}">{% if press_release.label %}{{ press_release.label }}{% else %}{{ document.label }}{% endif %}</a>
+		{% if document.viewable %} &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
+	  	{% csrf_token %}<input type="hidden" name="id" value="{{ document.id }}">
+	    &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
+		&nbsp;&nbsp;&nbsp; <i style="font-size: smaller;">{% trans "loaded on" %} {{ document.date_added }}</i>
+	{% endwith %}
+	</li>
+	</form>
+{% endfor %}
+</ul>
+{% endfor %}
+</section>
+
+{% endblock body %}
+
+{% block extra_script %}
+<script type="text/javascript">
+function view_document(url, title) {
+    var url = "/document/{{ last_release.document.id }}/view/?proj={{ project.id }}";
+    var w = 650;
+	var left = (screen.width/2)-(w/2);
+	// var top = (screen.height/2)-(h/2);
+	return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', top=300, left='+left);
+}
+{% if last_release %}
+window.onload = function () {
+    var url = "/document/{{ last_release.document.id }}/view/?proj={{ project.id }}";
+    var title = "{% trans "last press release"|capfirst %}";
+	return view_document(url, title);
+}
+{% endif %}
+</script>
+{% endblock extra_script %}

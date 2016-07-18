@@ -11,7 +11,8 @@ def community_children(request):
         ))
     children.append (MenuItem(
          capfirst(_("press releases")),
-         url='/info/press_releases/',
+         # url='/info/press_releases/',
+         url='/press_releases/',
         ))
     children.append (MenuItem(
          capfirst(_("all communities")),
@@ -189,6 +190,7 @@ Menu.add_item("main", MenuItem(capfirst(_("help")),
 Menu.add_item("main", MenuItem(capfirst(_("analytics")),
                                url='/p',
                                weight=30,
-                               check=admin_children,
+                               # check=admin_children,
+                               check=lambda request: admin_children(request) and True or False,
                                children=admin_children,
                                separator=True))
