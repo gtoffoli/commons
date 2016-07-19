@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 from filebrowser.sites import site
 from commons import settings
 from commons.forms import MessageComposeForm
-from commons.views import UserAutocomplete # , OerAutocomplete
+from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 
 # from .wizards import DocumentCreateWizard
 
@@ -168,6 +168,7 @@ urlpatterns = patterns('',
     url('user-fullname-autocomplete/$', 'commons.views.user_fullname_autocomplete', name='user-fullname-autocomplete',),
     url('repo-autocomplete/$', 'commons.views.repo_autocomplete', name='repo-autocomplete',),
     url('oer-autocomplete/$', 'commons.views.oer_autocomplete', name='oer-autocomplete',),
+    url('featured-autocomplete/$', FeaturedAutocompleteView.as_view(), name='featured-autocomplete'),
     url(r"^analytics/activity_stream/$", 'commons.analytics.activity_stream', name="activity_stream"),
     url(r"^analytics/user_activity/(?P<username>[\w\.-]+)/$", 'commons.views.user_activity', name="user_activity"),
     url(r"^analytics/project_activity/(?P<project_slug>[\w-]+)/$", 'commons.views.project_activity', name="project_activity"),

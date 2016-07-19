@@ -117,8 +117,11 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.linkedin_oauth2',
     'tinymce',
     # django-autocomplete-light
+    'queryset_sequence',
     'dal',
     'dal_select2',
+    'dal_queryset_sequence',
+    'dal_select2_queryset_sequence',
     # from pinax project
     "pinax_theme_bootstrap",
     "bootstrapform",

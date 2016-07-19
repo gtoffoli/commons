@@ -18,7 +18,7 @@ from taggit_labels.widgets import LabelWidget
 
 from .models import Tag, UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
-from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm
+from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
 class UserProfileInline(admin.StackedInline):
@@ -221,7 +221,8 @@ class PathEdgeAdmin(admin.ModelAdmin):
         obj.save()
 
 class FeaturedAdmin(admin.ModelAdmin):
-    list_display = ('id', 'lead', 'group_name', 'sort_order', 'text', 'scope', 'object_type', 'featured_object', 'status', 'start_publication', 'end_publication', 'user',)
+    list_display = ('id', 'lead', 'group_name', 'sort_order', 'text', 'object_type', 'featured_object', 'status', 'start_publication', 'end_publication', 'user',)
+    form = FeaturedChangeForm
 
     def object_type(self, obj):
         if obj.featured_object:

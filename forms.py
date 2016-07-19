@@ -30,7 +30,7 @@ from dmuc.models import Room
 from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
-from models import LearningPath, PathNode
+from models import LearningPath, PathNode, Featured
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from models import PROJECT_OPEN, PROJECT_CLOSED
 
@@ -596,7 +596,18 @@ class MatchMentorForm(forms.Form):
     project = forms.IntegerField(widget=forms.HiddenInput())
     mentor = UserChoiceField(required=True, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect())
 
-from dal import autocomplete
 class UserSearchForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))
     # user = forms.ModelChoiceField(queryset=User.objects.all())
+
+class FeaturedChangeForm(autocomplete.FutureModelForm):
+    class Meta:
+        model = Featured
+        fields = ('lead', 'group_name', 'sort_order', 'priority', 'text', 'featured_object', 'status', 'start_publication', 'end_publication')
+
+    text = forms.CharField(required=False, label=_('optional text'), widget=TinyMCE(attrs={'rows': 5,}), help_text=_('Use formatting with care: only bold, italic and links!'))
+    featured_object = autocomplete.QuerySetSequenceModelField(
+        queryset=autocomplete.QuerySetSequence(Project.objects.all(), LearningPath.objects.all(), OER.objects.all(),),
+        required=False,
+        widget=autocomplete.QuerySetSequenceSelect2('featured-autocomplete'),
+        )

@@ -210,6 +210,21 @@ def home(request):
         wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
+from queryset_sequence import QuerySetSequence
+from dal_select2_queryset_sequence.views import Select2QuerySetSequenceView
+class FeaturedAutocompleteView(Select2QuerySetSequenceView):
+    def get_queryset(self):
+        if self.q:
+            # Get querysets
+            projects = Project.objects.filter(name__icontains=self.q)
+            lps = LearningPath.objects.filter(title__icontains=self.q)
+            oers = OER.objects.filter(title__icontains=self.q)
+            # Aggregate querysets
+            qs = QuerySetSequence(projects, lps, oers)
+            # This will limit each queryset so that they show an equal number of results.
+            qs = self.mixup_querysets(qs)
+            return qs
+
 def press_releases(request):
     var_dict = {}
     projects = Project.objects.filter(slug='editorial-staff')
