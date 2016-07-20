@@ -24,7 +24,37 @@
     }
     .box-featured {
       background:#f1f2f2;
-      padding:20px 0px 5px 15px;
+      margin:20px 0px 20px 15px;
+    }
+    .box-featured dl {
+      margin-bottom: 0;
+      padding: 10px 10px 0 10px;
+      background: white;
+      border-radius: 4px;
+      border:1px solid transparent;
+    }
+    .box-featured dl dd dl{
+      margin-bottom: 10px;
+      padding: 10px 10px 0 10px;
+      background: white;
+      border-radius: 4px;
+      border:1px solid #EBEDED;
+    }
+    .box-featured dl dd dl dd {
+    	 padding: 0 10px;
+    	 border-radius: 4px;
+    }
+    .box-featured dl dd dl dd:nth-child(odd) {
+      background: #f1f2f2;
+    }
+    .box-featured dl dd dl dd:nth-child(even) {
+      background: transparent;
+    }
+    .box-featured dl dd dl dd:first-child {
+      background: white;
+    }
+    .box-featured dl dd:last-child {
+      margin-bottom: 0;
     }
     .label-header {
       margin-top:0;
@@ -206,30 +236,34 @@
     <div class="row">
       <div class="col-md-3 col-lg-3 paddingR0">
         <div class="box-featured">
-        	{% if lead_featured %}
-        	<div class="bc-white" style="min-height:234px; border-radius:4px; padding:10px">
-        		{% if groups_lead_featured %}
-        		{% for group_featured in groups_lead_featured %}
-        		{% if group_featured.text %}
-        		  <p class="demiBold">{{ group_featured.text }}</p>
-        		{% endif %}
-        		{% endfor %}
-        		{% for group_featured in groups_lead_featured %}
-        		{% if group_featured.featured_object %}
-        		<p class="demiBold">{% if group_featured.featured_object.name %} 
-        			<a style="color:#FABE66;" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.name }}</a>
-        		{% else %}
-              {% if group_featured.sort_order == 3 %}
-        			<a style="color:#008BD2;" href="/oer/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.title }}</a>
-              {% else %}
-              <a style="color:#CB4F98;" href="/lp/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object.title }}</a>
-        		{% endif %}
-        		{% endif %}</p>
-        		{% endif %}
-        		{% endfor %}
-        		{% endif %}
-        	</div>
-        	{% endif %}
+          {% if groups_lead_featured %}
+            <dl>
+              {% for group_lead_featured in groups_lead_featured %}
+                <dd><dl>
+                  {% for group_featured in group_lead_featured %}
+                  <dd>
+                    {% if group_featured.text %}
+                      <div>{{ group_featured.text|safe }}</div>
+                    {% endif %}
+                    {% if group_featured.featured_object  %}
+                      <p class="demiBold">
+                        {% if group_featured.content_type.model == 'project' %}
+                          <a class="c-harvest-gold" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                        {% elif group_featured.content_type.model == 'oer' %}
+                          <a class="c-pacific-blue" href="/oer/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                        {% elif group_featured.content_type.model == 'learningpath' %}
+                          <a class="c-mulberry" href="/lp/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                        {% else %}
+                          <a href="{{group_featured.featured_object.get_absolute_url }}">{{ group_featured.featured_object }}</a>
+                        {% endif %}
+                      </p>
+                    {% endif %}
+                  </dd>
+                  {% endfor %}
+                </dl></dd>
+              {% endfor %}
+            </dl>
+          {% endif %}
         </div>
       </div>
       <div class="col-md-9 col-lg-9">

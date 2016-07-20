@@ -22,6 +22,7 @@ from taggit_labels.widgets import LabelWidget
 from models import Tag
 from django_messages.forms import ComposeForm
 from django_messages.fields import CommaSeparatedUserField
+from zinnia.models import Entry
 from pybb.models import Forum
 from dal import autocomplete
 
@@ -33,7 +34,6 @@ from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, Acces
 from models import LearningPath, PathNode, Featured
 from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from models import PROJECT_OPEN, PROJECT_CLOSED
-
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
@@ -607,7 +607,7 @@ class FeaturedChangeForm(autocomplete.FutureModelForm):
 
     text = forms.CharField(required=False, label=_('optional text'), widget=TinyMCE(attrs={'rows': 5,}), help_text=_('Use formatting with care: only bold, italic and links!'))
     featured_object = autocomplete.QuerySetSequenceModelField(
-        queryset=autocomplete.QuerySetSequence(Project.objects.all(), LearningPath.objects.all(), OER.objects.all(),),
+        queryset=autocomplete.QuerySetSequence(Project.objects.all(), LearningPath.objects.all(), OER.objects.all(), Entry.objects.all(),),
         required=False,
         widget=autocomplete.QuerySetSequenceSelect2('featured-autocomplete'),
         )

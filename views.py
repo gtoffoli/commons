@@ -137,17 +137,12 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
         wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     else:
-        lead_featured = Featured.objects.filter(lead=True)
-        print "============== LEAD =================="
-        print lead_featured.count()
-        print "============== fine =================="
-        groups_lead_featured = None
+        lead_featured = Featured.objects.filter(lead=True, status=PUBLISHED).order_by('sort_order')
+        groups_lead_featured = []
         for lead in lead_featured:
-            groups_lead_featured = Featured.objects.filter(group_name=lead.group_name)
-            break
-        print "============== LEAD =================="
-        print groups_lead_featured.count()
-        print "============== fine =================="
+            if lead.is_actual: 
+                group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
+                groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
         wall_dict['lead_featured'] = lead_featured
         wall_dict['groups_lead_featured'] = groups_lead_featured
         MAX_ARTICLES = 3
@@ -219,8 +214,10 @@ class FeaturedAutocompleteView(Select2QuerySetSequenceView):
             projects = Project.objects.filter(name__icontains=self.q)
             lps = LearningPath.objects.filter(title__icontains=self.q)
             oers = OER.objects.filter(title__icontains=self.q)
+            entries = Entry.objects.filter(title__icontains=self.q)
+
             # Aggregate querysets
-            qs = QuerySetSequence(projects, lps, oers)
+            qs = QuerySetSequence(projects, lps, oers, entries,)
             # This will limit each queryset so that they show an equal number of results.
             qs = self.mixup_querysets(qs)
             return qs
@@ -448,7 +445,7 @@ def user_dashboard(request, username, user=None):
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=7)
+    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=360, max_actions=30)
     var_dict['my_last_actions'] = actions
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
 

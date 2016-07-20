@@ -37,8 +37,13 @@
             <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %} <sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
             <li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>
           </ul>
+          {% if request.user.is_staff %}
+          <ul class="list-inline list-unstyled margin0 padding105">
+            <li><a href="/admin/commons/featured/" target="_blank"><i class="fa fa-edit"></i> {% trans "manage featured"|capfirst %}</a></small></li>
+          </ul>
+          {% endif %}
         </div>
-		
+
 		 {% if com_applications  %}
 		  <div class="panel-white">
             <div class="panel-heading-c4 padding510 demiBold">{% trans "pending applications to communities"|capfirst %}</div>
