@@ -242,6 +242,9 @@
                 <dd><dl>
                   {% for group_featured in group_lead_featured %}
                   <dd>
+                    {% if not group_featured.status == PUBLISHED %}
+                      <div>{{ group_featured.get_state }}</div>
+                    {% endif %}
                     {% if group_featured.text %}
                       <div>{{ group_featured.text|safe }}</div>
                     {% endif %}

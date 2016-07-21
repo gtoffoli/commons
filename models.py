@@ -2005,5 +2005,9 @@ class Featured(models.Model):
         """
         return self.is_actual and self.status == PUBLISHED
 
+    def get_state(self):
+        return PUBLICATION_STATE_DICT[self.status]
+    
+
 # from commons.metadata_models import *
 from translations import *

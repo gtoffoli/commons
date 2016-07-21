@@ -137,12 +137,18 @@ def home(request):
         wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
         wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
     else:
-        lead_featured = Featured.objects.filter(lead=True, status=PUBLISHED).order_by('sort_order')
+        # lead_featured = Featured.objects.filter(lead=True, status=PUBLISHED).order_by('sort_order')
+        lead_featured = Featured.objects.filter(lead=True).order_by('sort_order')
         groups_lead_featured = []
+        wall_dict['PUBLISHED'] = PUBLISHED
         for lead in lead_featured:
-            if lead.is_actual: 
-                group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
-                groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
+            if request.user.is_staff: 
+                group_lead_featured = Featured.objects.filter(group_name=lead.group_name).exclude(lead=True).order_by('sort_order')
+                groups_lead_featured.append([lead] + list (group_lead_featured))
+            else:
+                if lead.is_visible:
+                   group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
+                   groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
         wall_dict['lead_featured'] = lead_featured
         wall_dict['groups_lead_featured'] = groups_lead_featured
         MAX_ARTICLES = 3
