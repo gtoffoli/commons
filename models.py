@@ -2005,9 +2005,23 @@ class Featured(models.Model):
         """
         return self.is_actual and self.status == PUBLISHED
 
+    @property
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.status]
-    
+
+    @property
+    def get_visible(self):
+        now = timezone.now()
+        if self.status == PUBLISHED and self.start_publication and now < self.start_publication:
+            return True
+        return False
+
+    @property
+    def is_close(self):
+        now = timezone.now()
+        if self.status == PUBLISHED and self.end_publication and now >= self.end_publication:
+            return True
+        return False
 
 # from commons.metadata_models import *
 from translations import *

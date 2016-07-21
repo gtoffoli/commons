@@ -41,8 +41,8 @@
       border:1px solid #EBEDED;
     }
     .box-featured dl dd dl dd {
-    	 padding: 0 10px;
-    	 border-radius: 4px;
+       padding: 5px 10px 1px 10px;
+       border-radius: 4px;
     }
     .box-featured dl dd dl dd:nth-child(odd) {
       background: #f1f2f2;
@@ -243,7 +243,9 @@
                   {% for group_featured in group_lead_featured %}
                   <dd>
                     {% if not group_featured.status == PUBLISHED %}
-                      <div>{{ group_featured.get_state }}</div>
+                      <div class="text-center c-black"><i class="fa fa-caret-right font16" aria-hidden="true"></i><span class="paddingLR10">{{ group_featured.get_state }}</span><i class="fa fa-caret-left font16" aria-hidden="true"></i></div>
+                    {% elif user.is_staff and group_featured.get_visible %}
+                      <div  class="text-center c-black"><i class="fa fa-caret-right font16" aria-hidden="true"></i><span class="paddingLR10">{{ group_featured.get_state }} - {% trans "visible from" %} {{ group_featured.start_publication|date:"d.m.Y H:i" }}</span><i class="fa fa-caret-left font16" aria-hidden="true"></i></div>
                     {% endif %}
                     {% if group_featured.text %}
                       <div>{{ group_featured.text|safe }}</div>

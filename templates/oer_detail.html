@@ -19,6 +19,11 @@
   <section class="view-card-details">
     <div class="row">
       <div class="col-sm-9 col-md-9 col-lg-9">
+      {% if is_un_published %}
+      <div class="marginB10">
+        <p>{{ oer.description }}</p>
+      </div>
+      {% else %}
       <div class="marginB10 clearfix">
       {% if oer.url and oer.description %}
         <div class="hidden-xs">
@@ -150,6 +155,7 @@
                </div>
                </form></dd>
         </dl>
+      {% endif %}
       {% endif %}
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">

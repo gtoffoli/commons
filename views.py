@@ -35,7 +35,7 @@ from documents import DocumentType, Document
 from models import Featured, Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
-from models import DRAFT, PUBLISHED
+from models import DRAFT, PUBLISHED, UN_PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
@@ -122,93 +122,76 @@ def home(request):
 
 def home(request):
     wall_dict = {}
-    wall_dict['PRODUCTION'] = PRODUCTION
-    if False: # PRODUCTION:
-        MAX_MEMBERS = 10
-        MAX_FORUMS = 5
-        MAX_ARTICLES = 6
-        MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
-        user = request.user
-        wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
-        wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
-        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
-        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
-        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
-        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
-        wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
-    else:
-        # lead_featured = Featured.objects.filter(lead=True, status=PUBLISHED).order_by('sort_order')
-        lead_featured = Featured.objects.filter(lead=True).order_by('sort_order')
-        groups_lead_featured = []
-        wall_dict['PUBLISHED'] = PUBLISHED
-        for lead in lead_featured:
-            if request.user.is_staff: 
-                group_lead_featured = Featured.objects.filter(group_name=lead.group_name).exclude(lead=True).order_by('sort_order')
-                groups_lead_featured.append([lead] + list (group_lead_featured))
-            else:
-                if lead.is_visible:
-                   group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
-                   groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
-        wall_dict['lead_featured'] = lead_featured
-        wall_dict['groups_lead_featured'] = groups_lead_featured
-        MAX_ARTICLES = 3
-        min_time = timezone.now()-timedelta(days=90)
-        recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
-        wall_dict['recent_proj'] = []
-        for recent_proj in recent_projects:
-            if not recent_proj.reserved:
+    wall_dict['PUBLISHED'] = PUBLISHED
+    groups_lead_featured = []
+    wall_dict['recent_proj'] = None
+    wall_dict['active_proj'] = None
+    wall_dict['popular_proj'] = None
+    wall_dict['last_lp'] = None
+    wall_dict['popular_lp'] = None
+    wall_dict['last_oer'] = None
+    wall_dict['popular_oer'] = None
+    MAX_ARTICLES = 3
+    lead_featured = Featured.objects.filter(lead=True).order_by('sort_order')
+    for lead in lead_featured:
+        if request.user.is_staff:
+            if not lead.is_close:
+               group_lead_featured = Featured.objects.filter(group_name=lead.group_name).exclude(lead=True).order_by('sort_order')
+               groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if not featured.is_close])
+        else:
+            if lead.is_visible:
+                group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
+                groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
+    wall_dict['groups_lead_featured'] = groups_lead_featured
+    min_time = timezone.now()-timedelta(days=90)
+    recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
+    for recent_proj in recent_projects:
+        if not recent_proj.reserved:
+            wall_dict['recent_proj'] = recent_proj
+            break
+        else:
+            level = recent_proj.get_level()
+            if level < 3:
                 wall_dict['recent_proj'] = recent_proj
-                break
-            else:
-                level = recent_proj.get_level()
-                if level < 3:
-                    wall_dict['recent_proj'] = recent_proj
-                    break  
-        principal_type_id = ContentType.objects.get_for_model(Project).id
-        active_projects = popular_principals(principal_type_id, active=True, max_days=30)
-        wall_dict['active_proj'] = None
-        for active_proj in active_projects:
-            project = Project.objects.get(pk=active_proj[0])
-            # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and project.get_level() in [1, 2]:
-            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
-                wall_dict['active_proj'] = project
-                break
-        popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
-        wall_dict['popular_proj'] = None
-        for popular_proj in popular_projects:
-            project = Project.objects.get(pk=popular_proj[0])
-            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
-                wall_dict['popular_proj'] = project
-                break
-        wall_dict['last_lp'] = None
-        actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
-        for action in actions:
-            lp = action.action_object
-            if lp.state == PUBLISHED and lp.project:
-                wall_dict['last_lp'] = lp
-                break
-        wall_dict['popular_lp'] = None
-        actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
-        for action in actions:
-            lp = action.action_object
-            if lp.state == PUBLISHED and lp.project:
-                wall_dict['popular_lp'] = lp
-                break
-        wall_dict['last_oer'] = None
-        actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
-        for action in actions:
-            oer = action.action_object
-            if oer.state == PUBLISHED and oer.project:
-                wall_dict['last_oer'] = oer
-                break
-        wall_dict['popular_oer'] = None
-        actions = filter_actions(verbs=['View'], object_content_type=ContentType.objects.get_for_model(OER), max_days=30)
-        for action in actions:
-            oer = action.action_object
-            if oer.state == PUBLISHED and oer.project:
-                wall_dict['popular_oer'] = oer
-                break
-        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+                break 
+    principal_type_id = ContentType.objects.get_for_model(Project).id
+    active_projects = popular_principals(principal_type_id, active=True, max_days=30)
+    for active_proj in active_projects:
+        project = Project.objects.get(pk=active_proj[0])
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+            wall_dict['active_proj'] = project
+            break
+    popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
+    for popular_proj in popular_projects:
+        project = Project.objects.get(pk=popular_proj[0])
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+            wall_dict['popular_proj'] = project
+            break
+    actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
+    for action in actions:
+        lp = action.action_object
+        if lp.state == PUBLISHED and lp.project:
+            wall_dict['last_lp'] = lp
+            break
+    actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
+    for action in actions:
+        lp = action.action_object
+        if lp.state == PUBLISHED and lp.project:
+            wall_dict['popular_lp'] = lp
+            break
+    actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
+    for action in actions:
+        oer = action.action_object
+        if oer.state == PUBLISHED and oer.project:
+            wall_dict['last_oer'] = oer
+            break
+    actions = filter_actions(verbs=['View'], object_content_type=ContentType.objects.get_for_model(OER), max_days=30)
+    for action in actions:
+        oer = action.action_object
+        if oer.state == PUBLISHED and oer.project:
+            wall_dict['popular_oer'] = oer
+            break
+    wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
     return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
 
 from queryset_sequence import QuerySetSequence
@@ -2007,6 +1990,10 @@ def oer_detail(request, oer_id, oer=None):
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = oer.state == PUBLISHED
+    var_dict['is_un_published'] = oer.state == UN_PUBLISHED
+    print "============ STATO ================="
+    print oer.state == UN_PUBLISHED
+    print "=============== FINE =================="
     user = request.user
     if user.is_authenticated():
         profile = user.get_profile()
