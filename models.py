@@ -1162,6 +1162,14 @@ class OER(Resource, Publishable):
 
     def get_more_metadata(self):
         return self.metadata_set.all().order_by('metadata_type__name')
+
+    def can_access(self, user):
+        if self.state==PUBLISHED:
+            return True
+        if not user.is_authenticated():
+            return False
+        project = self.project
+        return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
  
     def can_edit(self, user):
         if not user.is_authenticated():

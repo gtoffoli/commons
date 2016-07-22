@@ -6,9 +6,10 @@ Created on 02/apr/2015
 import re
 import json
 from collections import defaultdict
+from datetime import datetime, timedelta
 
 from django.utils import timezone
-from datetime import datetime, timedelta
+from django.core.exceptions import PermissionDenied
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -16,8 +17,8 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
+from django.shortcuts import render, render_to_response, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.models import Message
@@ -1930,10 +1931,12 @@ def oer_view(request, oer_id, oer=None):
         oer = get_object_or_404(OER, pk=oer_id)
     elif not oer_id:
         oer_id = oer.id
+    user = request.user
+    if not oer.can_access(user):
+        raise PermissionDenied
     var_dict = { 'oer': oer, }
     var_dict['oer_url'] = oer.url
     var_dict['is_published'] = oer.state == PUBLISHED
-    user = request.user
     if user.is_authenticated():
         profile = user.get_profile()
         add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
@@ -1978,23 +1981,23 @@ def oer_view(request, oer_id, oer=None):
     return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
 
 def oer_view_by_slug(request, oer_slug):
-    oer = OER.objects.get(slug=oer_slug)
+    # oer = OER.objects.get(slug=oer_slug)
+    oer = get_object_or_404(OER, slug=oer_slug)
     return oer_view(request, oer.id, oer)
-    
+
 def oer_detail(request, oer_id, oer=None):
     if not oer:
         oer_id = int(oer_id)
         oer = get_object_or_404(OER, pk=oer_id)
     elif not oer_id:
         oer_id = oer.id
+    user = request.user
+    if not oer.can_access(user):
+        raise PermissionDenied
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = oer.state == PUBLISHED
     var_dict['is_un_published'] = oer.state == UN_PUBLISHED
-    print "============ STATO ================="
-    print oer.state == UN_PUBLISHED
-    print "=============== FINE =================="
-    user = request.user
     if user.is_authenticated():
         profile = user.get_profile()
         add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
@@ -2035,8 +2038,8 @@ def oer_detail(request, oer_id, oer=None):
     return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
 
 def oer_detail_by_slug(request, oer_slug):
-    # oer = get_object_or_404(OER, slug=oer_slug)
-    oer = OER.objects.get(slug=oer_slug)
+    # oer = OER.objects.get(slug=oer_slug)
+    oer = get_object_or_404(OER, slug=oer_slug)
     return oer_detail(request, oer.id, oer)
 
 def oer_edit(request, oer_id=None, project_id=None):
@@ -2045,8 +2048,9 @@ def oer_edit(request, oer_id=None, project_id=None):
     action = '/oer/edit/'
     if oer_id:
         oer = get_object_or_404(OER, pk=oer_id)
+        if not oer.can_access(user):
+            raise PermissionDenied
         action = '/oer/%s/edit/' % oer.slug
-        # if not user.can_edit(request):
         if not oer.can_edit(user):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if request.POST:
@@ -2114,24 +2118,34 @@ def oer_edit_by_slug(request, oer_slug):
 
 def oer_submit(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
     oer.submit(request)
     track_action(request.user, 'Submit', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_withdraw(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
     oer.withdraw(request)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_reject(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
     oer.reject(request)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
     oer.publish(request)
     track_action(request.user, 'Approve', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_un_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
     oer.un_publish(request)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
@@ -2213,7 +2227,8 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
 
 def oer_evaluate_by_slug(request, oer_slug):
-    oer = OER.objects.get(slug=oer_slug)
+    # oer = OER.objects.get(slug=oer_slug)
+    oer = get_object_or_404(OER, slug=oer_slug)
     evaluations = oer.get_evaluations(request.user)
     if evaluations:
         evaluation = evaluations[0]
@@ -2417,7 +2432,8 @@ def lp_detail(request, lp_id, lp=None):
     return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
 
 def lp_detail_by_slug(request, lp_slug):
-    lp = LearningPath.objects.get(slug=lp_slug)
+    # lp = LearningPath.objects.get(slug=lp_slug)
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_detail(request, lp.id, lp)
 
 TEXT_VIEW_TEMPLATE= """<div>%s</div>"""
@@ -2618,7 +2634,8 @@ def lp_play(request, lp_id, lp=None):
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
 def lp_play_by_slug(request, lp_slug):
-    lp = LearningPath.objects.get(slug=lp_slug)
+    # lp = LearningPath.objects.get(slug=lp_slug)
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_play(request, lp.id, lp)
 
 def lp_edit(request, lp_id=None, project_id=None):
