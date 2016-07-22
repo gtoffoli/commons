@@ -1,12 +1,13 @@
 {% load i18n %}
+{% extends "commons_base.html" %}
+{% load staticfiles i18n %}
 
-<html>
+{% block head_title %}{% trans "Sorry. You are not allowed to access this page." %}{% endblock %}
 
-<head>
-</head>
+{% block body_class %}403_status{% endblock %}
 
-<body>
-<h1>{% trans "Sorry. You are not allowed to access this page." %}</h1>
-</body>
-
-</html>
+{% block body_base %}
+<div class="container-fluid">
+<div class="text-center" style="position: fixed; top:32%; width:100%;"><h1 class="paddingT30">{% trans "Sorry. You are not allowed to access the requested content or function." %}</h1></div>
+</div>
+{% endblock %}
