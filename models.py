@@ -741,6 +741,14 @@ class Project(Resource):
         else:
             return _('supervisor')
 
+    def can_access(self, user):
+        if self.state==PROJECT_OPEN:
+            return True
+        if not user.is_authenticated():
+            return False
+        parent = self.get_parent()
+        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,)) or (parent and parent.is_admin(user))
+
     def can_edit(self, user):
         if not user.is_authenticated():
             return False
@@ -1516,6 +1524,14 @@ class LearningPath(Resource, Publishable):
         return PUBLICATION_COLOR_DICT[self.state]
     def get_link_color(self):
         return PUBLICATION_LINK_DICT[self.state]
+
+    def can_access(self, user):
+        if self.state==PUBLISHED:
+            return True
+        if not user.is_authenticated():
+            return False
+        project = self.project
+        return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
 
     def can_play(self, request):
         if not self.get_nodes().count():

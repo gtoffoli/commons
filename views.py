@@ -745,6 +745,8 @@ def projects_search(request, template='search_projects.html', extra_context=None
 def project_add_document(request):
     project_id = request.POST.get('id', '')
     project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     folder = project.get_folder()
     form = DocumentUploadForm(request.POST, request.FILES)
     if form.is_valid():
@@ -787,6 +789,8 @@ def project_folder(request, project_slug):
     user = request.user
     # assert user.is_authenticated()
     project = get_object_or_404(Project, slug=project_slug)
+    if not project.can_access(user):
+        raise PermissionDenied
     if not user.is_authenticated():
         return project_detail(request, project.id, project=project)
     proj_type = project.proj_type
@@ -805,11 +809,13 @@ def project_detail(request, project_id, project=None):
     MAX_MESSAGES = 5
     if not project:
         project = get_object_or_404(Project, pk=project_id)
+    user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
     proj_type = project.proj_type
     type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
-    user = request.user
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     proj_types = ProjType.objects.filter(public=True)
     if not user.is_superuser:
@@ -948,6 +954,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     action = '/project/edit/'
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
+    if not project.can_access(user):
+        raise PermissionDenied
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if project_id:
@@ -1054,16 +1062,23 @@ def project_new_by_slug(request, project_slug, type_name):
 
 def project_propose(request, project_id):
     project = Project.objects.get(pk=project_id)
+    user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
     project.propose(request)
     track_action(request.user, 'Submit', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_open(request, project_id):
     project = Project.objects.get(pk=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     project.open(request)
     track_action(request.user, 'Approve', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_close(request, project_id):
     project = Project.objects.get(pk=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     project.close(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
@@ -1102,6 +1117,8 @@ def project_logo_upload(request, project_slug):
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     user = get_object_or_404(User, username=username)
+    if not project.can_access(user):
+        raise PermissionDenied
     if user.id == request.user.id:
         membership = project.add_member(user)
         # track_action(user, 'Apply', project)
@@ -1116,6 +1133,8 @@ def apply_for_membership(request, username, project_slug):
 
 def accept_application(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     # membership = project.get_membership(request.user)
     users = User.objects.filter(username=username)
     if users and users.count()==1:
@@ -1133,6 +1152,8 @@ def project_membership(request, project_id, user_id):
 
 def project_toggle_supervisor_role(request, project_id):
     project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     if request.POST:
         username = request.POST.get('user', '')
         user = get_object_or_404(User, username=username)
@@ -1149,6 +1170,8 @@ def project_set_mentor(request):
     if request.POST:
         project_id = request.POST.get('project')
         project = get_object_or_404(Project, id=project_id)
+        if not project.can_access(request.user):
+            raise PermissionDenied
         mentor_id = request.POST.get('mentor', None)
         print 'mentor_id : ', mentor_id
         if mentor_id:
@@ -1164,6 +1187,8 @@ def project_paste_oer(request, project_id, oer_id):
     cut_oers = get_clipboard(request, key='cut_oers') or []
     project = get_object_or_404(Project, pk=project_id)
     user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
     if user.is_authenticated() and project.can_add_oer(user) and oer_id in cut_oers:
         oer = get_object_or_404(OER, pk=oer_id)
         oer.project = project
@@ -1177,6 +1202,8 @@ def project_paste_lp(request, project_id, lp_id):
     cut_lps = get_clipboard(request, key='cut_lps') or []
     project = get_object_or_404(Project, id=project_id)
     user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
     if user.is_authenticated() and project.can_add_lp(user) and lp_id in cut_lps:
         lp = get_object_or_404(LearningPath, pk=lp_id)
         lp.project = project
@@ -1188,6 +1215,8 @@ def project_paste_lp(request, project_id, lp_id):
 def project_create_forum(request, project_id):
     user = request.user
     project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(user):
+        raise PermissionDenied
     name = project.get_name()
     type_name = project.proj_type.name
     if type_name == 'com' and request.GET.get('thematic', ''):
@@ -1242,6 +1271,8 @@ def forum_edit_by_id(request, forum_id):
 
 def project_create_room(request, project_id):
     project = get_object_or_404(Project ,id=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     # assert project.need_create_room()
     if not project.need_create_room():
         return project_detail(request, project_id, project=project)    
@@ -1258,6 +1289,8 @@ def project_create_room(request, project_id):
 
 def project_sync_xmppaccounts(request, project_id):
     project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     # assert project.chat_type in [1]
     if not project.chat_type in [1]:
         return project_detail(request, project_id, project=project)    
@@ -1279,6 +1312,8 @@ def project_sync_xmppaccounts(request, project_id):
 
 def project_compose_message(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
     members = project.members(user_only=True)
     # recipient_filter = [member.username for member in members]
     recipient_filter = [member.username for member in members if not member==request.user]
@@ -2401,6 +2436,8 @@ def lp_detail(request, lp_id, lp=None):
     elif not lp_id:
         lp_id = lp.id
     user = request.user
+    if not lp.can_access(user):
+        raise PermissionDenied
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     var_dict['is_published'] = lp.state == PUBLISHED
@@ -2540,6 +2577,8 @@ TED_TALK_TEMPLATE = """
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     language = request.LANGUAGE_CODE
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
@@ -2644,6 +2683,8 @@ def lp_edit(request, lp_id=None, project_id=None):
     action = '/lp/edit/'
     if lp_id:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+        if not lp.can_access(user):
+            raise PermissionDenied
         action = '/lp/%s/edit/' % lp.slug
         # if not user.can_edit(request):
         if not lp.can_edit(request):
@@ -2715,29 +2756,41 @@ def lp_edit_by_slug(request, lp_slug):
 
 def lp_submit(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.submit(request)
     track_action(request.user, 'Submit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_withdraw(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.withdraw(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_reject(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.reject(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.publish(request)
     track_action(request.user, 'Approve', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.un_publish(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def lp_delete(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     project = lp.project
     lp.lp_delete(request)
     if project:
@@ -2747,6 +2800,8 @@ def lp_delete(request, lp_id):
 
 def lp_add_node(request, lp_slug):
     path = get_object_or_404(LearningPath, slug=lp_slug)
+    if not path.can_access(request.user):
+        raise PermissionDenied
     print request
     return pathnode_edit(request, path_id=path.id) 
 
@@ -2755,6 +2810,8 @@ def lp_add_oer(request, lp_slug, oer_id):
     bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
     user = request.user
     path = get_object_or_404(LearningPath, slug=lp_slug)
+    if not path.can_access(user):
+        raise PermissionDenied
     if path.can_edit(request) and oer_id in bookmarked_oers:
         oer = get_object_or_404(OER, pk=oer_id)
         node = PathNode(path=path, oer=oer, label=oer.title, creator=user, editor=user)
@@ -2767,12 +2824,16 @@ def lp_add_oer(request, lp_slug, oer_id):
 
 def lp_make_sequence(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     head = lp.make_sequence(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_detail(request, node_id, node=None):
     if not node:
         node = get_object_or_404(PathNode, pk=node_id)
+    if not node.path.can_access(request.user):
+        raise PermissionDenied
     var_dict = { 'node': node, }
     var_dict['lp'] = node.path
     """
@@ -2805,6 +2866,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
         node = get_object_or_404(PathNode, id=node_id)
         path = node.path
         action = '/pathnode/%d/edit/' % node.id
+        if not path.can_access(user):
+            raise PermissionDenied
         if not path.can_edit(request):
             return HttpResponseRedirect('/lp/%s/' % path.slug)
     if request.POST:
@@ -2872,6 +2935,8 @@ def pathnode_edit_by_id(request, node_id):
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     track_action(request.user, 'Delete', node, target=lp.project)
     lp.remove_node(node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
@@ -2883,6 +2948,8 @@ def pathnode_move_before(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.move_node_before(node, other_node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2890,6 +2957,8 @@ def pathnode_move_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.move_node_after(node, other_node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2898,6 +2967,8 @@ def pathnode_link_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
     other_node = get_object_or_404(PathNode, id=other_node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.link_node_after(node, other_node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -2905,6 +2976,8 @@ def pathnode_link_after(request, node_id, other_node_id):
 def pathnode_up(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.node_up(node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
@@ -2913,6 +2986,8 @@ def pathnode_up(request, node_id):
 def pathnode_down(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)
     lp = node.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     lp.node_down(node, request)
     track_action(request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
@@ -2923,6 +2998,8 @@ def pathedge_delete(request, edge_id):
     edge = get_object_or_404(PathEdge, id=edge_id)
     parent = edge.parent
     lp = parent.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
     assert edge.child.path == lp
     edge.delete()
     track_action(request.user, 'Edit', lp, target=lp.project)
