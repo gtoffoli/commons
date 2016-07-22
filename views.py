@@ -954,9 +954,13 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     action = '/project/edit/'
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
-    if not project.can_access(user):
-        raise PermissionDenied
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
+    if project:
+        if not project.can_access(user):
+            raise PermissionDenied
+    elif parent:
+        if not parent.can_access(user):
+            raise PermissionDenied
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if project_id:
         if project.can_edit(user):
