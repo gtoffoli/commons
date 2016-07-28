@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block head_title %}{% trans "press releases"|capfirst %}{% endblock %}
-
+{% comment %}
 {% block body %}
 
             <h1 class="text-center">{% trans "press releases"|capfirst %}</h1>
@@ -49,3 +49,41 @@ window.onload = function () {
 {% endif %}
 </script>
 {% endblock extra_script %}
+
+{% endcomment %}
+
+{% block body_class %}press_viewer{% endblock %}
+{% block body_base %}
+<div class="container-fluid margin0 padding0">
+  <div class="row margin0">
+    <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0">
+  	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #E85619">
+  		    <h5 class="demiBold" style="color: #E85619">{% trans "press releases"|capfirst %}</h5>
+</div>
+<dl class="panel panel-col panel-white" style="padding-right:0">
+{% for language_code, language_name, press_releases in language_pr_list %}
+
+  <dt class="demiBold">{{ language_name }}</dt>
+
+{% for press_release in press_releases %}{% with document=press_release.document %}
+  <dd class="font13 paddingL16 marginB10">
+  {% if document.id == docsel %}
+    <div class="text-right font14 demiBold" style="background:#E85619; color:white; padding:3px; border-top-left-radius:4px; border-bottom-left-radius:4px;">{% if press_release.label %}{{ press_release.label }}{% else %}{{ document.label }}{% endif %}</div>
+  {% else %}
+    <a href="/press_releases/?doc={{ document.id }}">{% if press_release.label %}{{ press_release.label }}{% else %}{{ document.label }}{% endif %}</a>
+  {% endif %}
+{% endwith %}{% endfor %}
+
+{% endfor %}
+</dl>
+    </div>
+    <div class="col-sm-9 col-md-9 col-lg-10">
+      <div class="iframe-container">
+    {% if url %}
+      <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+    {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

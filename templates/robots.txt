@@ -3,7 +3,11 @@ Disallow: /admin
 Disallow: /accounts
 Disallow: /my_home
 Disallow: /my_profile
+Disallow: /my_preferences
+Disallow: /project/*/edit
+Disallow: /oer/*/edit
 Disallow: /oer/*/view
+Disallow: /lp/*/edit
 Disallow: /lp/*/play
 Crawl-delay: 12
 User-agent: BUbiNG

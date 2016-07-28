@@ -212,6 +212,7 @@ class FeaturedAutocompleteView(Select2QuerySetSequenceView):
             qs = self.mixup_querysets(qs)
             return qs
 
+"""
 def press_releases(request):
     var_dict = {}
     projects = Project.objects.filter(slug='editorial-staff')
@@ -240,6 +241,48 @@ def press_releases(request):
     if current_language_code in language_pr_dict:
         last_release = language_pr_dict[current_language_code][0]
         var_dict['last_release'] = last_release
+    return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
+"""
+
+def press_releases(request):
+    var_dict = {}
+    projects = Project.objects.filter(slug='editorial-staff')
+    project = projects and projects[0] or None
+    folder = project and project.get_folder() or None
+    releases = folder and FolderDocument.objects.filter(folder=folder, state=PUBLISHED).filter(Q(label__icontains='_pr_') | Q(document__label__icontains='_pr_') | Q(label__icontains='press') | Q(document__label__icontains='press')).order_by('order', '-document__date_added') or []
+    language_choices_dict = dict(settings.LANGUAGES)
+    languages_dict = dict([(language.code, language.name,) for language in Language.objects.all()])
+    language_pr_dict = defaultdict(list)
+    for release in releases:
+        label = release.label or release.document.label
+        splitted = label.split('.')
+        language_code = len(splitted)>=2 and ((len(splitted[-1])==2 and splitted[-1]) or (len(splitted[-2])==2 and splitted[-2])) or ''
+        language_code = language_code in languages_dict and language_code or release.document.language[:2]
+        if language_code:
+            language_pr_dict[language_code].append(release)
+    language_pr_list = []
+    for language_code, releases in language_pr_dict.iteritems():
+        language_name = language_code in language_choices_dict and language_choices_dict[language_code] or languages_dict[language_code]
+        language_pr_list.append([language_code, language_name, releases])
+    language_pr_list = sorted(language_pr_list, key=lambda x: x[1])
+    var_dict['language_pr_list'] = language_pr_list
+    var_dict['project'] = project
+    # var_dict['form'] = DocumentUploadForm()
+    current_language_code = request.LANGUAGE_CODE
+    if request.method == 'GET' and request.GET.get('doc', ''):
+        doc_id = request.GET.get('doc', '')
+        var_dict['docsel'] = int(doc_id)
+        print "DOC"
+        print doc_id
+        var_dict['url'] = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], doc_id)
+    elif current_language_code in language_pr_dict:
+        last_release = language_pr_dict[current_language_code][0]
+        var_dict['last_release'] = last_release
+        if last_release:
+            var_dict['docsel'] = last_release.document.id
+            print "LAST"
+            print last_release.document.id
+            var_dict['url']= url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
     return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
 
 def my_chat(request):
