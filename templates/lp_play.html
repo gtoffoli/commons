@@ -44,23 +44,29 @@
     <div class="text-center" style="float:left; width:80%">{{ current_node.label }}</div>
     <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
-{% if oer.url %}
-  <p class="view-url" style="padding-top:10px; border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+{% if not oer_is_un_published %}
+  {% if oer.url %}
+    <p class="view-url" style="padding-top:10px; border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+  {% endif %}
 {% endif %}
   <div class="iframe-container">
-{% if oer.url %}
-  {% if document_view %}
-    {{ document_view|safe }}
-  {% elif youtube %}
-    {{ youtube|safe }}
-  {% elif ted_talk %}
-    {{ ted_talk|safe }}
-  {% elif slideshare %}
-    {{ slideshare|safe }}
-  {% elif embed_code %}
-    {{ embed_code|safe }}
+{% if oer %}
+  {% if not oer_is_un_published %}
+    {% if document_view %}
+      {{ document_view|safe }}
+    {% elif youtube %}
+      {{ youtube|safe }}
+    {% elif ted_talk %}
+      {{ ted_talk|safe }}
+    {% elif slideshare %}
+      {{ slideshare|safe }}
+    {% elif embed_code %}
+      {{ embed_code|safe }}
+    {% else %}
+      <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+    {% endif %}
   {% else %}
-    <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+  <h2 class="text-center marginT30" style="color: {{ oer.get_link_color }};">OER {{ oer.get_state|upper }}</h2>
   {% endif %}
 {% else %}
   {% if document_view %}

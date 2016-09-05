@@ -32,6 +32,7 @@
        ul.ul-right li {
          padding-left:15px;
        }
+      
        div.navbar-search {
          padding-top:8px; padding-bottom:10px;
        }
@@ -40,6 +41,20 @@
        }
        div.navbar-search input.input-search  {
          padding-left:30px; padding-right:10px; font-size:12px; height:30px;
+       }
+       @media (max-width: 991px) {
+         ul.ul-right {
+           margin-right:5px;
+         }
+
+       }
+       @media (min-width: 768px) and (max-width: 991px) {
+         ul.ul-right li:first-child {
+           padding-left:0;
+         }
+         div.navbar-search label {
+           left:8px;
+         }
        }
        </style>
        {% block extra_style %}{% endblock %}
@@ -99,15 +114,24 @@ $(document).ready(function() {
                           {% endfor %}
                         </ul>{% endwith %}
                         <ul class="nav navbar-nav navbar-right ul-right" style="display:inline-block">
-                          <li style="padding-right:10px"><div class="navbar-search">
+                          <li><div class="navbar-search">
                             <label for="search-input"><i class="fa fa-search"></i></label>
                             <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
                           </div></li>
-                          <li><div class="navbar-search">
+                          <li class="hidden-sm"><div class="navbar-search">
                             <form action="/i18n/setlang/" method="post">{% csrf_token %}
                               <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
                               {% for lang in LANGUAGES %}
                                 <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+                              {% endfor %}
+                              </select>
+                            </form>
+                          </div></li>
+                          <li class="visible-sm"><div class="navbar-search">
+                            <form action="/i18n/setlang/" method="post">{% csrf_token %}
+                              <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
+                              {% for lang in LANGUAGES %}
+                                <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.0|upper }}</option>
                               {% endfor %}
                               </select>
                             </form>

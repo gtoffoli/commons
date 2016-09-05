@@ -58,6 +58,7 @@
     }
   }
   $(document).ready(function() {
+/*
   	{% if lp %}
     setDisabled( 'id_path_type' )
     {% endif %}
@@ -65,6 +66,10 @@
     {% if not user.is_superuser %}
       setDisabled( 'id_project' )
     {% endif %}
+*/
+    setDisabled( 'id_path_type')
+    setDisabled( 'id_project')
+    setDisabled('id_state');
   })
 </script>
 

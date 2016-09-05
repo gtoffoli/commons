@@ -1174,10 +1174,24 @@ class OER(Resource, Publishable):
     def can_access(self, user):
         if self.state==PUBLISHED:
             return True
+        """
+        if not user.is_authenticated():
+            return False
+        """
+        if not user.is_authenticated() and self.state in (DRAFT, SUBMITTED):
+            return False
+        project = self.project
+        # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
+        return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED)) or self.state == UN_PUBLISHED
+
+    def can_republish(self, user):
+        if self.state!=UN_PUBLISHED:
+            return True
         if not user.is_authenticated():
             return False
         project = self.project
-        return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
+        # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
+        return user.is_superuser or self.creator==user or project.is_admin(user)
  
     def can_edit(self, user):
         if not user.is_authenticated():
@@ -1220,6 +1234,13 @@ class OER(Resource, Publishable):
         if self.state not in [PUBLISHED]:
             return False
         return ProjectMember.objects.filter(user=user, state=1)
+
+    def oer_delete(self, request):
+        if self.state != DRAFT:
+           return True
+        for document in self.get_sorted_documents():
+            self.remove_document(document, request)
+        self.delete()
 
     def get_referring_lps(self):
         return LearningPath.objects.filter(path_node__oer=self).distinct().order_by('title')

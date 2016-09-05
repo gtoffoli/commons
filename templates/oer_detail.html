@@ -7,7 +7,7 @@
 
 {% block body %}
 <article class="panel-white text-left marginTB30">
-  <div class="navbar panel-c2 panel-heading-c2 padding1020">
+  <!--div class="navbar panel-c2 panel-heading-c2 padding1020">
     <h2 class="pull-left marginTB5">{{ oer.title }}</h2>
     <p class="pull-right marginB0 font26">
       {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
@@ -15,11 +15,25 @@
       {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
       {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
     </p>
-  </div>
+  </div-->
+  {% if can_less_action %}
+    <div class="row panel-c2 panel-heading-c2 marginLR0 padding1020">
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5" style="padding-left:0">{% if can_remove %}<form class="view_inline" action="/oer/{{ oer.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
+      <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right" style="padding-left:0">
+        {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+        {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
+        {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
+        {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
+      </p>
+    </div>
+  {% else %}
+    <div class="panel-c2 panel-heading-c2 padding1020"><h2 class="marginTB5">{{ oer.title }}</h2></div>
+  {% endif %}
   <section class="view-card-details">
     <div class="row">
       <div class="col-sm-9 col-md-9 col-lg-9">
-      {% if is_un_published %}
+      	
+      {% if is_un_published and not can_republish %}
       <div class="marginB10">
         <p>{{ oer.description }}</p>
       </div>
@@ -163,6 +177,7 @@
            <span class="demiBold">{% trans "on" %}:</span> {{ oer.created|date:"d/m/Y" }} <br>
            <span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>
         </p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ oer.modified|date:"d/m/Y" }}</p>
         {% if user.is_authenticated %}
           {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>{% endif %}
           {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
@@ -175,9 +190,10 @@
                 {% if can_un_publish %}<li class="marginB5"><a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
             </ul>
           {% endif %}
+        {% else %}
+          {% if is_un_published %}<p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></p>{% endif %}
         {% endif %}
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ oer.modified|date:"d/m/Y" }}</p>
-        {% if is_published %}
+        {% if is_published or is_un_published %}
           <dl class="font14 marginB10">
             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
             {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" %}</dd>{% endwith %}
@@ -210,6 +226,12 @@
 
 {% block extra_script %}
 <script type="text/javascript">
+	{% if can_remove %}
+		function confirm_delete(form) {
+			return confirm('{% trans "do you really want to delete" %} {% trans "this OER" %}?');
+		}
+	{% endif %}
+	
 $(document).ready(function (){
 	$('dt a.toggleIcon').on('click', function(event){
 		event.preventDefault();

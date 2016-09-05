@@ -2019,6 +2019,7 @@ def oer_view(request, oer_id, oer=None):
     var_dict = { 'oer': oer, }
     var_dict['oer_url'] = oer.url
     var_dict['is_published'] = oer.state == PUBLISHED
+    var_dict['is_un_published'] = un_published = oer.state == UN_PUBLISHED
     if user.is_authenticated():
         profile = user.get_profile()
         add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
@@ -2031,6 +2032,7 @@ def oer_view(request, oer_id, oer=None):
     var_dict['add_bookmarked'] = add_bookmarked
     var_dict['in_bookmarked_oers'] = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     var_dict['can_evaluate'] = oer.can_evaluate(request.user)
+    var_dict['can_republish'] = oer.can_republish(user)
     var_dict['evaluations'] = oer.get_evaluations()
     url = oer.url
     youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
@@ -2074,8 +2076,10 @@ def oer_detail(request, oer_id, oer=None):
     elif not oer_id:
         oer_id = oer.id
     user = request.user
+
     if not oer.can_access(user):
         raise PermissionDenied
+
     var_dict = { 'oer': oer, }
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = oer.state == PUBLISHED
@@ -2090,9 +2094,10 @@ def oer_detail(request, oer_id, oer=None):
         if not oer_id in bookmarked_oers:
             set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
     var_dict['add_bookmarked'] = add_bookmarked
-    var_dict['in_bookmarked_oers'] = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
+    var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     var_dict['can_edit'] = can_edit = oer.can_edit(user)
     var_dict['can_delete'] = can_delete = oer.can_delete(user)
+    var_dict['can_remove'] = can_delete and oer.state == DRAFT
     if can_delete and request.GET.get('cut', ''):
         cut_oers = get_clipboard(request, key='cut_oers') or []
         if not oer_id in cut_oers:
@@ -2103,7 +2108,9 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_reject'] = oer.can_reject(request)
     var_dict['can_publish'] = oer.can_publish(request)
     var_dict['can_un_publish'] = oer.can_un_publish(request)
-    var_dict['can_evaluate'] = oer.can_evaluate(user)
+    var_dict['can_republish'] = oer.can_republish(user)
+    var_dict['can_evaluate'] = can_evaluate = oer.can_evaluate(user)
+    var_dict['can_less_action'] = can_edit or (add_bookmarked and not in_bookmarked_oers) or can_evaluate
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
@@ -2231,6 +2238,17 @@ def oer_un_publish(request, oer_id):
     oer.un_publish(request)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
+def oer_delete(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
+    project = oer.project
+    oer.oer_delete(request)
+    if project:
+        return HttpResponseRedirect('/project/%s/' % project.slug)
+    else:
+        return my_profile(request)
+        
 def oer_evaluation_detail(request, evaluation=None):
     var_dict = { 'evaluation': evaluation, }
     var_dict['oer'] = evaluation.oer
@@ -2673,6 +2691,7 @@ def lp_play(request, lp_id, lp=None):
         var_dict['oer'] = oer
         url = oer.url
         var_dict['oer_url'] = oer.url
+        var_dict['oer_is_un_published'] = oer.state == UN_PUBLISHED
         youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
         if youtube:
             if youtube.count('embed'):

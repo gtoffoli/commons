@@ -9,8 +9,8 @@
 {% block nav %}
   <div class="navbar">
     <div class="pull-left">
-      <h5 class="c-pacific-blue marginB0">{% if not is_published %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small>{% endif %}{{ oer.title }}</h5>
-      {% if is_published %}
+      <h5 class="c-pacific-blue marginB0">{% if not is_published %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}{{ oer.title }}</h5>
+      {% if is_published or is_un_published %}
         <div class="font12">
           {% with stars=oer.get_stars %}
             {% include "_view_rating.html" %}
@@ -27,6 +27,7 @@
 
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
+	{% if can_republish %}
   <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer_url }}</a></p>
   <div class="iframe-container">
   {% if oer_url %}
@@ -41,6 +42,7 @@
     {% else %}
       <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
     {% endif %}
+  {% endif %}
   {% endif %}
   </div>
 </div>
