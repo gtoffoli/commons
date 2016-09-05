@@ -94,6 +94,7 @@
 {% endblock entry-widgets %}
 
 {% block entry-pingbacks %}
+{% comment %}
 <section id="pingbacks">
   <h4>{% trans "Pingbacks" %}</h4>
   {% if object.pingback_count %}
@@ -134,10 +135,11 @@
   {% endif %}
   {% endblock pingbacks-status %}
 </section>
+{% endcomment %}
 {% endblock entry-pingbacks %}
 
-{% comment %}
 {% block entry-trackbacks %}
+{% comment %}
 {% if object.trackback_count or object.trackbacks_are_open %}
 <section id="trackbacks">
   <h4>{% trans "Trackbacks" %}</h4>
@@ -181,8 +183,8 @@
   {% endblock trackbacks-status %}
 </section>
 {% endif %}
-{% endblock entry-trackbacks %}
 {% endcomment %}
+{% endblock entry-trackbacks %}
 
 {% block entry-comments %}
 <section id="comments">
