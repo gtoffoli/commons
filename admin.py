@@ -16,7 +16,7 @@ from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
 """
 
-from .models import Tag, UserProfile, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
@@ -32,9 +32,15 @@ class UserProfileInline(admin.StackedInline):
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span6', 'size':'12'})},}
 
+class UserPreferencesInline(admin.StackedInline):
+    model = UserPreferences
+    # form = UserProfileChangeForm
+    can_delete = False
+    verbose_name_plural = 'user preferences'
+
 class UserAdmin(UserWithMPTTAdmin):
     form = UserChangeForm
-    inlines = (UserProfileInline,)
+    inlines = (UserProfileInline, UserPreferencesInline,)
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
