@@ -77,6 +77,11 @@ def user_is_completed_profile(self):
     return True
 User.is_completed_profile = user_is_completed_profile
 
+def user_get_preferences(self):
+    preferences = UserPreferences.objects.filter(user=self)
+    return preferences and preferences[0] or None
+User.get_preferences = user_get_preferences
+
 def user_is_full_member(self):
     """ user is full member of CommonSpaces if has a complete profile
     and is member of a Community (Project membership is not enough """
@@ -159,6 +164,7 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
+import django_comments as comments
 class Resource(models.Model):
     class Meta:
         abstract = True
@@ -166,6 +172,25 @@ class Resource(models.Model):
     deleted = models.BooleanField(default=False, verbose_name=_('deleted'))
     small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
     big_image = models.ImageField('big image', upload_to='images/resources/', null=True, blank=True)
+
+    comment_enabled = models.BooleanField(
+        _('comments enabled'), default=True,
+        help_text=_('Allows comments if checked.'))
+    comment_count = models.IntegerField(
+        _('comment count'), default=0)
+
+    @property
+    # def discussions(self):
+    def comments(self):
+        """
+        Returns a queryset of the published comments.
+        """
+        return comments.get_model().objects.for_model(
+            self).filter(is_public=True, is_removed=False)
+
+    @property
+    def comments_are_open(self):
+        return True
 
 DRAFT = 1
 SUBMITTED = 2
@@ -334,6 +359,12 @@ mentor_fitness_metrics = {
     'subjects': 1.5,
     'languages': 1.5,
 }
+
+class UserPreferences(models.Model):
+    user = models.OneToOneField(User, primary_key=True, related_name='preferences')
+    enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
+    stream_max_days = models.PositiveIntegerField(default=90, null=True, verbose_name=_('activity stream max days'), help_text=_('Max age of actions to list in my dashboard.'))
+    stream_max_actions = models.PositiveIntegerField(default=30, null=True, verbose_name=_('activity stream max actions '), help_text=_('Max number of actions to list in my dashboard.'))
 
 from awesome_avatar.fields import AvatarField
 class UserProfile(models.Model):

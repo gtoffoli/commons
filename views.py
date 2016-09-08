@@ -2081,6 +2081,7 @@ def oer_detail(request, oer_id, oer=None):
         raise PermissionDenied
 
     var_dict = { 'oer': oer, }
+    var_dict['object'] = oer
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = oer.state == PUBLISHED
     var_dict['is_un_published'] = oer.state == UN_PUBLISHED
