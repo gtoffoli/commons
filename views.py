@@ -1411,6 +1411,9 @@ def repo_detail(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
     var_dict = { 'repo': repo, }
+    var_dict['object'] = repo
+    var_dict['is_published'] = repo.state == PUBLISHED
+    var_dict['can_comment'] = repo.can_comment(request)
     var_dict['repo_type'] = repo.repo_type
     var_dict['can_edit'] = repo.can_edit(request)
     var_dict['can_submit'] = repo.can_submit(request)
@@ -2082,6 +2085,7 @@ def oer_detail(request, oer_id, oer=None):
 
     var_dict = { 'oer': oer, }
     var_dict['object'] = oer
+    var_dict['can_comment'] = oer.can_comment(request)
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = oer.state == PUBLISHED
     var_dict['is_un_published'] = oer.state == UN_PUBLISHED
@@ -2505,6 +2509,8 @@ def lp_detail(request, lp_id, lp=None):
     if not lp.can_access(user):
         raise PermissionDenied
     var_dict = { 'lp': lp, }
+    var_dict['object'] = lp
+    var_dict['can_comment'] = lp.can_comment(request)
     var_dict['project'] = lp.project
     var_dict['is_published'] = lp.state == PUBLISHED
     var_dict['can_play'] = lp.can_play(request)

@@ -192,6 +192,10 @@ class Resource(models.Model):
     def comments_are_open(self):
         return True
 
+    def can_comment(self, request):
+        user = request.user
+        return user.is_authenticated()  and user.profile and user.profile.get_completeness()
+
 DRAFT = 1
 SUBMITTED = 2
 PUBLISHED = 3
