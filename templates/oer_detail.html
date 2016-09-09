@@ -229,13 +229,13 @@
       </div>
     </div>
 
-{% comment %}
 {% block entry-comments %}
 <hr>
 <dl class="font14 marginB10">
   <dt class="demiBold"><h3 style="margin-bottom: 20px;">{% trans "Comments" %}</h3></dt>
   <dd>
-  {% if object.comment_count %}
+  {% get_comment_count for object as comment_count %}
+  {% if comment_count %}
   {% with comment_list=object.comments %}
   {% block comments-loop %}
   <ol id="comment-list">
@@ -307,7 +307,6 @@
   </dd>
 </dl>
 {% endblock entry-comments %}
-{% endcomment %}
   </section>
 </article>
 {% endblock %}
