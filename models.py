@@ -176,8 +176,10 @@ class Resource(models.Model):
     comment_enabled = models.BooleanField(
         _('comments enabled'), default=True,
         help_text=_('Allows comments if checked.'))
+    """
     comment_count = models.IntegerField(
         _('comment count'), default=0)
+    """
 
     @property
     # def discussions(self):
