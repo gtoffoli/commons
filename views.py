@@ -595,11 +595,13 @@ def user_activity(request, username):
     var_dict['actions'] = actions
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
 
+"""
 def send_message_to(request, username):
-    user = get_object_or_404(User, username=username)
-    recipient_filter = [user.username]
-    track_action(request.user, 'Send', None, target=user)
-    return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
+    recipient_user = get_object_or_404(User, username=username)
+    track_action(request.user, 'Send', None, target=recipient_user)
+    print request.user, 'Send', None, recipient_user
+    return message_compose(request, recipient=recipient_user.username)
+"""
 
 def cops_tree(request):
     """

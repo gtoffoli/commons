@@ -20,7 +20,11 @@
       {% if can_edit %}<div style="margin-top:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
       </div>
 	{% endif %}
-	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  profile_user.get_display_name }}</h2>
+	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{ profile_user.get_display_name }}
+	{% if complete_profile and not request.user = profile_user %}
+		&nbsp; <a href="/my_mail/compose/{{ profile_user.username }}/" title="{% trans "send a message to" %} {{ profile_user.get_display_name }}"><i class="fa fa-envelope" style="font-size: 0.7em; vertical-align="middle"></i></a>
+	{% endif %}
+	</h2>
     {% if can_edit and complete_profile %}
       <ul class="pull-right marginT20 marginB0 font16">
         <li><a href="/my_home/">{% trans "my home"|capfirst %}</a></li>
