@@ -23,7 +23,7 @@
     {% if complete_profile %}
       <ul class="pull-right marginT20 marginB0 font16">
         <li><a href="/my_profile/">{% trans "my profile"|capfirst %}</a></li>
-        <li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
+        <li><a href="/edit_preferences/?next={{request.path}}">{% trans "preferences"|capfirst %}</a></li>
       </ul>
     {% endif %}
   </div>
@@ -35,11 +35,26 @@
           <ul class="list-inline list-unstyled margin0 padding105">
             <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if user.inbox_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ user.inbox_count}}</sup>{% endif %}</div></a></li>
             <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %} <sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
-            <li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>
+            {% comment %}<li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>{% endcomment %}
+         {% if user.is_superuser or user.is_manager %}
+           <li class="dropdown">
+             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bar-chart" aria-hidden="true"></i> {% trans "analytics"|capfirst %} <b class="caret"></b></a>
+             <ul class="dropdown-menu">
+                <li><a href="{% url "activity_stream" %}">{% trans "activity stream"|capfirst %}</a></li>
+                <li><a href="{% url "forum_analytics" %}">{% trans "forums"|capfirst %}</a></li>
+                <li><a href="{% url "message_analytics" %}">{% trans "messages"|capfirst %}</a></li>
+             </ul>
+           </li>
+         {% endif %}
           </ul>
           {% if request.user.is_staff %}
           <ul class="list-inline list-unstyled margin0 padding105">
-            <li><a href="/admin/commons/featured/" target="_blank"><i class="fa fa-edit"></i> {% trans "manage featured"|capfirst %}</a></small></li>
+            <li><i class="fa fa-edit"></i> {% trans "manage"|capfirst %}:</li>
+            <li><a href="/admin/commons/featured/" target="_blank">{% trans "featured"|capfirst %}</a></small></li>
+            <li style="padding-left:0; padding-right:0">|</li>
+            <li><a href="/admin/flatpages/flatpage/" target="_blank">{% trans "flatpages"|capfirst %}</a></small></li>
+            <li style="padding-left:0; padding-right:0">|</li>
+            <li><a href="/admin/zinnia/entry/" target="_blank">{% trans "Weblog"|capfirst %}</a></small></li>
           </ul>
           {% endif %}
         </div>
@@ -173,28 +188,33 @@
         </div>
       </div>	
       <div class="col-sm-8 col-md-8 col-lg-8">
-		{% if my_last_actions %}
-		  <div class="panel-white">
-            <div class="panel-heading-c0 padding510 demiBold">{% trans "my activity of last period"|capfirst %}</div>
-            <div {% if my_last_actions|length > 10 %} class="box-scroll box-medium" {% endif %}>
-          	  <ul class="list-unstyled my-list-unstyled padding510">
-            {% for action in my_last_actions %}
-	            <li><small>{{ action.timestamp|date:"d.m.Y" }} {{ action.verb }} {% if action.description %}{{ action.description }}s{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}: 
-	            	{% if action.action_object.get_absolute_url %}
-	            	<a href="{{ action.action_object.get_absolute_url }}">{% endif %}
-	            		{% if action.action_object.name %}
-	            		{{ action.action_object.name|truncatechars:60 }}
-	            		{% elif action.action_object.title %}
-	            		{{ action.action_object.title|truncatechars:60 }}
-	            		{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% endif %}
-	            		{% if action.action_object %}</a>{% endif %}</small></li>
-            {% endfor %}
-	</ul>
-		  </div>
-		</div>
-		{% endif %}
+         <div class="panel-white">
+           <div class="panel-heading-c0 padding510 demiBold">{% trans "my activity of last period"|capfirst %} ({{ max_days }} {% trans "days" %})</div>
+             {% if my_last_actions %}
+               <div {% if my_last_actions|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                 <ul class="list-unstyled my-list-unstyled padding510">
+                 {% for action in my_last_actions %}
+                    <li><small>{{ action.timestamp|date:"d.m.Y" }} {{ action.verb }} {% if action.description %}{{ action.description }}s{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}: 
+                    {% if action.action_object.get_absolute_url %}
+                      <a href="{{ action.action_object.get_absolute_url }}">{% endif %}
+                    {% if action.action_object.name %}
+                      {{ action.action_object.name|truncatechars:60 }}
+                    {% elif action.action_object.title %}
+                      {{ action.action_object.title|truncatechars:60 }}
+                    {% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% endif %}
+                    {% if action.action_object %}</a>{% endif %}</small></li>
+                 {% endfor %}
+                 </ul>
+               </div>
+             {% else %}
+             <div class="padding510">{% trans "no actions of last period"|capfirst %}</div>
+             {% endif %}
+         </div>
+<div class="row marginB20">
+{% if my_lps %}
+<div class="col-sm-6 col-md-6 col-lg-6">
+
         <div class="panel-white">
-	      {% if my_lps %}
             <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
             <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
           	  <ul class="list-unstyled my-list-unstyled padding510">
@@ -203,9 +223,17 @@
               {% endfor %}
 			  </ul>
             </div>
-	      {% endif %}
-    	  <div class="panel-footer-c1 padding510 demiBold"><a href="/lp_new/">{% trans "create personal Learning Path"|capfirst %}</a></div>
+
         </div>
+</div>
+{% endif %}
+<div class={% if my_lps %} "col-sm-6 col-md-6 col-lg-6" {% else %} "col-sm-12 col-md-12 col-lg-12"{% endif %}>
+
+    	  <div><a class="bc-c1 borderRadius4 c-white padding510 demiBold" href="/lp_new/">{% trans "create personal Learning Path"|capfirst %}</a></div>
+</div>
+</div>
+<div class="row">
+<div class="col-sm-6 col-md-6 col-lg-6">
 	    {% if oers %}
 		  <div class="panel-white">
             <div class="panel-heading-c2 padding510 demiBold">{% trans "OERs"|capfirst %}</div>
@@ -218,6 +246,8 @@
             </div>
 		  </div>
 	    {% endif %}
+</div>
+<div class="col-sm-6 col-md-6 col-lg-6">
 		{% if lps %}
 		  <div class="panel-white">
             <div class="panel-heading-c1 padding510 demiBold">{% trans "learning paths"|capfirst %}</div>
@@ -230,7 +260,8 @@
             </div>
 		  </div>
 	    {% endif %}
-
+</div>
+</div>
 	</div>
     </div>
       {% else %}

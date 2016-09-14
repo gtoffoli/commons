@@ -11,17 +11,30 @@
 
      {% if user.is_authenticated %}
        <ul class="nav navbar-nav pull-right my-navbar-user-auth">
-         <li>{% if user.is_completed_profile %}<a href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}">{% else %}<a href="{% url "account_settings" %}" title="{% trans "my profile"|capfirst %}">{% endif %}
+       	<!-- {% url "account_settings" %}  profile/{{ user.get_display_name }}/edit -->
+         <li>{% if user.is_completed_profile %}<a href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}">{% else %}<a href="/user_welcome" title="{% trans "complete profile"|capfirst %}">{% endif %}
            {% if user.profile.avatar %}
              <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
            {% else %}
              <img src="/media/images/avatars/anonymous.png" class="avatar-small">
            {% endif %}{% if not user.is_completed_profile %}<sup class="fa fa-exclamation-triangle" style="border-top-left-radius:10px; background:#222; margin-left:-10px; font-size:13px; color:yellow;" aria-hidden="true"></sup>{% endif %} <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
          </a></li>
+         {% if user.is_completed_profile %}
          <li><a href="/my_mail/" title="{% trans "my messages" %}"><div class="fa fa-envelope">{% if user.inbox_count %}<div class="txt-over">{{ user.inbox_count}}</div>{% endif %}</div></a></li>
          <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><div class="fa fa-comment">{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<div class="txt-over">{{ unviewed_posts_count}}</div>{% endif %}{% endwith %}</div></a></li>
+         {% if user.is_superuser or user.is_manager %}
+           <li class="dropdown">
+             <a href="#" class="dropdown-toggle c-white" data-toggle="dropdown"><i class="fa fa-bar-chart" aria-hidden="true"></i> <b class="caret"></b></a>
+             <ul class="dropdown-menu">
+                <li><a href="{% url "activity_stream" %}">{% trans "activity stream"|capfirst %}</a></li>
+                <li><a href="{% url "forum_analytics" %}">{% trans "forums"|capfirst %}</a></li>
+                <li><a href="{% url "message_analytics" %}">{% trans "messages"|capfirst %}</a></li>
+             </ul>
+           </li>
+         {% endif %}
          {% if request.user.is_staff %}
            <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog"></span></a></li>
+         {% endif %}
          {% endif %}
          <li>
            <form method="post" action="{% url 'account_logout' %}" class="form-logout">{% csrf_token %}

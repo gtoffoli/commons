@@ -334,6 +334,7 @@
 
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if request.user.is_authenticated %}
+     
        {% if can_apply %}
           <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
            {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
@@ -341,7 +342,13 @@
           {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
           {% endif %}
+       {% else %}
+          <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
+           {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
        {% endif %}
+     {% else %}
+          <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
+           {% if proj_type.name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
      {% endif %}
 
 

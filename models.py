@@ -82,6 +82,13 @@ def user_get_preferences(self):
     return preferences and preferences[0] or None
 User.get_preferences = user_get_preferences
 
+def user_get_email_notifications(self):
+    preferences = self.get_preferences()
+    if not preferences:
+        preferences = self.get_profile()
+    return preferences and preferences.enable_email_notifications or False
+User.get_email_notifications = user_get_email_notifications 
+
 def user_is_full_member(self):
     """ user is full member of CommonSpaces if has a complete profile
     and is member of a Community (Project membership is not enough """
@@ -118,7 +125,7 @@ def user_is_community_manager(self):
     return False
 User.is_community_manager = user_is_community_manager
 
-def user_is_manager(self, level=0):
+def user_is_manager(self, level=1):
     if self.is_authenticated():
         groups = Group.objects.filter(level__lt=level+1)
         for group in groups:
@@ -540,6 +547,7 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+        UserPreferences.objects.create(user=instance)
 
 post_save.connect(create_user_profile, sender=User,
                  dispatch_uid="create_user_profile")

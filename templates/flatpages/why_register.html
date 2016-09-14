@@ -1,0 +1,55 @@
+{% extends "commons_base.html" %}
+
+{% load i18n staticfiles %}
+{% load socialaccount %}
+
+{% block head_title %}{{ flatpage.title }}{% endblock %}
+{% block extra_style %}
+<style>
+body {
+  background: #0E1B24 !important;
+}
+.container-back {
+  background: url({% static 'commons/img/community.jpg' %}) no-repeat top center;
+  background-size: cover;
+  padding-bottom: 5.80%;
+}
+.box_sup {
+  margin:70px 0 0 0;
+  border-top-left-radius:10px;
+  border-top-right-radius:10px;
+  padding:10px 20px;
+  background: rgba(255,255,255,0.9);
+}
+.box_inf {
+  margin:0 0 70px 0;
+  border-bottom-left-radius:10px;
+  border-bottom-right-radius:10px;
+  padding:10px 20px 10px 20px;
+  background: rgba(255,255,255,1);
+}
+</style>
+{% endblock %}
+
+{% block body_class %} why_register{% endblock %}
+
+{% block body_base %}
+
+  <div class="container-fluid container-back">
+    <div class="container">
+      <div class="box_sup">
+        <h1 class="text-center">{{ flatpage.title }}</h1>
+        <div class="font16 demiBold">{{ flatpage.content|safe }}</div>
+      </div>
+      <div class="box_inf">
+        <ul class="list-inline marginB0 marginL0 text-center">
+          <li class="font24" style="margin-right:30px; vertical-align:middle"><a href="/accounts/signup/" class="bc-c4 borderRadius4 paddingLR40 c-white" style="padding-bottom:3px">{% trans "sign up"|capfirst %}</a></li>
+          <li class="font24" style="margin-right:20px; vertical-align:middle">{% trans "or"|upper %}</li>
+          <li><div class="social-login font18">{% trans "Login With"|capfirst %} <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}"><img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
+            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}"><img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+          </div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{% endblock %}

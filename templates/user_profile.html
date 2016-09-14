@@ -20,22 +20,21 @@
       {% if can_edit %}<div style="margin-top:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
       </div>
 	{% endif %}
-	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{ profile_user.get_display_name }}
-	{% if complete_profile and not request.user = profile_user %}
+	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  profile_user.get_display_name }} 
+		{% if complete_profile and not request.user = profile_user %}
 		&nbsp; <a href="/my_mail/compose/{{ profile_user.username }}/" title="{% trans "send a message to" %} {{ profile_user.get_display_name }}"><i class="fa fa-envelope" style="font-size: 0.7em; vertical-align="middle"></i></a>
-	{% endif %}
-	</h2>
+	{% endif %}</h2>
     {% if can_edit and complete_profile %}
       <ul class="pull-right marginT20 marginB0 font16">
         <li><a href="/my_home/">{% trans "my home"|capfirst %}</a></li>
-        <li><a href="/my_preferences/">{% trans "preferences"|capfirst %}</a></li>
+        <li><a href="/edit_preferences/?next={{request.path}}">{% trans "preferences"|capfirst %}</a></li>
       </ul>
     {% endif %}
   </div>
   
   <section class="padding10">
     <div class="row">
-      <div class="col-sm-9 col-md-9 col-lg-9">
+      <div class={% if likes %}"col-sm-9 col-md-9 col-lg-9"{% else %}"col-sm-12 col-md-12 col-lg-12"{% endif %}>
         <div class="panel-white">
           {% if can_edit and not complete_profile %}
             <p class="text-center font18 txt-error paddingT10">{% trans "please, complete your profile"|capfirst %}!  &nbsp; <a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit"></i></a></p>
@@ -149,24 +148,23 @@
 			</ul>
 		  </div>
 		{% endif %}
-		
       </div>
+    {% if likes %}
       <div class="col-sm-3 col-md-3 col-lg-3">
-        {% if likes %}
-          <div class="panel-white">
-            <div class="panel-heading-c0 padding510 demiBold">{% trans "similar members"|capfirst %}</div>
-            <div {% if likes|length > 10 %} class="box-scroll box-medium" {% endif %}>
-              <ul class="list-unstyled my-list-unstyled padding510">
+        <div class="panel-white">
+          <div class="panel-heading-c0 padding510 demiBold">{% trans "similar members"|capfirst %}</div>
+          <div {% if likes|length > 10 %} class="box-scroll box-medium" {% endif %}>
+            <ul class="list-unstyled my-list-unstyled padding510">
               {% for like in likes %}
                 {% if like.0 > 0.5 or forloop.counter < 6 %}
                   <li><small class="demiBold">{{ like.0|floatformat:2 }}</small> &nbsp; <img {% if like.2 %} src="/media/{{ like.2 }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <small><a href="/profile/{{like.1.username }}/" title="{% trans "view user profile" %}">{{ like.1.get_display_name }}</a></small></li>
                 {% endif %}
               {% endfor %}
-              </ul>
-            </div>
+            </ul>
           </div>
-        {% endif %}
+        </div>
       </div>
+    {% endif %}
     </div>
   </section>
 </article>

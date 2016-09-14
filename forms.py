@@ -28,7 +28,7 @@ from dal import autocomplete
 
 import settings
 from dmuc.models import Room
-from models import UserProfile, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
+from models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode, Featured
@@ -107,8 +107,10 @@ class AvatarForm(forms.ModelForm):
 
 class UserPreferencesForm(forms.ModelForm):
     class Meta:
-        model = UserProfile
-        fields = ['enable_email_notifications',]
+        model = UserPreferences
+        fields = ['user','enable_email_notifications','stream_max_days','stream_max_actions',]
+        
+    user = forms.IntegerField(widget=forms.HiddenInput())
 
 class PeopleSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):

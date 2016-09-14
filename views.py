@@ -33,7 +33,7 @@ from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEnt
 from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import Featured, Tag, UserProfile, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED, UN_PUBLISHED
@@ -478,8 +478,18 @@ def user_dashboard(request, username, user=None):
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=360, max_actions=30)
+    user_preferences = user.get_preferences()
+    if user_preferences:
+        max_days = user_preferences.stream_max_days
+        max_actions = user_preferences.stream_max_actions
+    else:
+        max_days = 90
+        max_actions = 30
+    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=max_days, max_actions=max_actions)
+    var_dict['max_days'] = max_days
+    var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
+    
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
 
 def my_home(request):
@@ -557,22 +567,25 @@ def my_preferences(request):
  
 def edit_preferences(request):
     user = request.user
-    profile = UserProfile.objects.get(user=user)
+    called_by = request.GET.get('next','')
+    users_preferences = UserPreferences.objects.filter(user=user)
+    preferences = users_preferences and users_preferences[0] or None
     if request.POST:
-        form = UserPreferencesForm(request.POST, instance=profile)
-        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+        form = UserPreferencesForm(request.POST, instance=preferences)
+        if request.POST.get('save', '') or request.POST.get('continue', ''):
             if form.is_valid():
                 form.save()
                 if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/my_preferences/')
+                    return HttpResponseRedirect(called_by)
                 else: 
-                    return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                    return render_to_response('edit_preferences.html', {'form': form, 'user': user, 'next': called_by}, context_instance=RequestContext(request))
             else:
-                return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                print form.errors
+                return render_to_response('edit_preferences.html', {'form': form, 'user': user, 'next': called_by}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/my_home/')
+            return HttpResponseRedirect(called_by)
     else:
-        form = UserPreferencesForm(instance=profile)
+        form = UserPreferencesForm(instance=preferences)
     return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
 
 def new_posts(request, username):

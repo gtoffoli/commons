@@ -187,6 +187,7 @@ Menu.add_item("main", MenuItem(capfirst(_("help")),
                                check=True,
                                children=help_children,
                                separator=True))
+"""
 Menu.add_item("main", MenuItem(capfirst(_("analytics")),
                                url='/p',
                                weight=30,
@@ -194,3 +195,4 @@ Menu.add_item("main", MenuItem(capfirst(_("analytics")),
                                check=lambda request: admin_children(request) and True or False,
                                children=admin_children,
                                separator=True))
+"""
