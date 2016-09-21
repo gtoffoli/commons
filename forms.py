@@ -254,8 +254,8 @@ class RepoForm(forms.ModelForm):
     class Meta:
         model = Repo
         # fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
-        fields = ('name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
-
+        fields = ('comment_enabled', 'name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
+        
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     repo_type = forms.ModelChoiceField(required=True, queryset=RepoType.objects.all(), label=_('repository type'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -613,3 +613,4 @@ class FeaturedChangeForm(autocomplete.FutureModelForm):
         required=False,
         widget=autocomplete.QuerySetSequenceSelect2('featured-autocomplete'),
         )
+

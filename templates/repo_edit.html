@@ -1,7 +1,6 @@
 {% extends "commons_base.html" %}
 
-{% load staticfiles%}
-{% load i18n %}
+{% load i18n staticfiles%}
 {% load tinymce_tags %}
 
 {% block head_title %}{% if repo %}{% trans "edit repository"|capfirst %}: {{ repo.name }}{% else %}{% trans "add repository"|capfirst %}{% endif %}{% endblock %}
@@ -37,6 +36,18 @@
 {% endblock %}
 
 {% block extra_script %}
+<script type="text/javascript">
+  function setDisabled( selectElementId){
+    if($('select[id="'+selectElementId+'"]').length > 0) {
+      var txtValue = $('select[id="'+selectElementId+'"] option:selected').text();
+      $("#"+selectElementId).css("display","none");
+      $('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
+    }
+  }
+ $(document).ready(function() {
+   setDisabled('id_state');
+ })
+</script>
 {% include "_tinymce_init.html" %}
 {% endblock %}
 

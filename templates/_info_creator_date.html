@@ -1,0 +1,8 @@
+{% load staticfiles i18n %}
+{% block info-creator-date %}
+        <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <img {% if data.creator.get_profile.avatar %} src="/media/{{ data.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/resources_by/{{ data.creator.username }}">{{ data.creator.get_full_name }}</a><br>
+           <span class="demiBold">{% trans "on" %}</span> {{ data.created|date:"d/m/Y" }} <br>
+           {% if data.project.slug %}<span class="demiBold">{% trans "in project" %}</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ data.project.slug }}/">{{ data.project }}</a>{% endif %}
+        </p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if data.editor.id != data.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if data.editor.get_profile.avatar %} src="/media/{{ data.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/resources_by/{{ data.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ data.modified|date:"d/m/Y" }}</p>
+{% endblock info-creator-date %}

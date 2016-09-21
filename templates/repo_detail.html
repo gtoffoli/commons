@@ -8,13 +8,14 @@
 
 {% block body %}
 <article class="panel-white text-left marginTB30">
-  <div class="navbar panel-c3 panel-heading-c3 padding1020">
-    <h2 class="pull-left marginTB5">{{ repo.name }}</h2>
-    <p class="pull-right marginB0 font26">
+  <div class="row panel-c3 panel-heading-c3 marginLR0 padding1020">
+    <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{{ repo.name }}</h2>
+    <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
       {% if can_edit %}&nbsp; <a href="/repo/{{ repo.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
       &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list font07em c-white"></i></a>
     </p>
   </div>
+
   <section class="view-card-details">
     <div class="row">
       <div class="col-sm-9 col-md-9 col-lg-9">
@@ -47,42 +48,11 @@
         {% endif %}
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
-        <p>
-          <span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/resources_by/{{ repo.creator.username }}">{{ repo.creator.get_full_name }}</a><br>
-          <span class="demiBold">{% trans "on" %}:</span> {{ repo.created|date:"d/m/Y" }}
-        </p>
-{% comment %}
-        {% if user.is_authenticated %}            
-            <div><strong>{% trans "publication state"|capfirst %}</strong>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span>
-                {% if can_submit %}&nbsp; <a href="/repo/{{ repo.id }}/submit/" title="{% trans "submit for publication" %}"><i class="fa fa-mail-forward" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_withdraw %}&nbsp; <a href="/repo/{{ repo.id }}/withdraw/" title="{% trans "withdraw" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_reject %}&nbsp; <a href="/repo/{{ repo.id }}/reject/" title="{% trans "reject" %}"><i class="fa fa-reply" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_publish %}&nbsp; <a href="/repo/{{ repo.id }}/publish/" title="{% trans "publish" %}"><i class="fa fa-check" style="font-size: 0.7em;""></i></a>{% endif %}
-                {% if can_un_publish %}&nbsp; <a href="/repo/{{ repo.id }}/un_publish/" title="{% trans "unpublish" %}"><i class="fa fa-lock" style="font-size: 0.7em;""></i></a>{% endif %}
-            </div>
-        {% endif %}
-{% endcomment %}
-        {% if user.is_authenticated %}
-          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span></div>{% endif %}
-          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
-            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ repo.get_title_color }};">{{ repo.get_state }}</span></div>{% endif %}
-            <ul class="list-inline">
-                {% if can_submit %}<li class="marginB5"><a href="/repo/{{ repo.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
-                {% if can_withdraw %}<li class="marginB5"><a href="/repo/{{ repo.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</li></a>{% endif %}
-                {% if can_reject %}<li class="marginB5"><a href="/repo/{{ repo.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
-                {% if can_publish %}<li class="marginB5"><a href="/repo/{{ repo.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
-                {% if can_un_publish %}<li class="marginB5"><a href="/repo/{{repo.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
-            </ul>
-          {% endif %}
-        {% endif %}
-        
-        
-        
-        
-        
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span>{% if repo.editor.id != repo.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ repo.editor.username }}">{{ repo.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ repo.modified|date:"d/m/Y" }}</p>
+        {% include "_info_creator_date.html" with data=repo %}
+        {% include "_change_state.html" with data=repo type_object="repo" %}
       </div>
     </div>
+		{% include "_object_comments.html" with data_class="c3" %}
   </section>
 </article>
 {% endblock %}

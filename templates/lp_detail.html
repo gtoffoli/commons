@@ -7,14 +7,26 @@
 {% block body_class %}lp_detail{% endblock %}
 {% block body %}
 <article class="panel-white text-left marginTB30">
-  <div class="navbar panel-c1 panel-heading-c1 padding1020">
+ {% comment %} <div class="navbar panel-c1 panel-heading-c1 padding1020">
     <h2 class="pull-left marginTB5">
     {% if can_delete %}<form class="view_inline" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2>
     <p class="pull-right marginB0 font26">
        {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
        {% if can_delete and not in_cut_lps %}&nbsp; <a href="/lp/{{ lp.slug }}/?cut=true" title="{% trans "mark this LP as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
     </p>
-  </div>
+  </div> {% endcomment %}
+  
+    {% if can_less_action %}
+    <div class="row panel-c1 panel-heading-c1 marginLR0 padding1020">
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_delete %}<form class="view_inline" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2></h2>
+      <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
+        {% if can_edit %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+       {% if can_delete and not in_cut_lps %}&nbsp; <a href="/lp/{{ lp.slug }}/?cut=true" title="{% trans "mark this LP as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
+      </p>
+    </div>
+  {% else %}
+    <div class="panel-c1 panel-heading-c1 padding1020"><h2 class="marginTB5">{{ lp.title }}</h2></div>
+  {% endif %}
   <section class="view-card-details">
     <div class="row">
       <div class="col-sm-9 col-md-9 col-lg-9">
@@ -95,9 +107,6 @@
           </dl>
         {% endif %}
 
-
-
-
         <dl class="list-inline font14 ">
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
           <dd><form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>
@@ -143,54 +152,15 @@
             {% endif %}
           </dl>
         {% endif %}
-      
-{% comment %}
-      {% if lp.get_nodes or can_edit %}
-    		<div><strong>{% trans "path nodes"|capfirst %}</strong></div>
-			{% if lp.path_type == 2 %}<ol class="root">{% else %}<ul class="root">{% endif %}
-		    {% for node in lp.get_ordered_nodes %}
-            	<li>{% if can_edit %}&nbsp;<a href="/pathnode/{{ node.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close font07em red"></i></a>&nbsp;&nbsp;
-            	{% if node.is_root or node.is_island %}&nbsp;&nbsp;{% else %}<a href="/pathnode/{{ node.id }}/up/" title="{% trans "move up" %}"><i class="fa fa-arrow-up font07em"></i></a>{% endif %}
-            	{% if node.is_leaf or node.is_island %}&nbsp;&nbsp;&nbsp;&nbsp;{% else %}&nbsp;<a href="/pathnode/{{ node.id }}/down/" title="{% trans "move down" %}"><i class="fa fa-arrow-down font07em"></i></a>&nbsp;{% endif %}
-            	{% endif %}
-            	<a href="/pathnode/{{ node.id }}/" title="path node">{{ node.label }}</a></li>
-		    {% endfor %}
-			{% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
-
-
-    		{% if can_edit %}
-			<ul class="list-unstyled" style="margin-left: 1.5em;">
-    			<li style="margin-top: 0em;"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default btn-primary btn-sm">{% trans "add node"|capfirst %}</a></li>
-		    	{% if bookmarked_oers %}{% for oer in bookmarked_oers %}
-	    		<li style="margin-top: 0.2em;"><a href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default btn-warning btn-sm">{% trans "add node with OER"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-		    	{% endfor %}{% endif %}
-			</ul>
-		    {% endif %}
-		    {% endif %}
-{% endcomment %}      
-      
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
-         <p><span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/profile/{{ lp.creator.username }}">{{ lp.creator.get_full_name }}</a>
-            {% comment %}<span class="demiBold">{% trans "on" %}:</span> {{ lp.created|date:"d/m/Y" }}{% endcomment %}
-            {% if project %}<br><span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ lp.project.slug }}/">{{ lp.project }}</a>{% endif %}
-         </p>
-
-        {% if user.is_authenticated %}
-          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span></div>{% endif %}
-          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
-            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span></div>{% endif %}
-            <ul class="list-inline">
-               {% if can_submit %}<li class="marginB5"><a href="/lp/{{ lp.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
-               {% if can_withdraw %}<li class="marginB5"><a href="/lp/{{ lp.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</a></li>{% endif %}
-               {% if can_reject %}<li class="marginB5"><a href="/lp/{{ lp.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
-               {% if can_publish %}<li class="marginB5"><a href="/lp/{{ lp.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
-               {% if can_un_publish %}<li class="marginB5"><a href="/lp/{{ lp.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
-            </ul>
-          {% endif %}
-        {% endif %}
+        {% include "_info_creator_date.html" with data=lp %}
+        {% include "_change_state.html" with data=lp type_object="lp" %}
       </div>
     </div>
+    
+		{% include "_object_comments.html" with data_class="c1" %}
+
   </section>
 </article>
 {% endblock %}

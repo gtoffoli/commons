@@ -1,20 +1,13 @@
 {% extends "commons_base.html" %}
 {% load staticfiles i18n %}
-{% load comments zinnia %}
 
 {% block head_title %}OER: {{ oer.title }}{% endblock %}
-
-{% block extra_head %}
-<style>
-#id_honeypot { display: none; }
-</style>
-{% endblock extra_head %}
 
 {% block body_class %}oer_detail{% endblock %}
 
 {% block body %}
 <article class="panel-white text-left marginTB30">
-  <!--div class="navbar panel-c2 panel-heading-c2 padding1020">
+  {% comment %}<div class="navbar panel-c2 panel-heading-c2 padding1020">
     <h2 class="pull-left marginTB5">{{ oer.title }}</h2>
     <p class="pull-right marginB0 font26">
       {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
@@ -22,11 +15,11 @@
       {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
       {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
     </p>
-  </div-->
+  </div>{% endcomment %}
   {% if can_less_action %}
     <div class="row panel-c2 panel-heading-c2 marginLR0 padding1020">
-      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5" style="padding-left:0">{% if can_remove %}<form class="view_inline" action="/oer/{{ oer.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
-      <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right" style="padding-left:0">
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_remove %}<form class="view_inline" action="/oer/{{ oer.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
+      <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
         {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
         {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
@@ -180,26 +173,8 @@
       {% endif %}
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
-        <p><span class="demiBold">{% trans "submitted by"|capfirst %}:</span> <a href="/resources_by/{{ oer.creator.username }}">{{ oer.creator.get_full_name }}</a><br>
-           <span class="demiBold">{% trans "on" %}:</span> {{ oer.created|date:"d/m/Y" }} <br>
-           <span class="demiBold">{% trans "in project" %}:</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ oer.project.slug }}/">{{ oer.project }}</a>
-        </p>
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if not oer.editor.id = oer.creator.id %} <span class="demiBold">{% trans "by" %}:</span> <a href="/resources_by/{{ oer.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}:</span> {{ oer.modified|date:"d/m/Y" }}</p>
-        {% if user.is_authenticated %}
-          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>{% endif %}
-          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
-            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>{% endif %}
-            <ul class="list-inline">
-                {% if can_submit %}<li class="marginB5"><a href="/oer/{{ oer.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
-                {% if can_withdraw %}<li class="marginB5"><a href="/oer/{{ oer.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</li></a>{% endif %}
-                {% if can_reject %}<li class="marginB5"><a href="/oer/{{ oer.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
-                {% if can_publish %}<li class="marginB5"><a href="/oer/{{ oer.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
-                {% if can_un_publish %}<li class="marginB5"><a href="/oer/{{ oer.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
-            </ul>
-          {% endif %}
-        {% else %}
-          {% if is_un_published %}<p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></p>{% endif %}
-        {% endif %}
+        {% include "_info_creator_date.html" with data=oer %}
+        {% include "_change_state.html" with data=oer type_object="oer" %}
         {% if is_published or is_un_published %}
           <dl class="font14 marginB10">
             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
@@ -229,86 +204,11 @@
       </div>
     </div>
 
-{% block entry-comments %}
-<hr>
-<dl class="font14 marginB10">
-  <dt class="demiBold"><h3 style="margin-bottom: 20px;">{% trans "Comments" %}</h3></dt>
-  <dd>
-  {% get_comment_count for object as comment_count %}
-  {% if comment_count %}
-  {% with comment_list=object.comments %}
-  {% block comments-loop %}
-  <ol id="comment-list">
-    {% for comment in comment_list %}
-    <li id="comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
-        class="comment vcard {% cycle box1,box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
-      {% block comment-image %}
-      <img src="{% get_gravatar comment.email 60 "G" %}"
-           class="gravatar photo" alt="{{ comment.name }}" />
-      {% endblock comment-image %}
-      {% block comment-info %}
-      <p class="comment-info">
-	{% if comment.url %}
-	<a href="{{ comment.url }}" rel="external nofollow"
-           class="fn url">{{ comment.name }}</a>
-	{% elif comment.user %}
-	<a href="/profile/{{ comment.user.username }}/">{{ comment.user.get_display_name }}</a>
-	{% else %}
-	<span class="fn">{{ comment.name }}</span>
-	{% endif %}
-	{% trans "on" context "on date" %}
-        <time class="comment-published" datetime="{{ comment.submit_date|date:"c" }}">
-          {{ comment.submit_date|date:"SHORT_DATETIME_FORMAT" }}
-        </time>
-        <a href="#comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
-           id="c{{ comment.pk }}" class="anchor-link"
-           title="{% trans "Direct link to this comment" %}">#</a>
-      </p>
-      {% endblock comment-info %}
-      {% block comment-content %}
-      {{ comment.comment|linebreaks }}
-      {% endblock comment-content %}
-    </li>
-    {% endfor %}
-  </ol>
-  {% endblock comments-loop %}
-  {% endwith %}
-    {% if not object.comments_are_open %}
-  <p>{% trans "Comments are closed." %}</p>
-    {% endif %}
-  {% else %}
-    {% if object.comments_are_open %}
-  <p>{% trans "No comments yet." %}</p>
-    {% else %}
-  <p>{% trans "Comments are closed." %}</p>
-    {% endif %}
-  {% endif %}
+		{% include "_object_comments.html" with data_class="c2" %}
 
-{% block entry-comments-form %}
-{% if is_published and object.comments_are_open %}
-{% if can_comment %}
-    {% get_comment_form for object as form %}
-    <form action="{% comment_form_target %}" method="POST">
-    {% csrf_token %}
-    {{ form.comment }}
-    {{ form.honeypot }}
-    {{ form.content_type }}
-    {{ form.object_pk }}
-    {{ form.timestamp }}
-    {{ form.security_hash }}
-    <input type="hidden" name="next" value="{{ object.get_absolute_url }}" />
-    <input type="submit" value="{% trans "Add comment" %}" id="id_submit" />
-    </form>
-{% else %}
-    <p>Please <a href="{% url 'account_login' %}">{% trans "log in" %}</a> {% trans "to leave a comment" %}.</p>
-{% endif %}
-{% endif %}
-{% endblock entry-comments-form %}
-  </dd>
-</dl>
-{% endblock entry-comments %}
   </section>
 </article>
+
 {% endblock %}
 
 {% block extra_script %}

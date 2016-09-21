@@ -1,0 +1,18 @@
+{% load staticfiles i18n %}
+{% block change-state %}
+        {% if user.is_authenticated %}
+          {% if not is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ data.get_title_color }};">{{ data.get_state }}</span></div>{% endif %}
+          {% if can_submit or can_withdraw or can_reject or can_publish or can_un_publish %}
+            {% if is_published %}<div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ data.get_title_color }};">{{ data.get_state }}</span></div>{% endif %}
+            <ul class="list-inline">
+                {% if can_submit %}<li class="marginB5"><a href="/{{ type_object }}/{{ data.id }}/submit/" title="{% trans "submit for publication" %}" class="btn btn-default"><i class="fa fa-mail-forward font07em"></i> {% trans "submit for publication" %}</a></li>{% endif %}
+                {% if can_withdraw %}<li class="marginB5"><a href="/{{ type_object }}/{{ data.id }}/withdraw/" title="{% trans "withdraw" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "withdraw" %}</li></a>{% endif %}
+                {% if can_reject %}<li class="marginB5"><a href="/{{ type_object }}/{{ data.id }}/reject/" title="{% trans "reject" %}" class="btn btn-default"><i class="fa fa-reply font07em"></i> {% trans "reject" %}</a></li>{% endif %}
+                {% if can_publish %}<li class="marginB5"><a href="/{{ type_object }}/{{ data.id }}/publish/" title="{% trans "publish" %}" class="btn btn-default"><i class="fa fa-check font07em"></i> {% trans "publish" %}</a></li>{% endif %}
+                {% if can_un_publish %}<li class="marginB5"><a href="/{{ type_object }}/{{ data.id }}/un_publish/" title="{% trans "unpublish" %}" class="btn btn-default"><i class="fa fa-lock font07em"></i> {% trans "unpublish" %}</a></li>{% endif %}
+            </ul>
+          {% endif %}
+        {% else %}
+          {% if is_un_published %}<p><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ data.get_title_color }};">{{ data.get_state }}</span></p>{% endif %}
+        {% endif %}
+{% endblock change-state %}

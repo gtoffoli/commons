@@ -376,64 +376,6 @@ def my_profile(request):
     user = request.user
     return user_profile(request, None, user=user)
 
-"""
-def user_dashboard(request, username, user=None):
-    if not username and (not user or not user.is_authenticated()):
-        return HttpResponseRedirect('/')
-    MAX_REPOS = MAX_OERS = MAX_LP = 5
-    var_dict = {}
-    var_dict['user'] = user = request.user
-    var_dict['profile'] = profile = user.get_profile()
-    var_dict['best_mentors'] = ''
-    if profile:
-        var_dict['complete_profile'] = profile_complete = profile.get_completeness()
-        if profile_complete:
-            var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
-    else:
-    	var_dict['complete_profile'] = False
-    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
-    com_adminships = []
-    com_only_memberships = []
-    for membership in memberships:
-        if membership.project.is_admin(user):
-            membership.proj_applications = membership.project.get_applications().count()
-            com_adminships.append(membership)
-        else:
-            com_only_memberships.append(membership)
-    var_dict['com_adminships'] = com_adminships
-    var_dict['com_only_memberships'] = com_only_memberships
-    memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp','sup',)).order_by('project__state','-project__created')
-    adminships = []
-    only_memberships = []
-    for membership in memberships:
-        if membership.project.is_admin(user):
-            membership.proj_applications = membership.project.get_applications()
-            adminships.append(membership)
-        else:
-            only_memberships.append(membership)
-    var_dict['adminships'] = adminships
-    var_dict['only_memberships'] = only_memberships
-    var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
-    var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
-    var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
-    var_dict['accept_members'] = True
-    var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
-    var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
-    print 'mentoring_rels : ', mentoring_rels
-    repos = Repo.objects.filter(creator=user).order_by('-created')
-    var_dict['more_repos'] = more_repos = repos.count() > MAX_REPOS
-    var_dict['repos'] = repos = repos[:MAX_REPOS]
-    oers = OER.objects.filter(creator=user).order_by('-created')
-    var_dict['more_oers'] = more_oers = oers.count() > MAX_OERS
-    var_dict['oers'] = oers = oers[:MAX_OERS]
-    lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('-created')
-    var_dict['more_lps'] = more_lps = lps.count() > MAX_LP
-    var_dict['lps'] = lps = lps[:MAX_LP]
-    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-created')
-    # return render_to_response('user_dashboard.html', {'user': user, 'profile': user.get_profile(), 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers, 'lps': lps, 'more_lps': more_lps, 'my_lps': my_lps,}, context_instance=RequestContext(request))
-    return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
-"""
-
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
         return HttpResponseRedirect('/')
@@ -475,8 +417,12 @@ def user_dashboard(request, username, user=None):
     var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
     var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
     var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
+    """
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
+    """
+    var_dict['oers'] = OER.objects.filter(creator=user).order_by('-modified')
+    var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     user_preferences = user.get_preferences()
     if user_preferences:
@@ -539,20 +485,19 @@ def profile_avatar_upload(request, username):
     if request.POST:
        if request.POST.get('cancel', ''):
            return HttpResponseRedirect('/my_profile/')
-       else: # Save or Save & continue
+       else: # Save
            form = AvatarForm(request.POST, request.FILES, instance=profile)
-           if form.is_valid():
-               form.save()
-               user.save()
-               if request.POST.get('save', ''):
-                   return HttpResponseRedirect('/my_profile/')
-               else: # continue
-                   form = AvatarForm(request.POST,instance=profile)
-                   # return HttpResponseRedirect('/project/%s/upload/' % project.slug)
-                   return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
-
-           else:
-               print form.errors
+           if request.FILES: 
+               if form.is_valid():
+                   form.save()
+                   user.save()
+                   """
+                   if request.POST.get('save', ''):
+                       return HttpResponseRedirect('/my_profile/')
+                   """
+               else:
+                   print form.errors
+           return HttpResponseRedirect('/my_profile/')
     else:
         if user.can_edit(request):
             form = AvatarForm(instance=profile)
@@ -1433,7 +1378,8 @@ def repo_detail(request, repo_id, repo=None):
         repo = get_object_or_404(Repo, pk=repo_id)
     var_dict = { 'repo': repo, }
     var_dict['object'] = repo
-    var_dict['is_published'] = repo.state == PUBLISHED
+    var_dict['is_published'] = is_published = repo.state == PUBLISHED
+    var_dict['is_un_published'] = is_un_published = repo.state == UN_PUBLISHED
     var_dict['can_comment'] = repo.can_comment(request)
     var_dict['repo_type'] = repo.repo_type
     var_dict['can_edit'] = repo.can_edit(request)
@@ -1442,6 +1388,7 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['can_reject'] = repo.can_reject(request)
     var_dict['can_publish'] = repo.can_publish(request)
     var_dict['can_un_publish'] = repo.can_un_publish(request)
+    var_dict['view_comments'] = is_published or is_un_published
 
     user = request.user
     if user.is_authenticated():
@@ -2108,11 +2055,11 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['object'] = oer
     var_dict['can_comment'] = oer.can_comment(request)
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
-    var_dict['is_published'] = oer.state == PUBLISHED
-    var_dict['is_un_published'] = oer.state == UN_PUBLISHED
+    var_dict['is_published'] = is_published = oer.state == PUBLISHED
+    var_dict['is_un_published'] = is_un_published = oer.state == UN_PUBLISHED
     if user.is_authenticated():
         profile = user.get_profile()
-        add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
+        add_bookmarked = is_published and profile and profile.get_completeness()
     else:
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
@@ -2128,15 +2075,15 @@ def oer_detail(request, oer_id, oer=None):
         cut_oers = get_clipboard(request, key='cut_oers') or []
         if not oer_id in cut_oers:
             set_clipboard(request, key='cut_oers', value=cut_oers+[oer_id])
-    var_dict['in_cut_oers'] = oer_id in (get_clipboard(request, key='cut_oers') or [])
+    var_dict['in_cut_oers'] = in_cut_oers = oer_id in (get_clipboard(request, key='cut_oers') or [])
     var_dict['can_submit'] = oer.can_submit(request)
     var_dict['can_withdraw'] = oer.can_withdraw(request)
     var_dict['can_reject'] = oer.can_reject(request)
     var_dict['can_publish'] = oer.can_publish(request)
     var_dict['can_un_publish'] = oer.can_un_publish(request)
-    var_dict['can_republish'] = oer.can_republish(user)
+    var_dict['can_republish'] = can_republish = oer.can_republish(user)
     var_dict['can_evaluate'] = can_evaluate = oer.can_evaluate(user)
-    var_dict['can_less_action'] = can_edit or (add_bookmarked and not in_bookmarked_oers) or can_evaluate
+    var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or can_evaluate or (can_delete and not in_cut_oers)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
@@ -2146,6 +2093,7 @@ def oer_detail(request, oer_id, oer=None):
         return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
     else:
     """
+    var_dict['view_comments'] = is_published or (is_un_published and can_republish)
     if user.is_authenticated():
         if oer.state == PUBLISHED and not user == oer.creator:
             # actstream.action.send(user, verb='View', action_object=oer)
@@ -2392,10 +2340,14 @@ def oer_add_document(request):
             oer_document = OerDocument(oer=oer, document=version.document)
             oer_document.save()
             oer.save()
-            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+            # return HttpResponseRedirect('/oer/%s/' % oer.slug)
+        """
         else:
             can_edit = oer.can_edit(request.user)
             return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
+        """
+        
+        return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
 # def document_download(request):
 def document_download(request, document_id, document=None):
@@ -2533,7 +2485,8 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['object'] = lp
     var_dict['can_comment'] = lp.can_comment(request)
     var_dict['project'] = lp.project
-    var_dict['is_published'] = lp.state == PUBLISHED
+    var_dict['is_published'] = is_published = lp.state == PUBLISHED
+    var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
     var_dict['can_delete'] = can_delete = lp.can_delete(request)
@@ -2542,7 +2495,8 @@ def lp_detail(request, lp_id, lp=None):
         cut_lps = get_clipboard(request, key='cut_lps') or []
         if not lp_id in cut_lps:
             set_clipboard(request, key='cut_lps', value=cut_lps+[lp_id])
-    var_dict['in_cut_lps'] = lp_id in (get_clipboard(request, key='cut_lps') or [])
+    var_dict['in_cut_lps'] = in_cut_lps = lp_id in (get_clipboard(request, key='cut_lps') or [])
+    var_dict['can_less_action'] = can_edit or can_delete or (can_delete and not in_cut_lps)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)
@@ -2555,6 +2509,7 @@ def lp_detail(request, lp_id, lp=None):
     if lp.path_type >= LP_SEQUENCE:
         var_dict['json'] = lp.get_json()
     """
+    var_dict['view_comments'] = is_published or is_un_published
     if user.is_authenticated():
         if lp.state == PUBLISHED and not user == lp.creator:
             # actstream.action.send(user, verb='View', action_object=lp)

@@ -195,11 +195,12 @@ class Resource(models.Model):
         Returns a queryset of the published comments.
         """
         return comments.get_model().objects.for_model(
-            self).filter(is_public=True, is_removed=False)
+            self).filter(is_public=True, is_removed=False).order_by('-pk')
 
     @property
     def comments_are_open(self):
-        return True
+        # return True
+        return self.comment_enabled
 
     def can_comment(self, request):
         user = request.user
@@ -246,7 +247,7 @@ class Publishable(object):
     def can_withdraw(self, request):
         return self.state in [SUBMITTED] and request.user == self.creator
     def can_reject(self, request):
-        return self.state in [SUBMITTED] and self.project and self.project.is_admin(request.user)
+        return self.state in [SUBMITTED] and request.user != self.creator and self.project and self.project.is_admin(request.user)
     def can_publish(self, request):
         return self.state in [SUBMITTED, UN_PUBLISHED] and self.project and self.project.is_admin(request.user)
     def can_un_publish(self, request):
@@ -1242,7 +1243,8 @@ class OER(Resource, Publishable):
         if not user.is_authenticated():
             return False
         project = self.project
-        return user.is_superuser or self.creator==user or project.can_add_oer(user)
+        # return user.is_superuser or self.creator==user or project.can_add_oer(user)
+        return user.is_superuser or self.creator==user or project.is_admin(user)
  
     def can_delete(self, user):
         if not user.is_authenticated():

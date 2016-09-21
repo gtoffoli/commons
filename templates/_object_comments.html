@@ -1,0 +1,81 @@
+{% load staticfiles i18n %}
+{% load comments zinnia %}
+
+{% block entry-comments %}
+
+{% if view_comments %}
+<div class="box_comments">
+<dl>
+  {% get_comment_count for object as comment_count %}
+  <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }}">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</h3></dt>
+  {% if comment_count %}
+    {% with comment_list=object.comments %}
+    {% block comments-loop %}
+      {% for comment in comment_list %}
+        <dd id="comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
+            class="comment vcard {% cycle box1,box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
+          {% block comment-info %}
+            <p class="comment-info">
+              {% block comment-image %}
+                <img {% if comment.user.get_profile.avatar %} src="/media/{{ comment.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> 
+              {% endblock comment-image %}
+              {% if comment.url %}
+                <a href="{{ comment.url }}" rel="external nofollow" class="fn url">{{ comment.name }}</a>
+              {% elif comment.user %}
+                <a href="/profile/{{ comment.user.username }}/">{{ comment.user.get_display_name }}</a>
+              {% else %}
+                {{ comment.name }}
+              {% endif %}
+              <small>{% trans "on" context "on date" %}
+              <time class="comment-published" datetime="{{ comment.submit_date|date:"c" }}">
+              {{ comment.submit_date|date:"SHORT_DATETIME_FORMAT" }}
+              </time></small>
+{% comment %}
+<a href="#comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
+id="c{{ comment.pk }}" class="anchor-link"
+title="{% trans "Direct link to this comment" %}">#</a>
+{% endcomment %}
+            </p>
+          {% endblock comment-info %}
+          {% block comment-content %}
+            <blockquote>{{ comment.comment|linebreaks }}</blockquote>
+          {% endblock comment-content %}
+        </dd>
+      {% endfor %}
+    {% endblock comments-loop %}
+    {% endwith %}
+    {% if not object.comments_are_open %}
+       <dd><p>{% trans "Comments are closed." %}</p></dd>
+    {% endif %}
+  {% else %}
+    {% if object.comments_are_open %}
+      <dd><p>{% trans "No comments yet." %}</p></dd>
+    {% else %}
+      <dd><p>{% trans "Comments are closed." %}</p></dd>
+    {% endif %}
+  {% endif %}
+
+  {% block entry-comments-form %}
+   {% if is_published and object.comments_are_open %}
+     {% if can_comment %}
+       {% get_comment_form for object as form %}
+       <dd><form action="{% comment_form_target %}" method="POST">{% csrf_token %}
+         {{ form.comment }}
+         {# comment {{ form.honeypot }} #}
+         {{ form.content_type }}
+         {{ form.object_pk }}
+         {{ form.timestamp }}
+         {{ form.security_hash }}
+         <input type="hidden" name="next" value="{{ object.get_absolute_url }}">
+         <!--input  type="submit" value="{% trans "Add comment" %}" id="id_submit"-->
+         <div class="marginT5"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default">{% trans "Add comment" %}</button></div>
+       </form></dd>
+     {% else %}
+       <dd><p>Please <a href="{% url 'account_login' %}">{% trans "log in" %}</a> {% trans "to leave a comment" %}.</p></dl>
+     {% endif %}
+   {% endif %}
+  {% endblock entry-comments-form %}
+</dl>
+</div>
+{% endif %}
+{% endblock entry-comments %}
