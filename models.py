@@ -205,8 +205,10 @@ class Resource(models.Model):
     def can_comment(self, request):
         user = request.user
         # return user.is_authenticated() and user.profile and user.profile.get_completeness()
+        if not user.is_authenticated():
+            return False
         profile = user.get_profile()
-        return user.is_authenticated() and profile and profile.get_completeness()
+        return profile and profile.get_completeness()
 
 DRAFT = 1
 SUBMITTED = 2
