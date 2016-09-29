@@ -1,0 +1,28 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+{% load tinymce_tags %}
+
+{% block head_title %}{% trans "Translations of" %} {{ model_title }} {{ object_title }}{% endblock %}
+
+{% block body %}
+<h2 class="marginTB5">{% trans "Translations for" %} <span style="font-style:italic; font-size: smaller;">{{ model_title }}</span> <a href="{{ object_url }}">{{ object_title }}</a></h2>
+
+{% for field_forms in form_sets %}
+<hr>
+{% for field_form in field_forms %}
+<form action="{{ action_url }}" method='POST'>
+{% csrf_token %}
+{{ field_form.as_p }}
+<input type="submit" name="save" value="{% trans "save" %}">
+</form>
+{% endfor %}
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_script %}
+{% include "_tinymce_init.html" %}
+{% endblock %}
+

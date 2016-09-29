@@ -115,7 +115,7 @@
 	 
 	 
 {% comment %} AMMINISTRAZIONE {% endcomment %}
-        {% if can_edit or can_open or can_close or is_admin %}
+        {% if can_edit or can_open or can_close or is_admin or user.is_staff %}
           <div>
             <ul class="list-inline marginLB020">
               <li class="list-back-c4">
@@ -124,6 +124,7 @@
                        <ul class="list-inline list-last">
                        {% if can_edit %}{% comment %}<li><a href="/project/{{ project.slug }}/upload/" title="uploading logo" class="btn btn-default"><i class="fa fa-picture-o" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endcomment %}
                        <li><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
+                       {% if user.username == 'giottoffoli' %}<li><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
                        {% if can_open %}<li><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
                        {% if can_close %}<li><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
                        </ul>

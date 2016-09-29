@@ -492,3 +492,9 @@ if SEARCH_BACKEND == 'whoosh':
             'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
         },
     }
+
+# DATATRANS_CACHE_DURATION = 1
+DATATRANS_TRANSLATE_MAP = {
+    'project': ('/project/%s/', 'slug', 'name', 'commons.forms.ProjectForm',),
+    'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
+}
