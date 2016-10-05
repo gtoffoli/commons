@@ -16,6 +16,33 @@
 
 {% block body_class %}project_edit{% endblock %}
 {% block body %}
+{% if user.is_staff %}
+<div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+{% if project %}
+  {% if language_mismatch %}
+   {% trans "WARNING" %}! {% trans "You are using the currently active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "to edit a content whose 'original editing language' is" %}
+   <span style="color: black;">{{ project.get_language_name }}</span>:
+   {% trans "this WILL CHANGE its 'original editing language'" %}!
+  {% else %}
+   {% if project.original_language %}{% trans "OK" %}.{% endif %}
+   {% trans "You are using the currently active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "to edit a content whose 'original editing language' is" %}
+   {% if project.original_language %}{% trans "also" %}{% else %}{% trans "still" %}{% endif %}
+   <span style="color: black;">{{ project.get_language_name }}</span>.
+   {% if not project.original_language %}{% trans "This will set its 'original editing language'" %}{% endif %}.
+  {% endif %}
+{% else %}
+   {% trans "IMPORTANT NOTICE! The content that you are creating will take the currently active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "as its 'original editing language'" %}.
+   {% trans "Afterwards, you should edit it using always the same language, and you will be able to add translations to other languages" %}.
+{% endif %}
+</div>
+{% endif %}
+
   <div class="panel panel-c4 text-left marginTB30">
     <div class="panel-heading-c4 padding1020">
       <h2 class="marginTB5">

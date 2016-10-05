@@ -5,9 +5,10 @@ from math import sqrt
 from django.core.validators import MinValueValidator
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
+from django.dispatch import receiver
 from django.db import models
 from django.db.models import Max
-from django.db.models.signals import post_save
+from django.db.models.signals import pre_save, post_save
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
@@ -27,6 +28,7 @@ from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
+from datatrans.utils import get_current_language
 
 from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
@@ -179,6 +181,7 @@ class Resource(models.Model):
     deleted = models.BooleanField(default=False, verbose_name=_('deleted'))
     small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
     big_image = models.ImageField('big image', upload_to='images/resources/', null=True, blank=True)
+    original_language = models.CharField(verbose_name=_('original language code'), max_length=5, default='', db_index=True)
 
     comment_enabled = models.BooleanField(
         _('comments enabled'), default=True,
@@ -209,6 +212,17 @@ class Resource(models.Model):
             return False
         profile = user.get_profile()
         return profile and profile.get_completeness()
+
+    def get_language_name(self):
+        return dict(settings.LANGUAGES).get(self.original_language, _('unknown'))
+
+    def can_translate(self, request):
+        return self.can_edit(request)
+
+@receiver(pre_save)
+def set_original_language(sender, instance, **kwargs):
+    if issubclass(sender, Resource):
+        instance.original_language = get_current_language()
 
 DRAFT = 1
 SUBMITTED = 2
@@ -799,7 +813,9 @@ class Project(Resource):
         parent = self.get_parent()
         return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,)) or (parent and parent.is_admin(user))
 
-    def can_edit(self, user):
+    # def can_edit(self, user):
+    def can_edit(self, request):
+        user = request.user
         if not user.is_authenticated():
             return False
         if user.is_superuser: return True
@@ -1243,7 +1259,9 @@ class OER(Resource, Publishable):
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
         return user.is_superuser or self.creator==user or project.is_admin(user)
  
-    def can_edit(self, user):
+    # def can_edit(self, user):
+    def can_edit(self, request):
+        user = request.user
         if not user.is_authenticated():
             return False
         project = self.project

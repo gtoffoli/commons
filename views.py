@@ -24,6 +24,7 @@ from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage
+from datatrans.utils import get_current_language
 import actstream
 
 from commons import settings
@@ -865,7 +866,12 @@ def project_detail(request, project_id, project=None):
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
-        var_dict['can_edit'] = project.can_edit(user)
+        # var_dict['can_edit'] = project.can_edit(user)
+        var_dict['can_edit'] = project.can_edit(request)
+        var_dict['can_translate'] = project.can_translate(request)
+        current_language = get_current_language()
+        var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+        var_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
         var_dict['can_open'] = project.can_open(user)
         var_dict['can_propose'] = project.can_propose(user)
         var_dict['can_close'] = project.can_close(user)
@@ -972,15 +978,22 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             raise PermissionDenied
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if project_id:
-        if project.can_edit(user):
+        # if project.can_edit(user):
+        if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
             form = ProjectForm(instance=project)
-            return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
+            # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
+            data_dict = {'form': form, 'action': action, 'project': project,}
+            current_language = get_current_language()
+            data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+            data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
+            return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
-        if parent.can_edit(user) or (proj_type and proj_type.name=='ment'):
+        # if parent.can_edit(user) or (proj_type and proj_type.name=='ment'):
+        if parent.can_edit(request) or (proj_type and proj_type.name=='ment'):
             # form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
             initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
@@ -989,7 +1002,11 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             elif proj_type.name == 'ment':
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             form = ProjectForm(initial=initial)
-            return render_to_response('project_edit.html', {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
+            # return render_to_response('project_edit.html', {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
+            data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }
+            current_language = get_current_language()
+            data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+            return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
@@ -2068,7 +2085,8 @@ def oer_detail(request, oer_id, oer=None):
             set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
     var_dict['add_bookmarked'] = add_bookmarked
     var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
-    var_dict['can_edit'] = can_edit = oer.can_edit(user)
+    # var_dict['can_edit'] = can_edit = oer.can_edit(user)
+    var_dict['can_edit'] = can_edit = oer.can_edit(request)
     var_dict['can_delete'] = can_delete = oer.can_delete(user)
     var_dict['can_remove'] = can_delete and oer.state == DRAFT
     if can_delete and request.GET.get('cut', ''):
@@ -2114,7 +2132,8 @@ def oer_edit(request, oer_id=None, project_id=None):
         if not oer.can_access(user):
             raise PermissionDenied
         action = '/oer/%s/edit/' % oer.slug
-        if not oer.can_edit(user):
+        # if not oer.can_edit(user):
+        if not oer.can_edit(request):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if request.POST:
         oer_id = request.POST.get('id', '')

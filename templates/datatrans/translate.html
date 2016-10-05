@@ -7,19 +7,49 @@
 {% block head_title %}{% trans "Translations of" %} {{ model_title }} {{ object_title }}{% endblock %}
 
 {% block body %}
-<h2 class="marginTB5">{% trans "Translations for" %} <span style="font-style:italic; font-size: smaller;">{{ model_title }}</span> <a href="{{ object_url }}">{{ object_title }}</a></h2>
+ <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+  {% trans "Please, note that the translation functionality is affected by the original editing language of this content" %} (<span style="color: black;">{{ object.get_language_name }}</span>).
+  {% trans "The current active language" %} (<span style="color: black;">{{ current_language_name }}</span>) {% trans "affects only the UI messages of this view" %}.
+ </div>
 
+<div class="panel panel-c4 text-left marginTB30">
+ <div class="panel-heading-c4 padding1020">
+
+ <h2 class="marginTB5">{% trans "Translations for" %}
+   {% if model == 'project' %} <span class="fa fa-group neutral"></span>{% endif %}
+ 	<a href="{{ object_url }}" title="back to the normal view of this content">{{ object_title }}</a>
+ </h1>
+ </div>
+
+{% if original_language %}
 {% for field_forms in form_sets %}
-<hr>
-{% for field_form in field_forms %}
-<form action="{{ action_url }}" method='POST'>
+
+<div style="margin-top: 0.0em;">
+{% for form_language, field_form in field_forms %}
+<div style="margin-top: 0.5em;">
+<form action="{{ action_url }}" method='POST'">
 {% csrf_token %}
+<fieldset class="padding1020">
+{% if form_language == original_language %}
+<span style="color: lightgrey;">
+{{ field_form.as_p }}
+</span>
+{% else %}
 {{ field_form.as_p }}
 <input type="submit" name="save" value="{% trans "save" %}">
+{% endif %}
+</fieldset>
 </form>
+</div>
 {% endfor %}
+</div>
+{% if not forloop.last %}<hr style="border-color: #FABE66;">{% endif %}
 {% endfor %}
+{% else %}
+<div style="color: red; margin-top: 1.0em;">{% trans "The original language of this content is not known." %}</div>
+{% endif %}
 
+</div>
 {% endblock %}
 
 {% block extra_script %}

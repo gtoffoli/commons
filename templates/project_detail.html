@@ -25,6 +25,21 @@
 
 {% block body %}
 {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
+ {% if can_edit %}
+   {% if not project.original_language %}
+    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+   {% trans "IMPORTANT NOTICE! The next time you will edit this content, it will take the current active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "as its 'original editing language'. Afterwards, you should edit it using always the same language, and you will be able to add translations to other languages." %}
+   </div>
+   {% elif language_mismatch %}
+    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+   {% trans "Please note that, to be able to edit this content in its original language" %}
+   (<span style="color: black;">{{ project.get_language_name }}</span>)
+   {% trans "you should make this the active language using the control in the menu bar" %}.
+   </div>
+   {% endif %}
+ {% endif %}
  {% if project.small_image %}
  <table class="marginT30">
  	<td><img src="/media/{{ project.small_image }}" class="avatar-medium"></td>
@@ -59,6 +74,7 @@
         {% endwith %}
       {% endif %}
     {% endif %}
+    - {% trans "original editing language"|capfirst %}: {{ project.get_language_name }}
  </p>
  <div class="row marginB20">
    <div class="col-sm-7 col-md-7 col-lg-8">
@@ -122,9 +138,9 @@
                  <ul class="list-inline">
                     <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %} {% endif %}</div>
                        <ul class="list-inline list-last">
-                       {% if can_edit %}{% comment %}<li><a href="/project/{{ project.slug }}/upload/" title="uploading logo" class="btn btn-default"><i class="fa fa-picture-o" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endcomment %}
+                       {% if can_edit and not language_mismatch %}{% comment %}<li><a href="/project/{{ project.slug }}/upload/" title="uploading logo" class="btn btn-default"><i class="fa fa-picture-o" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endcomment %}
                        <li><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
-                       {% if user.username == 'giottoffoli' %}<li><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
+                       {% if can_translate and project.original_language and user.is_staff %}<li><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
                        {% if can_open %}<li><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
                        {% if can_close %}<li><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
                        </ul>
