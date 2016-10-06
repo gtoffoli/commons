@@ -47,7 +47,7 @@
                 </li>
               {% endif %}
             </ul>
-            {% if request.user.is_staff %}
+            {% if request.user.is_staff and request.LANGUAGE_CODE == 'en' %}
               <ul class="list-inline list-unstyled margin0 padding105">
                 <li><i class="fa fa-edit"></i> {% trans "manage"|capfirst %}:</li>
                 <li><a href="/admin/commons/featured/" target="_blank">{% trans "featured"|capfirst %}</a></li>

@@ -614,3 +614,7 @@ class FeaturedChangeForm(autocomplete.FutureModelForm):
         widget=autocomplete.QuerySetSequenceSelect2('featured-autocomplete'),
         )
 
+class FlatPageForm(forms.Form):
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    content = forms.CharField(required=False, label=_('page content'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+

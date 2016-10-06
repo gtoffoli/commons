@@ -14,6 +14,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.flatpages.models import FlatPage
 
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
@@ -142,6 +143,15 @@ def user_has_xmpp_account(self):
 User.has_xmpp_account = user_has_xmpp_account
 
 User.inbox_count = inbox_count_for
+
+def flatpage_get_language_name(self):
+    return dict(settings.LANGUAGES).get(settings.LANGUAGE_CODE, 'English')
+FlatPage.get_language_name = flatpage_get_language_name
+
+@property
+def flatpage_get_original_language(self):
+    return settings.LANGUAGE_CODE
+FlatPage.original_language = flatpage_get_original_language
 
 """
 def user_unviewed_posts_count(self):

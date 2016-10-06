@@ -32,7 +32,7 @@
              </ul>
            </li>
          {% endif %}
-         {% if request.user.is_staff %}
+         {% if request.user.is_staff and request.LANGUAGE_CODE == 'en' %}
            <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog"></span></a></li>
          {% endif %}
          {% endif %}
