@@ -9,7 +9,7 @@
 {% block body %}
 	<h1 class="text-center">{{ flatpage.title }}
 	{% if request.user.is_staff %}
-		{% if request.user.is_staff and request.LANGUAGE_CODE == 'en' %}
+		{% if request.LANGUAGE_CODE == 'en' %}
 			<small><a href="/admin/flatpages/flatpage/{{ flatpage.id }}/" title=""><i class="fa fa-edit"></i></a></small>
 		{% endif %}
 		<small><a href="/datatrans/translate/flatpage/{{ flatpage.id }}/" title=""><i class="fa fa-language"></i></a></small>

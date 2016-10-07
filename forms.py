@@ -616,5 +616,9 @@ class FeaturedChangeForm(autocomplete.FutureModelForm):
 
 class FlatPageForm(forms.Form):
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    content = forms.CharField(required=False, label=_('page content'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
+    content = forms.CharField(required=False, label=_('page content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))
 
+class BlogArticleForm(forms.Form):
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    content = forms.CharField(required=False, label=_('article content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))
+    lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))

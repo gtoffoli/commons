@@ -7,6 +7,12 @@
       <a href="{{ object.get_absolute_url }}" title="{{ object.title }}" rel="bookmark" itemprop="url">
         {{ object.title|widont }}
       </a>
+	{% if request.user.is_staff %}
+		{% if request.LANGUAGE_CODE == 'en' %}
+			<small><a href="/admin/zinnia/entry/{{ object.pk }}/" title=""><i class="fa fa-edit"></i></a></small>
+		{% endif %}
+		<small><a href="/datatrans/translate/entry/{{ object.pk }}/" title=""><i class="fa fa-language"></i></a></small>
+	{% endif %}
     </h2>
     {% endblock entry-title %}
     {% block entry-info %}

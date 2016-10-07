@@ -27,6 +27,7 @@ from taggit.managers import TaggableManager
 """
 from django_messages.models import inbox_count_for
 from pybb.models import Forum
+from zinnia.models import Entry as BlogArticle
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 from datatrans.utils import get_current_language
@@ -144,14 +145,16 @@ User.has_xmpp_account = user_has_xmpp_account
 
 User.inbox_count = inbox_count_for
 
-def flatpage_get_language_name(self):
+def model_get_language_name(self):
     return dict(settings.LANGUAGES).get(settings.LANGUAGE_CODE, 'English')
-FlatPage.get_language_name = flatpage_get_language_name
+FlatPage.get_language_name = model_get_language_name
+BlogArticle.get_language_name = model_get_language_name
 
 @property
-def flatpage_get_original_language(self):
+def model_get_original_language(self):
     return settings.LANGUAGE_CODE
-FlatPage.original_language = flatpage_get_original_language
+FlatPage.original_language = model_get_original_language
+BlogArticle.original_language = model_get_original_language
 
 """
 def user_unviewed_posts_count(self):

@@ -495,6 +495,7 @@ if SEARCH_BACKEND == 'whoosh':
 # DATATRANS_CACHE_DURATION = 1
 DATATRANS_TRANSLATE_MAP = {
     'flatpage': ('/admin/flatpages/flatpage/%s/', 'pk', 'title', 'commons.forms.FlatPageForm',),
+    'entry': ('/admin/zinnia/entry/%s/', 'pk', 'title', 'commons.forms.BlogArticleForm',),
     'project': ('/project/%s/', 'slug', 'name', 'commons.forms.ProjectForm',),
     # 'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
 }

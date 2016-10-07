@@ -7,6 +7,7 @@ Created on 30/giu/2015
 
 from datatrans.utils import register as register_translations
 from django.contrib.flatpages.models import FlatPage
+from zinnia.models import Entry as BlogArticle
 # from taggit.models import Tag
 from models import Tag, ProjType, Project, RepoType, RepoFeature, Featured
 from vocabularies import Language, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -15,6 +16,10 @@ from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, Med
 class FlatPageTranslation(object):
     fields = ('title', 'content',)
 register_translations(FlatPage, FlatPageTranslation)
+
+class BlogArticleTranslation(object):
+    fields = ('title', 'content', 'lead',)
+register_translations(BlogArticle, BlogArticleTranslation)
 
 class TagTranslation(object):
     fields = ('name',)
