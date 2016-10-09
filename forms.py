@@ -325,7 +325,7 @@ class OerForm(forms.ModelForm):
     class Meta:
         model = OER
         # exclude = ('slug', 'documents', 'metadata')
-        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type')
+        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language',)
         # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -462,7 +462,7 @@ class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
         # exclude = ('slug', 'group',)
-        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image',)
+        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
