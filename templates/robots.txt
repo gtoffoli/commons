@@ -1,4 +1,5 @@
 User-agent: *
+Disallow: /datatrans
 Disallow: /admin
 Disallow: /accounts
 Disallow: /my_home
