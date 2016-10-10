@@ -3,7 +3,8 @@
 import json
 from math import sqrt
 from django.core.validators import MinValueValidator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.text import capfirst
 from django.utils import timezone
 from django.dispatch import receiver
 from django.db import models
@@ -38,7 +39,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
-from commons.utils import filter_empty_words
+from commons.utils import filter_empty_words, strings_from_html
 # from analytics import filter_actions, post_views_by_user
 
 # indexable_models = [UserProfile, Project, OER, LearningPath]
@@ -2106,6 +2107,19 @@ class Featured(models.Model):
     modified = ModificationDateTimeField(_('modified'))
 
     @property
+    def title(self):
+        title = ''
+        if self.featured_object:
+            title = self.featured_object.__unicode__()
+        elif self.text:
+            strings = strings_from_html(self.text, fragment=True)
+            if strings:
+                title = ' '.join(strings)[:80]
+        if not title:
+            title = string_concat(capfirst(_("featured item")), ' # %d' % self.pk),
+        return title
+
+    @property
     def publication_date(self):
         """
         Return the publication date of the item.
@@ -2149,6 +2163,13 @@ class Featured(models.Model):
         if self.status == PUBLISHED and self.end_publication and now >= self.end_publication:
             return True
         return False
+
+    @property
+    def original_language(self):
+        return settings.LANGUAGE_CODE
+
+    def get_language_name(self):
+        return dict(settings.LANGUAGES).get(settings.LANGUAGE_CODE, 'English')
 
 # from commons.metadata_models import *
 from translations import *

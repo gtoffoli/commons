@@ -496,6 +496,7 @@ if SEARCH_BACKEND == 'whoosh':
 DATATRANS_TRANSLATE_MAP = {
     'flatpage': ('/admin/flatpages/flatpage/%s/', 'pk', 'title', 'commons.forms.FlatPageForm',),
     'entry': ('/admin/zinnia/entry/%s/', 'pk', 'title', 'commons.forms.BlogArticleForm',),
+    'featured': ('/admin/commons/featured/%s/', 'pk', 'title', 'commons.forms.FeaturedForm',),
     'project': ('/project/%s/', 'slug', 'name', 'commons.forms.ProjectForm',),
     # 'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
 }
