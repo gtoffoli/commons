@@ -1583,7 +1583,7 @@ def repo_edit(request, repo_id):
     data_dict = {'form': form, 'repo': repo, 'object': repo,}
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-    data_dict['language_mismatch'] = repo.original_language and not repo.original_language==current_language
+    data_dict['language_mismatch'] = repo and repo.original_language and not repo.original_language==current_language or False
     return render_to_response('repo_edit.html', data_dict, context_instance=RequestContext(request))
 
 def repo_edit_by_slug(request, repo_slug):
@@ -2196,7 +2196,7 @@ def oer_edit(request, oer_id=None, project_id=None):
     data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer, 'action': action}
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-    data_dict['language_mismatch'] = oer.original_language and not oer.original_language==current_language
+    data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
     return render_to_response('oer_edit.html', data_dict, context_instance=RequestContext(request))
 
 def oer_edit_by_slug(request, oer_slug):
@@ -2829,7 +2829,7 @@ def lp_edit(request, lp_id=None, project_id=None):
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-    data_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
+    data_dict['language_mismatch'] = lp and lp.original_language and not lp.original_language==current_language or False
     return render_to_response('lp_edit.html', data_dict, context_instance=RequestContext(request))
 
 def lp_edit_by_slug(request, lp_slug):
