@@ -1334,7 +1334,8 @@ class OER(Resource, Publishable):
         return [oer_document.document for oer_document in oer_documents]
 
     def remove_document(self, document, request):
-        assert self.can_edit(request.user)
+        # assert self.can_edit(request.user)
+        assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         document.delete()
         oer_document.delete()
@@ -1342,7 +1343,8 @@ class OER(Resource, Publishable):
         self.save()
 
     def document_up(self, document, request):
-        assert self.can_edit(request.user)
+        # assert self.can_edit(request.user)
+        assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         order = oer_document.order
         assert order > 1
@@ -1358,7 +1360,8 @@ class OER(Resource, Publishable):
         self.save()
 
     def document_down(self, document, request):
-        assert self.can_edit(request.user)
+        # assert self.can_edit(request.user)
+        assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         order = oer_document.order
         next_order = order+1
