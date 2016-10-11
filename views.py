@@ -825,6 +825,7 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
+    var_dict['object'] = project
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     proj_types = ProjType.objects.filter(public=True)
@@ -984,7 +985,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 project.name = project.group.name
             form = ProjectForm(instance=project)
             # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
-            data_dict = {'form': form, 'action': action, 'project': project,}
+            data_dict = {'form': form, 'action': action, 'project': project, 'object': project,}
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
             data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
@@ -1003,7 +1004,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             form = ProjectForm(initial=initial)
             # return render_to_response('project_edit.html', {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
-            data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }
+            data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, 'object': None,}
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
@@ -1400,6 +1401,10 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['can_comment'] = repo.can_comment(request)
     var_dict['repo_type'] = repo.repo_type
     var_dict['can_edit'] = repo.can_edit(request)
+    var_dict['can_translate'] = repo.can_translate(request)
+    current_language = get_current_language()
+    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    var_dict['language_mismatch'] = repo.original_language and not repo.original_language==current_language
     var_dict['can_submit'] = repo.can_submit(request)
     var_dict['can_withdraw'] = repo.can_withdraw(request)
     var_dict['can_reject'] = repo.can_reject(request)
@@ -1569,26 +1574,17 @@ def repo_edit(request, repo_id):
         return HttpResponseRedirect('/repo/%s/' % repo.slug)
     user = request.user
     if request.POST:
-        """
-        form = RepoForm(request.POST, instance=repo)
-        if request.POST.get('save', '') or request.POST.get('continue', ''): 
-            if form.is_valid():
-                form.save()
-                if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/repo/%s/' % repo.slug)
-                else: 
-                    return render_to_response('repo_edit.html', {'form': form,}, context_instance=RequestContext(request))
-            else:
-                return render_to_response('repo_edit.html', {'form': form,}, context_instance=RequestContext(request))
-        elif request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/repo/%s/' % repo.slug)
-        """
         return repo_save(request, repo=repo)
     elif repo:
         form = RepoForm(instance=repo)
     else:
         form = RepoForm(initial={'creator': user.id, 'editor': user.id})
-    return render_to_response('repo_edit.html', {'form': form, 'repo': repo,}, context_instance=RequestContext(request))
+    # return render_to_response('repo_edit.html', {'form': form, 'repo': repo,}, context_instance=RequestContext(request))
+    data_dict = {'form': form, 'repo': repo, 'object': repo,}
+    current_language = get_current_language()
+    data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    data_dict['language_mismatch'] = repo.original_language and not repo.original_language==current_language
+    return render_to_response('repo_edit.html', data_dict, context_instance=RequestContext(request))
 
 def repo_edit_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
@@ -2087,6 +2083,10 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     # var_dict['can_edit'] = can_edit = oer.can_edit(user)
     var_dict['can_edit'] = can_edit = oer.can_edit(request)
+    var_dict['can_translate'] = oer.can_translate(request)
+    current_language = get_current_language()
+    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    var_dict['language_mismatch'] = oer.original_language and not oer.original_language==current_language
     var_dict['can_delete'] = can_delete = oer.can_delete(user)
     var_dict['can_remove'] = can_delete and oer.state == DRAFT
     if can_delete and request.GET.get('cut', ''):
@@ -2192,7 +2192,12 @@ def oer_edit(request, oer_id=None, project_id=None):
         # form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
         form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id, 'oer_type': 2, 'source_type': 2, 'state': DRAFT,})
         metadata_formset = OerMetadataFormSet()
-    return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action}, context_instance=RequestContext(request))
+    # return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action}, context_instance=RequestContext(request))
+    data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer, 'action': action}
+    current_language = get_current_language()
+    data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    data_dict['language_mismatch'] = oer.original_language and not oer.original_language==current_language
+    return render_to_response('oer_edit.html', data_dict, context_instance=RequestContext(request))
 
 def oer_edit_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
@@ -2508,6 +2513,10 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
+    var_dict['can_translate'] = lp.can_translate(request)
+    current_language = get_current_language()
+    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
     var_dict['can_delete'] = can_delete = lp.can_delete(request)
     if can_delete and request.GET.get('cut', ''):
         set_clipboard(request, key='cut_lps', value=(get_clipboard(request, key='cut_lps') or []) + [lp_id])
@@ -2816,7 +2825,12 @@ def lp_edit(request, lp_id=None, project_id=None):
         if not project_id:
             project_id = 0
         form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
-    return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
+    # return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
+    data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
+    current_language = get_current_language()
+    data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    data_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
+    return render_to_response('lp_edit.html', data_dict, context_instance=RequestContext(request))
 
 def lp_edit_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
