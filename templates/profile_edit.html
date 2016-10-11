@@ -2,7 +2,7 @@
 
 {% load staticfiles%}
 {% load i18n %}
-{% load tinymce_tags %}
+{# load tinymce_tags #}
 
 {% block head_title %}{% trans "edit the profile of"|capfirst %}: &nbsp;
 	{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}

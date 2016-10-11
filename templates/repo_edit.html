@@ -1,7 +1,7 @@
 {% extends "commons_base.html" %}
 
 {% load i18n staticfiles%}
-{% load tinymce_tags %}
+{# load tinymce_tags #}
 
 {% block head_title %}{% if repo %}{% trans "edit repository"|capfirst %}: {{ repo.name }}{% else %}{% trans "add repository"|capfirst %}{% endif %}{% endblock %}
 

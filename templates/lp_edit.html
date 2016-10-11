@@ -2,7 +2,7 @@
 
 {% load staticfiles%}
 {% load i18n %}
-{% load tinymce_tags %}
+{# load tinymce_tags #}
 
 {% block head_title %}{% if lp %}{% trans "edit learning path"|capfirst %}: {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}{% endblock %}
 

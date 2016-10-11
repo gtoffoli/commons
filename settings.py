@@ -405,42 +405,33 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # TinyMCE settings (from roma APP of RomaPaese project)
-TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
+# TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
+TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/js/tinymce/tinymce.min.js')
 """
 TINYMCE_COMPRESSOR = True
 """
 
 TINYMCE_DEFAULT_CONFIG = {
-    """
-	'width': '400', # '640',
-    'height': '300', # '480',
-    'plugins': 'fullscreen,media,preview,paste,table',
-    'theme': 'advanced',
-    'relative_urls': False,
-    'theme_advanced_toolbar_location': 'top',
-    'theme_advanced_toolbar_align': 'left',
-    'theme_advanced_buttons1': 'undo,redo,|,formatselect,bold,italic,underline,|,' \
-        'justifyleft,justifycenter,justifyright,justifyfull,|,forecolor,backcolor,' \
-        'sub,sup,charmap,|,bullist,numlist,|,indent,outdent,|,link,unlink,anchor,image,media',
-    'theme_advanced_buttons2': '|,tablecontrols,|,cut,copy,paste,pasteword,pastetext,selectall,|,removeformat,cleanup,|,visualaid,code,preview,fullscreen',
-    'theme_advanced_buttons3': '',
-    'theme_advanced_blockformats': 'p,pre,address,blockquote,h1,h2,h3,h4,' \
-        'h5,h6',
-    'plugin_preview_width' : '800',
-    'plugin_preview_height' : '600',
-    'paste_auto_cleanup_on_paste': 'true',
-    """
 	'schema': "html5",
     'resize' : "both",
 	'height': 350,
-	'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
-	'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
+	# 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
+    'plugins': "advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
+	# 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
+    'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
     'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
 	'plugin_preview_width' : 800,
 	'plugin_preview_height' : 600,
-	# 'file_browser_callback' : os.path.join(STATIC_URL,"tinymce/filebrowser.js"),
-
     }
+
+FILEBROWSER_DIRECTORY = 'ugc_upload/'
+FILEBROWSER_EXTENSIONS = {
+# 'Image': ['.jpg','.jpeg','.gif','.png','.tif','.tiff'],
+'Image': ['.jpg','.jpeg','.gif','.png'],
+'Document': ['.pdf','.doc','.rtf','.txt','.xls','.csv'],
+# 'Video': ['.mov','.wmv','.mpeg','.mpg','.avi','.rm'],
+# 'Audio': ['.mp3','.mp4','.wav','.aiff','.midi','.m4p']
+}
 
 # configure graph_models command of django-extensions
 GRAPH_MODELS = {

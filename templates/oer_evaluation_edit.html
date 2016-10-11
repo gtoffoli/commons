@@ -2,7 +2,6 @@
 
 {% load staticfiles%}
 {% load i18n %}
-{% load tinymce_tags %}
 
 {% block head_title %}{% if evaluation %}{% trans "edit evaluation of OER"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %} {% trans "of OER" %}:&nbsp; {{ oer.title }}{% endblock %}
 
