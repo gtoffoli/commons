@@ -498,5 +498,7 @@ DATATRANS_TRANSLATE_MAP = {
     'entry': ('/admin/zinnia/entry/%s/', 'pk', 'title', 'commons.forms.BlogArticleForm',),
     'featured': ('/admin/commons/featured/%s/', 'pk', 'title', 'commons.forms.FeaturedForm',),
     'project': ('/project/%s/', 'slug', 'name', 'commons.forms.ProjectForm',),
-    # 'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
+    'repo': ('/repo/%s/', 'slug', 'name', 'commons.forms.RepoForm',),
+    'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
+    'learningpath': ('/lp/%s/', 'slug', 'title', 'commons.forms.LpForm',),
 }

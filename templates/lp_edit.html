@@ -8,6 +8,7 @@
 
 {% block body_class %}lp_edit{% endblock %}
 {% block body %}
+{% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="panel-heading-c1 padding1020">
     <h2 class="marginTB5">{% if lp %}<small class="c-white">{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>

@@ -6,21 +6,14 @@
 {% block body_class %}oer_detail{% endblock %}
 
 {% block body %}
+{% include "_resource_lang_msg.html" %}
 <article class="panel-white text-left marginTB30">
-  {% comment %}<div class="navbar panel-c2 panel-heading-c2 padding1020">
-    <h2 class="pull-left marginTB5">{{ oer.title }}</h2>
-    <p class="pull-right marginB0 font26">
-      {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
-      {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
-      {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
-      {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
-    </p>
-  </div>{% endcomment %}
   {% if can_less_action %}
     <div class="row panel-c2 panel-heading-c2 marginLR0 padding1020">
       <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_remove %}<form class="view_inline" action="/oer/{{ oer.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
-        {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+        {% if can_edit and not language_mismatch %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+        {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/oer/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
         {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
         {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
         {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
@@ -174,6 +167,7 @@
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% include "_info_creator_date.html" with data=oer %}
+        {% include "_resource_original_lang.html" %}
         {% include "_change_state.html" with data=oer type_object="oer" %}
         {% if is_published or is_un_published %}
           <dl class="font14 marginB10">

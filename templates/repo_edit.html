@@ -8,6 +8,7 @@
 
 {% block body_class %}repo_edit{% endblock %}
 {% block body %}
+{% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c3 text-left marginTB30">
   <div class="panel-heading-c3 padding1020">
     <h2 class="marginTB5">{% if repo %}<small class="c-white">{% trans "edit repository"|capfirst %}:</small> {{ repo.name }}{% else %}{% trans "add repository"|capfirst %}{% endif %}</h2>

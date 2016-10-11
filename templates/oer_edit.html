@@ -13,6 +13,7 @@
 
 {% block body_class %}oer_edit{% endblock %}
 {% block body %}
+{% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c2 text-left marginTB30">
   <div class="panel-heading-c2 padding1020">
     <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>

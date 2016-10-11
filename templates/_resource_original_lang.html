@@ -1,0 +1,6 @@
+{% load i18n %}
+
+{% block original-language %}
+	<div class="marginB5"><span class="demiBold">{% trans "original editing language"|capfirst %}</span>:
+		<span>{{ object.get_language_name }}</span></div>
+{% endblock original-language %}

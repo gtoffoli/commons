@@ -7,11 +7,13 @@
 {% block body_class %}repo_detail{% endblock %}
 
 {% block body %}
+{% include "_resource_lang_msg.html" %}
 <article class="panel-white text-left marginTB30">
   <div class="row panel-c3 panel-heading-c3 marginLR0 padding1020">
     <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{{ repo.name }}</h2>
     <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
-      {% if can_edit %}&nbsp; <a href="/repo/{{ repo.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+      {% if can_edit and not language_mismatch %}&nbsp; <a href="/repo/{{ repo.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
+      {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/repo/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
       &nbsp; <a href="/repo_oers/{{ repo.slug }}/" title="list OERs"><i class="fa fa-list font07em c-white"></i></a>
     </p>
   </div>
@@ -49,6 +51,7 @@
       </div>
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% include "_info_creator_date.html" with data=repo %}
+        {% include "_resource_original_lang.html" %}
         {% include "_change_state.html" with data=repo type_object="repo" %}
       </div>
     </div>
