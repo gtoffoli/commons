@@ -10,7 +10,7 @@ from django.contrib.flatpages.models import FlatPage
 from zinnia.models import Entry as BlogArticle
 # from taggit.models import Tag
 from models import Tag, ProjType, RepoType, RepoFeature, Featured
-from models import Project, Repo, OER, LearningPath
+from models import Project, Repo, OER, LearningPath, PathNode
 from vocabularies import EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 
@@ -110,6 +110,10 @@ register_translations(OER, OerTranslation)
 class LpTranslation(object):
     fields = ('title', 'short', 'long',)
 register_translations(LearningPath, LpTranslation)
+
+class PathNodeTranslation(object):
+    fields = ('label', 'text',)
+register_translations(PathNode, PathNodeTranslation)
 
 
 class FeaturedTranslation(object):

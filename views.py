@@ -2798,19 +2798,6 @@ def lp_edit(request, lp_id=None, project_id=None):
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else:
                     return my_home(request)
-                """
-                if project_id:
-                    project = get_object_or_404(Project, id=project_id)
-                else:
-                    group_id = request.POST.get('group')
-                    if group_id:
-                        group = get_object_or_404(Group, id=int(group_id))
-                        project = group.project
-                if project_id or group_id:
-                    return HttpResponseRedirect('/project/%s/' % project.slug)
-                else:
-                    return my_dashboard(request)
-                """
     elif lp:
         form = LpForm(instance=lp)
     else:
@@ -2917,6 +2904,7 @@ def pathnode_detail(request, node_id, node=None):
     if not node.path.can_access(request.user):
         raise PermissionDenied
     var_dict = { 'node': node, }
+    var_dict['object'] = node
     var_dict['lp'] = node.path
     """
     nodes = get_object_or_404(LearningPath, pk=node.path_id)
@@ -2933,6 +2921,10 @@ def pathnode_detail(request, node_id, node=None):
     var_dict['nodes'] = nodes
     var_dict['i_node'] = i_node
     var_dict['can_edit'] = node.can_edit(request)
+    var_dict['can_translate'] = node.can_translate(request)
+    current_language = get_current_language()
+    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
     return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
 
 def pathnode_detail_by_id(request, node_id):
@@ -3009,7 +3001,14 @@ def pathnode_edit(request, node_id=None, path_id=None):
         form = PathNodeForm(instance=node)
     else:
         form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
-    return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }, context_instance=RequestContext(request))
+    # return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }, context_instance=RequestContext(request))
+    data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }
+    data_dict['path'] = path
+    current_language = get_current_language()
+    data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    original_language = node and node.original_language or path.original_language
+    data_dict['language_mismatch'] = original_language and not original_language==current_language or False
+    return render_to_response('pathnode_edit.html', data_dict, context_instance=RequestContext(request))
 
 def pathnode_edit_by_id(request, node_id):
     return pathnode_edit(request, node_id=node_id)

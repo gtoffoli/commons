@@ -13,6 +13,27 @@
 
 {% block body_class %}pathnode_edit{% endblock %}
 {% block body %}
+<div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+{% if language_mismatch %}
+   {% trans "WARNING" %}! {% trans "You are using the currently active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "to edit a content whose 'original editing language' is" %}
+   <span style="color: black;">{{ path.get_language_name }}</span>.
+{% else %}
+  {% if object %}
+   {% if object.original_language %}{% trans "OK" %}.{% else %}{% trans "WARNING" %}!{% endif %}
+   {% trans "You are using the currently active language" %}
+   (<span style="color: black;">{{ current_language_name }}</span>)
+   {% trans "to edit a content whose 'original editing language' is" %}
+   {% if object.original_language %}{% trans "also" %}{% else %}{% trans "still" %}{% endif %}
+   <span style="color: black;">{{ object.get_language_name }}</span>.
+  {% else %}
+   {% trans "IMPORTANT NOTICE! The node that you are creating will get its 'original editing language'" %},
+   <span style="color: black;">{{ current_language_name }}</span>,
+   {% trans "from the Learning Path it belongs to" %}.
+  {% endif %}
+{% endif %}
+</div>
 <div class="panel panel-c1 text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
     <h3 class="pull-left marginTB5">{{ name_lp }}</h3>

@@ -137,7 +137,7 @@
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
             </dd>
 {% endif %}
-            {% if can_edit %}
+            {% if can_edit and not language_mismatch %}
               <dd><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
                 <dd class="marginT5"><a id="{{ oer.id }}" href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default add_node_oer">{% trans "add node with OER"|capfirst %}: <span class="demiBold">{{ oer.title|truncatewords:5 }}</span></a></dd>

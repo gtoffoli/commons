@@ -1389,22 +1389,6 @@ def update_oer_type(sender, **kwargs):
 
 post_save.connect(update_oer_type, sender=OER)
    
-"""
-class oer_documents(models.Model):
-    ""
-    to be removed after data migration
-    ""
-    oer = models.ForeignKey(OER, related_name='old_oer', verbose_name=_('OER'))
-    document = models.ForeignKey(Document, related_name='old_document', verbose_name=_('Document'))
-
-    def __unicode__(self):
-        return unicode(self.document.label)
-
-    class Meta:
-        unique_together = ('oer', 'document',)
-        verbose_name = _('attached document')
-        verbose_name_plural = _('attached documents')
-"""
 class OerDocument(models.Model):
     """
     Link an OER to an attached document; attachments are ordered
@@ -1943,10 +1927,6 @@ class PathNode(node_factory('PathEdge')):
     oer = models.ForeignKey(OER, blank=True, null=True, verbose_name=_('stands for'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
     text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
-    """
-    file = models.FileField(storage=storage_backend, upload_to='files/pathnodes/', null=True, blank=True, verbose_name=_('own file content'))
-    mimetype = models.CharField(max_length=50, null=True, blank=True, editable=False)
-    """
     document = models.ForeignKey(Document, blank=True, null=True, related_name='pathnode_document', verbose_name=_('document'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -1956,10 +1936,7 @@ class PathNode(node_factory('PathEdge')):
     class Meta:
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
-    """
-    def make_dict(self):
-        return { 'id': self.id, 'label': self.label, 'oer': self.oer and self.oer.id or None }
-    """
+
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%06d' % self.id, 'attrs': {'text': {'text': self.label }}}
         return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label }}}
@@ -1967,8 +1944,18 @@ class PathNode(node_factory('PathEdge')):
     def get_absolute_url(self):
         return '/pathnode/%s/' % self.id
 
+    @property
+    def original_language(self):
+        return self.path.original_language
+
+    def get_language_name(self):
+        return dict(settings.LANGUAGES).get(self.original_language, _('unknown'))
+
     def can_edit(self, request):
         return self.path.can_edit(request)
+
+    def can_translate(self, request):
+        return self.can_edit(request)
     
     def get_subranges(self, r=''):
         """ parses the value of the field range and return subranges

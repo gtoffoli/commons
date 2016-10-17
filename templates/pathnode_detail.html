@@ -7,6 +7,20 @@
 {% block body_class %}pathnode_detail{% endblock %}
 
 {% block body %}
+ {% if can_edit %}
+   {% if not object.original_language %}
+   <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+   {% trans "IMPORTANT NOTICE! To be able to edit this node, you must first set the editing language of the learning path it belongs to" %}.
+   </div>
+   {% elif language_mismatch %}
+    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+   {% trans "Please note that, to be able to edit this content in its original language" %}
+   (<span style="color: black;">{{ object.get_language_name }}</span>)
+   {% trans "you should make this the active language using the control in the menu bar" %}.
+   </div>
+   {% endif %}
+ {% endif %}
+
 <article class="panel-white text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
     <h3 class="pull-left marginTB5">{{ node.path }}</h3>
@@ -20,7 +34,6 @@
     <div class="col-sm-3 col-md-3 col-lg-3">
     {% if nodes %}
       <dl class="panel panel-col font14">
-{% comment %} <dt class="paddingB10">{% trans "path nodes"|capfirst %}</dt> {% endcomment %}
         <dd>
         {% for pathnode in nodes %}
           <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-no-oer {% endif %}">
@@ -40,12 +53,10 @@
     <div class="col-sm-9 col-md-9 col-lg-9">
       <section class="view-node-details">
         <div class="clearfix section-node-header">
-          <h3 {% if can_edit %}class="h3-left"{% endif %}>{{ node.label }}</h3>
-          {% if can_edit %}
-          <div>
-          <a href="/pathnode/{{ node.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em"></i></a>
-          </div>
-          {% endif %}
+          <h3 {% if can_edit %}class="h3-left"{% endif %}>{{ node.label }}
+          {% if can_edit and not language_mismatch %}&nbsp; <a href="/pathnode/{{ node.id }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
+          {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/pathnode/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language"></i></a>{% endif %}
+          </h3>
         </div>
         <div class="section-node-content">
         {% if node.oer %}
@@ -77,6 +88,7 @@
         {% endif %}
         </div>
         <p class="paddingT6"><span class="demiBold">{% trans "node added by"|capfirst %}:</span> <a href="/profile/{{ node.creator.username }}">{{ node.creator.get_full_name }}</a></p>
+        {% include "_resource_original_lang.html" %}
       </section>
     </div>
   </div>

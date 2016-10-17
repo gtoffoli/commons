@@ -492,4 +492,5 @@ DATATRANS_TRANSLATE_MAP = {
     'repo': ('/repo/%s/', 'slug', 'name', 'commons.forms.RepoForm',),
     'oer': ('/oer/%s/', 'slug', 'title', 'commons.forms.OerForm',),
     'learningpath': ('/lp/%s/', 'slug', 'title', 'commons.forms.LpForm',),
+    'pathnode': ('/pathnode/%s/', 'pk', 'label', 'commons.forms.PathNodeForm',),
 }
