@@ -4,6 +4,7 @@ Disallow: /admin
 Disallow: /accounts
 Disallow: /my_home
 Disallow: /my_profile
+Disallow: /my_mail
 Disallow: /user_welcome
 Disallow: /edit_preferences
 Disallow: /project/*/edit
