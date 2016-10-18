@@ -1,0 +1,5 @@
+{% if object.original_language %}
+<link rel="alternate" hreflang="x-default" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/{{ object.original_language }}{{ path_no_language }}">
+<link rel="alternate" hreflang="{{ object.original_language }}" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/{{ object.original_language }}{{ path_no_language }}">
+{% for code in object.get_translation_codes %}<link rel="alternate" hreflang="{{ code }}" href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/{{ code }}{{ path_no_language }}">{% endfor %}
+{% endif %}

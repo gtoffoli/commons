@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.conf.urls.i18n import i18n_patterns
 from django.views.generic import TemplateView
 
 from django.contrib import admin
@@ -86,9 +87,8 @@ urlpatterns = patterns('',
     url(r"^project/add_document/$", 'commons.views.project_add_document', name="project_add_document"),
     url(r"^folderdocument/(?P<folderdocument_id>[\d-]+)/delete/$", 'commons.views.folderdocument_delete', name="folderdocument_delete"),
     url(r"^folderdocument/(?P<folderdocument_id>[\d-]+)/edit/$", 'commons.views.folderdocument_edit', name="folderdocument_edit"),
-    url(r"^project/(?P<project_slug>[\w-]+)/$", 'commons.views.project_detail_by_slug', name="project_detail"),
+    ## url(r"^project/(?P<project_slug>[\w-]+)/$", 'commons.views.project_detail_by_slug', name="project_detail"),
     url(r"^set_mentor/$", 'commons.views.project_set_mentor', name="project_set_mentor"),
-    # url(r"^repos/$", 'commons.views.repo_list', name="repo_list"),
     url(r"^browse_people/$", 'commons.views.browse_people', name="browse_people"),
     url(r"^people/search/$", 'commons.views.people_search', name="people_search"),
     url(r"^browse/$", 'commons.views.browse', name="browse"),
@@ -103,7 +103,7 @@ urlpatterns = patterns('',
     url(r"^repo/(?P<repo_id>[\d-]+)/reject/$", 'commons.views.repo_reject', name="repo_reject"),
     url(r"^repo/(?P<repo_id>[\d-]+)/publish/$", 'commons.views.repo_publish', name="repo_publish"),
     url(r"^repo/(?P<repo_id>[\d-]+)/un_publish/$", 'commons.views.repo_un_publish', name="repo_un_publish"),
-    url(r"^repo/(?P<repo_slug>[\w-]+)/$", 'commons.views.repo_detail_by_slug', name="repo_detail"),
+    ## url(r"^repo/(?P<repo_slug>[\w-]+)/$", 'commons.views.repo_detail_by_slug', name="repo_detail"),
     url(r"^repo_oers/(?P<repo_slug>[\w-]+)/$", 'commons.views.repo_oers_by_slug', name="repo_oers"),
     url(r"^repos/search/$", 'commons.views.repos_search', name="repos_search"),
     url(r"^oer/edit/$", 'commons.views.oer_edit', name='oer_new_edit'),
@@ -118,8 +118,8 @@ urlpatterns = patterns('',
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/evaluate/$", 'commons.views.oer_evaluate_by_slug', name="oer_evaluate"),
     url(r"^oer_evaluation/(?P<evaluation_id>[\d-]+)/edit/$", 'commons.views.oer_evaluation_edit_by_id', name="oer_evaluation_edit"),
     url(r"^oer_evaluation/(?P<evaluation_id>[\d-]+)/$", 'commons.views.oer_evaluation_by_id', name="oer_evaluation"),
-    url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", 'commons.views.oer_detail_by_slug', name="oer_detail"),
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/view/$", 'commons.views.oer_view_by_slug', name="oer_view"),
+    ## url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", 'commons.views.oer_detail_by_slug', name="oer_detail"),
     url(r"^oers_by/(?P<username>[\w\.-]+)/$", 'commons.views.oers_by_user', name="oers_by_user"),
     url(r"^oers/contributors/$", 'commons.views.oer_contributors', name="oer_contributors"),
     url(r"^oers/search/$", 'commons.views.oers_search', name="oers_search"),
@@ -144,7 +144,7 @@ urlpatterns = patterns('',
     url(r"^lp/(?P<lp_id>[\d-]+)/delete/$", 'commons.views.lp_delete', name="lp_delete"),
     url(r"^lp/(?P<lp_id>[\d-]+)/make_sequence/$", 'commons.views.lp_make_sequence', name="lp_make_sequence"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/play/$", 'commons.views.lp_play_by_slug', name="lp_play"),
-    url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", 'commons.views.lp_detail_by_slug', name="lp_detail"),
+    ## url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", 'commons.views.lp_detail_by_slug', name="lp_detail"),
     url(r"^pathnode/edit/$", 'commons.views.pathnode_edit', name='pathnode_edit'),
     url(r"^pathnode/(?P<node_id>[\d-]+)/edit/$", 'commons.views.pathnode_edit_by_id', name="pathnode_edit"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/delete/$", 'commons.views.pathnode_delete', name="pathnode_delete"),
@@ -153,7 +153,7 @@ urlpatterns = patterns('',
     url(r"^pathnode/(?P<node_id>[\d-]+)/move_before/(?P<other_node_id>[\d-]+)/$", 'commons.views.pathnode_move_before', name="pathnode_move_before"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/move_after/(?P<other_node_id>[\d-]+)/$", 'commons.views.pathnode_move_after', name="pathnode_move_after"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/link_after/(?P<other_node_id>[\d-]+)/$", 'commons.views.pathnode_link_after', name="pathnode_link_after"),
-    url(r"^pathnode/(?P<node_id>[\d-]+)/$", 'commons.views.pathnode_detail', name="pathnode_detail"),
+    ## url(r"^pathnode/(?P<node_id>[\d-]+)/$", 'commons.views.pathnode_detail', name="pathnode_detail"),
     url(r"^pathedge/(?P<edge_id>[\d-]+)/delete/$", 'commons.views.pathedge_delete', name="pathedge_delete"),
     url(r"^lps/search/$", 'commons.views.lps_search', name="lps_search"),
     url(r"^resources/contributors/$", 'commons.views.resource_contributors', name="resource_contributors"),
@@ -176,6 +176,14 @@ urlpatterns = patterns('',
     ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
+
+urlpatterns += i18n_patterns('',
+    url(r"^project/(?P<project_slug>[\w-]+)/$", 'commons.views.project_detail_by_slug', name="project_detail"),
+    url(r"^repo/(?P<repo_slug>[\w-]+)/$", 'commons.views.repo_detail_by_slug', name="repo_detail"),
+    url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", 'commons.views.oer_detail_by_slug', name="oer_detail"),
+    url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", 'commons.views.lp_detail_by_slug', name="lp_detail"),
+    url(r"^pathnode/(?P<node_id>[\d-]+)/$", 'commons.views.pathnode_detail', name="pathnode_detail"),
+)
 
 if settings.USE_HAYSTACK:
     # urlpatterns += patterns('', url(r'^haystack/', include('haystack.urls')),

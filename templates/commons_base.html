@@ -10,6 +10,9 @@
     <meta charset="utf-8">
     <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
+    {% block languages %}
+    {% endblock %}
+
     {% block viewport %}
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% endblock %}
@@ -120,6 +123,7 @@ $(document).ready(function() {
                           </div></li>
                           <li class="hidden-sm"><div class="navbar-search">
                             <form action="/i18n/setlang/" method="post">{% csrf_token %}
+                              <input type="hidden" name="next" value="{{ path_no_language }}">
                               <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
                               {% for lang in LANGUAGES %}
                                 <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
@@ -129,6 +133,7 @@ $(document).ready(function() {
                           </div></li>
                           <li class="visible-sm"><div class="navbar-search">
                             <form action="/i18n/setlang/" method="post">{% csrf_token %}
+                              <input type="hidden" name="next" value="{{ path_no_language }}">
                               <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
                               {% for lang in LANGUAGES %}
                                 <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.0|upper }}</option>

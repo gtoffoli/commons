@@ -4,6 +4,8 @@
 
 {% block head_title %}{{ node.label }} - {% trans "node of path"|capfirst %}: {{ node.path.title }}{% endblock %}
 
+{% block languages %}{% include "_hreflang.html" %}{% endblock %}
+
 {% block body_class %}pathnode_detail{% endblock %}
 
 {% block body %}

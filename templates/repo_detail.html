@@ -4,6 +4,8 @@
 
 {% block head_title %}{% trans "repository"|capfirst %}: {{ repo.name }}{% endblock %}
 
+{% block languages %}{% include "_hreflang.html" %}{% endblock %}
+
 {% block body_class %}repo_detail{% endblock %}
 
 {% block body %}

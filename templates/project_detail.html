@@ -6,6 +6,8 @@
 
 {% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
+{% block languages %}{% include "_hreflang.html" %}{% endblock %}
+
 {% block extra_style %}
     <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
     <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
@@ -114,10 +116,9 @@
 				</ul>
 				</div>
 	   {% endif %}
-	 
-	 
+
 {% comment %} AMMINISTRAZIONE {% endcomment %}
-        {% if can_edit or can_open or can_close or is_admin or user.is_staff %}
+        {% if can_edit or can_open or can_close or is_admin %}
           <div>
             <ul class="list-inline marginLB020">
               <li class="list-back-c4">

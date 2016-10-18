@@ -31,6 +31,7 @@ from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
+from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
 
 from commons import settings
@@ -232,6 +233,19 @@ class Resource(models.Model):
 
     def can_translate(self, request):
         return self.can_edit(request)
+
+    def get_translations(self):
+        content_type_id = ContentType.objects.get_for_model(self).pk
+        translations = KeyValue.objects.filter(content_type_id=content_type_id, object_id=self.pk)
+        return translations
+
+    def get_translation_codes(self):
+        codes = []
+        for t in self.get_translations():
+            code = t.language
+            if not code in codes:
+                codes.append(code)
+        return codes
 
 @receiver(pre_save)
 def set_original_language(sender, instance, **kwargs):
@@ -820,12 +834,13 @@ class Project(Resource):
             return _('supervisor')
 
     def can_access(self, user):
-        if self.state==PROJECT_OPEN:
+        # if self.state==PROJECT_OPEN:
+        if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
             return True
         if not user.is_authenticated():
             return False
         parent = self.get_parent()
-        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,)) or (parent and parent.is_admin(user))
+        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
 
     # def can_edit(self, user):
     def can_edit(self, request):
@@ -1956,7 +1971,7 @@ class PathNode(node_factory('PathEdge')):
 
     def can_translate(self, request):
         return self.can_edit(request)
-    
+
     def get_subranges(self, r=''):
         """ parses the value of the field range and return subranges
         as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
@@ -2001,6 +2016,9 @@ class PathNode(node_factory('PathEdge')):
 
     def page_in_range(self, page):
         return True
+
+PathNode.get_translations = Resource.get_translations
+PathNode.get_translation_codes = Resource.get_translation_codes
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
     label = models.TextField(blank=True, verbose_name=_('label'))
