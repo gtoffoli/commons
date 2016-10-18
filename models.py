@@ -422,9 +422,10 @@ mentor_fitness_metrics = {
 
 class UserPreferences(models.Model):
     user = models.OneToOneField(User, primary_key=True, related_name='preferences')
-    enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
+    enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'), help_text=_('Do you want that private messages from other members be notified to you by email? In any case, they will not know your email address.'))
     stream_max_days = models.PositiveIntegerField(default=90, null=True, verbose_name=_('activity stream max days'), help_text=_('Max age of actions to list in my dashboard.'))
     stream_max_actions = models.PositiveIntegerField(default=30, null=True, verbose_name=_('activity stream max actions '), help_text=_('Max number of actions to list in my dashboard.'))
+    enable_emails_from_admins = models.BooleanField(default=True, verbose_name=_('accept emails from administrators'), help_text=_('Occasionally, the CommonSpaces administrators will do some mailing, without disclosing email addresses to anybody.'))
 
 from awesome_avatar.fields import AvatarField
 class UserProfile(models.Model):

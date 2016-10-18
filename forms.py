@@ -108,7 +108,7 @@ class AvatarForm(forms.ModelForm):
 class UserPreferencesForm(forms.ModelForm):
     class Meta:
         model = UserPreferences
-        fields = ['user','enable_email_notifications','stream_max_days','stream_max_actions',]
+        fields = ['user', 'enable_emails_from_admins', 'enable_email_notifications', 'stream_max_days', 'stream_max_actions',]
         
     user = forms.IntegerField(widget=forms.HiddenInput())
 

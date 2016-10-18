@@ -5,7 +5,9 @@ Disallow: /accounts
 Disallow: /my_home
 Disallow: /my_profile
 Disallow: /my_mail
+Disallow: /my_chat
 Disallow: /user_welcome
+Disallow: /my_preferences
 Disallow: /edit_preferences
 Disallow: /project/*/edit
 Disallow: /oer/*/edit

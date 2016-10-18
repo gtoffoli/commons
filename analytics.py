@@ -326,3 +326,21 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
         project_activity_dict[project_id] += math.sqrt(verb_factor * contenttype_factor)
     project_activity_list = sorted(project_activity_dict.items(), key=lambda x: x[1], reverse=True)
     return project_activity_list
+
+def filter_users(profiled=None, member=None, count_only=False):
+    users = User.objects.filter(is_active=True).order_by('last_name', 'first_name')
+    if profiled is not None:
+        if profiled:
+            users = [user for user in users if user.is_completed_profile()]
+        else:
+            users = [user for user in users if not user.is_completed_profile()]
+    if member is not None:
+        if member:
+            users = [user for user in users if user.is_full_member()]
+        else:
+            users = [user for user in users if not user.is_full_member()]
+    if count_only:
+        return users.count()
+    else:
+        return users
+

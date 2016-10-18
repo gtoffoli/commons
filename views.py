@@ -50,7 +50,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import track_action, filter_actions, post_views_by_user, popular_principals
+from analytics import track_action, filter_actions, post_views_by_user, popular_principals, filter_users
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -287,15 +287,17 @@ def press_releases(request):
     return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
 
 def my_chat(request):
-    rooms = []
     user = request.user
-    if user.is_authenticated():
-        xmpp_accounts = XMPPAccount.objects.filter(user=user)
-        for xmpp_account in xmpp_accounts:
-            room_members = RoomMember.objects.filter(xmpp_account=xmpp_account)
-            for room_member in room_members:
-                room = room_member.room
-                rooms.append(room)
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
+    rooms = []
+    # if user.is_authenticated():
+    xmpp_accounts = XMPPAccount.objects.filter(user=user)
+    for xmpp_account in xmpp_accounts:
+        room_members = RoomMember.objects.filter(xmpp_account=xmpp_account)
+        for room_member in room_members:
+            room = room_member.room
+            rooms.append(room)
     chat_dict = {}
     chat_dict['rooms'] = rooms
     info = FlatPage.objects.get(url='/info/chatrooms/').content
@@ -375,6 +377,8 @@ def user_profile(request, username, user=None):
 
 def my_profile(request):
     user = request.user
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
     return user_profile(request, None, user=user)
 
 def user_dashboard(request, username, user=None):
@@ -441,6 +445,8 @@ def user_dashboard(request, username, user=None):
 
 def my_home(request):
     user = request.user
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
     return user_dashboard(request, None, user=user)
 
 def profile_edit(request, username):
@@ -509,10 +515,14 @@ def profile_avatar_upload(request, username):
 	
 def my_preferences(request):
     user = request.user
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
     return render_to_response('user_preferences.html', {'user': user, 'profile': user.get_profile(),}, context_instance=RequestContext(request))
  
 def edit_preferences(request):
     user = request.user
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
     called_by = request.GET.get('next','')
     users_preferences = UserPreferences.objects.filter(user=user)
     preferences = users_preferences and users_preferences[0] or None
@@ -553,6 +563,26 @@ def user_activity(request, username):
     var_dict['actor'] = user
     var_dict['actions'] = actions
     return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
+
+def mailing_list(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_staff:
+        return HttpResponseForbidden()
+    profiled = request.GET.get('profiled', None)
+    if profiled:
+        profiled = profiled.lower() in ('true', 't',)
+    member = request.GET.get('member', None)
+    if member:
+        member = member.lower() in ('true', 't',)
+    users = filter_users(profiled=profiled, member=member)
+    n_receivers = len(users)
+    receivers = []
+    for user in users:
+        full_name = '%s %s' % (user.first_name, user.last_name)
+        address = '%s <%s>' % (full_name, user.email)
+        receivers.append(address)
+    text = '\n'.join([str(n_receivers), ', '.join(receivers)])
+    return HttpResponse(text, content_type="text/plain")
 
 """
 def send_message_to(request, username):
