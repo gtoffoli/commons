@@ -606,7 +606,8 @@ def cops_tree(request):
             project = node.project
             if project and project.proj_type.public and project.state==PROJECT_OPEN:
                 filtered_nodes.append(node)
-    return render_to_response('cops_tree.html', {'nodes': filtered_nodes,}, context_instance=RequestContext(request))
+    info = FlatPage.objects.get(url='/info/communities/').content
+    return render_to_response('cops_tree.html', {'nodes': filtered_nodes, 'info': info,}, context_instance=RequestContext(request))
 
 def create_project_folders(request):  
     projects = Project.objects.all()

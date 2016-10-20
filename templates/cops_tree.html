@@ -8,6 +8,7 @@
 {% block body_class %}cops_tree{% endblock %}
 {% block body %}
    <h1 class="text-center">{% trans "all communities"|capfirst %}</h1>
+   {{ info|safe }}
    <section class="view-card">
    {% if nodes %}
 <ul class="list-unstyled">
