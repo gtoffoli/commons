@@ -5,6 +5,7 @@ Created on 02/apr/2015
 
 import re
 import json
+import csv
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -575,6 +576,7 @@ def mailing_list(request):
     if member:
         member = member.lower() in ('true', 't',)
     users = filter_users(profiled=profiled, member=member)
+    """
     n_receivers = len(users)
     receivers = []
     for user in users:
@@ -583,6 +585,18 @@ def mailing_list(request):
         receivers.append(address)
     text = '\n'.join([str(n_receivers), ', '.join(receivers)])
     return HttpResponse(text, content_type="text/plain")
+    """
+
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="cs_mailing.csv"'
+
+    writer = csv.writer(response, dialect="excel", delimiter="\t") # , skipinitialspace=True)
+    writer.writerow(['Email Address', 'First Name', 'Last Name'])
+    for user in users:
+        writer.writerow([user.email, user.first_name, user.last_name,])
+
+    return response
 
 """
 def send_message_to(request, username):
