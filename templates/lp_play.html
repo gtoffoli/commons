@@ -15,7 +15,7 @@
     <div class="clearfix">
     <h5 class="pull-left c-mulberry" style="width: 90%; margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
 <p class="pull-right paddingT10 paddingLR5" style="width: 10%; margin-bottom:5px; ">
-      <a href="/lp/{{ lp.slug }}"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
+      <a href="/lp/{{ lp.slug }}/"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
     </p>
     </div>
     <p class="font12">{{ lp.short|safe }}</p>
