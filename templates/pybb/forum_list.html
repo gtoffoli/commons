@@ -26,6 +26,7 @@
         </thead>
         <tbody>
         {% for forum in forum_list|pybb_forum_unread:user %}
+			{% if forum.topic_count %}
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} forum-unread{% endif %}">
                     <div class="state-indicator"></div>
@@ -49,6 +50,7 @@
                     {% include "pybb/forum_last_update_info.html" %}
                 </td>
             </tr>
+			{% endif %}
         {% empty %}
             {% if category %}
                 <h3>{% trans "No forums created" %}</h3>
