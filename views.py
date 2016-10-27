@@ -2370,9 +2370,11 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
 
 def oer_evaluate_by_slug(request, oer_slug):
-    # oer = OER.objects.get(slug=oer_slug)
     oer = get_object_or_404(OER, slug=oer_slug)
-    evaluations = oer.get_evaluations(request.user)
+    user = request.user
+    if not user.is_authenticated():
+        return HttpResponseRedirect('/oer/%s/' % oer.slug)
+    evaluations = oer.get_evaluations(user)
     if evaluations:
         evaluation = evaluations[0]
         return oer_evaluation_edit(request, evaluation_id=evaluation.id, oer=oer)
