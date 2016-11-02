@@ -65,14 +65,6 @@
 
      <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    if(window.opener){
-        $("header").remove();
-    }
-});
-</script>
-
      {% block extra_head_base %}
        {% block extra_head %}{% endblock %}
      {% endblock %}

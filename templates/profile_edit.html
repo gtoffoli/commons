@@ -34,6 +34,7 @@
             {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
           </div>
         {% endwith %}{% endfor %}
+      <div class="form-group bc-white" style="padding: 6px 12px;">{{ info|safe }}</div>
       </fieldset>
       <div class="panel-footer-c0 padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;

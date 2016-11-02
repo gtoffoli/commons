@@ -455,11 +455,14 @@ def profile_edit(request, username):
     if not user.can_edit(request):
         # return HttpResponseRedirect('/profile/%s/' % username)
         return HttpResponseRedirect('/my_profile/')
+    info = FlatPage.objects.get(url='/info/newsletter/').content
+    data_dict = {'user': user, 'info': info,}
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
         # form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
         form = UserProfileExtendedForm(request.POST, instance=profile)
+        data_dict['form'] = form
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()
@@ -471,9 +474,11 @@ def profile_edit(request, username):
                     # return HttpResponseRedirect('/profile/%s/' % username)
                     return HttpResponseRedirect('/my_profile/')
                 else: 
-                    return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                    # return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                    return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
             else:
-                return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                # return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+                return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             # return HttpResponseRedirect('/profile/%s/' % username)
             return HttpResponseRedirect('/my_profile/')
@@ -481,7 +486,9 @@ def profile_edit(request, username):
         form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name,})
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
-    return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+    # return render_to_response('profile_edit.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
+    data_dict['form'] = form
+    return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
 
 def profile_avatar_upload(request, username):
     user = get_object_or_404(User, username=username)
