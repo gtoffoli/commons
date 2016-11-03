@@ -29,7 +29,7 @@
     .box-featured dl {
       margin-bottom: 0;
       padding: 10px 10px 0 10px;
-      background: white;
+      background: #ddd;
       border-radius: 4px;
       border:1px solid transparent;
     }
@@ -54,7 +54,7 @@
       background: white;
     }
     .box-featured dl dd:last-child {
-      margin-bottom: 0;
+      margin-bottom: 10px;
     }
     .label-header {
       margin-top:0;
@@ -251,13 +251,13 @@
                       <div>{{ group_featured.text|safe }}</div>
                     {% endif %}
                     {% if group_featured.featured_object  %}
-                      <p class="demiBold">
+                      <p class="demiBold" style="margin-top:10px">
                         {% if group_featured.content_type.model == 'project' %}
-                          <a class="c-harvest-gold" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                          <i class="fa fa-group neutral"></i> <a class="c-harvest-gold" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
                         {% elif group_featured.content_type.model == 'oer' %}
-                          <a class="c-pacific-blue" href="/oer/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                          <i class="fa fa-recycle neutral"></i> <a class="c-pacific-blue" href="/oer/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
                         {% elif group_featured.content_type.model == 'learningpath' %}
-                          <a class="c-mulberry" href="/lp/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
+                          <i class="fa fa-cubes neutral"></i> <a class="c-mulberry" href="/lp/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
                         {% else %}
                           <a href="{{group_featured.featured_object.get_absolute_url }}">{{ group_featured.featured_object }}</a>
                         {% endif %}
@@ -280,9 +280,11 @@
               <div class="panel-heading-c4 padding10 borderRadius4">
                 <h3 class="label-header">{% trans "newest project" %}</h3>
                 <div class="bc-white padding10 borderRadius4">
-                  <h4 class="demiBold">{{ recent_proj.name }}</h4>
-                  <p>{{ recent_proj.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-harvest-gold" href="/project/{{recent_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div>{% if recent_proj.small_image %}<img src="/media/{{recent_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
+                    <h4 class="demiBold">{{ recent_proj.name }}</h4>
+                    <p>{{ recent_proj.description|safe|truncatechars_html:140 }}</p>
+                  </div>
+                  <div class="text-right"{% if recent_proj.small_image %} style="clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{recent_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -292,9 +294,11 @@
               <div class="panel-heading-c4 padding10 borderRadius4">
                 <h3 class="label-header">{% trans "most active project" %}</h3>
                 <div class="bc-white padding10 borderRadius4">
-                  <h4 class="demiBold">{{ active_proj.name }}</h4>
-                  <p>{{ active_proj.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-harvest-gold" href="/project/{{active_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div>{% if active_proj.small_image %}<img src="/media/{{active_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
+                    <h4 class="demiBold">{{ active_proj.name }}</h4>
+                    <p>{{ active_proj.description|safe|truncatechars_html:140 }}</p>
+                  </div>
+                  <div class="text-right"{% if active_proj.small_image %} "clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{active_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -304,9 +308,11 @@
               <div class="panel-heading-c4 padding10 borderRadius4">
                 <h3 class="label-header">{% trans "most popular project" %}</h3>
                 <div class="bc-white padding10 borderRadius4">
-                  <h4 class="demiBold">{{ popular_proj.name }}</h4>
-                  <p>{{ popular_proj.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-harvest-gold" href="/project/{{popular_proj.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div>{% if popular_proj.small_image %}<img src="/media/{{popular_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
+                    <h4 class="demiBold">{{ popular_proj.name }}</h4>
+                    <p>{{ popular_proj.description|safe|truncatechars_html:140 }}</p>
+                  </div>
+                  <div class="text-right"{% if popular_proj.small_image %} "clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{popular_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -314,11 +320,11 @@
           {% if last_lp %}
             <div class="grid-item">
               <div class="panel-heading-c1 padding10 borderRadius4">
-                <h3 class="class="label-header">{% trans "newest learning path" %}</h3>
+                <h3 class="label-header">{% trans "newest learning path" %}</h3>
                 <div class="bc-white c-black padding10 borderRadius4">
                   <h4 class="demiBold">{{ last_lp.title }}</h4>
                   <p>{{ last_lp.short|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{last_lp.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{last_lp.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -330,7 +336,7 @@
                 <div class="bc-white c-black padding10 borderRadius4">
                   <h4 class="demiBold">{{ popular_lp.title }}</h4>
                   <p>{{ popular_lp.short|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{popular_lp.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{popular_lp.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -342,7 +348,7 @@
                 <div class="bc-white c-black padding10 borderRadius4">
                   <h4 class="demiBold">{{ last_oer.title }}</h4>
                   <p>{{ last_oer.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{last_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{last_oer.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>
@@ -355,7 +361,7 @@
                   <h4 class="demiBold marginB3">{{ popular_oer.title }}</h4>
                   {% with stars=oer.get_stars %}<p>{% include "_view_rating.html" %}</p>{% endwith %}
                   <p>{{ popular_oer.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font18" aria-hidden="true"></i></a></div>
+                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
                 </div>
               </div>
             </div>

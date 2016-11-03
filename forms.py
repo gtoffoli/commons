@@ -191,12 +191,15 @@ class ProjectForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
-"""
 class ProjectLogoForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ('small_image',)
-"""
+
+class ProjectImageForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('big_image',)
 
 N_MEMBERS_CHOICES = (
     (0, ''),

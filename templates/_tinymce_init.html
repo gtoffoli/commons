@@ -1,7 +1,8 @@
 	{% load staticfiles %}
+
 	<script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
 	
-	<script>
+	<script type="text/javascript">
 	tinymce.init({
 	    schema: "html5",
 	    mode: "specific_textareas",
@@ -11,24 +12,8 @@
 		height : 350,
 	    /* width: "100%",
 	    theme: "advanced",*/
-	    plugins: "advlist charmap textcolor colorpicker link image visualblocks code",
-	    toolbar: 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | link unlink image | visualblocks code',
+	    plugins: "advlist charmap textcolor colorpicker link image visualblocks code fullscreen preview",
+	    toolbar: 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | link unlink image | visualblocks code fullscreen preview',
 	    content_css : "{% static "tinymce/mycontent.css" %}",
-	    /*theme_advanced_toolbar_location: "top",
-	    theme_advanced_resizing: true,
-	    theme_advanced_resizing_horizontal: true,
-	    theme_advanced_resizing_min_height: 350,
-	    theme_advanced_buttons1: "undo,redo,formatselect,bold,italic,underline,separator,justifyleft,justifycenter,justifyright,justifyfull,separator,forecolor,backcolor,sub,sup,charmap,separator,bullist,numlist,outdent,indent,separator,link,unlink,image,separator,cleanup,code",
-	    {% if data == 'extend' %} 
-	      plugins : "fullscreen,preview,",
-        theme_advanced_buttons2: "fullscreen,preview",
-        plugin_preview_width : "800",
-        plugin_preview_height : "600",
-        fullscreen_new_window : true,
-        fullscreen_settings : {
-          theme_advanced_path_location : "top"
-        },
-	    {% endif %}
-	    */
 	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea"
 	});	</script>

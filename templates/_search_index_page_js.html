@@ -37,12 +37,12 @@ $(document).ready(function (){
 		event.preventDefault();
 		var parent=$(this).parent().parent();
 		parent.children("p:first").css( "display", "none" );
-		parent.children("p:last").css( "display", "inline-block");
+		parent.children("p:last").css( "display", "block");
 	});
 	$('.restrict-description').on('click', function(event){
 		event.preventDefault();
 		var parent=$(this).parent().parent();
-		parent.children("p:first").css( "display", "inline-block");
+		parent.children("p:first").css( "display", "block");
 		parent.children("p:last").css( "display", "none");
 	});
 });

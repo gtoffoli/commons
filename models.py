@@ -188,14 +188,16 @@ class Tag(models.Model):
     def __unicode__(self):
         return self.name
 
+from filebrowser.fields import FileBrowseField
 import django_comments as comments
 class Resource(models.Model):
     class Meta:
         abstract = True
 
     deleted = models.BooleanField(default=False, verbose_name=_('deleted'))
-    small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
-    big_image = models.ImageField('big image', upload_to='images/resources/', null=True, blank=True)
+    # small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
+    # small_image = FileBrowseField('small image', max_length=200, null=True, blank=True)
+    # big_image = FileBrowseField('big image', max_length=200, null=True, blank=True)
     original_language = models.CharField(verbose_name=_('original language code'), max_length=5, default='', db_index=True)
 
     comment_enabled = models.BooleanField(
@@ -712,6 +714,8 @@ class Project(Resource):
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
+    small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100)
+    big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300)
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
@@ -1231,6 +1235,8 @@ class OER(Resource, Publishable):
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
     project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
+    small_image = AvatarField(_('screenshoot'), upload_to='images/oers/', width=140, height=140)
+    big_image = AvatarField(_('featured image'), upload_to='images/oers/', width=1100, height=180)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
@@ -1571,6 +1577,8 @@ class LearningPath(Resource, Publishable):
     project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True, related_name='lp_project')
     # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
     group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
+    small_image = AvatarField(_('logo'), upload_to='images/lps/', width=120, height=120)
+    big_image = AvatarField(_('featured image'), upload_to='images/lps/', width=1100, height=180)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))

@@ -5,15 +5,15 @@
 
 
 {% block head_title %}
-{% if project %}{% trans "upload logo"|capfirst %}: {{ project.get_name }}{% endif %}{% endblock %}
+{% if project %}{% trans "upload image"|capfirst %}: {{ project.get_name }}{% endif %}{% endblock %}
 
-{% block body_class %}logo_project_upload{% endblock %}
+{% block body_class %}image_project_upload{% endblock %}
 {% block body %}
   <div class="panel panel-c4 text-left marginTB30">
     <div class="panel-heading-c4 padding1020">
       <h2 class="marginTB5">
       {% if project %}
-        <small class="c-black">{% trans "upload logo of project"|capfirst %}:</small> {{ project.get_name }}
+        <small class="c-black">{% trans "upload image of project"|capfirst %}:</small> {{ project.get_name }}
       {% endif %}
       </h2>
     </div>
@@ -28,7 +28,7 @@
             {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
           </div>
         {% endfor %}
-        <div class="form-group"><input type="checkbox" name="remove" value="1"> <label>{% trans "remove logo" %}</label></div>
+        <div class="form-group"><input type="checkbox" name="remove" value="1"> <label>{% trans "remove image" %}</label></div>
       </fieldset>
       <div class="panel-footer-c4 padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}</button>&nbsp;

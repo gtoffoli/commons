@@ -11,8 +11,14 @@
 {% block extra_style %}
     <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
     <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
+<style>
+  .select2-container {
+    min-width: auto;
+  }
+</style>
 {% endblock %}
 
+{% comment %}
 {% block extra_head %}
 {% if can_delegate %}
 	<script>
@@ -23,48 +29,47 @@
 	</script>
 {% endif %}
 {% endblock %}
+{% endcomment %}
+
 {% block body_class %}project_detail{% endblock %}
 
 {% block body %}
 {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
 {% include "_resource_lang_msg.html" %}
- {% if project.small_image %}
- <table class="marginT30">
- 	<td><img src="/media/{{ project.small_image }}" class="avatar-medium"></td>
- 	<td><h1 style="padding-left: 10px;"> {{ project.get_name }}</h1></td>
- </table>
- {% else %}
- <h1 class="marginT30">{{ project.get_name }}</h1>
- {% endif %}
- <p>
-    {% if is_closed %}
-      <span class="fa fa-lock neutral"></span>
-    {% endif %}	
-    {% if is_draft %}
-      <span class="fa fa-group orange"></span>
-    {% elif is_submitted %}
-      <span class="fa fa-group limegreen"></span>
-    {% elif is_open or is_closed %}
-      <span class="fa fa-group neutral"></span>
-    {% elif is_deleted %}
-      <span class="fa fa-group red"></span>
-    {% endif %}
-    {{ proj_type.description }}
-    {% if project.get_level > 1 %}
-      {% if project.get_level == 2 %}
-        {% with parent=project.get_parent %}
+<div class="marginT30 marginB20" style="background:#EBEDED; border-bottom:6px solid #FABE66; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;">
+ <div class="bc-c4" style="overflow:hidden; position:relative; border-top-left-radius: 6px;  border-top-right-radius: 6px; max-height: 180px"><img src="{% if project.big_image %}/media/{{ project.big_image }}{% else %}/media/images/projectBigImage.png{% endif %}" style="width:100%; height:auto; border-top-left-radius: 6px;  border-top-right-radius: 6px;">
+    <div style="position:absolute; bottom:0;">
+    {% if project.small_image %}<h1 style="color: white; padding-left:15px; padding-right:15px; text-shadow: 0 1px 2px rgba(0,0,0,0.6);"><img src="/media/{{ project.small_image }}" style="background:white; max-width:100%; height:auto; vertical-align:bottom"> {{ project.get_name }}</h1>{% else %}<h1 class="demiBold" style="color: white; padding-left:15px; padding-right:15px; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">{{ project.get_name }}</h1>{% endif %}</div>
+ </div>
+ <p style="background:white; padding:6px 15px">
+   {% if is_closed %}
+     <span class="fa fa-lock neutral"></span>
+   {% endif %}	
+   {% if is_draft %}
+     <span class="fa fa-group orange"></span>
+   {% elif is_submitted %}
+     <span class="fa fa-group limegreen"></span>
+   {% elif is_open or is_closed %}
+     <span class="fa fa-group neutral"></span>
+   {% elif is_deleted %}
+     <span class="fa fa-group red"></span>
+   {% endif %}
+   {{ proj_type.description }}
+   {% if project.get_level > 1 %}
+     {% if project.get_level == 2 %}
+       {% with parent=project.get_parent %}
            &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
-        {% endwith %}
-      {% elif project.get_level == 3 %}
-        {% with parent=project.get_parent %}
+       {% endwith %}
+     {% elif project.get_level == 3 %}
+       {% with parent=project.get_parent %}
            &nbsp; - &nbsp;{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
            &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="{% trans "parent" %}">{{ parent.get_parent.get_name }}</a>
-        {% endwith %}
-      {% endif %}
-    {% endif %}
+       {% endwith %}
+     {% endif %}
+   {% endif %}
     - {% trans "original editing language"|capfirst %}: {{ project.get_language_name }}
  </p>
- <div class="row marginB20">
+ <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
    <div class="col-sm-7 col-md-7 col-lg-8">
      <article class="view-list">
        {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
@@ -74,7 +79,8 @@
             <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
          </dl>
        {% endif %}
-     </article> 
+     </article>
+
      {% if not project.get_project_type == 'sup' and project_children %}
         <div class="panel-white">
           <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 0 %} {% trans "communities"|capfirst %} {% elif project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
@@ -100,69 +106,65 @@
              </ul>
         </div>
      {% endif %}
-	 
-
-	 
-
      {% if user.is_authenticated %}
-
-	   {% if is_admin and  proj_type.name == 'com' and project_support_child %}
-	     <div class="panel-white">
-          <div class="panel-heading-c4 padding510 demiBold">{% trans "support projects"|capfirst %}</div>
-            <ul class="list-inline padding10510 list-orange">
-			    {% for proj_sup in project_support_child %}
-                <li><a href="/project/{{ proj_sup.slug }}/" title="{% trans "view project" %}">{{ proj_sup.get_name }}</a></li>
-				{% endfor %}
-				</ul>
-				</div>
-	   {% endif %}
+        {% if is_admin and  proj_type.name == 'com' and project_support_child %}
+          <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% trans "support projects"|capfirst %}</div>
+              <ul class="list-inline padding10510 list-orange">
+                {% for proj_sup in project_support_child %}
+                  <li><a href="/project/{{ proj_sup.slug }}/" title="{% trans "view project" %}">{{ proj_sup.get_name }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+        {% endif %}
 
 {% comment %} AMMINISTRAZIONE {% endcomment %}
         {% if can_edit or can_open or can_close or is_admin %}
           <div>
             <ul class="list-inline marginLB020">
-              <li class="list-back-c4">
+              <li class="list-back-c4 marginB5">
                  <ul class="list-inline">
                     <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %} {% endif %}</div>
                        <ul class="list-inline list-last">
-                       {% if can_edit and not language_mismatch %}{% comment %}<li><a href="/project/{{ project.slug }}/upload/" title="uploading logo" class="btn btn-default"><i class="fa fa-picture-o" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endcomment %}
-                       <li><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
-                       {% if can_translate and project.original_language %}<li><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
-                       {% if can_open %}<li><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
-                       {% if can_close %}<li><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
+                       {% if can_edit and not language_mismatch %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
+                       {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
+                       {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/logo/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endif %}
+                       {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/image/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload image" %}</a></li>{% endif %}
+                       {% if can_open %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
+                       {% if can_close %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
                        </ul>
                     </li>
                  </ul>
               </li>
               {% if not proj_type.name == 'roll' and not project.get_project_type == 'sup' %}
               {% if can_edit and not project_no_children %}
-                <li class="list-back-c4">
-                   <ul class="list-inline"><li>
+                <li class="list-back-c4 marginB5">
+                   <ul class="list-inline">
+                     <li>
                       {% if project.get_level > 0 %}
                         <div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "new projects"|capfirst %} {% else %} {% trans "new child projects"|capfirst %} {% endif %}</div>
                         <ul class="list-inline list-last">
                           {% for projType in proj_types %}
                             {% if projType.name != 'com' %}
-                              <li><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
                             {% endif %}
                           {% endfor %}
-						  {% if proj_type.name == 'com' %}
-						    <li><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" class="btn btn-default"><span class="fa fa-group orange"></span> {{ proj_type_sup.description }}</a></a></li>
-						  {% endif %}
+                          {% if proj_type.name == 'com' %}
+                           <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" class="btn btn-default"><span class="fa fa-group orange"></span> {{ proj_type_sup.description }}</a></li>
+                          {% endif %}
                         </ul>
-                     {% else %}
+                      {% else %}
                         <div class="marginB5 demiBold">{% trans "new community"|capfirst %}</div>
                         <ul class="list-inline list-last">
-                         <li><a href="/project/{{ project.slug }}/project_new/com/" title="{% trans "create community" %}" class="btn btn-default"><span class="fa fa-group orange"></span> {% trans "community"|capfirst %}</a></li>
+                         <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/com/" title="{% trans "create community" %}" class="btn btn-default"><span class="fa fa-group orange"></span> {% trans "community"|capfirst %}</a></li>
                         </ul>
-                     {% endif %}
+                      {% endif %}
                      </li>
                    </ul>
                 </li>
-				
               {% endif %}
               {% endif %}
-			  </ul>
+            </ul>
             
             {% if is_admin and is_open %}
               {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
@@ -173,10 +175,10 @@
                          <li><div class="c-white marginB5 demiBold">{% trans "new forum"|capfirst %}</div>
                             <ul class="list-inline list-last">
                               {% if not project.forum %}
-                                <li><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o"></i> {% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
+                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o"></i> {% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
                               {% endif %}
                               {% if proj_type.name == 'com' %}
-                                <li><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o"></i> {% trans "thematic" %}</a></li>
+                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o"></i> {% trans "thematic" %}</a></li>
                               {% endif %}
                             </ul>
                          </li>
@@ -189,10 +191,10 @@
                          <li><div class="c-white marginB5 demiBold">{% trans "chatroom"|capfirst %}</div>
                             <ul class="list-inline list-last">
                               {% if project.need_create_room %}
-                                <li><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create" %}</a></li>
+                                <li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create" %}</a></li>
                               {% endif %}
                               {% if project.need_sync_xmppaccounts %}
-                                <li><a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts"|capfirst %}</a></li>
+                                <li class="marginB5"><a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts"|capfirst %}</a></li>
                               {% endif %}
                             </ul>
                          </li> 
@@ -212,10 +214,10 @@
              <li class="list-back-black">
                 <ul class="list-inline">
                 {% if view_shared_folder %}
-                  <li><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a></li>
+                  <li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a></li>
                 {% endif %}
                 {% if can_send_message %}
-                   <li>
+                   <li class="marginB5">
                      <form action="/project/{{ project.id }}/compose_message/" method="post">
                      {% csrf_token %}
                      <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o"></i> {% trans "message to members"|capfirst %}</button>
@@ -224,14 +226,9 @@
                 {% endif %}
 
                 {% if project.forum %}
-              <li><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
+                   <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
                   	   {% trans "forum"|capfirst %} {% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
                 {% endif %}
-{% comment %}
-                {% if view_chat %}
-                   <li><a href="/my_chat/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "chatroom"|capfirst %}</a></li>
-                {% endif %}
-{% endcomment %}
                 </ul>
              </li>
            </ul>
@@ -250,14 +247,14 @@
 {% endcomment %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
-{% if is_member and not project.get_project_type == 'sup' %}
+        {% if is_member and not project.get_project_type == 'sup' %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
               {% if can_add_repo %}
-                <li class="list-back-c3">
+                <li class="list-back-c3 marginB5">
                    <ul class="list-inline">
-                      <li><div class="c-white marginB5 demiBold">{% trans "external repository"|capfirst %}</div>
+                      <li class="marginB5"><div class="c-white marginB5 demiBold">{% trans "external repository"|capfirst %}</div>
                          <ul class="list-inline list-last">
                             <li><a href="/repo/new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
                          </ul>
@@ -266,13 +263,13 @@
                 </li>
               {% endif %}
               {% if can_add_oer %}
-                <li class="list-back-c2">
+                <li class="list-back-c2 marginB5">
                    <ul class="list-inline">
                       <li><div class="c-white marginB5 demiBold">{% trans "OER" %}</div>
                          <ul class="list-inline list-last">
-                            <li ><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
+                            <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
                             {% if cut_oers %}{% for oer in cut_oers %}
-                              <li><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -280,13 +277,13 @@
                 </li>
               {% endif %}
               {% if can_add_lp %}
-                <li class="list-back-c3">
+                <li class="list-back-c1 marginB5">
                    <ul class="list-inline">
                       <li><div class="c-white marginB5 demiBold">{% trans "LP" %}</div>
                          <ul class="list-inline list-last">
-                            <li><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
+                            <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
                             {% if cut_lps %}{% for lp in cut_lps %}
-                              <li><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -296,7 +293,8 @@
             </ul>
           </div>
         {% endif %}
-{% endif %}
+        {% endif %}
+        
 {% comment %} MENTORING {% endcomment %}
         {% if proj_type.name == 'com' %}
             <div class="panel">
@@ -338,7 +336,6 @@
 
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if request.user.is_authenticated %}
-     
        {% if can_apply %}
           <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
            {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
@@ -351,110 +348,105 @@
            {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
        {% endif %}
      {% else %}
-          <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
-           {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
+       <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
+       {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
      {% endif %}
 
+     {% if project.group.level > 0 %}
+       <div class="panel-white">
+         <div class="panel-heading-c0 padding510 demiBold">{% trans "members"|capfirst %}</div>
+         {% with users=project.members %}{% if users|length > 0 %}
+         <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %}>
+           <ul class="list-unstyled my-list-unstyled padding510">
+           {% for u in users %}
+             <li>
+               <img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if u.1 %}<small>, <i>{{ project.admin_name }}</i></small>
+            {% if can_delegate and u.0 != user %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
+              {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+              <input type="submit" class="btn-link padding0 bold" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
+              </form>{% endif %}
+            {% else %}
+              {% if can_delegate %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
+                {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+                <input type="submit" class="btn-link padding0 bold" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
+                </form>
+              {% endif %}
+            {% endif %}
+             </li>
+           {% endfor %}
+           </ul>
+         </div>
+         {% endif %}{% endwith %}
+         {% if can_accept_member %}
+           {% with applications=project.get_applications %}{% if applications|length > 0 %}
+            <div class="borderTdotted{% if applications|length > 20 %} box-scroll box-medium {% endif %}">
+              <div class="padding510"><div class="bold" >{% trans "applications"|capfirst %}</div>
+                <ul class="list-unstyled">
+                {% for application in applications %}
+                  <li><small><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus"></i></a></small></li>
+                {% endfor %}
+                </ul>
+              </div>
+            </div>
+            {% endif %}{% endwith %}
+            {% if project.get_project_type == 'sup' %}
+              <div class="borderTdotted padding510">
+                <form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
+                  <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>
+                  <div class="form-group"><button type="submit" name="add" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
+                </form>
+              </div>
+            {% endif %}
+         {% endif %}
+       </div>
 
-   {% if project.group.level > 0 %}
+       {% if recent_actions %}
+         <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
+       {% endif %}
 
-   <div class="panel-white">
-     <div class="panel-heading-c0 padding510 demiBold">{% trans "members"|capfirst %}</div>
-     {% with users=project.members %}{% if users|length > 0 %}
-     <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %}>
-     <ul class="list-unstyled my-list-unstyled padding510">
-     {% for u in users %}
-       <li><img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if u.1 %}<small>, <i>{{ project.admin_name }}</i></small>
-          {% if can_delegate and u.0 != user %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
-          {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-          <input type="submit" class="btn-link padding0 bold" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
-          </form>{% endif %}
-        {% else %}
-          {% if can_delegate %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
-          {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
-          <input type="submit" class="btn-link padding0 bold" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
-          </form>{% endif %}
-        {% endif %}
-       </li>
-     {% endfor %}
-     </ul>
-     </div>
-     {% endif %}{% endwith %}
-     {% if can_accept_member %}
-       {% with applications=project.get_applications %}{% if applications|length > 0 %}
-       <div class="borderTdotted{% if applications|length > 20 %} box-scroll box-medium {% endif %}">
-       <div class="padding510"><div class="bold" >{% trans "applications"|capfirst %}</div>
-       <ul class="list-unstyled">
-       {% for application in applications %}
-         <li><small><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus"></i></a></small></li>
-       {% endfor %}
-       </ul>
-       </div>
-       </div>
-       {% endif %}{% endwith %}
-
-       {% if project.get_project_type == 'sup' %}
-       <div class="borderTdotted">
-       <div class="padding510"><div class="bold" >{% trans "add a member by your initiative"|capfirst %}</div>
-  		<form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
-	      <div class="form-group">{{ add_member_form.user }}</div>
-	      <div>
-	        <button type="submit" name="add" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button>&nbsp;
-		  </div>
-		</form>
-       </div>
-       </div>
+       {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
+         {% if lps %}
+           <div class="panel-white">
+             <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>
+             <ul class="list-unstyled my-list-unstyled padding510">
+             {% for lp in lps %}
+               <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+             {% endfor %}
+             </ul>
+             {% if n_lps > lps|length %}
+               <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+             {% endif %}
+           </div>
+         {% endif %}
+         {% if oers %}
+           <div class="panel-white">
+             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
+             <ul class="list-unstyled my-list-unstyled padding510">
+             {% for oer in oers %}
+               <li>{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/"><small>{{ oer.title }}</small></a> </li>
+             {% endfor %}
+             </ul>
+             {% if n_oers > oers.count %}
+               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+             {% endif %}
+           </div>
+         {% endif %}
+         {% if oer_evaluations %}
+           <div class="panel-white">
+             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OER evaluations"|capfirst %}</div>
+             <ul class="list-unstyled my-list-unstyled padding510">
+             {% for oer_evaluation in oer_evaluations %}
+               <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/"><small>{{ oer_evaluation.oer.title }}</small></a></li>
+             {% endfor %}
+             </ul>
+             {% if n_oer_evaluations > oer_evaluations.count %}
+               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+             {% endif %}
+           </div>
+         {% endif %}
        {% endif %}
      {% endif %}
    </div>
-
-   {% if recent_actions %}
-   <div class="panel-white"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
-   {% endif %}
-
-   {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
-    {% if lps %}
-      <div class="panel-white">
-      <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>
-      <ul class="list-unstyled my-list-unstyled padding510">
-      {% for lp in lps %}
-	      <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
-      {% endfor %}
-      </ul>
-      {% if n_lps > lps|length %}
-        <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
-      {% endif %}
-      </div>
-    {% endif %}
-    {% if oers %}
-      <div class="panel-white">
-      <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
-      <ul class="list-unstyled my-list-unstyled padding510">
-      {% for oer in oers %}
-        <li>{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/"><small>{{ oer.title }}</small></a> </li>
-      {% endfor %}
-      </ul>
-      {% if n_oers > oers.count %}
-        <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
-      {% endif %}
-      </div>
-    {% endif %}
-    {% if oer_evaluations %}
-      <div class="panel-white">
-      <div class="panel-heading-c2 padding510 demiBold">{% trans "last OER evaluations"|capfirst %}</div>
-      <ul class="list-unstyled my-list-unstyled padding510">
-      {% for oer_evaluation in oer_evaluations %}
-        <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/"><small>{{ oer_evaluation.oer.title }}</small></a></li>
-      {% endfor %}
-      </ul>
-      {% if n_oer_evaluations > oer_evaluations.count %}
-         <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
-      {% endif %}
-      </ul>
-      </div>
-    {% endif %}
-   {% endif %}
-   {% endif %}
  </div>
 </div>
 {% endblock %}
@@ -466,6 +458,10 @@
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
 
 	<script type="text/javascript">
+	{% if can_delegate %}
+		function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the admin or supervisor role to this member" %}?');}
+		function confirm_undelegate(form) {return confirm('{% trans "do you really want to call back the admin or supervisor role from this member" %}?');}
+	{% endif %}
 	$(document).ready(function (){
 		$('dt a.toggleIcon').on('click', function(event){
 			event.preventDefault();

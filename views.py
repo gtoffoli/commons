@@ -46,7 +46,7 @@ from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, Pr
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
-from forms import AvatarForm # ProjectLogoForm
+from forms import AvatarForm, ProjectLogoForm, ProjectImageForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
@@ -1165,37 +1165,78 @@ def project_close(request, project_id):
     project.close(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
-"""
-from commons.widgets import MyImageInput
 def project_logo_upload(request, project_slug):
     user = request.user
     project = get_object_or_404(Project, slug=project_slug)
-    action = '/project/'+project.slug+'/upload/'
+    action = '/project/'+project.slug+'/upload/logo/'
+    if project:
+        if not project.can_access(user):
+            raise PermissionDenied
     if request.POST:
        if request.POST.get('cancel', ''):
            return HttpResponseRedirect('/project/%s/' % project.slug)
-       else: # Save or Save & continue
-           form = ProjectLogoForm(request.POST,request.FILES, instance=project)
-           if form.is_valid():
-               project = form.save(commit=False)
+       else:
+           if request.POST.get('remove','') == '1':
+               project.small_image = ''
                project.editor = user
                project.save()
-               if request.POST.get('save', ''):
-                   return HttpResponseRedirect('/project/%s/' % project.slug)
-               else: # continue
-                   form = ProjectLogoForm(request.POST,instance=project)
-                   # return HttpResponseRedirect('/project/%s/upload/' % project.slug)
-                   return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
-
+               return HttpResponseRedirect('/project/%s/' % project.slug)
            else:
-               print form.errors
+               if request.FILES:
+                   form = ProjectLogoForm(request.POST,request.FILES, instance=project)
+                   if form.is_valid():
+                       project = form.save(commit=False)
+                       project.editor = user
+                       project.save()
+                       return HttpResponseRedirect('/project/%s/' % project.slug)
+                   else:
+                       print form.errors
+               else:
+                   form = ProjectLogoForm(instance=project)
+                   return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
     else:
-        if project.can_edit(user):
+        if project.can_edit(request):
             form = ProjectLogoForm(instance=project)
             return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
-"""
+
+def project_image_upload(request, project_slug):
+    user = request.user
+    project = get_object_or_404(Project, slug=project_slug)
+    action = '/project/'+project.slug+'/upload/image/'
+    if project:
+        if not project.can_access(user):
+            raise PermissionDenied
+    if request.POST:
+       if request.POST.get('cancel', ''):
+           return HttpResponseRedirect('/project/%s/' % project.slug)
+       else:
+           if request.POST.get('remove','') == '1':
+               project.big_image = ''
+               project.editor = user
+               project.save()
+               return HttpResponseRedirect('/project/%s/' % project.slug)
+           else:
+               if request.FILES:
+                   form = ProjectImageForm(request.POST,request.FILES, instance=project)
+                   if form.is_valid():
+                       project = form.save(commit=False)
+                       project.editor = user
+                       project.save()
+                       return HttpResponseRedirect('/project/%s/' % project.slug)
+                   else:
+                       print form.errors
+               else:
+                   form = ProjectImageForm(instance=project)
+                   return render_to_response('project_image_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
+    else:
+        if project.can_edit(request):
+            form = ProjectImageForm(instance=project)
+            return render_to_response('project_image_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/project/%s/' % project.slug)
+
 
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)

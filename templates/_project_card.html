@@ -2,8 +2,9 @@
 
  {% load i18n staticfiles %}
 
-<article class="view-card">
-  <p class="title-card"><a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
+<article class="view-card" style="min-height:130px">
+  {% if project.small_image %}<img src="/media/{{project.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
+    <p class="title-card"><a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
   <p class="text-card">
     {% if project.state == 3 %}
       <span class="fa fa-lock neutral"></span>
@@ -31,11 +32,11 @@
   </p>
   {% if project.description|length > 140 %}
   <div>
-    <p style="display:inline-block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
+    <p style="display:block" class="text-card short-description"><i>{{ project.description|truncatechars:140 }}</i> <a href="#" class="expand-description"><span class="fa fa-plus-circle"></span></a></p>
     <p style="display:none" class="text-card full-description"><i>{{ project.description }}</i> <a href="#" class="restrict-description"><span class="fa fa-minus-circle"></span></a></p>
   </div>
   {% else %}
-  <p style="display:inline-block" class="text-card full-description"><i>{{ project.description }}</i></p>
+  <p style="display:block" class="text-card full-description"><i>{{ project.description }}</i></p>
   {% endif %}
 
   {% if project.get_lps and project.get_oers %}
