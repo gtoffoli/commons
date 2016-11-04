@@ -500,27 +500,27 @@ def profile_avatar_upload(request, username):
     if request.POST:
        if request.POST.get('cancel', ''):
            return HttpResponseRedirect('/my_profile/')
-       else: # Save
-           form = AvatarForm(request.POST, request.FILES, instance=profile)
-           if request.FILES: 
-               if form.is_valid():
-                   form.save()
-                   user.save()
-                   """
-                   if request.POST.get('save', ''):
-                       return HttpResponseRedirect('/my_profile/')
-                   """
-               else:
-                   print form.errors
+       else: 
+           if request.POST.get('remove','') == '1':
+               profile.avatar = ''
+               profile.save()
+               user.save()
+           else:
+               if request.FILES:
+                  form = AvatarForm(request.POST, request.FILES, instance=profile)
+                  if form.is_valid():
+                      form.save()
+                      user.save()
+                  else:
+                      print form.errors
            return HttpResponseRedirect('/my_profile/')
     else:
         if user.can_edit(request):
             form = AvatarForm(instance=profile)
             return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
         else:
-            return HttpResponseRedirect('/my_profile/')		
+            return HttpResponseRedirect('/my_profile/')
 
-	
 def my_preferences(request):
     user = request.user
     if not user.is_authenticated():
