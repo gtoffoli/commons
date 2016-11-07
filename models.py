@@ -249,10 +249,12 @@ class Resource(models.Model):
                 codes.append(code)
         return codes
 
+""" moved set_original_language to individual views
 @receiver(pre_save)
 def set_original_language(sender, instance, **kwargs):
     if issubclass(sender, Resource):
         instance.original_language = get_current_language()
+"""
 
 DRAFT = 1
 SUBMITTED = 2

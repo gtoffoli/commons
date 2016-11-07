@@ -630,6 +630,9 @@ def cops_tree(request):
     info = FlatPage.objects.get(url='/info/communities/').content
     return render_to_response('cops_tree.html', {'nodes': filtered_nodes, 'info': info,}, context_instance=RequestContext(request))
 
+def set_original_language(object):
+    object.original_language = get_current_language()
+
 def create_project_folders(request):  
     projects = Project.objects.all()
     for project in projects:
@@ -1094,6 +1097,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.group = group
                     project.creator = user
                     project.editor = user
+                    set_original_language(project)
                     project.save()
                     track_action(request.user, 'Create', project)
                     proj_type_name = project.get_type_name()
@@ -1115,6 +1119,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user
+                    set_original_language(project)
                     project.save()
                     track_action(request.user, 'Edit', project)
                 if request.POST.get('save', ''): 
@@ -1643,6 +1648,7 @@ def repo_save(request, repo=None):
                 if repo.creator_id == 1:
                     repo.creator = user
                 repo.editor = user
+                set_original_language(repo)
                 repo.save()
                 if repo_id:
                     track_action(request.user, 'Edit', repo)
@@ -2240,6 +2246,7 @@ def oer_edit(request, oer_id=None, project_id=None):
             if form.is_valid():
                 oer = form.save(commit=False)
                 oer.editor = user
+                set_original_language(oer)
                 oer.save()
                 form.save_m2m()
                 # oer = get_object_or_404(OER, id=oer.id)
@@ -2872,6 +2879,7 @@ def lp_edit(request, lp_id=None, project_id=None):
             if form.is_valid():
                 lp = form.save(commit=False)
                 lp.editor = user
+                set_original_language(lp)
                 lp.save()
                 form.save_m2m()
                 if lp_id:
