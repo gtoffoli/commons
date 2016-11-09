@@ -174,6 +174,7 @@ urlpatterns = patterns('',
     url(r"^analytics/forums/$", 'commons.analytics.forum_analytics', name="forum_analytics"),
     url(r"^analytics/messages/$", 'commons.analytics.message_analytics', name="message_analytics"),
     url(r"^analytics/mailing_list/$", 'commons.views.mailing_list', name="mailing_list"),
+    url(r"^analytics/oer_duplicates/$", 'commons.analytics.oer_duplicates', name="oer_duplicates"),
     url(r"^bosh_prebind/$", 'dmuc.views.bosh_prebind', name="bosh_prebind"),
     ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

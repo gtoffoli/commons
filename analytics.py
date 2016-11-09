@@ -7,6 +7,7 @@ import math
 from collections import defaultdict
 from datetime import timedelta
 
+from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.db.models import Count, Q
 from django.template import RequestContext
@@ -19,7 +20,8 @@ from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
-# from models import Project
+from models import OER # , Project
+from models import PUBLISHED
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve',]
 
@@ -343,4 +345,27 @@ def filter_users(profiled=None, member=None, count_only=False):
         return users.count()
     else:
         return users
+
+def oer_duplicates(request):
+    published = request.GET.get('published', None)
+    oers = OER.objects.exclude(url=u'')
+    if published:
+        oers = oers.filter(state=PUBLISHED)
+    url_dict = defaultdict(list)
+    for oer in oers:
+        url = oer.url.strip()
+        splitted = url.split('://')
+        if len(splitted)==2:
+            url = splitted[1]
+        url_dict[url].append(oer)
+    url_list = sorted(url_dict.items(), key=lambda x: len(x[1]), reverse=True)
+    lines = []
+    for item in url_list:
+        if len(item[1])<2:
+            break
+        url = item[0]
+        titles = '<ul>' + ', '.join(['<li><a href="%s">%s</a></li>' % (oer.get_absolute_url(), oer.title) for oer in item[1]]) + '</ul>'
+        lines.append('<div><a href="%s">%s</a> - %s</div>' % (url, url, titles))
+    html = '<html>\n<body>\n<h1>CommonSpaces - Possible OER duplicates (same url)</h1>\n' + ' \n'.join(lines) + '</body>\n</html>'
+    return HttpResponse(html)
 
