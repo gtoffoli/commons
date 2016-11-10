@@ -920,6 +920,8 @@ def project_detail(request, project_id, project=None):
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
             var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
+            bookmarked_oers = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
+            var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project]
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
@@ -1317,13 +1319,14 @@ def project_add_shared_oer(request, project_id, oer_id):
     user = request.user
     project = get_object_or_404(Project, id=project_id)
     if user.is_authenticated() and project.can_add_oer(user):
-        bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
-        if oer_id in bookmarked_oers:
+        bookmarked_ids = get_clipboard(request, key='bookmarked_oers') or []
+        if oer_id in bookmarked_ids:
             oer = get_object_or_404(OER, id=oer_id)
-            shared_oer = SharedOer(oer=oer, project=project, user=user)
-            shared_oer.save()
-            bookmarked_oers.remove(oer_id)
-            set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers or None)
+            if not oer.project==project:
+                shared_oer = SharedOer(oer=oer, project=project, user=user)
+                shared_oer.save()
+                bookmarked_ids.remove(oer_id)
+                set_clipboard(request, key='bookmarked_oers', value=bookmarked_ids or None)
     return project_detail(request, project_id, project=project)
 
 def shared_oer_delete(request, shared_oer_id):
