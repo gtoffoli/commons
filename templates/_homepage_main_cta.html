@@ -1,0 +1,88 @@
+{% load staticfiles i18n %}
+{% comment %} MAIN CTA {% endcomment %}
+    <div class="container-fluid bc-white paddingT50 paddingLR15 paddingB20">
+        <div class="row hidden-xs hidden-lg visible-sm visible-md">
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
+               </div>
+            </div>
+        </div>
+        <div class="row hidden-xs hidden-lg visible-sm visible-md">
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm btn bc-c2 c-white demiBold" href="/browse/" style="width:280px">{% trans "educational library"|capfirst %}</a>
+                 <a class="visible-sm btn bc-c2 paddingLR10 c-white bold" href="/browse/">{% trans "educational library"|capfirst %}</a>
+               </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm btn bc-c4 c-white demiBold" href="/cops/" style="width:280px">{% trans "communities"|capfirst %}</a>
+                 <a class="visible-sm btn bc-c4 paddingLR10 c-white bold" href="/cops/">{% trans "communities"|capfirst %}</a>
+               </div>
+            </div>
+            <div class="col-sm-4 col-md-4">
+               <div class="text-center">
+                 <a class="hidden-sm btn bc-c1 c-white demiBold" href="/lps/search/" style="width:280px">{% trans "learning paths"|capfirst %}</a>
+                 <a class="visible-sm btn bc-c1 paddingLR10 c-white bold" href="/lps/search/">{% trans "learning paths"|capfirst %}</a>
+               </div>
+            </div>
+        </div>
+        
+        <div class="row hidden-xs hidden-sm hidden-md visible-lg">
+            <div class="col-lg-4 paddingB10">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
+                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:300px">{% trans "educational library"|capfirst %}</a></div>
+                </div>
+            </div>
+            <div class="col-lg-4 paddingB10">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
+                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:300px">{% trans "communities"|capfirst %}</a></div>
+               </div>
+            </div>
+            <div class="col-lg-4 paddingB10">
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
+                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:300px">{% trans "learning paths"|capfirst %}</a></div>
+               </div>
+            </div>
+        </div>
+        
+        <div class="row hidden-sm hidden-lg hidden-md visible-xs">
+            <div class="col-xs-12">
+               <div class="text-center paddingB50">
+                 <div><img src="{% static "commons/img/resources.png" %}"></div>
+                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
+                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:280px">{% trans "educational library"|capfirst %}</a></div>
+               </div>
+               <div class="text-center paddingB50">
+                 <div><img src="{% static "commons/img/group.png" %}"></div>
+                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
+                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:280px">{% trans "communities"|capfirst %}</a></div>
+               </div>
+               <div class="text-center">
+                 <div><img src="{% static "commons/img/lp.png" %}"></div>
+                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
+                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:280px">{% trans "learning paths"|capfirst %}</a></div>
+               </div>
+            </div>
+        </div>
+    </div>

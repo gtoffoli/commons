@@ -1,0 +1,40 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles%}
+{% load i18n %}
+
+
+{% block head_title %}
+{% if oer %}{% trans "upload screenshot"|capfirst %}: {{ oer.title }}{% endif %}{% endblock %}
+
+{% block body_class %}screenshot_oer_upload{% endblock %}
+{% block body %}
+  <div class="panel panel-c2 text-left marginTB30">
+    <div class="panel-heading-c2 padding1020">
+      <h2 class="marginTB5">
+      {% if oer %}
+        <small class="c-white">{% trans "upload screenshot of OER"|capfirst %}:</small> {{ oer.title }}
+      {% endif %}
+      </h2>
+    </div>
+    <form method="post" action="{{ action }}" id="upload_form" enctype="multipart/form-data">{% csrf_token %}
+      {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
+      {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+      <fieldset class="padding1020">
+        {% for field in form.visible_fields %}
+          <div class="form-group">
+            <label for="{{ field.name }}">{{ field.label|capfirst}}</label>
+            <span class="txt-error">{{ field.errors }}</span>{{ field }}
+            {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+          </div>
+        {% endfor %}
+        <div class="form-group"><input type="checkbox" name="remove" value="1"> <label>{% trans "remove screenshot" %}</label></div>
+      </fieldset>
+      <div class="panel-footer-c2 padding1020">
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}</button>&nbsp;
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}{% if oer %} ({% trans "user view" %}){% endif %}</button>
+      </div>
+    </form>
+   </div>
+{% endblock %}
+

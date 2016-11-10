@@ -13,7 +13,7 @@
         <input id="{{ id }}-ratio" type="hidden" name="{{ name }}-ratio"/>
     </div>
     
-    {% if config.width > 200 %}
+    {% if config.width > 300 %}
       <div id="{{ id }}-preview" class="awesome-avatar-preview"
            style="width:{{ config.width }}px; height:{{ config.height }}px; margin-bottom:10px">
            <img src="{{ avatar_url }}">
@@ -28,7 +28,7 @@
            style="width:{{ config.width }}px; height:{{ config.height }}px; display:inline-block;">
            <img src="{{ avatar_url }}">
       </div>
-      <div style="display:inline-block; vertical-align:middle">
+      <div style="display:inline-block; {% if config.width < 300 %}vertical-align:middle {% endif %}">
       <div id="{{ id }}-select-area" class="awesome-avatar-select-area"
            style="width:{{ config.select_area_width }}px;height:{{ config.select_area_height }}px;">
            <img src="">

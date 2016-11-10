@@ -92,14 +92,14 @@
                 <ul class="list-unstyled my-list-unstyled padding510">
                  {% for membership in com_adminships %}
                    <li>
-                     {% if membership.project.state == 0 %}
-                       <span class="fa fa-group orange"></span> 
-                     {% elif memberhip.project.state == 1 %}
-                       <span class="fa fa-group limegreen"></span> 
-                     {% elif membership.project.state == 3 %}
-                       <span class="fa fa-lock neutral"></span> 
-                     {% endif %}
-                     <small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>{% if membership.proj_applications %} [{{ membership.proj_applications }} {% trans "applications" %}]{% endif %}</small>
+                      {% if membership.project.state == 0 %}
+                        <span class="fa fa-group orange"></span> 
+                      {% elif membership.project.state == 1 %}
+                        <span class="fa fa-group limegreen"></span> 
+                      {% elif membership.project.state == 3 %}
+                        <span class="fa fa-lock neutral"></span> 
+                      {% endif %}
+                      <small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a>{% if membership.proj_applications %} [{{ membership.proj_applications }} {% trans "applications" %}]{% endif %}</small>
                    </li>
                  {% endfor %}
                 </ul>
@@ -113,7 +113,16 @@
               <div {% if adminships|length > 10 %} class="box-scroll box-medium" {% endif %}>
                 <ul class="list-unstyled my-list-unstyled padding510">
                 {% for membership in adminships %}
-                  <li><small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a></small></li>
+                  <li>
+                      {% if membership.project.state == 0 %}
+                        <span class="fa fa-group orange"></span> 
+                      {% elif membership.project.state == 1 %}
+                        <span class="fa fa-group limegreen"></span> 
+                      {% elif membership.project.state == 3 %}
+                        <span class="fa fa-lock neutral"></span> 
+                      {% endif %}
+                      <small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a></small>
+                  </li>
                 {% endfor %}
                 </ul>
               </div>

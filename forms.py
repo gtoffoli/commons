@@ -175,7 +175,6 @@ class ProjectForm(forms.ModelForm):
         # exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
         fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
 
-
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -357,6 +356,7 @@ class OerForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     
+
     def clean(self):
         cd = self.cleaned_data
         oers = cd.get('oers')
@@ -368,6 +368,11 @@ class OerForm(forms.ModelForm):
 
         return cd
 
+class OerScreenshotForm(forms.ModelForm):
+    class Meta:
+        model = OER
+        fields = ('small_image',)
+ 
 class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER

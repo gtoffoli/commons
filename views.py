@@ -46,7 +46,7 @@ from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, Pr
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
-from forms import AvatarForm, ProjectLogoForm, ProjectImageForm
+from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
@@ -2302,6 +2302,42 @@ def oer_edit(request, oer_id=None, project_id=None):
 def oer_edit_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
     return oer_edit(request, oer_id=oer.id)
+
+def oer_screenshot_upload(request, oer_slug):
+    user = request.user
+    oer = get_object_or_404(OER, slug=oer_slug)
+    action = '/oer/'+oer_slug+'/upload/screenshot/'
+    if oer:
+        if not oer.can_access(user):
+            raise PermissionDenied
+    if request.POST:
+       if request.POST.get('cancel', ''):
+           return HttpResponseRedirect('/oer/%s/' % oer.slug)
+       else:
+           if request.POST.get('remove','') == '1':
+               oer.small_image = ''
+               oer.editor = user
+               oer.save()
+               return HttpResponseRedirect('/oer/%s/' % oer.slug)
+           else:
+               if request.FILES:
+                   form = OerScreenshotForm(request.POST,request.FILES, instance=oer)
+                   if form.is_valid():
+                       oer = form.save(commit=False)
+                       oer.editor = user
+                       oer.save()
+                       return HttpResponseRedirect('/oer/%s/' % oer.slug)
+                   else:
+                       print form.errors
+               else:
+                   form = OerScreenshotForm(instance=oer)
+                   return render_to_response('oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, }, context_instance=RequestContext(request))
+    else:
+        if oer.can_edit(request):
+            form = OerScreenshotForm(instance=oer)
+            return render_to_response('oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, }, context_instance=RequestContext(request))
+        else:
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
 def oer_submit(request, oer_id):
     oer = OER.objects.get(pk=oer_id)

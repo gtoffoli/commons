@@ -16,6 +16,7 @@
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/oer/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
+        {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/upload/screenshot/" title="{% trans "upload screenshot" %}"><i class="fa fa-picture-o font07em" aria-hidden="true"></i></a>{% endif %}
         {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
         {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
         {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
@@ -37,13 +38,22 @@
       {% if oer.url and oer.description %}
         <div class="hidden-xs">
            <div class="posRel">
-              <div class="bg_view floatL"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+              <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>{%endif%}
+              	<a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
         </div>
         <div class="visible-xs">
+           {% if oer.small_image%}
+           <div class="posRel">
+              <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+              <p>{{ oer.description }}</p>
+           </div>
+           {% else %}
            <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
            <p>{{ oer.description }}</p>
+           {% endif %}
         </div>
       {% elif oer.description %}
         <p>{{ oer.description }}</p>

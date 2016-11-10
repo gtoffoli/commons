@@ -15,12 +15,12 @@
   {% elif oer %}
     <h5 class="pull-left c-pacific-blue">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small>{% endif %}{{ oer.title }}</h5>
     <p class="pull-right paddingT10 paddingLR5">
-       <a href="/oer/{{ oer.slug }}"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
+       <a href="/oer/{{ oer.slug }}/"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
     </p>
   {% elif project %}
     <h5 class="pull-left ">{% trans "shared folder"|capfirst %}: {{ project.name }}</h5>
     <p class="pull-right paddingT10 paddingLR5">
-       <a href="/project/{{ project.slug }}/folder"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
+       <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>
 
   {% endif %}

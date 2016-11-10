@@ -3,6 +3,7 @@
  {% load staticfiles i18n %}
 
 <article class="view-card">
+{% if oer.small_image %}<img src="/media/{{oer.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px; max-width:20%">{% endif %}
   <p class="title-card">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></p>
   <p class="text-card">Rating &nbsp;
     {% with stars=oer.get_stars %}
@@ -32,5 +33,11 @@
   {% endif %}
   {% if oer.license %}
     {% include "_data.html" with data=oer.license data_class="" label_data="terms of use" action="/oers/search/" type_data="license" %}
+  {% endif %}
+  {% if oer.comments.all %}
+   <dl class="list-inline paddingT10">
+    <dt>{% trans "comments"|capfirst %}</dt>
+    <dd>{{oer.comments.all.count }}</dd>
+  </dl>
   {% endif %}
 </article>
