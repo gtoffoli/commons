@@ -716,8 +716,8 @@ class Project(Resource):
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
-    small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100)
-    big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300)
+    small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True)
+    big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True)
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
@@ -1141,8 +1141,8 @@ class Repo(Resource, Publishable):
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     info = models.TextField(_('longer description / search suggestions'), blank=True, null=True)
     eval = models.TextField(_('comments / evaluation'), blank=True, null=True)
-    small_image = AvatarField(_('screenshot'), upload_to='images/repo/', width=140, height=140)
-    big_image = AvatarField(_('featured image'), upload_to='images/repo/', width=1100, height=180)
+    small_image = AvatarField(_('screenshot'), upload_to='images/repo/', width=140, height=140, null=True)
+    big_image = AvatarField(_('featured image'), upload_to='images/repo/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
@@ -1239,8 +1239,8 @@ class OER(Resource, Publishable):
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
     project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
-    small_image = AvatarField('screenshot', upload_to='images/oers/', width=300, height=300)
-    big_image = AvatarField('', upload_to='images/oers/', width=1100, height=180)
+    small_image = AvatarField('screenshot', upload_to='images/oers/', width=300, height=300, null=True)
+    big_image = AvatarField('', upload_to='images/oers/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
     created = CreationDateTimeField(_('created'))
@@ -1457,6 +1457,27 @@ class OerMetadata(models.Model):
         verbose_name = _('additional metadatum')
         verbose_name_plural = _('additional metadata')
 
+class SharedOer(models.Model):
+    """
+    Link to an OER catalogued in another project
+    """
+    oer = models.ForeignKey(OER, verbose_name=_('referenced OER'))
+    project = models.ForeignKey(Project, verbose_name=_('referencing project'))
+    created = CreationDateTimeField(_('created'))
+    user = models.ForeignKey(User, verbose_name=_('last editor'))
+
+    class Meta:
+        unique_together = ('oer', 'project')
+        verbose_name = _('shared OER')
+        verbose_name_plural = _('shared OERs')
+
+    def __unicode__(self):
+        return '\u21D2 %s' % self.oer.title
+
+    def can_delete(self, request):
+        user = request.user
+        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
 
@@ -1581,8 +1602,8 @@ class LearningPath(Resource, Publishable):
     project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True, related_name='lp_project')
     # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
     group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
-    small_image = AvatarField(_('logo'), upload_to='images/lps/', width=120, height=120)
-    big_image = AvatarField(_('featured image'), upload_to='images/lps/', width=1100, height=180)
+    small_image = AvatarField(_('logo'), upload_to='images/lps/', width=120, height=120, null=True)
+    big_image = AvatarField(_('featured image'), upload_to='images/lps/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))

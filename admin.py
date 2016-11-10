@@ -17,7 +17,7 @@ from taggit_labels.widgets import LabelWidget
 """
 
 from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
-from .models import OerMetadata, OER, OerQualityMetadata, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
+from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
@@ -173,6 +173,15 @@ class OerMetadataAdmin(admin.ModelAdmin):
     # fieldsets = []
     list_display = ('oer', 'metadata_type', 'value',)
 
+class SharedOerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'oer_title', 'project_name', 'user', 'created',)
+
+    def oer_title(self, obj):
+        return obj.oer and obj.oer.title or ''
+
+    def project_name(self, obj):
+        return obj.project.get_name()
+
 class OerQualityMetadataInline(admin.TabularInline):
     model = OerQualityMetadata
     extra = 4 # how many rows to show
@@ -264,6 +273,7 @@ admin.site.register(RepoType, RepoTypeAdmin)
 admin.site.register(Repo, RepoAdmin)
 admin.site.register(OER, OERAdmin)
 admin.site.register(OerMetadata, OerMetadataAdmin)
+admin.site.register(SharedOer, SharedOerAdmin)
 admin.site.register(OerEvaluation, OerEvaluationAdmin)
 
 # admin.site.register(OerProxy, OerProxyAdmin)

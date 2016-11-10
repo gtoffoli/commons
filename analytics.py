@@ -272,7 +272,7 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
 
 def activity_stream(request, user=None, max_actions=100, max_days=1):
     actions = []
-    if user==request.user or request.user.is_superuser or request.user.is_manager(1):
+    if user==request.user or request.user.is_superuser or (request.user.is_authenticated() and request.user.is_manager(1)):
         actions = filter_actions(user=user, max_days=max_days, max_actions=max_actions)
     var_dict = {}
     var_dict['actor'] = user

@@ -35,7 +35,8 @@ from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEnt
 from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, OER, OerMetadata, OerEvaluation, OerDocument
+from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
+from models import OER, OerMetadata, SharedOer, OerEvaluation, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED, UN_PUBLISHED
@@ -994,6 +995,7 @@ def project_detail(request, project_id, project=None):
         oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
+    var_dict['shared_oers'] = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
     oer_evaluations = project.get_oer_evaluations()
     var_dict['n_oer_evaluations'] = oer_evaluations.count()
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
@@ -1310,6 +1312,26 @@ def project_set_mentor(request):
             role_admin = Role.objects.get(name='admin')
             add_local_role(project, mentor_user, role_admin)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
+
+def project_add_shared_oer(request, project_id, oer_id):
+    user = request.user
+    project = get_object_or_404(Project, id=project_id)
+    if user.is_authenticated() and project.can_add_oer(user):
+        bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
+        if oer_id in bookmarked_oers:
+            oer = get_object_or_404(OER, id=oer_id)
+            shared_oer = SharedOer(oer=oer, project=project, user=user)
+            shared_oer.save()
+            bookmarked_oers.remove(oer_id)
+            set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers or None)
+    return project_detail(request, project_id, project=project)
+
+def shared_oer_delete(request, shared_oer_id):
+    shared_oer = get_object_or_404(SharedOer, id=shared_oer_id)
+    project = shared_oer.project
+    if shared_oer.can_delete(request):
+        shared_oer.delete()
+    return project_detail(request, project.id, project=project)
         
 def project_paste_oer(request, project_id, oer_id):
     oer_id = int(oer_id)
