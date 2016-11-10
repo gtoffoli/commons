@@ -143,94 +143,7 @@
         <div class="hidden-xs hidden-sm col-md-1 col-height">&nbsp;</div>
       </div>
     </div>
-
-{% comment %} MAIN CTA {% endcomment %}
-    <div class="container-fluid bc-white paddingT50 paddingLR15 paddingB20">
-        <div class="row hidden-xs hidden-lg visible-sm visible-md">
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-               </div>
-            </div>
-        </div>
-        <div class="row hidden-xs hidden-lg visible-sm visible-md">
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c2 c-white demiBold" href="/browse/" style="width:280px">{% trans "educational library"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c2 paddingLR10 c-white bold" href="/browse/">{% trans "educational library"|capfirst %}</a>
-               </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c4 c-white demiBold" href="/cops/" style="width:280px">{% trans "communities"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c4 paddingLR10 c-white bold" href="/cops/">{% trans "communities"|capfirst %}</a>
-               </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c1 c-white demiBold" href="/lps/search/" style="width:280px">{% trans "learning paths"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c1 paddingLR10 c-white bold" href="/lps/search/">{% trans "learning paths"|capfirst %}</a>
-               </div>
-            </div>
-        </div>
-        
-        <div class="row hidden-xs hidden-sm hidden-md visible-lg">
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:300px">{% trans "educational library"|capfirst %}</a></div>
-                </div>
-            </div>
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:300px">{% trans "communities"|capfirst %}</a></div>
-               </div>
-            </div>
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:300px">{% trans "learning paths"|capfirst %}</a></div>
-               </div>
-            </div>
-        </div>
-        
-        <div class="row hidden-sm hidden-lg hidden-md visible-xs">
-            <div class="col-xs-12">
-               <div class="text-center paddingB50">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:280px">{% trans "educational library"|capfirst %}</a></div>
-               </div>
-               <div class="text-center paddingB50">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:280px">{% trans "communities"|capfirst %}</a></div>
-               </div>
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:280px">{% trans "learning paths"|capfirst %}</a></div>
-               </div>
-            </div>
-        </div>
-    </div>
+    {% include "_homepage_main_cta.html" %}
  {% endif %}
   <div class="container-fluid {% if user.is_authenticated %} paddingT20 {% endif %}">
     <div class="row">
@@ -276,188 +189,32 @@
           <div class="gutter-sizer"></div>
           <div class="grid-sizer"></div>
           {% if recent_proj %}
-            <div class="grid-item">
-              <div class="panel-heading-c4 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "newest project" %}</h3>
-                <div class="bc-white padding10 borderRadius4">
-                  <div>{% if recent_proj.small_image %}<img src="/media/{{recent_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
-                    <h4 class="demiBold">{{ recent_proj.name }}</h4>
-                    <p>{{ recent_proj.description|safe|truncatechars_html:140 }}</p>
-                  </div>
-                  <div class="text-right"{% if recent_proj.small_image %} style="clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{recent_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=recent_proj data_ele="c4" data_label="newest project" data_class="c-harvest-gold" data_type="project" data_attr="last"%}
           {% endif %}
           {% if active_proj %}
-            <div class="grid-item">
-              <div class="panel-heading-c4 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "most active project" %}</h3>
-                <div class="bc-white padding10 borderRadius4">
-                  <div>{% if active_proj.small_image %}<img src="/media/{{active_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
-                    <h4 class="demiBold">{{ active_proj.name }}</h4>
-                    <p>{{ active_proj.description|safe|truncatechars_html:140 }}</p>
-                  </div>
-                  <div class="text-right"{% if active_proj.small_image %} "clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{active_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=active_proj data_ele="c4" data_label="most active project" data_class="c-harvest-gold" data_type="project" data_attr="active" %}
           {% endif %}
           {% if popular_proj %}
-            <div class="grid-item">
-              <div class="panel-heading-c4 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "most popular project" %}</h3>
-                <div class="bc-white padding10 borderRadius4">
-                  <div>{% if popular_proj.small_image %}<img src="/media/{{popular_proj.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px;">{% endif %}
-                    <h4 class="demiBold">{{ popular_proj.name }}</h4>
-                    <p>{{ popular_proj.description|safe|truncatechars_html:140 }}</p>
-                  </div>
-                  <div class="text-right"{% if popular_proj.small_image %} "clear:left"{% endif %}><a class="padding26 c-harvest-gold" href="/project/{{popular_proj.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=popular_proj data_ele="c4" data_label="most popular project" data_class="c-harvest-gold" data_type="project" data_attr="popular" %}
           {% endif %}
           {% if last_lp %}
-            <div class="grid-item">
-              <div class="panel-heading-c1 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "newest learning path" %}</h3>
-                <div class="bc-white c-black padding10 borderRadius4">
-                  <h4 class="demiBold">{{ last_lp.title }}</h4>
-                  <p>{{ last_lp.short|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{last_lp.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=last_lp data_ele="c1" data_label="newest learning path" data_class="c-mulberry" data_type="lp" data_attr="last" %}
           {% endif %}
           {% if popular_lp %}
-            <div class="grid-item">
-              <div class="panel-heading-c1 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "most popular learning path" %}</h3>
-                <div class="bc-white c-black padding10 borderRadius4">
-                  <h4 class="demiBold">{{ popular_lp.title }}</h4>
-                  <p>{{ popular_lp.short|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-mulberry" href="/lp/{{popular_lp.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=popular_lp data_ele="c1" data_label="most popular learning path" data_class="c-mulberry" data_type="lp" data_attr="popular" %}
           {% endif %}
           {% if last_oer %}
-            <div class="grid-item">
-              <div class="panel-heading-c2 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "newest OER" %}</h3>
-                <div class="bc-white c-black padding10 borderRadius4">
-                  <h4 class="demiBold">{{ last_oer.title }}</h4>
-                  <p>{{ last_oer.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{last_oer.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=last_oer data_ele="c2" data_label="newest OER" data_class="c-pacific-blue" data_type="oer" data_attr="last" %}
           {% endif %}
           {% if popular_oer %}
-            <div class="grid-item">
-              <div class="panel-heading-c2 padding10 borderRadius4">
-                <h3 class="label-header">{% trans "most popular OER" %}</h3>
-                <div class="bc-white c-black padding10 borderRadius4">
-                  <h4 class="demiBold marginB3">{{ popular_oer.title }}</h4>
-                  {% with stars=oer.get_stars %}<p>{% include "_view_rating.html" %}</p>{% endwith %}
-                  <p>{{ popular_oer.description|safe|truncatechars_html:140 }}</p>
-                  <div class="text-right"><a class="padding26 c-pacific-blue" href="/oer/{{popular_oer.slug }}/"><i class="fa fa-chevron-circle-right font22" aria-hidden="true"></i></a></div>
-                </div>
-              </div>
-            </div>
+            {% include "_data_item_HP.html" with data=popular_oer data_ele="c2" data_label="most popular OER" data_class="c-pacific-blue" data_type="oer" data_attr="popular" %}
           {% endif %}
         </div>
       </div>
 	  </div>
   </div>
 {% if user.is_authenticated %}
-{% comment %} MAIN CTA {% endcomment %}
-    <div class="container-fluid bc-white paddingT50 paddingLR15 paddingB20" style="/*background: rgba(103, 174,115, 0.3); border-top: 1px solid rgba(103, 174,115, 1); border-bottom: 1px solid rgba(103, 174,115, 1)*/">
-        <div class="row hidden-xs hidden-lg visible-sm visible-md">
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-               </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                </div>
-            </div>
-        </div>
-        <div class="row hidden-xs hidden-lg visible-sm visible-md">
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c4 c-white demiBold" href="/cops/" style="width:280px">{% trans "communities"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c4 paddingLR10 c-white bold" href="/cops/">{% trans "communities"|capfirst %}</a>
-               </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c1 c-white demiBold" href="/lps/search/" style="width:280px">{% trans "learning paths"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c1 paddingLR10 c-white bold" href="/lps/search/">{% trans "learning paths"|capfirst %}</a>
-               </div>
-            </div>
-            <div class="col-sm-4 col-md-4">
-               <div class="text-center">
-                 <a class="hidden-sm btn bc-c2 c-white demiBold" href="/browse/" style="width:280px">{% trans "educational library"|capfirst %}</a>
-                 <a class="visible-sm btn bc-c2 paddingLR10 c-white bold" href="/browse/">{% trans "educational library"|capfirst %}</a>
-               </div>
-            </div>
-        </div>
-        
-        <div class="row hidden-xs hidden-sm hidden-md visible-lg">
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:300px">{% trans "communities"|capfirst %}</a></div>
-               </div>
-            </div>
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:300px">{% trans "learning paths"|capfirst %}</a></div>
-               </div>
-            </div>
-            <div class="col-lg-4 paddingB10">
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:300px">{% trans "educational library"|capfirst %}</a></div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row hidden-sm hidden-lg hidden-md visible-xs">
-            <div class="col-xs-12">
-               <div class="text-center paddingB50">
-                 <div><img src="{% static "commons/img/group.png" %}"></div>
-                 <h3 class="c-harvest-gold demiBold marginLR0 marginT30 marginB50">{% trans "learn together"|capfirst %}</h3>
-                 <div><a href="/cops/" class="btn bc-c4 c-white bold" style="width:280px">{% trans "communities"|capfirst %}</a></div>
-               </div>
-               <div class="text-center paddingB50">
-                 <div><img src="{% static "commons/img/lp.png" %}"></div>
-                 <h3 class="c-pacific-blue demiBold marginLR0 marginT30 marginB50">{% trans "remix resources"|capfirst %}</h3>
-                 <div><a href="/lps/search/" class="btn bc-c1 c-white bold" style="width:280px">{% trans "learning paths"|capfirst %}</a></div>
-               </div>
-               <div class="text-center">
-                 <div><img src="{% static "commons/img/resources.png" %}"></div>
-                 <h3 class="c-mulberry demiBold marginLR0 marginT30 marginB50">{% trans "explore library"|capfirst %}</h3>
-                 <div><a href="/browse/" class="btn bc-c2 c-white bold" style="width:280px">{% trans "educational library"|capfirst %}</a></div>
-               </div>
-            </div>
-        </div>
-    </div>
+  {% include "_homepage_main_cta.html" %}
 {% endif %}
 {% if articles %}
     <div class="container-fluid grid">
