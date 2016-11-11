@@ -452,10 +452,12 @@
          {% endif %}
          {% if shared_oers %}
            <div class="panel-white">
-             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
+             <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
-             {% for oer in shared_oers %}
-               <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</small></a> </li>
+             {% for shared_oer, deletable in shared_oers %}
+               <li><a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</small></a>
+                   {% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+               </li>
              {% endfor %}
              </ul>
            </div>

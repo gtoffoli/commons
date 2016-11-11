@@ -998,7 +998,7 @@ def project_detail(request, project_id, project=None):
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
     shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
-    var_dict['shared_oers'] = [shared_oer, shared_oer.can_delete(request) for shared_oer in shared_oers]
+    var_dict['shared_oers'] = [[shared_oer, shared_oer.can_delete(request)] for shared_oer in shared_oers]
     oer_evaluations = project.get_oer_evaluations()
     var_dict['n_oer_evaluations'] = oer_evaluations.count()
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
@@ -1329,14 +1329,14 @@ def project_add_shared_oer(request, project_id, oer_id):
                 shared_oer.save()
                 bookmarked_ids.remove(oer_id)
                 set_clipboard(request, key='bookmarked_oers', value=bookmarked_ids or None)
-    return project_detail(request, project_id, project=project)
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def shared_oer_delete(request, shared_oer_id):
     shared_oer = get_object_or_404(SharedOer, id=shared_oer_id)
     project = shared_oer.project
     if shared_oer.can_delete(request):
         shared_oer.delete()
-    return project_detail(request, project.id, project=project)
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
         
 def project_paste_oer(request, project_id, oer_id):
     oer_id = int(oer_id)
