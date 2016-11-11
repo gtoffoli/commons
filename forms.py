@@ -465,11 +465,11 @@ class OerEvaluationForm(forms.ModelForm):
 class OerEvaluationForm(forms.Form):
     oer = forms.ModelChoiceField(queryset=OER.objects.all(), widget=forms.HiddenInput())
     review = forms.CharField(required=True, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
-    facet_1_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('technical quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("Technical quality ..."))
-    facet_2_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('communicative quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("Communicative quality ..."))
-    facet_3_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('cognitive quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("Cognitive quality ..."))
-    facet_4_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('scientific quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("Scientific quality ..."))
     overall_score = forms.ChoiceField(required=True, choices=QUALITY_SCORE_CHOICES, label=_('overall quality assessment'), widget=forms.Select(attrs={'class':'form-control',}))
+    facet_1_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('technical quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("e.g. audio or video quality, quality of presentation, etc."))
+    facet_2_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('communicative quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("e.g. message immediacy and clarity"))
+    facet_3_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('cognitive quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("e.g. originality and creativity"))
+    facet_4_score = forms.ChoiceField(required=False, choices=QUALITY_SCORE_CHOICES, label=_('scientific quality assessment'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_("e.g. scientific validity of content and methodologies, critical aspects, interdisciplinarity"))
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 
