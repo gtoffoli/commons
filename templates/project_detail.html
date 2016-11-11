@@ -285,7 +285,10 @@
                          <ul class="list-inline list-last">
                             <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
                             {% if cut_oers %}{% for oer in cut_oers %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+                            {% if shareable_oers %}{% for oer in shareable_oers %}
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -445,6 +448,16 @@
              {% if n_oers > oers.count %}
                <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
              {% endif %}
+           </div>
+         {% endif %}
+         {% if shared_oers %}
+           <div class="panel-white">
+             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
+             <ul class="list-unstyled my-list-unstyled padding510">
+             {% for oer in shared_oers %}
+               <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</small></a> </li>
+             {% endfor %}
+             </ul>
            </div>
          {% endif %}
          {% if oer_evaluations %}

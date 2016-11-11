@@ -997,7 +997,8 @@ def project_detail(request, project_id, project=None):
         oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
-    var_dict['shared_oers'] = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
+    shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
+    var_dict['shared_oers'] = [shared_oer, shared_oer.can_delete(request) for shared_oer in shared_oers]
     oer_evaluations = project.get_oer_evaluations()
     var_dict['n_oer_evaluations'] = oer_evaluations.count()
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
@@ -1317,6 +1318,7 @@ def project_set_mentor(request):
 
 def project_add_shared_oer(request, project_id, oer_id):
     user = request.user
+    oer_id = int(oer_id)
     project = get_object_or_404(Project, id=project_id)
     if user.is_authenticated() and project.can_add_oer(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_oers') or []
