@@ -48,14 +48,16 @@ function setDisabled( selectElementId){
   <div class="col-xs-12 col-sm-12 col-md-9">
     <form method="post" action="{{ action }}" id="oer_evaluation_edit_form" class="form-horizontal">
     {% csrf_token %}
+    <input type="hidden" name ="id" value="{{ evaluation.id }}">
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    {% for field in form.visible_fields %}
     <div class="form-group">
-      <label for="{{ field.name }}" {% if field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+      <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
       <span class="txt-error">{{ field.errors }}</span>{{ field }}
       {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
     </div>
-    {% endwith %}{% endfor %}
+    {% endfor %}
+{% comment %}
     <div class="form-group">
       <label>{% trans "evaluation  metadata"|capfirst %}</label>
       {% for fm in metadata_formset %}
@@ -73,6 +75,7 @@ function setDisabled( selectElementId){
       {% endfor %}
     </div>
     {{ metadata_formset.management_form }}
+{% endcomment %}
     <div class="form-group">
       <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if evaluation %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
@@ -86,7 +89,7 @@ function setDisabled( selectElementId){
 {% block extra_script %}
 {% if evaluation %}
 <script type="text/javascript">
-	{% comment %}
+  {% comment %}
 	setReadonly('id_oer');
   {% endcomment %}
   

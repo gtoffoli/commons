@@ -36,15 +36,16 @@ from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
 from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
-from models import OER, OerMetadata, SharedOer, OerEvaluation, OerDocument
+from models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED, UN_PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
+from metadata import QualityFacet
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
-from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, OerQualityFormSet, DocumentUploadForm, LpForm, PathNodeForm
+from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
@@ -2425,6 +2426,7 @@ def oer_evaluation_by_id(request, evaluation_id):
     evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
     return oer_evaluation_detail(request, evaluation=evaluation)
 
+"""
 # @transaction.atomic
 def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     user = request.user
@@ -2486,6 +2488,81 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
         metadata_formset = OerQualityFormSet()
         action = '/oer/%s/evaluate/' % oer.slug
     return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
+"""
+
+def oer_evaluation_edit(request, evaluation_id=None, oer=None):
+    user = request.user
+    evaluation = None
+    action = '/oer_evaluation/edit/'
+    if evaluation_id:
+        evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+        oer = evaluation.oer
+        action = '/oer_evaluation/%s/edit/' % evaluation_id
+    if request.POST:
+        evaluation_id = request.POST.get('id', '')
+        if evaluation_id:
+            evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
+            action = '/oer_evaluation/%s/edit/' % evaluation_id
+            oer = evaluation.oer
+        form = OerEvaluationForm(request.POST)
+        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+            if form.is_valid():
+                if not evaluation:
+                    evaluation = OerEvaluation(oer=oer, user=user)
+                data = form.cleaned_data
+                evaluation.review = data['review']
+                evaluation.overall_score = data['overall_score']
+                evaluation.save()
+                if not evaluation_id:
+                    track_action(request.user, 'Create', evaluation, target=oer.project)
+                for i in range(1,5):
+                    facet_field_name = 'facet_%d_score' % i
+                    new_score = data[facet_field_name]
+                    if new_score:
+                        new_score = int(new_score)
+                    quality_facet = QualityFacet.objects.get(order=i)
+                    if evaluation_id:
+                        try:
+                            metadatum = OerQualityMetadata.objects.get(oer_evaluation=evaluation, quality_facet=quality_facet)
+                            current_score = metadatum.value
+                        except:
+                            current_score = None
+                    else:
+                        current_score = None
+                    if new_score and current_score is None:
+                        metadatum = OerQualityMetadata(oer_evaluation=evaluation, quality_facet=quality_facet, value=new_score)
+                        metadatum.save()
+                    elif new_score and current_score is not None:
+                        if not new_score == current_score:
+                            metadatum.value = new_score
+                            metadatum.save()
+                    elif current_score is not None:
+                        metadatum.delete()
+                action = '/oer_evaluation/%s/edit/' % evaluation.id
+                if request.POST.get('save', ''): 
+                    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+            else:
+                print form.errors
+            return render_to_response('oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action,}, context_instance=RequestContext(request))
+        elif request.POST.get('cancel', ''):
+            if evaluation:
+                oer = evaluation.oer
+            else:
+                oer_id = oer and oer.id or request.POST.get('oer')
+                oer = get_object_or_404(OER, pk=oer_id)
+            return HttpResponseRedirect('/oer/%s/' % oer.slug)
+    elif evaluation:
+        initial = {'oer': oer.id, 'user': user.id, 'review': evaluation.review, 'overall_score': evaluation.overall_score}
+        metadata = OerQualityMetadata.objects.filter(oer_evaluation=evaluation)
+        for metadatum in metadata:
+            i = metadatum.quality_facet.order
+            initial['facet_%d_score' % i] = metadatum.value
+        form = OerEvaluationForm(initial=initial)
+        action = '/oer_evaluation/%s/edit/' % evaluation.id
+    else: # oer
+        form = OerEvaluationForm(initial={'oer': oer.id, 'user': user.id,})
+        action = '/oer/%s/evaluate/' % oer.slug
+    return render_to_response('oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
 
 def oer_evaluate_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
