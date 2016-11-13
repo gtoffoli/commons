@@ -26,6 +26,8 @@
         </thead>
         <tbody>
         {% for forum in forum_list|pybb_forum_unread:user %}
+{% with project=forum.project %}
+{% if not project or not project.get_type_name == "ment" %}
 			{% if forum.topic_count %}
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} forum-unread{% endif %}">
@@ -51,6 +53,8 @@
                 </td>
             </tr>
 			{% endif %}
+{% endif %}
+{% endwith %}
         {% empty %}
             {% if category %}
                 <h3>{% trans "No forums created" %}</h3>
