@@ -32,7 +32,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         project = forum.get_project()
         if not project:
             return True
-        return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp',] or self.is_member(user) or user.is_superuser)
+        # return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp',] or self.is_member(user) or user.is_superuser)
+        return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp',] or project.is_member(user) or user.is_superuser)
 
     def may_create_topic(self, user, forum):
         """ return True if `user` is allowed to create a new topic in `forum` """
