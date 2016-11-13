@@ -26,7 +26,7 @@
         </thead>
         <tbody>
         {% for forum in forum_list|pybb_forum_unread:user %}
-{% with project=forum.project %}
+{% with project=forum.get_project %}
 {% if not project or not project.get_type_name == "ment" %}
 			{% if forum.topic_count %}
             <tr class="forum-row">
