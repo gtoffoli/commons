@@ -2228,10 +2228,11 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_un_publish'] = oer.can_un_publish(request)
     var_dict['can_republish'] = can_republish = oer.can_republish(user)
     var_dict['can_evaluate'] = can_evaluate = oer.can_evaluate(user)
-    var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or can_evaluate or (can_delete and not in_cut_oers)
+    var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or (can_delete and not in_cut_oers)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     var_dict['evaluations'] = oer.get_evaluations()
+    var_dict['user_evaluation'] = user.id != None and oer.get_evaluations(user)
     var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
     """
     if request.GET.get('core', ''):
@@ -2425,6 +2426,13 @@ def oer_evaluation_detail(request, evaluation=None):
 def oer_evaluation_by_id(request, evaluation_id):
     evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
     return oer_evaluation_detail(request, evaluation=evaluation)
+
+def oer_evaluations(request, oer_slug):
+    oer = get_object_or_404(OER, slug=oer_slug)
+    user = request.user
+    var_dict={'oer': oer,}
+    var_dict['evaluations']=oer.get_evaluations()
+    return render_to_response('oer_evaluations.html', var_dict, context_instance=RequestContext(request))
 
 """
 # @transaction.atomic

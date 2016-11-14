@@ -17,7 +17,6 @@
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/oer/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
         {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/upload/screenshot/" title="{% trans "upload screenshot" %}"><i class="fa fa-picture-o font07em" aria-hidden="true"></i></a>{% endif %}
-        {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font07em c-white"></i></a>{% endif %}
         {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
         {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
       </p>
@@ -182,30 +181,24 @@
         {% include "_resource_original_lang.html" %}
         {% include "_change_state.html" with data=oer type_object="oer" %}
         {% if is_published or is_un_published %}
-          <dl class="font14 marginB10">
+          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
             {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" %}</dd>{% endwith %}
             {% if evaluations %}
-              {% for evaluation in evaluations %}
-                <dd><a href="/resources_by/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a>: <a href="/oer_evaluation/{{ evaluation.id }}/" title="{{ evaluation.review|truncatechars:100 }}">
-                    <strong>{{ evaluation.overall_score }}</strong>/5 <small><i class="fa fa-star-o"></i></small></a>
-                    {% if evaluation.get_quality_metadata %}
-                      <small> ({% for qm in evaluation.get_quality_metadata %}{{ qm.quality_facet }}:
-                       {{ qm.value }}/5{% if not forloop.last %}, {% endif %}{% endfor %})</small>
-                    {% endif %}
-                </dd>
-              {% endfor %}
+              <dd class="paddingT6"><a href="/oer/{{oer.slug}}/evaluations/" class="btn btn-default" title="{% trans "view evaluations" %}">{% trans "view evaluations" %}</a></dd>
+            {% else %}
+              <dd class="paddingT6">{% trans "no evaluation"|capfirst %}</dd>  
             {% endif %}
           </dl>
-          {% if lps %}
-            <dl class="font14 marginB10">
-              <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
-                {% for lp in lps %}
-                  <dd><a href="/lp/{{ lp.slug }}/">{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}</a></dd>
-                {% endfor %}
-            </dl>
-          {% endif %}
-
+        {% endif %}
+        {% if can_evaluate %}<a href="/oer/{{ oer.slug }}/evaluate/" class="btn btn-default" title={% if user_evaluation %}"{% trans "edit evaluation" %}"{% else %}"{% trans "add evaluation" %}"{% endif %}><i class="fa fa-star-o"></i> {% if user_evaluation %}{% trans "edit evaluation" %}{% else %}{% trans "add evaluation" %}{% endif %}</a>{% endif %}
+        {% if lps %}
+          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
+            <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
+              {% for lp in lps %}
+                <dd><a href="/lp/{{ lp.slug }}/">{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}</a></dd>
+              {% endfor %}
+          </dl>
         {% endif %}
       </div>
     </div>

@@ -1,0 +1,67 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "evaluations of OER"|capfirst %}: {{ oer.title }}{% endblock %}
+
+{% block extra_style %}
+<style>
+dl.eval {
+	background: white;
+	margin-bottom:5px;
+}
+dl.eval dd {
+	padding:20px 20px 10px 20px;
+}
+dl.eval dd:nth-child(odd) {
+    background: #f8f8f8;
+}
+dl.eval dd:nth-child(even) {
+    background: transparent;
+}
+
+</style>
+{% endblock %}
+{% block body_class %}evaluations_oer{% endblock %}
+
+{% block body %}
+{% if evaluations %}
+<div class="panel panel-c2 text-left marginTB30">
+  <div class="panel-heading-c2 padding1020">
+    <h3 class="pull-left marginTB5">{{ oer.title }}</h3>
+    <p class="pull-right marginB0 font26">
+      <a href="/oer/{{ oer.slug }}/" title="{% trans "show OER" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
+    </p>
+    <div style="clear:both;">
+      <h1 class="marginTB5"><small class="c-white demiBold">{% trans "evaluations"|capfirst %}</small></h1>
+    </div>
+  </div>
+<dl class="eval">
+{% for evaluation in evaluations %}
+  <dd class="padding1020" style="padding-top:20px">
+  <div class="row">
+    <div class="col-md-7">
+    	{%if evaluation.review|safe %}<p>{{ evaluation.review|safe }}</p>{% endif %}
+      <p><span class="demiBold">{% trans "overall assessment"|capfirst %}:</span> {% with stars=evaluation.get_stars %}{% include "_view_rating.html" %}{% endwith %}</p>
+    </div>
+    <div class="col-md-5">
+      {% if evaluation.get_quality_metadata %}
+        <ul class="list-unstyled">
+          {% for qm in evaluation.get_quality_metadata %}
+            <li class="marginB5"><span class="demiBold font13">{{ qm.quality_facet|capfirst }}:</span> {% with stars=qm.get_stars %}{% include "_view_rating.html" with data_class="font07em" %}{% endwith %}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <p class="font13"><span class="demiBold">{% trans "evaluated by"|capfirst %}</span> <a href="/profile/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ evaluation.modified|date:"d/m/Y" }}</p>
+    </div>
+  </div>
+  </dd>
+{% endfor %}
+</dl>
+</div>
+{% endif %}
+{% endblock %}

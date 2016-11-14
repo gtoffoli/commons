@@ -1318,7 +1318,7 @@ class OER(Resource, Publishable):
         if user:
             return OerEvaluation.objects.filter(user=user, oer=self)
         else:
-            return OerEvaluation.objects.filter(oer=self)
+            return OerEvaluation.objects.filter(oer=self).order_by('-modified')
 
     """
     def get_stars(self):
@@ -1343,7 +1343,7 @@ class OER(Resource, Publishable):
         MAX_STARS = 5
         if evaluation:
             evaluations = [evaluation]
-            n = 1
+            n = 1 
         else:
             evaluations = self.get_evaluations()
             n = evaluations.count()
@@ -1377,7 +1377,8 @@ class OER(Resource, Publishable):
             return False
         if self.state not in [PUBLISHED]:
             return False
-        return ProjectMember.objects.filter(user=user, state=1)
+        # return ProjectMember.objects.filter(user=user, state=1)
+        return user.is_completed_profile
 
     def oer_delete(self, request):
         if self.state != DRAFT:
@@ -1566,6 +1567,14 @@ QUALITY_SCORE_CHOICES = (
     (EXCELLENT, _('excellent')),)
 QUALITY_SCORE_DICT = dict(QUALITY_SCORE_CHOICES)
 
+def score_to_stars(score):
+    MAX_STARS = 5
+    half = False
+    stars = score
+    full = 'i' * stars
+    empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
+    return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': stars }
+
 class OerEvaluation(models.Model):
     """
     Link an OER to instances of quality metadata
@@ -1586,7 +1595,10 @@ class OerEvaluation(models.Model):
         verbose_name_plural = _('OER evaluations')
 
     def get_quality_metadata(self):
-        return OerQualityMetadata.objects.filter(oer_evaluation=self)
+        return OerQualityMetadata.objects.filter(oer_evaluation=self).order_by('quality_facet__order')
+    
+    def get_stars(self):
+        return score_to_stars(self.overall_score)
 
 class OerQualityMetadata(models.Model):
     """
@@ -1603,6 +1615,9 @@ class OerQualityMetadata(models.Model):
         unique_together = ('oer_evaluation', 'quality_facet')
         verbose_name = _('quality metadatum')
         verbose_name_plural = _('quality metadata')
+
+    def get_stars(self):
+        return score_to_stars(self.value)
 
 """ not necessary ? use the Project class, instead
 class OerFolder(models.Model):

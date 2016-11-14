@@ -3,97 +3,38 @@
 {% load staticfiles%}
 {% load i18n %}
 
-{% block head_title %}{% if evaluation %}{% trans "edit evaluation of OER"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %} {% trans "of OER" %}:&nbsp; {{ oer.title }}{% endblock %}
+{% block head_title %}{% if evaluation %}{% trans "edit evaluation of OER"|capfirst %}{% else %}{% trans "add evaluation of OER"|capfirst %}{% endif %}: {{ oer.title }}{% endblock %}
 
-{% block extra_head %}
-<script type="text/javascript">
-{% comment %}
-//Copyright: CodePug.com 2009
-//Do not REMOVE these comments
-//Usage: setReadonly('mySelect');
-function setReadonly(selectElementId ){
-	var selectElement = document.getElementById(selectElementId);
-	if (selectElement){		
-		var parent = selectElement.parentElement;
-		var textValue = selectElement.options[selectElement.options.selectedIndex].textContent;
-		if (!parent){
-			parent=selectElement.parentNode;
-			textValue = selectElement.options[selectElement.options.selectedIndex].text;
-		}
-		var input = document.createElement("input");
-		input.setAttribute("id",selectElement.id);
-		input.setAttribute("type","text");
-		input.setAttribute("value",textValue);
-		input.setAttribute("class","form-control");
-		input.style.background="#eeeeee";
-		input.readOnly = true;
-		parent.appendChild(input);
-	}
-	selectElement.style.display="none";
-}
-{% endcomment %}	
-function setDisabled( selectElementId){
-	if($('select[id="'+selectElementId+'"]').length > 0) {
-		var txtValue = $('select[id="'+selectElementId+'"] option:selected').text();
-		$("#"+selectElementId).css("display","none");
-		$('<input type="text" value="'+txtValue+'" id="'+selectElementId+'_text" class="form-control" disabled>').insertAfter("#"+selectElementId);
-	}
-}
-</script>
-{% endblock %}
 {% block body_class %}oer_evaluation_edit{% endblock %}
 {% block body %}
-  <h1><small>{% if evaluation %}{% trans "edit evaluation"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %} {% trans "of OER" %}:</small> {{ oer.title }}</h1>
-  <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-9">
-    <form method="post" action="{{ action }}" id="oer_evaluation_edit_form" class="form-horizontal">
+<div class="panel panel-c2 text-left marginTB30">
+  <div class="panel-heading-c2 padding1020">
+    <h3 class="pull-left marginTB5">{{ oer.title }}</h3>
+    <p class="pull-right marginB0 font26">
+      <a href="/oer/{{ oer.slug }}/" title="{% trans "show OER" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
+    </p>
+    <div style="clear:both;">
+      <h1 class="marginTB5"><small class="c-white">{% if evaluation %}{% trans "edit evaluation"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %}</small></h1>
+    </div>
+  </div>
+  <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
-    <input type="hidden" name ="id" value="{{ evaluation.id }}">
+    {% if evaluation %}<input type="hidden" id="id" name="id" value="{{ evaluation.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+    <fieldset class="padding1020">
     {% for field in form.visible_fields %}
-    <div class="form-group">
-      <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
-      <span class="txt-error">{{ field.errors }}</span>{{ field }}
-      {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
-    </div>
+      <div class="form-group">
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+      </div>
     {% endfor %}
-{% comment %}
-    <div class="form-group">
-      <label>{% trans "evaluation  metadata"|capfirst %}</label>
-      {% for fm in metadata_formset %}
-      {% if forloop.first %}
-        <table class="grid-table">
-        <thead><tr>{% for field in fm.visible_fields %}<td><small>{{ field.label|capfirst}}</small></td>{% endfor %}</tr></thead>
-        <tbody>
-      {% endif %}
-        <tr>{% for field in fm.hidden_fields %}{{ field }}{% endfor %}
-        {% for field in fm.visible_fields %}<td><span class="txt-error">{{ field.errors }}</span>{{ field }}</td>{% endfor %}</tr>
-      {% if forloop.last %}
-        </tbody>
-        </table>
-      {% endif %}
-      {% endfor %}
-    </div>
-    {{ metadata_formset.management_form }}
-{% endcomment %}
-    <div class="form-group">
+    </fieldset>
+    <div class="panel-footer-c2 padding1020">
       <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if evaluation %} {% trans "changes" %}{% endif %}</button>&nbsp;
       <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
       <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
-    </div>
-    </form>
-  </div>
-  </div>
-{% endblock %}
-
-{% block extra_script %}
-{% if evaluation %}
-<script type="text/javascript">
-  {% comment %}
-	setReadonly('id_oer');
-  {% endcomment %}
-  
-  setDisabled('id_oer');
-</script>
-{% endif %}
+     </div>
+  </form>
+</div>
 {% endblock %}
