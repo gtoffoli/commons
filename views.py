@@ -3046,6 +3046,7 @@ def lp_edit(request, lp_id=None, project_id=None):
             else:
                 project_id = project_id or request.POST.get('project')
                 if project_id :
+                    project = get_object_or_404(Project, id=project_id)
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else:
                     return my_home(request)

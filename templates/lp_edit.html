@@ -68,8 +68,10 @@
       setDisabled( 'id_project' )
     {% endif %}
 */
-    setDisabled( 'id_path_type')
-    setDisabled( 'id_project')
+	{% if not request.user.is_staff %}
+		setDisabled('id_path_type')
+	{% endif %}
+    setDisabled('id_project')
     setDisabled('id_state');
   })
 </script>

@@ -1,0 +1,263 @@
+{% load staticfiles i18n %}
+
+<style>
+.element.basic.Rect, .element.basic.Circle {
+    cursor: pointer;
+}
+{% if not can_edit %}
+.link-tools .tool-remove { display: none }
+.link-tools .tool-options { display: none }
+{% endif %}
+</style>
+
+<link rel="stylesheet" href="{% static "jointjs/joint.css" %}" />
+<link rel="stylesheet" href="{% static "jointjs/autolayout.css" %}" />
+<!-- <script src="jquery.js"></script>  -->
+<script src="{% static "jointjs/lodash.min.js" %}"></script>
+<script src="{% static "jointjs/backbone-min.js" %}"></script>
+<script src="{% static "jointjs/graphlib.js" %}"></script>
+<script src="{% static "jointjs/dagre.js" %}"></script>
+<script src="{% static "jointjs/joint.js" %}"></script>
+<script src="{% static "jointjs/joint.layout.DirectedGraph.js" %}"></script>
+<script src="{% static "jointjs/autolayout.js"" %}"></script>
+
+<script type="text/javascript">
+
+var x_margin = 50;
+var max_width = 300;
+var half_max_width = max_width/2;
+var y_step = 50;
+var node_height = 40;
+var half_height = node_height/2;
+var node_padding = 20; // 50;
+var icon_size = 16;
+// var drop_margin = (node_height-icon_size)/2;
+
+var graph = new joint.dia.Graph;
+var paper = new joint.dia.Paper({
+    el: $('#myholder'),
+    width: 800,
+    height: 400,
+    model: graph,
+    gridSize: 1,
+{% if can_edit %}
+    // interactive: function(cellView) { return ! cellView.model.isLink(); },
+    interactive: true,
+{% else %}
+	interactive: false,
+{% endif %}
+	async: false,
+    });
+{% if can_edit %}
+var drop = new joint.shapes.basic.Rect({
+    size: { width: icon_size, height: icon_size },
+    attrs: { rect: { fill: 'red' }, text: { text: 'x', fill: 'white', 'font-size': 12, } }
+});
+var add = new joint.shapes.basic.Rect({
+    size: { width: icon_size, height: icon_size },
+    attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-size': 12, } }
+});
+{% endif %}
+
+var json_in = '{{ lp.make_json|safe }}';
+graph.fromJSON(JSON.parse(json_in));
+
+/*
+graph.getElements().forEach(function(node, index) {
+*/
+graph.getElements().forEach(function(node, index, array) {
+	node.attr({ rect: { fill: 'blue', rx: 3, ry: 3 }});
+	node.set('index', index)
+    node.attr({ text: { fill: 'white', 'font-size': 12 }});
+    label = node.attr('text').text;
+    console.log(index, label);
+    width = label.length * 5 + node_padding * 2;
+    node.resize(width, node_height);
+/*
+    x = x_margin + half_max_width - width/2;
+    y = index * y_step;
+    node.position(x, y);
+*/
+})
+graph.getLinks().forEach(function(link, index) {
+	link.set('connector', { name: 'smooth' });
+	link.attr({
+ 	    '.connection': { stroke: 'blue' },
+ 	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
+ 	});
+	// console.log(link.toolMarkup);
+})
+// console.log(JSON.stringify(graph.toJSON()))
+
+graph.resetCells(graph.getCells());
+
+layout_options = {
+		setLinkVertices: false,
+		nodeSep: 50,
+	    edgeSep: 80,
+	    rankDir: "TB"
+}
+function make_layout() {
+	joint.layout.DirectedGraph.layout(graph, layout_options);
+}
+make_layout();
+paper.fitToContent();
+
+/*
+element.on('change:position', function() {
+	alert('element moved');
+});
+*/
+
+paper.on('cell:pointerclick', function (cellView, evt, x, y) {
+	on_cell_clicked(cellView, x, y);
+});
+{% if can_edit %}
+    paper.on('cell:pointerup', function (cellView, evt, x, y) {
+    	on_cell_dragged(cellView, x, y);
+    });
+    paper.on('tool:remove', function(evt, linkView) {
+        console.log("Removing link" + linkView.model.id);
+        // linkView.model.remove();
+    });
+    graph.on('remove', function(cell, collection, opt) {
+   	   if (cell.isLink()) {
+		  	// console.log("A link was removed" + linkView.model.id); // a link was removed  (cell.id contains the ID of the removed link)
+			var msg = 'Do you really want to remove this edge?';
+			if (window.confirm(msg)) {
+			   	id = cell.id.split('-')[1];
+				document.location.href = '/pathedge/{0}/delete/'.format(id);
+	  			console.log("A link was removed: " + cell.id); // a link was removed  (cell.id contains the ID of the removed link)
+			}
+		}
+   	})
+{% endif %}
+
+//First, checks if it isn't implemented yet.
+if (!String.prototype.format) {
+  String.prototype.format = function() {
+    var args = arguments;
+    return this.replace(/{(\d+)}/g, function(match, number) { 
+      return typeof args[number] != 'undefined'
+        ? args[number]
+        : match
+      ;
+    });
+  };
+}
+function on_node_moved(element) {
+	position = element.get('position');
+}
+function on_cell_clicked(cellView, x, y) {
+	console.log('cell clicked');
+	var cell = cellView.model;
+	var parent_id = cell.get('parent');
+	var id;
+	if (parent_id) {
+	   	console.log(parent_id);
+		var node = graph.getCell(parent_id);
+		var label = node.attr('text').text;
+	   	id = node.id.split('-')[1];
+	   	action = cell.get('action');
+	   	console.log('action: ', action);
+	   	if (action == 'delete') {
+			var msg = 'Do you really want to remove this node? ' + label;
+			if (window.confirm(msg))
+				document.location.href = '/pathnode/{0}/delete/'.format(id);
+		}
+	   	/*
+		else if (action == 'add_before') {
+			var msg = 'Add a node before this node? ' + label;
+			if (window.confirm(msg))
+				document.location.href = '/pathnode/{0}/add_before/'.format(id);
+		} else if (action == 'add_after') {
+			var msg = 'Add a node after this node? ' + label;
+			if (window.confirm(msg))
+				document.location.href = '/pathnode/{0}/add_after/'.format(id);
+		}
+	   	*/
+	} else if (! cell.isLink()) {
+		console.log('node clicked');
+	   	id = cell.id.split('-')[1];
+{% if 'play' in request.path %}
+		document.location.href = '{{ request.path }}?node={0}'.format(cell.get('index'));
+{% else %}
+		document.location.href = '/pathnode/{0}/'.format(id);
+{% endif %}
+	}
+}
+
+function on_cell_dragged(cellView, x, y) {
+	this_cell = cellView.model;
+	if (this_cell.get('parent'))
+		return;
+	this_cell_id = this_cell.id
+
+    // Find the first element below that is not a link nor the dragged element itself.
+    var elementBelow = graph.get('cells').find(function(cell) {
+        if (cell instanceof joint.dia.Link) return false; // Not interested in links.
+        if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
+        if (cell.getBBox().containsPoint(g.point(x, y))) {
+            return true;
+        }
+        this_cell.set('position', this_cell.previous('position'));
+        return false;
+    });
+    
+    // If the two elements are connected already, don't
+    // connect them again (this is application specific though).
+    if (elementBelow && !_.contains(graph.getNeighbors(elementBelow), cellView.model)) {
+
+    	target_id = cellView.model.id;
+    	source_id = elementBelow.id;
+        graph.addCell(new joint.dia.Link({
+            source: { id: source_id }, target: { id: target_id },
+            attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+        }));
+        // Move the element a bit to the side.
+        cellView.model.translate(+200, 0);
+        paper.fitToContent();
+        // make_layout();
+		document.location.href = '/pathnode/{0}/link_after/{1}/'.format(target_id.split('-')[1], source_id.split('-')[1]);
+    }
+}
+
+/*
+graph.on('change:position', function(cell) {
+    var parentId = cell.get('parent');
+    if (!parentId) return;
+    // Revert the child position.
+    cell.set('position', cell.previous('position'));
+});
+*/
+
+{% if can_edit %}
+function add_tools(graph) {
+	graph.getElements().forEach(function(node, index) {
+	    label = node.attr('text').text;
+	    width = label.length * 5 + node_padding * 2;
+	
+	    drop_cell = drop.clone();
+	    drop_cell.set('action', 'delete')
+	    node.embed(drop_cell);
+	    graph.addCell(drop_cell);
+	    drop_cell.position(width-icon_size, 0, { parentRelative: true});
+		/*
+	    add_before = add.clone();
+	    add_before.set('action', 'add_before')
+	    node.embed(add_before);
+	    graph.addCell(add_before);
+	    add_before.position(0, 0, { parentRelative: true});
+	 
+	    add_after = add.clone();
+	    add_after.set('action', 'add_after')
+	    node.embed(add_after);
+	    graph.addCell(add_after);
+	    add_after.position(width-icon_size, node_height-icon_size, { parentRelative: true});
+	    */
+	})
+}
+add_tools(graph);
+{% endif %}
+paper.fitToContent();
+</script>

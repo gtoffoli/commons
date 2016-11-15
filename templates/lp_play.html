@@ -11,6 +11,7 @@
 <div class="container-fluid margin0 padding0">
 <div class="row margin0">
   <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0" id="list_nodes">
+ 
   	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
     <div class="clearfix">
     <h5 class="pull-left c-mulberry" style="width: 90%; margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
@@ -21,6 +22,9 @@
     <p class="font12">{{ lp.short|safe }}</p>
     </div>
     {% if nodes %}
+{% if lp.path_type == 3 %}
+	<div id="myholder" style="padding: 1em 0.5em;"></div>
+{% else %}
     	<dl class="panel panel-col panel-white">
         <dd>
         {% for pathnode in nodes %}
@@ -36,8 +40,11 @@
         {% endfor %}
         </dd>
       </dl>
-    {% endif %}
+{% endif %}
+	{% endif %}
+
 </div>
+
 <div class="col-sm-9 col-md-9 col-lg-10" style="background:white;" id="right">
   <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
     <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
@@ -84,6 +91,11 @@
 </div>
 </div>
 {% endblock %}
+
+{% block extra_script %}
+{% if lp.path_type == 3 %}{% include "_lp_dag.html" %}{% endif %}
+{% endblock %}
+
 {% endblock %}
 
 
