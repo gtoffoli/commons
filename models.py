@@ -1787,6 +1787,9 @@ class LearningPath(Resource, Publishable):
         roots = self.get_roots(nodes=nodes)
         if path_type == LP_SEQUENCE:
             assert len(roots) == 1
+        elif len(roots) > 1:
+            roots = list(roots)
+            roots.sort(cmp=lambda x,y: pathnode_before(x, y))
         visited = []
         for root in roots:
             stack = [root]
@@ -1797,9 +1800,14 @@ class LearningPath(Resource, Publishable):
                     children = node.children.all()
                     if path_type == LP_SEQUENCE:
                         assert len(children) <= 1
+                    else:
+                        children = list(children)
+                        children.sort(cmp=lambda x,y: pathnode_before(x, y, parent=node))
                     stack.extend([node for node in children if not node in visited])
         if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
+            if len(islands) > 1:
+                islands.sort(cmp=lambda x,y: pathnode_before(x, y))
             visited.extend(islands)
         assert len(visited) == len(nodes)
         return visited
@@ -1825,10 +1833,14 @@ class LearningPath(Resource, Publishable):
  
     def can_chain(self, request):
         return self.path_type==LP_COLLECTION and self.can_edit(request) and self.get_nodes() and self.is_pure_collection()
+
+    def can_make_dag(self, request):
+        return self.path_type==LP_SEQUENCE and self.can_edit(request) and self.get_nodes()
         
     def make_sequence(self, request):
         assert self.is_pure_collection()
-        nodes = self.get_nodes()
+        # nodes = self.get_nodes()
+        nodes = self.get_nodes(order_by='created') 
         if nodes and self.path_type==LP_COLLECTION:
             previous = None
             for node in nodes:
@@ -1882,11 +1894,13 @@ class LearningPath(Resource, Publishable):
         self.save()
         return edge
 
-    def add_edge(self, parent, child, request):
+    # def add_edge(self, parent, child, request):
+    def add_edge(self, parent, child, request, order=0):
         assert parent.path == self
         assert child.path == self
         assert not PathEdge.objects.filter(parent=parent, child=child)
-        edge = PathEdge(parent=parent, child=child, creator=request.user, editor=request.user)
+        # edge = PathEdge(parent=parent, child=child, creator=request.user, editor=request.user)
+        edge = PathEdge(parent=parent, child=child, order=order, creator=request.user, editor=request.user)
         edge.save()
         self.editor = request.user
         self.save()
@@ -1966,11 +1980,28 @@ class LearningPath(Resource, Publishable):
         self.disconnect_node(node, request)
         self.insert_node_after(node, other_node, request)
 
+    def get_max_order(self, parent, children):
+        assert parent.path == self
+        max_order = 0
+        for node in children:
+            assert node.path == self
+            edge = PathEdge.objects.get(parent=parent, child=node)
+            max_order = max(max_order, edge.order)
+        return max_order
+
     def link_node_after(self, node, other_node, request):
         assert node.path == self
         assert other_node.path == self
+        """
         assert not node in other_node.children.all()
         self.add_edge(other_node, node, request)
+        """
+        max_order = 0
+        children = other_node.children.all()
+        if children.count():
+            assert not node in children
+            max_order = self.get_max_order(other_node, children)
+        self.add_edge(other_node, node, request, order=max_order+10)
 
     def node_up(self, node, request):
         assert self.is_node_sequence()
@@ -2020,6 +2051,39 @@ class LearningPath(Resource, Publishable):
         self.editor = request.user
         self.save()
 
+    def make_linear_dag(self, request):
+        """ convert from LP_COLLECTION to LP_DAG, adding only explicit ordering to edges """
+        assert self.path_type==LP_SEQUENCE
+        nodes = self.get_ordered_nodes()
+        parent = root = nodes[0]
+        max_order = 0
+        for node in nodes[1:]:
+            max_order += 10
+            edge = PathEdge.objects.get(parent=parent, child=node)
+            edge.order = max_order
+            edge.save(disable_circular_check=True)
+            parent = node
+        self.path_type = LP_DAG
+        self.save()
+        return parent
+
+    def make_tree_dag(self, request):
+        """ convert from LP_COLLECTION to LP_DAG, making all other nodes children of the root node
+            and adding explicit ordering to edges """
+        assert self.path_type==LP_SEQUENCE
+        nodes = self.get_ordered_nodes()
+        edges = PathEdge.objects.filter(parent__path=self)
+        for edge in edges:
+            edge.delete()
+        self.path_type = LP_DAG
+        self.save()
+        root = nodes[0]
+        max_order = 0
+        for node in nodes[1:]:
+            max_order += 10
+            self.add_edge(root, node, request, order=max_order)
+        return root
+
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
     label = models.TextField(blank=True, verbose_name=_('label'))
@@ -2037,8 +2101,9 @@ class PathNode(node_factory('PathEdge')):
         verbose_name_plural = _('path nodes')
 
     def make_json(self):
-        # return {'type': 'basic.Rect', 'id': 'node-%06d' % self.id, 'attrs': {'text': {'text': self.label }}}
-        return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label }}}
+        # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label }}}
+        # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
+        return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", " ") }}}
 
     def get_absolute_url(self):
         return '/pathnode/%s/' % self.id
@@ -2105,6 +2170,7 @@ PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
+    order = models.IntegerField(default=0)
     label = models.TextField(blank=True, verbose_name=_('label'))
     content = models.TextField(blank=True, verbose_name=_('content'))
     created = CreationDateTimeField(_('created'))
@@ -2115,13 +2181,20 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     class Meta:
         verbose_name = _('path edge')
         verbose_name_plural = _('path edges')
-    """
-    def make_dict(self):
-        return { 'id': self.id, 'label': self.label, 'parent': self.parent.id, 'child': self.child.id }
-    """
+
     def make_json(self):
         # return {'type': 'link', 'id': 'edge-%06d' % self.id, 'source': {'id': 'node-%06d' % self.parent.id}, 'target': {'id': 'node-%06d' % self.child.id}}
         return {'type': 'link', 'id': 'edge-%d' % self.id, 'source': {'id': 'node-%d' % self.parent.id}, 'target': {'id': 'node-%d' % self.child.id}}
+
+def pathnode_before(node_1, node_2, parent=None):
+    """ compare the sort order of 2 children of a node:
+        return True if node_1 should come before node_2, otherwise return False """
+    if parent:
+        edge_1 = PathEdge.objects.get(parent=parent, child=node_1)
+        edge_2 = PathEdge.objects.get(parent=parent, child=node_2)
+        return (edge_1.order and edge_2.order and edge_1.order < edge_2.order) or edge_1.created < edge_2.created
+    else:
+        return node_1.created < node_2.created
 
 # Cannot set values on a ManyToManyField which specifies an intermediary model. 
 # Use commons.TaggedOER's Manager instead.

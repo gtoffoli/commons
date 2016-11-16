@@ -227,7 +227,7 @@ class PathNodeAdmin(admin.ModelAdmin):
 
 class PathEdgeAdmin(admin.ModelAdmin):
     # fieldsets = []
-    list_display = ('id', 'label', 'parent', 'child', 'creator', 'created',)
+    list_display = ('id', 'label', 'parent', 'child', 'order', 'creator', 'created',)
 
     def save_model(self, request, obj, form, change):
         if not change:

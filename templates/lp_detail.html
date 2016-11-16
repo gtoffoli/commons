@@ -104,8 +104,12 @@
 
         <dl class="list-inline font14 ">
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
-          <dd><form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>
-            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain font07"></i></a>{% endif %}
+          <dd>{% comment %}<form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>{% endcomment %}{{ lp.get_type }}
+            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain font07"></i></a>
+            {% elif can_make_dag %}&nbsp;
+            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_linear_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "keeping the linear ordering" %}" id="submit_{{ lp.id }}"><i class="fa fa-long-arrow-down font07" style="font-weight: bold;"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_{{ lp.id }}"><i class="fa fa-sitemap font07"></i></button></form>
+            {% endif %}
           </dd>
         </dl>
 
@@ -168,6 +172,11 @@
       return confirm('{% trans "do you really want to delete" %} {% trans "this learning path" %}?');
     }
   {% endif %}
+  {% if can_make_dag %}
+  function confirm_convert(form) {
+    return confirm('{% trans "do you really want to convert" %} {% trans "this learning path" %}? {% trans "this operation cannot be undone" %}');
+  }
+{% endif %}
 	$(document).ready(function() {
 
 		$('dt a.toggleIcon').on('click', function(event){
