@@ -23,11 +23,23 @@
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
     {% for field in form.visible_fields %}
+      {% if field.name == 'facet_1_score' %}
+         <fieldset style="border-bottom:1px dotted #008BD2">
+         	<legend class="paddingT20 font18 demiBold" style="border-bottom:1px dotted #008BD2">{% trans "detailed quality assessment"|capfirst %}</legend>
+      <ul class="list-inline">
+      {% endif %}
+      {% if 'facet' in field.name %}<li style="padding-right:20px; vertical-align:top">{%endif%}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        {% if field.help_text %}<div style="margin-top:-5px; margin-bottom:5px"><small id="{{ field.name }}helpBlock">{{ field.help_text }}</small></div>{% endif %}
         <span class="txt-error">{{ field.errors }}</span>{{ field }}
-        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+
       </div>
+    {% if 'facet' in field.name %}</li>{%endif%}
+      {% if field.name == 'facet_4_score' %}
+    </ul>
+    </fieldset>
+      {% endif %}
     {% endfor %}
     </fieldset>
     <div class="panel-footer-c2 padding1020">

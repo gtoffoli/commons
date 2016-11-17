@@ -67,11 +67,12 @@ title="{% trans "Direct link to this comment" %}">#</a>
          {{ form.timestamp }}
          {{ form.security_hash }}
          <input type="hidden" name="next" value="{{ object.get_absolute_url }}">
-         <!--input  type="submit" value="{% trans "Add comment" %}" id="id_submit"-->
          <div class="marginT5"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default">{% trans "Add comment" %}</button></div>
        </form></dd>
+     {% elif user.is_authenticated and not user_is_completed_profile %}
+       <dd><p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to leave a comment" %}.</p></dl>
      {% else %}
-       <dd><p>Please <a href="{% url 'account_login' %}">{% trans "log in" %}</a> {% trans "to leave a comment" %}.</p></dl>
+       <dd><p>{% trans "please"|capfirst %} <a href="{% url 'account_login'%}?next={{request.path}}">{% trans "log in" %}</a> {% trans "to leave a comment" %}.</p></dl>
      {% endif %}
    {% endif %}
   {% endblock entry-comments-form %}

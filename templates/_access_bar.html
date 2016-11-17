@@ -11,8 +11,7 @@
 
      {% if user.is_authenticated %}
        <ul class="nav navbar-nav pull-right my-navbar-user-auth">
-       	<!-- {% url "account_settings" %}  profile/{{ user.get_display_name }}/edit -->
-         <li>{% if user.is_completed_profile %}<a href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}">{% else %}<a href="/user_welcome" title="{% trans "complete profile"|capfirst %}">{% endif %}
+         <li><a {% if user.is_completed_profile %} href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}" {% else %} href="/user_welcome" title="{% trans "complete profile"|capfirst %}" {% endif %}>
            {% if user.profile.avatar %}
              <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
            {% else %}
@@ -47,7 +46,7 @@
        </ul>
      {% else %}
        <!-- Login hidden on mobile -->
-       <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/" method="post" name="form-login" id="form-login">{% csrf_token %}
+       <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/?next={{request.path}}" method="post" name="form-login" id="form-login">{% csrf_token %}
          <div class="form-group">
            <span id="form-login-username">
              <input name="login" id="id_login" type="email" size="15" class="form-control" placeholder="{% trans "email address"|capfirst %}">

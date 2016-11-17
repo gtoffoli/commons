@@ -556,6 +556,16 @@ margin-right:0;
 .font26 {
 	font-size: 26px;
 }
+.font_small {
+}
+@media (max-width:480px) {
+    .font_small {
+    	font-size:18px;
+    }
+    .font_button_small {
+    	font-size:20px;
+    }
+}
 .largerDemiBold {
 	font-size: larger;
 	font-weight:500;

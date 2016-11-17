@@ -10,7 +10,7 @@
           <h4 class="modal-title">{% trans "Log in" %}</h4>
         </div>
         <div class="modal-body">
-          <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/">{% csrf_token %}
+          <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/?next={{request.path}}">{% csrf_token %}
             <fieldset class="userdata">
               <div id="form-login-e-mail" class="form-group">
                 <div class="input-group">

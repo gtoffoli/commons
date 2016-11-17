@@ -14,10 +14,10 @@ dl.eval dd {
 	padding:20px 20px 10px 20px;
 }
 dl.eval dd:nth-child(odd) {
-    background: #f8f8f8;
+    background: transparent;
 }
 dl.eval dd:nth-child(even) {
-    background: transparent;
+    background: #f8f8f8;
 }
 
 </style>
@@ -28,8 +28,8 @@ dl.eval dd:nth-child(even) {
 {% if evaluations %}
 <div class="panel panel-c2 text-left marginTB30">
   <div class="panel-heading-c2 padding1020">
-    <h3 class="pull-left marginTB5">{{ oer.title }}</h3>
-    <p class="pull-right marginB0 font26">
+    <h3 class="pull-left marginTB5 font_small">{{ oer.title }}</h3>
+    <p class="pull-right marginB0 font26 font_button_small">
       <a href="/oer/{{ oer.slug }}/" title="{% trans "show OER" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
     </p>
     <div style="clear:both;">
@@ -40,13 +40,15 @@ dl.eval dd:nth-child(even) {
 {% for evaluation in evaluations %}
   <dd class="padding1020" style="padding-top:20px">
   <div class="row">
-    <div class="col-md-7">
+    <div class="col-sm-7 col-md-7 col-lg-7">
     	{%if evaluation.review|safe %}<p>{{ evaluation.review|safe }}</p>{% endif %}
       <p><span class="demiBold">{% trans "overall assessment"|capfirst %}:</span> {% with stars=evaluation.get_stars %}{% include "_view_rating.html" %}{% endwith %}</p>
     </div>
-    <div class="col-md-5">
+    <div class="col-sm-5 col-md-5 col-lg-5">
       {% if evaluation.get_quality_metadata %}
+        
         <ul class="list-unstyled">
+        	<li class="marginB5 demiBold">{% trans "detailed quality assessment"|capfirst %}</li>
           {% for qm in evaluation.get_quality_metadata %}
             <li class="marginB5"><span class="demiBold font13">{{ qm.quality_facet|capfirst }}:</span> {% with stars=qm.get_stars %}{% include "_view_rating.html" with data_class="font07em" %}{% endwith %}</li>
           {% endfor %}

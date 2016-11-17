@@ -411,15 +411,11 @@ class OerSearchForm(forms.Form):
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-    oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
-        label=_('OER type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
     """
     source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
         label=_('source type'), required=False,
         widget=forms.CheckboxSelectMultiple())
     """
-
     origin_type = forms.MultipleChoiceField(choices=ORIGIN_TYPE_CHOICES,
         label=_('source type'), required=False,
         widget=forms.CheckboxSelectMultiple())
@@ -441,6 +437,9 @@ class OerSearchForm(forms.Form):
     accessibility = forms.ModelMultipleChoiceField(
         queryset=AccessibilityEntry.objects.all(),
         label=_('accessibility features'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    oer_type = forms.MultipleChoiceField(choices=OER_TYPE_CHOICES,
+        label=_('OER type'), required=False,
         widget=forms.CheckboxSelectMultiple())
 
 class DocumentUploadForm(forms.Form):
@@ -527,11 +526,11 @@ class LpSearchForm(forms.Form):
     tags = forms.ModelMultipleChoiceField(Tag.objects.all().order_by('name'),
         label=_('tags'), required=False,
         widget=forms.SelectMultiple(attrs={'class':'form-control','size': 8,}))
-    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES[:-1],
-        label=_('learning path type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
+        widget=forms.CheckboxSelectMultiple())
+    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES[:-1],
+        label=_('learning path type'), required=False,
         widget=forms.CheckboxSelectMultiple())
 
 
