@@ -55,9 +55,9 @@
         </div>
         <div class="modal-footer visible-xs">
           <div class="social-login">
-            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}">
+            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}&next={{request.path}}">
               <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
-            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}">
+            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}?next={{request.path}}">
               <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
           </div>
         </div>
