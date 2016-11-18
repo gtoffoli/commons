@@ -311,7 +311,7 @@ LANGUAGES = (
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
 SITE_ID = 1
-SITE_NAME = 'CommonS Platform'
+SITE_NAME = 'CommonSpaces'
 
 WSGI_APPLICATION = 'commons.wsgi.application'
 ROOT_URLCONF = 'commons.urls'

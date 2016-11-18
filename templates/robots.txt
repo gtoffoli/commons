@@ -14,6 +14,7 @@ Disallow: /oer/*/edit
 Disallow: /oer/*/view
 Disallow: /lp/*/edit
 Disallow: /lp/*/play
+Disallow: /pathnode
 Crawl-delay: 12
 User-agent: BUbiNG
 Disallow: /

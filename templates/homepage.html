@@ -189,25 +189,32 @@
           <div class="gutter-sizer"></div>
           <div class="grid-sizer"></div>
           {% if recent_proj %}
+            {% trans "newest project" as translatetext %}
             {% include "_data_item_HP.html" with data=recent_proj data_ele="c4" data_label="newest project" data_class="c-harvest-gold" data_type="project" data_attr="last"%}
           {% endif %}
           {% if active_proj %}
-            {% include "_data_item_HP.html" with data=active_proj data_ele="c4" data_label="most active project" data_class="c-harvest-gold" data_type="project" data_attr="active" %}
+            {% trans "most active project" as translatetext %}
+            {% include "_data_item_HP.html" with data=active_proj data_ele="c4" data_label=translatetext data_class="c-harvest-gold" data_type="project" data_attr="active" %}
           {% endif %}
           {% if popular_proj %}
-            {% include "_data_item_HP.html" with data=popular_proj data_ele="c4" data_label="most popular project" data_class="c-harvest-gold" data_type="project" data_attr="popular" %}
+            {% trans "most popular project" as translatetext %}
+            {% include "_data_item_HP.html" with data=popular_proj data_ele="c4" data_label=translatetext data_class="c-harvest-gold" data_type="project" data_attr="popular" %}
           {% endif %}
           {% if last_lp %}
-            {% include "_data_item_HP.html" with data=last_lp data_ele="c1" data_label="newest learning path" data_class="c-mulberry" data_type="lp" data_attr="last" %}
+            {% trans "newest learning path" as translatetext %}
+            {% include "_data_item_HP.html" with data=last_lp data_ele="c1" data_label=translatetext data_class="c-mulberry" data_type="lp" data_attr="last" %}
           {% endif %}
           {% if popular_lp %}
-            {% include "_data_item_HP.html" with data=popular_lp data_ele="c1" data_label="most popular learning path" data_class="c-mulberry" data_type="lp" data_attr="popular" %}
+            {% trans "most popular learning path" as translatetext %}
+            {% include "_data_item_HP.html" with data=popular_lp data_ele="c1" data_label=translatetext data_class="c-mulberry" data_type="lp" data_attr="popular" %}
           {% endif %}
           {% if last_oer %}
-            {% include "_data_item_HP.html" with data=last_oer data_ele="c2" data_label="newest OER" data_class="c-pacific-blue" data_type="oer" data_attr="last" %}
+            {% trans "newest OER" as translatetext %}
+            {% include "_data_item_HP.html" with data=last_oer data_ele="c2" data_label=translatetext data_class="c-pacific-blue" data_type="oer" data_attr="last" %}
           {% endif %}
           {% if popular_oer %}
-            {% include "_data_item_HP.html" with data=popular_oer data_ele="c2" data_label="most popular OER" data_class="c-pacific-blue" data_type="oer" data_attr="popular" %}
+            {% trans "most popular OER" as translatetext %}
+            {% include "_data_item_HP.html" with data=popular_oer data_ele="c2" data_label=translatetext data_class="c-pacific-blue" data_type="oer" data_attr="popular" %}
           {% endif %}
         </div>
       </div>

@@ -100,33 +100,16 @@ def group_has_project(group):
     except:
         return None
 
-"""
 def home(request):
     wall_dict = {}
-    wall_dict['PRODUCTION'] = PRODUCTION
-    if PRODUCTION:
-        MAX_MEMBERS = 10
-        MAX_FORUMS = 5
-        MAX_ARTICLES = 6
-        MAX_PROJECTS = MAX_LPS = MAX_OERS = MAX_REPOS = 10
-        user = request.user
-        wall_dict['members'] = ProjectMember.objects.filter(state=1).order_by('-created')[:MAX_MEMBERS]
-        wall_dict['forums'] = Forum.objects.filter(category_id=1).exclude(post_count=0).order_by('-post_count')[:MAX_FORUMS]
-        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
-        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:MAX_PROJECTS]
-        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:MAX_LPS]
-        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:MAX_OERS]
-        wall_dict['repos'] = Repo.objects.filter(state=3).order_by('-created')[:MAX_REPOS]
-    else:
-        wall_dict['projects'] = Project.objects.filter(state=2, proj_type__public=True).exclude(proj_type__name='com').order_by('-created')[:2]
-        wall_dict['lps'] = LearningPath.objects.filter(state=3, project__isnull=False).order_by('-created')[:2]
-        wall_dict['oers'] = OER.objects.filter(state=3).order_by('-created')[:2]
-
-    return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
-"""
-
-def home(request):
-    wall_dict = {}
+    description='%s, %s, %s' % (_("learning in online communities of practice"),_("reusing resources to build learning paths"),_("browsing collections in our library of OERs"))
+    wall_dict['meta'] =  {
+        'description':description,
+        'og:title': _('Learn with others, Create, Reuse'),
+        'og:description': description,
+        'og:type': 'website',
+        'og:url': request.build_absolute_uri,
+    }
     wall_dict['PUBLISHED'] = PUBLISHED
     groups_lead_featured = []
     wall_dict['recent_proj'] = None
@@ -882,6 +865,18 @@ def project_detail(request, project_id, project=None):
     proj_type = project.proj_type
     type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
+    if project.small_image:
+        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
+    else:
+        image = ''
+    var_dict['meta'] =  {
+        'description':project.description,
+        'og:title': project.name,
+        'og:description': project.description,
+        'og:type': 'article',
+        'og:url': request.build_absolute_uri,
+        'og:image': image,
+    }
     var_dict['object'] = project
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
@@ -1521,6 +1516,18 @@ def repo_detail(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
     var_dict = { 'repo': repo, }
+    if repo.small_image:
+        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
+    else:
+        image = ''
+    var_dict['meta'] =  {
+        'description':repo.description,
+        'og:title': repo.name,
+        'og:description': repo.description,
+        'og:type': 'article',
+        'og:url': request.build_absolute_uri,
+        'og:image': image,
+    }
     var_dict['object'] = repo
     var_dict['is_published'] = is_published = repo.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = repo.state == UN_PUBLISHED
@@ -2192,6 +2199,18 @@ def oer_detail(request, oer_id, oer=None):
         raise PermissionDenied
 
     var_dict = { 'oer': oer, }
+    if oer.small_image:
+        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,oer.small_image)
+    else:
+        image = ''
+    var_dict['meta'] =  {
+        'description':oer.description,
+        'og:title': oer.title,
+        'og:description': oer.description,
+        'og:type': 'article',
+        'og:url': request.build_absolute_uri,
+        'og:image': image,
+    }
     var_dict['object'] = oer
     var_dict['can_comment'] = oer.can_comment(request)
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
@@ -2756,6 +2775,18 @@ def lp_detail(request, lp_id, lp=None):
     if not lp.can_access(user):
         raise PermissionDenied
     var_dict = { 'lp': lp, }
+    if lp.small_image:
+        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,lp.small_image)
+    else:
+        image = ''
+    var_dict['meta'] =  {
+        'description':lp.short,
+        'og:title': lp.title,
+        'og:description': lp.short,
+        'og:type': 'article',
+        'og:url': request.build_absolute_uri,
+        'og:image': image,
+    }
     var_dict['object'] = lp
     var_dict['can_comment'] = lp.can_comment(request)
     var_dict['project'] = lp.project

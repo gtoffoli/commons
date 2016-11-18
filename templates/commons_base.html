@@ -5,14 +5,25 @@
 {% generate_menu %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" xmlns:og="http://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
     <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
     {% block languages %}
     {% endblock %}
-
+    
+    {% block meta %}
+    {% if meta %}
+      <meta property="og:site_name" content="{{ site_name }}">
+      {% for key, value in meta.items %}
+        {% if value %}
+          <meta property={{ key }} content="{{ value }}">
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+    {% endblock %}
+    
     {% block viewport %}
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% endblock %}
