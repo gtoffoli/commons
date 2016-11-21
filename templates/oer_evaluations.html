@@ -42,7 +42,7 @@ dl.eval dd:nth-child(even) {
   <div class="row">
     <div class="col-sm-7 col-md-7 col-lg-7">
     	{%if evaluation.review|safe %}<p>{{ evaluation.review|safe }}</p>{% endif %}
-      <p><span class="demiBold">{% trans "overall assessment"|capfirst %}:</span> {% with stars=evaluation.get_stars %}{% include "_view_rating.html" %}{% endwith %}</p>
+      <p><span class="demiBold">{% trans "overall assessment"|capfirst %}:</span> {% with stars=evaluation.get_stars %}{% include "_view_rating.html" with color_class="c-pacific-blue" %}{% endwith %}</p>
     </div>
     <div class="col-sm-5 col-md-5 col-lg-5">
       {% if evaluation.get_quality_metadata %}
@@ -50,7 +50,7 @@ dl.eval dd:nth-child(even) {
         <ul class="list-unstyled">
         	<li class="marginB5 demiBold">{% trans "detailed quality assessment"|capfirst %}</li>
           {% for qm in evaluation.get_quality_metadata %}
-            <li class="marginB5"><span class="demiBold font13">{{ qm.quality_facet|capfirst }}:</span> {% with stars=qm.get_stars %}{% include "_view_rating.html" with data_class="font07em" %}{% endwith %}</li>
+            <li class="marginB5"><span class="demiBold font12">{{ qm.quality_facet|capfirst }}:</span> {% with stars=qm.get_stars %}{% include "_view_rating.html" with color_class="c-pacific-blue" font_class="font07em" %}{% endwith %}</li>
           {% endfor %}
         </ul>
       {% endif %}

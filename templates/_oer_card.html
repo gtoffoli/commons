@@ -7,7 +7,7 @@
   <p class="title-card">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></p>
   <p class="text-card">Rating &nbsp;
     {% with stars=oer.get_stars %}
-      {% include "_view_rating.html" %}
+      {% include "_view_rating.html" with color_class="c-pacific-blue" %}
     {% endwith %}
   </p>
 

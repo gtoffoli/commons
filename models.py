@@ -1378,7 +1378,8 @@ class OER(Resource, Publishable):
         if self.state not in [PUBLISHED]:
             return False
         # return ProjectMember.objects.filter(user=user, state=1)
-        return user.is_completed_profile
+        profile = user.get_profile()
+        return profile and profile.get_completeness() and not self.creator==user
 
     def oer_delete(self, request):
         if self.state != DRAFT:
@@ -2083,6 +2084,27 @@ class LearningPath(Resource, Publishable):
             max_order += 10
             self.add_edge(root, node, request, order=max_order)
         return root
+
+class SharedLearningPath(models.Model):
+    """
+    Link to an LearningPath created in another project
+    """
+    lp = models.ForeignKey(LearningPath, verbose_name=_('referenced Learning Path'))
+    project = models.ForeignKey(Project, verbose_name=_('referencing project'))
+    created = CreationDateTimeField(_('created'))
+    user = models.ForeignKey(User, verbose_name=_('last editor'))
+
+    class Meta:
+        unique_together = ('lp', 'project')
+        verbose_name = _('shared Learning Path')
+        verbose_name_plural = _('shared Learning Paths')
+
+    def __unicode__(self):
+        return '\u21D2 %s' % self.lp.title
+
+    def can_delete(self, request):
+        user = request.user
+        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
 
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')

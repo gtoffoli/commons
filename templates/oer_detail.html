@@ -27,7 +27,6 @@
   <section class="view-card-details">
     <div class="row">
       <div class="col-sm-9 col-md-9 col-lg-9">
-      	
       {% if is_un_published and not can_republish %}
       <div class="marginB10">
         <p>{{ oer.description }}</p>
@@ -38,12 +37,12 @@
         <div class="hidden-xs">
            <div class="posRel">
               <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>{%endif%}
-              	<a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
         </div>
         <div class="visible-xs">
-           {% if oer.small_image%}
+           {% if oer.small_image %}
            <div class="posRel">
               <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>
                 <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
@@ -54,6 +53,12 @@
            <p>{{ oer.description }}</p>
            {% endif %}
         </div>
+      {% elif oer.small_image and oer.description %}
+        <div class="posRel">
+            <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"></div>
+            <p>{{ oer.description }}</p>
+        </div>
+
       {% elif oer.description %}
         <p>{{ oer.description }}</p>
       {% endif %}
@@ -183,7 +188,7 @@
         {% if is_published or is_un_published %}
           <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
             <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
-            {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" %}</dd>{% endwith %}
+            {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" with color_class="c-pacific-blue" %}</dd>{% endwith %}
             {% if evaluations %}
               <dd class="paddingT6"><a href="/oer/{{oer.slug}}/evaluations/" class="btn btn-default" title="{% trans "view evaluations" %}">{% trans "view evaluations" %}</a></dd>
             {% else %}
@@ -193,10 +198,14 @@
         {% endif %}
         {% if can_evaluate %}
            <div><a href="/oer/{{ oer.slug }}/evaluate/" class="btn btn-default" title={% if user_evaluation %}"{% trans "edit evaluation" %}"{% else %}"{% trans "add evaluation" %}"{% endif %}><i class="fa fa-star-o"></i> {% if user_evaluation %}{% trans "edit evaluation"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %}</a></div>
-        {% elif user.is_authenticated and not user_is_completed_profile %}
-          <p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to add evaluation" %}.</p>
         {% else %}
-           <p>{% trans "please"|capfirst %} <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans "log in" %}</a> {% trans "to add evaluation" %}.</p>
+          {% if is_published and not user == oer.user %}
+            {% if not user.is_authenticated %}
+              <p>{% trans "please"|capfirst %} <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans "log in" %}</a> {% trans "to add evaluation" %}.</p>
+            {% elif not completed_profile %}
+              <p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to add evaluation" %}.</p>
+            {% endif %}
+          {% endif %}
         {% endif %}
         {% if lps %}
           <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">

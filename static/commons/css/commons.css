@@ -657,7 +657,7 @@ color:#a7a7a7;
 	border-radius:0;
 }
 .borderRadius4 {
-	border-radius: 4px;
+	border-radius: 4px !important;
 }
 /* scheda e lista */
 article.view-card,

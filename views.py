@@ -38,7 +38,7 @@ from documents import DocumentType, Document
 from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
 from models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from models import RepoType, RepoFeature
-from models import LearningPath, PathNode, PathEdge, LP_TYPE_DICT
+from models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
 from models import DRAFT, PUBLISHED, UN_PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
@@ -866,7 +866,7 @@ def project_detail(request, project_id, project=None):
     type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
     if project.small_image:
-        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
+        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -921,6 +921,8 @@ def project_detail(request, project_id, project=None):
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         if can_add_lp:
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
+            bookmarked_lps = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='bookmarked_lps') or []]
+            var_dict['shareable_lps'] = [lp for lp in bookmarked_lps if not lp.project==project and not SharedLearningPath.objects.filter(project=project, lp=lp).count()]
         # var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_edit'] = project.can_edit(request)
         var_dict['can_translate'] = project.can_translate(request)
@@ -1003,6 +1005,8 @@ def project_detail(request, project_id, project=None):
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['n_lps'] = len(lps)
     var_dict['lps'] = lps[:MAX_LPS]
+    shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
+    var_dict['shared_lps'] = [[shared_lp, shared_lp.can_delete(request)] for shared_lp in shared_lps]
     if proj_type.name == 'ment':
         return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
     else:
@@ -1333,7 +1337,7 @@ def shared_oer_delete(request, shared_oer_id):
     if shared_oer.can_delete(request):
         shared_oer.delete()
     return HttpResponseRedirect('/project/%s/' % project.slug)    
-        
+
 def project_paste_oer(request, project_id, oer_id):
     oer_id = int(oer_id)
     cut_oers = get_clipboard(request, key='cut_oers') or []
@@ -1348,7 +1352,29 @@ def project_paste_oer(request, project_id, oer_id):
     cut_oers.remove(oer_id)
     set_clipboard(request, key='cut_oers', value=cut_oers or None)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
-        
+
+def project_add_shared_lp(request, project_id, lp_id):
+    user = request.user
+    lp_id = int(lp_id)
+    project = get_object_or_404(Project, id=project_id)
+    if user.is_authenticated() and project.can_add_lp(user):
+        bookmarked_ids = get_clipboard(request, key='bookmarked_lps') or []
+        if lp_id in bookmarked_ids:
+            lp = get_object_or_404(LearningPath, id=lp_id)
+            if not lp.project==project:
+                shared_lp = SharedLearningPath(lp=lp, project=project, user=user)
+                shared_lp.save()
+                bookmarked_ids.remove(lp_id)
+                set_clipboard(request, key='bookmarked_lps', value=bookmarked_ids or None)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
+def shared_lp_delete(request, shared_lp_id):
+    shared_lp = get_object_or_404(SharedLearningPath, id=shared_lp_id)
+    project = shared_lp.project
+    if shared_lp.can_delete(request):
+        shared_lp.delete()
+    return HttpResponseRedirect('/project/%s/' % project.slug)    
+ 
 def project_paste_lp(request, project_id, lp_id):
     lp_id = int(lp_id)
     cut_lps = get_clipboard(request, key='cut_lps') or []
@@ -1517,7 +1543,7 @@ def repo_detail(request, repo_id, repo=None):
         repo = get_object_or_404(Repo, pk=repo_id)
     var_dict = { 'repo': repo, }
     if repo.small_image:
-        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
+        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -2200,7 +2226,7 @@ def oer_detail(request, oer_id, oer=None):
 
     var_dict = { 'oer': oer, }
     if oer.small_image:
-        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,oer.small_image)
+        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,oer.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -2218,8 +2244,10 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['is_un_published'] = is_un_published = oer.state == UN_PUBLISHED
     if user.is_authenticated():
         profile = user.get_profile()
+        completed_profile = profile and profile.get_completeness()
         add_bookmarked = is_published and profile and profile.get_completeness()
     else:
+        completed_profile = False
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
         bookmarked_oers = get_clipboard(request, key='bookmarked_oers') or []
@@ -2247,6 +2275,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_un_publish'] = oer.can_un_publish(request)
     var_dict['can_republish'] = can_republish = oer.can_republish(user)
     var_dict['can_evaluate'] = can_evaluate = oer.can_evaluate(user)
+    var_dict['completed_profile'] = completed_profile
     var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or (can_delete and not in_cut_oers)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
@@ -2776,7 +2805,7 @@ def lp_detail(request, lp_id, lp=None):
         raise PermissionDenied
     var_dict = { 'lp': lp, }
     if lp.small_image:
-        image='http://%s/%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,lp.small_image)
+        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,lp.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -2792,6 +2821,17 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['project'] = lp.project
     var_dict['is_published'] = is_published = lp.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
+    if user.is_authenticated():
+        profile = user.get_profile()
+        add_bookmarked = is_published and profile and profile.get_completeness()
+    else:
+        add_bookmarked = None
+    if add_bookmarked and request.GET.get('copy', ''):
+        bookmarked_lps = get_clipboard(request, key='bookmarked_lps') or []
+        if not lp_id in bookmarked_lps:
+            set_clipboard(request, key='bookmarked_lps', value=bookmarked_lps+[lp_id])
+    var_dict['add_bookmarked'] = add_bookmarked
+    var_dict['in_bookmarked_lps'] = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
     var_dict['can_translate'] = lp.can_translate(request)
@@ -2805,7 +2845,7 @@ def lp_detail(request, lp_id, lp=None):
         if not lp_id in cut_lps:
             set_clipboard(request, key='cut_lps', value=cut_lps+[lp_id])
     var_dict['in_cut_lps'] = in_cut_lps = lp_id in (get_clipboard(request, key='cut_lps') or [])
-    var_dict['can_less_action'] = can_edit or can_delete or (can_delete and not in_cut_lps)
+    var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_lps) or (can_delete and not in_cut_lps)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)

@@ -17,7 +17,7 @@ from taggit_labels.widgets import LabelWidget
 """
 
 from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
-from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, Featured
+from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
@@ -235,6 +235,15 @@ class PathEdgeAdmin(admin.ModelAdmin):
         obj.editor = request.user
         obj.save()
 
+class SharedLearningPathAdmin(admin.ModelAdmin):
+    list_display = ('id', 'lp_title', 'project_name', 'user', 'created',)
+
+    def lp_title(self, obj):
+        return obj.oer and obj.lp.title or ''
+
+    def project_name(self, obj):
+        return obj.project.get_name()
+
 class FeaturedAdmin(admin.ModelAdmin):
     list_display = ('id', 'lead', 'group_name', 'sort_order', 'text', 'object_type', 'featured_object', 'status', 'start_publication', 'end_publication', 'user',)
     form = FeaturedChangeForm
@@ -280,6 +289,7 @@ admin.site.register(OerEvaluation, OerEvaluationAdmin)
 admin.site.register(PathNode, PathNodeAdmin)
 admin.site.register(PathEdge, PathEdgeAdmin)
 admin.site.register(LearningPath, LearningPathAdmin)
+admin.site.register(SharedLearningPath, SharedLearningPathAdmin)
 admin.site.register(Featured, FeaturedAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin

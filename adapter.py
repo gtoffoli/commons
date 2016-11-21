@@ -7,7 +7,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
         user = request.user
         profile = user.get_profile()
         if profile and profile.get_completeness():
-            path = "/my_home"
+            path = "/"
         elif profile and not profile.get_completeness():
             path = "/user_welcome"
         else:

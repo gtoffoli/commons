@@ -18,7 +18,7 @@
       <meta property="og:site_name" content="{{ site_name }}">
       {% for key, value in meta.items %}
         {% if value %}
-          <meta property={{ key }} content="{{ value }}">
+          <meta {% if key == 'description' %}name{% else %}property{% endif %}={{ key }} content="{{ value }}">
         {% endif %}
       {% endfor %}
     {% endif %}

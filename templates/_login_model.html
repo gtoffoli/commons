@@ -10,7 +10,7 @@
           <h4 class="modal-title">{% trans "Log in" %}</h4>
         </div>
         <div class="modal-body">
-          <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/?next={{request.get_full_path}}">{% csrf_token %}
+          <form method="post" id="form-login-modal" class="mymodallogin" action="/accounts/login/{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">{% csrf_token %}
             <fieldset class="userdata">
               <div id="form-login-e-mail" class="form-group">
                 <div class="input-group">
@@ -55,9 +55,9 @@
         </div>
         <div class="modal-footer visible-xs">
           <div class="social-login">
-            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}&next={{request.get_full_path}}">
+            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login' %}{% if not "accounts" in request.get_full_path %}&next={{request.get_full_path}}{% endif %}">
               <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
-            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}?next={{request.get_full_path}}">
+            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
               <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
           </div>
         </div>

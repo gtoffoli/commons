@@ -13,7 +13,7 @@
       {% if is_published or is_un_published %}
         <div class="font12">
           {% with stars=oer.get_stars %}
-            {% include "_view_rating.html" %}
+            {% include "_view_rating.html" with color_class="c-pacific-blue" %}
           {% endwith %}
         </div>
       {% endif %}

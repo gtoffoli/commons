@@ -12,26 +12,39 @@
   {% trans "The current active language" %} (<span style="color: black;">{{ current_language_name }}</span>) {% trans "affects only the UI messages of this view" %}.
  </div>
 
-<div class="panel panel-c4 text-left marginTB30">
- <div class="panel-heading-c4 padding1020">
-
- <h2 class="marginTB5">{% trans "Translations for" %}
-   {% if model == 'project' %} <span class="fa fa-group neutral"></span>
-   {% elif model == 'flatpage' %} <span class="fa fa-th-large neutral"></span>
-   {% elif model == 'entry' %} <span class="fa fa-newspaper-o neutral"></span>
-   {% elif model == 'featured' %} <span class="fa fa-flag-o neutral"></span>
-   {% elif model == 'repo' %} <span class="fa fa-database neutral"></span>
-   {% elif model == 'oer' %} <span class="fa fa-recycle neutral"></span>
-   {% elif model == 'learningpath' %} <span class="fa fa-cubes neutral"></span>
-   {% elif model == 'pathnode' %} <span class="fa fa-cube neutral"></span>
+<div class="panel 
+{% if model == 'project' %} panel-c4 
+{% elif model == 'repo' %} panel-c3 
+{% elif model == 'oer' %} panel-c2 
+{% elif model == 'learningpath' or model == 'pathnode' %} panel-c1 
+{% endif %}
+text-left marginTB30">
+<div class="navbar {% if model == 'project' %} panel-heading-c4 
+{% elif model == 'repo' %} panel-heading-c3 
+{% elif model == 'oer' %} panel-heading-c2 
+{% elif model == 'learningpath' or model == 'pathnode' %} panel-heading-c1 
+{% endif %}padding1020">
+ <h2 class="pull-left marginTB5">
+   {% if model == 'project' %}<small class="c-black">{% trans "Translations for" %} <i class="fa fa-group font7em"></i></small>
+   {% elif model == 'flatpage' %}<small>{% trans "Translations for" %} <i class="fa fa-th-large font7em"></i></small>
+   {% elif model == 'entry' %}<small>{% trans "Translations for" %} <i class="fa fa-newspaper-o font7em"></i></small>
+   {% elif model == 'featured' %}<small>{% trans "Translations for" %} <i class="fa fa-flag-o font7em"></i></small>
+   {% elif model == 'repo' %}<small class="c-white">{% trans "Translations for" %} <i class="fa fa-database font7em"></i></small>
+   {% elif model == 'oer' %}<small class="c-white">{% trans "Translations for" %} <i class="fa fa-recycle font7em"></i></small>
+   {% elif model == 'learningpath' %}<small class="c-white">{% trans "Translations for" %} <i class="fa fa-cubes font7em"></i></small>
+   {% elif model == 'pathnode' %}<small class="c-white">{% trans "Translations for" %} <i class="fa fa-cube  font7em"></i></small>
    {% endif %}
- 	<a href="{{ object_url }}" title="back to the normal view of this content">{{ object_title }}</a>
- </h1>
- </div>
-
+   {{ object_title }}
+ </h2>
+ <p class="pull-right marginB0 font26">
+   <a href="{{ object_url }}" title="{% trans "back to the normal view of this content" %}"><i class="fa fa-list-alt font07em
+     {% if model == 'repo' or model == 'oer' or model == 'learningpath' or model == 'pathnode'%}c-white
+     {% else %}c-black {% endif %}" aria-hidden="true"></i></a>
+ </p>
+</div>
+<div style="clear:both">
 {% if original_language %}
 {% for field_forms in form_sets %}
-
 <div style="margin-top: 0.0em;">
 {% for form_language, field_form in field_forms %}
 <div style="margin-top: 0.5em;">
@@ -44,19 +57,19 @@
 </span>
 {% else %}
 {{ field_form.as_p }}
-<input type="submit" name="save" value="{% trans "save" %}">
+<input type="submit" name="save" class="btn btn-default" value="{% trans "save" %}">
 {% endif %}
 </fieldset>
 </form>
 </div>
 {% endfor %}
 </div>
-{% if not forloop.last %}<hr style="border-color: #FABE66;">{% endif %}
+{% if not forloop.last %}<hr style="border-color: black">{% endif %}
 {% endfor %}
 {% else %}
 <div style="color: red; margin-top: 1.0em;">{% trans "The original language of this content is not known." %}</div>
 {% endif %}
-
+</div>
 </div>
 {% endblock %}
 

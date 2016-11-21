@@ -302,7 +302,10 @@
                          <ul class="list-inline list-last">
                             <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
                             {% if cut_lps %}{% for lp in cut_lps %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+                            {% if shareable_lps %}{% for lp in shareable_lps %}
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -437,6 +440,18 @@
              {% endif %}
            </div>
          {% endif %}
+         {% if shared_lps %}
+           <div class="panel-white">
+             <div class="panel-heading-c1 padding510 demiBold">{% trans "shared LPs"|capfirst %}</div>
+             <ul class="list-unstyled my-list-unstyled padding510">
+             {% for shared_lp, deletable in shared_lps %}
+               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</small></a>
+               </li>
+             {% endfor %}
+             </ul>
+           </div>
+         {% endif %}
          {% if oers %}
            <div class="panel-white">
              <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
@@ -455,8 +470,8 @@
              <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_oer, deletable in shared_oers %}
-               <li><a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</small></a>
-                   {% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</small></a>
                </li>
              {% endfor %}
              </ul>
