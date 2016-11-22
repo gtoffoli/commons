@@ -1669,7 +1669,10 @@ class LearningPath(Resource, Publishable):
         return self.title
 
     def make_json(self):
-        return json.dumps({ 'cells': [node.make_json() for node in self.get_ordered_nodes()] + [edge.make_json() for edge in self.get_edges()]})
+        # return json.dumps({ 'cells': [node.make_json() for node in self.get_ordered_nodes()] + [edge.make_json() for edge in self.get_edges()]})
+        nodes = self.get_ordered_nodes()
+        edges = self.get_ordered_edges(nodes=nodes)
+        return json.dumps({ 'cells': [node.make_json() for node in nodes] + [edge.make_json() for edge in edges]})
 
     def get_absolute_url(self):
         return '/lp/%s/' % self.slug
@@ -1791,7 +1794,7 @@ class LearningPath(Resource, Publishable):
             assert len(roots) == 1
         elif len(roots) > 1:
             roots = list(roots)
-            roots.sort(cmp=lambda x,y: pathnode_before(x, y))
+            roots.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
         visited = []
         for root in roots:
             stack = [root]
@@ -1799,20 +1802,24 @@ class LearningPath(Resource, Publishable):
                 node = stack.pop()
                 if node not in visited:
                     visited.append(node)
-                    children = node.children.all()
-                    if path_type == LP_SEQUENCE:
-                        assert len(children) <= 1
-                    else:
-                        children = list(children)
-                        children.sort(cmp=lambda x,y: pathnode_before(x, y, parent=node))
+                    children = [edge.child for edge in node.ordered_out_edges()]
+                    children.reverse()
                     stack.extend([node for node in children if not node in visited])
         if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
             if len(islands) > 1:
-                islands.sort(cmp=lambda x,y: pathnode_before(x, y))
+                islands.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
             visited.extend(islands)
         assert len(visited) == len(nodes)
         return visited
+
+    def get_ordered_edges(self, nodes=None):
+        if nodes is None:
+            nodes = self.get_ordered_nodes()
+        edges = []
+        for node in nodes:
+            edges.extend(node.ordered_out_edges())
+        return edges            
 
     def is_pure_collection(self):
         nodes = self.get_nodes()
@@ -2059,12 +2066,14 @@ class LearningPath(Resource, Publishable):
         assert other_edge.parent.path == self
         assert other_edge.parent == parent
         edges = parent.ordered_out_edges()
-        i_edge = edges.index(edge)
+        edges.remove(edge) 
         i_other_edge = edges.index(other_edge)
-        if i_edge > i_other_edge:
-            pass
-        else:
-            pass
+        edges.insert(i_other_edge+1, edge)
+        order = 0
+        for edge in edges:
+            order += 10
+            edge.order = order
+            edge.save(disable_circular_check=True)
 
     def make_linear_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, adding only explicit ordering to edges """
@@ -2134,8 +2143,15 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
         verbose_name_plural = _('path edges')
 
     def make_json(self):
-        # return {'type': 'link', 'id': 'edge-%06d' % self.id, 'source': {'id': 'node-%06d' % self.parent.id}, 'target': {'id': 'node-%06d' % self.child.id}}
-        return {'type': 'link', 'id': 'edge-%d' % self.id, 'source': {'id': 'node-%d' % self.parent.id}, 'target': {'id': 'node-%d' % self.child.id}}
+        json = {
+            'type': 'link',
+            'id': 'edge-%d' % self.id,
+            'source': {'id': 'node-%d' % self.parent.id},
+            'target': {'id': 'node-%d' % self.child.id},
+        }
+        if False: # not settings.PRODUCTION:
+            json['labels'] = [{'position': .5, 'attrs': {'text': {'text': '%d - %d' % (self.order, self.id), 'font-size': 10, 'font-family': 'san-serif'}}}]
+        return json
 
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
@@ -2154,9 +2170,12 @@ class PathNode(node_factory('PathEdge')):
         verbose_name_plural = _('path nodes')
 
     def make_json(self):
-        # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label }}}
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
-        return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", " ") }}}
+        return {
+            'type': 'basic.Rect',
+            'id': 'node-%d' % self.id,
+            'attrs': {'text': {'text': self.label.replace("'", " ") }}
+        }
 
     def get_absolute_url(self):
         return '/pathnode/%s/' % self.id
@@ -2221,21 +2240,25 @@ class PathNode(node_factory('PathEdge')):
 
     def ordered_out_edges(self):
         children = list(self.children.all())
-        children.sort(cmp=lambda x,y: pathnode_before(x, y, parent=self))
+        children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         return [PathEdge.objects.get(parent=self, child=child) for child in children]
 
 PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes
 
-def pathnode_before(node_1, node_2, parent=None):
+def cmp_pathnode_order(node_1, node_2, parent=None):
     """ compare the sort order of 2 children of a node:
         return True if node_1 should come before node_2, otherwise return False """
     if parent:
         edge_1 = PathEdge.objects.get(parent=parent, child=node_1)
         edge_2 = PathEdge.objects.get(parent=parent, child=node_2)
-        return (edge_1.order and edge_2.order and edge_1.order < edge_2.order) or edge_1.created < edge_2.created
+        if edge_1.order and edge_2.order:
+            out = edge_1.order - edge_2.order
+        else:
+            out = edge_1.child.created - edge_2.child.created
     else:
-        return node_1.created < node_2.created
+        out = node_1.created - node_2.created
+    return out
 
 # Cannot set values on a ManyToManyField which specifies an intermediary model. 
 # Use commons.TaggedOER's Manager instead.

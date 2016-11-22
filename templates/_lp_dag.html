@@ -88,6 +88,8 @@ graph.getLinks().forEach(function(link, index) {
  	    '.connection': { stroke: 'blue' },
  	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
  	});
+    label = link.id.toString();
+    // link.label(0, { position: .5, attrs: {text: { text: label, 'font-size': 10, 'font-family': 'san-serif' }}});
 })
 
 graph.resetCells(graph.getCells());
@@ -200,9 +202,10 @@ function on_edge_dragged(cellView, x, y) {
 	edges.forEach(function(edge) {
 		link_view = edge.findView(paper);
 		link_bbox = link_view.getBBox();
-		if (edges.id!= this_cell_id && x>link_bbox.x && x<link_bbox.x+link_bbox.width && y>link_bbox.y && y<link_bbox.y+link_bbox.height)
-		    console.log('edge: ', link.id, link_bbox);
+		if (edge.id!= this_cell_id && x>link_bbox.x && x<link_bbox.x+link_bbox.width && y>link_bbox.y && y<link_bbox.y+link_bbox.height) {
+		    console.log('edge: ', edge.id, link_bbox);
 			document.location.href = '/pathedge/{0}/move_after/{1}/'.format(this_cell_id.split('-')[1], edge.id.split('-')[1]);
+		}
 	})
 }		
 
@@ -242,7 +245,6 @@ function on_cell_dragged(cellView, x, y) {
 	this_cell = cellView.model;
 	if (this_cell.get('parent'))
 		return;
-	this_cell_id = this_cell.id
 	if (this_cell.isLink())
 		on_edge_dragged(cellView, x, y);
 	else
