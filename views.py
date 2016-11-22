@@ -2831,7 +2831,7 @@ def lp_detail(request, lp_id, lp=None):
         if not lp_id in bookmarked_lps:
             set_clipboard(request, key='bookmarked_lps', value=bookmarked_lps+[lp_id])
     var_dict['add_bookmarked'] = add_bookmarked
-    var_dict['in_bookmarked_lps'] = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
+    var_dict['in_bookmarked_lps'] = in_bookmarked_lps = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
     var_dict['can_translate'] = lp.can_translate(request)
@@ -3421,6 +3421,17 @@ def pathedge_delete(request, edge_id):
         raise PermissionDenied
     assert edge.child.path == lp
     edge.delete()
+    track_action(request.user, 'Edit', lp, target=lp.project)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
+def pathedge_move_after(request, edge_id, other_edge_id):
+    edge = get_object_or_404(PathEdge, id=edge_id)
+    other_edge = get_object_or_404(PathEdge, id=other_edge_id)
+    lp = edge.parent.path
+    if not lp.can_access(request.user):
+        raise PermissionDenied
+    assert other_edge.parent == edge.parent
+    lp.move_edge_after(edge, other_edge)
     track_action(request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 

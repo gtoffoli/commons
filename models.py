@@ -2052,6 +2052,19 @@ class LearningPath(Resource, Publishable):
         self.editor = request.user
         self.save()
 
+    def move_edge_after(self, edge, other_edge):
+        assert not edge == other_edge
+        parent = edge.parent
+        assert other_edge.parent.path == self
+        assert other_edge.parent == parent
+        edges = parent.ordered_out_edges()
+        i_edge = edges.index(edge)
+        i_other_edge = edges.index(other_edge)
+        if i_edge > i_other_edge:
+            pass
+        else:
+            pass
+
     def make_linear_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, adding only explicit ordering to edges """
         assert self.path_type==LP_SEQUENCE
@@ -2105,6 +2118,23 @@ class SharedLearningPath(models.Model):
     def can_delete(self, request):
         user = request.user
         return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+
+class PathEdge(edge_factory('PathNode', concrete = False)):
+    order = models.IntegerField(default=0)
+    label = models.TextField(blank=True, verbose_name=_('label'))
+    content = models.TextField(blank=True, verbose_name=_('content'))
+    created = CreationDateTimeField(_('created'))
+    modified = ModificationDateTimeField(_('modified'))
+    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathedge_creator')
+    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathedge_editor')
+
+    class Meta:
+        verbose_name = _('path edge')
+        verbose_name_plural = _('path edges')
+
+    def make_json(self):
+        # return {'type': 'link', 'id': 'edge-%06d' % self.id, 'source': {'id': 'node-%06d' % self.parent.id}, 'target': {'id': 'node-%06d' % self.child.id}}
+        return {'type': 'link', 'id': 'edge-%d' % self.id, 'source': {'id': 'node-%d' % self.parent.id}, 'target': {'id': 'node-%d' % self.child.id}}
 
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
@@ -2188,25 +2218,13 @@ class PathNode(node_factory('PathEdge')):
     def page_in_range(self, page):
         return True
 
+    def ordered_out_edges(self):
+        children = list(self.children.all())
+        children.sort(cmp=lambda x,y: pathnode_before(x, y, parent=self))
+        return [PathEdge.objects.get(parent=self, child=child) for child in children]
+
 PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes
-
-class PathEdge(edge_factory('PathNode', concrete = False)):
-    order = models.IntegerField(default=0)
-    label = models.TextField(blank=True, verbose_name=_('label'))
-    content = models.TextField(blank=True, verbose_name=_('content'))
-    created = CreationDateTimeField(_('created'))
-    modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathedge_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathedge_editor')
-
-    class Meta:
-        verbose_name = _('path edge')
-        verbose_name_plural = _('path edges')
-
-    def make_json(self):
-        # return {'type': 'link', 'id': 'edge-%06d' % self.id, 'source': {'id': 'node-%06d' % self.parent.id}, 'target': {'id': 'node-%06d' % self.child.id}}
-        return {'type': 'link', 'id': 'edge-%d' % self.id, 'source': {'id': 'node-%d' % self.parent.id}, 'target': {'id': 'node-%d' % self.child.id}}
 
 def pathnode_before(node_1, node_2, parent=None):
     """ compare the sort order of 2 children of a node:
