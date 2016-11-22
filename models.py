@@ -1750,7 +1750,8 @@ class LearningPath(Resource, Publishable):
         user = request.user
         if not user.is_authenticated():
             return False
-        return user.is_superuser or self.creator==user and self.state in (DRAFT, UN_PUBLISHED,)
+        project = self.project
+        return user.is_superuser or self.creator==user or project.is_admin(user)
 
     def lp_delete(self, request):
         for node in self.get_nodes():

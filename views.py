@@ -852,6 +852,24 @@ def project_folder(request, project_slug):
     var_dict['form'] = DocumentUploadForm()
     return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
 
+def oers_in_clipboard(request, key):
+    oers = []
+    for oer_id in get_clipboard(request, key=key) or []:
+        try:
+            oers.append(OER.objects.get(pk=oer_id))
+        except:
+            pass
+    return oers
+
+def lps_in_clipboard(request, key):
+    lps = []
+    for lp_id in get_clipboard(request, key=key) or []:
+        try:
+            lps.append(LearningPath.objects.get(pk=lp_id))
+        except:
+            pass
+    return lps
+
 def project_detail(request, project_id, project=None):
     MAX_OERS = 5
     MAX_EVALUATIONS = 5
@@ -915,13 +933,21 @@ def project_detail(request, project_id, project=None):
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
+            """
             var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
             bookmarked_oers = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
+            """
+            var_dict['cut_oers'] = oers_in_clipboard(request, 'cut_oers')
+            bookmarked_oers = oers_in_clipboard(request, 'bookmarked_oers')
             var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project and not SharedOer.objects.filter(project=project, oer=oer).count()]
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         if can_add_lp:
+            """
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
             bookmarked_lps = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='bookmarked_lps') or []]
+            """
+            var_dict['cut_lps'] = lps_in_clipboard(request, 'cut_lps')
+            bookmarked_lps = lps_in_clipboard(request, 'bookmarked_lps')
             var_dict['shareable_lps'] = [lp for lp in bookmarked_lps if not lp.project==project and not SharedLearningPath.objects.filter(project=project, lp=lp).count()]
         # var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_edit'] = project.can_edit(request)
@@ -2839,6 +2865,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
     var_dict['can_delete'] = can_delete = lp.can_delete(request)
+    var_dict['can_remove'] = can_delete and lp.state == DRAFT
     if can_delete and request.GET.get('cut', ''):
         set_clipboard(request, key='cut_lps', value=(get_clipboard(request, key='cut_lps') or []) + [lp_id])
         cut_lps = get_clipboard(request, key='cut_lps') or []

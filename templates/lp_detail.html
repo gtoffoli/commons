@@ -12,7 +12,7 @@
 <article class="panel-white text-left marginTB30">
     {% if can_less_action %}
     <div class="row panel-c1 panel-heading-c1 marginLR0 padding1020">
-      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_delete %}<form class="view_inline" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2></h2>
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_remove %}<form class="view_inline" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2></h2>
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/learningpath/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
