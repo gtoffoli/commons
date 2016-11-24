@@ -83,7 +83,7 @@ graph.getElements().forEach(function(node, index, array) {
 	fill_color = node_color;
 	text_color = 'white';
 {% if 'play' in request.path %}
-	if (index == 0{{ node_index }}) {
+	if (index == 0{{ i_node }}) {
 		fill_color = 'white';
 		text_color = node_color;
 	}
