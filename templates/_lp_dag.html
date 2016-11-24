@@ -4,7 +4,9 @@
 .element.basic.Rect, .element.basic.Circle {
     cursor: pointer;
 }
+.marker-arrowhead { display: none }
 {% if not can_edit %}
+.connection-wrap, .marker-vertices { display: none }
 .link-tools .tool-remove { display: none }
 .link-tools .tool-options { display: none }
 {% endif %}
@@ -20,6 +22,7 @@
 <script src="{% static "jointjs/joint.js" %}"></script>
 <script src="{% static "jointjs/joint.layout.DirectedGraph.js" %}"></script>
 <script src="{% static "jointjs/autolayout.js"" %}"></script>
+<script src="{% static "jointjs/svg-pan-zoom.js"" %}"></script>
 
 <script type="text/javascript">
 
@@ -31,11 +34,13 @@ var node_height = 40;
 var half_height = node_height/2;
 var node_padding = 10; // 20; // 50;
 var icon_size = 16;
-// var drop_margin = (node_height-icon_size)/2;
+var node_color = '#CB4F98';
+var edge_color = 'blue';
 
+var dagElement = $('#dag');
 var graph = new joint.dia.Graph;
 var paper = new joint.dia.Paper({
-    el: $('#myholder'),
+    el: dagElement,
     width: 800,
     height: 400,
     model: graph,
@@ -49,10 +54,11 @@ var paper = new joint.dia.Paper({
 	async: false,
     });
 {% if can_edit %}
-var drop = new joint.shapes.basic.Rect({
+var drop = new joint.shapes.basic.Circle({
     size: { width: icon_size, height: icon_size },
-    attrs: { rect: { fill: 'red' }, text: { text: 'x', fill: 'white', 'font-size': 12, } }
+    attrs: { circle: { stroke: 'red', fill: 'white' }, text: { text: '\u2a2f', fill: 'red', 'font-size': 12, 'font-weight': 'bold', 'text-anchor': 'middle'} }
 });
+
 var add = new joint.shapes.basic.Rect({
     size: { width: icon_size, height: icon_size },
     attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-size': 12, } }
@@ -74,10 +80,18 @@ function label_width(label) {
 	return width;
 }
 graph.getElements().forEach(function(node, index, array) {
-	node.attr({ rect: { fill: '#CB4F98', rx: 3, ry: 3 }});
+	fill_color = node_color;
+	text_color = 'white';
+{% if 'play' in request.path %}
+	if (index == {{ node_index }}0) {
+		fill_color = 'white';
+		text_color = node_color;
+	}
+{% endif %}
+	node.attr({ rect: { fill: fill_color, stroke: node_color, rx: 3, ry: 3 }});
 	node.set('index', index)
     label = (1+index).toString() + '.\n' + node.attr('text').text;
-    node.attr({ text: { text: label, fill: 'white', 'font-size': 12 }});
+    node.attr({ text: { text: label, fill: text_color, 'font-size': 12 }});
     console.log(index, label);
     width = label_width(label) + node_padding * 2;
     node.resize(width, node_height);
@@ -85,11 +99,10 @@ graph.getElements().forEach(function(node, index, array) {
 graph.getLinks().forEach(function(link, index) {
 	link.set('connector', { name: 'smooth' });
 	link.attr({
- 	    '.connection': { stroke: 'blue' },
+ 	    '.connection': { stroke: edge_color },
  	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
  	});
     label = link.id.toString();
-    // link.label(0, { position: .5, attrs: {text: { text: label, 'font-size': 10, 'font-family': 'san-serif' }}});
 })
 
 graph.resetCells(graph.getCells());
@@ -196,17 +209,18 @@ function on_cell_clicked(cellView, x, y) {
 function on_edge_dragged(cellView, x, y) {
 	this_cell = cellView.model;
 	this_cell_id = this_cell.id;
-	console.log(this_cell_id, x, y);
+	source_id = this_cell.get('source').id;
 	edges = graph.getLinks()
-	console.log(edges.length)
 	edges.forEach(function(edge) {
 		link_view = edge.findView(paper);
 		link_bbox = link_view.getBBox();
 		if (edge.id!= this_cell_id && x>link_bbox.x && x<link_bbox.x+link_bbox.width && y>link_bbox.y && y<link_bbox.y+link_bbox.height) {
-		    console.log('edge: ', edge.id, link_bbox);
-			document.location.href = '/pathedge/{0}/move_after/{1}/'.format(this_cell_id.split('-')[1], edge.id.split('-')[1]);
+			if (edge.get('source').id == source_id)
+				document.location.href = '/pathedge/{0}/move_after/{1}/'.format(this_cell_id.split('-')[1], edge.id.split('-')[1]);
 		}
 	})
+    // this_cell.set('position', this_cell.previous('position'));
+	// document.location.reload();
 }		
 
 function on_node_dragged(cellView, x, y) {
@@ -249,35 +263,6 @@ function on_cell_dragged(cellView, x, y) {
 		on_edge_dragged(cellView, x, y);
 	else
 		on_node_dragged(cellView, x, y);
-/*
-// Find the first element below that is not a link nor the dragged element itself.
-    var elementBelow = graph.get('cells').find(function(cell) {
-        if (cell instanceof joint.dia.Link) return false; // Not interested in links.
-        if (cell.id === cellView.model.id) return false; // The same element as the dropped one.
-        if (cell.getBBox().containsPoint(g.point(x, y))) {
-            return true;
-        }
-        this_cell.set('position', this_cell.previous('position'));
-        return false;
-    });
-    
-    // If the two elements are connected already, don't
-    // connect them again (this is application specific though).
-    if (elementBelow && !_.contains(graph.getNeighbors(elementBelow), cellView.model)) {
-
-    	target_id = cellView.model.id;
-    	source_id = elementBelow.id;
-        graph.addCell(new joint.dia.Link({
-            source: { id: source_id }, target: { id: target_id },
-            attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
-        }));
-        // Move the element a bit to the side.
-        cellView.model.translate(+200, 0);
-        paper.fitToContent();
-        // make_layout();
-		document.location.href = '/pathnode/{0}/link_after/{1}/'.format(target_id.split('-')[1], source_id.split('-')[1]);
-    }
-*/
 }
 
 /*
@@ -300,8 +285,8 @@ function add_tools(graph) {
 	    drop_cell.set('action', 'delete')
 	    node.embed(drop_cell);
 	    graph.addCell(drop_cell);
-	    // drop_cell.position(width-icon_size, 0, { parentRelative: true});
-	    drop_cell.position(width-icon_size/2, -icon_size/2, { parentRelative: true});
+	    // drop_cell.position(width-icon_size/2, -icon_size/2, { parentRelative: true});
+	    drop_cell.position(width-icon_size*0.2, -icon_size*0.8, { parentRelative: true});
 		/*
 	    add_before = add.clone();
 	    add_before.set('action', 'add_before')
@@ -320,4 +305,41 @@ function add_tools(graph) {
 add_tools(graph);
 {% endif %}
 paper.fitToContent();
+// $('body').bind("mousewheel", function() { return false; });
+
+{% if 'play' in request.path %}
+// see http://stackoverflow.com/questions/28431384/how-to-make-a-paper-draggable
+svgElement = dagElement.children()[0];
+gElement = svgElement.childNodes[0]
+
+// panAndZoom = svgPanZoom(dagElement.childNodes[0], 
+panAndZoom = svgPanZoom(svgElement, 
+	    {
+	        // viewportSelector: dagElement.childNodes[0].childNodes[0],
+	        viewportSelector: gElement,
+	        fit: false,
+	        zoomScaleSensitivity: 0.1, //0.4,
+	        panEnabled: false,
+	        mouseWheelZoomEnabled: false, // true,
+	        fit: false, // true,
+	        contain: true, // false,
+	        minZoom: 0.2,
+	        maxZoom: 1,
+	        onZoom: null, // on_zoom,
+	    });
+
+function on_zoom(relative_zoom) {
+	if (relative_zoom < 1)
+		panAndZoom.fit();
+}
+
+paper.on('blank:pointerdown', function (evt, x, y) {
+	panAndZoom.enablePan();
+	dagElement.css('cursor', 'move');
+});
+paper.on('cell:pointerup blank:pointerup', function(cellView, event) {
+    panAndZoom.disablePan();
+    dagElement.css('cursor', 'default');
+});
+{% endif %}
 </script>

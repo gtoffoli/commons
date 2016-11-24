@@ -118,7 +118,7 @@
           <dl class="font14 marginB10">
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
 {% if lp.path_type == 3 %}
-			<div id="myholder"></div>
+			<div id="dag"></div>
 {% else %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="paddingL16">{% endif %}
               {% for node in lp.get_ordered_nodes %}
