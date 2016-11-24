@@ -159,9 +159,9 @@
         {% include "_change_state.html" with data=lp type_object="lp" %}
       </div>
     </div>
-    
+    {% if project %}
 		{% include "_object_comments.html" with data_class="c1" %}
-
+    {% endif %}
   </section>
 </article>
 {% endblock %}

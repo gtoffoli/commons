@@ -384,6 +384,9 @@ margin-right:0;
 .paddingR0 {
 	padding-right:0;
 }
+.paddingR10 {
+	padding-right:10px !important;
+}
 .paddingLR5 {
 	padding-left:5px;
 	padding-right:5px;
@@ -801,11 +804,17 @@ div.box_comments dd form {
 	padding-right:10px;
 	border-right:1px solid #FABE66;
 }
+.list-green li {
+	padding-right:10px;
+	border-right:1px solid #67AE73;
+}
 .list-orange li:last-child,
+.list-green li:last-child,
 .list-inline.list-last li:last-child {
 	padding-right: 0;
 	border-right-width: 0;
 }
+
 .my-list-unstyled {
 	margin-top:5px;
 }
@@ -1038,16 +1047,16 @@ ul.list-inline > li.list-back-c3 {
 .panel-heading-c2,
 .panel-heading-c3,
 .panel-heading-c4 {
-  border-top-left-radius: 3px;
-  border-top-right-radius: 3px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
 }
 .panel-footer-c0,
 .panel-footer-c1,
 .panel-footer-c2,
 .panel-footer-c3,
 .panel-footer-c4 {
-  border-bottom-left-radius: 3px;
-  border-bottom-right-radius: 3px;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
 }
 
 .panel-heading-c0 a,

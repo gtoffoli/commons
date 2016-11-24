@@ -976,12 +976,17 @@ def project_detail(request, project_id, project=None):
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
+        var_dict['block_mentoring']=''
         if type_name=='com':
+            print "============= COMMUNITY =================="
             var_dict['roll'] = roll = project.get_roll_of_mentors()
-            var_dict['mentoring_projects'] = is_admin and project.get_mentoring_projects()
-            var_dict['mentoring'] = project.get_mentoring(user=user)
-            var_dict['can_add_roll'] = is_open and is_admin and not roll
-            var_dict['can_request_mentor'] = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring(user=user)
+            var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[1])
+            var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
+            var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[2,3])
+            var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user)
+            var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and not roll
+            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring_mentee(user=user,states=[0,1,2])
+            var_dict['mentoring_block']= roll or can_add_roll or can_request_mentor or mentoring
         elif type_name=='ment':
             var_dict['mentor'] = mentor = project.get_mentor()
             var_dict['mentee'] = mentee = project.get_mentee()
@@ -2849,7 +2854,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     if user.is_authenticated():
         profile = user.get_profile()
-        add_bookmarked = is_published and profile and profile.get_completeness()
+        add_bookmarked = lp.project and is_published and profile and profile.get_completeness()
     else:
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
@@ -3216,7 +3221,7 @@ def lp_delete(request, lp_id):
     if project:
         return HttpResponseRedirect('/project/%s/' % project.slug)
     else:
-        return my_profile(request)
+        return my_home(request)
 
 def lp_add_node(request, lp_slug):
     path = get_object_or_404(LearningPath, slug=lp_slug)

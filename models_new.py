@@ -1064,7 +1064,6 @@ class Project(Resource):
             if child.get_memberships(user=user):
                 if child.is_admin(user=user):
                     children.append(child)
-        return children
 
     def get_mentoring_mentee(self, user=None, states=None):
         mentoring_children = self.get_children(proj_type_name='ment', states=states)
@@ -1073,8 +1072,7 @@ class Project(Resource):
             if child.get_memberships(user=user):
                 if not child.is_admin(user=user):
                     children.append(child)
-        return children
-
+     
     def get_candidate_mentors(self):
         roll = self.get_parent().get_roll_of_mentors()
         return roll and roll.members(user_only=True)

@@ -250,6 +250,17 @@
            </ul>
         </div>
         {% endif %}
+{% comment %} MMR
+                {% elif is_member %}
+                  <i>{% trans "you are not yet"|capfirst %} {% trans "member of the project chatroom" %}</i>
+                {% else %}
+                  <i>{% trans "you are not"|capfirst %} {% trans "member of the project" %}</i>
+                {% endif %}
+              {% else %}
+                <i>{% if project.need_create_room and proj_type.name == 'oer' or proj_type.name == 'lp' %}{% trans "no chatroom has has been created for this project"|capfirst %}{% endif %}</i>
+              {% endif %}
+            {% endif %}
+{% endcomment %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
         {% if is_member and not project.get_project_type == 'sup' %}
@@ -305,8 +316,8 @@
           </div>
         {% endif %}
         {% endif %}
-
-{% comment %} MENTORING 
+        
+{% comment %} MENTORING {% endcomment %}
         {% if proj_type.name == 'com' %}
             <div class="panel">
               <h4 class="text-center">{% trans "mentoring"|capfirst %}</h4>
@@ -342,10 +353,9 @@
               {% endif %}
             </div>
         {% endif %}
-{% endcomment %}
      {% endif %}
-
    </div>
+
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if request.user.is_authenticated %}
        {% if can_apply %}
@@ -436,7 +446,7 @@
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_lp, deletable in shared_lps %}
                <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</a>
+                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</small></a>
                </li>
              {% endfor %}
              </ul>
@@ -461,7 +471,7 @@
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_oer, deletable in shared_oers %}
                <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</a>
+                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</small></a>
                </li>
              {% endfor %}
              </ul>
@@ -484,88 +494,6 @@
      {% endif %}
    </div>
  </div>
- 
-{% comment %} MENTORING {% endcomment %}
-{% if mentoring_block %}
-   <div class="paddingLR15">
-     <ul class="list-inline marginLB020">
-       <li class="list-back-c0 paddingR10">
-         <div class="c-white marginB5 demiBold">
-           {% with roll=project.get_roll_of_mentors %}
-           {% if roll %}
-             <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a>
-           {% elif can_add_roll %}
-             <a href="/project/{{ project.slug }}/project_new/roll/" class="btn btn-default" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %} {% trans "roll of mentors"|capfirst %}</a>
-           {% endif %}
-           {% endwith %}
-         </div>
-       </li>
-     </ul>
-
-   {% if mentoring_mentor %}
-     <div class="panel-white">
-       <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentor"|capfirst %}</div>
-         <ul class="list-inline padding10510 list-green">
-         {% for mentoring_project in mentoring_mentor %}
-           <li><div class="c-white marginB5 demiBold">
-             <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
-               {% if mentoring_project.state != 2 %}
-                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> {# [{{ mentoring_project.get_state }}] #}</small>
-               {% endif %}
-               {{ mentoring_project.get_name }}</a>
-           </div></li>
-         {% endfor %}
-         </ul>
-     </div>
-   {% endif %}
-
-   {% if mentoring_mentee %}
-     <div class="panel-white">
-         <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentee"|capfirst %}</div>
-         <ul class="list-inline padding10510 list-green">
-         {% for mentoring_project in mentoring_mentee %}
-           <li><div class="c-white marginB5 demiBold">
-             <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
-               {% if mentoring_project.state != 2 %}
-                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> {# [{{ mentoring_project.get_state }}] #}</small>
-               {% endif %}
-               {{ mentoring_project.get_name }}</a>
-           </div></li>
-         {% endfor %}
-         </ul>
-     </div>
-   {% endif %}
-
-   {% if can_request_mentor %}
-     <ul class="list-inline marginLB020">
-       <li class="list-back-c0 paddingR10">
-         <div class="c-white marginB5 demiBold">
-           <form action="/project/{{ project.slug }}/project_new/ment/" method="post">{% csrf_token %}
-             <input type="submit" class="btn btn-default" value="{% trans "request a mentor"|capfirst %}">
-           </form>
-         </div>
-       </li>
-     </ul>
-   {% endif %}
-   
-   {% if is_admin and mentoring_projects %}
-     <div class="panel-white">
-       <div class="panel-heading-c4 padding10510 demiBold">{% trans "mentoring requests"|capfirst %}</div>
-       <ul class="list-inline padding10510 list-green">
-       {% for mentoring_project in mentoring_projects %}
-         <li><div class="c-white marginB5 demiBold">
-           <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
-             {% if mentoring_project.state != 2 %}
-               <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> {# [{{ mentoring_project.get_state }}] #}</small>
-             {% endif %}
-           {{ mentoring_project.get_name }}</a>
-         </div></li>
-       {% endfor %}
-        </ul>
-     </div>
-   {% endif %}
-   </div>
-{% endif %}
 </div>
 {% endblock %}
 
