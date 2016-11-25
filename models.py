@@ -208,6 +208,12 @@ class Resource(models.Model):
         _('comment count'), default=0)
     """
 
+    def enable_comments(self):
+        self.comment_enabled = True
+
+    def disable_comments(self):
+        self.comment_enabled = False
+
     @property
     # def discussions(self):
     def comments(self):
@@ -2274,9 +2280,11 @@ def cmp_pathnode_order(node_1, node_2, parent=None):
         if edge_1.order and edge_2.order:
             out = edge_1.order - edge_2.order
         else:
-            out = edge_1.child.created - edge_2.child.created
+            # out = edge_1.child.created - edge_2.child.created
+            out = int((edge_1.child.created - edge_2.child.created).total_seconds())
     else:
-        out = node_1.created - node_2.created
+        # out = node_1.created - node_2.created
+        out = int((node_1.created - node_2.created).total_seconds())
     return out
 
 # Cannot set values on a ManyToManyField which specifies an intermediary model. 
