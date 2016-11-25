@@ -1572,6 +1572,7 @@ def repos_by_user(request, username):
 def repo_detail(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
+    user = request.user
     var_dict = { 'repo': repo, }
     if repo.small_image:
         image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
@@ -1600,9 +1601,8 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['can_reject'] = repo.can_reject(request)
     var_dict['can_publish'] = repo.can_publish(request)
     var_dict['can_un_publish'] = repo.can_un_publish(request)
+    var_dict['can_toggle_comments'] = user.is_authenticated() and (user.is_superuser or repo.creator==user)
     var_dict['view_comments'] = is_published or is_un_published
-
-    user = request.user
     if user.is_authenticated():
         if not user == repo.creator:
             # actstream.action.send(user, verb='View', action_object=repo)
@@ -1780,6 +1780,14 @@ def repo_edit(request, repo_id):
 def repo_edit_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_edit(request, repo.id)
+
+def repo_toggle_comments(request, repo_id):
+    repo = Repo.objects.get(pk=repo_id)
+    if repo.comment_enabled:
+      repo.disable_comments()
+    else:
+      repo.enable_comments()
+    return HttpResponseRedirect('/repo/%s/' % repo.slug)
 
 def repo_submit(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
@@ -2318,6 +2326,7 @@ def oer_detail(request, oer_id, oer=None):
         return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
     else:
     """
+    var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
     if user.is_authenticated():
         if oer.state == PUBLISHED and not user == oer.creator:
@@ -2489,8 +2498,18 @@ def oer_delete(request, oer_id):
     if project:
         return HttpResponseRedirect('/project/%s/' % project.slug)
     else:
-        return my_profile(request)
-        
+        return my_home(request)
+
+def oer_toggle_comments(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
+    if oer.comment_enabled:
+      oer.disable_comments()
+    else:
+      oer.enable_comments()
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
+
 def oer_evaluation_detail(request, evaluation=None):
     var_dict = { 'evaluation': evaluation, }
     var_dict['oer'] = evaluation.oer
@@ -2891,6 +2910,7 @@ def lp_detail(request, lp_id, lp=None):
     if lp.path_type >= LP_SEQUENCE:
         var_dict['json'] = lp.get_json()
     """
+    var_dict['can_toggle_comments'] = lp.project and (user.is_superuser or lp.creator==user or lp.project.is_admin(user))
     var_dict['view_comments'] = is_published or is_un_published
     if user.is_authenticated():
         if lp.state == PUBLISHED and not user == lp.creator:
@@ -3179,6 +3199,16 @@ def lp_edit_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_edit(request, lp_id=lp.id)
 
+def lp_toggle_comments(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
+    if lp.comment_enabled:
+      lp.disable_comments()
+    else:
+      lp.enable_comments()
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+    
 def lp_submit(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     if not lp.can_access(request.user):

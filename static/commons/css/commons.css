@@ -647,6 +647,15 @@ color:#a7a7a7;
 .border0 {
 	border:none !important;
 }
+.borderColor-c1 {
+	border-color:#CB4F98;
+}
+.borderColor-c2 {
+	border-color:#008BD2;
+}
+.borderColor-c3 {
+	border-color:#A65C45;
+}
 .borderTBdotted {
 	border-top: 1px dotted #555;
 	border-bottom: 1px dotted  #555;
@@ -1011,6 +1020,21 @@ ul.list-inline > li.list-back-c3 {
 	text-decoration: none !important;
 }
 
+.like-button-neutral {
+  color: #333;
+  background-color: white;
+  border:1px solid #ccc;
+  border-left-width:0;
+  border-top-right-radius:4px;
+  padding:6px 12px;
+  font-weight: normal;
+}
+.like-button-neutral:hover,
+.like-button-neutral:focus {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #8c8c8c;
+}
 .panel-heading-c0,
 .panel-footer-c0 {
   color: #fff;

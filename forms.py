@@ -257,7 +257,7 @@ class RepoForm(forms.ModelForm):
     class Meta:
         model = Repo
         # fields = ('name', 'slug', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
-        fields = ('comment_enabled', 'name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
+        fields = ('name', 'repo_type', 'url', 'description', 'features', 'languages',  'subjects', 'info', 'eval', 'state', 'creator', 'editor',)
         
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
@@ -328,7 +328,7 @@ class OerForm(forms.ModelForm):
     class Meta:
         model = OER
         # exclude = ('slug', 'documents', 'metadata')
-        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language',)
+        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled')
         # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -480,7 +480,7 @@ class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
         # exclude = ('slug', 'group',)
-        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language',)
+        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))

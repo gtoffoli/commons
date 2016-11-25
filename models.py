@@ -210,9 +210,11 @@ class Resource(models.Model):
 
     def enable_comments(self):
         self.comment_enabled = True
+        self.save()
 
     def disable_comments(self):
         self.comment_enabled = False
+        self.save()
 
     @property
     # def discussions(self):

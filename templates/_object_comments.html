@@ -2,12 +2,16 @@
 {% load comments zinnia %}
 
 {% block entry-comments %}
-
 {% if view_comments %}
 <div class="box_comments">
 <dl>
   {% get_comment_count for object as comment_count %}
-  <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }}">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</h3></dt>
+  {% if can_toggle_comments %}
+     <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }} borderColor-{{ data_class }}" style="border-top-right-radius:0">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</span><a href="/{{type_obj}}/{{ data_obj.id }}/toggle_comments/" class="like-button-neutral" title="">{% if data_obj.comment_enabled %}{% trans "disable" %}{% else %}{% trans "enable" %}{% endif %}</a></dt>
+  {% else %} 
+  <dt class="bb-{{ data_class }}"><span class="panel-heading-{{ data_class }}">{% if comment_count %}{{ comment_count }} {% endif %}{% trans "Comments" %}</span></dt>
+  {% endif %}
+
   {% if comment_count %}
     {% with comment_list=object.comments %}
     {% block comments-loop %}
