@@ -1051,14 +1051,17 @@ def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
-# def project_edit(request, project_id=None, parent_id=None):
-# def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
     project_id: edit existent project
     parent_id: create sub-project
     """
+    data_dict = {}
+    current_language = get_current_language()
+    current_language_name = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    data_dict['current_language_name'] = current_language_name
     action = '/project/edit/'
+    data_dict['action'] = action
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
@@ -1075,18 +1078,20 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             if not project.name:
                 project.name = project.group.name
             form = ProjectForm(instance=project)
-            # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
+            """
             data_dict = {'form': form, 'action': action, 'project': project, 'object': project,}
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+            """
+            data_dict['form'] = form
+            data_dict['project'] = project
+            data_dict['object'] = project
             data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
-        # if parent.can_edit(user) or (proj_type and proj_type.name=='ment'):
         if parent.can_edit(request) or (proj_type and proj_type.name=='ment'):
-            # form = ProjectForm(initial={'creator': user.id, 'editor': user.id})
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
             initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
             if proj_type.name == 'roll':
@@ -1094,10 +1099,15 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             elif proj_type.name == 'ment':
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             form = ProjectForm(initial=initial)
-            # return render_to_response('project_edit.html', {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, }, context_instance=RequestContext(request))
+            """
             data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, 'object': None,}
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+            """
+            data_dict['form'] = form
+            data_dict['parent'] = parent
+            data_dict['proj_type'] = proj_type
+            data_dict['object'] = None
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
@@ -1106,15 +1116,20 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         parent_id = request.POST.get('parent', '')
         if project_id:
             project = get_object_or_404(Project, id=project_id)
-            # form = ProjectForm(request.POST, instance=project)
+            data_dict['project'] = project
+            data_dict['object'] = project
             form = ProjectForm(request.POST, request.FILES, instance=project)
+            data_dict['form'] = form
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
-            # form = ProjectForm(request.POST)
+            data_dict['parent'] = parent
             form = ProjectForm(request.POST, request.FILES)
+            data_dict['form'] = form
             name = request.POST.get('name', '')
+        """
         else:
             raise
+        """
         if request.POST.get('cancel', ''):
             if project_id:
                 return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1125,6 +1140,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         else: # Save or Save & continue
             if form.is_valid():
                 project = form.save(commit=False)
+                data_dict['project'] = project
+                data_dict['object'] = project
                 if parent:
                     group_name = slugify(name[:50])
                     group = Group(name=group_name)
@@ -1162,11 +1179,13 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
                     form = ProjectForm(request.POST, instance=project) # togliere ?
-                    return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
+                    # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
+                    data_dict['form'] = form
+                    return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
             else:
                 print form.errors
-                # return render_to_response('project_edit.html', {'form': form, 'project': project, 'parent_id': parent_id,}, context_instance=RequestContext(request))
-                return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project, 'parent': parent,}, context_instance=RequestContext(request))
+                # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project, 'parent': parent,}, context_instance=RequestContext(request))
+                return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
     else:
         raise
 

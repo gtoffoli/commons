@@ -173,7 +173,8 @@ class ProjectForm(forms.ModelForm):
         model = Project
         # exclude = ('slug', 'group', 'forum', 'folders',)
         # exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
-        fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+        # fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+        fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
