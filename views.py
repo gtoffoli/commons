@@ -907,6 +907,7 @@ def project_detail(request, project_id, project=None):
     var_dict['is_open'] = is_open = project.state==PROJECT_OPEN
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
+    var_dict['block_mentoring']=''
     if user.is_authenticated():
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
@@ -976,16 +977,17 @@ def project_detail(request, project_id, project=None):
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
-        var_dict['block_mentoring']=''
         if type_name=='com':
-            print "============= COMMUNITY =================="
-            var_dict['roll'] = roll = project.get_roll_of_mentors()
-            var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[1])
+            if is_admin or user.is_superuser:
+                var_dict['roll'] = roll = project.get_roll_of_mentors()
+            else:
+                var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
+            var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
             var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
-            var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[2,3])
+            var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[PROJECT_OPEN,PROJECT_CLOSED,])
             var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user)
             var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and not roll
-            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and not project.get_mentoring_mentee(user=user,states=[0,1,2])
+            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,])
             var_dict['mentoring_block']= roll or can_add_roll or can_request_mentor or mentoring
         elif type_name=='ment':
             var_dict['mentor'] = mentor = project.get_mentor()
@@ -1016,6 +1018,8 @@ def project_detail(request, project_id, project=None):
         elif type_name=='sup':
             var_dict['support'] = project
     else:
+        if type_name=='com':
+            var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
         var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
     var_dict['repos'] = []
     if project.is_admin(user) or user.is_superuser:
@@ -1071,9 +1075,11 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     elif parent:
         if not parent.can_access(user):
             raise PermissionDenied
+    data_dict['proj_type_list']=["ment", "roll",]
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
+    if proj_type:
+       data_dict['proj_type_name'] = proj_type.name
     if project_id:
-        # if project.can_edit(user):
         if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
@@ -1087,6 +1093,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             data_dict['project'] = project
             data_dict['object'] = project
             data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
+            data_dict['proj_type_name'] = project.get_project_type()
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1094,10 +1101,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         if parent.can_edit(request) or (proj_type and proj_type.name=='ment'):
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
             initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
+            """
             if proj_type.name == 'roll':
                 initial['name'] = string_concat(capfirst(_('roll of mentors')), ' ', _('for'), ' ', parent.name)
             elif proj_type.name == 'ment':
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
+            """
             form = ProjectForm(initial=initial)
             """
             data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, 'object': None,}
@@ -1106,12 +1115,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             """
             data_dict['form'] = form
             data_dict['parent'] = parent
-            data_dict['proj_type'] = proj_type
             data_dict['object'] = None
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
+        print "================ SESTO PASSO ============"
         project_id = request.POST.get('id', '')
         parent_id = request.POST.get('parent', '')
         if project_id:
@@ -1120,11 +1129,16 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             data_dict['object'] = project
             form = ProjectForm(request.POST, request.FILES, instance=project)
             data_dict['form'] = form
+            data_dict['proj_type_name'] = project.get_type_name()
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
             data_dict['parent'] = parent
             form = ProjectForm(request.POST, request.FILES)
             data_dict['form'] = form
+            proj_type_id = request.POST.get('proj_type','')
+            proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
+            if proj_type:
+                data_dict['proj_type_name'] = proj_type.name
             name = request.POST.get('name', '')
         """
         else:
@@ -1142,6 +1156,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 project = form.save(commit=False)
                 data_dict['project'] = project
                 data_dict['object'] = project
+                data_dict['proj_type_name'] = project.get_type_name()
                 if parent:
                     group_name = slugify(name[:50])
                     group = Group(name=group_name)
@@ -1181,6 +1196,11 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     form = ProjectForm(request.POST, instance=project) # togliere ?
                     # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
                     data_dict['form'] = form
+                    data_dict['proj_type_name'] = project.get_type_name()
+                    if project:
+                        data_dict['proj_type_name'] = project.get_type_name()
+                    else:
+                        data_dict['proj_type_name'] = proj_type.name
                     return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
             else:
                 print form.errors

@@ -4,7 +4,7 @@
 {% load account_tags %}
 {% load commons_tags %}
 
-{% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% elif proj_type.name == 'roll' %}{% trans "roll of mentors"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
@@ -51,8 +51,8 @@
 {% block body %}
 {% comment %}{% for message in messages %}<div class="alert alert-{{ message.tags }}">{{ message }}</div>{% endfor %}{% endcomment %}
 {% include "_resource_lang_msg.html" %}
-<div class="marginT30 marginB20" style="background:#EBEDED; border-bottom:6px solid #FABE66; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;">
- <div class="bc-c4" style="overflow:hidden; position:relative; border-top-left-radius: 6px; border-top-right-radius: 6px; max-height: 180px"><img src="{% if project.big_image %}/media/{{ project.big_image }}{% else %}/media/images/projectBigImage.png{% endif %}" style="width:100%; height:auto; border-top-left-radius: 6px;  border-top-right-radius: 6px;">
+<div class="marginT30 marginB20" style="background:#EBEDED; border-bottom:6px solid {% if not proj_type.name == 'roll' %}#FABE66{% else %}#67AE73{% endif %}; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;">
+ <div class="bc-c{% if not proj_type.name == 'roll' %}4{% else %}0{% endif %}" style="overflow:hidden; position:relative; border-top-left-radius: 6px; border-top-right-radius: 6px; max-height: 180px"><img src="{% if project.big_image %}/media/{{ project.big_image }}{% else %}/media/images/projectBigImage.png{% endif %}" style="width:100%; height:auto; border-top-left-radius: 6px;  border-top-right-radius: 6px;">
     <div style="position:absolute; bottom:0;">
        <h1 class="font_small" style="margint-top:0; margin-bottom:5px; padding-left:15px; padding-right:5px; color: white; text-shadow: 0 1px 2px rgba(0,0,0,0.6);">{% if project.small_image %}<img src="/media/{{ project.small_image }}" class="img_small">{% endif %}{{ project.get_name }}</h1>
     </div> 
@@ -138,9 +138,9 @@
         {% if can_edit or can_open or can_close or is_admin %}
           <div>
             <ul class="list-inline marginLB020">
-              <li class="list-back-c4 marginB5">
+              <li class="list-back-c{% if not proj_type.name == 'roll' %}4{% else %}0{% endif %} marginB5">
                  <ul class="list-inline">
-                    <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %} {% endif %}</div>
+                    <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% elif proj_type.name == 'roll'%}<span class="c-white">{% trans "roll of mentors"|capfirst %}</span>{% else %}{% trans "project"|capfirst %}{% endif %}</div>
                        <ul class="list-inline list-last">
                        {% if can_edit and not language_mismatch %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
                        {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
@@ -305,44 +305,6 @@
           </div>
         {% endif %}
         {% endif %}
-
-{% comment %} MENTORING 
-        {% if proj_type.name == 'com' %}
-            <div class="panel">
-              <h4 class="text-center">{% trans "mentoring"|capfirst %}</h4>
-              <ul class="list-unstyled">
-                {% with roll=project.get_roll_of_mentors %}
-                  <li><a href="/project/{{ roll.slug }}/" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a></li>
-                {% endwith %}
-                {% if mentoring %}
-                  <li><a href="/project/{{ mentoring.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ mentoring.get_title_color }};">{{ mentoring.get_name }}</a></li>
-                {% endif %}
-                {% if can_request_mentor %}
-                  <li><form class="form-inline" style="margin: 0; padding: 0; display: inline-block;" action="/project/{{ project.slug }}/project_new/ment/" method="post">
-                  {% csrf_token %}
-                  <input type="submit" class="btn-link" style="cursor: hand; padding:0; margin:0;" value="- {% trans "request a mentor"|capfirst %} -">
-                  </form></li>
-                {% endif %}
-                {% if is_admin %}
-                  {% if can_add_roll %}
-                    <li>- <a href="/project/{{ project.slug }}/project_new/roll/" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %}
-                     {% trans "roll of mentors"|capfirst %}</a> -</li>
-                  {% endif %}
-                {% endif %}
-              </ul>
-              {% if is_admin %}
-                 {% if mentoring_projects %}
-                    <h5>{% trans "mentoring requests"|capfirst %}</h5>
-                    <ul class="list-unstyled" style="font-size: smaller;">
-                    {% for proj in mentoring_projects %}
-                       <li><a href="/project/{{ proj.slug }}/" title="{% trans "mentoring project" %}"  style="color: {{ proj.get_title_color }};">{{ proj.get_name }}</a></li>
-                    {% endfor %}
-                    </ul>
-                {% endif %}
-              {% endif %}
-            </div>
-        {% endif %}
-{% endcomment %}
      {% endif %}
 
    </div>
@@ -487,17 +449,17 @@
  
 {% comment %} MENTORING {% endcomment %}
 {% if mentoring_block %}
+
    <div class="paddingLR15">
      <ul class="list-inline marginLB020">
        <li class="list-back-c0 paddingR10">
          <div class="c-white marginB5 demiBold">
-           {% with roll=project.get_roll_of_mentors %}
            {% if roll %}
-             <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{{ roll.name }}</a>
+             <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{% if roll.state == 0 or roll.state == 1 %}<small style="color: {{ roll.get_link_color }};"><i class="fa fa-group" aria-hidden="true"></i></small> {% elif roll.state == 3 %}<i class="fa fa-lock neutral" aria-hidden="true"></i> {% endif %}{{ roll.name }}</a>
            {% elif can_add_roll %}
              <a href="/project/{{ project.slug }}/project_new/roll/" class="btn btn-default" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %} {% trans "roll of mentors"|capfirst %}</a>
            {% endif %}
-           {% endwith %}
+
          </div>
        </li>
      </ul>
@@ -509,8 +471,10 @@
          {% for mentoring_project in mentoring_mentor %}
            <li><div class="c-white marginB5 demiBold">
              <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
-               {% if mentoring_project.state != 2 %}
-                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> {# [{{ mentoring_project.get_state }}] #}</small>
+               {% if mentoring_project.state == 0 or mentoring_project.state == 1 %}
+                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> </small>
+               {% elif mentoring_project.state == 3 %}
+                 <small><i class="fa fa-lock neutral" aria-hidden="true"></i> </small>
                {% endif %}
                {{ mentoring_project.get_name }}</a>
            </div></li>
@@ -526,8 +490,10 @@
          {% for mentoring_project in mentoring_mentee %}
            <li><div class="c-white marginB5 demiBold">
              <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
-               {% if mentoring_project.state != 2 %}
-                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> {# [{{ mentoring_project.get_state }}] #}</small>
+               {% if mentoring_project.state == 0 or mentoring_project.state == 1 %}
+                 <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> </small>
+               {% elif mentoring_project.state == 3 %}
+                 <small><i class="fa fa-lock neutral" aria-hidden="true"></i> </small>
                {% endif %}
                {{ mentoring_project.get_name }}</a>
            </div></li>
@@ -564,6 +530,16 @@
         </ul>
      </div>
    {% endif %}
+   </div>
+{% elif roll %}
+ <div class="paddingLR15">
+     <ul class="list-inline marginLB020">
+       <li class="list-back-c0 paddingR10">
+         <div class="c-white marginB5 demiBold">
+             <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{% if roll.state == 0 or roll.state == 1 %}<small style="color: {{ roll.get_link_color }};"><i class="fa fa-group" aria-hidden="true"></i></small> {% elif roll.state == 3 %}<i class="fa fa-lock neutral" aria-hidden="true"></i> {% endif %}{{ roll.name }}</a>
+         </div>
+       </li>
+     </ul>
    </div>
 {% endif %}
 </div>
