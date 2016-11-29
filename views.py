@@ -2241,6 +2241,7 @@ def oer_view(request, oer_id, oer=None):
     user = request.user
     if not oer.can_access(user):
         raise PermissionDenied
+    language = request.LANGUAGE_CODE
     var_dict = { 'oer': oer, }
     var_dict['oer_url'] = oer.url
     var_dict['is_published'] = oer.state == PUBLISHED
