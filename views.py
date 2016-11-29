@@ -972,8 +972,11 @@ def project_detail(request, project_id, project=None):
         # var_dict['recent_actions'] = project.recent_actions()
         var_dict['recent_actions'] = filter_actions(project=project, max_days=7, max_actions=100)
         profile = user.get_profile()
-        # can_apply = not membership and not project_no_apply and (is_open or is_submitted)
         can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
+        # project is reserved ?
+        if can_apply and project.is_reserved_project():
+            can_apply = project.get_community().is_member(user)
+        # project type is Support, Roll of mentors, Mentoring ?
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply

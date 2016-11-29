@@ -71,6 +71,9 @@
      <span class="fa fa-group red"></span>
    {% endif %}
    {{ proj_type.description }}
+   {% if project.is_reserved_project %}
+   - {% trans "reserved project"|capfirst %}
+   {% endif %}
    {% if project.get_level > 1 %}
      {% if project.get_level == 2 %}
        {% with parent=project.get_parent %}
@@ -317,11 +320,11 @@
           {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
           {% endif %}
-       {% else %}
+       {% elif not project.is_reserved_project %}
           <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
            {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
        {% endif %}
-     {% else %}
+     {% elif not project.is_reserved_project %}
        <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
        {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
      {% endif %}
@@ -363,7 +366,7 @@
               </div>
             </div>
             {% endif %}{% endwith %}
-            {% if project.get_project_type == 'sup' %}
+            {% if project.get_project_type == 'sup' or project.is_reserved_project %}
               <div class="borderTdotted padding510">
                 <form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
                   <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>

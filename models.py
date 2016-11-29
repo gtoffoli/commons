@@ -741,6 +741,16 @@ class Project(Resource):
     def indexable_text(self):
         return filter_empty_words(self.description)
 
+    def get_community(self):
+        project = self
+        while project.get_level() > 1:
+            project = project.get_parent()
+        return project
+
+    def is_reserved_project(self):
+        level = self.get_level()
+        return (level > 1 and self.reserved) or (level > 2 and self.get_parent().is_reserved_project())
+
     def propose(self, request):
         if self.can_propose(request.user):
             self.state = PROJECT_SUBMITTED
