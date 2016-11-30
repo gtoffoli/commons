@@ -1016,15 +1016,19 @@ class Project(Resource):
                 return True
         return False
 
-    """
-    def get_oers(self, order_by='-created'):
-        return OER.objects.filter(project=self.id).order_by(order_by)
-    """
-    def get_oers(self, states=[3], order_by='-created'):
+    def get_oers(self, states=[PUBLISHED], order_by='-created'):
         qs = OER.objects.filter(project=self.id)
         if states:
             qs = qs.filter(state__in=states)
         return qs.order_by(order_by)
+
+    def get_oers_last_evaluated(self):
+        oers = OER.objects.filter(project=self.id, state=PUBLISHED, evaluated_oer__isnull=False).order_by('-evaluated_oer__modified')
+        unique = []
+        for oer in oers:
+            if not oer in unique:
+                unique.append(oer)
+        return unique
 
     def get_oer_evaluations(self, order_by='-modified'):
         return OerEvaluation.objects.filter(oer__project=self.id).order_by(order_by)
