@@ -1,0 +1,19 @@
+<ul class="nodes-unlisted {% if child.oer_id %} dag-node-oer {% else %} dag-node-no-oer {% endif %}">
+<li class="font{{ font }}">
+    {% if pathnode == current_node %} 
+      <div>{{ pathnode.label }}</div>
+    {% else %}
+      <a href="/lp/{{ lp.slug }}/play/?node={{ pathnode.get_index }}" title="path node">{{ pathnode.label }}</a>
+    {% endif %}
+</li>
+</ul>
+    {% if pathnode.has_children %}
+<div style="padding-left: 20px;">
+        {% for child in pathnode.get_ordered_children %}
+             {% with pathnode=child font=font|add:"-1" depth=depth|add:"1" %}
+                  {% include "_lp_subtree.html" %}
+             {% endwith %}
+        {% endfor %}
+</div>
+    {% endif %}
+

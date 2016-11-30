@@ -10,7 +10,7 @@
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
 <div class="row margin0">
-  <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0" id="list_nodes">
+  <div class="col-sm-3 col-md-3 col-lg-3" style="padding-left:0" id="list_nodes">
  
   	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
     <div class="clearfix">
@@ -23,14 +23,25 @@
     </div>
     {% if nodes %}
 {% if lp.path_type == 3 %}
-	<div id="dag"></div>
+    {% comment %}<div id="dag"></div>{% endcomment %}
+    {% comment %} SEE http://stackoverflow.com/questions/32044/how-can-i-render-a-tree-structure-recursive-using-a-django-template{% endcomment %}
+   	<dl class="panel panel-col panel-white">
+    <dd>
+	{% for pathnode in lp.get_roots %} 
+		{% with font=14 depth=1 %}
+	    	{% include "_lp_subtree.html" %}
+	    {% endwith %}
+	{% endfor%}
+    </dd>
+    </dl>
 {% else %}
     	<dl class="panel panel-col panel-white">
         <dd>
         {% for pathnode in nodes %}
           <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-no-oer {% endif %} font14">
             <li>
-            {% if i_node == forloop.counter0 %} 
+            {% comment %}{% if i_node == forloop.counter0 %}{% endcomment %}
+            {% if pathnode == current_node %}
               <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
             {% else %}
               {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
@@ -45,7 +56,7 @@
 
 </div>
 
-<div class="col-sm-9 col-md-9 col-lg-10" style="background:white;" id="right">
+<div class="col-sm-9 col-md-9 col-lg-9" style="background:white;" id="right">
   <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
     <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
     <div class="text-center" style="float:left; width:80%">{{ current_node.label }}</div>
@@ -93,7 +104,7 @@
 {% endblock %}
 
 {% block extra_script %}
-{% if lp.path_type == 3 %}{% include "_lp_dag.html" %}{% endif %}
+{% if lp.path_type == 1000 %}{% include "_lp_dag.html" %}{% endif %}
 {% endblock %}
 
 {% endblock %}

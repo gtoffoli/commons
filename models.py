@@ -3,6 +3,7 @@
 import json
 from math import sqrt
 from django.core.validators import MinValueValidator
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django.utils.text import capfirst
 from django.utils import timezone
@@ -1854,6 +1855,10 @@ class LearningPath(Resource, Publishable):
         assert len(visited) == len(nodes)
         return visited
 
+    @cached_property
+    def cached_ordered_nodes(self):
+        return self.get_ordered_nodes()
+
     def get_ordered_edges(self, nodes=None):
         if nodes is None:
             nodes = self.get_ordered_nodes()
@@ -2149,6 +2154,16 @@ class LearningPath(Resource, Publishable):
             self.add_edge(root, node, request, order=max_order)
         return root
 
+    def get_tree_as_list(self):
+        assert self.path_type==LP_DAG
+        roots = self.get_roots()
+        visited = roots
+        superlist = []
+        for root in roots:
+            visited, sublist = root.get_subtree_as_sublist(visited=visited)
+            superlist.append(sublist)
+        return superlist
+
 class SharedLearningPath(models.Model):
     """
     Link to an LearningPath created in another project
@@ -2279,10 +2294,36 @@ class PathNode(node_factory('PathEdge')):
     def page_in_range(self, page):
         return True
 
+    def get_index(self):
+        nodes = self.path.cached_ordered_nodes
+        return nodes.index(self)
+
+    def has_children(self):
+        return self.children.all().count()
+
+    def get_ordered_children(self):
+        children = list(self.children.all())
+        children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        return children
+
     def ordered_out_edges(self):
+        """
         children = list(self.children.all())
         children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         return [PathEdge.objects.get(parent=self, child=child) for child in children]
+        """
+        return [PathEdge.objects.get(parent=self, child=child) for child in self.get_ordered_children()]
+    
+    def get_subtree_as_sublist(self, visited=[]):
+        children = self.get_ordered_children()
+        children = [child for child in children if not child in visited]
+        sublist = [self]
+        if children:
+            visited.extend(children)
+            for child in children:
+                new, sublist = child.get_subtree_as_sublist(visited=visited)
+                visited.extend(new)
+        return visited, sublist
 
 PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes

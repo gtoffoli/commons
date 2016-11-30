@@ -535,6 +535,12 @@ margin-right:0;
 .font07em {
 	font-size:0.7em;
 }
+.font10 {
+	font-size: 10px;
+}
+.font11 {
+	font-size: 11px;
+}
 .font12 {
 	font-size: 12px;
 }
@@ -1496,6 +1502,28 @@ font-family: 'FontAwesome';
 content: "\f096";
 margin:0 5px 0 -20px;
 color: #333;
+}
+ul.dag-node-oer li:before {
+/* font-family: 'FontAwesome'; */
+content: "O";
+border: 1px solid #008BD2;
+border-radius: 3px;
+margin: 0 5px 0 -24px;
+padding: 0 4px;
+color: #008BD2;
+font-size: 10px;
+font-weight: 600;
+}
+ul.dag-node-no-oer li:before {
+/* font-family: 'FontAwesome'; */
+content: "T";
+border: 1px solid #333;
+border-radius: 3px;
+margin:0 5px 0 -24px;
+padding: 0 4px;
+color: #333;
+font-size: 10px;
+font-weight: 600;
 }
 ul.nodes-unlisted div {
 	display:inline;
