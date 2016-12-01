@@ -132,7 +132,7 @@
           {% if com_only_memberships %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "member of the following communities"|capfirst %}</div>
-              <div {% if only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+              <div {% if com_only_memberships|length > 10 %} class="box-scroll box-medium" {% endif %}>
                 <ul class="list-unstyled my-list-unstyled padding510">
                   {% for membership in com_only_memberships %}
                     <li>
@@ -179,10 +179,19 @@
           
           {% with rels=mentoring_rels %}{% if rels %}
             <div class="panel-white">
-              <div class="panel-heading-c4 padding510 demiBold">{% trans "mentoring relationships"|capfirst %}</div>
+              <div class="panel-heading-c0 padding510 demiBold">{% trans "mentoring relationships"|capfirst %}</div>
                 <ul class="list-unstyled my-list-unstyled padding510">
                 {% for rel in rels %}
-                  <li><small><a href="/project/{{ rel.project.slug }}/" style="color: {{ rel.get_link_color }};">{{ rel.project.name }}</a></small></li>
+                  <li>
+                    {% if rel.project.state == 0 %}
+                      <span class="orange"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></span>
+                    {% elif rel.project.state == 1 %}
+                      <span class="limegreen"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></span>
+                    {% elif rel.project.state == 3 %}
+                      <span class="fa fa-lock neutral"></span> 
+                    {% endif %}
+                    <small><a href="/project/{{ rel.project.slug }}/">{{ rel.project.name }}</a></small>
+                  </li>
                 {% endfor %}
                 </ul>
             </div>
