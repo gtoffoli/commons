@@ -598,6 +598,15 @@ class ProjectMessageComposeForm(MessageComposeForm):
         self.fields['recipient'].queryset = queryset
         self.fields['recipient'].help_text=_('please, explicitly select the receiver(s)')
 
+class one2oneMessageComposeForm(forms.Form):
+    """
+    A simple form for mentoring and other 2-person relationships
+    """
+    sender = forms.CharField(widget=forms.HiddenInput())
+    recipient = forms.CharField(widget=forms.HiddenInput())
+    subject = forms.CharField(label=_(u"Subject"), max_length=120)
+    body = forms.CharField(label=_(u"Body"), widget=forms.Textarea(attrs={'rows': '12', 'cols':'80'}))
+
 class ForumForm(forms.ModelForm):
     class Meta:
         model = Forum
