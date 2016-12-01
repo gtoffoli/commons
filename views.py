@@ -35,7 +35,7 @@ from vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEnt
 from vocabularies import expand_to_descendants
 from documents import DocumentType, Document
 # from sources.models import WebFormSource
-from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
+from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, ProjectMessage
 from models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
@@ -1011,6 +1011,8 @@ def project_detail(request, project_id, project=None):
                     inbox = Message.objects.filter(recipient=user, sender=mentor_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
                     outbox = Message.objects.filter(recipient=mentor_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
                     recipient= mentor_user.username
+                inbox = [m for m in inbox if m.project==project]
+                outbox = [m for m in outbox if m.project==project]
                 var_dict['inbox'] = inbox
                 var_dict['outbox'] = outbox
                 post = request.POST
@@ -1024,6 +1026,8 @@ def project_detail(request, project_id, project=None):
                         body = data['body']
                         message = Message(sender=sender, recipient=recipient, subject=subject, body=body)
                         message.save()
+                        project_message = ProjectMessage(project=project, message=message)
+                        project_message.save()
                 else:
                     form = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
                 var_dict['compose_message_form'] =  form

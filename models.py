@@ -34,6 +34,7 @@ from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
+from django_messages.models import Message
 
 from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
@@ -1127,6 +1128,22 @@ class ProjectMember(models.Model):
     class Meta:
         verbose_name = _('project member')
         verbose_name_plural = _('project member')
+   
+class ProjectMessage(models.Model):
+    project = models.ForeignKey(Project, verbose_name=_('project'), related_name='message_project')
+    message = models.ForeignKey(Message, verbose_name=_('message'),  related_name='project_message')
+
+    class Meta:
+        verbose_name = _('project message')
+        verbose_name_plural = _('project messages')
+
+@property
+def message_project(self):
+    project_messages = ProjectMessage.objects.filter(message=self)
+    if len(project_messages) == 1:
+        return project_messages[0].project
+    return None
+Message.project = message_project
 
 class RepoFeature(models.Model):
     """
