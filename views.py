@@ -1524,8 +1524,10 @@ def forum_edit_by_id(request, forum_id):
     forum = get_object_or_404(Forum, id=forum_id)
     return forum_edit(request, forum_id=forum.id)
 
-def project_create_room(request, project_id):
-    project = get_object_or_404(Project ,id=project_id)
+# def project_create_room(request, project_id):
+def project_create_room(request, project_id, project=None, no_response=False):
+    if not project:
+        project = get_object_or_404(Project ,id=project_id)
     if not project.can_access(request.user):
         raise PermissionDenied
     # assert project.need_create_room()
@@ -1538,12 +1540,17 @@ def project_create_room(request, project_id):
     project.chat_room = room
     project.editor = request.user
     project.save()
+    if project.get_type_name() == 'ment':
+        project_sync_xmppaccounts(request, project_id, project=project, no_response=True)
     # actstream.action.send(request.user, verb='Create', action_object=room, target=project)
     track_action(request.user, 'Create', room, target=project)
-    return project_detail(request, project_id, project=project)    
+    if not no_response:
+        return project_detail(request, project_id, project=project)    
 
-def project_sync_xmppaccounts(request, project_id):
-    project = get_object_or_404(Project, id=project_id)
+# def project_sync_xmppaccounts(request, project_id):
+def project_sync_xmppaccounts(request, project_id, project=None, no_response=False):
+    if not project:
+        project = get_object_or_404(Project, id=project_id)
     if not project.can_access(request.user):
         raise PermissionDenied
     # assert project.chat_type in [1]
@@ -1563,8 +1570,9 @@ def project_sync_xmppaccounts(request, project_id):
             RoomMember.objects.get_or_create(xmpp_account=xmpp_account, room=room)
         else:
             pass
-    return project_detail(request, project_id, project=project)
-
+    if not no_response:
+        return project_detail(request, project_id, project=project)
+    
 def project_compose_message(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     if not project.can_access(request.user):
