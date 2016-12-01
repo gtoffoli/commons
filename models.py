@@ -875,7 +875,7 @@ class Project(Resource):
             return False
         if user.is_superuser: return True
         if self.get_type_name()=='ment':
-            return self.get_parent().is_admin(user) or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) 
+            return (self.get_parent().is_admin(user) and self.state in (PROJECT_SUBMITTED, PROJECT_OPEN,)) or self.is_admin(user) or self.creator==user
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user)) 
 
     def can_propose(self, user):

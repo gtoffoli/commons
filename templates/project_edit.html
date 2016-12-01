@@ -25,7 +25,9 @@
 
 {% block body_class %}project_edit{% endblock %}
 {% block body %}
+{% if not proj_type_name == 'ment' %}
 {% include "_resource_edit_lang_msg.html" %}
+{% endif %}
   <div class="panel panel-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} text-left marginTB30">
     <div class="panel-heading-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} padding1020">
       <h2 class="marginTB5">

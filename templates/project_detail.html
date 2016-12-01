@@ -370,7 +370,7 @@
               <div class="borderTdotted padding510">
                 <form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
                   <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>
-                  <div class="form-group"><button type="submit" name="add" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
+                  <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
                 </form>
               </div>
             {% endif %}
@@ -391,7 +391,7 @@
              {% endfor %}
              </ul>
              {% if n_lps > lps|length %}
-               <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+               <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_lps">{% trans "read more"|upper %}</a></div>
              {% endif %}
            </div>
          {% endif %}
@@ -416,7 +416,7 @@
              {% endfor %}
              </ul>
              {% if n_oers > oers.count %}
-               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_oers">{% trans "read more"|upper %}</a></div>
              {% endif %}
            </div>
          {% endif %}
@@ -432,16 +432,16 @@
              </ul>
            </div>
          {% endif %}
-         {% if oer_evaluations %}
+         {% if oers_last_evaluated %}
            <div class="panel-white">
-             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OER evaluations"|capfirst %}</div>
+             <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs evaluated"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
-             {% for oer_evaluation in oer_evaluations %}
-               <li><a href="/oer_evaluation/{{ oer_evaluation.id }}/"><small>{{ oer_evaluation.oer.title }}</small></a></li>
+             {% for oer_last_evaluated in oers_last_evaluated %}
+               <li><small><a href="/oer/{{oer_last_evaluated.slug}}/evaluations/" title="{% trans "view evaluations" %}">{{ oer_last_evaluated.title }}</small></a></li>
              {% endfor %}
              </ul>
-             {% if n_oer_evaluations > oer_evaluations.count %}
-               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/">{% trans "read more"|upper %}</a></div>
+             {% if n_oers_evaluated > oers_last_evaluated|length %}
+               <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_evaluations">{% trans "read more"|upper %}</a></div>
              {% endif %}
            </div>
          {% endif %}

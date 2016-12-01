@@ -604,8 +604,8 @@ class one2oneMessageComposeForm(forms.Form):
     """
     sender = forms.CharField(widget=forms.HiddenInput())
     recipient = forms.CharField(widget=forms.HiddenInput())
-    subject = forms.CharField(label=_(u"Subject"), max_length=120)
-    body = forms.CharField(label=_(u"Body"), widget=forms.Textarea(attrs={'rows': '12', 'cols':'80'}))
+    subject = forms.CharField(required=True, label=_(u"Subject"), max_length=120,  widget=forms.TextInput(attrs={'class':'form-control',}))
+    body = forms.CharField(required=True, label=_(u"Body"), widget=forms.Textarea(attrs={'class':'form-control','rows': '12', 'cols':'80'}))
 
 class ForumForm(forms.ModelForm):
     class Meta:

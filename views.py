@@ -47,7 +47,7 @@ from metadata import QualityFacet
 from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
-from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm
+from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, one2oneMessageComposeForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
@@ -876,7 +876,7 @@ def lps_in_clipboard(request, key):
 
 def project_detail(request, project_id, project=None):
     MAX_OERS = 5
-    MAX_EVALUATIONS = 5
+    MAX_OERS_EVALUATED = 5
     MAX_LPS = 5
     MAX_MESSAGES = 5
     if not project:
@@ -929,8 +929,9 @@ def project_detail(request, project_id, project=None):
         var_dict['can_accept_member'] = can_accept_member
         if can_accept_member:
             var_dict['add_member_form'] = ProjectAddMemberForm()
-            if request.POST:
-                user_id = request.POST.get('user')
+            post = request.POST
+            if post and post.get('add_member',''):
+                user_id = post.get('user')
                 user_to_add = User.objects.get(pk=user_id)
                 if not ProjectMember.objects.filter(project=project, user=user_to_add):
                     membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
@@ -964,7 +965,7 @@ def project_detail(request, project_id, project=None):
         var_dict['can_propose'] = project.can_propose(user)
         var_dict['can_close'] = project.can_close(user)
         var_dict['view_shared_folder'] = is_member or user.is_superuser
-        var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and  is_open
+        var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
         var_dict['can_chat'] = can_chat = project.can_chat(user) and is_open
         var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
         var_dict['xmpp_server'] = settings.XMPP_SERVER
@@ -1005,13 +1006,27 @@ def project_detail(request, project_id, project=None):
                 if user==mentor_user:
                     inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
                     outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
+                    recipient= mentee_user.username
                 elif user==mentee_user:
                     inbox = Message.objects.filter(recipient=user, sender=mentor_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
                     outbox = Message.objects.filter(recipient=mentor_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
-                var_dict['n_inbox'] = inbox.count()
-                var_dict['n_outbox'] = outbox.count()
-                var_dict['inbox'] = inbox[:MAX_MESSAGES]
-                var_dict['outbox'] = outbox[:MAX_MESSAGES]
+                    recipient= mentor_user.username
+                var_dict['inbox'] = inbox
+                var_dict['outbox'] = outbox
+                post = request.POST
+                if post and post.get('send',''):
+                    form = one2oneMessageComposeForm(post)
+                    if form.is_valid():
+                        data = form.cleaned_data
+                        sender = User.objects.get(username=data['sender'])
+                        recipient = User.objects.get(username=data['recipient'])
+                        subject = data['subject']
+                        body = data['body']
+                        message = Message(sender=sender, recipient=recipient, subject=subject, body=body)
+                        message.save()
+                else:
+                    form = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
+                var_dict['compose_message_form'] =  form
             var_dict['parent_roll'] = parent_roll = parent.get_roll_of_mentors()
             if is_parent_admin:
                 var_dict['candidate_mentors'] = candidate_mentors = project.get_candidate_mentors()
@@ -1039,10 +1054,15 @@ def project_detail(request, project_id, project=None):
     var_dict['oers'] = oers[:MAX_OERS]
     shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
     var_dict['shared_oers'] = [[shared_oer, shared_oer.can_delete(request)] for shared_oer in shared_oers]
+    """
     oer_evaluations = project.get_oer_evaluations()
     var_dict['n_oer_evaluations'] = oer_evaluations.count()
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
-    # lps = LearningPath.objects.filter(group=project.group).order_by('-created')
+    """
+    oers_last_evaluated = project.get_oers_last_evaluated()
+    print len(oers_last_evaluated)
+    var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
+    var_dict['oers_last_evaluated'] = oers_last_evaluated[:MAX_OERS_EVALUATED]
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
     var_dict['n_lps'] = len(lps)
