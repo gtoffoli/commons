@@ -137,22 +137,26 @@ def home(request):
         if not recent_proj.reserved:
             wall_dict['recent_proj'] = recent_proj
             break
+        """
         else:
             level = recent_proj.get_level()
             if level < 3:
                 wall_dict['recent_proj'] = recent_proj
                 break 
+        """
     principal_type_id = ContentType.objects.get_for_model(Project).id
     active_projects = popular_principals(principal_type_id, active=True, max_days=30)
     for active_proj in active_projects:
         project = Project.objects.get(pk=active_proj[0])
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
             wall_dict['active_proj'] = project
             break
     popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
     for popular_proj in popular_projects:
         project = Project.objects.get(pk=popular_proj[0])
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
             wall_dict['popular_proj'] = project
             break
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
