@@ -530,7 +530,7 @@ class LpSearchForm(forms.Form):
     levels = forms.ModelMultipleChoiceField(queryset=LevelNode.objects.all(),
         label=_('levels'), required=False,
         widget=forms.CheckboxSelectMultiple())
-    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES[:-1],
+    path_type = forms.MultipleChoiceField(choices=LP_TYPE_CHOICES,
         label=_('learning path type'), required=False,
         widget=forms.CheckboxSelectMultiple())
 

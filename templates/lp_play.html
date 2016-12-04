@@ -58,7 +58,9 @@
 <div class="col-sm-9 col-md-9 col-lg-9" style="background:white;" id="right">
   <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
     <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-    <div class="text-center" style="float:left; width:80%">{{ current_node.label }}</div>
+    <div class="text-center" style="float:left; width:80%">{{ i_node|add:"1" }}/{{ nodes|length }}
+    	&nbsp; {{ current_node.label }}
+		&nbsp; <a href="/pathnode/{{ current_node.id }}/"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a></div>
     <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
 {% if not oer_is_un_published %}

@@ -49,4 +49,17 @@ def oer_init_remix():
             oer.save()
             print 'remixed'
 
+def print_oer_urls():
+    oers = OER.objects.all()
+    for oer in oers:
+        p = oer.project
+        if not p: continue
+        url = oer.url
+        if not url: continue
+        # s = '<a href="/project/%d/">%s</a> %s <br/>' % (p.slug, p.title, url)
+        try:
+            print '%s - %s - %s' % (oer.title, url, p.name)
+        except:
+            pass
+
     
