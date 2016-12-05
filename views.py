@@ -137,27 +137,20 @@ def home(request):
         if not recent_proj.reserved:
             wall_dict['recent_proj'] = recent_proj
             break
-        """
-        else:
-            level = recent_proj.get_level()
-            if level < 3:
-                wall_dict['recent_proj'] = recent_proj
-                break 
-        """
     principal_type_id = ContentType.objects.get_for_model(Project).id
-    active_projects = popular_principals(principal_type_id, active=True, max_days=30)
-    for active_proj in active_projects:
-        project = Project.objects.get(pk=active_proj[0])
-        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
-            wall_dict['active_proj'] = project
-            break
     popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
     for popular_proj in popular_projects:
         project = Project.objects.get(pk=popular_proj[0])
-        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and (not project.reserved or (project.reserved and project.get_level() == 2)):
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
+        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj']:
             wall_dict['popular_proj'] = project
+            break
+    active_projects = popular_principals(principal_type_id, active=True, max_days=30)
+    for active_proj in active_projects:
+        project = Project.objects.get(pk=active_proj[0])
+        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
+        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
+            wall_dict['active_proj'] = project
             break
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
     for action in actions:
@@ -165,22 +158,42 @@ def home(request):
         if lp.state == PUBLISHED and lp.project:
             wall_dict['last_lp'] = lp
             break
+    """
     actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
     for action in actions:
         lp = action.action_object
-        if lp.state == PUBLISHED and lp.project:
+        # if lp.state == PUBLISHED and lp.project:
+        if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
             wall_dict['popular_lp'] = lp
             break
+    """
+    principal_type_id = ContentType.objects.get_for_model(LearningPath).id
+    popular_lps = popular_principals(principal_type_id, active=False, max_days=30, exclude_creator=True)
+    for lp_id, score in popular_lps:
+        lp = LearningPath.objects.get(pk=lp_id)
+        if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
+            wall_dict['popular_lp'] = lp
+            break        
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
     for action in actions:
         oer = action.action_object
         if oer.state == PUBLISHED and oer.project:
             wall_dict['last_oer'] = oer
             break
+    """
     actions = filter_actions(verbs=['View'], object_content_type=ContentType.objects.get_for_model(OER), max_days=30)
     for action in actions:
         oer = action.action_object
-        if oer.state == PUBLISHED and oer.project:
+        # if oer.state == PUBLISHED and oer.project:
+        if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
+            wall_dict['popular_oer'] = oer
+            break
+    """
+    principal_type_id = ContentType.objects.get_for_model(OER).id
+    popular_oers = popular_principals(principal_type_id, active=False, max_days=30, exclude_creator=True)
+    for oer_id, score in popular_oers:
+        oer = OER.objects.get(pk=oer_id)
+        if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
             wall_dict['popular_oer'] = oer
             break
     wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]

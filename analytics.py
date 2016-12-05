@@ -291,7 +291,7 @@ contenttype_weigth_dict = {
     'room': 1,
 }
 
-def popular_principals(principal_type_id, active=False, from_time=None, to_time=None, max_days=7):
+def popular_principals(principal_type_id, active=False, from_time=None, to_time=None, max_days=7, exclude_creator=False):
     if active:
         verbs = ['Send', 'Create', 'Edit', 'Delete', 'Submit', 'Approve',]
         verb_weigth_dict = {
@@ -315,6 +315,8 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
         # verb_factor = verb_weigth_dict[action.verb]
         verb_factor = verb_weigth_dict.get(action.verb, 0)
         if action.action_object_content_type_id == principal_type_id:
+            if exclude_creator and action.action_object.creator==action.actor:
+                continue
             project_id = action.action_object_object_id
             contenttype_factor = contenttype_weigth_dict['project']
             # print action.verb, 'project'
