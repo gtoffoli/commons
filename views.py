@@ -2698,10 +2698,13 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
         action = '/oer_evaluation/%s/edit/' % evaluation_id
     if request.POST:
         evaluation_id = request.POST.get('id', '')
+        oer = request.POST.get('oer', '')
         if evaluation_id:
             evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
             action = '/oer_evaluation/%s/edit/' % evaluation_id
             oer = evaluation.oer
+        elif oer:
+            oer =OER.objects.get(pk=oer)
         form = OerEvaluationForm(request.POST)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
