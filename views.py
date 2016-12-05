@@ -898,8 +898,10 @@ def project_detail(request, project_id, project=None):
     if not project.can_access(user):
         raise PermissionDenied
     proj_type = project.proj_type
-    type_name = proj_type.name
     var_dict = {'project': project, 'proj_type': proj_type,}
+    var_dict['proj_type_name'] = type_name = proj_type.name
+    if type_name == 'roll':
+        var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
     if project.small_image:
         image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
@@ -992,8 +994,8 @@ def project_detail(request, project_id, project=None):
         profile = user.get_profile()
         can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
         # project is reserved ?
-        if can_apply and project.is_reserved_project():
-            can_apply = project.get_community().is_member(user)
+        if project.is_reserved_project():
+            can_apply = can_apply and project.get_community().is_member(user)
         # project type is Support, Roll of mentors, Mentoring ?
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)

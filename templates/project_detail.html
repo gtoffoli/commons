@@ -90,6 +90,7 @@
  </p>
  <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
    <div class="col-sm-7 col-md-7 col-lg-8">
+     {% if not is_member and roll_info %}<div class="font12">{{ roll_info|safe }}</div>{% endif %}
      <article class="view-list">
        {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
        {% if project.info %}
@@ -320,18 +321,18 @@
           {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
           {% endif %}
-       {% elif not project.is_reserved_project %}
+       {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
           <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
-           {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
+           {% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
        {% endif %}
-     {% elif not project.is_reserved_project %}
+     {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
        <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
-       {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}{% endif %}</a></div>
+       {% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
      {% endif %}
 
      {% if project.group.level > 0 %}
        <div class="panel-white">
-         <div class="panel-heading-c0 padding510 demiBold">{% trans "members"|capfirst %}</div>
+         <div class="panel-heading-c0 padding510 demiBold">{% if proj_type_name == 'roll' %}{% trans "mentors"|capfirst %}{% else %}{% trans "members"|capfirst %}{% endif %}</div>
          {% with users=project.members %}{% if users|length > 0 %}
          <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %}>
            <ul class="list-unstyled my-list-unstyled padding510">
