@@ -168,7 +168,7 @@ def home(request):
             break
     """
     principal_type_id = ContentType.objects.get_for_model(LearningPath).id
-    popular_lps = popular_principals(principal_type_id, active=False, max_days=30, exclude_creator=True)
+    popular_lps = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
     for lp_id, score in popular_lps:
         lp = LearningPath.objects.get(pk=lp_id)
         if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
@@ -190,7 +190,7 @@ def home(request):
             break
     """
     principal_type_id = ContentType.objects.get_for_model(OER).id
-    popular_oers = popular_principals(principal_type_id, active=False, max_days=30, exclude_creator=True)
+    popular_oers = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
     for oer_id, score in popular_oers:
         oer = OER.objects.get(pk=oer_id)
         if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
