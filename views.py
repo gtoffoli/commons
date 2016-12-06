@@ -3444,12 +3444,14 @@ def pathnode_edit(request, node_id=None, path_id=None):
     if request.POST:
         node_id = request.POST.get('id', '')
         path_id = request.POST.get('path', '')
-        if path_id:
-           path = get_object_or_404(LearningPath, id=path_id)
         if node_id:
             node = get_object_or_404(PathNode, id=node_id)
+            path = node.path
+            form = PathNodeForm(request.POST, request.FILES, instance=node)
             action = '/pathnode/%d/edit/' % node.id
-        form = PathNodeForm(request.POST, request.FILES, instance=node)
+        elif path_id:
+            path = get_object_or_404(LearningPath, id=path_id)
+            form = PathNodeForm(request.POST, request.FILES)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 try:
@@ -3466,7 +3468,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 form.save_m2m()
                 node = get_object_or_404(PathNode, id=node.id)
                 if not node.label:
-                    # node.label = slugify(node.oer.title[:50])
                     node.label = node.oer.title
                     node.save()
                 path = node.path
@@ -3474,11 +3475,12 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     track_action(request.user, 'Edit', node, target=path.project)
                 else:
                     track_action(request.user, 'Create', node, target=path.project)
-                # if path.path_type==LP_SEQUENCE and not node.parents():
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
                 if request.POST.get('save', ''):
                     return HttpResponseRedirect('/pathnode/%d/' % node.id )
+                else:
+                    form = PathNodeForm(instance=node)
             else:
                 print form.errors
             return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug}, context_instance=RequestContext(request))
@@ -3499,7 +3501,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
     else:
         form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
     # return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }, context_instance=RequestContext(request))
-    data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, }
+    data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path.title, 'slug_lp': path.slug, }
     data_dict['path'] = path
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
