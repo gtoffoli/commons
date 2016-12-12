@@ -201,7 +201,16 @@ function on_cell_clicked(cellView, x, y) {
 {% if 'play' in request.path %}
 		document.location.href = '{{ request.path }}?node={0}'.format(cell.get('index'));
 {% else %}
-		document.location.href = '/pathnode/{0}/'.format(id);
+		// document.location.href = '/pathnode/{0}/'.format(id);
+		$.ajax({
+			url: "/pathnode/"+id+"/",
+			success: function(json){
+				if (json.data == 'OK') {
+				   $('#iframeNode').attr('src','/pathnode/'+json.node+'/');
+				   $('#showNode').css('display','block');
+				}
+			}
+		});
 {% endif %}
 	}
 }

@@ -3,7 +3,7 @@
 
 {% block body_base %}
 <body style="padding-top: 0px; background:transparent; height:auto">
-        {% include "_resource_lang_msg.html" with data_top="top" %}
+        {# include "_resource_lang_msg.html" with data_top="top" #}
 <section class="/*view-node-details*/" style="padding:10px">
         <div class="clearfix section-node-header">
           <h3 class="{% if can_edit %}h3-left {% endif %}font18">{% if lp.path_type != 1 %}{{ i_node }}. {% endif %}{{ node.label }}

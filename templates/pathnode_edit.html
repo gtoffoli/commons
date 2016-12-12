@@ -13,6 +13,7 @@
 
 {% block body_class %}pathnode_edit{% endblock %}
 {% block body %}
+{% comment %}
 <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
 {% if language_mismatch %}
    {% trans "WARNING" %}! {% trans "You are using the currently active language" %}
@@ -34,6 +35,7 @@
   {% endif %}
 {% endif %}
 </div>
+{% endcomment %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
     <h3 class="pull-left marginTB5">{{ name_lp }}</h3>

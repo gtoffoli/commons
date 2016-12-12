@@ -3130,6 +3130,9 @@ def lp_play(request, lp_id, lp=None):
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     var_dict['is_published'] = lp.state == PUBLISHED
+    var_dict['can_edit'] = lp.can_edit(request)
+    current_language = get_current_language()
+    var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
     nodes = lp.get_ordered_nodes()
     n_nodes = len(nodes)
     var_dict['nodes'] = nodes

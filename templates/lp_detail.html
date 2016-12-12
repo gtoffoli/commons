@@ -181,12 +181,12 @@ iframe {
                 </li>
               {% endfor %}
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
+            </dd>
+{% endif %}
               <div id="showNode" class="boxNode" style="display:none">
 <div class="text-right" ><a class="boxClose" href="#">{% trans "chiudi" %}</a></div>
 <iframe id="iframeNode" src=""></iframe>
 </div>
-            </dd>
-{% endif %}
             {% if can_edit and not language_mismatch %}
               <dd><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
@@ -250,9 +250,10 @@ iframe {
 				$.ajax({
 					url: "/pathnode/"+node_id+"/",
 					success: function(json){
-						if (json.data == 'OK')
+						if (json.data == 'OK') {
 						   $('#iframeNode').attr('src','/pathnode/'+json.node+'/');
 						   $('#showNode').css('display','block');
+						}
 					}
 				});
 			});
