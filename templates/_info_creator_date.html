@@ -8,5 +8,5 @@
              {% if data.project.slug %} <span class="demiBold">{% trans "in project" %}</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ data.project.slug }}/">{{ data.project }}</a>{% endif %}
            {% endif %}
         </p>
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if data.editor.id != data.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if data.editor.get_profile.avatar %} src="/media/{{ data.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/resources_by/{{ data.editor.username }}">{{ oer.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ data.modified|date:"d/m/Y" }}</p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if data.editor.id != data.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if data.editor.get_profile.avatar %} src="/media/{{ data.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.editor.username }}">{{ data.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ data.modified|date:"d/m/Y" }}</p>
 {% endblock info-creator-date %}

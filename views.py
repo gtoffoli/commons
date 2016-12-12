@@ -3395,6 +3395,7 @@ def lp_make_tree_dag(request, lp_id):
     root = lp.make_tree_dag(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
+"""
 def pathnode_detail(request, node_id, node=None):
     if not node:
         node = get_object_or_404(PathNode, pk=node_id)
@@ -3403,10 +3404,10 @@ def pathnode_detail(request, node_id, node=None):
     var_dict = { 'node': node, }
     var_dict['object'] = node
     var_dict['lp'] = node.path
-    """
+
     nodes = get_object_or_404(LearningPath, pk=node.path_id)
     nodes = nodes.get_ordered_nodes()
-    """
+
     nodes = node.path.get_ordered_nodes()
     i_node = 0
     count = 0
@@ -3423,6 +3424,35 @@ def pathnode_detail(request, node_id, node=None):
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
     return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
+"""
+
+def pathnode_detail(request, node_id, node=None):
+    if not node:
+        node = get_object_or_404(PathNode, pk=node_id)
+    if not node.path.can_access(request.user):
+        raise PermissionDenied
+    var_dict = { 'node': node, }
+    var_dict['object'] = node
+    var_dict['lp'] = lp = node.path
+    nodes = node.path.get_ordered_nodes()
+    i_node = 0
+    count = 0
+    while (count < len(nodes)):       
+        if int(nodes[count].id) == int(node_id):
+            i_node = count + 1
+            break
+        count = count + 1
+    var_dict['nodes'] = nodes
+    var_dict['i_node'] = i_node
+    var_dict['can_edit'] = node.can_edit(request)
+    var_dict['can_translate'] = node.can_translate(request)
+    current_language = get_current_language()
+    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
+    var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
+    if request.is_ajax():
+        return JsonResponse({"data": 'OK',"node": node_id })
+    #return HttpResponseRedirect('/lp/%s/' % lp.slug)
+    return render_to_response('_pathnode_detail.html', var_dict, context_instance=RequestContext(request))
 
 def pathnode_detail_by_id(request, node_id):
     return pathnode_detail(request, node_id=node_id)
@@ -3478,7 +3508,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
                 if request.POST.get('save', ''):
-                    return HttpResponseRedirect('/pathnode/%d/' % node.id )
+                    # return HttpResponseRedirect('/pathnode/%d/' % node.id )
+                    return HttpResponseRedirect('/lp/%s/' % path.slug )
                 else:
                     form = PathNodeForm(instance=node)
             else:
@@ -3490,7 +3521,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
             else:
                 node_id = request.POST.get('id', '')
             if node_id:
-                return HttpResponseRedirect('/pathnode/%d/' % node_id)
+                # return HttpResponseRedirect('/pathnode/%d/' % node_id)
+                return HttpResponseRedirect('/lp/%s/' % path.slug)
             else:
                 if not path_id:
                     path_id = request.POST.get('path', '')

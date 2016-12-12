@@ -32,6 +32,11 @@
 	    	{% include "_lp_subtree.html" %}
 	    {% endwith %}
 	{% endfor%}
+	{% for pathnode in lp.get_islands %} 
+		{% with font=14 depth=1 %}
+	    	{% include "_lp_subtree.html" %}
+	    {% endwith %}
+	{% endfor%}
     </dd>
     </dl>
 {% else %}

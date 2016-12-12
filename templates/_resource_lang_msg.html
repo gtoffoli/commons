@@ -2,13 +2,13 @@
 
  {% if can_edit %}
    {% if not object.original_language %}
-    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; {% if data_top != 'top' %} margin-top: 30px; margin-bottom: 5px;{% else %} margin: 5px 5px 0 5px;{% endif %} ">
    {% trans "IMPORTANT NOTICE! The next time you will edit this content, it will take the current active language" %}
    (<span style="color: black;">{{ current_language_name }}</span>)
    {% trans "as its 'original editing language'. Afterwards, you should edit it using always the same language, and you will be able to add translations to other languages." %}
    </div>
    {% elif language_mismatch %}
-    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+    <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px;{% if data_top != 'top' %} margin-top: 30px; margin-bottom: 5px;{% else %} margin: 5px 5px 0 5px;{% endif %}">
    {% trans "Please note that, to be able to edit this content in its original language" %}
    (<span style="color: black;">{{ object.get_language_name }}</span>)
    {% trans "you should make this the active language using the control in the menu bar" %}.

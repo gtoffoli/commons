@@ -7,7 +7,7 @@
 {% block head_title %}{% trans "Translations of" %} {{ model_title }} {{ object_title }}{% endblock %}
 
 {% block body %}
- <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+ <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 5px;">
   {% trans "Please, note that the translation functionality is affected by the original editing language of this content" %} (<span style="color: black;">{{ object.get_language_name }}</span>).
   {% trans "The current active language" %} (<span style="color: black;">{{ current_language_name }}</span>) {% trans "affects only the UI messages of this view" %}.
  </div>
@@ -37,7 +37,7 @@ text-left marginTB30">
    {{ object_title }}
  </h2>
  <p class="pull-right marginB0 font26">
-   <a href="{{ object_url }}" title="{% trans "back to the normal view of this content" %}"><i class="fa fa-list-alt font07em
+   <a href="{% if not model == 'pathnode'%}{{ object_url }}{% else %}/lp/{{object.path.slug}}/{% endif %}" title="{% trans "back to the normal view of this content" %}"><i class="fa fa-list-alt font07em
      {% if model == 'repo' or model == 'oer' or model == 'learningpath' or model == 'pathnode'%}c-white
      {% else %}c-black {% endif %}" aria-hidden="true"></i></a>
  </p>

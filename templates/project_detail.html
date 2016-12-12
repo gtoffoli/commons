@@ -101,7 +101,7 @@
        {% endif %}
      </article>
 
-     {% if not project.get_project_type == 'sup' and project_children %}
+     {% if not proj_type_name == 'sup' and project_children %}
         <div class="panel-white">
           <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 0 %} {% trans "communities"|capfirst %} {% elif project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
             <ul class="list-inline padding10510 list-orange">
@@ -156,7 +156,7 @@
                     </li>
                  </ul>
               </li>
-              {% if not proj_type.name == 'roll' and not project.get_project_type == 'sup' %}
+              {% if not proj_type.name == 'roll' and not proj_type_name == 'sup' %}
               {% if can_edit and not project_no_children %}
                 <li class="list-back-c4 marginB5">
                    <ul class="list-inline">
@@ -256,7 +256,7 @@
         {% endif %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
-        {% if is_member and not project.get_project_type == 'sup' %}
+        {% if is_member and not proj_type_name == 'sup' %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
@@ -316,18 +316,18 @@
      {% if request.user.is_authenticated %}
        {% if can_apply %}
           <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
-           {% if project.get_type_name == 'roll' %}{% trans "apply"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
+           {% if proj_type_name == 'roll' %}{% trans "propose you as a mentor"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
        {% elif membership %}
           {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
           {% endif %}
        {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
           <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
-           {% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
+           {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
        {% endif %}
      {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
        <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
-       {% if project.get_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
+       {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
      {% endif %}
 
      {% if project.group.level > 0 %}
@@ -367,7 +367,7 @@
               </div>
             </div>
             {% endif %}{% endwith %}
-            {% if project.get_project_type == 'sup' or project.is_reserved_project %}
+            {% if proj_type_name == 'sup' or project.is_reserved_project %}
               <div class="borderTdotted padding510">
                 <form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
                   <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>
@@ -382,7 +382,7 @@
          <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
        {% endif %}
 
-       {% if project.get_project_type == 'oer' or project.get_project_type == 'lp' %}
+       {% if proj_type_name == 'oer' or proj_type_name == 'lp' %}
          {% if lps %}
            <div class="panel-white">
              <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>

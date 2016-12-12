@@ -1,0 +1,50 @@
+{% extends "commons_base_iframe.html" %}
+{% load staticfiles i18n %}
+
+{% block body_base %}
+<body style="padding-top: 0px; background:transparent; height:auto">
+        {% include "_resource_lang_msg.html" with data_top="top" %}
+<section class="/*view-node-details*/" style="padding:10px">
+        <div class="clearfix section-node-header">
+          <h3 class="{% if can_edit %}h3-left {% endif %}font18">{% if lp.path_type != 1 %}{{ i_node }}. {% endif %}{{ node.label }}
+          {% if can_edit and not language_mismatch %}&nbsp; <a href="/pathnode/{{ node.id }}/edit/" target="_top" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
+          {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/pathnode/{{ object.pk }}/" target="_top" title="{% trans "show translate view" %}"><i class="fa fa-language"></i></a>{% endif %}
+          </h3>
+        </div>
+        <div class="section-node-content">
+        {% if node.oer %}
+          <dl class="font14 marginB10">
+            <dt class="demiBold node-oer">OER</dt>
+          <dd><p>{% if node.oer.state != 3 %}<span style="color: {{ node.oer.get_link_color }};">[{{ node.oer.get_state }}]</span> {% endif %}<span class="font16 demiBold">{{ node.oer }}</span> &nbsp; <a href="/oer/{{ node.oer.slug }}/" target="_top"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a><br>
+            {{node.oer.description}}</p></dd>
+          </dl>
+        {% endif %}
+        {% if node.range %}
+          <dl class="font14 marginB10">
+            <dt class="demiBold">{% trans "display range"|capfirst %}</dt>
+            <dd>{{ node.range }}</dd>
+          </dl>
+        {% endif %}
+        {% if node.document_id %}
+          <dl class="font14 marginB10">
+            <dt class="demiBold node-text">{% trans _('document')|capfirst %}</dt>
+            <dd>{{ node.document.label }} &nbsp; &nbsp; <a href="/document/{{ node.document_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+               {% if node.document.viewable %} &nbsp; &nbsp; <a href="/document/{{ node.document_id }}/view/?node=1" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+            </dd>
+          </dl>
+        {% endif %}
+        {% if node.text %}
+          <dl class="font14 marginB10">
+            <dt class="demiBold node-text">{% trans _('text')|capfirst %}</dt>
+            <dd>{{ node.text|safe }}</dd>
+          </dl>
+        {% endif %}
+        </div>
+        <p class="paddingT10"><span class="demiBold">{% trans "node added by"|capfirst %}</span> <img {% if node.creator.get_profile.avatar %} src="/media/{{ node.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.creator.username }}">{{ node.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ node.created|date:"d/m/Y" }}</p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if node.editor.id != node.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if node.editor.get_profile.avatar %} src="/media/{{ node.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.editor.username }}">{{ node.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ node.modified|date:"d/m/Y" }}</p>
+
+        {% include "_resource_original_lang.html" %}
+      </section>
+        </div>
+  </body>
+{% endblock %}
