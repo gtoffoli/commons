@@ -35,7 +35,8 @@ var half_height = node_height/2;
 var node_padding = 10; // 20; // 50;
 var icon_size = 16;
 var node_color = '#CB4F98';
-var edge_color = 'blue';
+// var edge_color = 'blue';
+var edge_color = '#CB4F98';
 
 var dagElement = $('#dag');
 var graph = new joint.dia.Graph;
@@ -61,7 +62,7 @@ var drop = new joint.shapes.basic.Circle({
 
 var add = new joint.shapes.basic.Rect({
     size: { width: icon_size, height: icon_size },
-    attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-size': 12, } }
+    attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-family': 'Open Sans, sans-serif', 'font-size': 12, } }
 });
 {% endif %}
 
@@ -91,7 +92,7 @@ graph.getElements().forEach(function(node, index, array) {
 	node.attr({ rect: { fill: fill_color, stroke: node_color, rx: 3, ry: 3 }});
 	node.set('index', index)
     label = (1+index).toString() + '.\n' + node.attr('text').text;
-    node.attr({ text: { text: label, fill: text_color, 'font-size': 12 }});
+    node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11 }});
     console.log(index, label);
     width = label_width(label) + node_padding * 2;
     node.resize(width, node_height);
@@ -100,7 +101,7 @@ graph.getLinks().forEach(function(link, index) {
 	link.set('connector', { name: 'smooth' });
 	link.attr({
  	    '.connection': { stroke: edge_color },
- 	    '.marker-target': { fill: 'white', d: 'M 8 0 L 0 4 L 8 8 z' }
+ 	    '.marker-target': { fill: 'white', stroke: '#CB4F98', d: 'M 8 0 L 0 4 L 8 8 z' }
  	});
     label = link.id.toString();
 })
@@ -254,7 +255,7 @@ function on_node_dragged(cellView, x, y) {
 	    	source_id = elementBelow.id;
 	        graph.addCell(new joint.dia.Link({
 	            source: { id: source_id }, target: { id: target_id },
-	            attrs: { '.marker-source': { d: 'M 10 0 L 0 5 L 10 10 z' } }
+	            attrs: { '.marker-source': {fill: '#CB4F98', stroke: '#CB4F98', d: 'M 10 0 L 0 5 L 10 10 z' } }
 	        }));
 	        // Move the element a bit to the side.
 	        cellView.model.translate(+200, 0);

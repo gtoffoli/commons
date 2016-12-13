@@ -38,11 +38,15 @@
 {% endcomment %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
+{% comment %}
     <h3 class="pull-left marginTB5">{{ name_lp }}</h3>
     <p class="pull-right marginB0 font26">
       <a href="/lp/{{ slug_lp }}/" title="{% trans "show learning path" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
     </p>
     <div style="clear:both;">
+{% endcomment %}
+    <h4 class="marginTB5">{{ name_lp }}</h4>
+    <div>
       <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
     </div>
   </div>
