@@ -1902,9 +1902,15 @@ class LearningPath(Resource, Publishable):
                 return False
             n +=1
         return n == l
+
+    def can_make_collection(self, request):
+        return self.path_type in [LP_SEQUENCE, LP_DAG] and self.can_edit(request) and self.get_nodes()
  
-    def can_chain(self, request):
+    def can_make_sequence(self, request):
         return self.path_type==LP_COLLECTION and self.can_edit(request) and self.get_nodes() and self.is_pure_collection()
+
+    def can_make_unconnected_dag(self, request):
+        return self.path_type in [LP_COLLECTION, LP_SEQUENCE] and self.can_edit(request) and self.get_nodes()
 
     def can_make_dag(self, request):
         return self.path_type==LP_SEQUENCE and self.can_edit(request) and self.get_nodes()
@@ -2138,6 +2144,18 @@ class LearningPath(Resource, Publishable):
             edge.order = order
             edge.save(disable_circular_check=True)
 
+    def make_collection(self, request):
+        """ convert from LP_SEQUENCE or LP_DAG to LP_COLLECTION, removing all edges """
+        assert self.path_type in [LP_SEQUENCE, LP_DAG]
+        nodes = self.get_ordered_nodes()
+        for node in nodes:
+            edges = PathEdge.objects.filter(parent=node)
+            for edge in edges:
+                edge.delete()
+            node.save()
+        self.path_type = LP_COLLECTION
+        self.save()
+
     def make_linear_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, adding only explicit ordering to edges """
         assert self.path_type==LP_SEQUENCE
@@ -2153,6 +2171,20 @@ class LearningPath(Resource, Publishable):
         self.path_type = LP_DAG
         self.save()
         return parent
+
+    def make_unconnected_dag(self, request):
+        """ convert from LP_COLLECTION to LP_DAG, removing all edges """
+        assert self.path_type in [LP_COLLECTION, LP_SEQUENCE]
+        nodes = self.get_ordered_nodes()
+        if self.path_type == LP_SEQUENCE:
+            parent = nodes[0]
+            for node in nodes[1:]:
+                edge = PathEdge.objects.get(parent=parent, child=node)
+                edge.delete()
+                node.save()
+                parent = node
+        self.path_type = LP_DAG
+        self.save()
 
     def make_tree_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, making all other nodes children of the root node
@@ -2242,12 +2274,16 @@ class PathNode(node_factory('PathEdge')):
         verbose_name = _('path node')
         verbose_name_plural = _('path nodes')
 
+    def get_nodetype(self):
+        return (self.oer and 'OER') or (self.text and 'TXT') or ''
+
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
         return {
             'type': 'basic.Rect',
             'id': 'node-%d' % self.id,
-            'attrs': {'text': {'text': self.label.replace("'", " ") }}
+            'attrs': {'text': {'text': self.label.replace("'", " ") }, 'nodetype': self.get_nodetype(),}
+            
         }
 
     def get_absolute_url(self):

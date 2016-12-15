@@ -91,7 +91,8 @@ graph.getElements().forEach(function(node, index, array) {
 {% endif %}
 	node.attr({ rect: { fill: fill_color, stroke: node_color, rx: 3, ry: 3 }});
 	node.set('index', index)
-    label = (1+index).toString() + '.\n' + node.attr('text').text;
+    // label = (1+index).toString() + '.\n' + node.attr('text').text;
+    label = (1+index).toString() + '.   ' + node.attr('nodetype') + '\n' + node.attr('text').text;
     node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11 }});
     console.log(index, label);
     width = label_width(label) + node_padding * 2;
@@ -317,7 +318,6 @@ add_tools(graph);
 paper.fitToContent();
 // $('body').bind("mousewheel", function() { return false; });
 
-{% if 'play' in request.path %}
 // see http://stackoverflow.com/questions/28431384/how-to-make-a-paper-draggable
 svgElement = dagElement.children()[0];
 gElement = svgElement.childNodes[0]
@@ -328,13 +328,13 @@ panAndZoom = svgPanZoom(svgElement,
 	        // viewportSelector: dagElement.childNodes[0].childNodes[0],
 	        viewportSelector: gElement,
 	        fit: false,
-	        zoomScaleSensitivity: 0.1, //0.4,
+	        zoomScaleSensitivity: 0.001, //0.4,
 	        panEnabled: false,
 	        mouseWheelZoomEnabled: false, // true,
 	        fit: false, // true,
 	        contain: true, // false,
 	        minZoom: 0.2,
-	        maxZoom: 1,
+	        maxZoom: 1.5,
 	        onZoom: null, // on_zoom,
 	    });
 
@@ -343,6 +343,7 @@ function on_zoom(relative_zoom) {
 		panAndZoom.fit();
 }
 
+{% if not can_edit %}
 paper.on('blank:pointerdown', function (evt, x, y) {
 	panAndZoom.enablePan();
 	dagElement.css('cursor', 'move');

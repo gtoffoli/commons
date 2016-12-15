@@ -141,10 +141,18 @@ iframe {
         <dl class="list-inline font14 ">
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
           <dd>{% comment %}<form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>{% endcomment %}{{ lp.get_type }}
-            {% if can_chain %}&nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "make sequence" %}"><i class="fa fa-chain font07"></i></a>
-            {% elif can_make_dag %}&nbsp;
-            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_linear_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "keeping the linear ordering" %}" id="submit_{{ lp.id }}"><i class="fa fa-long-arrow-down font07" style="font-weight: bold;"></i></button></form>
+            {% if can_make_sequence %}
+            &nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "convert to sequence type" %}"><i class="fa fa-chain font07"></i></a>
+            {% endif %}
+            {% if can_make_collection %}
+            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_collection/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-h font07"></i></button></form>
+            {% endif %}
+            {% comment %}&nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_linear_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "keeping the linear ordering" %}" id="submit_{{ lp.id }}"><i class="fa fa-long-arrow-down font07" style="font-weight: bold;"></i></button></form>{% endcomment %}
+            {% if can_make_dag %}
             &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_{{ lp.id }}"><i class="fa fa-sitemap font07"></i></button></form>
+            {% endif %}
+            {% if can_make_unconnected_dag %}
+            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-v font07" style="font-weight: bold;"></i></button></form>
             {% endif %}
           </dd>
         </dl>
@@ -153,7 +161,7 @@ iframe {
           <dl style="position:relative" class="font14 marginB10">
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
             {% if lp.path_type == 3 %}
-            <dd id="dag"></dd>
+            <dd id="dag" class="box-scroll" style="height:500px;"></dd>
             {% else %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="list-unstyled">{% endif %}
               {% for node in lp.get_ordered_nodes %}
@@ -217,12 +225,10 @@ iframe {
       return confirm('{% trans "do you really want to delete" %} {% trans "this learning path" %}?');
     }
   {% endif %}
-  {% if can_make_dag %}
   function confirm_convert(form) {
-    return confirm('{% trans "do you really want to convert" %} {% trans "this learning path" %}? {% trans "this operation cannot be undone" %}');
+    return confirm('{% trans "do you really want to convert" %} {% trans "this learning path" %}?{% comment %}{% trans "this operation cannot be undone" %}{% endcomment %}');
   }
-{% endif %}
-	$(document).ready(function() {
+  $(document).ready(function() {
 
 		$('dt a.toggleIcon').on('click', function(event){
 			event.preventDefault();

@@ -2999,7 +2999,9 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_reject'] = lp.can_reject(request)
     var_dict['can_publish'] = lp.can_publish(request)
     var_dict['can_un_publish'] = lp.can_un_publish(request)
-    var_dict['can_chain'] = lp.can_chain(request)
+    var_dict['can_make_collection'] = lp.can_make_collection(request)
+    var_dict['can_make_sequence'] = lp.can_make_sequence(request)
+    var_dict['can_make_unconnected_dag'] = lp.can_make_unconnected_dag(request)
     var_dict['can_make_dag'] = lp.can_make_dag(request)
     if can_edit:
         var_dict['bookmarked_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
@@ -3377,11 +3379,25 @@ def lp_add_oer(request, lp_slug, oer_id):
             path.append_node(node, request)
     return HttpResponseRedirect('/lp/%s/' % lp_slug)
 
+def lp_make_collection(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
+    head = lp.make_collection(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
 def lp_make_sequence(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     if not lp.can_access(request.user):
         raise PermissionDenied
     head = lp.make_sequence(request)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+
+def lp_make_unconnected_dag(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
+    lp.make_unconnected_dag(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def lp_make_linear_dag(request, lp_id):
