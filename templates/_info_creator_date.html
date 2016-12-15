@@ -1,6 +1,6 @@
 {% load staticfiles i18n %}
 {% block info-creator-date %}
-        <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <img {% if data.creator.get_profile.avatar %} src="/media/{{ data.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/resources_by/{{ data.creator.username }}">{{ data.creator.get_full_name }}</a><br>
+        <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <img {% if data.creator.get_profile.avatar %} src="/media/{{ data.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.creator.username }}">{{ data.creator.get_full_name }}</a><br>
            <span class="demiBold">{% trans "on" %}</span> {{ data.created|date:"d/m/Y" }}<br>
            {% if data.project.proj_type.name == 'ment' %}
              <span class="demiBold">{% trans "in project of mentoring" %}</span>

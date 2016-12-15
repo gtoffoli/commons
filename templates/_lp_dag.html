@@ -26,12 +26,12 @@
 
 <script type="text/javascript">
 
-var x_margin = 50;
+/*var x_margin = 50;
 var max_width = 300;
 var half_max_width = max_width/2;
-var y_step = 50;
+var y_step = 50;*/
 var node_height = 40;
-var half_height = node_height/2;
+//var half_height = node_height/2;
 var node_padding = 10; // 20; // 50;
 var icon_size = 16;
 var node_color = '#CB4F98';
@@ -42,8 +42,8 @@ var dagElement = $('#dag');
 var graph = new joint.dia.Graph;
 var paper = new joint.dia.Paper({
     el: dagElement,
-    width: 800,
-    height: 400,
+    width: dagElement.width(),
+    height: dagElement.height(),
     model: graph,
     gridSize: 1,
 {% if can_edit %}
@@ -57,13 +57,15 @@ var paper = new joint.dia.Paper({
 {% if can_edit %}
 var drop = new joint.shapes.basic.Circle({
     size: { width: icon_size, height: icon_size },
-    attrs: { circle: { stroke: 'red', fill: 'white' }, text: { text: '\u2a2f', fill: 'red', 'font-size': 12, 'font-weight': 'bold', 'text-anchor': 'middle'} }
+    attrs: { circle: { stroke: 'red', fill: 'white' }, text: { text: '\u2a2f', fill: 'red', 'font-size': '14', 'font-family': 'Open Sans, sans-serif', 'font-weight': 'bold', 'text-anchor':'middle', 'y':'13'} }
 });
 
+/*
 var add = new joint.shapes.basic.Rect({
     size: { width: icon_size, height: icon_size },
-    attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-family': 'Open Sans, sans-serif', 'font-size': 12, } }
+    attrs: { rect: { fill: 'green' }, text: { text: '+', fill: 'white', 'font-family': 'Open Sans, sans-serif', 'font-size': 11, 'text-anchor':'middle', } }
 });
+*/
 {% endif %}
 
 var json_in = '{{ lp.make_json|safe }}';
@@ -93,7 +95,7 @@ graph.getElements().forEach(function(node, index, array) {
 	node.set('index', index)
     // label = (1+index).toString() + '.\n' + node.attr('text').text;
     label = (1+index).toString() + '.   ' + node.attr('nodetype') + '\n' + node.attr('text').text;
-    node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11 }});
+    node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11, 'text-anchor':'middle', }});
     console.log(index, label);
     width = label_width(label) + node_padding * 2;
     node.resize(width, node_height);
@@ -297,7 +299,7 @@ function add_tools(graph) {
 	    node.embed(drop_cell);
 	    graph.addCell(drop_cell);
 	    // drop_cell.position(width-icon_size/2, -icon_size/2, { parentRelative: true});
-	    drop_cell.position(width-icon_size*0.2, -icon_size*0.8, { parentRelative: true});
+	    drop_cell.position(width-icon_size*0.4, -icon_size*0.4, { parentRelative: true});
 		/*
 	    add_before = add.clone();
 	    add_before.set('action', 'add_before')
@@ -333,8 +335,8 @@ panAndZoom = svgPanZoom(svgElement,
 	        mouseWheelZoomEnabled: false, // true,
 	        fit: false, // true,
 	        contain: true, // false,
-	        minZoom: 0.2,
-	        maxZoom: 1.5,
+	        minZoom: 0.3,
+	        maxZoom: 1.0,
 	        onZoom: null, // on_zoom,
 	    });
 

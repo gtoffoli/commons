@@ -39,6 +39,15 @@ iframe {
  height: 350px;
  border:0;
 }
+#dag {
+	width:100%;
+	min-height:400px;
+	overflow:auto;
+	/*background:rgba(203,79,152, 0.05);*/
+	border:1px solid #ccc;
+  margin-bottom: 10px;
+  padding:10px;
+}
 </style>
 {% endblock %}
 {% block body_class %}lp_detail{% endblock %}
@@ -161,7 +170,7 @@ iframe {
           <dl style="position:relative" class="font14 marginB10">
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
             {% if lp.path_type == 3 %}
-            <dd id="dag" class="box-scroll" style="height:500px;"></dd>
+            <dd id="dag"></dd>
             {% else %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="list-unstyled">{% endif %}
               {% for node in lp.get_ordered_nodes %}

@@ -9,6 +9,7 @@
           <h3 class="{% if can_edit %}h3-left {% endif %}font18">{% if lp.path_type != 1 %}{{ i_node }}. {% endif %}{{ node.label }}
           {% if can_edit and not language_mismatch %}&nbsp; <a href="/pathnode/{{ node.id }}/edit/" target="_top" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
           {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/pathnode/{{ object.pk }}/" target="_top" title="{% trans "show translate view" %}"><i class="fa fa-language"></i></a>{% endif %}
+          &nbsp; <a href="/lp/{{ lp.slug }}/play/?node={{i_node|add:"-1"}}" title="{% trans "show player view" %}" target="_top"><i class="fa fa-youtube-play" aria-hidden="true"></i></a>
           </h3>
         </div>
         <div class="section-node-content">
