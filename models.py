@@ -2258,6 +2258,7 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
             json['labels'] = [{'position': .5, 'attrs': {'text': {'text': '%d - %d' % (self.order, self.id), 'font-size': 10, 'font-family': 'san-serif'}}}]
         return json
 
+import string
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
     label = models.TextField(blank=True, verbose_name=_('label'))
@@ -2277,12 +2278,13 @@ class PathNode(node_factory('PathEdge')):
     def get_nodetype(self):
         return (self.oer and 'OER') or (self.text and 'TXT') or ''
 
+
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
         return {
             'type': 'basic.Rect',
             'id': 'node-%d' % self.id,
-            'attrs': {'text': {'text': self.label.replace("'", " ") }, 'nodetype': self.get_nodetype(),}
+            'attrs': {'text': {'text': self.label }, 'nodetype': self.get_nodetype(),}
             
         }
 
