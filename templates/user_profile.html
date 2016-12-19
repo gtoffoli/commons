@@ -21,7 +21,7 @@
       </div>
 	{% endif %}
 	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  profile_user.get_display_name }} 
-		{% if complete_profile and not request.user = profile_user %}
+		{% if complete_profile and not request.user == profile_user %}
 		&nbsp; <a href="/my_mail/compose/{{ profile_user.username }}/" title="{% trans "send a message to" %} {{ profile_user.get_display_name }}"><i class="fa fa-envelope" style="font-size: 0.7em; vertical-align="middle"></i></a>
 	{% endif %}</h2>
     {% if can_edit and complete_profile %}
@@ -121,10 +121,42 @@
                 <dd class="field-content width-full"><blockquote class="font14">{{ profile.long|safe }}</blockquote></dd>
               </dl>
             {% endif %}
+	        {% if profile.curriculum %}
+	        	CURRICULUM
+            {% endif %}
+            {% if profile.skype and request.user == profile_user %}
+            <div class="clearfix marginB10">
+              <dl class="list-inline pull-left font14 paddingR20">
+                <dt>{% trans "Skype id" %}</dt>
+                <dd>{{ profile.skype }}</dd>
+              </dl>
+            </div>
+            {% endif %}
+            {% if profile.mentoring %}
+            <div class="clearfix marginB10">
+              <dl class="list-inline pull-left font14 paddingR20">
+				<dt>{% trans "mentor presentation"|capfirst %}</dt>
+                <dd class="field-content width-full"><blockquote class="font14">{{ profile.mentoring|safe }}</blockquote></dd>
+              </dl>
+            </div>
+            {% endif %}
+            {% if can_edit and not profile.curriculum %}
+		        <dl class="font14 marginB10">
+		           <dt class="demiBold">{% trans "add curriculum"|capfirst %}</dt>
+		           <dd><form enctype="multipart/form-data" method="post" id="add_curriculum" action="/profile/add_document/">{% csrf_token %}
+		               <input type="hidden" id="id" name="id" value="{{ profile.user_id }}">
+		               <div>{{ form.non_field_errors }}</div>
+		               <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+		               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
+		                  {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
+		               </div>
+		               </form></dd>
+		        </dl>
+            {% endif %}
             {% if can_edit and complete_profile %}
-              <ul class="list-inline">
-                <li class="list-back-c0"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
- 			  </ul>
+	            <ul class="list-inline">
+	               <li class="list-back-c0"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
+	 			</ul>
             {% endif %}
           </div>
         </div>

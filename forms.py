@@ -61,8 +61,8 @@ dateTimeOptions = {
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        # fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages',  'long', 'url', 'networks', 'avatar',]
-        fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages',  'long', 'url', 'networks', ]
+        # fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'long', 'url', 'networks', ]
+        fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'long', 'url', 'networks', 'skype', 'mentoring',]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
@@ -77,10 +77,12 @@ class UserProfileForm(forms.ModelForm):
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('interest areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
     languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     other_languages = forms.CharField(required=False, label=_('known languages not listed above'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 1,}))
-    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
+    short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('very short presentation: 100-200 characters'))
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}))
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    skype = forms.CharField(required=False, label=_('skype id'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('your Skype id will be shared only within active mentoring relationships'))
+    mentoring = forms.CharField(required=False, label=_('mentor presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('an extension to your presentation focused on your qualification as a potential Mentors'))
 
     """
     def clean_avatar(self):

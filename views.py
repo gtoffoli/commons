@@ -365,6 +365,8 @@ def user_profile(request, username, user=None):
     profile = user.get_profile()
 	
     var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'memberships': memberships, }
+    if can_edit:
+        var_dict['form'] = DocumentUploadForm()
     if profile:
         var_dict['complete_profile'] = profile.get_completeness()
     else:
@@ -522,6 +524,21 @@ def profile_avatar_upload(request, username):
             return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/my_profile/')
+
+def profile_add_document(request):
+    if request.POST:
+        user_id = request.POST.get('id')
+        user = User.objects.get(pk=user_id)
+        if request.POST.get('cancel', ''):
+            return HttpResponseRedirect('/profile/%s/' % user.username)
+        form = DocumentUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            user_profile = UserProfile.objects.get(user_id=user_id)
+            uploaded_file = request.FILES['docfile']
+            version = handle_uploaded_file(uploaded_file)
+            user_profile.curriculum = version.document
+            user_profile.save()
+        return HttpResponseRedirect('/profile/%s/' % user.username)
 
 def my_preferences(request):
     user = request.user
@@ -2785,11 +2802,7 @@ def oer_evaluation_edit_by_id(request, evaluation_id):
     return oer_evaluation_edit(request, evaluation_id=evaluation.id, oer=oer)
 
 def handle_uploaded_file(file_object):
-    document_type = DocumentType.objects.get(pk=2) # OER file type
-    """
-    source = get_object_or_404(WebFormSource, pk=1) # WebForm source
-    source.upload_document(f, f.name, document_type=document_type)
-    """
+    document_type = DocumentType.objects.get(pk=2) # OER file type ??? non usato
     # from documents.settings import LANGUAGE
     from documents import LANGUAGE
     version = Document.objects.upload_single_document(document_type, file_object, language=LANGUAGE)

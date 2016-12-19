@@ -465,6 +465,9 @@ class UserProfile(models.Model):
     # avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
     avatar = AvatarField('', upload_to='images/avatars/', width=100, height=100)
     enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
+    skype = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('skype id'))
+    mentoring = models.TextField(blank=True, verbose_name=_('mentor presentation'))
+    curriculum = models.ForeignKey(Document, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
 
     def __unicode__(self):
         # return u'%s profile' % self.user.username
