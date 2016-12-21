@@ -41,15 +41,25 @@
           {% endif %}
           <div class="padding10">
             {% if profile.short %}<p class="marginB10">{{ profile.short }}</p>{% endif %}
+            {% if request.user.id == profile_user.id %}
+              <div class="clearfix">
+                <dl class="pull-left list-inline font14 paddingR20">
+                  <dt>{% trans "username"|capfirst %}</dt>
+                  <dd>{{ profile_user.username }}</dd>
+                </dl>
+                <dl class="pull-left list-inline font14 paddingR20">
+                  <dt>{% trans "email"|capfirst %}</dt>
+                  <dd>{{ profile_user.email }}</dd>
+                </dl>
+                {% if profile.skype %}
+                  <dl class="list-inline pull-left font14">
+                    <dt>{% trans "Skype id" %}</dt>
+                    <dd>{{ profile.skype }}</dd>
+                  </dl>
+                {% endif %}
+              </div>
+            {% endif %}
             <div class="clearfix marginB10">
-              <dl class="pull-left list-inline font14 paddingR20">
-                <dt>{% trans "username"|capfirst %}</dt>
-                <dd>{{ profile_user.username }}</dd>
-              </dl>
-              <dl class="pull-left list-inline font14 paddingR20">
-                <dt>{% trans "email"|capfirst %}</dt>
-                <dd>{{ profile_user.email }}</dd>
-              </dl>
               {% if profile.country %}
                 <dl class="pull-left list-inline font14 paddingR20">
                   <dt>{% trans "country"|capfirst %}</dt>
@@ -57,7 +67,7 @@
                 </dl>
               {% endif %}
               {% if profile.city %}
-                <dl class="pull-left list-inline font14 paddingR20">
+                <dl class="pull-left list-inline font14">
                   <dt>{% trans "city"|capfirst %}</dt>
                   <dd>{{ profile.city }}</dd>
                 </dl>
@@ -93,10 +103,10 @@
             {% if profile.languages.all or profile.other_languages %}
               <div class="clearfix marginB10">
                 {% if profile.languages.all %}
-                  {% include "_data_languages.html" with data=profile.languages.all data_class=" pull-left font14 paddingR20" action="/people/search/" %}
+                  {% include "_data_languages.html" with data=profile.languages.all data_class=" font14" action="/people/search/" %}
                 {% endif %}
                 {% if profile.other_languages %}
-                  <dl class="list-inline pull-left font14">
+                  <dl class="list-inline font14">
                     <dt>{% trans "other languages"|capfirst %}</dt>
                     <dd>{{ profile.other_languages }}</dd>
                   </dl>
@@ -112,7 +122,7 @@
                   </dl>
                 {% endif %}
                 {% if profile.networks.all %}
-                  {% include "_data_all.html" with data=profile.networks.all data_class=" pull-left font14 marginB10" label_data="social networks" action="/people/search/" type_data="networks" %}
+                  {% include "_data_all.html" with data=profile.networks.all data_class=" font14 marginB10" label_data="social networks" action="/people/search/" type_data="networks" %}
                 {% endif %}
               </div>
             {% endif %}
@@ -121,38 +131,35 @@
                 <dd class="field-content width-full"><blockquote class="font14">{{ profile.long|safe }}</blockquote></dd>
               </dl>
             {% endif %}
-	        {% if profile.curriculum %}
-	        	CURRICULUM
-            {% endif %}
-            {% if profile.skype and request.user == profile_user %}
-            <div class="clearfix marginB10">
-              <dl class="list-inline pull-left font14 paddingR20">
-                <dt>{% trans "Skype id" %}</dt>
-                <dd>{{ profile.skype }}</dd>
-              </dl>
-            </div>
-            {% endif %}
             {% if profile.mentoring %}
-            <div class="clearfix marginB10">
-              <dl class="list-inline pull-left font14 paddingR20">
-				<dt>{% trans "mentor presentation"|capfirst %}</dt>
+              <dl class="font14 marginB10">
+                <dt>{% trans "mentor presentation"|capfirst %}</dt>
                 <dd class="field-content width-full"><blockquote class="font14">{{ profile.mentoring|safe }}</blockquote></dd>
               </dl>
-            </div>
             {% endif %}
-            {% if can_edit and not profile.curriculum %}
+
+            {% if profile.curriculum and not can_edit %}
+              <dl class="list-inline font14 marginB10">
+                <dt>{% trans "curriculum"|capfirst %}</dt>
+                <dd>{{ profile.curriculum }} &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+                  {% if profile.curriculum.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+                </dd>
+            </dl>
+            {% endif %}
+            {% if can_edit %}
 		        <dl class="font14 marginB10">
-		           <dt class="demiBold">{% trans "add curriculum"|capfirst %}</dt>
+		           <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
 		           <dd><form enctype="multipart/form-data" method="post" id="add_curriculum" action="/profile/add_document/">{% csrf_token %}
 		               <input type="hidden" id="id" name="id" value="{{ profile.user_id }}">
 		               <div>{{ form.non_field_errors }}</div>
 		               <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-		               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
+		               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "save" %}</button>
 		                  {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
 		               </div>
 		               </form></dd>
 		        </dl>
             {% endif %}
+
             {% if can_edit and complete_profile %}
 	            <ul class="list-inline">
 	               <li class="list-back-c0"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>

@@ -22,6 +22,12 @@
     <p class="pull-right paddingT10 paddingLR5">
        <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>
+  {% elif profile %}
+     <h5 class="pull-left ">{% trans "curriculum"|capfirst %}: {{  profile.get_display_name }}</h5>
+     <p class="pull-right paddingT10 paddingLR5">
+       <a href="/profile/{{ profile.get_username }}/"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
+    </p>
+    </p>
 
   {% endif %}
   </div>

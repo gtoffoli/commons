@@ -2895,6 +2895,8 @@ def document_view(request, document_id, node_oer=False, return_url=False):
     document = get_object_or_404(Document, pk=document_id)
     node_doc = request.GET.get('node', '')
     proj = request.GET.get('proj', '')
+    profile = request.GET.get('profile', '')
+    
     if document.viewerjs_viewable:
        if node_doc:
            if not node_oer:
@@ -2904,6 +2906,13 @@ def document_view(request, document_id, node_oer=False, return_url=False):
        elif proj:
            folder_document = FolderDocument.objects.get(document_id=document_id)
            project = Project.objects.get(pk = proj)
+       elif profile:
+           profile_document = UserProfile.objects.get(curriculum_id=document_id)
+           # profile_user = User.objects.get(username = profile.username)
+           user = User.objects.get(username = profile)
+           profile = user.get_profile()
+           print "=========== TEST ============="
+           print profile
        else:
            oer_document = OerDocument.objects.get(document_id=document_id)
            oer = OER.objects.get(pk = oer_document.oer_id)
@@ -2912,7 +2921,7 @@ def document_view(request, document_id, node_oer=False, return_url=False):
            return url
        else:
             # return HttpResponseRedirect(url)
-           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, 'project': project}, context_instance=RequestContext(request))
+           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(
