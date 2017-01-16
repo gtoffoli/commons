@@ -32,8 +32,8 @@ from models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevel
 from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode, Featured
-from models import PROJECT_STATE_CHOICES, CHAT_TYPE_CHOICES, OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
-from models import PROJECT_OPEN, PROJECT_CLOSED
+from models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
+from models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
 class UserChangeForm(UserWithMPTTChangeForm):
     groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
@@ -82,7 +82,10 @@ class UserProfileForm(forms.ModelForm):
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     skype = forms.CharField(required=False, label=_('skype id'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('your Skype id will be shared only within active mentoring relationships'))
+    p2p_communication = forms.CharField(required=False, label=_('P2P communication preferences'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('any information useful in negotiating with a partner a convenient 1:1 communication solution; it will be shared only within active mentoring relationships.'))
     mentoring = forms.CharField(required=False, label=_('mentor presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('an extension to your presentation focused on your qualification as a potential Mentors'))
+    mentor_for_all = forms.BooleanField(required=False, label=_('available as mentor for other communities'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('check if available/interested to act as mentor outside the community/ies where registered to the Roll of Mentors.'))
+    mentor_unavailable = forms.BooleanField(required=False, label=_('currently not available as mentor'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('check if temporarily unavailable to accept (more) requests by mentees; remember to update this when the situation changes!'))
 
     """
     def clean_avatar(self):

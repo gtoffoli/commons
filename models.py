@@ -466,7 +466,10 @@ class UserProfile(models.Model):
     avatar = AvatarField('', upload_to='images/avatars/', width=100, height=100)
     enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
     skype = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('skype id'))
+    p2p_communication = models.TextField(blank=True, verbose_name=_('P2P communication preferences'))
     mentoring = models.TextField(blank=True, verbose_name=_('mentor presentation'))
+    mentor_for_all = models.BooleanField(default=False, verbose_name=_('available as mentor for other communities'), help_text=_('available to act as mentor also for member of other communities.'))
+    mentor_unavailable = models.BooleanField(default=False, verbose_name=_('currently not available as mentor'), help_text=_('temporarily unavailable to accept (more) requests by mentees.'))
     curriculum = models.ForeignKey(Document, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
 
     def __unicode__(self):
@@ -696,12 +699,26 @@ PROJECT_LINK_DICT = {
   PROJECT_DELETED: 'Red',
 }
 
+MEMBERSHIP_REQUEST_SUBMITTED = 0
+MEMBERSHIP_ACTIVE = 1
+MEMBERSHIP_REQUEST_REJECTED = 2
+MEMBERSHIP_INACTIVE = 3
 MEMBERSHIP_STATE_CHOICES = (
-    (0, _('request submitted')),
-    (1, _('request accepted')),
-    (2, _('request rejected')),
-    (3, _('membership suspended')),)
+    (MEMBERSHIP_REQUEST_SUBMITTED, _('request submitted')),
+    (MEMBERSHIP_ACTIVE, _('request accepted')),
+    (MEMBERSHIP_REQUEST_REJECTED, _('request rejected')),
+    (MEMBERSHIP_INACTIVE, _('membership suspended or expired')),)
 MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
+
+MENTORING_MODEL_A = 1
+MENTORING_MODEL_B = 2
+MENTORING_MODEL_C = MENTORING_MODEL_A+MENTORING_MODEL_B
+MENTORING_MODEL_CHOICES = (
+    (0, _('no mentoring')),
+    (MENTORING_MODEL_A, _('A - Administrator chooses mentor')),
+    (MENTORING_MODEL_B, _('B - Mentee chooses mentor')),
+    (MENTORING_MODEL_C, _('A+B - Administrator or mentee chooses mentor')),)
+MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 
 """
 class ProjectBase(models.Model):
@@ -732,6 +749,7 @@ class Project(Resource):
     small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True)
     big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True)
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
+    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, default=MENTORING_MODEL_A, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
