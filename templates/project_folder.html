@@ -1,62 +1,94 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
 
-{% block head_title %}{% trans "shared documents for"|capfirst %} {% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% trans "shared folder for"|capfirst %} {% if proj_type.name = 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block extra_style %}
+<style>
+dl.eval {
+	background: white;
+	margin-bottom:5px;
+}
+dl.eval dd {
+	padding:20px 20px 10px 20px;
+}
+dl.eval dd:nth-child(odd) {
+    background: transparent;
+}
+dl.eval dd:nth-child(even) {
+    background: #f8f8f8;
+}
 
+</style>
+{% endblock %}
 {% block body_class %}project_folder{% endblock %}
 {% block body %}
-    <h2 class="text-center"><span style="font-size: smaller;">{% trans "shared folder for"|capfirst %} {% if project.proj_type.name = 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}</span>
-		<a href="/project/{{ project.slug }}/"><i>{{ project.get_name }}</i></a>
-	</h2>
-<div class="row bc-white marginB20">
-  <div class="col-sm-9 col-md-9">
-	<section>
-   		{% if can_share %}
-   		<div><strong>{% trans "shared documents"|capfirst %}</strong></div>
-   		{% if folderdocuments %}
-		<ol class="root">
-	    {% for folderdocument in folderdocuments %}
-		{% with document=folderdocument.document %}
-		  	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
-			<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
-		  	{% csrf_token %}
-		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}<a href="/folderdocument/{{ folderdocument.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-close" style="font-size: 0.7em; color: red;"></i></a>&nbsp;&nbsp;{% endif %}
-			{% csrf_token %}
-			<input type="hidden" name="id" value="{{ document.id }}">{% if folderdocument.label %}{{ folderdocument.label }}{% else %}{{ document.label }}{% endif %}
-		    &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download" style="font-size: 0.8em;"></i></a>
-		    {% comment %} {% with mimetype=document.file_mimetype %}
-		    {% if 'pdf' in mimetype or 'opendocument.text' in mimetype %}{% endcomment %}
-		    {% if document.viewable %} &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
-		 	{% if is_admin or user.is_superuser or user = folderdocument.user %}&nbsp;&nbsp;&nbsp;<a href="/folderdocument/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit" style="font-size: 0.7em;"></i></a>&nbsp;&nbsp;{% endif %}
-		     {% comment %}{% endwith %}{% endcomment %}
-			&nbsp; &nbsp; <i style="font-size: smaller;">{% trans "loaded by" %} {{ folderdocument.user.get_display_name }} {% trans "on" %} {{ document.date_added }}</i>
-			</li></form>
-	    {% endwith %}
-	    {% endfor %}
-		</ol>
-   		{% else %}
-		<div><i>{% trans "no shared documents are present"|capfirst %}</i></div>
-   		{% endif %}
-	    {% endif %}
-   		{% if can_share %}
-   		<div style="margin-top: 1.0em;">
-   		<div><i>{% trans "add document"|capfirst %}</i></div>
-   		<form enctype="multipart/form-data" method="POST" id="add_document" action="/project/add_document/">
-			{% csrf_token %}
-			<input type="hidden" id="id" name="id" value="{{ project.id }}" />
-            <div>{{ form.non_field_errors }}</div>
-            <div><span style="color: red;">{{ form.docfile.errors }}</span>{{ form.docfile }}
-			<button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}' style="margin-left: 1.0em; padding: 0 1.5em;">{% trans "add"|capfirst %}</button>
-			{% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="padding: 0 1.5em;">Cancel</button>{% endif %}
-			</div>
-   		</form>
-   		</div>
-	    {% endif %}
-    </section>
-  </div>
-  <div class="col-sm-3 col-md-3">
-  </div>
-</div>
 
+<div class="panel panel-c4 text-left marginTB30">
+  <div class="panel-heading-c4 padding1020">
+    <h3 class="pull-left font_small marginTB5">{{ project.get_name }}</h3>
+    <p class="pull-right marginB0 font26 font_button_small">
+      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-list-alt font07em c-demiblack" aria-hidden="true"></i></a>
+    </p>
+    <div style="clear:both;">
+      <h1 class="marginTB0"><small class="c-demiblack">{% trans "shared folder"|capfirst %}</small></h1>
+    </div>
+  </div>
+  {% if can_share %}
+    <dl class="eval">
+       {% if folderdocuments %}
+         {% for folderdocument in folderdocuments %}{% with document=folderdocument.document %}
+           <dd>
+             <div class="row">
+               <div class="col-sm-7 col-md-7 col-lg-7">
+                 <p>{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
+                 <p class="font12"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
+               </div>
+               <div class="col-sm-5 col-md-5 col-lg-5">
+                 <ul class="list-inline">
+                    {% if is_admin or user.is_superuser or user = folderdocument.user %}
+                      <li class="marginR10"><a href="/folderdocument/{{ folderdocument.id }}/delete/" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
+                      <li class="marginR20"><a href="/folderdocument/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
+                    {% endif %}
+                    <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
+                    {% if document.viewable %}
+                      <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                    {% endif %}
+                 </ul>
+               </div>
+             </div>
+           </dd>
+         {% endwith %}{% endfor %}
+       {% else %}
+         <dd>
+           <p>{% trans "no shared documents are present"|capfirst %}</p>
+         </dd>
+       {% endif %}
+    </dl>
+    <dl class="font14 padding20 bc-white marginB0" style="border-bottom-left-radius:4px; border-bottom-right-radius:4px; ">
+      <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
+      <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/project/add_document/">{% csrf_token %}
+        <input type="hidden" id="id" name="id" value="{{ project.id }}">
+        <div>{{ form.non_field_errors }}</div>
+        <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+          <div><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
+            {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
+          </div>
+      </form></dd>
+    </dl>
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_script %}
+{% if can_share %}
+<script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
+
+<script type="text/javascript">
+       var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf";
+       var appls = "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,video/mp3,video/mp4,application/rtf";
+       var fsize = 10;
+</script>
+     {% include "_validate_file.html" %}
+{% endif %}
 {% endblock %}

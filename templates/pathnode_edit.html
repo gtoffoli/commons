@@ -6,6 +6,7 @@
 
 {% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: {{ node.label }}{% else %}{% trans "add node"|capfirst %}{% endif %}{% endblock %}
 
+
 {% block extra_style %}
     <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
     <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
@@ -38,20 +39,11 @@
 {% endcomment %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
-{% comment %}
-    <h3 class="pull-left marginTB5">{{ name_lp }}</h3>
-    <p class="pull-right marginB0 font26">
-      <a href="/lp/{{ slug_lp }}/" title="{% trans "show learning path" %}"><i class="fa fa-list-alt font07em c-white" aria-hidden="true"></i></a>
-    </p>
-    <div style="clear:both;">
-{% endcomment %}
     <h4 class="marginTB5">{{ name_lp }}</h4>
-    <div>
-      <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
-    </div>
+    <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
   </div>
   <p class="padding1020 demiBold font12">{% trans "In this form you can specify 3 types of resources: 1) an OER; 2) a document tailored to the needs of this learning path (LP); 3) a formatted text. When playing the LP, the platform will visualize only one of them: the OER, if present, otherwise the document or the formatted text as the last choice." %}</p>
-  <form method="POST" action="{{ action }}" id="edit_form" enctype="multipart/form-data">{% csrf_token %}
+  <form method="POST" action="{{ action }}" id="edit_pathnode" enctype="multipart/form-data">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
     {% if form.errors %}
@@ -62,20 +54,35 @@
       {% endif %}
     {% endif %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
+
       <div class="form-group">
-        {% if field.label %}
-          <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
-        {% endif %}
-        {% if  field.name  == 'document' %} 
+      	{% if field.name == 'remove_document' or field.name  == 'new_document' %}
+        {% if field.name == 'remove_document' %}
           {% if node.document_id > 0 %}
-            <div>{{ node.document.label }}</div>
+            <label for = "group_doc" style="display:block"%>{% trans "document"|capfirst %}</label>
+              {{ field }} <label for="{{ field.name }}" style="font-weight: normal">{{ field.label|capfirst}}: {{node.document.label}}</label>
+          {% else %}
+            <div style="display:none">{{ field }}</div>
           {% endif %}
-           <div>{{ field }}</div>
+        {% endif %}
+        {% if  field.name  == 'new_document' %}
+          {% if not node.document_id > 0 %}
+            <label for="{{ field.name }}">{{ field.label|capfirst}}</label>
+          {% endif %}
+        {% endif %}
         {% else %}
+        <label for="{{ field.name }}">{{ field.label|capfirst}}</label>
+        {% endif %}
+        {% if not field.name == 'remove_document' %}
           <span class="txt-error">{{ field.errors }}</span>{{ field }}
           {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
         {% endif %}
       </div>
+      {% if  field.name  == 'new_document' %}
+        <div class="marginT5 form-group">
+          <button id="clearfile" name="clearfile" class="btn btn-default" type="button">{% trans "rimuovi file selezionato" %}</button>
+        </div>
+      {% endif %}
     {% endwith %}{% endfor %}
     </fieldset>
     <div class="panel-footer-c1 padding1020">
@@ -88,10 +95,50 @@
 {% endblock %}
 
 {% block extra_script %}
+   <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
+
    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
 
 {% include "_tinymce_init.html" with data='extend' %}
+
+     <script type="text/javascript" src="{% static "commons/js/jquery.validate.min.js" %}"></script>
+     <script type="text/javascript" src="{% static "commons/js/additional-methods.min.js" %}"></script>
+     <script type="text/javascript" src="{{ STATIC_URL }}commons/js/localization/messages_{{ LANGUAGE_CODE }}.js"></script>
+     <script type="text/javascript">
+        var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf";
+        var appls = "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,video/mp3,video/mp4,application/rtf";
+        var fsize = 10;
+        $(document).ready(function() {
+          $.validator.addMethod('filesize', function(value, element, param) {
+            try{
+              return this.optional(element) || (element.files[0].size <= (param*1048576))
+            }
+            catch(err) {
+              return true
+            }
+          });
+          $("#edit_pathnode").validate ({
+             rules:{
+               'new_document':{
+                  extension: exts,
+                  accept: appls,
+                  filesize: fsize
+               },
+             },
+             submitHandler: function(form) {
+               form.submit();
+             }
+          });
+          $('#clearfile').click(function() {
+             $('#id_new_document').filestyle('clear');
+             if ($("#id_new_document").hasClass('error')) {
+                $("#id_new_document").removeClass('error');
+                $("#id_new_document-error").html('');
+             }
+          });
+        });
+        </script>
 {% endblock %}

@@ -371,9 +371,10 @@ def user_profile(request, username, user=None):
         var_dict['complete_profile'] = profile.get_completeness()
     else:
         var_dict['complete_profile'] = False
+
     if profile and profile.get_completeness():
         var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
-
+     
     if request.user.is_authenticated():
         if not profile or not request.user == profile.user:
             # actstream.action.send(request.user, verb='View', action_object=profile)
@@ -525,20 +526,42 @@ def profile_avatar_upload(request, username):
         else:
             return HttpResponseRedirect('/my_profile/')
 
-def profile_add_document(request):
+def profile_add_document(request,username):
+    user = get_object_or_404(User, username=username)
+    if not user.can_edit(request):
+        return HttpResponseRedirect('/my_profile/')
+    profiles = UserProfile.objects.filter(user=user)
+    profile = profiles and profiles[0] or None
     if request.POST:
-        user_id = request.POST.get('id')
-        user = User.objects.get(pk=user_id)
-        if request.POST.get('cancel', ''):
-            return HttpResponseRedirect('/profile/%s/' % user.username)
         form = DocumentUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            user_profile = UserProfile.objects.get(user_id=user_id)
-            uploaded_file = request.FILES['docfile']
+            try:
+                uploaded_file = request.FILES['docfile']
+            except:
+                return HttpResponseRedirect('/my_profile/')
+            old_curriculum = profile.curriculum
             version = handle_uploaded_file(uploaded_file)
-            user_profile.curriculum = version.document
-            user_profile.save()
-        return HttpResponseRedirect('/profile/%s/' % user.username)
+            profile.curriculum = version.document
+            profile.save()
+            if old_curriculum:
+                document = Document.objects.get(pk=old_curriculum.id)
+                document.delete()
+    return HttpResponseRedirect('/my_profile/')
+
+def profile_delete_document(request, username):
+    user = get_object_or_404(User, username=username)
+    if not user.can_edit(request):
+        return HttpResponseRedirect('/my_profile/')
+    profiles = UserProfile.objects.filter(user=user)
+    profile = profiles and profiles[0] or None
+    if request.POST:
+        old_curriculum = profile.curriculum
+        profile.curriculum_id = ''
+        profile.save()
+        if old_curriculum:
+            document = Document.objects.get(pk=old_curriculum.id)
+            document.delete()
+    return HttpResponseRedirect('/my_profile/')
 
 def my_preferences(request):
     user = request.user
@@ -835,15 +858,16 @@ def project_add_document(request):
     form = DocumentUploadForm(request.POST, request.FILES)
     if form.is_valid():
         uploaded_file = request.FILES['docfile']
+        try:
+            uploaded_file = request.FILES['docfile']
+        except:
+            return HttpResponseRedirect('/project/%s/folder/' % project.slug)
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
         folderdocument.save()
         # track_action(request.user, 'Upload', folderdocument)
         track_action(request.user, 'Create', folderdocument, target=project)
-        return HttpResponseRedirect('/project/%s/folder/' % project.slug)
-    else:
-        # return render_to_response('project_folder.html', {'form': form,}, context_instance=RequestContext(request))
-        return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
 def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
@@ -1096,7 +1120,6 @@ def project_detail(request, project_id, project=None):
     var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
     """
     oers_last_evaluated = project.get_oers_last_evaluated()
-    print len(oers_last_evaluated)
     var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
     var_dict['oers_last_evaluated'] = oers_last_evaluated[:MAX_OERS_EVALUATED]
     lps = LearningPath.objects.filter(project=project).order_by('-created')
@@ -1183,7 +1206,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
     elif request.POST:
-        print "================ SESTO PASSO ============"
         project_id = request.POST.get('id', '')
         parent_id = request.POST.get('parent', '')
         if project_id:
@@ -2817,21 +2839,17 @@ def oer_add_document(request):
         form = DocumentUploadForm(request.POST, request.FILES)
         if form.is_valid():
             uploaded_file = request.FILES['docfile']
+            try:
+                uploaded_file = request.FILES['docfile']
+            except:
+                return HttpResponseRedirect('/oer/%s/' % oer.slug)
             version = handle_uploaded_file(uploaded_file)
             # oer.documents.add(version.document)
             oer_document = OerDocument(oer=oer, document=version.document)
             oer_document.save()
             oer.save()
-            # return HttpResponseRedirect('/oer/%s/' % oer.slug)
-        """
-        else:
-            can_edit = oer.can_edit(request.user)
-            return render_to_response('oer_detail.html', {'oer': oer, 'can_edit': can_edit, 'form': form,}, context_instance=RequestContext(request))
-        """
-        
         return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
-# def document_download(request):
 def document_download(request, document_id, document=None):
     if not document:
         document = get_object_or_404(Document, pk=document_id)
@@ -2908,14 +2926,12 @@ def document_view(request, document_id, node_oer=False, return_url=False):
            project = Project.objects.get(pk = proj)
        elif profile:
            profile_document = UserProfile.objects.get(curriculum_id=document_id)
-           # profile_user = User.objects.get(username = profile.username)
            user = User.objects.get(username = profile)
            profile = user.get_profile()
-           print "=========== TEST ============="
-           print profile
        else:
            oer_document = OerDocument.objects.get(document_id=document_id)
            oer = OER.objects.get(pk = oer_document.oer_id)
+       
        url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
        if return_url:
            return url
@@ -3531,12 +3547,26 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     uploaded_file = 0
                 node = form.save(commit=False)
                 node.editor = user
-                if (uploaded_file):
+                # old_document = ''
+                if (request.POST.get('remove_document')):
+                    document = node.document
+                    node.document_id = ''
+                    # document = Document.objects.get(pk=document.id)
+                    # document.delete()
+                if uploaded_file:
+                    # old_document = node.document
                     version = handle_uploaded_file(uploaded_file)
                     document = version.document
                     node.document = document
                 node.save()
                 form.save_m2m()
+                """
+                print "=========TEST OLD DOCUMENT ==============="
+                print old_document
+                if old_document:
+                    document = Document.objects.get(pk=old_document.id)
+                    document.delete()
+                """
                 node = get_object_or_404(PathNode, id=node.id)
                 if not node.label:
                     node.label = node.oer.title

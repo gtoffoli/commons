@@ -168,12 +168,12 @@
       {% comment %}{% if oer.oer_type == 3 and can_edit %}{% endcomment %}
       {% if can_edit %}
         <dl class="font14 marginB10">
-           <dt class="demiBold">{% trans "add document"|capfirst %}</dt>
+           <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
            <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/oer/add_document/">{% csrf_token %}
                <input type="hidden" id="id" name="id" value="{{ oer.id }}">
                <div>{{ form.non_field_errors }}</div>
                <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'>{% trans "add"|capfirst %}</button>
+               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
                   {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
                </div>
                </form></dd>
@@ -226,13 +226,24 @@
 {% endblock %}
 
 {% block extra_script %}
+{% if can_edit %}
+   <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
+
+<script type="text/javascript">
+       var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf";
+       var appls = "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,video/mp3,video/mp4,application/rtf";
+       var fsize = 10;
+</script>
+     {% include "_validate_file.html" %}
+{% endif %}
 <script type="text/javascript">
 	{% if can_remove %}
 		function confirm_delete(form) {
 			return confirm('{% trans "do you really want to delete" %} {% trans "this OER" %}?');
 		}
 	{% endif %}
-	
+
+{% if can_edit %}
 $(document).ready(function (){
 	$('dt a.toggleIcon').on('click', function(event){
 		event.preventDefault();
@@ -294,5 +305,7 @@ $(document).ready(function (){
 	}
 
 });
+{% endif %}
 </script>
 {% endblock %}
+

@@ -250,11 +250,12 @@ class DocumentForm(forms.Form):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        exclude = ('folder', 'document', 'user')
+        # exclude = ('folder', 'document', 'user')
+        fields = ('label','document')
         
-    order = forms.IntegerField(required=True, label=_('sort order'))
+    # order = forms.IntegerField(required=True, label=_('sort order'))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    # state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
 
 class RepoForm(forms.ModelForm):
     class Meta:
@@ -448,7 +449,8 @@ class OerSearchForm(forms.Form):
 class DocumentUploadForm(forms.Form):
     docfile = forms.FileField(required=True,
         label=_('select a file'),
-        widget=forms.FileInput(attrs={'class': 'btn',}))
+        widget=forms.FileInput(attrs={'class': 'filestyle', 'data-buttonText':_("choose file"), 'data-icon':'false'}))
+        #widget=forms.FileInput(attrs={'class': 'btn',}))
 
 """
 OerQualityFormSet = inlineformset_factory(OerEvaluation, OerQualityMetadata, fields=('quality_facet', 'value',), can_delete=True, min_num=4, max_num=4)
@@ -541,7 +543,7 @@ class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
         # exclude = ('children',)
-        fields = ('id', 'path', 'label', 'oer', 'range', 'new_document', 'document', 'text', 'creator', 'editor', )
+        fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'text', 'creator', 'editor', )
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     # path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
@@ -550,10 +552,11 @@ class PathNodeForm(forms.ModelForm):
     # oer = forms.ModelChoiceField(required=True,label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
     oer = forms.ModelChoiceField(required=False,label=_('OER'), queryset=OER.objects.all().order_by('title'), widget=autocomplete.ModelSelect2(url='oer-autocomplete', attrs={'style': 'width: 100%;'}))
     range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('possibly specify document and page display range'))
-    document = forms.ModelChoiceField(required=False, label='',queryset=Document.objects.all(), widget=forms.TextInput(attrs={'style':'display:none'}))
+    remove_document = forms.BooleanField(required=False, label= 'delete', widget=forms.CheckboxInput())
+    document = forms.ModelChoiceField(required=False, queryset=Document.objects.all(), widget=forms.HiddenInput())
     new_document = forms.FileField(required=False,
         label = _('document'),
-        widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
+        widget=forms.FileInput(attrs={'class': 'filestyle', 'data-buttonText':_("choose file"), 'data-icon':'false'}))
     text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -565,8 +568,9 @@ class PathNodeForm(forms.ModelForm):
         oer = cd.get('oer')
         text = cd.get('text')
         document = cd.get('document')
+        remove_document = cd.get('remove_document')
         new_document = self.files
-        if (oer == None) & (document == None) & (len(new_document) == 0) & (len(text) == 0):
+        if (oer == None) & ((document == None) | (remove_document)) & (len(new_document) == 0) & (len(text) == 0):
             raise forms.ValidationError(_("the OER, the document attachment and the text content cannot be all missing"))
 
         if (oer == None) & (len(label) == 0):

@@ -25,7 +25,7 @@
   {% elif profile %}
      <h5 class="pull-left ">{% trans "curriculum"|capfirst %}: {{  profile.get_display_name }}</h5>
      <p class="pull-right paddingT10 paddingLR5">
-       <a href="/profile/{{ profile.get_username }}/"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
+       <a href="{% if request.user.get_username == profile.get_username %}/my_profile/{% else %}/profile/{{ profile.get_username }}/{% endif %}"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>
     </p>
 
