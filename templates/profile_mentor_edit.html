@@ -4,41 +4,28 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% trans "edit the profile of"|capfirst %}: &nbsp;
-	{% if user.first_name %}{{ user.first_name }} {{ user.last_name }}
-	{% else %}{{ user.username }}
-	{% endif %}{% endblock %}
+{% block head_title %}{% trans "edit mentor info of"|capfirst %}: &nbsp; {{user.first_name }} {{user.last_name }}{% endblock %}
 	
-{% block extra_head %}
-	{{ form.media }}
-
-{% endblock %}
-
-{% block body_class %}edit_profile{% endblock %}
+{% block body_class %}edit_profile_mentor{% endblock %}
 
 
 {% block body %}
   <div class="panel panel-c0 text-left marginTB30">
     <div class="panel-heading-c0 padding1020">
-      <h2 class="marginTB5">
-        <small class="c-white">{% trans "edit the profile of"|capfirst %}:</small> {% if user.first_name %} {{ user.first_name }} {{ user.last_name }} {% else %} {{ user.username }}{% endif %}
-      </h2>
+      <h2 class="marginTB5"><small class="c-white">{% trans "edit mentor info of"|capfirst %}:</small> {{user.first_name }} {{user.last_name }}</h2>
     </div>
     <form method="post" id="edit_form">{% csrf_token %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       {% for field in form.visible_fields %}
-        {% if field.name in 'first_name,skype' %}
-        <fieldset class="padding1020 marginT20"><legend class="marginB10 paddingN3 font18 c-fern borderColor-c0 demiBold">{% if field.name == 'first_name' %}{% trans "general info"|capfirst %}{% else %}{% trans "mentoring relationships"|capfirst %}{% endif %}</legend>{% endif %}
+        {% if field.name in 'mentoring,skype' %}
+          <fieldset class="padding1020 marginT20"><legend class="marginB10 paddingB3 font18 c-fern borderColor-c0 demiBold">{% if field.name == 'mentoring' %}{% trans "mentor info"|capfirst %}{% else %}{% trans "mentoring relationships"|capfirst %}{% endif %}</legend>{% endif %}
           <div class="form-group">
             <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
             <span class="txt-error">{{ field.errors }}</span>{{ field }}
             {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
           </div>
-        {% if field.name in 'networks,p2p_communication' %}</fieldset>{% endif %}
+        {% if field.name in 'mentor_unavailable,p2p_communication' %}</fieldset>{% endif %}
       {% endfor %}
-      <fieldset class="padding1020">
-      	<div class="form-group bc-white padding510">{{ info|safe }}</div>
-      </fieldset>
       <div class="panel-footer-c0 padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;
         <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
@@ -49,7 +36,6 @@
 {% endblock %}
 
 {% block extra_script %}
-	<script src="{% static "js/bootstrap-datetimepicker.js" %}"></script>
     {% include "_tinymce_init.html" %}
 {% endblock %}
 

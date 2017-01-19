@@ -41,8 +41,9 @@
             <p class="text-center font18 txt-error paddingT10">{% trans "please, complete your profile"|capfirst %}!  &nbsp; <a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit"></i></a></p>
           {% endif %}
           <div class="padding10">
-            {% if profile.short %}<p class="marginB10">{{ profile.short }}</p>{% endif %}
             {% if request.user.id == profile_user.id %}
+            <div class="marginB10 paddingB5">
+            <h4 class="marginT0 paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "private info"|capfirst %}</strong></small></h4>
               <div class="clearfix">
                 <dl class="pull-left list-inline font14 paddingR20">
                   <dt>{% trans "username"|capfirst %}</dt>
@@ -52,14 +53,13 @@
                   <dt>{% trans "email"|capfirst %}</dt>
                   <dd>{{ profile_user.email }}</dd>
                 </dl>
-                {% if profile.skype %}
-                  <dl class="list-inline pull-left font14">
-                    <dt>{% trans "Skype id" %}</dt>
-                    <dd>{{ profile.skype }}</dd>
-                  </dl>
-                {% endif %}
+              </div>
               </div>
             {% endif %}
+            {% if request.user.id == profile_user.id %}
+            <h4 class="marginT0 paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "general info"|capfirst %}</strong></small></h4>
+            {% endif %}
+            {% if profile.short %}<p class="marginB10">{{ profile.short }}</p>{% endif %}
             <div class="clearfix marginB10">
               {% if profile.country %}
                 <dl class="pull-left list-inline font14 paddingR20">
@@ -132,65 +132,133 @@
                 <dd class="field-content width-full"><blockquote class="font14">{{ profile.long|safe }}</blockquote></dd>
               </dl>
             {% endif %}
-            {% if profile.mentoring %}
-              <dl class="font14 marginB10">
-                <dt class="demiBold">{% trans "mentor presentation"|capfirst %}</dt>
-                <dd class="field-content width-full"><blockquote class="font14">{{ profile.mentoring|safe }}</blockquote></dd>
-              </dl>
-            {% endif %}
-
             {% if profile.curriculum and not can_edit %}
               <dl class="list-inline font14 marginB10">
                 <dt>{% trans "curriculum"|capfirst %}</dt>
-                <dd>{{ profile.curriculum }} &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
-                  {% if profile.curriculum.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+                 <dd>{{ profile.curriculum }}{# &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a> #}
+                  {% if profile.curriculum.viewable %} &nbsp; <a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></span>{% endif %}
                 </dd>
             </dl>
             {% endif %}
-            {% if can_edit and complete_profile %} 
-	            <ul class="list-inline">
-	               <li class="list-back-c0" style="vertical-align:top; padding-right:10px; padding-bottom:10px"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
-                 <li class="list-back-c0" style="width:50%; vertical-align:top; padding-right:10px; padding-bottom:10px"> <dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
-		             <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
-		             {% if profile.curriculum %}
-		             <dd><form method="post" id="delete_curriculum" action="/profile/{{ profile_user.username }}/delete_document/" style="display:inline">{% csrf_token %}
-		                <button type="submit" id="delete" name="curriculum_id" style="border:none; background: white; display:inline" value="{{ profile.curriculum_id }}"><i class="fa fa-times-circle red"></i></button> {{ profile.curriculum }}</form> &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
-                    {% if profile.curriculum.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
-                 </dd>
-		             {% endif %}
-		             <dd class="marginT5"><form enctype="multipart/form-data" method="post" id="add_document" action="/profile/{{ profile_user.username }}/add_document/">{% csrf_token %}
-		               <div><small>{% trans "only PDF format and size 2MB" %}</small></div>
-		               <div>{{ form.non_field_errors }}</div>
-		               <div><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-		               <div class="marginT5 marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
-		                  {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
-		               </div>
-		               </form></dd>
-		        </dl></li>
-	 			</ul>
+            {% if not profile.mentoring and request.user.id == profile_user.id %}
+              <div class="marginB20 paddingB5">
+                <h4 class="paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "mentoring relationships"|capfirst %}</strong></small></h4>
+                <dl class="font14 marginB10">
+                  <dt>{% trans "Skype id" %}</dt>
+                  <dd class="font12">{% trans "your Skype id will be shared only within active mentoring relationships" %}</dd>
+                  {% if profile.skype %}<dd class="marginT5">{{ profile.skype }}</dd>{% endif %}
+                </dl>
+                <dl class="font14 marginB10">
+                  <dt class="demiBold">{% trans "P2P communication preferences"|capfirst %}</dt>
+                  <dd class="font12">{% trans "any information useful in negotiating with a partner a convenient 1:1 communication solution" %}</dd>
+                  {% if profile.p2p_communication %}<dd class="marginT5 field-content width-full"><blockquote class="font14">{{ profile.p2p_communication|safe }}</blockquote></dd>{% endif %}
+                </dl>
+              </div>
+           {% endif %}
+           {% if not profile.mentoring and not request.user.id == profile_user.id and profile.p2p_communication %}
+             <div class="marginB20 paddingB5">
+               <dl class="font14 marginB10">
+                 <dt class="demiBold">{% trans "P2P communication preferences"|capfirst %}</dt>
+                 <dd class="marginB5 font12">{% trans "any information useful in negotiating with a partner a convenient 1:1 communication solution" %}</dd>
+                 <dd class="field-content width-full"><blockquote class="font14">{{ profile.p2p_communication|safe }}</blockquote></dd>
+               </dl>
+             </div>
+           {% endif %}
+           {% if can_edit and complete_profile %} 
+             <ul class="list-inline margin0">
+               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
+               <li class="list-back-c0" style="width:50%; vertical-align:top; padding-right:10px; padding-bottom:10px"><dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
+                 <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
+                 {% if profile.curriculum %}
+                   <dd><form method="post" id="delete_curriculum" action="/profile/{{ profile_user.username }}/delete_document/" style="display:inline">{% csrf_token %}
+                     <button type="submit" id="delete" name="curriculum_id" style="border:none; background: white; display:inline" value="{{ profile.curriculum_id }}"><i class="fa fa-times-circle red"></i></button> {{ profile.curriculum }}</form> &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+                     {% if profile.curriculum.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+                   </dd>
+                 {% endif %}
+                 <dd class="marginT5"><form enctype="multipart/form-data" method="post" id="add_document" action="/profile/{{ profile_user.username }}/add_document/">{% csrf_token %}
+                   <div><small>{% trans "only PDF format and size 2MB" %}</small></div>
+                   <div>{{ form.non_field_errors }}</div>
+                   <div><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+                   <div class="marginT5 marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
+                     {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
+                   </div>
+                 </form></dd>
+               </dl></li>
+             </ul>
             {% endif %}
-          </div>
+           </div>
         </div>
-		{% if com_memberships %}
+        {% if request.user.id == profile_user.id or profile.mentoring %}
+          <div class="panel-white padding10">
+          {% if request.user.id == profile_user.id %}
+            <h4 class="marginT0 paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "mentor info"|capfirst %}</strong></small></h4>
+          {% endif %}
+          {% if profile.mentoring %}
+            <dl class="font14 marginTB10">
+              <dt class="demiBold">{% trans "mentor presentation"|capfirst %}</dt>
+              <dd class="field-content width-full"><blockquote class="font14">{{ profile.mentoring|safe }}</blockquote></dd>
+            </dl>
+            <div class="marginB20 clearfix">
+              <dl class="list-inline pull-left font14 paddingR20">
+                 <dt>{% trans "available as mentor for other communities"|capfirst %}</dt>
+                 <dd>{% if profile.mentor_for_all %}{% trans "yes"|capfirst %}{% else %}{% trans "no"|capfirst %}{% endif %}</dd>
+              </dl>
+              <dl class="list-inline pull-left font14 paddingR20">
+                 <dt>{% trans "currently not available as mentor"|capfirst %}</dt>
+                 <dd>{% if profile.mentor_unavailable %}{% trans "yes"|capfirst %}{% else %}{% trans "no"|capfirst %}{% endif %}</dd>
+              </dl>
+            </div>
+            <div class="marginB0 paddingB5">
+              {% if request.user.id == profile_user.id %}
+              <h4 class="paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "mentoring relationships"|capfirst %}</strong></small></h4>
+              <dl class="font14 marginB10">
+                <dt>{% trans "Skype id" %}</dt>
+                <dd class="font12">{% trans "your Skype id will be shared only within active mentoring relationships" %}</dd>
+                {% if profile.skype %}<dd class="marginT5">{{ profile.skype }}</dd>{% endif %}
+              </dl>
+              {% endif %}
+              {% if not request.user.id == profile_user.id and profile.p2p_communication %}
+                <dl class="font14">
+                  <dt class=" demiBold">{% trans "P2P communication preferences"|capfirst %}</dt>
+                  <dd class="marginB5 font12">{% trans "any information useful in negotiating with a partner a convenient 1:1 communication solution" %}</dd>
+                  <dd class="field-content width-full"><blockquote class="font14">{{ profile.p2p_communication|safe }}</blockquote></dd>
+                </dl>
+              {% elif request.user.id == profile_user.id %}
+                <dl class="font14">
+                  <dt class="demiBold">{% trans "P2P communication preferences"|capfirst %}</dt>
+                  <dd class="font12">{% trans "any information useful in negotiating with a partner a convenient 1:1 communication solution" %}</dd>
+                  {% if profile.p2p_communication %}<dd class="marginT5 field-content width-full"><blockquote class="font14">{{ profile.p2p_communication|safe }}</blockquote></dd>{% endif %}
+                </dl>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if can_edit and complete_profile and com_memberships %}
+            <ul class="list-inline margin0">
+               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/mentor_edit/" title='{% trans "show edit mentor profile" %}' class="btn btn-default"><i class="fa fa-edit"></i>{% if profile.mentoring %}{% trans "modify" %}{% else %}{% trans "add" %}{% endif %}</a></li>
+            </ul>
+          {% endif %}
+          </div>
+        {% endif %}
+        {% if com_memberships %}
           <div class="panel-white">
             <div class="panel-heading-c4 padding510 demiBold">{% trans "communities"|capfirst %}</div>
-			<ul class="list-inline padding10510 list-orange">
-			{% for membership in com_memberships %}
-              <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view community" %}">{{ membership.project.get_name }}</a></li>
-			{% endfor %}
-			</ul>
-		  </div>
-		{% endif %}
-		{% if memberships %}
+              <ul class="list-inline padding10510 list-orange">
+                {% for membership in com_memberships %}
+                  <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view community" %}">{{ membership.project.get_name }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+        {% endif %}
+        {% if memberships %}
           <div class="panel-white">
             <div class="panel-heading-c4 padding510 demiBold">{% trans "projects"|capfirst %}</div>
-			<ul class="list-inline padding10510 list-orange">
-			{% for membership in memberships %}
-              <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view project" %}">{{ membership.project.get_name }}</a></li>
-			{% endfor %}
-			</ul>
-		  </div>
-		{% endif %}
+              <ul class="list-inline padding10510 list-orange">
+                {% for membership in memberships %}
+                  <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view project" %}">{{ membership.project.get_name }}</a></li>
+                {% endfor %}
+              </ul>
+          </div>
+        {% endif %}
       </div>
     {% if likes %}
       <div class="col-sm-3 col-md-3 col-lg-3">

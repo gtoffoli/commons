@@ -44,7 +44,7 @@ from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSE
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 from metadata import QualityFacet
-from forms import UserProfileExtendedForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
+from forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, one2oneMessageComposeForm
@@ -495,6 +495,36 @@ def profile_edit(request, username):
     data_dict['form'] = form
     return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
 
+def profile_mentor_edit(request, username):
+    user = get_object_or_404(User, username=username)
+    if not user.can_edit(request):
+        return HttpResponseRedirect('/my_profile/')
+    data_dict = {'user': user,}
+    profiles = UserProfile.objects.filter(user=user)
+    profile = profiles and profiles[0] or None
+    if profile and profile.get_completeness():
+        if request.POST:
+            form = UserProfileMentorForm(request.POST, instance=profile)
+            data_dict['form'] = form
+            if request.POST.get('save', '') or request.POST.get('continue', ''): 
+                if form.is_valid():
+                    form.save()
+                    track_action(user, 'Edit', profile, latency=0)
+                    if request.POST.get('save', ''): 
+                        return HttpResponseRedirect('/my_profile/')
+                    else: 
+                        return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
+                else:
+                    return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
+            elif request.POST.get('cancel', ''):
+                return HttpResponseRedirect('/my_profile/')
+        else:
+            form = UserProfileMentorForm(instance=profile)
+            data_dict['form'] = form
+            return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
+    else:
+        return HttpResponseRedirect('/my_profile/')
+        
 def profile_avatar_upload(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
