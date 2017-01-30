@@ -82,7 +82,7 @@ class UserProfileForm(forms.ModelForm):
     url = forms.CharField(required=False, label=_('web site'), widget=forms.TextInput(attrs={'class':'form-control'}))
     networks = forms.ModelMultipleChoiceField(required=False, label=_('social networks / services used'), queryset=NetworkEntry.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     skype = forms.CharField(required=False, label=_('skype id'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('your Skype id will be shared only within active mentoring relationships'))
-    p2p_communication = forms.CharField(required=False, label=_('P2P communication preferences'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('any information useful in negotiating with a partner a convenient 1:1 communication solution; it will be shared only within active mentoring relationships.'))
+    p2p_communication = forms.CharField(required=False, label=_('P2P communication preferences'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('any information useful in negotiating with a partner a convenient 1:1 communication solution'))
 
 class AvatarForm(forms.ModelForm):
     class Meta:
@@ -95,11 +95,11 @@ class UserProfileMentorForm(forms.ModelForm):
         fields = ['user', 'mentoring', 'mentor_for_all', 'mentor_unavailable','skype', 'p2p_communication', ]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
-    mentoring = forms.CharField(required=True, label=_('mentor presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('an extension to your presentation focused on your qualification as a potential Mentors'))
+    mentoring = forms.CharField(required=True, label=_('mentor presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('an extension to your presentation focused on your qualification as a potential mentor'))
     mentor_for_all = forms.BooleanField(required=False, label=_('available as mentor for other communities'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('check if available/interested to act as mentor outside the community/ies where registered to the Roll of Mentors.'))
     mentor_unavailable = forms.BooleanField(required=False, label=_('currently not available as mentor'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('check if temporarily unavailable to accept (more) requests by mentees; remember to update this when the situation changes!'))
     skype = forms.CharField(required=False, label=_('skype id'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('your Skype id will be shared only within active mentoring relationships'))
-    p2p_communication = forms.CharField(required=False, label=_('P2P communication preferences'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('any information useful in negotiating with a partner a convenient 1:1 communication solution; it will be shared only within active mentoring relationships.'))
+    p2p_communication = forms.CharField(required=False, label=_('P2P communication preferences'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}), help_text=_('any information useful in negotiating with a partner a convenient 1:1 communication solution'))
 
 class UserPreferencesForm(forms.ModelForm):
     class Meta:

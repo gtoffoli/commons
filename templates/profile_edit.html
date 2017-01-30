@@ -28,7 +28,7 @@
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       {% for field in form.visible_fields %}
         {% if field.name in 'first_name,skype' %}
-        <fieldset class="padding1020 marginT20"><legend class="marginB10 paddingN3 font18 c-fern borderColor-c0 demiBold">{% if field.name == 'first_name' %}{% trans "general info"|capfirst %}{% else %}{% trans "mentoring relationships"|capfirst %}{% endif %}</legend>{% endif %}
+        <fieldset class="padding1020 marginT20"><legend class="marginB10 paddingN3 font18 c-fern borderColor-c0 demiBold">{% if field.name == 'first_name' %}{% trans "general information"|capfirst %}{% else %}{% trans "communication preferences"|capfirst %}{% endif %}</legend>{% endif %}
           <div class="form-group">
             <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
             <span class="txt-error">{{ field.errors }}</span>{{ field }}

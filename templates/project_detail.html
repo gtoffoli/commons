@@ -369,7 +369,7 @@
             {% endif %}{% endwith %}
             {% if proj_type_name == 'sup' or project.is_reserved_project %}
               <div class="borderTdotted padding510">
-                <form method="post" action="/project/{{ project.slug }}/" id="add_member_form">{% csrf_token %}
+                <form method="post" action="/project/{{ project.slug }}/add_member/" id="add_member_form">{% csrf_token %}
                   <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>
                   <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
                 </form>

@@ -1015,6 +1015,7 @@ def project_detail(request, project_id, project=None):
         var_dict['can_accept_member'] = can_accept_member
         if can_accept_member:
             var_dict['add_member_form'] = ProjectAddMemberForm()
+            """
             post = request.POST
             if post and post.get('add_member',''):
                 user_id = post.get('user')
@@ -1022,6 +1023,7 @@ def project_detail(request, project_id, project=None):
                 if not ProjectMember.objects.filter(project=project, user=user_to_add):
                     membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
                     membership.save()
+            """
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -1170,6 +1172,18 @@ def project_detail(request, project_id, project=None):
 def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
+
+def project_add_member(request, project_slug):
+     user = request.user
+     project = get_object_or_404(Project, slug=project_slug)
+     post = request.POST
+     if post and post.get('add_member',''):
+         user_id = post.get('user')
+         user_to_add = User.objects.get(pk=user_id)
+         if not ProjectMember.objects.filter(project=project, user=user_to_add):
+             membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
+             membership.save()
+     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
