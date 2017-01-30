@@ -39,10 +39,12 @@ def post_post_save_handler(sender, **kwargs):
     verb = created and 'Create' or 'Edit'
     track_action(user, verb, post)
 
+"""
 post_save.connect(entry_post_save_handler, sender=Entry)
 # m2m_changed.connect(entry_m2m_changed, sender=Author)
 
 m2m_changed.connect(entry_m2m_changed_handler, sender=Entry.authors.through)
+"""
 post_save.connect(topic_post_save_handler, sender=Topic)
 # post_save.connect(post_post_save_handler, sender=Post)
 
