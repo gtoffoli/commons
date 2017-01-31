@@ -1143,6 +1143,7 @@ class ProjectMember(models.Model):
     state = models.IntegerField(choices=MEMBERSHIP_STATE_CHOICES, default=0, null=True, verbose_name='membership state')
     created = CreationDateTimeField(_('request created'))
     accepted = models.DateTimeField(_('last acceptance'), default=None, null=True)
+    refused = models.DateTimeField(_('last refusal'), default=None, null=True)
     modified = ModificationDateTimeField(_('last state change'))
     editor = models.ForeignKey(User, verbose_name=_('last state modifier'), related_name='membership_editor')
     history = models.TextField(_('history of state changes'), blank=True, null=True)
