@@ -459,8 +459,8 @@ PYBB_PREMODERATION = need_moderation
 """
 PYBB_PREMODERATION = False # otherwise, should customize also filter_topics and filter_posts
 
-ZINNIA_AUTO_MODERATE_COMMENTS = False # True
-ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 500 # 15 # 0 means no comments enabled at all
+ZINNIA_AUTO_MODERATE_COMMENTS = True # True means that comments are marked as non public
+ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 0 # 0 means no comments enabled at all
 ZINNIA_AUTO_CLOSE_PINGBACKS_AFTER = 0 # 0 means disabling pingbacks completely
 ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely.
 
