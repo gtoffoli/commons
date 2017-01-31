@@ -1,7 +1,4 @@
-'''
-Created on 08/mar/2016
-@author: giovanni
-'''
+# -*- coding: utf-8 -*-"""
 
 import math
 from collections import defaultdict
@@ -20,7 +17,7 @@ from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
-from models import OER # , Project
+from models import UserProfile, OER # , Project
 from models import PUBLISHED
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve',]
@@ -370,4 +367,102 @@ def oer_duplicates(request):
         lines.append('<div><a href="%s">%s</a> - %s</div>' % (url, url, titles))
     html = '<html>\n<body>\n<h1>CommonSpaces - Possible OER duplicates (same url)</h1>\n' + ' \n'.join(lines) + '</body>\n</html>'
     return HttpResponse(html)
+
+# the key of each dict item is the name of a field of the UserProfile model
+# the value is a number or a callable that will get in input a list of matches
+userprofile_similarity_metrics = {
+    'edu_level': 1,
+    'edu_field': 1.5,
+    'pro_status': 1,
+    'pro_field': 1,
+    'subjects': 1.5,
+    'languages': 1,
+}
+userprofile_similarity_field_names = [
+    'edu_level',
+    'edu_field',
+    'pro_status',
+    'pro_field',
+    'subjects',
+    'languages',
+]
+
+""" The functions get_likes and get_similarity should replace the homonymous methods of UserProfile """
+def get_likes(userprofile):
+    user = userprofile.user
+    likes = []
+    max_score = 0
+    userprofile_dict = {}
+    for field_name in userprofile_similarity_field_names:
+        weight = userprofile_similarity_metrics[field_name]
+        max_score += weight
+        field = UserProfile._meta.get_field(field_name)
+        field_type = str(field.get_internal_type())
+        value = getattr(userprofile, field_name)
+        if value:
+            if not field_type == 'ForeignKey': # field type is models.ManyToManyField
+                value = value.all()
+            userprofile_dict[field_name] = [field_type, value]
+    """
+    for other_profile in UserProfile.objects.exclude(user=user).values(*userprofile_similarity_field_names):
+    """
+    for other_profile in UserProfile.objects.exclude(user=user):
+        score, matches = get_similarity(userprofile_dict, other_profile, max_score)
+        if score > 0.6:
+            likes.append([score, other_profile])
+    likes = sorted(likes, key=lambda x: x[0], reverse=True)
+    return likes
+
+# da vedere se è possibile ottimizzare usando come traccia
+# http://stackoverflow.com/questions/4584020/django-orm-queryset-intersection-by-a-field
+def get_similarity(userprofile_dict, profile_2, max_score):
+    min_score = max_score/2 - 0.1
+    matches = {}
+    score = 0.0
+    missed_score = 0.0
+    for field_name in userprofile_similarity_field_names:
+        weight = userprofile_similarity_metrics[field_name]
+        type_value = userprofile_dict.get(field_name, [])
+        field_score = 0
+        if type_value:
+            field_type, value_1 = type_value
+            if field_type == 'ForeignKey':
+                """
+                value_2 = profile_2[field_name]
+                 """
+                value_2 = getattr(profile_2, field_name)
+                if field_name == 'edu_level' and value_2:
+                    """
+                    dist = abs(min(value_2, 3) - min(value_1.id, 3))
+                    """
+                    dist = abs(min(value_2.id, 3) - min(value_1.id, 3))
+                    field_score = weight * (1 - float(dist)/2)
+                    score += field_score
+                    matches[field_name] = value_2
+                else:
+                    """
+                    if value_1.id == value_2:
+                    """
+                    if value_1 == value_2:
+                        field_score = weight
+                        score += field_score
+                        matches[field_name] = value_1
+            else: # field type is models.ManyToManyField
+                """
+                value_2 = profile_2[field_name]
+                n_2 = value_2 and len(value_2) or 0
+                """
+                value_2 = getattr(profile_2, field_name).all()
+                n_2 = value_2.count()
+                if n_2:
+                    n_1 = value_1.count()
+                    matches[field_name] = [value for value in value_1 if value in value_2]
+                    field_score =  weight * math.sqrt(2.0 * len(matches[field_name]) / (n_1+n_2))
+                    score += field_score
+        if not field_score:
+            missed_score += weight
+            if missed_score >= min_score:
+                # print(min_score, missed_score)
+                break
+    return score/max_score, matches
 

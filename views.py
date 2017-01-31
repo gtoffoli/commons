@@ -54,6 +54,7 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
 from analytics import track_action, filter_actions, post_views_by_user, popular_principals, filter_users
+from analytics import get_likes
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -373,7 +374,9 @@ def user_profile(request, username, user=None):
         var_dict['complete_profile'] = False
 
     if profile and profile.get_completeness():
-        var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
+        # var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
+        likes = get_likes(profile)[:MAX_LIKES]
+        var_dict['likes'] = [[score, profile.user, profile.avatar] for score, profile in likes]
      
     if request.user.is_authenticated():
         if not profile or not request.user == profile.user:
