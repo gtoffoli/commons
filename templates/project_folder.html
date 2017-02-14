@@ -24,14 +24,14 @@ dl.eval dd:nth-child(even) {
 {% block body_class %}project_folder{% endblock %}
 {% block body %}
 
-<div class="panel panel-c4 text-left marginTB30">
-  <div class="panel-heading-c4 padding1020">
+<div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
+  <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
     <h3 class="pull-left font_small marginTB5">{{ project.get_name }}</h3>
     <p class="pull-right marginB0 font26 font_button_small">
-      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-list-alt font07em c-demiblack" aria-hidden="true"></i></a>
+      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-list-alt font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
     </p>
-    <div style="clear:both;">
-      <h1 class="marginTB0"><small class="c-demiblack">{% trans "shared folder"|capfirst %}</small></h1>
+    <div style="clear:both">
+      <h1 class="marginTB0"><small class="c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}">{% trans "shared folder"|capfirst %}</small></h1>
     </div>
   </div>
   {% if can_share %}

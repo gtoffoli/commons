@@ -76,7 +76,7 @@
            {% endif %}
            {% if oer.embed_code %}
               <dt class="with_icon">{% trans "embed code"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
-              <dd class="field-content" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.embed_code }}</pre></dd>
+              <dd class="field-content width-full" style="display:none"><pre class="borderRadius0 bc-white">{{ oer.embed_code }}</pre></dd>
            {% endif %}
         </dl>
       {% endif %}
@@ -243,7 +243,7 @@
 		}
 	{% endif %}
 
-{% if can_edit %}
+
 $(document).ready(function (){
 	$('dt a.toggleIcon').on('click', function(event){
 		event.preventDefault();
@@ -259,7 +259,7 @@ $(document).ready(function (){
 		}
 	});
 
-
+{% if can_edit %}
 	if ($('dd a').hasClass('deleteDoc')) {
 		$('dd a.deleteDoc').on('click', function(event){
 			event.preventDefault();
@@ -303,9 +303,9 @@ $(document).ready(function (){
 			});
 		});
 	}
-
-});
 {% endif %}
+});
+
 </script>
 {% endblock %}
 

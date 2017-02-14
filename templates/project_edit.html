@@ -55,7 +55,7 @@
       {% if parent %}<input type="hidden" id="parent" name="parent" value="{{ parent.id }}">{% endif %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       <fieldset class="padding1020">
-        {% for field in form.visible_fields %}{% with i=forloop.counter %}
+        {% for field in form.visible_fields %}
           {% if not field.name == "reserved" %}
             <div class="form-group">
               <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
@@ -71,7 +71,7 @@
              </div>
            {% endif %}
          {% endif %}
-        {% endwith %}{% endfor %}
+        {% endfor %}
       </fieldset>
       <div class="panel-footer-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if project %} {% trans "changes" %}{% endif %}</button>&nbsp;

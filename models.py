@@ -710,11 +710,12 @@ MEMBERSHIP_STATE_CHOICES = (
     (MEMBERSHIP_INACTIVE, _('membership suspended or expired')),)
 MEMBERSHIP_STATE_DICT = dict(MEMBERSHIP_STATE_CHOICES)
 
+NO_MENTORING = 0
 MENTORING_MODEL_A = 1
 MENTORING_MODEL_B = 2
 MENTORING_MODEL_C = MENTORING_MODEL_A+MENTORING_MODEL_B
 MENTORING_MODEL_CHOICES = (
-    (0, _('no mentoring')),
+    (NO_MENTORING, _('no mentoring')),
     (MENTORING_MODEL_A, _('A - Administrator chooses mentor')),
     (MENTORING_MODEL_B, _('B - Mentee chooses mentor')),
     (MENTORING_MODEL_C, _('A+B - Administrator or mentee chooses mentor')),)
@@ -779,6 +780,13 @@ class Project(Resource):
         if self.can_propose(request.user):
             self.state = PROJECT_SUBMITTED
             self.save()
+            if self.proj_type.name == 'ment':
+                memberships = ProjectMember.objects.filter(project=self, state=0)
+                for membership in memberships:
+                     membership.modified = self.modified
+                     membership.editor = request.user
+                     membership.save()
+
     def open(self, request):
         if self.can_open(request.user):
             self.state = PROJECT_OPEN
@@ -882,6 +890,7 @@ class Project(Resource):
         else:
             return _('supervisor')
 
+    """
     def can_access(self, user):
         # if self.state==PROJECT_OPEN:
         if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
@@ -889,6 +898,36 @@ class Project(Resource):
         if not user.is_authenticated():
             return False
         parent = self.get_parent()
+        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
+    """
+
+    def can_access(self, user):
+        if not user.is_authenticated():
+            return False
+        parent = self.get_parent()
+        if self.proj_type.name == 'ment':
+            if self.state in (PROJECT_OPEN, PROJECT_CLOSED) and (self.is_member(user) or (parent and parent.is_admin(user))):
+                print "================ PASSO UNO ====================="
+                return True
+            if self.state == PROJECT_DRAFT and self.is_member(user):
+                print "================ PASSO DUE ====================="
+                return True
+            if self.state == PROJECT_DRAFT and (not self.is_member(user) or (parent and parent.is_admin(user))):
+                print "================ PASSO TRE ====================="
+                return False
+            if self.state == PROJECT_SUBMITTED and (self.is_member(user)):
+                print "================ PASSO QUATTRO ====================="
+                return True
+            if self.state == PROJECT_SUBMITTED and (ProjectMember.objects.filter(project=self, user=user, state=0, refused=None)):
+                print "================ PASSO CINQUE ====================="
+                return True
+            if self.state == PROJECT_SUBMITTED and parent and parent.is_admin(user) and parent.mentoring_model == MENTORING_MODEL_B:
+                print "================ PASSO SEI ====================="
+                return False
+        else: 
+            if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
+                return True
+
         return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
 
     # def can_edit(self, user):
@@ -898,12 +937,24 @@ class Project(Resource):
             return False
         if user.is_superuser: return True
         if self.get_type_name()=='ment':
-            return (self.get_parent().is_admin(user) and self.state in (PROJECT_SUBMITTED, PROJECT_OPEN,)) or self.is_admin(user) or self.creator==user
+            if self.creator==user and self.state in (PROJECT_DRAFT, PROJECT_OPEN):
+                return True
+            if self.state == PROJECT_OPEN and self.is_admin(user):
+                return True
+            return False
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user)) 
 
+    """
     def can_propose(self, user):
         if user.is_superuser: return True
         return self.state in (PROJECT_DRAFT,) and (self.is_admin(user) or (self.get_type_name()=='ment' and self.is_member(user)))
+    """
+    def can_propose(self, user):
+        if user.is_superuser: return True
+        return self.state in (PROJECT_DRAFT,) and self.get_type_name()=='ment' and self.is_member(user)
+    def can_draft_back(self, user):
+        if user.is_superuser: return True
+        return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and self.get_parent().mentoring_model == MENTORING_MODEL_A and self.get_parent().is_admin(user)
     def can_open(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser) 
@@ -933,7 +984,15 @@ class Project(Resource):
                 item = [user, self.is_admin(user)]
                 out.append(item)
             return out
-    
+
+    def candidate_mentors(self, users, sort_on='last_name'):
+        memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
+        members = [membership.user for membership in memberships]
+        candidate_mentors =  UserProfile.objects.filter(user__in=members, mentor_unavailable = False)
+        candidate_mentors = candidate_mentors.exclude(user__in=users)
+        return candidate_mentors
+        
+    """
     def add_member(self, user, editor=None, state=0):
         if not editor:
             editor = user
@@ -944,10 +1003,27 @@ class Project(Resource):
         if not user in self.members(user_only=True):
             self.group.user_set.add(user)
         return membership
+    """
+    
+    def add_member(self, user, editor=None, state=0):
+        if not editor:
+            editor = user
+        if ProjectMember.objects.filter(project=self, user=user).exclude(project__proj_type__name='ment') or  ProjectMember.objects.filter(project=self, user=user, project__proj_type__name='ment', state=0, refused=None):
+            return None
+        membership = ProjectMember(project=self, user=user, editor=editor, state=state)
+        membership.save()
+        if not user in self.members(user_only=True):
+            self.group.user_set.add(user)
+        return membership
+
+    def remove_member(self, user):
+        membership = ProjectMember.objects.get(project=self, user=user)
+        self.group.user_set.remove(user)
+        membership.delete()
 
     def get_memberships(self, state=None, user=None):
         if user and user.is_authenticated():
-            memberships = ProjectMember.objects.filter(project=self, user=user)
+            memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
         else:
@@ -976,6 +1052,12 @@ class Project(Resource):
         role_names = [role.name for role in self.get_roles(user)]
         return 'admin' in role_names
 
+    """
+    def is_proposed_mentor(self, user):
+        role_names = [role.name for role in self.get_roles(user)]
+        return 'admin' in role_names
+    """
+    
     def get_admins(self):
         memberships = ProjectMember.objects.filter(project=self, state=1).order_by('created')
         admins = []
@@ -1067,6 +1149,7 @@ class Project(Resource):
         rolls = self.get_children(proj_type_name='roll', states=states)
         return rolls and rolls[0] or None
 
+
     def get_mentor(self, state=None):
         if self.proj_type.name == 'ment':
             members = self.get_memberships(state=state)
@@ -1082,7 +1165,7 @@ class Project(Resource):
                 if not self.is_admin(member.user):
                     return member
         return None
-
+    
     """
     def get_mentoring_projects(self):
         return self.get_children(proj_type_name='ment')
@@ -1112,12 +1195,14 @@ class Project(Resource):
                     children.append(child)
         return children
 
-    def get_mentoring_mentee(self, user=None, states=None):
+    def get_mentoring_mentee(self, user=None, states=None, membership_state=None):
         mentoring_children = self.get_children(proj_type_name='ment', states=states)
         children = []
         for child in mentoring_children:
-            if child.get_memberships(user=user):
-                if not child.is_admin(user=user):
+            membership=ProjectMember.objects.filter(user=user, project=child, state=membership_state)
+            if membership:
+            # if child.get_memberships(state=membership_state, user=user):
+               if not child.is_admin(user=user):
                     children.append(child)
         return children
 
@@ -1151,6 +1236,10 @@ class ProjectMember(models.Model):
     class Meta:
         verbose_name = _('project member')
         verbose_name_plural = _('project member')
+
+    def user_data(self):
+        user=User.objects.filter(pk=self.user_id)
+        return user and user[0] or None
    
 class ProjectMessage(models.Model):
     project = models.ForeignKey(Project, verbose_name=_('project'), related_name='message_project')

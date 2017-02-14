@@ -1,0 +1,37 @@
+{% load i18n staticfiles %}
+       {% if candidate_mentors %}
+         <div class="panel-white">
+           <h4 class="panel-heading-c0 padding510 margin0">{% trans "select mentor"|capfirst %}</h4>
+           <form method="POST" action="/set_mentor/">{% csrf_token %}
+             {% for hidden in match_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
+             <div class="padding105 form-group">
+               <div class="list-n">
+               {% for radio in match_mentor_form.mentor %}
+                 {% if not forloop.first %}
+                 <label for="{{ radio.id_for_label }}">
+                   <div class="box-label">{{ radio.choice_label }}</div>
+                   <div class="text-center">{{ radio.tag }}</div>
+                 </label>
+                 {% endif %}
+               {% endfor %}
+               </div>
+             </div>
+             {% if select_mentor_A %}
+               <div class="padding105 form-group">
+                 <label for="{{ match_mentor_form.message.name }}" {% if match_mentor_form.message.field.required %}class="required"{% endif %}>{{ match_mentor_form.message.label|capfirst}}</label>
+                 {{ match_mentor_form.message }}
+                 {% if match_mentor_form.message.help_text %}<small id="{{ match_mentor_form.message.name }}helpBlock" class="help-block">{{ match_mentor_form.message.help_text }}</small>{% endif %}
+               </div>
+               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="submit" id="submit" value="submit">{% trans "invia la richiesta al mentore" %}</button></div>
+             {% endif %}
+
+             {% if can_propose == 'B' %}
+               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="save" id="save" value="save">{% trans "salva la scelta" %}</button> &nbsp; &nbsp;
+               <button type="submit" class="btn btn-default" name="submit" id="submit" value="submit">{% trans "conferma e invia la richiesta al mentore" %}</button> &nbsp; &nbsp;
+               	</div>
+             {% endif %}
+           </form>
+         </div>
+       {% else %}
+         <p>Al momento non ci sono mentori disponibili</p>
+       {% endif %}

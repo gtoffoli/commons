@@ -1,0 +1,25 @@
+{% load i18n staticfiles %}
+
+       {% if mentors_refuse %}
+         <div class="panel-white">
+           <h6 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:4px; border-top-right-radius:4px;">{% trans "mentors who not have accepted"|capfirst %}</h6>
+           <dl class="eval font12">
+            {% for mentor_refuse in mentors_refuse %}
+              <dd>
+                <div class="row">
+                  <div class="col-md-3 col-lg-3">
+                  {% if mentor_refuse.user_data.get_profile.avatar %}
+                    <img src="/media/{{  mentor_refuse.user_data.get_profile.avatar }}" class="avatar-small">
+                  {% else %}
+                    <img src="/media/images/avatars/anonymous.png" class="avatar-small">
+                  {% endif %}
+                  {{ mentor_refuse.user_data.get_display_name }}
+                  </div>
+                  <div class="col-md-7 col-lg-7">{{ mentor_refuse.history }}</div>
+                  <div class="col-md-2 col-lg-2">{{ mentor_refuse.refused|date:"d/m/Y" }}</div>
+                </div>
+              </dd>
+            {% endfor %}
+            </dl>
+         </div>
+       {% endif %}

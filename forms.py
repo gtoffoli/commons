@@ -32,6 +32,7 @@ from models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevel
 from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from models import LearningPath, PathNode, Featured
+from models import ProjectMember
 from models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
@@ -196,6 +197,13 @@ class ProjectImageForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ('big_image',)
+
+class ProjectMentoringModelForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('mentoring_model',)
+
+    mentoring_model = forms.ChoiceField(required=False, choices=MENTORING_MODEL_CHOICES, label=_('mentoring model'),widget=forms.RadioSelect)
 
 N_MEMBERS_CHOICES = (
     (0, ''),
@@ -577,6 +585,7 @@ class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return obj.get_display_name()
 
+
 class MessageComposeForm(ComposeForm):
     """
     A customized form for private messages.
@@ -615,16 +624,70 @@ class ForumForm(forms.ModelForm):
     name = forms.CharField(label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('please, replace the automatically generated name with an appropriate one'))
     headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
 
+from django.utils.safestring import mark_safe
+from django.utils.html import format_html
+from django.forms.utils import flatatt
+from django.utils.encoding import force_text
+
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
-        return obj.get_display_name()
+        # return obj.get_display_name()
+        profile = UserProfile.objects.get(user=obj)
+        # title="{% trans "view user profile"
+        link="/profile/%s/" % obj.username
+        if profile.avatar:
+           avatar = "/media/%s" % profile.avatar
+        else:
+           avatar = "/media/images/avatars/anonymous.png"
+        attrs_link = {}
+        attrs_image = {}
+        attrs_name = {}
+        attrs_descr = {}
+        attrs_link["title"] = _('view user profile')
+        attrs_image["class"] = "img-responsive"
+        attrs_name["class"] = "title"
+        attrs_descr["class"] = "description"
+        if profile.position:
+            description = force_text(profile.position)
+        else:
+            description = force_text(profile.short)
+        if len(description) > 95:
+            description=description[:96]+'...'
+        return format_html('<div><a href="{}" {}><img src="{}" {}></a></div><div {}><a href="{}" {}>{}</a></div><div {}>{}</div>',
+                            link,
+                            flatatt(attrs_link),
+                            avatar,
+                            flatatt(attrs_image),
+                            flatatt(attrs_name),
+                            link,
+                            flatatt(attrs_link),
+                            force_text(obj.get_display_name()),
+                            flatatt(attrs_descr),
+                            description)
 
 class MatchMentorForm(forms.Form):
+    """
     def label_from_instance(self, obj):
         return obj.get_display_name()
+        print obj
+    """
+    
+    project = forms.IntegerField(widget=forms.HiddenInput())
+    mentor = UserChoiceField(required=False, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect(),)
+    message = forms.CharField(required=False, label=_('message'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('messaggio email'))
+
+class HorizontalRadioRenderer(forms.RadioSelect.renderer):
+    def render(self):
+        return mark_safe(u'\n'.join([u'%s &nbsp; \n' %  w for w in self]))
+
+class AcceptMentorForm(forms.ModelForm):
+    class Meta:
+        model = ProjectMember
+        fields = ['project',]
 
     project = forms.IntegerField(widget=forms.HiddenInput())
-    mentor = UserChoiceField(required=True, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect())
+    accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
+    description = forms.CharField(required=True, label=_('Motivo'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('motivo accettazione o rifiuto'))
 
 class UserSearchForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))

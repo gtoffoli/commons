@@ -1,0 +1,16 @@
+{% load i18n staticfiles %}
+
+<article class="view-list">
+  <p class="font16"><i>{{ project.description }}</i></p>
+  {% if project.info %}
+    <dl class="list-inline font14 clearfix">
+      <dt>{% trans "additional information"|capfirst %}</dt>
+      <dd class="field-content width-full"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
+    </dl>
+  {% endif %}
+</article>
+{% if can_edit %}
+  <ul class="list-inline marginLB020">
+    <li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li></ul></li>
+  </ul>
+{% endif %}

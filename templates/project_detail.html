@@ -22,6 +22,14 @@
   	padding-right:10px;
   	vertical-align:bottom;
   }
+  #id_mentoring_model {
+  	list-style:none;
+  	margin:0;
+  	padding-left:0;
+  }
+  #id_mentoring_model label {
+  	font-weight: normal;
+  }
   @media (max-width:480px) {
     .img_small {
       max-width:18%;
@@ -32,19 +40,6 @@
   }
 </style>
 {% endblock %}
-
-{% comment %}
-{% block extra_head %}
-{% if can_delegate %}
-	<script>
-	function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the admin or supervisor role to this member" %}?');}
-	</script>
-	<script>
-	function confirm_undelegate(form) {return confirm('{% trans "do you really want to call back the admin or supervisor role from this member" %}?');}
-	</script>
-{% endif %}
-{% endblock %}
-{% endcomment %}
 
 {% block body_class %}project_detail{% endblock %}
 
@@ -88,9 +83,10 @@
    {% endif %}
     - {% trans "original editing language"|capfirst %}: {{ project.get_language_name }}
  </p>
- <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
+
+{% if not proj_type.name == 'roll' %}
+  <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
    <div class="col-sm-7 col-md-7 col-lg-8">
-     {% if not is_member and roll_info %}<div class="font12">{{ roll_info|safe }}</div>{% endif %}
      <article class="view-list">
        {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
        {% if project.info %}
@@ -142,9 +138,9 @@
         {% if can_edit or can_open or can_close or is_admin %}
           <div>
             <ul class="list-inline marginLB020">
-              <li class="list-back-c{% if not proj_type.name == 'roll' %}4{% else %}0{% endif %} marginB5">
+              <li class="list-back-c4 marginB5">
                  <ul class="list-inline">
-                    <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% elif proj_type.name == 'roll'%}<span class="c-white">{% trans "roll of mentors"|capfirst %}</span>{% else %}{% trans "project"|capfirst %}{% endif %}</div>
+                    <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}</div>
                        <ul class="list-inline list-last">
                        {% if can_edit and not language_mismatch %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
                        {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
@@ -156,16 +152,16 @@
                     </li>
                  </ul>
               </li>
-              {% if not proj_type.name == 'roll' and not proj_type_name == 'sup' %}
-              {% if can_edit and not project_no_children %}
+              {% if not proj_type_name == 'sup' %}
+              {% if can_edit and not project_no_children and is_open %}
                 <li class="list-back-c4 marginB5">
                    <ul class="list-inline">
                      <li>
-                      {% if project.get_level > 0 %}
+                      {% if project.get_level > 0  %}
                         <div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "new projects"|capfirst %} {% else %} {% trans "new child projects"|capfirst %} {% endif %}</div>
                         <ul class="list-inline list-last">
                           {% for projType in proj_types %}
-                            {% if projType.name != 'com' %}
+                            {% if projType.name != 'com' and is_open %}
                               <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
                             {% endif %}
                           {% endfor %}
@@ -313,26 +309,27 @@
 
    </div>
    <div class="col-sm-5 col-md-5 col-lg-4">
-     {% if request.user.is_authenticated %}
-       {% if can_apply %}
-          <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">
-           {% if proj_type_name == 'roll' %}{% trans "propose you as a mentor"|capfirst %}{% else %}{% trans "join"|capfirst %}{% endif %}</a></div>
-       {% elif membership %}
-          {% if membership.state == 0 %}
+     {% if is_open %}
+       {% if request.user.is_authenticated %}
+         {% if can_apply %}
+            <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a></div>
+         {% elif membership %}
+           {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
-          {% endif %}
-       {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
-          <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
-           {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
+           {% endif %}
+         {% elif not project.is_reserved_project %}
+           <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
+            {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
+         {% endif %}
+       {% elif not project.is_reserved_project %}
+         <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
+          {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
        {% endif %}
-     {% elif not project.is_reserved_project and not proj_type_name == 'roll' %}
-       <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
-       {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
      {% endif %}
 
      {% if project.group.level > 0 %}
        <div class="panel-white">
-         <div class="panel-heading-c0 padding510 demiBold">{% if proj_type_name == 'roll' %}{% trans "mentors"|capfirst %}{% else %}{% trans "members"|capfirst %}{% endif %}</div>
+         <div class="panel-heading-c0 padding510 demiBold">{% trans "members"|capfirst %}</div>
          {% with users=project.members %}{% if users|length > 0 %}
          <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %}>
            <ul class="list-unstyled my-list-unstyled padding510">
@@ -358,10 +355,10 @@
          {% if can_accept_member %}
            {% with applications=project.get_applications %}{% if applications|length > 0 %}
             <div class="borderTdotted{% if applications|length > 20 %} box-scroll box-medium {% endif %}">
-              <div class="padding510"><div class="bold" >{% trans "applications"|capfirst %}</div>
-                <ul class="list-unstyled">
+              <div class="padding510"><div class="bold marginB5" >{% trans "applications"|capfirst %}</div>
+                <ul class="list-unstyled my-list-unstyled">
                 {% for application in applications %}
-                  <li><small><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> &nbsp; <a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus"></i></a></small></li>
+                  <li><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><small>{{ application.user.get_display_name }}</small></a><small> &nbsp;<a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus font07em"></i></a></small></li>
                 {% endfor %}
                 </ul>
               </div>
@@ -453,72 +450,95 @@
  
 {% comment %} MENTORING {% endcomment %}
 {% if mentoring_block %}
-
-   <div class="paddingLR15">
-     <ul class="list-inline marginLB020">
-       <li class="list-back-c0 paddingR10">
-         <div class="c-white marginB5 demiBold">
-           {% if roll %}
-             <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{% if roll.state == 0 or roll.state == 1 %}<small style="color: {{ roll.get_link_color }};"><i class="fa fa-group" aria-hidden="true"></i></small> {% elif roll.state == 3 %}<i class="fa fa-lock neutral" aria-hidden="true"></i> {% endif %}{{ roll.name }}</a>
-           {% elif can_add_roll %}
-             <a href="/project/{{ project.slug }}/project_new/roll/" class="btn btn-default" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %} {% trans "roll of mentors"|capfirst %}</a>
-           {% endif %}
-
-         </div>
-       </li>
-     </ul>
-
-   {% if mentoring_mentor %}
-     <div class="panel-white">
-       <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentor"|capfirst %}</div>
-         <ul class="list-inline padding10510 list-green">
-         {% for mentoring_project in mentoring_mentor %}
-           <li><div class="c-white marginB5 demiBold">
-             <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
+  <div class="paddingLR15">
+    <div class="clearfix">
+      {% if can_mentoring_model %}
+        <dl class="pull-left marginB20 marginR10 panel-white">
+          <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring model"|capfirst %}</dt>
+          {% if mentoring_model_C %}
+            <dd class="padding510">{{ mentoring_model_C_value }}</dd>
+          {% else %}
+            <dd class="padding510"><form method="post" id="mentoring_model" action="/project/{{ project.slug }}/edit_mm/">{% csrf_token %}
+              {% for field in form_memtoring_model.visible_fields %}
+                <div class="form-group">
+                  <span class="txt-error">{{ field.errors }}</span> {{ field }}
+                  {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+                </div>
+              {% endfor %}
+              <div class="form-group"><button type="submit" id="save_mm" name="save" class="btn btn-default" value='{% trans "save"|capfirst %}'> {% trans "save" %}</button></div>
+            </form></dd>
+          {% endif %}
+        </dl>
+      {% endif %}
+      {% if roll or can_add_roll %}
+        <ul class="pull-left list-inline marginLB020">
+          <li class="list-back-c0 paddingR10">
+            <div class="c-white marginB5 demiBold">
+              {% if roll %}
+                <a href="/project/{{ roll.slug }}/" class="btn btn-default" title="{% trans "view" %} {% trans "roll of mentors" %}">{% if roll.state == 0 or roll.state == 1 %}<small style="color: {{ roll.get_link_color }};"><i class="fa fa-group" aria-hidden="true"></i></small> {% elif roll.state == 3 %}<i class="fa fa-lock neutral" aria-hidden="true"></i> {% endif %}{{ roll.name }}</a>
+              {% elif can_add_roll %}
+                <a href="/project/{{ project.slug }}/project_new/roll/" class="btn btn-default" title="{% trans "create roll of mentors" %}">{% trans "create"|capfirst %} {% trans "roll of mentors"|capfirst %}</a>
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      {% endif %}
+    </div>
+    {% if not is_admin %}
+      <div class="panel-white">
+        <p>scrivere testo per indicare il tipo modello di mentoring attivo: {{ mentoring_model_value }}</p>
+      </div>
+    {% endif %}
+{% comment %}
+    {% if mentoring_mentor %}
+      <div class="panel-white">
+        <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentor"|capfirst %}</div>
+        <ul class="list-inline padding10510 list-green">
+          {% for mentoring_project in mentoring_mentor %}
+            <li><div class="c-white marginB5 demiBold">
+              <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
                {% if mentoring_project.state == 0 or mentoring_project.state == 1 %}
                  <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> </small>
                {% elif mentoring_project.state == 3 %}
                  <small><i class="fa fa-lock neutral" aria-hidden="true"></i> </small>
                {% endif %}
                {{ mentoring_project.get_name }}</a>
-           </div></li>
-         {% endfor %}
-         </ul>
-     </div>
-   {% endif %}
-
-   {% if mentoring_mentee %}
-     <div class="panel-white">
-         <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentee"|capfirst %}</div>
-         <ul class="list-inline padding10510 list-green">
-         {% for mentoring_project in mentoring_mentee %}
-           <li><div class="c-white marginB5 demiBold">
-             <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
+            </div></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+{% endcomment %}
+    {% if mentoring_mentee %}
+      <div class="panel-white">
+        <div class="panel-heading-c0 padding10510 demiBold">{% trans "my mentoring projects as a mentee"|capfirst %}</div>
+        <ul class="list-inline padding10510 list-green">
+          {% for mentoring_project in mentoring_mentee %}
+            <li><div class="c-white marginB5 demiBold">
+              <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
                {% if mentoring_project.state == 0 or mentoring_project.state == 1 %}
                  <small style="color: {{ mentoring_project.get_link_color }};"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i> </small>
                {% elif mentoring_project.state == 3 %}
                  <small><i class="fa fa-lock neutral" aria-hidden="true"></i> </small>
                {% endif %}
                {{ mentoring_project.get_name }}</a>
-           </div></li>
-         {% endfor %}
-         </ul>
-     </div>
-   {% endif %}
-
-   {% if can_request_mentor %}
-     <ul class="list-inline marginLB020">
-       <li class="list-back-c0 paddingR10">
-         <div class="c-white marginB5 demiBold">
-           <form action="/project/{{ project.slug }}/project_new/ment/" method="post">{% csrf_token %}
-             <input type="submit" class="btn btn-default" value="{% trans "request a mentor"|capfirst %}">
-           </form>
-         </div>
-       </li>
-     </ul>
-   {% endif %}
-   
-   {% if is_admin and mentoring_projects %}
+            </div></li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    {% if can_request_mentor %}
+      <ul class="list-inline marginLB020">
+        <li class="list-back-c0 paddingR10">
+          <div class="c-white marginB5 demiBold">
+            <form action="/project/{{ project.slug }}/project_new/ment/" method="post">{% csrf_token %}
+              <input type="submit" class="btn btn-default" value="{% trans "request a mentor"|capfirst %}">
+            </form>
+          </div>
+        </li>
+      </ul>
+    {% endif %}
+    {% if is_admin and mentoring_projects %}
      <div class="panel-white">
        <div class="panel-heading-c4 padding10510 demiBold">{% trans "mentoring requests"|capfirst %}</div>
        <ul class="list-inline padding10510 list-green">
@@ -533,7 +553,7 @@
        {% endfor %}
         </ul>
      </div>
-   {% endif %}
+    {% endif %}
    </div>
 {% elif roll %}
  <div class="paddingLR15">
@@ -545,6 +565,144 @@
        </li>
      </ul>
    </div>
+{% endif %}
+{% else %}
+{# ALBO DEI MENTORI #}
+  <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
+    <div class="col-sm-7 col-md-7 col-lg-8">
+      <article class="view-list">
+        {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
+        {% if project.info %}
+          <dl class="list-inline font14 clearfix">
+            <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+            <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
+          </dl>
+        {% endif %}
+      </article>
+
+      {% if is_admin %}
+        <ul class="list-inline marginLB020">
+          <li class="list-back-c0 paddingB0">
+            <ul class="list-inline">
+              {% if can_edit and not language_mismatch %}<li class="marginB10"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
+              {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
+              {% if can_edit %}<li class="marginB10"><a href="/project/{{ project.slug }}/upload/logo/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endif %}
+              {% if can_edit %}<li class="marginB10"><a href="/project/{{ project.slug }}/upload/image/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload image" %}</a></li>{% endif %}
+              {% if can_open %}<li class="marginB10"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
+              {% if can_close %}<li class="marginB10"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
+            </ul>
+          </li>
+        </ul>
+
+        {% if is_open %}
+          {% if not project.forum or project.need_create_room or project.need_sync_xmppaccounts %}
+            <ul class="list-inline marginLB020">
+              {% if not project.forum %}
+                <li class="list-back-black paddingRB10 marginB5">
+                  <a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o"></i> {% trans "create forum" %}</a>
+                </li>
+              {% endif %}
+              {% if project.need_create_room or project.need_sync_xmppaccounts %}
+                <li class="list-back-black paddingRB10 marginB5">
+                  {% if project.need_create_room %}
+                    <a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create chatroom" %}</a>
+                  {% elif project.need_sync_xmppaccounts %}
+                    <a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts of chatroom" %}</a>
+                  {% endif %}
+                </li>
+              {% endif %}
+            </ul>
+          {% endif %}
+        {% endif %}
+      {% endif %}
+
+      {% if can_accept_member %}
+        {% with applications=project.get_applications %}{% if applications|length > 0 %}
+          <div class="panel panel-white" style="border:1px solid white">
+            <div class="panel-heading-c0"><h4 class="margin0 padding510 c-white demiBold">{% trans "applications"|capfirst %}</h4></div>
+            <div class="padding10 list-n" style="overflow:hidden">
+              {% for application in applications %}
+                <div class="bc-white padding510" style="display: table; margin-bottom:10px; width:20%; float:left; height:250px">
+                  <div><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} style="width:100%; height:auto"></a></div>
+                  <div class="marginT5 font12 demiBold" style="line-height:1.0"><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> <span style="font-size:10px"><a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this roll of mentors" %}"><i class="fa fa-plus"></i></a></span></div>
+                  <div class="marginT5" style="font-size:10.5px">{{ application.user.get_profile.mentoring|safe|truncatechars_html:100 }}</div>
+
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}{% endwith %}
+      {% endif %}
+
+      {% if can_apply %}
+        <div class="marginB10">
+          {% if profile_mentoring %}
+            <a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a>
+          {% else %}
+            <a id="profile_mentoring" class="btn btn-green" href="#" title="">{% trans "add"|capfirst %}</a>
+            <div id="profile_mentoring_box" style="display:none">aggiorna profilo <a href="/profile/{{user.username }}/mentor_edit/" title='{% trans "show edit mentor profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "add" %}</a></div>
+          {% endif %}
+        </div>
+      {% elif membership and membership.state == 0 %}
+        <div class="panel-white panel-c0 padding510 marginB10 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
+      {% endif %}
+      <div class="panel panel-white" style="border:1px solid white">
+         <div class="panel-heading-c0"><h4 class="margin0 padding510 c-white demiBold">{% trans "mentors"|capfirst %}</h4></div>
+         <div class="padding10">
+          <div class="list-n">
+         {% with users=project.members %}
+           {% for u in users %} 
+	<div class="bc-white">
+               <div><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
+               <div class="title"><a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}">{{ u.0.get_display_name }}</a>{% if u.1 %}<small>, <i>{{ project.admin_name }}</i></small>
+            {% if can_delegate and u.0 != user %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
+              {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+              <input type="submit" class="btn-link padding0 bold" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
+              </form>{% endif %}
+            {% else %}
+              {% if can_delegate %}<form style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
+                {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
+                <input type="submit" class="btn-link padding0 bold" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
+                </form>
+              {% endif %}
+            {% endif %}
+</div>
+          <div class="description">{% if u.0.get_profile.position %}{{ u.0.get_profile.position|truncatechars:100 }}{% else %}{{ u.0.get_profile.short|truncatechars:100 }}{% endif %}</div>
+           </div>
+           {% endfor %}
+         {% endwith %}</div>
+       </div>
+     </div>
+
+    </div>
+    <div class="col-sm-5 col-md-5 col-lg-4">
+      <div class="panel-white">
+        <div class="padding510 paddinB0 font12">{{ roll_info|safe }}</div>
+      </div>
+
+      {% if view_shared_folder or can_send_message or project.forum %}
+        <ul class="list-inline marginLB020">
+          {% if view_shared_folder %}
+            <li class="list-back-black paddingRB10 marginB5">
+              <a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a>
+            </li>
+          {% endif %}
+          {% if project.forum %}
+            <li class="list-back-black paddingRB10 marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
+              {% trans "forum"|capfirst %} {% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
+          {% endif %}
+          {% if can_send_message %}
+            <li class="list-back-black paddingRB10 marginB5">
+              <form action="/project/{{ project.id }}/compose_message/" method="post">{% csrf_token %}
+                <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o"></i> {% trans "message to members"|capfirst %}</button>
+              </form>
+            </li>
+          {% endif %}
+
+        </ul>
+      {% endif %}
+    </div>
+  </div>
 {% endif %}
 </div>
 {% endblock %}
@@ -574,6 +732,39 @@
 				accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
 			}
 		});
+
+		{% if can_mentoring_model and roll %}
+		
+		$("#id_mentoring_model_0").parent().css('display','none');
+		$("#id_mentoring_model_0").prop('disabled',true);
+		{% endif %}
+		
+		{% if can_mentoring_model and mentoring_projects_all >= 1 %}
+			switch ($('input[name=mentoring_model]:checked').val()) {
+				case '1':
+				$("#id_mentoring_model_2").parent().css('display','none');
+				$("#id_mentoring_model_2").prop('disabled',true)
+				break;
+				case '2':
+				$("#id_mentoring_model_1").parent().css('display','none');
+				$("#id_mentoring_model_1").prop('disabled',true)
+				break;
+				case '3':
+				$("#id_mentoring_model_1").parent().css('display','none');
+				$("#id_mentoring_model_2").parent().css('display','none');
+				$("#id_mentoring_model_1").prop('disabled',true)
+				$("#id_mentoring_model_2").prop('disabled',true)
+			}
+		{% endif %}
+			
+		{% if can_apply and not profile_mentoring %}
+			$("#profile_mentoring").click(function(event) {
+				event.preventDefault();
+			 	$("#profile_mentoring_box").css('display','block');
+			});
+		{% endif %}
+		
+		
 	});
 	</script>
 	{% endblock %}

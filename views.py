@@ -43,12 +43,14 @@ from models import DRAFT, PUBLISHED, UN_PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
+from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
 from metadata import QualityFacet
 from forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, one2oneMessageComposeForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
+from forms import ProjectMentoringModelForm, AcceptMentorForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
@@ -60,7 +62,7 @@ from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 from dmuc.middleware import create_xmpp_account
 
-from roles.utils import add_local_role, remove_local_role, grant_permission
+from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 # from taggit.models import Tag
 from filetransfers.api import serve_file
@@ -390,6 +392,42 @@ def my_profile(request):
         return HttpResponseForbidden()
     return user_profile(request, None, user=user)
 
+def get_mentor_memberships(user, state=None):
+    role_admin = Role.objects.get(name='admin')
+    mm = ProjectMember.objects.filter(project__proj_type__name='ment', user=user)
+    if state is not None:
+        mm = mm.filter(state=state)
+    if state == 1:
+        mm = [m for m in mm if role_admin in get_local_roles(m.project, user)]
+    elif state == 0:
+        mm=mm.filter(refused=None).exclude(project__state=PROJECT_DRAFT)
+    return mm
+
+def get_mentee_memberships(user, state=None):
+    role_admin = Role.objects.get(name='admin')
+    mm = ProjectMember.objects.filter(project__proj_type__name='ment', user=user)
+    if state is not None:
+        mm = mm.filter(state=state)
+    mm = [m for m in mm if role_admin not in get_local_roles(m.project, user)]
+    return mm 
+
+def get_request_mentoring_projects(user):
+    role_admin = Role.objects.get(name='admin')
+    mm = ProjectMember.objects.filter(project__proj_type__name='com', project__state = PROJECT_OPEN, project__mentoring_model = MENTORING_MODEL_A, user=user)
+    mm = [m for m in mm if role_admin in get_local_roles(m.project, user)]
+    children = []
+    for m in mm:
+        project = m.project
+        children = project.get_children(proj_type_name='ment', states=[PROJECT_SUBMITTED])
+    if children:
+        tmp_children = []
+        for child in children:
+             mm = ProjectMember.objects.filter(project=child, user=user, state = 0, refused = None)
+             if len(mm) == 0:
+                 tmp_children.append(child)
+        children = tmp_children
+    return children
+
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
         return HttpResponseRedirect('/')
@@ -405,9 +443,11 @@ def user_dashboard(request, username, user=None):
     else:
         var_dict['complete_profile'] = False
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
+    
     com_adminships = []
     com_only_memberships = []
     for membership in memberships:
+        # if membership.project.get_level() > 0:
         if membership.project.is_admin(user):
             membership.proj_applications = membership.project.get_applications().count()
             com_adminships.append(membership)
@@ -430,7 +470,10 @@ def user_dashboard(request, username, user=None):
     var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
     var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
     var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
-    var_dict['mentoring_rels'] = mentoring_rels = ProjectMember.objects.filter(user=user, project__proj_type__name='ment')
+    var_dict['mentoring_rels_mentor']=get_mentor_memberships(user, 1)
+    var_dict['mentoring_rels_mentee'] = get_mentee_memberships(user, 1)
+    var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
+    var_dict['mentoring_rels_request_mentoring'] = get_request_mentoring_projects(user)
     """
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
@@ -445,11 +488,11 @@ def user_dashboard(request, username, user=None):
     else:
         max_days = 90
         max_actions = 30
-    actions = filter_actions(user=user, verbs=['Create','Edit','Submit','Approve',], max_days=max_days, max_actions=max_actions)
+    actions = filter_actions(user=user, verbs=['Accept','Create','Edit','Submit','Approve','Reject',], max_days=max_days, max_actions=max_actions)
     var_dict['max_days'] = max_days
     var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
-    
+
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
 
 def my_home(request):
@@ -935,7 +978,7 @@ def project_folder(request, project_slug):
     if not user.is_authenticated():
         return project_detail(request, project.id, project=project)
     proj_type = project.proj_type
-    var_dict = {'project': project, 'proj_type': proj_type,}
+    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name}
     var_dict['can_share'] = user.is_superuser or project.is_member(user)
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['folder'] = project.get_folder()
@@ -961,7 +1004,7 @@ def lps_in_clipboard(request, key):
             pass
     return lps
 
-def project_detail(request, project_id, project=None):
+def project_detail(request, project_id, project=None, accept_mentor_form=None):
     MAX_OERS = 5
     MAX_OERS_EVALUATED = 5
     MAX_LPS = 5
@@ -1014,8 +1057,8 @@ def project_detail(request, project_id, project=None):
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
         # var_dict['can_accept_member'] = project.can_accept_member(user)
-        can_accept_member = project.can_accept_member(user)
-        var_dict['can_accept_member'] = can_accept_member
+        var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
+        # var_dict['can_accept_member'] = can_accept_member
         if can_accept_member:
             var_dict['add_member_form'] = ProjectAddMemberForm()
             """
@@ -1053,9 +1096,21 @@ def project_detail(request, project_id, project=None):
         var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
         var_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
         var_dict['can_open'] = project.can_open(user)
-        var_dict['can_propose'] = project.can_propose(user)
+        """
+        can_propose = project.can_propose(user)
+        parent_mentoring_model = project.get_parent().mentoring_model
+        if can_propose:
+            if parent_mentoring_model == MENTORING_MODEL_A:
+               var_dict['can_propose'] = 'A'
+            elif parent_mentoring_model == MENTORING_MODEL_B:
+               var_dict['can_propose'] = 'B'
+            elif parent_mentoring_model == MENTORING_MODEL_C:
+               var_dict['can_propose'] = 'C'
+            else:
+               var_dict['can_propose'] = None
+        """
         var_dict['can_close'] = project.can_close(user)
-        var_dict['view_shared_folder'] = is_member or user.is_superuser
+        var_dict['view_shared_folder'] = view_shared_folder = is_member or user.is_superuser
         var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
         var_dict['can_chat'] = can_chat = project.can_chat(user) and is_open
         var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
@@ -1076,24 +1131,129 @@ def project_detail(request, project_id, project=None):
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
+        if type_name=='roll':
+            var_dict['profile_mentoring'] = profile.mentoring
+            var_dict['can_apply'] = is_open and parent.is_member(user) and not membership
         if type_name=='com':
             if is_admin or user.is_superuser:
                 var_dict['roll'] = roll = project.get_roll_of_mentors()
             else:
                 var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
-            var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
+            var_dict['mentoring_projects_all'] = len(project.get_mentoring_projects())
+            if project.mentoring_model == MENTORING_MODEL_A:
+                var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
             var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
-            var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[PROJECT_OPEN,PROJECT_CLOSED,])
-            var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user)
-            var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and not roll
-            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,])
-            var_dict['mentoring_block']= roll or can_add_roll or can_request_mentor or mentoring
+            # var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[PROJECT_OPEN,PROJECT_CLOSED,])
+            var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user,membership_state=1)
+            var_dict['can_mentoring_model'] = can_mentoring_model = is_open and is_admin
+            var_dict['form_memtoring_model'] = ProjectMentoringModelForm(instance=project)
+            var_dict['mentoring_model_value'] = MENTORING_MODEL_DICT.get(project.mentoring_model);
+            if project.mentoring_model == MENTORING_MODEL_C:
+               var_dict['mentoring_model_C'] = True
+               var_dict['mentoring_model_C_value'] = MENTORING_MODEL_DICT.get(MENTORING_MODEL_C);
+            var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and (not project.mentoring_model == NO_MENTORING) and not roll
+            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,],membership_state=1)
+            var_dict['mentoring_block']= can_mentoring_model or roll or can_add_roll or can_request_mentor or mentoring
         elif type_name=='ment':
-            var_dict['mentor'] = mentor = project.get_mentor()
-            var_dict['mentee'] = mentee = project.get_mentee()
-            mentor_user = mentor and mentor.user
+            can_propose = project.can_propose(user)
+            parent_mentoring_model = project.get_parent().mentoring_model
+            if can_propose:
+                if parent_mentoring_model == MENTORING_MODEL_A:
+                    var_dict['can_propose'] = 'A'
+                elif parent_mentoring_model == MENTORING_MODEL_B:
+                    var_dict['can_propose'] = 'B'
+                elif parent_mentoring_model == MENTORING_MODEL_C:
+                    var_dict['can_propose'] = 'C'
+            else:
+               var_dict['can_propose'] = None
+            var_dict['can_draft_back'] = can_draft_back = project.can_draft_back(user)
+            var_dict['mentee'] = mentee = project.get_mentee(state=1)
             mentee_user = mentee and mentee.user
+            var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
+            MAX_DELAY = 1
+            if (parent_mentoring_model == MENTORING_MODEL_B and is_draft):
+                var_dict['select_mentor_B'] = True
+                var_dict['roll'] = roll = parent.get_roll_of_mentors()
+                proj_type_roll = ProjType.objects.filter(name='roll')
+                rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
+                all_candidate_mentors = roll.candidate_mentors([user])
+                requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                # var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
+                candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
+                var_dict['candidate_mentors'] = candidate_mentors
+                if candidate_mentors:
+                    if requested_mentors:
+                        var_dict['requested_mentor'] =  requested_mentor = requested_mentors[0]
+                        form = MatchMentorForm(initial={'project': project_id, 'mentor': requested_mentor.user_id})
+                    else:
+                        form = MatchMentorForm(initial={'project': project_id })
+                    form.fields['mentor'].queryset = candidate_mentors
+                    var_dict['match_mentor_form'] = form
+            elif (parent_mentoring_model == MENTORING_MODEL_B and is_submitted):
+                var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                var_dict['requested_mentor'] = requested_mentor = requested_mentors[0]
+                var_dict['view_shared_folder'] = view_shared_folder or requested_mentor.user == user
+                date_max_delay = requested_mentors[0].modified + timedelta(days=MAX_DELAY)
+                var_dict['diff_date'] = diff_date =  timezone.now() > date_max_delay
+                var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
+                if requested_mentor:
+                    var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
+                var_dict['is_mentee'] = is_mentee = mentee_user == user
+                if is_mentee:
+                   var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
+                if can_accept_mentor:
+                    if (accept_mentor_form):
+                        var_dict['accept_mentor_form'] = AcceptMentorForm(accept_mentor_form['post'], instance=project)
+                    else:
+                        var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
+            elif (parent_mentoring_model == MENTORING_MODEL_A and is_member and is_draft):
+                var_dict["view_project_text"] = True
+            elif (parent_mentoring_model == MENTORING_MODEL_A and is_submitted):
+                var_dict['is_mentee'] = is_mentee = mentee_user == user
+                var_dict['parent_mentoring_model_A'] = True
+                var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                # var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
+                requested_mentor = None
+                can_accept_mentor = None
+                if not requested_mentors:
+                    if is_parent_admin:
+                        var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin
+                        var_dict['select_mentor_A'] = True
+                        var_dict['roll'] = roll = parent.get_roll_of_mentors()
+                        proj_type_roll = ProjType.objects.filter(name='roll')
+                        rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
+                        all_candidate_mentors = roll.candidate_mentors([mentee_user])
+                        requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                        candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
+                        var_dict['candidate_mentors'] = candidate_mentors
+                        if candidate_mentors:
+                            if requested_mentors:
+                                var_dict['requested_mentor'] =  requested_mentor = requested_mentors[0]
+                                form = MatchMentorForm(initial={'project': project_id, 'mentor': requested_mentor.user_id})
+                            else:
+                                form = MatchMentorForm(initial={'project': project_id })
+                            form.fields['mentor'].queryset = candidate_mentors
+                            var_dict['match_mentor_form'] = form
+                else:
+                    if requested_mentors:
+                        var_dict['requested_mentor'] = requested_mentor = requested_mentors[0]
+                        date_max_delay = requested_mentors[0].modified + timedelta(days=MAX_DELAY)
+                        var_dict['diff_date'] = diff_date =  timezone.now() > date_max_delay
+                        # var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
+                    if requested_mentor:
+                        var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
+                        var_dict['is_mentee'] = is_mentee = mentee_user == user
+                        var_dict['is_only_parent_admin'] = is_only_parent_admin = is_parent_admin and not user == requested_mentor.user
+                    if (is_mentee or is_only_parent_admin) and requested_mentor:
+                        var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
+                        var_dict['view_shared_folder'] = view_shared_folder or is_only_parent_admin
+                    if can_accept_mentor:
+                        var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
+                        var_dict['can_draft_back'] = False 
+                        var_dict['view_shared_folder'] = view_shared_folder or user.id == requested_mentors[0].user_id
             if is_open and is_member:
+                var_dict['mentor'] = mentor = project.get_mentor(state=1)
+                mentor_user = mentor and mentor.user
                 if user==mentor_user:
                     inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
                     outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
@@ -1122,16 +1282,7 @@ def project_detail(request, project_id, project=None):
                 else:
                     form = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
                 var_dict['compose_message_form'] =  form
-            var_dict['parent_roll'] = parent_roll = parent.get_roll_of_mentors()
-            if is_parent_admin:
-                var_dict['candidate_mentors'] = candidate_mentors = project.get_candidate_mentors()
-                if candidate_mentors:
-                    if mentor:
-                        form = MatchMentorForm(initial={'project': project_id, 'mentor': mentor.user.username})
-                    else:
-                        form = MatchMentorForm(initial={'project': project_id })
-                    form.fields['mentor'].queryset = User.objects.filter(username__in=[mentor.username for mentor in candidate_mentors])
-                    var_dict['match_mentor_form'] = form
+
         elif type_name=='sup':
             var_dict['support'] = project
     else:
@@ -1187,6 +1338,45 @@ def project_add_member(request, project_slug):
              membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
              membership.save()
      return HttpResponseRedirect('/project/%s/' % project.slug)
+     
+def project_accept_mentor(request):
+     user = request.user
+     post = request.POST
+     project_id = post.get('project')
+     project = get_object_or_404(Project, id=project_id)
+     if post:
+        if not project.can_access(request.user):
+            raise PermissionDenied
+        form = AcceptMentorForm(post, instance=project)
+        if form.is_valid():
+            membership = ProjectMember.objects.get(project=project, user=user, state=0, refused=None)
+            data = form.cleaned_data
+            accept = int(data['accept'])
+            membership.editor=user
+            membership.history=data['description']
+            if accept == 1:
+                membership.state = 1
+                membership.accepted=timezone.now()
+                membership.save()
+                role_admin = Role.objects.get(name='admin')
+                add_local_role(project, user, role_admin)
+                track_action(user, 'Accept', membership, target=project, description=data['description'])
+                project.state=PROJECT_OPEN
+                project.editor=user
+                project.save()
+                track_action(user, 'Approve', project)
+            else:
+                membership.refused=timezone.now()
+                membership.save()
+                track_action(user, 'Reject', membership, target=project, description=data['description'])
+                if project.get_parent().mentoring_model == MENTORING_MODEL_B:
+                    project.state=PROJECT_DRAFT
+                    project.editor=user
+                    project.save()
+                return HttpResponseRedirect('/my_home/')
+        else:
+            return project_detail(request, project_id, project=project, accept_mentor_form={'post': post})
+     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
@@ -1233,14 +1423,14 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     elif parent_id:
         if parent.can_edit(request) or (proj_type and proj_type.name=='ment'):
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
-            initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
+            # initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
             """
             if proj_type.name == 'roll':
                 initial['name'] = string_concat(capfirst(_('roll of mentors')), ' ', _('for'), ' ', parent.name)
             elif proj_type.name == 'ment':
                 initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
             """
-            form = ProjectForm(initial=initial)
+            # form = ProjectForm(initial=initial)
             """
             data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, 'object': None,}
             current_language = get_current_language()
@@ -1259,19 +1449,19 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             project = get_object_or_404(Project, id=project_id)
             data_dict['project'] = project
             data_dict['object'] = project
-            form = ProjectForm(request.POST, request.FILES, instance=project)
-            data_dict['form'] = form
             data_dict['proj_type_name'] = project.get_type_name()
+            form = ProjectForm(request.POST, instance=project)
+            data_dict['form'] = form
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
             data_dict['parent'] = parent
-            form = ProjectForm(request.POST, request.FILES)
-            data_dict['form'] = form
             proj_type_id = request.POST.get('proj_type','')
             proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
             if proj_type:
                 data_dict['proj_type_name'] = proj_type.name
             name = request.POST.get('name', '')
+            form = ProjectForm(request.POST)
+            data_dict['form'] = form
         """
         else:
             raise
@@ -1288,7 +1478,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 project = form.save(commit=False)
                 data_dict['project'] = project
                 data_dict['object'] = project
-                data_dict['proj_type_name'] = project.get_type_name()
+                data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
                 if parent:
                     group_name = slugify(name[:50])
                     group = Group(name=group_name)
@@ -1297,10 +1487,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.group = group
                     project.creator = user
                     project.editor = user
+                    if proj_type_name == 'com':
+                        project.mentoring_model = NO_MENTORING
                     set_original_language(project)
                     project.save()
                     track_action(request.user, 'Create', project)
-                    proj_type_name = project.get_type_name()
+
                     role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
                     membership = project.add_member(user)
@@ -1345,11 +1537,17 @@ def project_edit_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_edit(request, project_id=project.id)
 
-"""
-def project_new_by_slug(request, project_slug):
-    project = get_object_or_404(Project, slug=project_slug)
-    return project_edit(request, parent_id=project.id)
-"""
+def project_mentoring_model_edit(request, project_slug):
+     user = request.user
+     project = get_object_or_404(Project, slug=project_slug)
+     if request.POST:
+        form = ProjectMentoringModelForm(request.POST, instance=project)
+        if form.is_valid():
+            project.mentoring_model = request.POST.get('mentoring_model','')
+            project.editor = user
+            project.save()
+     return HttpResponseRedirect('/project/%s/' % project.slug)
+
 def project_new_by_slug(request, project_slug, type_name):
     project = get_object_or_404(Project, slug=project_slug)
     proj_type = get_object_or_404(ProjType, name=type_name)
@@ -1360,8 +1558,45 @@ def project_propose(request, project_id):
     user = request.user
     if not project.can_access(user):
         raise PermissionDenied
+    type_name = project.proj_type.name
+    mentoring_model = project.get_parent().mentoring_model
     project.propose(request)
+    if type_name == 'ment':
+        if mentoring_model == MENTORING_MODEL_B:
+            notify = True
+            # INVIARE NOTIFICA AL MENTORE
+            print "============= PROGETTO SUBMITTED INVIARE NOTIFICA AL MENTORE SCELTO ===="
+        elif mentoring_model == MENTORING_MODEL_A:
+            notify = True
+            # INVIARE NOTIFICA AL community admin
+            print "============= PROGETTO SUBMITTED INVIARE NOTIFICA A AMMINSTRATORE ===="
     track_action(request.user, 'Submit', project)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+def project_draft_back(request, project_id):
+    project = Project.objects.get(pk=project_id)
+    user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
+    type_name = project.proj_type.name
+    mentoring_model = project.get_parent().mentoring_model
+    if type_name == 'ment':
+        if mentoring_model == MENTORING_MODEL_A:
+            mm = ProjectMember.objects.filter(project=project,state=0,refused=None)
+            if mm:
+                for m in mm:
+                    m.history = 'mentore non ha risposto'
+                    m.editor = user
+                    m.refused = timezone.now()
+                    m.save()
+            message = request.POST.get('message',None)
+            if message:
+                project.state = PROJECT_DRAFT
+                project.editor = user
+                project.save()
+                notify = True
+                # INVIARE NOTIFICA AL MENTEE
+                print "=============RIPORTA PROGETTO A DRAFT INVIARE NOTIFICA AL MENTEE ===="
+                return HttpResponseRedirect('/my_home')
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_open(request, project_id):
     project = Project.objects.get(pk=project_id)
@@ -1462,7 +1697,8 @@ def apply_for_membership(request, username, project_slug):
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
-            notification.send(receivers, 'membership_application', extra_content)
+            if PRODUCTION:
+                notification.send(receivers, 'membership_application', extra_content)
             track_action(user, 'Submit', membership, target=project)
             # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
@@ -1502,6 +1738,7 @@ def project_toggle_supervisor_role(request, project_id):
         project.save
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
+"""
 def project_set_mentor(request):
     if request.POST:
         project_id = request.POST.get('project')
@@ -1509,14 +1746,62 @@ def project_set_mentor(request):
         if not project.can_access(request.user):
             raise PermissionDenied
         mentor_id = request.POST.get('mentor', None)
-        print 'mentor_id : ', mentor_id
         if mentor_id:
             mentor_user = get_object_or_404(User, id=mentor_id)
             mentor_member = project.add_member(mentor_user)
             project.accept_application(request, mentor_member)
             role_admin = Role.objects.get(name='admin')
             add_local_role(project, mentor_user, role_admin)
-    return HttpResponseRedirect('/project/%s/' % project.slug)    
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+"""
+
+def project_set_mentor(request):
+    post=request.POST
+    if post:
+        project_id = post.get('project')
+        project = get_object_or_404(Project, id=project_id)
+        if not project.can_access(request.user):
+            raise PermissionDenied
+        mentor_id = post.get('mentor', None)
+        save = post.get('save', '')
+        submit = post.get('submit', '')
+        parent_mentoring_model = project.get_parent().mentoring_model
+        if save:
+            if mentor_id:
+                mentor_user = get_object_or_404(User, id=mentor_id)
+                mentors_selected = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                if mentors_selected:
+                   mentor_selected = mentors_selected[0]
+                   if not (mentor_selected == mentor_user):
+                      if (parent_mentoring_model == MENTORING_MODEL_B) and (project_state == PROJECT_DRAFT):
+                          user_selected = get_object_or_404(User, id=mentor_selected.user_id)
+                          project.remove_member(user_selected)
+                   else:
+                       return HttpResponseRedirect('/project/%s/' % project.slug)
+                mentor_member = project.add_member(mentor_user,request.user)
+        elif submit:
+            if mentor_id:
+              mentor_user = get_object_or_404(User, id=mentor_id)
+              if (parent_mentoring_model == MENTORING_MODEL_A):
+                  mentor_member = project.add_member(mentor_user,request.user)
+                  message = post.get('message', None)
+                  # NOTIFICA AL MENTORE SELEZIONATO 
+                  print "================= INVIO EMAIL AL MENTORE SELEZIONATO ==========="
+                  print message
+              elif (parent_mentoring_model == MENTORING_MODEL_B):
+                  mentors_selected = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                  if mentors_selected:
+                      mentor_selected = mentors_selected[0]
+                      if not (mentor_selected == mentor_user):
+                          user_selected = get_object_or_404(User, id=mentor_selected.user_id)
+                          project.remove_member(user_selected)
+                          mentor_member = project.add_member(mentor_user,request.user)
+                  else:
+                      mentor_member = project.add_member(mentor_user,request.user)
+                  project.state = PROJECT_SUBMITTED
+                  project.save()
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
 
 def project_add_shared_oer(request, project_id, oer_id):
     user = request.user

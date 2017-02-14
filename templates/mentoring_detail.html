@@ -8,9 +8,34 @@
 
 {% block extra_head %}
 <style>
-    form label  { display: inline; }
-    ul#id_mentor { list-style-type: none; }
-    ul#id_mentor li label { font-weight: normal;  font-size: 12px; }
+    ul#id_mentor { list-style-type: none; display:inline }
+    ul#id_mentor li {width:20%; float:left; height:250px; vertical-align:top;  }
+    ul#id_mentor li label {font-weight: normal;  font-size: 12px; }
+
+dl.eval {
+	background: white;
+	margin-bottom:5px;
+}
+dl.eval dd {
+	padding:20px 20px 10px 20px;
+}
+dl.eval dd:nth-child(odd) {
+    background: transparent;
+}
+dl.eval dd:nth-child(even) {
+    background: #f8f8f8;
+}
+
+div.msg {
+	background: white;
+	margin-left: 15px;
+	margin-right: 15px;
+	padding: 8px 12px;
+	border: 1px solid red;
+	color: red;
+	font-style: italic;
+}
+
 </style>
 {% endblock %}
 
@@ -55,51 +80,50 @@
      &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
    {% endwith %}
   </p>
+  {% if view_project_text %}
+      <div class="msg">invia la richiesta all'amminstratore della comunita' che provvedera' ad assegnare un mentore</div>
+  {% endif %}
   <div class="row marginLR0 paddingT10">
-    <div class="{% if is_open or is_closed %}col-sm-7 col-md-7 col-lg-8{% else %}col-sm-12 col-md-12 col-lg-12{% endif %}">
-     <article class="view-list">
-       <p class="font16"><i>{{ project.description }}</i></p>
-       {% if project.info %}
-         <dl class="list-inline font14 clearfix">
-            <dt>{% trans "additional information"|capfirst %}</dt>
-            <dd class="field-content width-full"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
-         </dl>
-       {% endif %}
-     </article>
-     {% if can_edit or can_open or can_close or is_admin or can_propose or view_shared_folder %}
-       <ul class="list-inline marginLB020">
-         <li class="list-back-c0">
-           <ul class="list-inline">
-             {% if can_edit and not is_closed %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
-             {% if can_propose %}<li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li>{% endif %}
-             {% if can_open and is_admin %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
-             {% if can_close and is_admin %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
-           </ul>
-         </li>
-         {% if view_shared_folder %}
-           <li class="list-back-black"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
+    <div class="col-sm-7 col-md-7 col-lg-8">
+     {% if select_mentor_B %}
+       {% include "_mentors_refuse.html" %}
+       {% include "_candidate_mentors.html" %}
+       {% include "_project_mentoring_text.html" %}
+     {% elif select_mentor_A %}
+       {% include "_project_mentoring_text.html" %}
+       {% include "_mentors_refuse.html" %}
+       {% include "_candidate_mentors.html" %}
+     {% elif view_project_text %}
+       {% include "_mentors_refuse.html" %}
+       {% include "_project_mentoring_text.html" %}
+     {% endif %}
+     {% if is_submitted %}
+       {% if is_mentee or is_only_parent_admin %}
+         {% include "_mentors_refuse.html" %}
+         {% include "_selected_mentor.html" %}
+         {% include "_project_mentoring_text.html" %}
+       {% elif can_accept_mentor %}
+         {% include "_project_mentoring_text.html" %}
+         <div class="panel panel-c0">
+         <form method="post" action="/accept_mentor/" name="accept_mentor_form" id="ud_accept_mentor_form">{% csrf_token %}
+           {% for hidden in accept_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
+           <fieldset class="padding510">
+             {% for field in accept_mentor_form.visible_fields %}
+               <div class="form-group">
+                 <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label> &nbsp;
+                 <span class="txt-error">{{ field.errors }}</span>{{ field }}
+                 {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+               </div>
+             {% endfor %}
+           </fieldset>
+           <div class="panel-footer-c0 padding510"><button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "conferma la scelta"|capfirst %}</button></div>
+         </form></div>
          {% endif %}
-         {% if is_admin and is_open and project.need_create_room %}
-           <li class="list-back-black"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "enable chatroom" %}</a></li></ul></li> 
-         {% endif %}
-       </ul>
+     {% elif is_open or is_closed %}
+       {% include "_project_mentoring_text.html" %}  
      {% endif %}
 
-     {% if is_parent_admin and is_submitted and not mentor and candidate_mentors %}
-       <div class="panel-white">
-         <h5 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:3px; border-top-right-radius:3px;">{% trans "candidate mentors"|capfirst %}</h5>
-         <form method="post" action="/set_mentor/" class="padding510">{% csrf_token %}
-             {% for hidden in match_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
-             <div class="form-group">
-             {% for field in match_mentor_form.visible_fields %}
-             {{ field.label_tag }} {{ field }}
-             {% endfor %}
-             </div>
-             <div class="form-group"><input type="submit" class="btn btn-default" value="{% trans "assign mentee to selected mentor"|capfirst %}" id="match_mentor"></div>
-           </form>
-       </div>
-     {% endif %}
-     {% if can_send_message %}
+     {% if can_send_message and is_member %}
        <div class="panel-white">
          <ul class="nav nav-tabs" style="background:#ebeded; border-top-left-radius:4px; border-top-right-radius:4px;">
            <li class="active"><a data-toggle="tab" href="#inbox">{% trans "received messages"|capfirst %}</a></li>
@@ -146,9 +170,44 @@
      {% endif %}
    </div>
  
-   {% if is_open or is_closed %}
+   {# if is_open or is_closed #}
    <div class="col-sm-5 col-md-5 col-lg-4">
-   	       {% if can_add_oer or can_add_lp %}
+     {% if can_propose == 'A' %}
+       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request to admin" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
+{% comment %}
+     {% elif can_propose == 'B' and requested_mentor %}
+       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request to mentor" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
+{% endcomment %}
+     {% elif can_propose == 'C' %}
+       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
+     {% endif %}
+     {% if can_draft_back and mentors_refuse %}
+     <ul class="list-inline marginLB020"><li class="list-back-c0 width-full paddingLT4">
+     	<dl class="bc-white font14 marginB0 padding510 borderRadius4" >
+        <dd><form method="POST" action="/project/{{ project.id }}/draft_back/" id="id_draft_back_form" name="draft_back_form">{% csrf_token %}
+          <input type="hidden" name="admin" value="{{ user }}">
+          <div class="form-group">
+          <label for="id_message">{% trans "message"|capfirst %}</label>
+          <textarea name="message" class="form-control" id="message"></textarea>
+          <small id="urlhelpBlock" class="help-block">{% trans "testo verra' inviato al mentee" %}</small>
+          </div>
+       <div class="form-group"><button name="draft_back" id="id_draft_back" title="{% trans "back to draft state" %}" class="btn btn-default" value="draft"><i class="fa fa-reply"></i> {% trans "back to draft state" %}</button></div>
+     </form></dd>
+   </dl></li></ul>
+
+     {% endif %}
+
+     {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
+
+         <ul class="list-inline marginLB020">
+         {% if view_shared_folder %}
+           <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
+         {% endif %}
+         {% if is_admin and is_open and project.need_create_room %}
+           <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "enable chatroom" %}</a></li></ul></li> 
+         {% endif %}
+       </ul>
+          {% if can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
             {% if can_add_oer %}
@@ -246,7 +305,7 @@
          {% endif %}
 
    </div>
-   {% endif %}
+   {# endif #}
   </div>
 </div>
 {% endblock %}

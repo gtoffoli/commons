@@ -20,7 +20,7 @@ from django_messages.models import Message
 from models import UserProfile, OER # , Project
 from models import PUBLISHED
 
-verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve',]
+verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject',]
 
 def user_unviewed_posts_count(self):
     # return unviewed_posts(self)
