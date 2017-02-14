@@ -485,8 +485,8 @@
       {% endif %}
     </div>
     {% if not is_admin %}
-      <div class="panel-white">
-        <p>scrivere testo per indicare il tipo modello di mentoring attivo: {{ mentoring_model_value }}</p>
+      <div class="panel-white padding510">
+        {% trans "current mentoring model for this community"|capfirst %}: {{ mentoring_model_value }}
       </div>
     {% endif %}
 {% comment %}

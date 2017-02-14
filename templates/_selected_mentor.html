@@ -15,13 +15,13 @@
              <div>{%if selected_mentor.position %}{{selected_mentor.position|safe}}{% else %}{{ selected_mentor.short}}{% endif %}</div>
              </div>
            </div>
-           <div class="c-fern padding510 font13 demiBold">{% trans "inviata richiesta al mentore il"|capfirst %} {{ requested_mentor.created|date:"d/m/Y" }}</div>
+           <div class="c-fern padding510 font13 demiBold">{% trans "the request has been sent to the mentor on"|capfirst %} {{ requested_mentor.created|date:"d/m/Y" }}</div>
 </div>
 {% else %}
 {% if is_mentee and is_submitted and parent_mentoring_model_A %}
 <div class="panel-white">
            <h4 class="panel-heading-c0 padding510 margin0">{% trans "selected mentor"|capfirst %}</h4>
-           <div class="padding10">Al momento l'amministratore della comunita' non ha ancora assegnato un mentore</div>
+           <div class="padding10">{% trans "the community administrator hasn't chosen a mentor yet"|capfirst %}.</div>
 </div>
 {% endif %}
 {% endif %}

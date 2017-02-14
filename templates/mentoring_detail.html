@@ -81,7 +81,7 @@ div.msg {
    {% endwith %}
   </p>
   {% if view_project_text %}
-      <div class="msg">invia la richiesta all'amminstratore della comunita' che provvedera' ad assegnare un mentore</div>
+      <div class="msg">{% trans "a request must be submitted to the community administrator, which will try to allocate a mentor"|capfirst %}.</div>
   {% endif %}
   <div class="row marginLR0 paddingT10">
     <div class="col-sm-7 col-md-7 col-lg-8">
@@ -116,7 +116,7 @@ div.msg {
                </div>
              {% endfor %}
            </fieldset>
-           <div class="panel-footer-c0 padding510"><button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "conferma la scelta"|capfirst %}</button></div>
+           <div class="panel-footer-c0 padding510"><button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "confirm your choice"|capfirst %}</button></div>
          </form></div>
          {% endif %}
      {% elif is_open or is_closed %}
@@ -154,7 +154,7 @@ div.msg {
              {% endif %}
            </div>
            <div id="compose" class="tab-pane fade">
-             <form method="post" action="#" class="padding510">{% csrf_token %}
+             <form method="post" action="/project/{{ project.slug }}/send_one2one_message/" class="padding510">{% csrf_token %}
                {% for hidden in compose_message_form.hidden_fields %}{{ hidden }}{% endfor %}
                {% for field in compose_message_form.visible_fields %}
                  <div class="form-group">

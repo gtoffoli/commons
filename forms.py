@@ -666,15 +666,9 @@ class UserChoiceField(forms.ModelChoiceField):
                             description)
 
 class MatchMentorForm(forms.Form):
-    """
-    def label_from_instance(self, obj):
-        return obj.get_display_name()
-        print obj
-    """
-    
     project = forms.IntegerField(widget=forms.HiddenInput())
     mentor = UserChoiceField(required=False, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect(),)
-    message = forms.CharField(required=False, label=_('message'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('messaggio email'))
+    message = forms.CharField(required=False, label=_('message'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, enter a notice for the mentor, to motivate your choice'))
 
 class HorizontalRadioRenderer(forms.RadioSelect.renderer):
     def render(self):
@@ -687,7 +681,7 @@ class AcceptMentorForm(forms.ModelForm):
 
     project = forms.IntegerField(widget=forms.HiddenInput())
     accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
-    description = forms.CharField(required=True, label=_('Motivo'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('motivo accettazione o rifiuto'))
+    description = forms.CharField(required=True, label=_('Reason'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, explain the motivations of your acceptation or refusal'))
 
 class UserSearchForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))

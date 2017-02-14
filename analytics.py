@@ -4,6 +4,7 @@ import math
 from collections import defaultdict
 from datetime import timedelta
 
+from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from django.db.models import Count, Q
@@ -12,6 +13,7 @@ from django.db import connection
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
+from django.contrib.sites.models import Site
 import actstream
 from actstream.models import Action
 
@@ -21,6 +23,18 @@ from models import UserProfile, OER # , Project
 from models import PUBLISHED
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject',]
+
+notification_template = """%s
+
+Sent from: http://%s
+This is an automatic notification message: please do not reply to it. """
+from django.core.mail import send_mail
+def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):
+    site = Site.objects.get_current()
+    subject = '%s - %s' % (site.name, subject)
+    body = notification_template % (body, site.domain)
+    recipient_emails = [recipient.email for recipient in recipients]
+    send_mail(subject, body, from_email, recipient_emails)
 
 def user_unviewed_posts_count(self):
     # return unviewed_posts(self)

@@ -22,12 +22,12 @@
                  {{ match_mentor_form.message }}
                  {% if match_mentor_form.message.help_text %}<small id="{{ match_mentor_form.message.name }}helpBlock" class="help-block">{{ match_mentor_form.message.help_text }}</small>{% endif %}
                </div>
-               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="submit" id="submit" value="submit">{% trans "invia la richiesta al mentore" %}</button></div>
+               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="submit" id="submit" value="submit">{% trans "send the request to the mentor" %}</button></div>
              {% endif %}
 
              {% if can_propose == 'B' %}
-               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="save" id="save" value="save">{% trans "salva la scelta" %}</button> &nbsp; &nbsp;
-               <button type="submit" class="btn btn-default" name="submit" id="submit" value="submit">{% trans "conferma e invia la richiesta al mentore" %}</button> &nbsp; &nbsp;
+               <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="save" id="save" value="save">{% trans "save the choice" %}</button> &nbsp; &nbsp;
+               <button type="submit" class="btn btn-default" name="submit" id="submit" value="submit">{% trans "confirm and send the request to the mentor" %}</button> &nbsp; &nbsp;
                	</div>
              {% endif %}
            </form>

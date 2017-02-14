@@ -902,10 +902,10 @@ class Project(Resource):
     """
 
     def can_access(self, user):
-        if not user.is_authenticated():
-            return False
         parent = self.get_parent()
         if self.proj_type.name == 'ment':
+            if not user.is_authenticated():
+                return False
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED) and (self.is_member(user) or (parent and parent.is_admin(user))):
                 print "================ PASSO UNO ====================="
                 return True
@@ -927,7 +927,8 @@ class Project(Resource):
         else: 
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
                 return True
-
+        if not user.is_authenticated():
+            return False
         return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
 
     # def can_edit(self, user):
@@ -1149,6 +1150,9 @@ class Project(Resource):
         rolls = self.get_children(proj_type_name='roll', states=states)
         return rolls and rolls[0] or None
 
+    def get_chosen_mentor(self):
+        requested_mentors = ProjectMember.objects.filter(project=self, state=0, refused=None)
+        return requested_mentors and requested_mentors[0].user or None
 
     def get_mentor(self, state=None):
         if self.proj_type.name == 'ment':
