@@ -21,6 +21,7 @@ from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
 from models import UserProfile, OER # , Project
 from models import PUBLISHED
+from commons.settings import PRODUCTION
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject',]
 
@@ -30,6 +31,8 @@ Sent from: http://%s
 This is an automatic notification message: please do not reply to it. """
 from django.core.mail import send_mail
 def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):
+    if not PRODUCTION:
+        return
     site = Site.objects.get_current()
     subject = '%s - %s' % (site.name, subject)
     body = notification_template % (body, site.domain)

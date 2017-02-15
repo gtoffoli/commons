@@ -1,8 +1,3 @@
-'''
-Created on 02/apr/2015
-@author: Giovanni Toffoli - LINK srl
-'''
-
 import re
 import json
 import csv
@@ -55,9 +50,10 @@ from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE
 
 from permissions import ForumPermissionHandler
 from session import get_clipboard, set_clipboard
-from analytics import track_action, filter_actions, post_views_by_user, popular_principals, filter_users
-from analytics import get_likes
-from analytics import notify_event
+from analytics import notify_event, track_action
+from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
+
+from mentoring import get_mentor_memberships, get_mentee_memberships, get_mentoring_requests
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -220,38 +216,6 @@ class FeaturedAutocompleteView(Select2QuerySetSequenceView):
             qs = self.mixup_querysets(qs)
             return qs
 
-"""
-def press_releases(request):
-    var_dict = {}
-    projects = Project.objects.filter(slug='editorial-staff')
-    project = projects and projects[0] or None
-    folder = project and project.get_folder() or None
-    releases = folder and FolderDocument.objects.filter(folder=folder, state=PUBLISHED).filter(Q(label__icontains='_pr_') | Q(document__label__icontains='_pr_') | Q(label__icontains='press') | Q(document__label__icontains='press')).order_by('order', '-document__date_added') or []
-    language_choices_dict = dict(settings.LANGUAGES)
-    languages_dict = dict([(language.code, language.name,) for language in Language.objects.all()])
-    language_pr_dict = defaultdict(list)
-    for release in releases:
-        label = release.label or release.document.label
-        splitted = label.split('.')
-        language_code = len(splitted)>=2 and ((len(splitted[-1])==2 and splitted[-1]) or (len(splitted[-2])==2 and splitted[-2])) or ''
-        language_code = language_code in languages_dict and language_code or release.document.language[:2]
-        if language_code:
-            language_pr_dict[language_code].append(release)
-    language_pr_list = []
-    for language_code, releases in language_pr_dict.iteritems():
-        language_name = language_code in language_choices_dict and language_choices_dict[language_code] or languages_dict[language_code]
-        language_pr_list.append([language_code, language_name, releases])
-    language_pr_list = sorted(language_pr_list, key=lambda x: x[1])
-    var_dict['language_pr_list'] = language_pr_list
-    var_dict['project'] = project
-    var_dict['form'] = DocumentUploadForm()
-    current_language_code = request.LANGUAGE_CODE
-    if current_language_code in language_pr_dict:
-        last_release = language_pr_dict[current_language_code][0]
-        var_dict['last_release'] = last_release
-    return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
-"""
-
 def press_releases(request):
     var_dict = {}
     projects = Project.objects.filter(slug='editorial-staff')
@@ -311,46 +275,6 @@ def my_chat(request):
     chat_dict['info'] = info
     return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
 
-"""
-def user_profile(request, username, user=None):
-    # assert username or (user and user.is_authenticated())
-    if not username and (not user or not user.is_authenticated()):
-        return HttpResponseRedirect('/')
-    MAX_REPOS = MAX_OERS = 5
-    MAX_LIKES = 10
-    if not user:
-        user = get_object_or_404(User, username=username)
-    memberships = ProjectMember.objects.filter(user=user, state=1).order_by('project__proj_type__name')
-    if user.is_authenticated() and user==request.user:
-        can_edit = True
-        applications = ProjectMember.objects.filter(user=user, state=0)
-        repos = Repo.objects.filter(creator=user).order_by('-created')
-        oers = OER.objects.filter(creator=user).order_by('-created')
-    else:
-        can_edit = False
-        applications = []
-        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-        oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-    more_repos = repos.count() > MAX_REPOS
-    repos = repos[:MAX_REPOS]
-    more_oers = oers.count() > MAX_OERS
-    oers = oers[:MAX_REPOS]
-    profile = user.get_profile()
-    var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'memberships': memberships, 'applications': applications, 'repos': repos, 'more_repos': more_repos, 'oers': oers, 'more_oers': more_oers,}
-    if profile:
-        var_dict['complete_profile'] = profile.get_completeness()
-    else:
-        var_dict['complete_profile'] = False
-    if profile and profile.get_completeness():
-        var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
-        var_dict['best_mentors'] = profile.get_best_mentors(threshold=0.4)
-
-    if request.user.is_authenticated():
-        if not profile or not request.user == profile.user:
-            actstream.action.send(request.user, verb='View', action_object=profile)
-    return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
-"""
-
 def user_profile(request, username, user=None):
     # assert username or (user and user.is_authenticated())
     if not username and (not user or not user.is_authenticated()):
@@ -392,42 +316,6 @@ def my_profile(request):
     if not user.is_authenticated():
         return HttpResponseForbidden()
     return user_profile(request, None, user=user)
-
-def get_mentor_memberships(user, state=None):
-    role_admin = Role.objects.get(name='admin')
-    mm = ProjectMember.objects.filter(project__proj_type__name='ment', user=user)
-    if state is not None:
-        mm = mm.filter(state=state)
-    if state == 1:
-        mm = [m for m in mm if role_admin in get_local_roles(m.project, user)]
-    elif state == 0:
-        mm=mm.filter(refused=None).exclude(project__state=PROJECT_DRAFT)
-    return mm
-
-def get_mentee_memberships(user, state=None):
-    role_admin = Role.objects.get(name='admin')
-    mm = ProjectMember.objects.filter(project__proj_type__name='ment', user=user)
-    if state is not None:
-        mm = mm.filter(state=state)
-    mm = [m for m in mm if role_admin not in get_local_roles(m.project, user)]
-    return mm 
-
-def get_mentoring_requests(user):
-    """ return all mentoring projects in the state of request where the user is the community administrator """
-    role_admin = Role.objects.get(name='admin')
-    # find the community-admin memberships of the user
-    mm = ProjectMember.objects.filter(project__proj_type__name='com', project__state=PROJECT_OPEN, project__mentoring_model=MENTORING_MODEL_A, user=user)
-    admin_memberships = [m for m in mm if role_admin in get_local_roles(m.project, user)]
-    requests = []
-    for m in admin_memberships:
-        community = m.project
-        mentoring_projects = community.get_children(proj_type_name='ment', states=[PROJECT_SUBMITTED])
-        if mentoring_projects:
-            for project in mentoring_projects:
-                mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                if not mentors.count():
-                    requests.append(project)
-    return requests
 
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
@@ -471,7 +359,7 @@ def user_dashboard(request, username, user=None):
     var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
     var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
     var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
-    var_dict['mentoring_rels_mentor']=get_mentor_memberships(user, 1)
+    var_dict['mentoring_rels_mentor'] = get_mentor_memberships(user, 1)
     var_dict['mentoring_rels_mentee'] = get_mentee_memberships(user, 1)
     var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
     var_dict['mentoring_rels_request_mentoring'] = get_mentoring_requests(user)
@@ -1249,7 +1137,10 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                         var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
                         var_dict['view_shared_folder'] = view_shared_folder or is_only_parent_admin
                     if can_accept_mentor:
-                        var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
+                        if (accept_mentor_form):
+                            var_dict['accept_mentor_form'] = AcceptMentorForm(accept_mentor_form['post'], instance=project)
+                        else:
+                            var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
                         var_dict['can_draft_back'] = False 
                         var_dict['view_shared_folder'] = view_shared_folder or user.id == requested_mentors[0].user_id
             if is_open and is_member:
@@ -1340,92 +1231,6 @@ def project_add_member(request, project_slug):
          if not ProjectMember.objects.filter(project=project, user=user_to_add):
              membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
              membership.save()
-     return HttpResponseRedirect('/project/%s/' % project.slug)
-
-def project_send_one2one_message(request, project_slug):
-    project = get_object_or_404(Project, slug=project_slug)
-    post = request.POST
-    if post and post.get('send',''):
-        form = one2oneMessageComposeForm(post)
-        if form.is_valid():
-            data = form.cleaned_data
-            sender = User.objects.get(username=data['sender'])
-            recipient = User.objects.get(username=data['recipient'])
-            subject = data['subject']
-            body = data['body']
-            message = Message(sender=sender, recipient=recipient, subject=subject, body=body)
-            message.save()
-            project_message = ProjectMessage(project=project, message=message)
-            project_message.save()
-    return HttpResponseRedirect('/project/%s/' % project.slug)
-
-def project_accept_mentor(request):
-     user = request.user
-     post = request.POST
-     project_id = post.get('project')
-     project = get_object_or_404(Project, id=project_id)
-     if post:
-        if not project.can_access(request.user):
-            raise PermissionDenied
-        form = AcceptMentorForm(post, instance=project)
-        if form.is_valid():
-            membership = ProjectMember.objects.get(project=project, user=user, state=0, refused=None)
-            data = form.cleaned_data
-            accept = int(data['accept'])
-            membership.editor=user
-            description = data['description']
-            membership.history = description
-            community = project.get_parent()
-            community_admins = community.get_admins()
-            mentee = project.get_mentee().user
-            if accept == 1:
-                membership.state = 1
-                membership.accepted=timezone.now()
-                membership.save()
-                role_admin = Role.objects.get(name='admin')
-                add_local_role(project, user, role_admin)
-                track_action(user, 'Accept', membership, target=project, description=description)
-                project.state=PROJECT_OPEN
-                project.editor=user
-                project.save()
-                track_action(user, 'Approve', project)
-                # send notification
-                recipients = community_admins + [mentee]
-                subject = 'The chosen mentor has accepted the request'
-                body = """The mentor chosen has accepted the request of the mentee, and left the following notice for you:
-"%s".
-
-The mentoring project is now on.
-Please, look at your user dashboard for more specific information.""" % description
-                notify_event(recipients, subject, body)
-            else: # refusal
-                membership.refused=timezone.now()
-                membership.save()
-                track_action(user, 'Reject', membership, target=project, description=data['description'])
-                subject = "The chosen mentor didn't accept the request"
-                if community.mentoring_model == MENTORING_MODEL_B:
-                    project.state = PROJECT_DRAFT
-                    project.editor = user
-                    project.save()
-                    # send notification
-                    recipients = [mentee]
-                    body = """The mentor you sent a request didn't accept and left the following notice for you:
-"%s".
-
-Possibly you are willing to try another choice.
-Please, look at your user dashboard for more specific information.""" % description
-                elif community.mentoring_model == MENTORING_MODEL_A:
-                    # send notification
-                    recipients = community_admins
-                    body = """The mentor chosen for the mentee by a community administrator didn't accept and left the following notice for you:
-"%s".
-
-You could tell the mentee and/or try another choice.
-Please, look at your user dashboard for more specific information.""" % description
-                notify_event(recipients, subject, body)
-                return HttpResponseRedirect('/my_home/')
-        else:
-            return project_detail(request, project_id, project=project, accept_mentor_form={'post': post})
      return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
@@ -1587,17 +1392,6 @@ def project_edit_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_edit(request, project_id=project.id)
 
-def project_mentoring_model_edit(request, project_slug):
-     user = request.user
-     project = get_object_or_404(Project, slug=project_slug)
-     if request.POST:
-        form = ProjectMentoringModelForm(request.POST, instance=project)
-        if form.is_valid():
-            project.mentoring_model = request.POST.get('mentoring_model','')
-            project.editor = user
-            project.save()
-     return HttpResponseRedirect('/project/%s/' % project.slug)
-
 def project_new_by_slug(request, project_slug, type_name):
     project = get_object_or_404(Project, slug=project_slug)
     proj_type = get_object_or_404(ProjType, name=type_name)
@@ -1633,38 +1427,6 @@ Please, look at your user dashboard for more specific information."""
     track_action(request.user, 'Submit', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
-def project_draft_back(request, project_id):
-    project = Project.objects.get(pk=project_id)
-    user = request.user
-    if not project.can_access(user):
-        raise PermissionDenied
-    type_name = project.proj_type.name
-    mentoring_model = project.get_parent().mentoring_model
-    if type_name == 'ment':
-        if mentoring_model == MENTORING_MODEL_A:
-            mm = ProjectMember.objects.filter(project=project,state=0,refused=None)
-            if mm:
-                for m in mm:
-                    m.history = 'mentore non ha risposto'
-                    m.editor = user
-                    m.refused = timezone.now()
-                    m.save()
-            message = request.POST.get('message',None)
-            if message:
-                project.state = PROJECT_DRAFT
-                project.editor = user
-                project.save()
-                # INVIARE NOTIFICA AL MENTEE
-                print "=============RIPORTA PROGETTO A DRAFT INVIARE NOTIFICA AL MENTEE ===="
-                mentee = project.get_mentee(state=1)
-                recipients = mentee and [mentee.user]
-                subject = 'Cannot fulfil your request for a mentor.'
-                body = """Sorry, the Administrator of your community wasn't able to find a mentor for you and left the following notice:
-"%s".
-By accessing your request you could find more specific information.""" % message
-                notify_event(recipients, subject, body)
-                return HttpResponseRedirect('/my_home')
-    return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_open(request, project_id):
     project = Project.objects.get(pk=project_id)
     if not project.can_access(request.user):
@@ -1804,75 +1566,6 @@ def project_toggle_supervisor_role(request, project_id):
         project.editor = request.user
         project.save
     return HttpResponseRedirect('/project/%s/' % project.slug)    
-
-"""
-def project_set_mentor(request):
-    if request.POST:
-        project_id = request.POST.get('project')
-        project = get_object_or_404(Project, id=project_id)
-        if not project.can_access(request.user):
-            raise PermissionDenied
-        mentor_id = request.POST.get('mentor', None)
-        if mentor_id:
-            mentor_user = get_object_or_404(User, id=mentor_id)
-            mentor_member = project.add_member(mentor_user)
-            project.accept_application(request, mentor_member)
-            role_admin = Role.objects.get(name='admin')
-            add_local_role(project, mentor_user, role_admin)
-    return HttpResponseRedirect('/project/%s/' % project.slug)
-"""
-
-def project_set_mentor(request):
-    post=request.POST
-    if post:
-        project_id = post.get('project')
-        project = get_object_or_404(Project, id=project_id)
-        if not project.can_access(request.user):
-            raise PermissionDenied
-        mentor_id = post.get('mentor', None)
-        save = post.get('save', '')
-        submit = post.get('submit', '')
-        parent_mentoring_model = project.get_parent().mentoring_model
-        if save:
-            if mentor_id:
-                mentor_user = get_object_or_404(User, id=mentor_id)
-                mentors_selected = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                if mentors_selected:
-                   mentor_selected = mentors_selected[0]
-                   if not (mentor_selected == mentor_user):
-                      if (parent_mentoring_model == MENTORING_MODEL_B) and (project_state == PROJECT_DRAFT):
-                          user_selected = get_object_or_404(User, id=mentor_selected.user_id)
-                          project.remove_member(user_selected)
-                   else:
-                       return HttpResponseRedirect('/project/%s/' % project.slug)
-                mentor_member = project.add_member(mentor_user,request.user)
-        elif submit:
-            if mentor_id:
-                mentor_user = get_object_or_404(User, id=mentor_id)
-                if (parent_mentoring_model == MENTORING_MODEL_A):
-                    mentor_member = project.add_member(mentor_user,request.user)
-                    message = post.get('message', '')
-                    # NOTIFICA AL MENTORE SELEZIONATO 
-                    print "================= INVIO EMAIL AL MENTORE SELEZIONATO ==========="
-                    recipients = [mentor_user]
-                    subject = 'You have been chosen to answer a request for a mentor.'
-                    body = """The Administrator of a community thinks that you are a good fit to fulfil the request of a would be mentee, and left the following notice for you:
-"%s".
-Please, look at your user dashboard for more specific information.""" % message or "empty notice"
-                    notify_event(recipients, subject, body)
-                elif (parent_mentoring_model == MENTORING_MODEL_B):
-                    mentors_selected = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                    if mentors_selected:
-                        mentor_selected = mentors_selected[0]
-                        if not (mentor_selected == mentor_user):
-                            user_selected = get_object_or_404(User, id=mentor_selected.user_id)
-                            project.remove_member(user_selected)
-                            mentor_member = project.add_member(mentor_user,request.user)
-                    else:
-                        mentor_member = project.add_member(mentor_user,request.user)
-                    project.state = PROJECT_SUBMITTED
-                    project.save()
-    return HttpResponseRedirect('/project/%s/' % project.slug)
 
 
 def project_add_shared_oer(request, project_id, oer_id):

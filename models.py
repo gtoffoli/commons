@@ -718,7 +718,8 @@ MENTORING_MODEL_CHOICES = (
     (NO_MENTORING, _('no mentoring')),
     (MENTORING_MODEL_A, _('A - Administrator chooses mentor')),
     (MENTORING_MODEL_B, _('B - Mentee chooses mentor')),
-    (MENTORING_MODEL_C, _('A+B - Administrator or mentee chooses mentor')),)
+    # (MENTORING_MODEL_C, _('A+B - Administrator or mentee chooses mentor')),
+)
 MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 
 """
@@ -747,11 +748,12 @@ class Project(Resource):
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
-    small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True)
-    big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True)
+    small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True, blank=True)
+    big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True, blank=True)
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     # mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, default=MENTORING_MODEL_A, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+    prototype = models.ForeignKey('LearningPath', verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
