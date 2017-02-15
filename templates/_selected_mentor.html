@@ -15,7 +15,7 @@
              <div>{%if selected_mentor.position %}{{selected_mentor.position|safe}}{% else %}{{ selected_mentor.short}}{% endif %}</div>
              </div>
            </div>
-           <div class="c-fern padding510 font13 demiBold">{% trans "the request has been sent to the mentor on"|capfirst %} {{ requested_mentor.created|date:"d/m/Y" }}</div>
+           <div class="c-fern padding510 font13 demiBold">{% trans "the request has been sent to the mentor on"|capfirst %} {{ requested_mentor.created|date:"d/m/Y" }}{% if parent_mentoring_model_A %} {% trans "by" %} {{ requested_mentor.editor.get_profile.get_display_name }}{% endif %}</div>
 </div>
 {% else %}
 {% if is_mentee and is_submitted and parent_mentoring_model_A %}

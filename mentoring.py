@@ -4,7 +4,7 @@ from django.utils import timezone
 
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
-
+from django.contrib.auth.models import User
 from models import ProjType, Project, ProjectMember, ProjectMessage
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT

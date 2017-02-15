@@ -104,6 +104,21 @@ div.msg {
          {% include "_project_mentoring_text.html" %}
        {% elif can_accept_mentor %}
          {% include "_project_mentoring_text.html" %}
+         {% if requested_mentor_refuse %}
+         <div class="panel-white">
+           <h6 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:4px; border-top-right-radius:4px;">{% trans "my previous refusals"|capfirst %}</h6>
+           <dl class="eval font12">
+            {% for mentor_refuse in requested_mentor_refuse %}
+              <dd>
+                <div class="row">
+                  <div class="col-md-10 col-lg-10">{{ mentor_refuse.history }}</div>
+                  <div class="col-md-2 col-lg-2">{{ mentor_refuse.refused|date:"d/m/Y" }}</div>
+                </div>
+              </dd>
+            {% endfor %}
+            </dl>
+         </div>
+       {% endif %}
          <div class="panel panel-c0">
          <form method="post" action="/accept_mentor/" name="accept_mentor_form" id="ud_accept_mentor_form">{% csrf_token %}
            {% for hidden in accept_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}

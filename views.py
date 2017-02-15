@@ -985,19 +985,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
         var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
         var_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
         var_dict['can_open'] = project.can_open(user)
-        """
-        can_propose = project.can_propose(user)
-        parent_mentoring_model = project.get_parent().mentoring_model
-        if can_propose:
-            if parent_mentoring_model == MENTORING_MODEL_A:
-               var_dict['can_propose'] = 'A'
-            elif parent_mentoring_model == MENTORING_MODEL_B:
-               var_dict['can_propose'] = 'B'
-            elif parent_mentoring_model == MENTORING_MODEL_C:
-               var_dict['can_propose'] = 'C'
-            else:
-               var_dict['can_propose'] = None
-        """
         var_dict['can_close'] = project.can_close(user)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or user.is_superuser
         var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
@@ -1028,7 +1015,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 var_dict['roll'] = roll = project.get_roll_of_mentors()
             else:
                 var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
-            var_dict['mentoring_projects_all'] = len(project.get_mentoring_projects())
+            var_dict['mentoring_projects_all'] = len(project.get_mentoring_projects(states=[PROJECT_DRAFT,PROJECT_SUBMITTED]))
             if project.mentoring_model == MENTORING_MODEL_A:
                 var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
             var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
@@ -1041,7 +1028,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                var_dict['mentoring_model_C'] = True
                var_dict['mentoring_model_C_value'] = MENTORING_MODEL_DICT.get(MENTORING_MODEL_C);
             var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and (not project.mentoring_model == NO_MENTORING) and not roll
-            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,],membership_state=1)
+            # var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,],membership_state=1)
+            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user)))
             var_dict['mentoring_block']= can_mentoring_model or roll or can_add_roll or can_request_mentor or mentoring
         elif type_name=='ment':
             can_propose = project.can_propose(user)
@@ -1085,6 +1073,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 date_max_delay = requested_mentors[0].modified + timedelta(days=MAX_DELAY)
                 var_dict['diff_date'] = diff_date =  timezone.now() > date_max_delay
                 var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
+                var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
                 if requested_mentor:
                     var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
@@ -1131,6 +1120,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                         # var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
                     if requested_mentor:
                         var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
+                        var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
                         var_dict['is_mentee'] = is_mentee = mentee_user == user
                         var_dict['is_only_parent_admin'] = is_only_parent_admin = is_parent_admin and not user == requested_mentor.user
                     if (is_mentee or is_only_parent_admin) and requested_mentor:

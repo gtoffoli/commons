@@ -1,7 +1,7 @@
 {% load i18n staticfiles %}
        {% if candidate_mentors %}
          <div class="panel-white">
-           <h4 class="panel-heading-c0 padding510 margin0">{% trans "select mentor"|capfirst %}</h4>
+           <h4 class="panel-heading-c0 padding510 margin0">{% trans "select a mentor"|capfirst %}</h4>
            <form method="POST" action="/set_mentor/">{% csrf_token %}
              {% for hidden in match_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
              <div class="padding105 form-group">
