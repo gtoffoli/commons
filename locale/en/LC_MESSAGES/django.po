@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-20 10:50+0100\n"
+"POT-Creation-Date: 2017-02-20 11:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -286,8 +286,8 @@ msgstr ""
 msgid "project state"
 msgstr ""
 
-#: .\forms.py:206 .\models.py:755
-msgid "mentoring model"
+#: .\forms.py:206 .\models.py:755 .\templates\project_detail.html:467
+msgid "mentoring setup model"
 msgstr ""
 
 #: .\forms.py:231 .\forms.py:291
@@ -1103,7 +1103,7 @@ msgid "online networks / services used"
 msgstr ""
 
 #: .\models.py:471
-msgid "available to act as mentor also for member of other communities."
+msgid "available to act as mentor also for members of other communities."
 msgstr ""
 
 #: .\models.py:472
@@ -1835,7 +1835,7 @@ msgid "by"
 msgstr ""
 
 #: .\templates\_mentors_refuse.html:5
-msgid "mentors who not have accepted"
+msgid "mentors that didn't accept"
 msgstr ""
 
 #: .\templates\_object_comments.html:10 .\templates\_object_comments.html:12
@@ -2753,8 +2753,9 @@ msgstr ""
 msgid "move down"
 msgstr ""
 
-#: .\templates\lp_detail.html:209
-msgid "chiudi"
+#: .\templates\lp_detail.html:209 .\templates\mentoring_detail.html:207
+#: .\templates\project_detail.html:157 .\templates\project_detail.html:602
+msgid "close"
 msgstr ""
 
 #: .\templates\lp_detail.html:214 .\templates\pathnode_edit.html:7
@@ -2845,11 +2846,6 @@ msgstr ""
 
 #: .\templates\mentoring_detail.html:203
 msgid "back to draft state"
-msgstr ""
-
-#: .\templates\mentoring_detail.html:207 .\templates\project_detail.html:157
-#: .\templates\project_detail.html:602
-msgid "close"
 msgstr ""
 
 #: .\templates\mentoring_detail.html:210
@@ -3357,10 +3353,6 @@ msgstr ""
 msgid "last OERs evaluated"
 msgstr ""
 
-#: .\templates\project_detail.html:467
-msgid "mentoring setup model"
-msgstr ""
-
 #: .\templates\project_detail.html:490
 msgid "create roll of mentors"
 msgstr ""
@@ -3403,7 +3395,7 @@ msgid "accept application to this roll of mentors"
 msgstr ""
 
 #: .\templates\project_detail.html:653 .\templates\user_profile.html:237
-msgid "show edit mentor profile"
+msgid "edit mentor profile"
 msgstr ""
 
 #: .\templates\project_detail.html:660
@@ -3781,7 +3773,7 @@ msgid "mentoring requests in my communities"
 msgstr ""
 
 #: .\templates\user_dashboard.html:197
-msgid "Mentoring requests in my communities waiting for mentor answer"
+msgid "mentoring requests in my communities waiting for mentor answer"
 msgstr ""
 
 #: .\templates\user_dashboard.html:211
@@ -4101,7 +4093,7 @@ msgstr ""
 
 #: .\views.py:1133
 msgid ""
-"this request is waiting since long time, please write a notice for both the "
+"this request is waiting since long time: please write a notice for both the "
 "mentee and the mentor and push the button below"
 msgstr ""
 

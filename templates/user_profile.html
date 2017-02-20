@@ -234,7 +234,7 @@
           {% endif %}
           {% if can_edit and complete_profile and com_memberships %}
             <ul class="list-inline margin0">
-               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/mentor_edit/" title='{% trans "show edit mentor profile" %}' class="btn btn-default"><i class="fa fa-edit"></i>{% if profile.mentoring %}{% trans "modify" %}{% else %}{% trans "add" %}{% endif %}</a></li>
+               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/mentor_edit/" title='{% trans "edit mentor profile" %}' class="btn btn-default"><i class="fa fa-edit"></i>{% if profile.mentoring %}{% trans "modify" %}{% else %}{% trans "add" %}{% endif %}</a></li>
             </ul>
           {% endif %}
           </div>

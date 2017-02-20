@@ -468,7 +468,7 @@ class UserProfile(models.Model):
     skype = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('skype id'))
     p2p_communication = models.TextField(blank=True, verbose_name=_('P2P communication preferences'))
     mentoring = models.TextField(blank=True, verbose_name=_('mentor presentation'))
-    mentor_for_all = models.BooleanField(default=False, verbose_name=_('available as mentor for other communities'), help_text=_('available to act as mentor also for member of other communities.'))
+    mentor_for_all = models.BooleanField(default=False, verbose_name=_('available as mentor for other communities'), help_text=_('available to act as mentor also for members of other communities.'))
     mentor_unavailable = models.BooleanField(default=False, verbose_name=_('currently not available as mentor'), help_text=_('temporarily unavailable to accept (more) requests by mentees.'))
     curriculum = models.ForeignKey(Document, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
 
@@ -752,7 +752,7 @@ class Project(Resource):
     big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True, blank=True)
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     # mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, default=MENTORING_MODEL_A, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
-    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     prototype = models.ForeignKey('LearningPath', verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
     created = CreationDateTimeField(_('created'))

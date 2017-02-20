@@ -1130,7 +1130,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                         date_max_delay = requested_mentor.modified + timedelta(days=MENTORING_MAX_DELAY)
                         var_dict['out_date'] = out_date =  timezone.now() > date_max_delay
                         var_dict['can_draft_back'] = can_draft_back and out_date
-                        var_dict['msg_to_draft_state'] = _("this request is waiting since long time, please write a notice for both the mentee and the mentor and push the button below")
+                        var_dict['msg_to_draft_state'] = _("this request is waiting since long time: please write a notice for both the mentee and the mentor and push the button below")
                     if requested_mentor:
                         var_dict['can_accept_mentor'] = can_accept_mentor = user == requested_mentor.user
                         var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)

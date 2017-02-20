@@ -203,7 +203,7 @@ class ProjectMentoringModelForm(forms.ModelForm):
         model = Project
         fields = ('mentoring_model',)
 
-    mentoring_model = forms.ChoiceField(required=False, choices=MENTORING_MODEL_CHOICES, label=_('mentoring model'),widget=forms.RadioSelect)
+    mentoring_model = forms.ChoiceField(required=False, choices=MENTORING_MODEL_CHOICES, label=_('mentoring setup model'),widget=forms.RadioSelect)
 
 N_MEMBERS_CHOICES = (
     (0, ''),
