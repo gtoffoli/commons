@@ -894,6 +894,8 @@ def lps_in_clipboard(request, key):
             pass
     return lps
 
+MENTORING_MAX_DELAY = 7 # (days) set to 0 for test
+
 def project_detail(request, project_id, project=None, accept_mentor_form=None):
     MAX_OERS = 5
     MAX_OERS_EVALUATED = 5
@@ -1050,7 +1052,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             var_dict['mentee'] = mentee = project.get_mentee(state=1)
             mentee_user = mentee and mentee.user
             var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
-            MAX_DELAY = 0
             if (parent_mentoring_model == MENTORING_MODEL_B and is_draft):
                 var_dict['select_mentor_B'] = True
                 # INIT CANDIDATE MENTORS
@@ -1074,7 +1075,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                 var_dict['requested_mentor'] = requested_mentor = requested_mentors[0] 
                 var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin or requested_mentor.user == user
-                date_max_delay = requested_mentor.modified + timedelta(days=MAX_DELAY)
+                date_max_delay = requested_mentor.modified + timedelta(days=MENTORING_MAX_DELAY)
                 out_date = timezone.now() > date_max_delay
                 var_dict['can_draft_back'] = can_draft_back and out_date
                 var_dict['msg_to_draft_state'] = _("this request is waiting since long time: if you want to retract it, please write a notice for the mentor and push the button below")
@@ -1126,7 +1127,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 else:
                     if requested_mentors:
                         var_dict['requested_mentor'] = requested_mentor = requested_mentors[0]
-                        date_max_delay = requested_mentor.modified + timedelta(days=MAX_DELAY)
+                        date_max_delay = requested_mentor.modified + timedelta(days=MENTORING_MAX_DELAY)
                         var_dict['out_date'] = out_date =  timezone.now() > date_max_delay
                         var_dict['can_draft_back'] = can_draft_back and out_date
                         var_dict['msg_to_draft_state'] = _("this request is waiting since long time, please write a notice for both the mentee and the mentor and push the button below")
