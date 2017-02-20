@@ -53,7 +53,7 @@ from session import get_clipboard, set_clipboard
 from analytics import notify_event, track_action
 from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
-from mentoring import get_mentor_memberships, get_mentee_memberships, get_mentoring_requests
+from mentoring import get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -362,7 +362,8 @@ def user_dashboard(request, username, user=None):
     var_dict['mentoring_rels_mentor'] = get_mentor_memberships(user, 1)
     var_dict['mentoring_rels_mentee'] = get_mentee_memberships(user, 1)
     var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
-    var_dict['mentoring_rels_request_mentoring'] = get_mentoring_requests(user)
+    var_dict['mentoring_rels_mentoring_request'] = get_mentoring_requests(user)
+    var_dict['mentoring_rels_mentoring_requests_waiting'] = get_mentoring_requests_waiting(user)
     """
     var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
@@ -1043,21 +1044,24 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                     var_dict['can_propose'] = 'C'
             else:
                var_dict['can_propose'] = None
+            var_dict['select_mentor_A'] = False
+            var_dict['select_mentor_B'] = False
             var_dict['can_draft_back'] = can_draft_back = project.can_draft_back(user)
             var_dict['mentee'] = mentee = project.get_mentee(state=1)
             mentee_user = mentee and mentee.user
             var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
-            MAX_DELAY = 1
+            MAX_DELAY = 0
             if (parent_mentoring_model == MENTORING_MODEL_B and is_draft):
                 var_dict['select_mentor_B'] = True
+                # INIT CANDIDATE MENTORS
                 var_dict['roll'] = roll = parent.get_roll_of_mentors()
                 proj_type_roll = ProjType.objects.filter(name='roll')
                 rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
                 all_candidate_mentors = roll.candidate_mentors([user])
-                requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                # var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
                 candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
                 var_dict['candidate_mentors'] = candidate_mentors
+                # END CANDIDATE MENTORS
+                requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                 if candidate_mentors:
                     if requested_mentors:
                         var_dict['requested_mentor'] =  requested_mentor = requested_mentors[0]
@@ -1068,16 +1072,20 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                     var_dict['match_mentor_form'] = form
             elif (parent_mentoring_model == MENTORING_MODEL_B and is_submitted):
                 var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                var_dict['requested_mentor'] = requested_mentor = requested_mentors[0]
-                var_dict['view_shared_folder'] = view_shared_folder or requested_mentor.user == user
-                date_max_delay = requested_mentors[0].modified + timedelta(days=MAX_DELAY)
-                var_dict['diff_date'] = diff_date =  timezone.now() > date_max_delay
-                var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
+                var_dict['requested_mentor'] = requested_mentor = requested_mentors[0] 
+                var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin or requested_mentor.user == user
+                date_max_delay = requested_mentor.modified + timedelta(days=MAX_DELAY)
+                out_date = timezone.now() > date_max_delay
+                var_dict['can_draft_back'] = can_draft_back and out_date
+                var_dict['msg_to_draft_state'] = _("this request is waiting since long time: if you want to retract it, please write a notice for the mentor and push the button below")
+                var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user == requested_mentor.user)
                 var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
+                """
                 if requested_mentor:
-                    var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
+                    var_dict['can_accept_mentor'] = can_accept_mentor = user == requested_mentor.user
+                """
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
-                if is_mentee:
+                if (is_mentee or is_parent_admin) and requested_mentor:
                    var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
                 if can_accept_mentor:
                     if (accept_mentor_form):
@@ -1090,20 +1098,23 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
                 var_dict['parent_mentoring_model_A'] = True
                 var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                # var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
                 requested_mentor = None
                 can_accept_mentor = None
+                var_dict['can_draft_back'] = can_draft_back and mentors_refuse
+                var_dict['msg_to_draft_state'] = _("if you aren't able to choose another mentor, please write a notice for both the mentee and the mentor and push the button below")
                 if not requested_mentors:
                     if is_parent_admin:
                         var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin
                         var_dict['select_mentor_A'] = True
+                        # INIT CANDIDATE MENTORS
                         var_dict['roll'] = roll = parent.get_roll_of_mentors()
                         proj_type_roll = ProjType.objects.filter(name='roll')
                         rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
                         all_candidate_mentors = roll.candidate_mentors([mentee_user])
-                        requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                         candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
                         var_dict['candidate_mentors'] = candidate_mentors
+                        # END CANDIDATE MENTORS
+                        requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                         if candidate_mentors:
                             if requested_mentors:
                                 var_dict['requested_mentor'] =  requested_mentor = requested_mentors[0]
@@ -1115,14 +1126,15 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 else:
                     if requested_mentors:
                         var_dict['requested_mentor'] = requested_mentor = requested_mentors[0]
-                        date_max_delay = requested_mentors[0].modified + timedelta(days=MAX_DELAY)
-                        var_dict['diff_date'] = diff_date =  timezone.now() > date_max_delay
-                        # var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user.id == requested_mentors[0].user_id)
+                        date_max_delay = requested_mentor.modified + timedelta(days=MAX_DELAY)
+                        var_dict['out_date'] = out_date =  timezone.now() > date_max_delay
+                        var_dict['can_draft_back'] = can_draft_back and out_date
+                        var_dict['msg_to_draft_state'] = _("this request is waiting since long time, please write a notice for both the mentee and the mentor and push the button below")
                     if requested_mentor:
-                        var_dict['can_accept_mentor'] = can_accept_mentor = user.id == requested_mentors[0].user_id
+                        var_dict['can_accept_mentor'] = can_accept_mentor = user == requested_mentor.user
                         var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
                         var_dict['is_mentee'] = is_mentee = mentee_user == user
-                        var_dict['is_only_parent_admin'] = is_only_parent_admin = is_parent_admin and not user == requested_mentor.user
+                    is_only_parent_admin = is_parent_admin and not user == requested_mentor.user
                     if (is_mentee or is_only_parent_admin) and requested_mentor:
                         var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
                         var_dict['view_shared_folder'] = view_shared_folder or is_only_parent_admin

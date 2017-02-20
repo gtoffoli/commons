@@ -98,31 +98,28 @@ div.msg {
        {% include "_project_mentoring_text.html" %}
      {% endif %}
      {% if is_submitted %}
-       {% if is_mentee or is_only_parent_admin %}
-         {% include "_mentors_refuse.html" %}
-         {% include "_selected_mentor.html" %}
-         {% include "_project_mentoring_text.html" %}
-       {% elif can_accept_mentor %}
-         {% include "_project_mentoring_text.html" %}
-         {% if requested_mentor_refuse %}
-         <div class="panel-white">
-           <h6 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:4px; border-top-right-radius:4px;">{% trans "my previous refusals"|capfirst %}</h6>
-           <dl class="eval font12">
-            {% for mentor_refuse in requested_mentor_refuse %}
-              <dd>
-                <div class="row">
-                  <div class="col-md-10 col-lg-10">{{ mentor_refuse.history }}</div>
-                  <div class="col-md-2 col-lg-2">{{ mentor_refuse.refused|date:"d/m/Y" }}</div>
-                </div>
-              </dd>
-            {% endfor %}
-            </dl>
-         </div>
-       {% endif %}
-         <div class="panel panel-c0">
-         <form method="post" action="/accept_mentor/" name="accept_mentor_form" id="ud_accept_mentor_form">{% csrf_token %}
-           {% for hidden in accept_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
-           <fieldset class="padding510">
+       {% if not select_mentor_A %}
+         {% if can_accept_mentor %}
+           {% include "_project_mentoring_text.html" %}
+           {% if requested_mentor_refuse %}
+           <div class="panel-white">
+             <h6 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:4px; border-top-right-radius:4px;">{% trans "my previous refusals"|capfirst %}</h6>
+             <dl class="eval font12">
+              {% for mentor_refuse in requested_mentor_refuse %}
+                <dd>
+                  <div class="row">
+                    <div class="col-md-10 col-lg-10">{{ mentor_refuse.history }}</div>
+                    <div class="col-md-2 col-lg-2">{{ mentor_refuse.refused|date:"d/m/Y" }}</div>
+                  </div>
+                </dd>
+              {% endfor %}
+             </dl>
+           </div>
+           {% endif %}
+           <div class="panel panel-c0">
+           <form method="post" action="/accept_mentor/" name="accept_mentor_form" id="ud_accept_mentor_form">{% csrf_token %}
+             {% for hidden in accept_mentor_form.hidden_fields %}{{ hidden }}{% endfor %}
+             <fieldset class="padding510">
              {% for field in accept_mentor_form.visible_fields %}
                <div class="form-group">
                  <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label> &nbsp;
@@ -130,10 +127,15 @@ div.msg {
                  {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
                </div>
              {% endfor %}
-           </fieldset>
-           <div class="panel-footer-c0 padding510"><button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "confirm your choice"|capfirst %}</button></div>
-         </form></div>
+             </fieldset>
+             <div class="panel-footer-c0 padding510"><button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "confirm your choice"|capfirst %}</button></div>
+           </form></div>
+         {% elif is_mentee or is_parent_admin %}
+           {% include "_mentors_refuse.html" %}
+           {% include "_selected_mentor.html" %}
+           {% include "_project_mentoring_text.html" %}
          {% endif %}
+       {% endif %}
      {% elif is_open or is_closed %}
        {% include "_project_mentoring_text.html" %}  
      {% endif %}
@@ -189,31 +191,20 @@ div.msg {
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if can_propose == 'A' %}
        <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request to admin" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
-{% comment %}
-     {% elif can_propose == 'B' and requested_mentor %}
-       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request to mentor" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
-{% endcomment %}
      {% elif can_propose == 'C' %}
        <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
      {% endif %}
-     {% if can_draft_back and mentors_refuse %}
-     <ul class="list-inline marginLB020"><li class="list-back-c0 width-full paddingLT4">
-     	<dl class="bc-white font14 marginB0 padding510 borderRadius4" >
-        <dd><form method="POST" action="/project/{{ project.id }}/draft_back/" id="id_draft_back_form" name="draft_back_form">{% csrf_token %}
-          <input type="hidden" name="admin" value="{{ user }}">
-          <div class="form-group">
-          <label for="id_message">{% trans "message"|capfirst %}</label>
-          <textarea name="message" class="form-control" id="message"></textarea>
-          <small id="urlhelpBlock" class="help-block">{% trans "testo verra' inviato al mentee" %}</small>
-          </div>
-       <div class="form-group"><button name="draft_back" id="id_draft_back" title="{% trans "back to draft state" %}" class="btn btn-default" value="draft"><i class="fa fa-reply"></i> {% trans "back to draft state" %}</button></div>
-     </form></dd>
-   </dl></li></ul>
-
+     {% if can_draft_back %}
+       <ul class="list-inline marginLB020"><li class="list-back-c0 width-full paddingLT4">
+         <dl class="bc-white font14 marginB0 padding510 borderRadius4">
+           <dd class="demiBold font12">{{ msg_to_draft_state|capfirst }}</dd>
+           <dd><form method="POST" action="/project/{{ project.id }}/draft_back/" id="id_draft_back_form" name="draft_back_form">{% csrf_token %}
+             <div class="form-group"><textarea name="message" class="form-control" id="message"></textarea></div>
+             <div class="form-group"><button name="draft_back" id="id_draft_back" title="{% trans "back to draft state" %}" class="btn btn-default" value="draft"><i class="fa fa-reply"></i> {% trans "back to draft state" %}</button></div>
+           </form></dd>
+         </dl></li></ul>
      {% endif %}
-
      {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
-
          <ul class="list-inline marginLB020">
          {% if view_shared_folder %}
            <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
@@ -324,3 +315,4 @@ div.msg {
   </div>
 </div>
 {% endblock %}
+

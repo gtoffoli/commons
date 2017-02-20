@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.utils import timezone
+from django.core.exceptions import PermissionDenied
 
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
@@ -47,6 +48,26 @@ def get_mentoring_requests(user):
                     requests.append(project)
     return requests
 
+def get_mentoring_requests_waiting(user):
+    """ return all mentoring projects in the state of request where the user is the community administrator """
+    role_admin = Role.objects.get(name='admin')
+    # find the community-admin memberships of the user
+    mm = ProjectMember.objects.filter(project__proj_type__name='com', project__state=PROJECT_OPEN, user=user)
+    admin_memberships = [m for m in mm if role_admin in get_local_roles(m.project, user)]
+    requests = []
+    for m in admin_memberships:
+        community = m.project
+        mentoring_projects = community.get_children(proj_type_name='ment', states=[PROJECT_SUBMITTED])
+        if mentoring_projects:
+            for project in mentoring_projects:
+                print project.name
+                mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
+                print mentors.count()
+                if mentors.count():
+                    print project.name
+                    requests.append(project)
+    return requests
+    
 def project_mentoring_model_edit(request, project_slug):
      user = request.user
      project = get_object_or_404(Project, slug=project_slug)
@@ -202,29 +223,51 @@ def project_draft_back(request, project_id):
     if not project.can_access(user):
         raise PermissionDenied
     type_name = project.proj_type.name
-    mentoring_model = project.get_parent().mentoring_model
-    if type_name == 'ment':
+    if type_name == 'ment' and request.POST.get('draft_back',''):
+        mentoring_model = project.get_parent().mentoring_model
+        message = request.POST.get('message','')
+        mm = ProjectMember.objects.filter(project=project,state=0,refused=None)
+        last_selected_mentor = None
+        if mm:
+            for m in mm:
+                last_selected_mentor = m.user
+                if mentoring_model == MENTORING_MODEL_A:
+                    m.history = "The mentor didn't accept within time limits. The community administrator wrote: %s" % message
+                elif mentoring_model == MENTORING_MODEL_B:
+                    m.history = "The mentor didn't accept within time limits. The mentee wrote: %s" % message
+                m.editor = user
+                m.refused = timezone.now()
+                m.save()
+        project.state = PROJECT_DRAFT
+        project.editor = user
+        project.save()
         if mentoring_model == MENTORING_MODEL_A:
-            mm = ProjectMember.objects.filter(project=project,state=0,refused=None)
-            if mm:
-                for m in mm:
-                    m.history = 'mentore non ha risposto'
-                    m.editor = user
-                    m.refused = timezone.now()
-                    m.save()
-            message = request.POST.get('message',None)
-            if message:
-                project.state = PROJECT_DRAFT
-                project.editor = user
-                project.save()
-                # INVIARE NOTIFICA AL MENTEE
-                print "=============RIPORTA PROGETTO A DRAFT INVIARE NOTIFICA AL MENTEE ===="
-                mentee = project.get_mentee(state=1)
-                recipients = mentee and [mentee.user]
-                subject = 'Cannot fulfil your request for a mentor.'
-                body = """Sorry, the Administrator of your community wasn't able to find a mentor for you and left the following notice:
+            # INVIARE NOTIFICA AL MENTEE
+            mentee = project.get_mentee(state=1)
+            recipients = mentee and [mentee.user]
+            subject = 'Cannot fulfil your request for a mentor'
+            body = """Sorry, the Administrator of your community wasn't able to find a mentor for you and left the following notice:
 "%s".
 By accessing your request you could find more specific information.""" % message
+            notify_event(recipients, subject, body)
+            if last_selected_mentor:
+                # INVIARE NOTIFICA AL MENTOR
+                recipients = [last_selected_mentor]
+                subject = "A request by a mentee wasn't answered within time limits"
+                body = """You didn't answer a request by a mentee within the time limits; the Administrator of the community has returned the request to the mentee and left the following notice:
+"%s".
+""" % message
                 notify_event(recipients, subject, body)
-                return HttpResponseRedirect('/my_home')
+
+        elif mentoring_model == MENTORING_MODEL_B:
+            # INVIARE NOTIFICA AL MENTOR
+            recipients = [last_selected_mentor]
+            subject = "A request by a mentee wasn't answered within time limits"
+            body = """You didn't answer a request by a mentee within the time limits; the mentee has withdrawn the request and left the following notice:
+"%s".
+""" % message
+
+            notify_event(recipients, subject, body)
+
+        return HttpResponseRedirect('/my_home')
     return HttpResponseRedirect('/project/%s/' % project.slug)

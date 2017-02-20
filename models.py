@@ -925,7 +925,7 @@ class Project(Resource):
                 return True
             if self.state == PROJECT_SUBMITTED and parent and parent.is_admin(user) and parent.mentoring_model == MENTORING_MODEL_B:
                 print "================ PASSO SEI ====================="
-                return False
+                return True
         else: 
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
                 return True
@@ -957,7 +957,9 @@ class Project(Resource):
         return self.state in (PROJECT_DRAFT,) and self.get_type_name()=='ment' and self.is_member(user)
     def can_draft_back(self, user):
         if user.is_superuser: return True
-        return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and self.get_parent().mentoring_model == MENTORING_MODEL_A and self.get_parent().is_admin(user)
+        parent = self.get_parent()
+        parent_mentoring_model = parent.mentoring_model
+        return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and ((parent_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_B and self.is_member(user)))
     def can_open(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser) 

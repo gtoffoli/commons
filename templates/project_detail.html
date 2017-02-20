@@ -454,7 +454,7 @@
     <div class="clearfix">
       {% if can_mentoring_model %}
         <dl class="pull-left marginB20 marginR10 panel-white">
-          <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring model"|capfirst %}</dt>
+          <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring setup model"|capfirst %}</dt>
           {% if mentoring_model_C %}
             <dd class="padding510">{{ mentoring_model_C_value }}</dd>
           {% else %}
@@ -486,7 +486,7 @@
     </div>
     {% if not is_admin %}
       <div class="panel-white padding510">
-        {% trans "current mentoring model for this community"|capfirst %}: {{ mentoring_model_value }}
+        {% trans "current mentoring setup model for this community"|capfirst %}: {{ mentoring_model_value }}
       </div>
     {% endif %}
 {% comment %}
