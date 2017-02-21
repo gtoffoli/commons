@@ -43,6 +43,8 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words, strings_from_html
+
+
 # from analytics import filter_actions, post_views_by_user
 
 # indexable_models = [UserProfile, Project, OER, LearningPath]
@@ -718,7 +720,7 @@ MENTORING_MODEL_CHOICES = (
     (NO_MENTORING, _('no mentoring')),
     (MENTORING_MODEL_A, _('A - Administrator chooses mentor')),
     (MENTORING_MODEL_B, _('B - Mentee chooses mentor')),
-    # (MENTORING_MODEL_C, _('A+B - Administrator or mentee chooses mentor')),
+    (MENTORING_MODEL_C, _('B+A - Mentee chooses mentor or administrator')),
 )
 MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 
@@ -782,13 +784,6 @@ class Project(Resource):
         if self.can_propose(request.user):
             self.state = PROJECT_SUBMITTED
             self.save()
-            if self.proj_type.name == 'ment':
-                memberships = ProjectMember.objects.filter(project=self, state=0)
-                for membership in memberships:
-                     membership.modified = self.modified
-                     membership.editor = request.user
-                     membership.save()
-
     def open(self, request):
         if self.can_open(request.user):
             self.state = PROJECT_OPEN
@@ -923,7 +918,7 @@ class Project(Resource):
             if self.state == PROJECT_SUBMITTED and (ProjectMember.objects.filter(project=self, user=user, state=0, refused=None)):
                 print "================ PASSO CINQUE ====================="
                 return True
-            if self.state == PROJECT_SUBMITTED and parent and parent.is_admin(user) and parent.mentoring_model == MENTORING_MODEL_B:
+            if self.state == PROJECT_SUBMITTED and parent and parent.is_admin(user) and (parent.mentoring_model == MENTORING_MODEL_B or (parent.mentoring_model == MENTORING_MODEL_C and self.mentoring_model == MENTORING_MODEL_B)):
                 print "================ PASSO SEI ====================="
                 return True
         else: 
@@ -959,7 +954,8 @@ class Project(Resource):
         if user.is_superuser: return True
         parent = self.get_parent()
         parent_mentoring_model = parent.mentoring_model
-        return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and ((parent_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_B and self.is_member(user)))
+        project_mentoring_model = self.mentoring_model
+        return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and ((parent_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_B and self.is_member(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B and self.is_member(user)))
     def can_open(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser) 

@@ -894,7 +894,7 @@ def lps_in_clipboard(request, key):
             pass
     return lps
 
-MENTORING_MAX_DELAY = 7 # (days) set to 0 for test
+MENTORING_MAX_DELAY = 14 # (days) set to 0 for test
 
 def project_detail(request, project_id, project=None, accept_mentor_form=None):
     MAX_OERS = 5
@@ -1052,7 +1052,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             var_dict['mentee'] = mentee = project.get_mentee(state=1)
             mentee_user = mentee and mentee.user
             var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
-            if (parent_mentoring_model == MENTORING_MODEL_B and is_draft):
+            if (parent_mentoring_model in (MENTORING_MODEL_B, MENTORING_MODEL_C) and is_draft):
                 var_dict['select_mentor_B'] = True
                 # INIT CANDIDATE MENTORS
                 var_dict['roll'] = roll = parent.get_roll_of_mentors()
@@ -1071,9 +1071,9 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                         form = MatchMentorForm(initial={'project': project_id })
                     form.fields['mentor'].queryset = candidate_mentors
                     var_dict['match_mentor_form'] = form
-            elif (parent_mentoring_model == MENTORING_MODEL_B and is_submitted):
+            elif (is_submitted and ((parent_mentoring_model == MENTORING_MODEL_B) or (parent_mentoring_model == MENTORING_MODEL_C and project.mentoring_model == MENTORING_MODEL_B))):
                 var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                var_dict['requested_mentor'] = requested_mentor = requested_mentors[0] 
+                var_dict['requested_mentor'] = requested_mentor = requested_mentors and requested_mentors[0] 
                 var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin or requested_mentor.user == user
                 date_max_delay = requested_mentor.modified + timedelta(days=MENTORING_MAX_DELAY)
                 out_date = timezone.now() > date_max_delay
@@ -1095,13 +1095,14 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                         var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
             elif (parent_mentoring_model == MENTORING_MODEL_A and is_member and is_draft):
                 var_dict["view_project_text"] = True
-            elif (parent_mentoring_model == MENTORING_MODEL_A and is_submitted):
+            elif (is_submitted and ((parent_mentoring_model == MENTORING_MODEL_A) or (parent_mentoring_model == MENTORING_MODEL_C and project.mentoring_model == MENTORING_MODEL_A))):
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
                 var_dict['parent_mentoring_model_A'] = True
                 var_dict['requested_mentors'] = requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                 requested_mentor = None
                 can_accept_mentor = None
                 var_dict['can_draft_back'] = can_draft_back and mentors_refuse
+                
                 var_dict['msg_to_draft_state'] = _("if you aren't able to choose another mentor, please write a notice for both the mentee and the mentor and push the button below")
                 if not requested_mentors:
                     if is_parent_admin:
@@ -1347,6 +1348,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.editor = user
                     if proj_type_name == 'com':
                         project.mentoring_model = NO_MENTORING
+                    if proj_type_name == 'ment' and parent.mentoring_model == MENTORING_MODEL_C:
+                        project.mentoring_model = MENTORING_MODEL_B
                     set_original_language(project)
                     project.save()
                     track_action(request.user, 'Create', project)
@@ -1411,7 +1414,6 @@ def project_propose(request, project_id):
     if type_name == 'ment':
         if mentoring_model == MENTORING_MODEL_B:
             # INVIARE NOTIFICA AL MENTORE
-            print "============= PROGETTO SUBMITTED INVIARE NOTIFICA AL MENTORE SCELTO ===="
             mentor_user = project.get_chosen_mentor()
             subject = 'A user would like to have you as mentor'
             body = """ A user needing some mentoring has chosen you from a Roll of Mentors.
@@ -1420,7 +1422,6 @@ Please, look at your user dashboard for more specific information."""
             notify_event([mentor_user], subject, body)
         elif mentoring_model == MENTORING_MODEL_A:
             # INVIARE NOTIFICA AL community admin
-            print "============= PROGETTO SUBMITTED INVIARE NOTIFICA A AMMINISTRATORE ===="
             recipients = project.get_parent().get_admins()
             subject = 'A user is looking for a mentor'
             body = """A user in your community has submitted a request for a mentor.
@@ -3031,7 +3032,6 @@ def document_view(request, document_id, node_oer=False, return_url=False):
        else:
            oer_document = OerDocument.objects.get(document_id=document_id)
            oer = OER.objects.get(pk = oer_document.oer_id)
-       
        url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
        if return_url:
            return url

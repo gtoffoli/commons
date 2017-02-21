@@ -35,7 +35,7 @@ def get_mentoring_requests(user):
     """ return all mentoring projects in the state of request where the user is the community administrator """
     role_admin = Role.objects.get(name='admin')
     # find the community-admin memberships of the user
-    mm = ProjectMember.objects.filter(project__proj_type__name='com', project__state=PROJECT_OPEN, project__mentoring_model=MENTORING_MODEL_A, user=user)
+    mm = ProjectMember.objects.filter(project__proj_type__name='com', project__state=PROJECT_OPEN, project__mentoring_model__in=[MENTORING_MODEL_A,MENTORING_MODEL_C], user=user)
     admin_memberships = [m for m in mm if role_admin in get_local_roles(m.project, user)]
     requests = []
     for m in admin_memberships:
@@ -60,11 +60,8 @@ def get_mentoring_requests_waiting(user):
         mentoring_projects = community.get_children(proj_type_name='ment', states=[PROJECT_SUBMITTED])
         if mentoring_projects:
             for project in mentoring_projects:
-                print project.name
                 mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
-                print mentors.count()
                 if mentors.count():
-                    print project.name
                     requests.append(project)
     return requests
     
@@ -96,6 +93,30 @@ def project_send_one2one_message(request, project_slug):
             project_message.save()
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
+def A_send_delegate_msg(community_admins):
+    subject = 'A mentee has delegated the choice of the mentor.'
+    body = """A mentee has filled the request for a mentor and asks that you makes the choice. Please, look at your user dashboard for more specific information."""
+    notify_event(community_admins, subject, body)
+
+def project_delegate_admin (request, project_id):
+    project = Project.objects.get(pk=project_id)
+    user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
+    if project.can_propose(user):
+       project.state = PROJECT_SUBMITTED
+       project.save()
+       memberships = ProjectMember.objects.filter(project=project, state=0)
+       for membership in memberships:
+           membership.modified = project.modified
+           membership.editor = user
+           membership.save()
+       community = project.get_parent()
+       parent_mentoring_model = community.mentoring_model
+       if ((parent_mentoring_model == MENTORING_MODEL_A) or (parent_mentoring_model == MENTORING_MODEL_C and self.mentoring_model == MENTORING_MODEL_A)):
+           A_send_delegate_msg(community.get_admins())
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
 def project_set_mentor(request):
     post=request.POST
     if post:
@@ -106,7 +127,11 @@ def project_set_mentor(request):
         mentor_id = post.get('mentor', None)
         save = post.get('save', '')
         submit = post.get('submit', '')
-        parent_mentoring_model = project.get_parent().mentoring_model
+        delegate = post.get('delegate', '')
+        community = project.get_parent()
+        parent_mentoring_model = community.mentoring_model
+        project_mentoring_model = project.mentoring_model
+        community_admins = community.get_admins()
         if save:
             if mentor_id:
                 mentor_user = get_object_or_404(User, id=mentor_id)
@@ -123,29 +148,38 @@ def project_set_mentor(request):
         elif submit:
             if mentor_id:
                 mentor_user = get_object_or_404(User, id=mentor_id)
-                if (parent_mentoring_model == MENTORING_MODEL_A):
+                if ((parent_mentoring_model == MENTORING_MODEL_A) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A)):
                     mentor_member = project.add_member(mentor_user,request.user)
                     message = post.get('message', '')
                     # NOTIFICA AL MENTORE SELEZIONATO 
-                    print "================= INVIO EMAIL AL MENTORE SELEZIONATO ==========="
                     recipients = [mentor_user]
                     subject = 'You have been chosen to answer a request for a mentor.'
                     body = """The Administrator of a community thinks that you are a good fit to fulfil the request of a would be mentee, and left the following notice for you:
 "%s".
 Please, look at your user dashboard for more specific information.""" % message or "empty notice"
                     notify_event(recipients, subject, body)
-                elif (parent_mentoring_model == MENTORING_MODEL_B):
+                elif ((parent_mentoring_model == MENTORING_MODEL_B) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B)):
                     mentors_selected = ProjectMember.objects.filter(project=project, state=0, refused=None)
                     if mentors_selected:
                         mentor_selected = mentors_selected[0]
                         if not (mentor_selected == mentor_user):
                             user_selected = get_object_or_404(User, id=mentor_selected.user_id)
                             project.remove_member(user_selected)
-                            mentor_member = project.add_member(mentor_user,request.user)
-                    else:
-                        mentor_member = project.add_member(mentor_user,request.user)
+                    mentor_member = project.add_member(mentor_user,request.user)
                     project.state = PROJECT_SUBMITTED
+                    project.editor = request.user
                     project.save()
+                    # NOTIFICA AL MENTORE SELEZIONATO E ALL'AMMINISTRATORE DELLE COMUNITA'
+                    recipients = community_admins + [mentor_user]
+                    subject = 'A mentee has chosen a mentor.'
+                    body = """A mentee has chosen a mentor and is asking his/her consent. In your user dashboard you will find more specific information from your point of view (as mentor or community administrator)."""
+                    notify_event(recipients, subject, body)
+        elif delegate:
+            project.mentoring_model = MENTORING_MODEL_A
+            project.state = PROJECT_SUBMITTED
+            project.editor = request.user
+            project.save()
+            A_send_delegate_msg(community_admins)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_accept_mentor(request):
@@ -192,7 +226,7 @@ Please, look at your user dashboard for more specific information.""" % descript
                 membership.save()
                 track_action(user, 'Reject', membership, target=project, description=data['description'])
                 subject = "The chosen mentor didn't accept the request"
-                if community.mentoring_model == MENTORING_MODEL_B:
+                if ((community.mentoring_model == MENTORING_MODEL_B) or (community.mentoring_model == MENTORING_MODEL_C and project.mentoring_model == MENTORING_MODEL_B)):
                     project.state = PROJECT_DRAFT
                     project.editor = user
                     project.save()
@@ -203,7 +237,7 @@ Please, look at your user dashboard for more specific information.""" % descript
 
 Possibly you are willing to try another choice.
 Please, look at your user dashboard for more specific information.""" % description
-                elif community.mentoring_model == MENTORING_MODEL_A:
+                elif ((community.mentoring_model == MENTORING_MODEL_A) or (community.mentoring_model == MENTORING_MODEL_C and project.mentoring_model == MENTORING_MODEL_A)):
                     # send notification
                     recipients = community_admins
                     body = """The mentor chosen for the mentee by a community administrator didn't accept and left the following notice for you:
@@ -224,24 +258,27 @@ def project_draft_back(request, project_id):
         raise PermissionDenied
     type_name = project.proj_type.name
     if type_name == 'ment' and request.POST.get('draft_back',''):
-        mentoring_model = project.get_parent().mentoring_model
+        parent_mentoring_model = project.get_parent().mentoring_model
+        project_mentoring_model = project.mentoring_model
         message = request.POST.get('message','')
         mm = ProjectMember.objects.filter(project=project,state=0,refused=None)
         last_selected_mentor = None
         if mm:
             for m in mm:
                 last_selected_mentor = m.user
-                if mentoring_model == MENTORING_MODEL_A:
+                if ((parent_mentoring_model == MENTORING_MODEL_A) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A)):
                     m.history = "The mentor didn't accept within time limits. The community administrator wrote: %s" % message
-                elif mentoring_model == MENTORING_MODEL_B:
+                elif ((parent_mentoring_model == MENTORING_MODEL_B) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B)):
                     m.history = "The mentor didn't accept within time limits. The mentee wrote: %s" % message
                 m.editor = user
                 m.refused = timezone.now()
                 m.save()
+        if (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A):
+            project.mentoring_model = MENTORING_MODEL_B
         project.state = PROJECT_DRAFT
         project.editor = user
         project.save()
-        if mentoring_model == MENTORING_MODEL_A:
+        if ((parent_mentoring_model == MENTORING_MODEL_A) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A)):
             # INVIARE NOTIFICA AL MENTEE
             mentee = project.get_mentee(state=1)
             recipients = mentee and [mentee.user]
@@ -259,7 +296,7 @@ By accessing your request you could find more specific information.""" % message
 """ % message
                 notify_event(recipients, subject, body)
 
-        elif mentoring_model == MENTORING_MODEL_B:
+        elif ((parent_mentoring_model == MENTORING_MODEL_B) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B)):
             # INVIARE NOTIFICA AL MENTOR
             recipients = [last_selected_mentor]
             subject = "A request by a mentee wasn't answered within time limits"

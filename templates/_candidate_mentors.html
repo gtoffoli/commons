@@ -28,7 +28,13 @@
              {% if can_propose == 'B' %}
                <div class="panel-footer-c0 padding510"><button type="submit"  class="btn btn-default" name="save" id="save" value="save">{% trans "save the choice" %}</button> &nbsp; &nbsp;
                <button type="submit" class="btn btn-default" name="submit" id="submit" value="submit">{% trans "confirm and send the request to the mentor" %}</button> &nbsp; &nbsp;
-               	</div>
+               </div>
+             {% endif %}
+             {% if can_propose == 'C' %}
+               <div class="panel-footer-c0 padding510"><div><button type="submit"  class="btn btn-default" name="save" id="save" value="save">{% trans "save the choice" %}</button> &nbsp; &nbsp;
+               <button type="submit" class="btn btn-default" name="submit" id="submit" value="submit">{% trans "confirm and send the request to the mentor" %}</button></div>
+               <div class="marginT5"><button type="submit" class="btn btn-default" name="delegate" id="delegate" value="delegate">{% trans "delegate community administrator" %}</button></div>
+               </div>
              {% endif %}
            </form>
          </div>

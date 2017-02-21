@@ -190,9 +190,7 @@ div.msg {
    {# if is_open or is_closed #}
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if can_propose == 'A' %}
-       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request to admin" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
-     {% elif can_propose == 'C' %}
-       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/propose/" title="{% trans "submit request" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
+       <ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/delegate/" title="{% trans "submit request to admin" %}" class="btn btn-default"><i class="fa fa-mail-forward"></i> {% trans "submit request" %}</a></li></ul></li></ul>
      {% endif %}
      {% if can_draft_back %}
        <ul class="list-inline marginLB020"><li class="list-back-c0 width-full paddingLT4">
