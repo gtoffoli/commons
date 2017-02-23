@@ -1,6 +1,7 @@
 import re
 import json
 import csv
+import uuid
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -1288,7 +1289,10 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 data_dict['object'] = project
                 data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
                 if parent:
+                    """
                     group_name = slugify(name[:50])
+                    """
+                    group_name = uuid.uuid4()
                     group = Group(name=group_name)
                     group.parent = parent.group
                     group.save()
@@ -1301,6 +1305,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         project.mentoring_model = MENTORING_MODEL_B
                     set_original_language(project)
                     project.save()
+                    group = project.group
+                    project.create_folder()
                     track_action(request.user, 'Create', project)
 
                     role_member = Role.objects.get(name='member')

@@ -338,14 +338,19 @@ class Publishable(object):
 
 class Folder(MPTTModel):
        
+    """
     title = models.CharField(max_length=128, verbose_name=_('Title'), db_index=True)
+    """
+    title = models.CharField(max_length=128, verbose_name=_('Title'))
     parent = TreeForeignKey('self', null=True, blank=True, related_name = 'subfolders')
     documents = models.ManyToManyField(Document, through='FolderDocument', related_name='document_folder', blank=True, verbose_name='documents')
     user = models.ForeignKey(User, verbose_name=_('User'))
     created = CreationDateTimeField(verbose_name=_('created'))
 
     class Meta:
+        """
         unique_together = ('title', 'user')
+        """
         ordering = ('title',)
         verbose_name = _('folder')
         verbose_name_plural = _('folders')
@@ -739,9 +744,13 @@ class Project(Resource):
         verbose_name_plural = _('projects')
 
     group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
+    """
     # name = models.CharField(max_length=100, verbose_name=_('name'))
     name = models.CharField(max_length=50, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
+    """
+    name = models.CharField(max_length=78, verbose_name=_('name')) # the slug is used as the group name (max 80 chars)
+    slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
     proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
     # chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
@@ -825,18 +834,21 @@ class Project(Resource):
                 folderdocuments = FolderDocument.objects.filter(folder=folder, state=PUBLISHED).order_by('order')
         return folderdocuments
 
+    """ this logic must be in views.py, where the parent project is known
     def save(self, *args, **kwargs):
         new = self.pk is None
         try:
             group = self.group
         except:
-            group_name = slugify(self.name)[:50]
+            # group_name = slugify(self.name)[:50]
+            group_name = uuid.uuid4()
             group = Group(name=group_name)
             group.save()
             self.group = group
         super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
         if new:
             self.create_folder()
+    """
 
     def get_name(self):
         return self.name or self.group.name
@@ -1307,7 +1319,7 @@ class RepoType(models.Model):
 # class Repo(models.Model, Publishable):
 class Repo(Resource, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
-    slug = AutoSlugField(unique=True, populate_from='name', editable=True)
+    slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
     repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
     url = models.CharField(max_length=200,  null=True, blank=True, verbose_name=_('URL of the repository site'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
@@ -1389,7 +1401,7 @@ SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 # class OER(models.Model, Publishable):
 class OER(Resource, Publishable):
     # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
-    slug = AutoSlugField(unique=True, populate_from='title', editable=True)
+    slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
@@ -1817,7 +1829,7 @@ LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
 # class LearningPath(models.Model, Publishable):
 class LearningPath(Resource, Publishable):
-    slug = AutoSlugField(unique=True, populate_from='title', editable=True)
+    slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     short = models.TextField(blank=True, verbose_name=_('objectives'))
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')

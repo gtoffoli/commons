@@ -173,7 +173,7 @@ class ProjectForm(forms.ModelForm):
         # fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
         fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
 
-    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('max length is 78 characters, but less is better'))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
     proj_type = forms.ModelChoiceField(required=False, queryset=ProjType.objects.all(), widget=forms.HiddenInput())
