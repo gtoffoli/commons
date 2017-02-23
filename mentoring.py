@@ -6,11 +6,43 @@ from django.core.exceptions import PermissionDenied
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 from django.contrib.auth.models import User
-from models import ProjType, Project, ProjectMember, ProjectMessage
+from models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
 from forms import ProjectMentoringModelForm, AcceptMentorForm, one2oneMessageComposeForm, MatchMentorForm
 from analytics import notify_event, track_action
+
+def get_all_candidate_mentors(user, community):
+    community_candidate_mentors = communities_candidate_mentors = None
+    proj_type_roll = ProjType.objects.filter(name='roll')
+    roll = community.get_roll_of_mentors(states=[PROJECT_OPEN])
+    rolls = Project.objects.filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
+    if roll:
+        memberships = roll.get_memberships(state=1).order_by('user__last_name')
+        members = [membership.user for membership in memberships if not membership.user == user]
+        community_mentors = UserProfile.objects.filter(user__in=members, mentor_unavailable = False)
+        if community_mentors:
+            community_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in community_mentors]).order_by('last_name')
+        rolls = rolls.exclude(pk=roll.id)
+    if rolls:
+        members = []
+        other_candidate_mentors = None
+        for roll in rolls:
+            memberships = roll.get_memberships(state=1).order_by('user__last_name')
+            for membership in memberships:
+                if not membership.user == user:
+                    members.append(membership.user)
+        if members:
+            other_candidate_mentors = UserProfile.objects.filter(user__in=members, mentor_for_all = True, mentor_unavailable = False)
+    if other_candidate_mentors:
+        communities_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in other_candidate_mentors]).order_by('last_name')
+    if community_candidate_mentors and communities_candidate_mentors:
+        return (community_candidate_mentors | communities_candidate_mentors)
+    elif community_candidate_mentors:
+        return community_candidate_mentors
+    elif communities_candidate_mentors:
+        return communities_candidate_mentors
+    return None
 
 def get_mentor_memberships(user, state=None):
     role_admin = Role.objects.get(name='admin')

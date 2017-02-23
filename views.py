@@ -53,7 +53,7 @@ from session import get_clipboard, set_clipboard
 from analytics import notify_event, track_action
 from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
-from mentoring import get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting
+from mentoring import get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -924,8 +924,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
         'og:image': image,
     }
     var_dict['object'] = project
-    # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
-    # var_dict['proj_types'] = ProjType.objects.filter(public=True).exclude(name='com')
     proj_types = ProjType.objects.filter(public=True)
     if not user.is_superuser:
         proj_types = proj_types.exclude(name='com') 
@@ -948,20 +946,9 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
         else:
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
-        # var_dict['can_accept_member'] = project.can_accept_member(user)
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
-        # var_dict['can_accept_member'] = can_accept_member
         if can_accept_member:
             var_dict['add_member_form'] = ProjectAddMemberForm()
-            """
-            post = request.POST
-            if post and post.get('add_member',''):
-                user_id = post.get('user')
-                user_to_add = User.objects.get(pk=user_id)
-                if not ProjectMember.objects.filter(project=project, user=user_to_add):
-                    membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
-                    membership.save()
-            """
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -981,7 +968,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             var_dict['cut_lps'] = lps_in_clipboard(request, 'cut_lps')
             bookmarked_lps = lps_in_clipboard(request, 'bookmarked_lps')
             var_dict['shareable_lps'] = [lp for lp in bookmarked_lps if not lp.project==project and not SharedLearningPath.objects.filter(project=project, lp=lp).count()]
-        # var_dict['can_edit'] = project.can_edit(user)
         var_dict['can_edit'] = project.can_edit(request)
         var_dict['can_translate'] = project.can_translate(request)
         current_language = get_current_language()
@@ -999,7 +985,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
         var_dict['membership'] = membership = project.get_membership(user)
-        # var_dict['recent_actions'] = project.recent_actions()
         var_dict['recent_actions'] = filter_actions(project=project, max_days=7, max_actions=100)
         profile = user.get_profile()
         can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
@@ -1022,17 +1007,17 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             if project.mentoring_model == MENTORING_MODEL_A:
                 var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
             var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
-            # var_dict['mentoring_mentor'] = project.get_mentoring_mentor(user=user, states=[PROJECT_OPEN,PROJECT_CLOSED,])
             var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user,membership_state=1)
             var_dict['can_mentoring_model'] = can_mentoring_model = is_open and is_admin
+            var_dict['hide_no_mentoring'] = can_mentoring_model and (roll or len(project.get_mentoring_projects()) >= 1)
             var_dict['form_memtoring_model'] = ProjectMentoringModelForm(instance=project)
             var_dict['mentoring_model_value'] = MENTORING_MODEL_DICT.get(project.mentoring_model);
             if project.mentoring_model == MENTORING_MODEL_C:
                var_dict['mentoring_model_C'] = True
                var_dict['mentoring_model_C_value'] = MENTORING_MODEL_DICT.get(MENTORING_MODEL_C);
             var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and (not project.mentoring_model == NO_MENTORING) and not roll
-            # var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user))) and not project.get_mentoring_mentee(user=user,states=[PROJECT_DRAFT,PROJECT_SUBMITTED,PROJECT_OPEN,],membership_state=1)
-            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user)))
+            # var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user)))
+            var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and project.mentoring_model in [MENTORING_MODEL_A,MENTORING_MODEL_B,MENTORING_MODEL_C]
             var_dict['mentoring_block']= can_mentoring_model or roll or can_add_roll or can_request_mentor or mentoring
         elif type_name=='ment':
             can_propose = project.can_propose(user)
@@ -1054,14 +1039,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             var_dict['mentors_refuse'] = mentors_refuse = ProjectMember.objects.filter(project=project, state=0).exclude(refused=None).order_by('-refused')
             if (parent_mentoring_model in (MENTORING_MODEL_B, MENTORING_MODEL_C) and is_draft):
                 var_dict['select_mentor_B'] = True
-                # INIT CANDIDATE MENTORS
-                var_dict['roll'] = roll = parent.get_roll_of_mentors()
-                proj_type_roll = ProjType.objects.filter(name='roll')
-                rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
-                all_candidate_mentors = roll.candidate_mentors([user])
-                candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
-                var_dict['candidate_mentors'] = candidate_mentors
-                # END CANDIDATE MENTORS
+                var_dict['candidate_mentors'] = candidate_mentors = get_all_candidate_mentors(user,parent)
                 requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                 if candidate_mentors:
                     if requested_mentors:
@@ -1081,10 +1059,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 var_dict['msg_to_draft_state'] = _("this request is waiting since long time: if you want to retract it, please write a notice for the mentor and push the button below")
                 var_dict['can_accept_mentor'] = can_accept_mentor = requested_mentor and (user == requested_mentor.user)
                 var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
-                """
-                if requested_mentor:
-                    var_dict['can_accept_mentor'] = can_accept_mentor = user == requested_mentor.user
-                """
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
                 if (is_mentee or is_parent_admin) and requested_mentor:
                    var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
@@ -1108,14 +1082,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                     if is_parent_admin:
                         var_dict['view_shared_folder'] = view_shared_folder or is_parent_admin
                         var_dict['select_mentor_A'] = True
-                        # INIT CANDIDATE MENTORS
-                        var_dict['roll'] = roll = parent.get_roll_of_mentors()
-                        proj_type_roll = ProjType.objects.filter(name='roll')
-                        rolls = Project.objects.exclude(pk=roll.id).filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
-                        all_candidate_mentors = roll.candidate_mentors([mentee_user])
-                        candidate_mentors=User.objects.filter(id__in=[mentor.user_id for mentor in all_candidate_mentors]).order_by('last_name')
-                        var_dict['candidate_mentors'] = candidate_mentors
-                        # END CANDIDATE MENTORS
+                        var_dict['candidate_mentors'] = candidate_mentors = get_all_candidate_mentors(mentee_user,parent)
                         requested_mentors = ProjectMember.objects.filter(project=project, state=0, refused=None)
                         if candidate_mentors:
                             if requested_mentors:
@@ -1162,24 +1129,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 outbox = [m for m in outbox if m.project==project]
                 var_dict['inbox'] = inbox
                 var_dict['outbox'] = outbox
-                """
-                post = request.POST
-                if post and post.get('send',''):
-                    form = one2oneMessageComposeForm(post)
-                    if form.is_valid():
-                        data = form.cleaned_data
-                        sender = User.objects.get(username=data['sender'])
-                        recipient = User.objects.get(username=data['recipient'])
-                        subject = data['subject']
-                        body = data['body']
-                        message = Message(sender=sender, recipient=recipient, subject=subject, body=body)
-                        message.save()
-                        project_message = ProjectMessage(project=project, message=message)
-                        project_message.save()
-                else:
-                    form = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
-                var_dict['compose_message_form'] =  form
-                """
                 var_dict['compose_message_form'] = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
         elif type_name=='sup':
             var_dict['support'] = project

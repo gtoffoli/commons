@@ -457,6 +457,8 @@
           <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring setup model"|capfirst %}</dt>
           {% if mentoring_model_C %}
             <dd class="padding510">{{ mentoring_model_C_value }}</dd>
+          {% elif mentoring_projects_all >= 1 %}
+            <dd  class="padding510">{{ mentoring_model_value }}</dd>
           {% else %}
             <dd class="padding510"><form method="post" id="mentoring_model" action="/project/{{ project.slug }}/edit_mm/">{% csrf_token %}
               {% for field in form_memtoring_model.visible_fields %}
@@ -733,21 +735,24 @@
 			}
 		});
 
-		{% if can_mentoring_model and roll %}
-		
-		$("#id_mentoring_model_0").parent().css('display','none');
-		$("#id_mentoring_model_0").prop('disabled',true);
+		{% if hide_no_mentoring %}
+		  $("#id_mentoring_model_0").parent().css('display','none');
+		  $("#id_mentoring_model_0").prop('disabled',true);
 		{% endif %}
 		
 		{% if can_mentoring_model and mentoring_projects_all >= 1 %}
 			switch ($('input[name=mentoring_model]:checked').val()) {
 				case '1':
 				$("#id_mentoring_model_2").parent().css('display','none');
+				$("#id_mentoring_model_3").parent().css('display','none');
 				$("#id_mentoring_model_2").prop('disabled',true)
+				$("#id_mentoring_model_3").prop('disabled',true)
 				break;
 				case '2':
 				$("#id_mentoring_model_1").parent().css('display','none');
+				$("#id_mentoring_model_3").parent().css('display','none');
 				$("#id_mentoring_model_1").prop('disabled',true)
+				$("#id_mentoring_model_3").prop('disabled',true)
 				break;
 				case '3':
 				$("#id_mentoring_model_1").parent().css('display','none');
