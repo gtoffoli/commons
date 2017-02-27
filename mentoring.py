@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django_messages.models import Message
 
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
