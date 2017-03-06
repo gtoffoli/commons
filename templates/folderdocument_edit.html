@@ -7,9 +7,9 @@
 {% block body_class %}folder_document_edit{% endblock %}
 
 {% block body %}
-<div class="panel panel-c4 text-left marginTB30">
-  <div class="panel-heading-c4 padding1020">
-    <h2 class="marginTB5"><small>{% trans "edit document in folder"|capfirst %}:</small> {{ folder.get_title }}</h2>
+<div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
+  <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
+    <h2 class="marginTB5"><small {% if proj_type_name in 'roll,ment' %}class="c-white"{% endif %}>{% trans "edit document in folder"|capfirst %}:</small> {{ folder.get_title }}</h2>
   </div>
   <form method="post" action="{{ field }}" id="folderdocument_edit_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
@@ -21,12 +21,13 @@
           </div>
         {% endwith %}{% endfor %}
       </fieldset>
-      <div class="panel-footer-c4 padding1020">
+      <div class="panel-footer-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;
         <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
       </div>
   </form>
 </div>
+
 {% endblock %}
 
 {% block extra_script %}

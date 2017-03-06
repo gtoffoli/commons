@@ -2404,7 +2404,7 @@ class PathNode(node_factory('PathEdge')):
         verbose_name_plural = _('path nodes')
 
     def get_nodetype(self):
-        return (self.oer and 'OER') or (self.text and 'TXT') or ''
+        return (self.oer and 'OER') or (self.document and 'DOC') or (self.text and 'TXT') or ''
 
 
     def make_json(self):
@@ -2484,10 +2484,44 @@ class PathNode(node_factory('PathEdge')):
     def has_children(self):
         return self.children.all().count()
 
+    def has_text_children(self):
+        children = self.children.all()
+        n_children = 0
+        for child in children:
+            if child.get_nodetype() == 'TXT':
+                n_children += 1
+        return n_children
+
+    def has_doc_children(self):
+        children = self.children.all()
+        n_children = 0
+        for child in children:
+            if child.get_nodetype() == 'DOC':
+                n_children += 1
+        return n_children
+
     def get_ordered_children(self):
         children = list(self.children.all())
         children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         return children
+
+    def get_ordered_text_children(self):
+        children = self.children.all()
+        txt_children = []
+        for child in children:
+           if child.get_nodetype() == 'TXT':
+              txt_children.append(child)
+        txt_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        return txt_children
+    
+    def get_ordered_doc_children(self):
+        children = self.children.all()
+        doc_children = []
+        for child in children:
+           if child.get_nodetype() == 'DOC':
+              doc_children.append(child)
+        doc_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        return doc_children
 
     def ordered_out_edges(self):
         """

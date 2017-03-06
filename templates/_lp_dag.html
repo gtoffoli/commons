@@ -100,7 +100,7 @@ graph.getElements().forEach(function(node, index, array) {
   node.attr({ rect: { fill: fill_color, stroke: node_color, rx: 3, ry: 3 }});
   node.set('index', index);
   // label = (1+index).toString() + '.\n' + node.attr('text').text;
-  label = (1+index).toString() + '.   ' + node.attr('nodetype') + '\n' + node.attr('text').text;
+  label = (1+index).toString() + '.  ' + node.attr('nodetype') + '\n' + node.attr('text').text;
   node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11, 'text-anchor':'middle', }});
   console.log(index, label);
   width = label_width(label) + node_padding * 2;

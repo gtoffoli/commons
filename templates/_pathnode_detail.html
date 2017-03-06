@@ -28,9 +28,9 @@
         {% endif %}
         {% if node.document_id %}
           <dl class="font14 marginB10">
-            <dt class="demiBold node-text">{% trans _('document')|capfirst %}</dt>
+            <dt class="demiBold node-doc">{% trans _('document')|capfirst %}</dt>
             <dd>{{ node.document.label }} &nbsp; &nbsp; <a href="/document/{{ node.document_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
-               {% if node.document.viewable %} &nbsp; &nbsp; <a href="/document/{{ node.document_id }}/view/?node=1" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+               {% if node.document.viewable %} &nbsp; &nbsp; <a href="/document/{{ node.document_id }}/view/?node=1" title="{% trans "view" %}" target="_top"><i class="fa fa-eye"></i></a>{% endif %}
             </dd>
           </dl>
         {% endif %}

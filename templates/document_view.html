@@ -7,10 +7,15 @@
 
 {% block nav %}
   <div class="navbar">
-  {% if node %}
-    <h5 class="pull-left c-mulberry"><i class="fa fa-dot-circle-o" aria-hidden="true"></i> {{ node.label }}</h5>
+  {% if node and ment_proj %}
+    <h5 class="pull-left">{{ ment_proj.name }}</h5>
     <p class="pull-right paddingT10 paddingLR5">
-       <a href="/pathnode/{{ node.id }}"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
+       <a href="/project/{{ ment_proj.slug }}/"><i class="fa fa-list-alt font18 aria-hidden="true"></i></a>
+    </p>
+  {% elif node %}
+    <h5 class="pull-left c-mulberry">{{ node.label }}</h5>
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/lp/{{ node.path.slug }}/"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
     </p>
   {% elif oer %}
     <h5 class="pull-left c-pacific-blue">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small>{% endif %}{{ oer.title }}</h5>
@@ -18,7 +23,7 @@
        <a href="/oer/{{ oer.slug }}/"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
     </p>
   {% elif project %}
-    <h5 class="pull-left ">{% trans "shared folder"|capfirst %}: {{ project.name }}</h5>
+    <h5 class="pull-left">{% trans "shared folder"|capfirst %}: {{ project.name }}</h5>
     <p class="pull-right paddingT10 paddingLR5">
        <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>

@@ -379,7 +379,7 @@ def user_dashboard(request, username, user=None):
     else:
         max_days = 90
         max_actions = 30
-    actions = filter_actions(user=user, verbs=['Accept','Create','Edit','Submit','Approve','Reject',], max_days=max_days, max_actions=max_actions)
+    actions = filter_actions(user=user, verbs=['Accept','Create','Edit','Submit','Approve','Reject','Enabled',], max_days=max_days, max_actions=max_actions)
     var_dict['max_days'] = max_days
     var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
@@ -830,7 +830,7 @@ def project_add_document(request):
         except:
             return HttpResponseRedirect('/project/%s/folder/' % project.slug)
         version = handle_uploaded_file(uploaded_file)
-        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user)
+        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
         folderdocument.save()
         # track_action(request.user, 'Upload', folderdocument)
         track_action(request.user, 'Create', folderdocument, target=project)
@@ -839,18 +839,23 @@ def project_add_document(request):
 def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
+    projects = Project.objects.filter(folders = folder)
+    project = projects and projects[0]
     if request.POST:
         form = FolderDocumentForm(request.POST, instance=folderdocument)
         if form.is_valid():
             if request.POST.get('save', ''): 
                 form.save()
-            projects = Project.objects.filter(folders = folder)
-            if projects:
-                return HttpResponseRedirect('/project/%s/folder/' % projects[0].slug)
+            if project:
+                return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     else:
         form = FolderDocumentForm(instance=folderdocument)
         action = '/folderdocument/%d/edit/' % folderdocument.id
-        return render_to_response('folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'form': form, 'action': action}, context_instance=RequestContext(request))
+        if project:
+            proj_type_name = project.proj_type.name
+        else:
+            proj_type_name = ''
+        return render_to_response('folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
  
 def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
@@ -869,8 +874,12 @@ def project_folder(request, project_slug):
     if not user.is_authenticated():
         return project_detail(request, project.id, project=project)
     proj_type = project.proj_type
-    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name}
-    var_dict['can_share'] = user.is_superuser or project.is_member(user)
+    ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
+    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
+    selected_mentors = []
+    if ment_proj_submitted:
+        selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
+    var_dict['can_share'] = can_share = user.is_superuser or project.is_member(user) or (selected_mentors.count() > 0 and selected_mentors[0])
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['folder'] = project.get_folder()
     var_dict['folderdocuments'] = project.get_folderdocuments(user)
@@ -1131,6 +1140,22 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                 var_dict['inbox'] = inbox
                 var_dict['outbox'] = outbox
                 var_dict['compose_message_form'] = one2oneMessageComposeForm(initial={'sender': user.username, 'recipient': recipient})
+            if project.prototype:
+                prototype_enabled_states = filter_actions(verbs=['Enabled'], object_content_type=ContentType.objects.get_for_model(PathNode), project=project, max_actions=1, expires=False)
+                prototype_roots = project.prototype.get_roots()
+                var_dict['prototype_text_children'] = None
+                var_dict['prototype_n_text_children'] = prototype_n_text_children = prototype_roots and prototype_roots[0] and prototype_roots[0].has_text_children() or 0
+                if prototype_n_text_children:
+                    var_dict['prototype_text_children'] = prototype_text_children = prototype_roots[0].get_ordered_text_children()
+                    var_dict['prototype_current_state'] = prototype_current_state = prototype_enabled_states and prototype_enabled_states[0].action_object or ''
+                    if prototype_current_state:
+                        i = i_prototype_current_state = 0
+                        for child in prototype_text_children:
+                            if child == prototype_current_state:
+                                i_prototype_current_state = i
+                                break
+                            i += 1
+                        var_dict['i_prototype_current_state'] = i_prototype_current_state
         elif type_name=='sup':
             var_dict['support'] = project
     else:
@@ -2947,7 +2972,7 @@ def parse_page_range(page_range):
                 return None
             subrange.append(last_page)
         subranges.append(subrange)
-    return subranges            
+    return subranges
 
 def document_download_range(request, document_id, page_range):
     document = get_object_or_404(Document, pk=document_id)
@@ -2964,19 +2989,23 @@ def document_download_range(request, document_id, page_range):
         response['Content-Length'] = file.len
     return response
 
-def document_view(request, document_id, node_oer=False, return_url=False):
-    node = oer = project = 0
+def document_view(request, document_id, node_oer=False, return_url=False, ):
+    node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
     node_doc = request.GET.get('node', '')
+    ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
     profile = request.GET.get('profile', '')
-    
     if document.viewerjs_viewable:
        if node_doc:
            if not node_oer:
                node = PathNode.objects.get(document_id=document_id)
            else:
                oer_document = OerDocument.objects.get(document_id=document_id)
+       elif ment_node_doc:
+            node = PathNode.objects.get(document_id=document_id)
+            list=ment_node_doc.split('-')
+            ment_proj = Project.objects.get(pk = int(list[1]))
        elif proj:
            folder_document = FolderDocument.objects.get(document_id=document_id)
            project = Project.objects.get(pk = proj)
@@ -2992,7 +3021,7 @@ def document_view(request, document_id, node_oer=False, return_url=False):
            return url
        else:
             # return HttpResponseRedirect(url)
-           return render_to_response('document_view.html', {'url': url, 'node': node, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
+           return render_to_response('document_view.html', {'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(

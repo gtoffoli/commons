@@ -23,7 +23,7 @@ from models import UserProfile, OER # , Project
 from models import PUBLISHED
 from commons.settings import PRODUCTION
 
-verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject',]
+verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
 
 notification_template = """%s
 
@@ -253,7 +253,7 @@ def track_action(actor, verb, action_object, target=None, description=None, late
         pass
 
 # def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
-def filter_actions(user=None, verbs=[], object_content_type=None, project=None, max_days=1, from_time=None, to_time=None, max_actions=None, no_sort=False):
+def filter_actions(user=None, verbs=[], object_content_type=None, project=None, max_days=1, from_time=None, to_time=None, max_actions=None, no_sort=False, expires=True):
     actions = Action.objects
     if user:
         actions = actions.filter(actor_object_id=user.id)
@@ -269,19 +269,21 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
         min_time = timezone.now()-timedelta(days=max_age)
         actions = actions.filter(timestamp__gt=min_time)
     """
-    if from_time:
-        actions = actions.filter(timestamp__gt=from_time)
-        if max_days and not to_time:
-            to_time = to_time+timedelta(days=max_days)
-    if to_time:
-        actions = actions.filter(timestamp__lt=to_time)
-    if not from_time and not to_time and max_days:
-        from_time = timezone.now()-timedelta(days=max_days)
-        actions = actions.filter(timestamp__gt=from_time)
+    if expires:
+        if from_time:
+            actions = actions.filter(timestamp__gt=from_time)
+            if max_days and not to_time:
+                to_time = to_time+timedelta(days=max_days)
+        if to_time:
+            actions = actions.filter(timestamp__lt=to_time)
+        if not from_time and not to_time and max_days:
+            from_time = timezone.now()-timedelta(days=max_days)
+            actions = actions.filter(timestamp__gt=from_time)
     if not no_sort:
         actions = actions.order_by('-timestamp')
     if max_actions:
         actions = actions[:max_actions]
+
     return actions
 
 def activity_stream(request, user=None, max_actions=100, max_days=1):

@@ -7,6 +7,7 @@ from django_messages.models import Message
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 from django.contrib.auth.models import User
+
 from models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
@@ -340,4 +341,33 @@ By accessing your request you could find more specific information.""" % message
             notify_event(recipients, subject, body)
 
         return HttpResponseRedirect('/my_home')
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
+def set_prototype_state(request,project_id):
+    project = Project.objects.get(pk=project_id)
+    user = request.user
+    if not project.can_access(user):
+        raise PermissionDenied
+    if project.is_admin(user):
+        post = request.POST
+        if post:
+            next = post.get('next', '')
+            prev = post.get('prev', '')
+            prototype_current_state = post.get('prototype_current_state')
+            if prototype_current_state:
+                pathnodes=project.prototype.get_roots()
+                pathnode = pathnodes[0]
+                n_children = pathnode.has_text_children()
+                if n_children:
+                    i = 0
+                    children = pathnode.get_ordered_text_children()
+                    for child in children:
+                        if child.id == int(prototype_current_state):
+                            if next and i < (n_children - 1):
+                                track_action(user, 'Enabled', children[i+1], target=project)
+                                break
+                            elif prev and i > 0:
+                                track_action(user, 'Enabled', children[i-1], target=project)
+                                break
+                        i += 1
     return HttpResponseRedirect('/project/%s/' % project.slug)

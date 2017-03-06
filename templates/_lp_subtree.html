@@ -1,4 +1,4 @@
-<ul class="nodes-unlisted {% if child.oer_id %} node-oer {% else %} node-text {% endif %}">
+<ul class="nodes-unlisted {% if child.oer_id %} node-oer {% elif child.document_id %} node-doc {% else %} node-text {% endif %}">
 <li class="font{{ font }}">
     {% if pathnode == current_node %} 
       <div>{{ pathnode.label }}</div>

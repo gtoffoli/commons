@@ -8,10 +8,19 @@
 
 {% block extra_head %}
 <style>
-    ul#id_mentor { list-style-type: none; display:inline }
-    ul#id_mentor li {width:20%; float:left; height:250px; vertical-align:top;  }
-    ul#id_mentor li label {font-weight: normal;  font-size: 12px; }
-
+.contentBody {
+	margin-top:30px;
+	margin-bottom:20px;
+	background:#EBEDED;
+	border-bottom: 6px solid #67AE73;
+	border-bottom-left-radius: 6px;
+	border-bottom-right-radius: 6px;
+}
+.contentBodyHeader {
+	padding:10px 20px 0 20px;
+	border-top-left-radius:6px;
+	border-top-right-radius:6px;
+}
 dl.eval {
 	background: white;
 	margin-bottom:5px;
@@ -35,14 +44,90 @@ div.msg {
 	color: red;
 	font-style: italic;
 }
+.table-responsive > .timeline {
+	border-collapse:separate;
+	width:100%;
+}
+.table-responsive > .timeline > tbody > tr > td.cell-sep {
+	background:white;
+	padding: 10px 2px;
+	border-bottom:2px solid #ccc;
+	vertical-align: middle;
+}
+.table-responsive > .timeline > tbody > tr > td {
+    border-bottom: 2px solid #ccc;
+    vertical-align: top;
+    padding:10px 20px;
+    font-size: 12px;
+    background: #f8f8f8;
+}
+.table-responsive > .timeline > tbody > tr > td.prev,
+.table-responsive > .timeline > tbody > tr > td.current {
+    background: #67AE73;
+}
+.table-responsive > .timeline > tbody > tr > td.next {
+    background: #f8f8f8;
+}
+
+.table-responsive > .timeline > tbody > tr > td.currentactive, 
+.table-responsive > .timeline > tbody > tr > td.prevactive,
+.table-responsive > .timeline > tbody > tr > td.nextactive {
+    border: 2px solid #ccc;
+    border-bottom-color: white;
+    background: white;
+    border-top-left-radius: 4px ;
+    border-top-right-radius: 4px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.table-responsive > .timeline > tbody > tr > td.prev a,
+.table-responsive > .timeline > tbody > tr > td.current a {
+   color: white;
+   font-weight: 600;
+}
+.table-responsive > .timeline > tbody > tr > td.currentactive a,
+.table-responsive > .timeline > tbody > tr > td.prevactive a {
+   color: #67AE73;
+   font-weight: 600;
+}
+.table-responsive > .timeline > tbody > tr > td.next a,
+.table-responsive > .timeline > tbody > tr > td.nextactive a {
+    color: #333;
+}
+
+.table-responsive > .timeline > tbody > tr > td button.btn {
+  display: inline-block;
+  padding: 0;
+  font-size: 20px;
+  background:transparent;
+  border-width: 0px;
+  border-radius: 0;
+}
+.btnright {
+	margin-left:-4px;
+}
+.btnleft {
+	margin-right:-5px;
+}
+
+@media (max-width: 767px) {
+  .table-responsive {
+    width: 100%;
+    margin-bottom: 15px;
+    overflow-y: hidden;
+    -ms-overflow-style: -ms-autohiding-scrollbar;
+    border: 0;
+  }
+
+}
 
 </style>
 {% endblock %}
 
 {% block body_class %}mentoring_detail{% endblock %}
 {% block body %}
-<div class="marginT30 marginB20" style="background:#EBEDED; border-bottom: 6px solid #67AE73; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px;">
-  <div class="bc-c0 c-white" style="padding:10px 20px 0 20px; border-top-left-radius:6px; border-top-right-radius:6px">
+<div class="contentBody">
+  <div class="contentBodyHeader bc-c0 c-white">
     <ul class="list-inline marginB0">
       {% with users=project.members %}
       {% for u in users %}
@@ -59,10 +144,10 @@ div.msg {
          <li class="marginB10 c-white font12"><img src="/media/images/avatars/question.png" class="avatar-medium"> &nbsp;<i>{% trans "mentor" %}</i></li>
       {% endif %}
       {% endwith %}
-      <li class="marginB10"><h1 class="font-small c-white" style="margin:0">{{ project.get_name }}</h1></li>
+      <li class="marginB10"><h2 class="c-white margin0">{{ project.get_name }}</h2></li>
     </ul>
   </div>
-  <p style="background:white; padding:6px 15px">
+  <p class="bc-white padding615">
    {% if is_closed %}
      <span class="neutral"><i class="fa fa-lock" aria-hidden="true"></i> </span>
    {% endif %}	
@@ -80,8 +165,74 @@ div.msg {
      &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
    {% endwith %}
   </p>
+
   {% if view_project_text %}
       <div class="msg">{% trans "a request must be submitted to the community administrator, which will try to allocate a mentor"|capfirst %}.</div>
+  {% endif %}
+  
+  {% if project.prototype %}
+    <div  class="panel-white marginLR15 padding10">
+      <h6 class="c-fern marginT0 paddingB5 bold">{% trans "my mentoring journey"|capfirst %} <a href="#contentpathnode" data-toggle="collapse" class="toggleIcon"><i class="fa fa-minus-circle c-fern font07em"></i></a></h6>
+      <div id="contentpathnode" class="collapse in">
+        {% if prototype_text_children %}
+           <div class="table-responsive">
+             <table class="timeline"><tbody><tr>
+               {% for child in prototype_text_children %}
+                 {% if is_admin and child == prototype_current_state and not forloop.first %}
+                   <td class="cell-sep">
+                     <form method="POST" action="/project/{{project.id}}/set_prototype_state/">{% csrf_token %}
+                       <input type="hidden" name="prototype_current_state" value="{{ prototype_current_state.id }}">
+                       <button type"submit" name="prev" value="prev" class="btn btnleft"><i class="fa fa-caret-left" aria-hidden="true"></i></button>
+                     </form>
+                   </td>
+                 {% endif %}
+                 <td class="{% if i_prototype_current_state == forloop.counter0 %}currentactive{% elif i_prototype_current_state > forloop.counter0 %}prev{% else %}next{% endif %}">
+                   <div>
+                     <div><a href="#" class="clickNode" id="node_{{ forloop.counter }}" title="{{ child.label|safe}}">{{ child.label|safe|truncatechars:20 }}</a></div>
+                   </div>
+                 </td>
+                 {% if is_admin %}
+                   {% if not forloop.last %}
+                     {% if child == prototype_current_state %}
+                       <td class="cell-sep">
+                         <form method="POST" action="/project/{{project.id}}/set_prototype_state/">{% csrf_token %}
+                           <input type="hidden" name="prototype_current_state" value="{{  prototype_current_state.id }}">
+                           <button type"submit" name="next" value="next" class="btn btnright"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+                         </form>
+                       </td>
+                     {% elif not i_prototype_current_state == forloop.counter %}
+                       <td class="cell-sep"></td>
+                     {% endif %}
+                   {% endif %}
+                 {% elif not forloop.last %}
+                   <td class="cell-sep"></td>
+                 {% endif %}
+               {% endfor %}
+             </tr></tbody></table>
+            </div>
+            {% for child in prototype_text_children %}
+            <div id="contentnode_{{ forloop.counter}}" class="padding1020 contentnode" style="{% if not child == prototype_current_state %}display:none{% endif %}" >
+              <h3 class="marginT5 demiBold">{{ child.label|safe }}</h3>
+              <blockquote class="box-scroll box-small">{{child.text|safe}}</blockquote>
+              {% with s_children=child.get_ordered_doc_children %}
+              {% if s_children %}
+              <div class="marginT10 demiBold">{% trans "documents"|capfirst %}</div>
+              <ul class="list-inline">
+              {% for s_child in s_children %}
+                <li class="marginB5">
+                	{{ s_child.document }}&nbsp;&nbsp;<a href="/document/{{ s_child.document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+               {% if s_child.document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ s_child.document.id }}/view/?ment_doc={{ forloop.counter }}-{{project.id}}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
+
+                	</li>{% if not forloop.last %}<li>|</li>{% endif %}
+              {% endfor %}
+              </ul>
+              {% endif %}
+              {% endwith %}
+            </div>
+            {% endfor %}
+        {% endif %}
+      </div>
+    </div>
   {% endif %}
   <div class="row marginLR0 paddingT10">
     <div class="col-sm-7 col-md-7 col-lg-8">
@@ -103,7 +254,7 @@ div.msg {
            {% include "_project_mentoring_text.html" %}
            {% if requested_mentor_refuse %}
            <div class="panel-white">
-             <h6 class="bc-c0 c-white padding510 margin0" style="border-top-left-radius:4px; border-top-right-radius:4px;">{% trans "my previous refusals"|capfirst %}</h6>
+             <h6 class="bc-c0 c-white padding510 margin0 borderTLRradius">{% trans "my previous refusals"|capfirst %}</h6>
              <dl class="eval font12">
               {% for mentor_refuse in requested_mentor_refuse %}
                 <dd>
@@ -142,7 +293,7 @@ div.msg {
 
      {% if can_send_message and is_member %}
        <div class="panel-white">
-         <ul class="nav nav-tabs" style="background:#ebeded; border-top-left-radius:4px; border-top-right-radius:4px;">
+         <ul class="nav nav-tabs borderTLRradius nav-tabs-back">
            <li class="active"><a data-toggle="tab" href="#inbox">{% trans "received messages"|capfirst %}</a></li>
            <li><a data-toggle="tab" href="#outbox">{% trans "sent messages"|capfirst %}</a></li>
            <li><a data-toggle="tab" href="#compose">{% trans "new message"|capfirst %}</a></li>
@@ -275,8 +426,8 @@ div.msg {
              <div class="panel-heading-c1 padding510 demiBold">{% trans "shared LPs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_lp, deletable in shared_lps %}
-               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</a>
+               <li><small>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</a></small>
                </li>
              {% endfor %}
              </ul>
@@ -300,8 +451,8 @@ div.msg {
              <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_oer, deletable in shared_oers %}
-               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</a>
+               <li><small>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
+                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</a></small>
                </li>
              {% endfor %}
              </ul>
@@ -314,3 +465,50 @@ div.msg {
 </div>
 {% endblock %}
 
+{% block extra_script %}
+<script type="text/javascript">
+$(document).ready(function (){
+	$('a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		if ($(this).children('i').hasClass("fa-minus-circle")) {
+			$(this).children('i').attr("class","fa fa-plus-circle c-fern font07em");
+		} else {
+			$(this).children('i').attr("class","fa fa-minus-circle c-fern font07em");
+		}
+	});
+	
+  $('a.clickNode').on('click', function(event){
+    event.preventDefault();
+    for (i=1; i<={{prototype_n_text_children}}; i++) {
+      node = parent.$("#node_"+i);
+      console.log('node: '+ node);
+      parentNode=node.parent().parent().parent();
+      if (parentNode.hasClass('currentactive')) {
+        parentNode.removeClass('currentactive');
+        parentNode.addClass('current');
+      } else if (parentNode.hasClass('prevactive')) {
+        parentNode.removeClass('prevactive');
+        parentNode.addClass('prev');
+      } else if (parentNode.hasClass('nextactive')) {
+        parentNode.removeClass('nextactive');
+        parentNode.addClass('next');
+      }
+    }
+    idnode = $(this).attr('id');
+    $('div.contentnode').css('display','none');
+    elementParent=$(this).parent().parent().parent();
+    if (elementParent.hasClass('current')) {
+      elementParent.removeClass('current');
+      elementParent.addClass('currentactive');
+    } else if (elementParent.hasClass('prev')) {
+      elementParent.removeClass('prev');
+      elementParent.addClass('prevactive');
+    } else if (elementParent.hasClass('next')) {
+      elementParent.removeClass('next');
+      elementParent.addClass('nextactive');
+    }
+    $('#content'+idnode).css('display','block');
+  });
+})
+</script>
+{% endblock %}
