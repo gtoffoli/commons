@@ -722,10 +722,10 @@ MENTORING_MODEL_A = 1
 MENTORING_MODEL_B = 2
 MENTORING_MODEL_C = MENTORING_MODEL_A+MENTORING_MODEL_B
 MENTORING_MODEL_CHOICES = (
-    (NO_MENTORING, _('no mentoring')),
-    (MENTORING_MODEL_A, _('A - Administrator chooses mentor')),
-    (MENTORING_MODEL_B, _('B - Mentee chooses mentor')),
-    (MENTORING_MODEL_C, _('B+A - Mentee chooses mentor or administrator')),
+    (NO_MENTORING, _('mentoring is not available')),
+    (MENTORING_MODEL_A, _('A - The community administrator chooses the mentor')),
+    (MENTORING_MODEL_B, _('B - The mentee chooses the mentor')),
+    (MENTORING_MODEL_C, _('B+A - The mentee or the administrator choose the mentor')),
 )
 MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 

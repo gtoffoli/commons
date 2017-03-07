@@ -129,3 +129,39 @@ def strings_from_html(string, fragment=False):
     for s in strings_from_block(body):
         if s:
             yield s
+
+"""
+see http://stackoverflow.com/questions/843392/python-get-http-headers-from-urllib2-urlopen-call
+    Python: Get HTTP headers from urllib2.urlopen call?
+"""
+from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.text import capfirst
+
+import urllib2
+""" a Request using the HEAD method in place of the default one (GET or PUT) """
+class HeadRequest(urllib2.Request):
+    def get_method(self):
+        return "HEAD"
+def get_headers(url):
+    """ tries to open the resource at the given url;
+        returns the HTTP headers as a dict or a dict including only the exception object """
+    request = HeadRequest(url)
+    try:
+        response = urllib2.urlopen(request)
+        response_headers = response.info()
+        return response_headers.dict
+    except Exception as e:
+        return { 'error': e}
+
+def x_frame_protection(url):
+    """ returns an empty string if the resource at the given url can be loaded inside an i-frame;
+        otherways returns a localized error message """
+    headers = get_headers(url)
+    e = headers.get('error', None)
+    if e:
+        return string_concat(capfirst(_('a problem was found in accessing this resource')), '. ', capfirst(_('the following error code was returned')), ': ', str(e))
+    x_frame_options = headers.get('x-frame-options', '')
+    # if x_frame_options and x_frame_options.upper() == 'SAMEORIGIN':
+    if x_frame_options:
+        return string_concat(capfirst(_('embedding inside a page the view of this resource is forbidden: please, use the link above to access it directly')), '. ')
+    return ''
