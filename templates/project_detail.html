@@ -569,7 +569,6 @@
    </div>
 {% endif %}
 {% else %}
-{# ALBO DEI MENTORI #}
   <div class="row" style="margin-left:0; margin-right:0; padding-top:10px;">
     <div class="col-sm-7 col-md-7 col-lg-8">
       <article class="view-list">
@@ -700,8 +699,42 @@
               </form>
             </li>
           {% endif %}
-
         </ul>
+      {% endif %}
+      {% if can_add_lp %}
+        <ul class="list-inline padding10510">
+          <li class="list-back-c1 marginB5">
+            <ul class="list-inline">
+              <li><div class="c-white marginB5 demiBold">{% trans "LP" %}</div>
+                <ul class="list-inline list-last">
+                  <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
+                  {% if cut_lps %}{% for lp in cut_lps %}
+                    <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                  {% endfor %}{% endif %}
+
+{% comment %}
+                            {% if shareable_lps %}{% for lp in shareable_lps %}
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+{% endcomment %}
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      {% endif %}
+      {% if lps %}
+        <div class="panel-white">
+          <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>
+          <ul class="list-unstyled my-list-unstyled padding510">
+            {% for lp in lps %}
+              <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+            {% endfor %}
+          </ul>
+          {% if n_lps > lps|length %}
+            <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_lps">{% trans "read more"|upper %}</a></div>
+          {% endif %}
+        </div>
       {% endif %}
     </div>
   </div>

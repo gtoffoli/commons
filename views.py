@@ -44,7 +44,7 @@ from metadata import QualityFacet
 from forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
-from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, one2oneMessageComposeForm
+from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
 from forms import ProjectMentoringModelForm, AcceptMentorForm
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
@@ -54,7 +54,7 @@ from session import get_clipboard, set_clipboard
 from analytics import notify_event, track_action
 from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
-from mentoring import get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting
+from mentoring import get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -906,7 +906,7 @@ def lps_in_clipboard(request, key):
 
 MENTORING_MAX_DELAY = 14 # (days) set to 0 for test
 
-def project_detail(request, project_id, project=None, accept_mentor_form=None):
+def project_detail(request, project_id, project=None, accept_mentor_form=None, select_mentoring_journey=None):
     MAX_OERS = 5
     MAX_OERS_EVALUATED = 5
     MAX_LPS = 5
@@ -970,6 +970,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
             bookmarked_oers = oers_in_clipboard(request, 'bookmarked_oers')
             var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project and not SharedOer.objects.filter(project=project, oer=oer).count()]
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
+        print project.can_add_lp(user)
         if can_add_lp:
             """
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
@@ -1156,6 +1157,14 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None):
                                 break
                             i += 1
                         var_dict['i_prototype_current_state'] = i_prototype_current_state
+            elif is_admin:
+                lps_in_rolls = LearningPath.objects.filter(project__proj_type__name = 'roll')
+                var_dict['n_lps_in_rolls'] = lps_in_rolls.count()
+                if lps_in_rolls.count() > 0:
+                    if select_mentoring_journey:
+                        var_dict['select_mentoring_journey'] = SelectMentoringJourneyForm(select_mentoring_journey['post'], instance=project)
+                    else:
+                        var_dict['select_mentoring_journey'] = SelectMentoringJourneyForm(initial={'slug':project.slug, 'editor': user.id})
         elif type_name=='sup':
             var_dict['support'] = project
     else:
@@ -1350,6 +1359,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     elif proj_type_name == 'ment':
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
+                    elif proj_type_name == 'roll':
+                        grant_permission(project, role_member, 'add-lp')
                 else:
                     project.editor = user
                     set_original_language(project)
@@ -1497,7 +1508,12 @@ def project_image_upload(request, project_slug):
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
 
+def project_accept_mentor(request):
+    return mentoring_project_accept_mentor(request, project_detail)
 
+def project_select_mentoring_journey(request):
+    return mentoring_project_select_mentoring_journey(request, project_detail)
+    
 def apply_for_membership(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     user = get_object_or_404(User, username=username)
@@ -4280,3 +4296,33 @@ def oer_autocomplete(request):
             results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
+
+def lp_autocomplete(request):
+    MIN_CHARS = 2
+    q = request.GET.get('q', None)
+    create_option = []
+    results = []
+    if request.user.is_authenticated():
+        if q and len(q) >= MIN_CHARS:
+            qs = LearningPath.objects.filter(state=PUBLISHED, project__proj_type__name = 'roll', title__icontains=q).order_by('title')
+            results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
+    body = json.dumps({ 'results': results, 'more': False, })
+    return HttpResponse(body, content_type='application/json')
+
+"""
+def project_select_mentoring_journey(request):
+    user = request.user
+    post = request.POST
+    project_slug = post.get('slug')
+    project = get_object_or_404(Project, slug=project_slug)
+    if not project.can_access(user):
+        raise PermissionDenied
+    if project.is_admin(user):
+        form = SelectMentoringJourneyForm(post, instance=project)
+        if form.is_valid():
+            form.save()
+        else:
+            return project_detail(request, project.id, project=project, select_mentoring_journey={'post': post})
+
+    return HttpResponseRedirect('/project/%s/' % project_slug)
+"""

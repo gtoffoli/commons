@@ -683,6 +683,15 @@ class AcceptMentorForm(forms.ModelForm):
     accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
     description = forms.CharField(required=True, label=_('Reason'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, explain the motivations of your acceptation or refusal'))
 
+class SelectMentoringJourneyForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('slug','editor', )
+    
+    slug = forms.CharField(required=False, widget=forms.HiddenInput())
+    prototype = forms.ModelChoiceField(required=True,label=_('my mentoring journey'), queryset=LearningPath.objects.all().order_by('title'),widget=autocomplete.ModelSelect2(url='lp-autocomplete', attrs={'style': 'width: 100%;'}))
+    editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
 class UserSearchForm(forms.Form):
     user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))
     # user = forms.ModelChoiceField(queryset=User.objects.all())

@@ -11,7 +11,8 @@ from django.contrib.auth.models import User
 from models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from forms import ProjectMentoringModelForm, AcceptMentorForm, one2oneMessageComposeForm, MatchMentorForm
+from forms import ProjectMentoringModelForm, AcceptMentorForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
+
 from analytics import notify_event, track_action
 
 def get_all_candidate_mentors(user, community):
@@ -216,7 +217,7 @@ Please, look at your user dashboard for more specific information.""" % message 
             A_send_delegate_msg(community_admins)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
-def project_accept_mentor(request):
+def mentoring_project_accept_mentor(request, project_detail):
     user = request.user
     post = request.POST
     project_id = post.get('project')
@@ -342,6 +343,31 @@ By accessing your request you could find more specific information.""" % message
 
         return HttpResponseRedirect('/my_home')
     return HttpResponseRedirect('/project/%s/' % project.slug)
+
+
+def mentoring_project_select_mentoring_journey(request, project_detail):
+    user = request.user
+    post = request.POST
+    project_slug = post.get('slug')
+    project = get_object_or_404(Project, slug=project_slug)
+    if not project.can_access(user):
+        raise PermissionDenied
+    if project.is_admin(user):
+        form = SelectMentoringJourneyForm(post, instance=project)
+        if form.is_valid():
+            data = form.cleaned_data
+            pathnodes=data['prototype'].get_roots()
+            pathnode = pathnodes[0]
+            n_children = pathnode.has_text_children()
+            if n_children:
+                project.prototype=data['prototype']
+                project.editor=data['editor']
+                project.save()
+                children = pathnode.get_ordered_text_children()
+                track_action(user, 'Enabled', children[0], target=project)
+        else:
+            return project_detail(request, project.id, project=project, select_mentoring_journey={'post': post})
+    return HttpResponseRedirect('/project/%s/' % project_slug)
 
 def set_prototype_state(request,project_id):
     project = Project.objects.get(pk=project_id)
