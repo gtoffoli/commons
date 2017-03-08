@@ -418,6 +418,9 @@ margin-right:0;
 	padding-right:10px !important;
 	padding-bottom:10px !important;
 }
+.paddingR5 {
+	padding-right: 5px;
+}
 .paddingR10 {
 	padding-right:10px;
 }
@@ -473,6 +476,9 @@ margin-right:0;
 	padding-top:20px;
 	padding-bottom:20px;
 }
+.padding302020{
+	padding:30px 20px 20px 20px
+}
 .padding105 {
 	padding:10px 5px;
 }
@@ -500,8 +506,10 @@ margin-right:0;
 .margin10 {
 	margin: 10px;
 }
-.marginL5{
-	margin-left:5px;
+
+.marginLR-12{
+	margin-left:-12px;
+	margin-right:-12px;
 }
 .marginL10{
 	margin-left:10px;

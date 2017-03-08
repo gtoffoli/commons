@@ -27,7 +27,7 @@
 
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
-	{% if can_republish %}
+{% if can_republish %}
   <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer_url }}</a></p>
   <div class="iframe-container">
   {% if oer_url %}
@@ -39,12 +39,14 @@
       {{ slideshare|safe }}
     {% elif embed_code %}
       {{ embed_code|safe }}
+    {% elif x_frame_protection %}
+       <h5 class="marginTB30 text-center demiBold">{{ x_frame_protection }}</h5>
     {% else %}
       <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
     {% endif %}
   {% endif %}
-  {% endif %}
   </div>
+{% endif %}
 </div>
 {% endblock %}
 

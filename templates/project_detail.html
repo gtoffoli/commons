@@ -688,7 +688,7 @@
               <a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a>
             </li>
           {% endif %}
-          {% if project.forum %}
+          {% if project.forum and is_member %}
             <li class="list-back-black paddingRB10 marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
               {% trans "forum"|capfirst %} {% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
           {% endif %}

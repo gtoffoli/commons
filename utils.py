@@ -157,9 +157,11 @@ def x_frame_protection(url):
     """ returns an empty string if the resource at the given url can be loaded inside an i-frame;
         otherways returns a localized error message """
     headers = get_headers(url)
+    """
     e = headers.get('error', None)
     if e:
         return string_concat(capfirst(_('a problem was found in accessing this resource')), '. ', capfirst(_('the following error code was returned')), ': ', str(e))
+    """
     x_frame_options = headers.get('x-frame-options', '')
     # if x_frame_options and x_frame_options.upper() == 'SAMEORIGIN':
     if x_frame_options:

@@ -54,6 +54,8 @@ from session import get_clipboard, set_clipboard
 from analytics import notify_event, track_action
 from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
+from utils import x_frame_protection
+
 from mentoring import get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
 
 from conversejs.models import XMPPAccount
@@ -2400,7 +2402,6 @@ def browse_people(request):
             people_browse_list.append([field_name, field_label, entries])
     return render_to_response('browse_people.html', {'people_browse_list': people_browse_list,}, context_instance=RequestContext(request))
    
-
 def oer_list(request, field_name='', field_value=None):
     oers = []
     if field_name=='tags' and field_value:
@@ -2409,16 +2410,23 @@ def oer_list(request, field_name='', field_value=None):
         oers = OER.objects.filter(q & Q(state=PUBLISHED))
         return render_to_response('oer_list.html', {'oers': oers, 'field_name': field_name, 'field_value': field_value,}, context_instance=RequestContext(request))
 
+TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
+
+DOCUMENT_VIEW_TEMPLATE = """
+<iframe src="%s" id="iframe" allowfullscreen>
+</iframe>
 """
-def oers_by_project(request):
-    project_list = []
-    for project in Project.objects.all().order_by('group__name'):
-        oers = OER.objects.filter(project=project, state=PUBLISHED)
-        n = len(oers)
-        if n:
-            project_list.append([project, n])
-    return render_to_response('oers_by_project.html', {'project_list': project_list,}, context_instance=RequestContext(request))
+YOUTUBE_TEMPLATE = """
+<iframe src="%s?autoplay=1" id="iframe" allowfullscreen>
+</iframe>
 """
+SLIDESHARE_TEMPLATE = """
+%s
+"""
+TED_TALK_TEMPLATE = """
+<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
+"""
+
 def oer_view(request, oer_id, oer=None):
     if not oer:
         oer_id = int(oer_id)
@@ -2447,33 +2455,32 @@ def oer_view(request, oer_id, oer=None):
     var_dict['can_evaluate'] = oer.can_evaluate(request.user)
     var_dict['can_republish'] = oer.can_republish(user)
     var_dict['evaluations'] = oer.get_evaluations()
-    url = oer.url
+    var_dict['oer_url'] = url = oer.url
     youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
+    ted_talk = url and url.count('www.ted.com/talks/') and url or ''
+    reference = oer.reference
+    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
     if youtube:
         if youtube.count('embed'):
             pass
-            print 1, youtube
         elif youtube.count('youtu.be/'):
             youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
-            print 2, youtube
         elif youtube.count('watch?v='):
             youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
-            print 3, youtube
         youtube = YOUTUBE_TEMPLATE % youtube
-    var_dict['youtube'] = youtube
-    ted_talk = url and url.count('www.ted.com/talks/') and url or ''
-    if ted_talk:
+        var_dict['youtube'] = youtube
+    elif ted_talk:
         if ted_talk.count('?'):
             ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
         else:
             ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
         ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
-    var_dict['ted_talk'] = ted_talk
-    reference = oer.reference
-    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
-    if slideshare:
+        var_dict['ted_talk'] = ted_talk
+    elif slideshare:
         slideshare = SLIDESHARE_TEMPLATE % slideshare
-    var_dict['slideshare'] = slideshare
+        var_dict['slideshare'] = slideshare
+    else:
+        var_dict['x_frame_protection'] = x_frame_protection(url)
     var_dict['embed_code'] = oer.embed_code
     return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
 
@@ -3160,107 +3167,6 @@ def lp_detail_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_detail(request, lp.id, lp)
 
-TEXT_VIEW_TEMPLATE= """<div>%s</div>"""
-
-DOCUMENT_VIEW_TEMPLATE = """<div class="flex-video widescreen">
-<iframe src="%s" frameborder="0" allowfullscreen="">
-</iframe>
-</div>
-"""
-YOUTUBE_TEMPLATE = """<div class="flex-video widescreen">
-<iframe src="%s?autoplay=1" frameborder="0" allowfullscreen="">
-</iframe>
-</div>
-"""
-SLIDESHARE_TEMPLATE = """<div class="flex-video widescreen">
-%s
-</div>
-"""
-TED_TALK_TEMPLATE = """<div class="flex-video widescreen">
-<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" width="854" height="480" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
-</div>
-"""
-
-"""
-def lp_play(request, lp_id, lp=None):
-    if not lp:
-        lp = get_object_or_404(LearningPath, pk=lp_id)
-    language = request.LANGUAGE_CODE
-    var_dict = { 'lp': lp, }
-    var_dict['project'] = lp.project
-    nodes = lp.get_ordered_nodes()
-    n_nodes = len(nodes)
-    var_dict['nodes'] = nodes
-    var_dict['max_node'] = n_nodes-1
-    var_dict['node_range'] = range(n_nodes)
-    i_node = request.GET.get('node', '')
-    i_node = i_node.isdigit() and int(i_node) or 0
-    var_dict['i_node'] = i_node
-    current_node = nodes[i_node]
-    var_dict['current_node'] = current_node
-    oer = current_node.oer
-    documents = oer.get_sorted_documents()
-    page_range = current_node.range
-    if documents:
-        document = documents[0]
-        if page_range:
-            url = document_view_range(request, document.id, page_range)
-        else:
-            url = document_view(request, document.id, return_url=True)
-        var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-    var_dict['oer'] = oer
-    url = oer.url
-    var_dict['oer_url'] = oer.url
-    youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
-    if youtube:
-        if youtube.count('embed'):
-            pass
-            print 1, youtube
-        elif youtube.count('youtu.be/'):
-            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
-            print 2, youtube
-        elif youtube.count('watch?v='):
-            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
-            print 3, youtube
-        youtube = YOUTUBE_TEMPLATE % youtube
-    var_dict['youtube'] = youtube
-    ted_talk = url and url.count('www.ted.com/talks/') and url or ''
-    if ted_talk:
-        if ted_talk.count('?'):
-            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
-        else:
-            ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
-        ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
-    var_dict['ted_talk'] = ted_talk
-    reference = oer.reference
-    slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
-    if slideshare:
-        slideshare = SLIDESHARE_TEMPLATE % slideshare
-    var_dict['slideshare'] = slideshare
-    var_dict['embed_code'] = oer.embed_code
-    i_page = request.GET.get('page', '')
-    i_page = i_page.isdigit() and int(i_page) or 0
-    var_dict['i_page'] = i_page
-    return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
-"""
-
-TEXT_VIEW_TEMPLATE= """<div style="padding:30px 20px 20px 20px; background: white;">%s</div>"""
-
-DOCUMENT_VIEW_TEMPLATE = """
-<iframe src="%s" id="iframe" allowfullscreen>
-</iframe>
-"""
-YOUTUBE_TEMPLATE = """
-<iframe src="%s?autoplay=1" id="iframe" allowfullscreen>
-</iframe>
-"""
-SLIDESHARE_TEMPLATE = """
-%s
-"""
-TED_TALK_TEMPLATE = """
-<iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
-"""
-
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
@@ -3276,10 +3182,6 @@ def lp_play(request, lp_id, lp=None):
     nodes = lp.get_ordered_nodes()
     n_nodes = len(nodes)
     var_dict['nodes'] = nodes
-    """
-    var_dict['max_node'] = n_nodes-1
-    var_dict['node_range'] = range(n_nodes)
-    """
     max_node = n_nodes-1
     i_node = request.GET.get('node', '')
     from_start = not i_node
@@ -3314,10 +3216,12 @@ def lp_play(request, lp_id, lp=None):
                 url = document_view(request, document.id, node_oer=True, return_url=True)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
         var_dict['oer'] = oer
-        url = oer.url
-        var_dict['oer_url'] = oer.url
-        var_dict['oer_is_un_published'] = oer.state == UN_PUBLISHED
+        var_dict['oer_url'] = url = oer.url
+        var_dict['oer_is_published'] = oer.state == PUBLISHED
         youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
+        ted_talk = url and url.count('www.ted.com/talks/') and url or ''
+        reference = oer.reference
+        slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
         if youtube:
             if youtube.count('embed'):
                 pass
@@ -3329,37 +3233,28 @@ def lp_play(request, lp_id, lp=None):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
                 print 3, youtube
             youtube = YOUTUBE_TEMPLATE % youtube
-        var_dict['youtube'] = youtube
-        ted_talk = url and url.count('www.ted.com/talks/') and url or ''
-        if ted_talk:
+            var_dict['youtube'] = youtube
+        elif ted_talk:
             if ted_talk.count('?'):
                 ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:ted_talk.index('?')]
             else:
                 ted_talk = url[ted_talk.index('www.ted.com/talks/')+18:]
             ted_talk = TED_TALK_TEMPLATE % (language, ted_talk)
-        var_dict['ted_talk'] = ted_talk
-        reference = oer.reference
-        slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
-        if slideshare:
-            slideshare = SLIDESHARE_TEMPLATE % slideshare
-        var_dict['slideshare'] = slideshare
+            var_dict['ted_talk'] = ted_talk
+        elif slideshare:
+            var_dict['slideshare'] = slideshare
+        else:
+            var_dict['x_frame_protection'] = x_frame_protection(url)
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
         url = document_view(request, current_document.id, return_url=True)
         var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
-    """
-    i_page = request.GET.get('page', '')
-    i_page = i_page.isdigit() and int(i_page) or 0
-    var_dict['i_page'] = i_page
-    """
     user = request.user
     if user.is_authenticated():
         if from_start:
-            # actstream.action.send(user, verb='Play', action_object=lp)
             track_action(user, 'Play', lp, target=lp.project)
-        # actstream.action.send(user, verb='Play', action_object=current_node)
         track_action(user, 'Play', current_node, target=lp.project)
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
@@ -4308,21 +4203,3 @@ def lp_autocomplete(request):
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
-
-"""
-def project_select_mentoring_journey(request):
-    user = request.user
-    post = request.POST
-    project_slug = post.get('slug')
-    project = get_object_or_404(Project, slug=project_slug)
-    if not project.can_access(user):
-        raise PermissionDenied
-    if project.is_admin(user):
-        form = SelectMentoringJourneyForm(post, instance=project)
-        if form.is_valid():
-            form.save()
-        else:
-            return project_detail(request, project.id, project=project, select_mentoring_journey={'post': post})
-
-    return HttpResponseRedirect('/project/%s/' % project_slug)
-"""

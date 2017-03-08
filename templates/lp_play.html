@@ -10,12 +10,12 @@
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
 <div class="row margin0">
-  <div class="col-sm-3 col-md-3 col-lg-3" style="padding-left:0" id="list_nodes">
+  <div class="col-sm-3 col-md-3 col-lg-3 paddingL0" id="list_nodes">
  
-  	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #CB4F98">
+  	<div class="bc-white paddingT10 paddingR5 paddingB0 paddingL20" style="border-bottom: 1px dotted #CB4F98">
     <div class="clearfix">
-    <h5 class="pull-left c-mulberry" style="width: 90%; margin-bottom:5px">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
-<p class="pull-right paddingT10 paddingLR5" style="width: 10%; margin-bottom:5px; ">
+    <h5 class="pull-left c-mulberry marginB5" style="width: 90%">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
+    <p class="pull-right marginB5 paddingT10 paddingLR5" style="width: 10%;">
       <a href="/lp/{{ lp.slug }}/"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
     </p>
     </div>
@@ -43,7 +43,7 @@
     	<dl class="panel panel-col panel-white">
         <dd>
         {% for pathnode in nodes %}
-          <ul class="nodes-unlisted {% if pathnode.oer_id %} node-oer {% else %} node-text {% endif %} font14">
+          <ul class="nodes-unlisted {% if pathnode.oer %} node-oer 1{% elif pathnode.document %} node-doc 2{% else %} node-text 3{% endif %} font14">
             <li>
             {% if pathnode == current_node %}
               <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
@@ -60,10 +60,10 @@
 
 </div>
 
-<div class="col-sm-9 col-md-9 col-lg-9" style="background:white;" id="right">
-  <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
+<div class="col-sm-9 col-md-9 col-lg-9 bc-white" id="right">
+  <div class="clearfix marginTB0 marginLR-12 bc-white padding812">
     <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-    <div class="text-center" style="float:left; width:80%">{{ i_node|add:"1" }}/{{ nodes|length }}
+    <div class="text-center pull-left" style="width:80%">{{ i_node|add:"1" }}/{{ nodes|length }}
     	&nbsp; {{ current_node.label }}
 		{% if can_edit and not language_mismatch %}
 		&nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
@@ -71,14 +71,14 @@
 	</div>
     <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
-{% if not oer_is_un_published %}
+{% if oer_is_published %}
   {% if oer.url %}
-    <p class="view-url" style="padding-top:10px; border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+    <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
   {% endif %}
 {% endif %}
   <div class="iframe-container">
 {% if oer %}
-  {% if not oer_is_un_published %}
+  {% if oer_is_published %}
     {% if document_view %}
       {{ document_view|safe }}
     {% elif youtube %}
@@ -89,11 +89,13 @@
       {{ slideshare|safe }}
     {% elif embed_code %}
       {{ embed_code|safe }}
+    {% elif x_frame_protection %}
+       <h5 class="marginTB30 text-center demiBold">{{ x_frame_protection }}</h5>
     {% else %}
-      <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+     <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
     {% endif %}
   {% else %}
-  <h2 class="text-center marginT30" style="color: {{ oer.get_link_color }};">OER {{ oer.get_state|upper }}</h2>
+    <h5 class="marginTB30 text-center demiBold">{% trans "currently this OER is not public"|capfirst %}</h5>
   {% endif %}
 {% else %}
   {% if document_view %}
@@ -103,7 +105,7 @@
   {% endif %}
 {% endif %}
   </div>
-  <div class="clearfix" style="margin:0 -15px; background:white; padding:8px 15px">
+  <div class="clearfix clearfix marginTB0 marginLR-12 bc-white padding812">
     <div class="pull-left">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
     <div class="pull-right">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
