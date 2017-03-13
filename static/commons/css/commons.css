@@ -12,12 +12,14 @@ body,
 h1,h2,h3,h4,h5,h6,.h1,.h2,.h3,.h4,.h5,.h6 {
 	font-family: 'Open Sans', sans-serif;
 }
+
 h1 {
 	font-size: 26px;
 }
 h2 {
 	font-size: 24px;
 }
+
 h3 {
 	font-size: 22px;
 }
@@ -398,6 +400,10 @@ margin-right:0;
 	padding-left:5px !important;
 	padding-top:5px !important;;
 }
+.paddingLR0 {
+	padding-left:0;
+	padding-right:0;
+}
 .paddingLR5 {
 	padding-left:5px;
 	padding-right:5px;
@@ -426,6 +432,9 @@ margin-right:0;
 }
 .paddingR20 {
 	padding-right:20px;
+}
+.paddingT0 {
+	padding-top:0;
 }
 .paddingT3 {
 	padding-top:3px;
@@ -1208,6 +1217,7 @@ ul.list-inline > li.list-back-c3 {
 }
 .box-medium {
 height:250px;
+/*height:25vh;*/
 }
 .box-small {
 	height: 180px;
@@ -1748,9 +1758,6 @@ input[type="file"] {
 .list-n .box-n:nth-child(5n+1) {
 	clear: both;
 }
-.list-m .box-n:nth-child(10n+1) {
-	clear: both;
-}
 .list-n > div,
 .list-n > label {
     display: table;
@@ -1758,14 +1765,6 @@ input[type="file"] {
     width:20%;
     float:left;
     height:250px;
-    padding: 5px 10px;
-}
-.list-m > div {
-    display: table;
-    margin-bottom:10px;
-    width:10%;
-    float:left;
-    height:40px;
     padding: 5px 10px;
 }
 .list-n > label {
@@ -1793,4 +1792,13 @@ input[type="file"] {
     margin-top: 3px;
     font-weight: normal;
     font-size: 10.5px;
+}
+
+sup.format {
+  font-size:10px;
+  background:#dc0d17;
+  border-radius:2px;
+  color: white;
+  padding:1px 3px;
+  font-weight: 600;
 }

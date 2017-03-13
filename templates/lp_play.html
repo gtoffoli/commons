@@ -43,7 +43,7 @@
     	<dl class="panel panel-col panel-white">
         <dd>
         {% for pathnode in nodes %}
-          <ul class="nodes-unlisted {% if pathnode.oer %} node-oer 1{% elif pathnode.document %} node-doc 2{% else %} node-text 3{% endif %} font14">
+          <ul class="nodes-unlisted {% if pathnode.oer %} node-oer {% elif pathnode.document %} node-doc {% else %} node-text {% endif %} font14">
             <li>
             {% if pathnode == current_node %}
               <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>

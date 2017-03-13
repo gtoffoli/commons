@@ -6,8 +6,9 @@
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
   {% block extra_style %}
+  <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
 <style>
-div.boxNode {
+/*div.boxNode {
 	border:2px solid #ccc;
 	border-radius: 4px;
 	background: #f1f2f2;
@@ -34,9 +35,10 @@ a.boxClose {
 a.boxClose:hover,.boxClose.focus {
 	color:white;
 }
+*/
 iframe {
  width: 100%;
- height: 350px;
+ /*height: 350px;*/
  border:0;
 }
 #dag {
@@ -47,6 +49,14 @@ iframe {
 	margin-top: 5px;
   margin-bottom: 10px;
   padding:10px;
+}
+.ui-widget-overlay {
+	background: #444444;
+	opacity: .7;
+	filter: Alpha(Opacity=70); /* support: IE8 */
+}
+.ui-dialog {
+	z-index: 1050;
 }
 </style>
 {% endblock %}
@@ -193,7 +203,7 @@ iframe {
                       {% endif %}
                     {% endif %}
                     {# /pathnode/{{ node.id }}/?node={{forloop.counter0}} #}
-                    <a class="viewNode" id="u_{{ node.id }}" href="#" title="">{{ node.label }}</a>
+                      <a class="viewNode" id="u_{{ node.id }}" href="/pathnode/{{node.id}}/" title="">{{ node.label }}</a>
                     </li></ul>
                   </div>
                 </li>
@@ -201,12 +211,14 @@ iframe {
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
             </dd>
             {% endif %}
+            {% comment %}
             {% if lp.get_nodes %}
               <div id="showNode" class="boxNode" style="display:none">
                 <div class="text-right" ><a class="boxClose" href="#">{% trans "close" %}</a></div>
                 <iframe id="iframeNode" src=""></iframe>
               </div>
             {% endif %}
+            {% endcomment %}
             {% if can_edit and lp.original_language and not language_mismatch %}
               <dd class="marginT10"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
@@ -225,11 +237,14 @@ iframe {
     {% if project %}
       {% include "_object_comments.html" with data_class="c1" data_obj=lp type_obj="lp" %}
     {% endif %}
-  </section>
+  </section> 
 </article>
 {% endblock %}
 
 {% block extra_script %}
+<script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
+
 <script type="text/javascript">
   {% if can_delete %}
     function confirm_delete(form) {
@@ -254,12 +269,14 @@ iframe {
 				accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
 			}
 		});
-
+/*
 		if ($('li div a').hasClass('viewNode')) {
 			$('li div a.viewNode').on('click', function(event){
 				event.preventDefault();
 				var node_id = $(this).attr('id');
 				node_id = node_id.substr(2);
+				$('#popup').load("/pathnode/"+node_id+"/").dialog({modal: true}).dialog('open')
+				/*
 				$.ajax({
 					url: "/pathnode/"+node_id+"/",
 					success: function(json){
@@ -279,6 +296,7 @@ iframe {
 				$('#iframeNode').attr('src','');
 			});
 		}
+*/
 		
 		if ($('li div a').hasClass('deleteNode')) {
 			$('li div a.deleteNode').on('click', function(event){
@@ -322,6 +340,24 @@ iframe {
 				});
 			});
 		}
+    if ($('li a').hasClass('viewNode')) {
+      $('li a.viewNode').on('click', function(event){
+         event.preventDefault();
+         $('<div/>',{
+           'id':'link-'+($(this).index()+1)})
+         .html($('<iframe/>', {
+           'src': $(this).attr('href'),
+           'style': 'width:100%; height:90%'}))
+         .appendTo('body')
+         .dialog({
+           'width': 800,
+           'height': 450,
+           modal: true,
+           responsive: true,
+           clickOut: true,
+         });
+      });
+    }
 	});
 </script>
 

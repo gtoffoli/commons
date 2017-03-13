@@ -2,9 +2,9 @@
 {% load staticfiles i18n %}
 
 {% block body_base %}
-<body style="padding-top: 0px; background:transparent; height:auto">
-        {# include "_resource_lang_msg.html" with data_top="top" #}
-<section class="/*view-node-details*/" style="padding:10px">
+  <body class="paddingT0 bc-white">
+    {# include "_resource_lang_msg.html" with data_top="top" #}
+    <section class="padding10">
         <div class="clearfix section-node-header">
           <h3 class="{% if can_edit %}h3-left {% endif %}font18">{% if lp.path_type != 1 %}{{ i_node }}. {% endif %}{{ node.label }}
           {% if can_edit and not language_mismatch %}&nbsp; <a href="/pathnode/{{ node.id }}/edit/" target="_top" title="{% trans "show edit view" %}"><i class="fa fa-edit"></i></a>{% endif %}
@@ -41,11 +41,10 @@
           </dl>
         {% endif %}
         </div>
-        <p class="paddingT10"><span class="demiBold">{% trans "node added by"|capfirst %}</span> <img {% if node.creator.get_profile.avatar %} src="/media/{{ node.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.creator.username }}">{{ node.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ node.created|date:"d/m/Y" }}</p>
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if node.editor.id != node.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if node.editor.get_profile.avatar %} src="/media/{{ node.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.editor.username }}">{{ node.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ node.modified|date:"d/m/Y" }}</p>
+        <p class="paddingT10"><span class="demiBold">{% trans "node added by"|capfirst %}</span> <img {% if node.creator.get_profile.avatar %} src="/media/{{ node.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.creator.username }}" target="_top">{{ node.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ node.created|date:"d/m/Y" }}</p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if node.editor.id != node.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if node.editor.get_profile.avatar %} src="/media/{{ node.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.editor.username }}"><a href="/profile/{{ node.editor.username }}" target="_top">{{ node.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ node.modified|date:"d/m/Y" }}</p>
 
         {% include "_resource_original_lang.html" %}
-      </section>
-        </div>
+    </section>
   </body>
 {% endblock %}

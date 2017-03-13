@@ -339,7 +339,6 @@ def user_dashboard(request, username, user=None):
     com_adminships = []
     com_only_memberships = []
     for membership in memberships:
-        # if membership.project.get_level() > 0:
         if membership.project.is_admin(user):
             membership.proj_applications = membership.project.get_applications().count()
             com_adminships.append(membership)
@@ -358,10 +357,24 @@ def user_dashboard(request, username, user=None):
             only_memberships.append(membership)
     var_dict['adminships'] = adminships
     var_dict['only_memberships'] = only_memberships
+    
     var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
     var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
+    var_dict['roll_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='roll').order_by('project__created')
+
     var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
     var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
+    rollmentorships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll').order_by('project__state','-project__created')
+    adminrollmentorships = []
+    only_rollmentorships = []
+    for membership in rollmentorships:
+        if membership.project.is_admin(user):
+            membership.roll_applications = membership.project.get_applications()
+            adminrollmentorships.append(membership)
+        else:
+            only_rollmentorships.append(membership)
+    var_dict['adminrollmentorships'] = adminrollmentorships
+    var_dict['only_rollmentorships'] = only_rollmentorships
     var_dict['mentoring_rels_mentor'] = get_mentor_memberships(user, 1)
     var_dict['mentoring_rels_mentee'] = get_mentee_memberships(user, 1)
     var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
@@ -3501,8 +3514,10 @@ def pathnode_detail(request, node_id, node=None):
     current_language = get_current_language()
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
+    """
     if request.is_ajax():
         return JsonResponse({"data": 'OK',"node": node_id })
+    """
     #return HttpResponseRedirect('/lp/%s/' % lp.slug)
     return render_to_response('_pathnode_detail.html', var_dict, context_instance=RequestContext(request))
 

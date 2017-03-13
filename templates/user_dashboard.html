@@ -5,6 +5,9 @@
 
 {% block head_title %}{% trans "my home"|capfirst %}: {{ user.get_display_name }}{% endblock %}
 
+{% block extra_style %}
+{% endblock %}
+
 {% block body_class %}my_home{% endblock %}
 
 {% block body %}
@@ -33,8 +36,8 @@
         <div class="col-sm-4 col-md-4 col-lg-4">
           <div class="panel-white">
             <ul class="list-inline list-unstyled margin0 padding105">
-              <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if user.inbox_count %}<sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ user.inbox_count}}</sup>{% endif %}</div></a></li>
-              <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %} <sup style="font-size:10px; background:#dc0d17; border-radius:2px; color: white; padding:1px 3px; font-weight: 600">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
+              <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if user.inbox_count %}<sup class="format">{{ user.inbox_count}}</sup>{% endif %}</div></a></li>
+              <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
               {% comment %}<li><a href="/analytics/user_activity/{{ user.username }}/">{% trans "recent activity"|capfirst %}</a></li>{% endcomment %}
               {% if user.is_superuser or user.is_manager %}
                 <li class="dropdown">
@@ -51,9 +54,9 @@
               <ul class="list-inline list-unstyled margin0 padding105">
                 <li><i class="fa fa-edit"></i> {% trans "manage"|capfirst %}:</li>
                 <li><a href="/admin/commons/featured/" target="_blank">{% trans "featured"|capfirst %}</a></li>
-                <li style="padding-left:0; padding-right:0">|</li>
+                <li class="paddingLR0">|</li>
                 <li><a href="/admin/flatpages/flatpage/" target="_blank">{% trans "flatpages"|capfirst %}</a></li>
-                <li style="padding-left:0; padding-right:0">|</li>
+                <li class="paddingLR0">|</li>
                 <li><a href="/admin/zinnia/entry/" target="_blank">{% trans "Weblog"|capfirst %}</a></li>
               </ul>
             {% endif %}
@@ -85,6 +88,18 @@
             </div>
           {% endif %}
 
+          {% if roll_applications  %}
+            <div class="panel-white">
+              <div class="panel-heading-c0 padding510 demiBold">{% trans "pending applications to rolls of mentors"|capfirst %}</div>
+              <div {% if roll_applications|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                <ul class="list-unstyled my-list-unstyled padding510">
+                {% for application in roll_applications %}
+                  <li><a href="/project/{{ application.project.slug }}/"><small>{{ application.project.get_name }}</small></a></li>
+                {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif %}
           {% if com_adminships %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "admin of the following communities"|capfirst %}</div>
@@ -107,6 +122,28 @@
             </div>
           {% endif%}
 
+          {% if adminrollmentorships %}
+            <div class="panel-white">
+              <div class="panel-heading-c0 padding510 demiBold">{% trans "supervisor of the following rolls of mentors"|capfirst %}</div>
+              <div {% if adminrollmentorships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                <ul class="list-unstyled my-list-unstyled padding510">
+                {% for membership in adminrollmentorships %}
+                  <li>
+                      {% if membership.project.state == 0 %}
+                        <span class="fa fa-group orange"></span> 
+                      {% elif membership.project.state == 1 %}
+                        <span class="fa fa-group limegreen"></span> 
+                      {% elif membership.project.state == 3 %}
+                        <span class="fa fa-lock neutral"></span> 
+                      {% endif %}
+                      <small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a>{% if membership.roll_applications %} [{{ membership.roll_applications|length }} {% trans "applications" %}]{% endif %}</small>
+                  </li>
+                {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endif%}
+
           {% if adminships %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "supervisor of the following projects"|capfirst %}</div>
@@ -121,14 +158,14 @@
                       {% elif membership.project.state == 3 %}
                         <span class="fa fa-lock neutral"></span> 
                       {% endif %}
-                      <small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a></small>
+                      <small><a href="/project/{{ membership.project.slug }}/">{{membership.project.get_name }}</a>{% if membership.proj_applications %} [{{ membership.proj_applications|length }} {% trans "applications" %}]{% endif %}</small>
                   </li>
                 {% endfor %}
                 </ul>
               </div>
             </div>
           {% endif%}
-
+         
           {% if com_only_memberships %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "member of the following communities"|capfirst %}</div>
@@ -148,6 +185,32 @@
                   {% endfor %}
                 </ul>
               </div>
+            </div>
+          {% endif%}
+
+          {% if only_rollmentorships %}
+            <div class="panel-white">
+              <div class="panel-heading-c0 padding510 demiBold">{% trans "member of the following rolls of mentors"|capfirst %}</div>
+              {% if only_rollmentorships %}
+                <div {% if only_rollmentorships|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                  <ul class="list-unstyled my-list-unstyled padding510">
+                  {% for membership in only_rollmentorships %}
+                    <li>
+                      {% if membership.project.state == 0 %}
+                        <span class="fa fa-group orange"></span> 
+                      {% elif membership.project.state == 1 %}
+                        <span class="fa fa-group limegreen"></span> 
+                      {% elif membership.project.state == 3 %}
+                        <span class="fa fa-lock neutral"></span> 
+                      {% endif %}
+                      <small><a href="/project/{{ membership.project.slug }}/">{{ membership.project.get_name }}</a></small>
+                    </li>
+                  {% endfor %}
+                  </ul>
+                </div>
+              {% else %}
+                <div class="padding510"><small>{% trans "no projects"|capfirst %}</small></div>
+              {% endif %}
             </div>
           {% endif%}
 
@@ -310,7 +373,7 @@
               </div>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
-              <div class="text-center" style="padding-top:20px"><a class="bc-c1 borderRadius4 c-white padding510 demiBold" href="/lp_new/"><i class="fa fa-file"></i> {% trans "create personal Learning Path"|capfirst %}</a></div>
+              <div class="paddingT20 text-center"><a class="bc-c1 borderRadius4 c-white padding510 demiBold" href="/lp_new/"><i class="fa fa-file"></i> {% trans "create personal Learning Path"|capfirst %}</a></div>
             </div>
           </div>
           <div class="row">
