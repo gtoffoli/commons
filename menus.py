@@ -14,9 +14,14 @@ def community_children(request):
          # url='/info/press_releases/',
          url='/press_releases/',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("all communities")),
          url='/cops/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("rolls of mentors")),
+         url='/mentoring/',
         ))
     children.append (MenuItem(
          capfirst(_("browse people")),
@@ -27,13 +32,20 @@ def community_children(request):
          url='/people/search/',
         ))
     children.append (MenuItem(
+         capfirst(_("browse mentors")),
+         url='/browse_mentors/',
+        ))
+    """
+    children.append (MenuItem(
          capfirst(_("blog")),
          url='/weblog/',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("forums")),
          url='/forum/',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("the platform")),
          url='/info/platform/',
@@ -42,6 +54,18 @@ def community_children(request):
 
 def projects_children(request):
     children = []
+    children.append (MenuItem(
+         capfirst(_("all communities")),
+         url='/cops/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("browse mentors")),
+         url='/browse_mentors/',
+    ))
+    children.append (MenuItem(
+         capfirst(_("rolls of mentors")),
+         url='/mentoring/',
+        ))
     children.append (MenuItem(
          # string_concat(capfirst(_("projects")), ' - ', _("advanced search")),
          capfirst(_("projects")),
@@ -52,9 +76,23 @@ def projects_children(request):
          url='/resources/contributors/',
         ))
     children.append (MenuItem(
+         capfirst(_("forums")),
+         url='/forum/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("browse people")),
+         url='/browse_people/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("search people")),
+         url='/people/search/',
+        ))
+    """
+    children.append (MenuItem(
          capfirst(_("mentoring support")),
          url='/mentoring/',
         ))
+    """
     return children
 
 def search_children(request):
@@ -173,7 +211,7 @@ Menu.add_item("main", MenuItem(capfirst(_("about")),
                                check=True,
                                children=community_children,
                                separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("projects")),
+Menu.add_item("main", MenuItem(capfirst(_("communities")),
                                url='/p',
                                weight=30,
                                check=True,

@@ -1,7 +1,7 @@
 {% extends "commons_base.html" %}
 
 {% load staticfiles i18n %}
-{% load account_tags %}
+
 {% load commons_tags %}
 
 {% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% elif proj_type.name == 'roll' %}{% trans "roll of mentors"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}

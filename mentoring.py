@@ -15,6 +15,15 @@ from forms import ProjectMentoringModelForm, AcceptMentorForm, one2oneMessageCom
 
 from analytics import notify_event, track_action
 
+
+def get_all_mentors():
+    proj_type_roll = ProjType.objects.filter(name='roll')
+    all_memberships = ProjectMember.objects.filter(state=1, project__proj_type__name='roll', project__state=PROJECT_OPEN).order_by('user__last_name','user__first_name','user_id').distinct('user__last_name','user__first_name','user_id')
+    mentors = []
+    for m in all_memberships:
+        mentors.append(m.user)
+    return mentors
+
 def get_all_candidate_mentors(user, community):
     community_candidate_mentors = communities_candidate_mentors = None
     proj_type_roll = ProjType.objects.filter(name='roll')

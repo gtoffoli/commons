@@ -412,16 +412,19 @@ TINYMCE_COMPRESSOR = True
 """
 
 TINYMCE_DEFAULT_CONFIG = {
-	'schema': "html5",
+    'schema': "html5",
     'resize' : "both",
-	'height': 350,
-	# 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
+    'height': 350,
+    # 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
     'plugins': "advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
-	# 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
+    # 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
     'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
     'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
-	'plugin_preview_width' : 800,
-	'plugin_preview_height' : 600,
+    'plugin_preview_width' : 800,
+    'plugin_preview_height' : 600,
+    # URL settings
+    # 'convert_urls' : False,
+    'relative_urls' : False,
     }
 
 FILEBROWSER_DIRECTORY = 'ugc_upload/'

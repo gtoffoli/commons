@@ -1,0 +1,28 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles i18n %}
+
+{% block head_title %}{% trans "mentors"|capfirst %}{% endblock %}
+
+{% block body_class %}mentors{% endblock %}
+{% block body %}
+<div class="panel panel-white marginTB30 borderColor-c0">
+  <div class="panel-heading-c0"><h3 class="margin0 padding510 c-white demiBold text-center">{% trans "mentors"|capfirst %}</h3></div>
+  {% if mentors %}
+    <div class="padding10">
+      <div class="list-m">
+        {% for u in mentors %} 
+          <div class="bc-white box-m">
+            <div><a href="/profile/{{ u.username }}/" title="{% trans "view user profile" %}"><img {% if u.get_profile.avatar %} src="/media/{{ u.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
+            <div class="title"><a href="/profile/{{ u.username }}/" title="{% trans "view user profile" %}">{{ u.get_display_name }}</a></small>
+          </div>
+            <div class="description">{% if u.get_profile.position %}{{ u.get_profile.position|truncatechars:100 }}{% else %}{{ u.get_profile.short|truncatechars:100 }}{% endif %}</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% else %}
+    <div class="padding510">{% trans "currently there aren't any mentors"|capfirst %}</div>
+  {% endif %}
+  </div>
+{% endblock %}

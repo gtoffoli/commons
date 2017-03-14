@@ -56,7 +56,7 @@ from analytics import filter_actions, post_views_by_user, popular_principals, fi
 
 from utils import x_frame_protection
 
-from mentoring import get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
+from mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
 
 from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
@@ -2414,7 +2414,11 @@ def browse_people(request):
         if entries:
             people_browse_list.append([field_name, field_label, entries])
     return render_to_response('browse_people.html', {'people_browse_list': people_browse_list,}, context_instance=RequestContext(request))
-   
+
+def browse_mentors(request):
+    mentors = get_all_mentors ()
+    return render_to_response('browse_mentors.html', {'mentors': mentors,}, context_instance=RequestContext(request))
+  
 def oer_list(request, field_name='', field_value=None):
     oers = []
     if field_name=='tags' and field_value:
