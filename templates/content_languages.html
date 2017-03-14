@@ -1,0 +1,75 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+{% load commons_tags %}
+
+{% block extra_style %}
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+th, td {
+    padding:0 10px; /* To give a bit of padding on the left and right */
+}
+thead tr {
+  background-color: #dcdcdc;
+}
+tr.section {
+  background-color: #dcdcdc;
+}
+thead tr th, tr.section td {
+    padding: 5px 10px; /* To give a bit of padding on the left and right and also on the top and bottom */
+}
+</style>
+{% endblock %}
+
+{% block head_title %}{% trans "contents languages and translations"|capfirst %}{% endblock %}
+
+{% block body_class %}home{% endblock %}
+
+{% block extra_head %}
+<style>
+	th, td { padding: 0 1em }
+</style>
+{% endblock extra_head %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h1 class="marginT30">{% trans "contents languages and translations"|capfirst %}</h1>
+
+        {% for content, content_name in contents %}{% with source_dict=content_language_dict|lookup:content %}
+		<div style="{% if not forloop.first %}display: inline-block; {% endif %}vertical-align: top; margin-top: 1.0em; margin-right: 1.0em;"><label>{{ content_name|capfirst }}</label>
+		<table>
+			<thead>
+				<th style="font-size: small;" colspan="2"><div style="text-align: right;"><i>target language</i></div><div style="text-align: left;"><i>source language</i></div></th>
+				{% for code, language in languages|slice:"1:" %}<th>{{ language }}</th>{% endfor %}</thead>
+			<tbody>
+        		{% for source_code, source_language in languages %}{% with target_dict=source_dict|lookup:source_code %}
+        		<tr>{% if source_code %}<th>{{ source_language }}</th>{% else %}<td>{{ source_language }}</td>{% endif %}
+        			{% for target_code, target_language in languages %}
+        				{% if target_code == source_code %}
+        					<td style="text-align: center; font-weight: bold;">{{ target_dict|lookup:target_code }}</td>
+        				{% else %}
+        					<td style="text-align: center;">{% if target_dict|lookup:target_code %}{{ target_dict|lookup:target_code }}{% endif %}</td>
+        				{% endif %}
+			        {% endfor %}
+        		</tr>
+	        	{% endwith %}{% endfor %}
+			</tbody>
+		</table>
+		</div>
+        {% endwith %}{% endfor %}
+
+		<div style="margin-top: 0.8em;">
+			<label>Legenda</label>
+			<div style="font-size: small;">
+				Row names and bold numbers refer to original (source) languages of contents.<br />
+				Column names and the other numbers refer to target languages and existing translations.<br />
+				Note - only translations of names / titles / labels are taken into account.<br />
+			</div>
+		</div>
+
+        </div>
+    </section>
+{% endblock %}

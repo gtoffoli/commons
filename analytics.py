@@ -14,14 +14,17 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+
+from datatrans.models import KeyValue
+
 import actstream
 from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
-from models import UserProfile, OER # , Project
-from models import PUBLISHED
-from commons.settings import PRODUCTION
+from models import UserProfile, Project, Repo, OER, LearningPath, PathNode
+from models import SUBMITTED, PUBLISHED, PROJECT_OPEN
+from commons.settings import PRODUCTION, LANGUAGES
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
 
@@ -485,3 +488,66 @@ def get_similarity(userprofile_dict, profile_2, max_score):
                 break
     return score/max_score, matches
 
+translate_map = getattr(settings, 'DATATRANS_TRANSLATE_MAP', None)
+from translations import ProjectTranslation, RepoTranslation, OerTranslation, LpTranslation, PathNodeTranslation
+
+content_classes = [Project, Repo, OER, LearningPath, PathNode]
+content_language_map = {
+    Project: [ProjectTranslation, PROJECT_OPEN],
+    Repo: [RepoTranslation, SUBMITTED, PUBLISHED],
+    OER: [OerTranslation, SUBMITTED, PUBLISHED],
+    LearningPath: [LpTranslation, SUBMITTED, PUBLISHED],
+    PathNode: [PathNodeTranslation, SUBMITTED, PUBLISHED],
+}
+
+languages = [('', 'unknown')] + list(LANGUAGES)
+
+def content_languages(request):
+    var_dict = {}
+    var_dict['LANGUAGES'] = LANGUAGES
+    var_dict['languages'] = languages
+    var_dict['contents'] = [[content_class._meta.object_name, content_class._meta.verbose_name_plural] for content_class in content_classes]
+    content_language_dict = {}
+    for content_class in content_classes:
+        class_name = content_class._meta.object_name
+        # translation_class, state = content_language_map[content_class]
+        states = content_language_map[content_class][1:]
+        content_type = ContentType.objects.get_for_model(content_class)
+        title_field = translate_map[content_type.model][2]
+        qs = content_class.objects
+        if content_class == PathNode: 
+            qs = qs.filter(path__state__in=states)
+        else:
+            qs = qs.filter(state__in=states)
+        n = qs.count()
+        print class_name, n
+        source_dict = {}
+        for source_code, source_name in languages:
+            if source_code:
+                if content_class == PathNode:
+                    source_objects = qs.filter(path__original_language=source_code)
+                else:
+                    source_objects = qs.filter(original_language=source_code)
+            else:
+                other_codes = [language[0] for language in LANGUAGES if not language[0]==source_code]
+                if content_class == PathNode:
+                    source_objects = qs.exclude(path__original_language__in=other_codes)
+                else:
+                    source_objects = qs.exclude(original_language__in=other_codes)
+            n_source = source_objects.count()
+            target_dict = defaultdict(int)
+            target_dict[source_code] = n_source
+            for instance in source_objects:
+                for target_code, target_name in languages:
+                    if not target_code or target_code == source_code:
+                        continue
+                    translations = KeyValue.objects.filter(language=target_code, content_type_id=content_type.id, object_id=instance.pk, field=title_field)
+                    if translations.count():
+                        # print translations.count(), 'translations'
+                        target_dict[target_code] += 1
+            source_dict[source_code] = target_dict
+            print class_name, source_name, n_source
+        content_language_dict[class_name] = source_dict
+    var_dict['content_language_dict'] = content_language_dict
+    # return content_language_dict
+    return render_to_response('content_languages.html', var_dict, context_instance=RequestContext(request))

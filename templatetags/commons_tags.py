@@ -22,3 +22,10 @@ def topic_unviewed_posts_count(topic, user):
 @register.filter
 def object_class(obj):
     return obj and obj.__class__.__name__ or ''
+
+@register.filter
+def lookup(d, key):
+    try:
+        return d[key]
+    except KeyError:
+        return ''

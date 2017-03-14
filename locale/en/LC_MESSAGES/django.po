@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-13 12:37+0100\n"
+"POT-Creation-Date: 2017-03-14 17:01+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -298,7 +298,7 @@ msgstr ""
 msgid "text in name and short description"
 msgstr ""
 
-#: .\forms.py:236 .\templates\_homepage_main_cta.html:34
+#: .\forms.py:236 .\menus.py:214 .\templates\_homepage_main_cta.html:34
 #: .\templates\_homepage_main_cta.html:35
 #: .\templates\_homepage_main_cta.html:58
 #: .\templates\_homepage_main_cta.html:80 .\templates\project_detail.html:144
@@ -709,7 +709,8 @@ msgstr ""
 msgid "better specify the purpose of this forum"
 msgstr ""
 
-#: .\forms.py:646 .\templates\mentoring_detail.html:142
+#: .\forms.py:646 .\templates\browse_mentors.html:16
+#: .\templates\browse_mentors.html.py:17 .\templates\mentoring_detail.html:142
 #: .\templates\project_detail.html:388 .\templates\project_detail.html:411
 #: .\templates\project_detail.html:678 .\templates\project_detail.html:679
 #: .\templates\project_detail.html:707 .\templates\project_detail.html:708
@@ -784,52 +785,56 @@ msgstr ""
 msgid "press releases"
 msgstr ""
 
-#: .\menus.py:18 .\templates\cops_tree.html:6 .\templates\cops_tree.html.py:10
-msgid "all communities"
-msgstr ""
-
-#: .\menus.py:22
-msgid "browse people"
-msgstr ""
-
-#: .\menus.py:26 .\templates\search_people.html:5
-#: .\templates\search_people.html.py:10
-msgid "search people"
-msgstr ""
-
-#: .\menus.py:30
+#: .\menus.py:40
 msgid "blog"
 msgstr ""
 
-#: .\menus.py:34 .\menus.py:156 .\templates\_access_bar.html:29
+#: .\menus.py:50
+msgid "the platform"
+msgstr ""
+
+#: .\menus.py:58 .\templates\cops_tree.html:6 .\templates\cops_tree.html.py:10
+msgid "all communities"
+msgstr ""
+
+#: .\menus.py:62
+msgid "browse mentors"
+msgstr ""
+
+#: .\menus.py:66 .\templates\mentoring_support.html:5
+#: .\templates\mentoring_support.html:11
+msgid "rolls of mentors"
+msgstr ""
+
+#: .\menus.py:71 .\models.py:744 .\templates\project_detail.html:144
+#: .\templates\search_projects.html:10 .\templates\search_results.html:29
+#: .\templates\user_profile.html:254
+msgid "projects"
+msgstr ""
+
+#: .\menus.py:75 .\templates\contributors.html:11
+msgid "top contributors"
+msgstr ""
+
+#: .\menus.py:79 .\menus.py:194 .\templates\_access_bar.html:29
 #: .\templates\user_dashboard.html:48
 msgid "forums"
 msgstr ""
 
-#: .\menus.py:38
-msgid "the platform"
+#: .\menus.py:83
+msgid "browse people"
 msgstr ""
 
-#: .\menus.py:47 .\menus.py:176 .\models.py:744
-#: .\templates\project_detail.html:144 .\templates\search_projects.html:10
-#: .\templates\search_results.html:29 .\templates\user_profile.html:254
-msgid "projects"
+#: .\menus.py:87 .\templates\search_people.html:5
+#: .\templates\search_people.html.py:10
+msgid "search people"
 msgstr ""
 
-#: .\menus.py:51 .\templates\contributors.html:11
-msgid "top contributors"
-msgstr ""
-
-#: .\menus.py:55 .\templates\mentoring_support.html:5
-#: .\templates\mentoring_support.html:11
-msgid "mentoring support"
-msgstr ""
-
-#: .\menus.py:63
+#: .\menus.py:101
 msgid "all resources"
 msgstr ""
 
-#: .\menus.py:69 .\menus.py:115 .\models.py:1853
+#: .\menus.py:107 .\menus.py:153 .\models.py:1853
 #: .\templates\_homepage_main_cta.html:40
 #: .\templates\_homepage_main_cta.html:41
 #: .\templates\_homepage_main_cta.html:65
@@ -839,81 +844,81 @@ msgstr ""
 msgid "learning paths"
 msgstr ""
 
-#: .\menus.py:74
+#: .\menus.py:112
 msgid "open resources"
 msgstr ""
 
-#: .\menus.py:79 .\templates\search_results.html:37
+#: .\menus.py:117 .\templates\search_results.html:37
 msgid "source repositories"
 msgstr ""
 
-#: .\menus.py:87
+#: .\menus.py:125
 msgid "tutorials"
 msgstr ""
 
-#: .\menus.py:91
+#: .\menus.py:129
 msgid "registration and authentication"
 msgstr ""
 
-#: .\menus.py:95
+#: .\menus.py:133
 msgid "user profile and user roles"
 msgstr ""
 
-#: .\menus.py:99
+#: .\menus.py:137
 msgid "site navigation"
 msgstr ""
 
-#: .\menus.py:103 .\templates\autocomplete.html:7
+#: .\menus.py:141 .\templates\autocomplete.html:7
 msgid "communities and projects"
 msgstr ""
 
-#: .\menus.py:107
+#: .\menus.py:145
 msgid "searching the catalogued resources"
 msgstr ""
 
-#: .\menus.py:111
+#: .\menus.py:149
 msgid "cataloguing and evaluating resources"
 msgstr ""
 
-#: .\menus.py:119
+#: .\menus.py:157
 msgid "mentoring"
 msgstr ""
 
-#: .\menus.py:123 .\templates\user_dashboard.html:45
+#: .\menus.py:161 .\templates\user_dashboard.html:45
 msgid "analytics"
 msgstr ""
 
-#: .\menus.py:127
+#: .\menus.py:165
 msgid "internationalization"
 msgstr ""
 
-#: .\menus.py:131
+#: .\menus.py:169
 msgid "translation"
 msgstr ""
 
-#: .\menus.py:135
+#: .\menus.py:173
 msgid "editorial tools"
 msgstr ""
 
-#: .\menus.py:152 .\templates\_access_bar.html:28
+#: .\menus.py:190 .\templates\_access_bar.html:28
 #: .\templates\user_dashboard.html:47
 msgid "activity stream"
 msgstr ""
 
-#: .\menus.py:160 .\templates\_access_bar.html:30
+#: .\menus.py:198 .\templates\_access_bar.html:30
 #: .\templates\user_dashboard.html:39 .\templates\user_dashboard.html.py:49
 msgid "messages"
 msgstr ""
 
-#: .\menus.py:170
+#: .\menus.py:208
 msgid "about"
 msgstr ""
 
-#: .\menus.py:182
+#: .\menus.py:220
 msgid "library"
 msgstr ""
 
-#: .\menus.py:188
+#: .\menus.py:226
 msgid "help"
 msgstr ""
 
@@ -987,8 +992,8 @@ msgid "Allows comments if checked."
 msgstr ""
 
 #: .\models.py:246 .\models.py:2427 .\views.py:1000 .\views.py:1246
-#: .\views.py:1841 .\views.py:2020 .\views.py:2551 .\views.py:2665
-#: .\views.py:3144 .\views.py:3342 .\views.py:3515 .\views.py:3620
+#: .\views.py:1841 .\views.py:2020 .\views.py:2555 .\views.py:2669
+#: .\views.py:3148 .\views.py:3346 .\views.py:3519 .\views.py:3624
 msgid "unknown"
 msgstr ""
 
@@ -2104,8 +2109,8 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: .\templates\_search_form.html:16 .\views.py:780 .\views.py:3822
-#: .\views.py:4021 .\views.py:4119
+#: .\templates\_search_form.html:16 .\views.py:780 .\views.py:3826
+#: .\views.py:4025 .\views.py:4123
 msgid "include non published items"
 msgstr ""
 
@@ -2193,6 +2198,15 @@ msgstr ""
 msgid "of the sources"
 msgstr ""
 
+#: .\templates\browse_mentors.html:5 .\templates\browse_mentors.html.py:10
+#: .\templates\project_detail.html:701
+msgid "mentors"
+msgstr ""
+
+#: .\templates\browse_mentors.html:25
+msgid "currently there aren't any mentors"
+msgstr ""
+
 #: .\templates\browse_people.html:5 .\templates\browse_people.html.py:10
 msgid "all people"
 msgstr ""
@@ -2232,6 +2246,14 @@ msgstr ""
 #: .\templates\commons_base.html:209 .\templates\livesearch.html:10
 #: .\templates\theme_bootstrap\base.html:120
 msgid "Search ... (enter at least 3 characters)"
+msgstr ""
+
+#: .\templates\content_languages.html:26
+msgid "Contents languages and translations"
+msgstr ""
+
+#: .\templates\content_languages.html:39
+msgid "contents languages and translations"
 msgstr ""
 
 #: .\templates\contributors.html:5 .\templates\repo_contributors.html:5
@@ -2935,10 +2957,6 @@ msgstr ""
 msgid "unshare this OER"
 msgstr ""
 
-#: .\templates\mentoring_support.html:14
-msgid "rolls of mentors"
-msgstr ""
-
 #: .\templates\mentoring_support.html:21
 msgid "no mentoring activity started yet"
 msgstr ""
@@ -3439,10 +3457,6 @@ msgstr ""
 
 #: .\templates\project_detail.html:694
 msgid "add mentor presentation to your profile"
-msgstr ""
-
-#: .\templates\project_detail.html:701
-msgid "mentors"
 msgstr ""
 
 #: .\templates\project_detail.html:804
