@@ -1,8 +1,6 @@
 {% load staticfiles i18n %}
-
-<div class="grid-item">
+<div class="{{ data_parent_class }}">
 <div class="panel-heading-{{data_ele}} padding10 borderRadius4">
-
 <h3 class="label-header">{{data_label}}</h3>
 <div class="bc-white c-black padding10 borderRadius4">
 <div>{% if data.small_image %}<img src="/media/{{data.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px; {% if data_type != "project" %}max-width:30% {% endif %}">{% endif %}
