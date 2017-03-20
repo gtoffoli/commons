@@ -1941,7 +1941,8 @@ class LearningPath(Resource, Publishable):
         if not user.is_authenticated():
             return False
         project = self.project
-        return user.is_superuser or self.creator==user or project.is_admin(user)
+        # return user.is_superuser or self.creator==user or project.is_admin(user)
+        return user.is_superuser or self.creator==user or (project and project.is_admin(user))
 
     def lp_delete(self, request):
         for node in self.get_nodes():
