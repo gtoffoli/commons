@@ -3,22 +3,20 @@
 Django settings for commons project.
 """
 
-from django.utils.translation import ugettext_lazy as _
-
 PRODUCTION = False
 DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
 # from base import *
-XMPP_SERVER = 'openfire.commonspaces.eu'
 
 from private import *
 if PRODUCTION:
     DEBUG = False
     ALLOWED_HOSTS = ['*']
-    ALLOWED_HOSTS.append(XMPP_SERVER)
 else:
     DEBUG = True
-    # TEMPLATE_STRING_IF_INVALID = '%s'
+    ALLOWED_HOSTS = []
+if CONVERSEJS_ENABLED:
+    ALLOWED_HOSTS.append(XMPP_SERVER)
 
 PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
@@ -43,12 +41,6 @@ SOCIALACCOUNT_PROVIDERS = \
                          'picture-url',
                          'public-profile-url']}}
 """
-# EMAIL_BACKEND = "mailer.backend.DbBackend"
-
-import os
-import sys
-
-# from private import *
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -470,11 +462,6 @@ ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely
 COMMONS_PROJECTS_MAX_DEPTH = 3
 COMMONS_PROJECTS_NO_APPLY = ('sup',)
 COMMONS_PROJECTS_NO_CHAT = ('com',)
-
-"""
-CONVERSEJS_ENABLED = True
-CONVERSEJS_HIDE_MUC_SERVER = True
-"""
 
 USE_HAYSTACK = True
 SEARCH_BACKEND = "whoosh"

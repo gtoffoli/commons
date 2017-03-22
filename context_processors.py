@@ -18,4 +18,5 @@ def processor(request):
         'site_name': settings.SITE_NAME,
         'users_count': online_users_count(),
         'path_no_language': path,
+        'PRODUCTION': settings.PRODUCTION,
     }
