@@ -1,0 +1,55 @@
+{% extends "commons_base_iframe.html" %}
+
+{% load i18n staticfiles %}
+
+{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+
+{% block body_base %}
+<body class="paddingT0">
+  <div class="borderBottom borderColor-c0 paddingB5">
+    <h5 class="marginTB0 c-fern demiBold">
+    	<a href="{% if request.user.id == profile_user.id %}/my_profile/{%else%}/profile/{{ profile_user.username }}{% endif %}" title="{% trans "view user profile" %}" target="_top">
+      {% if profile.avatar %}
+        <img src="/media/{{ profile.avatar }}" class="avatar-medium" class="pull-left">
+      {% else %}
+        <img src="/media/images/avatars/anonymous.png" class="avatar-medium" class="pull-left">
+      {% endif %}</a>
+      <a href="{% if request.user.id == profile_user.id %}/my_profile/{%else%}/profile/{{ profile_user.username }}{% endif %}" title="{% trans "view user profile" %}" target="_top">{{  profile_user.get_display_name }}</a>
+      {% if not request.user == profile_user %}
+        <a href="/my_mail/compose/{{ profile_user.username }}/" title="{% trans "send a message to" %} {{ profile_user.get_display_name }}" target="_top"><i class="fa fa-envelope font07em"></i></a>
+      {% endif %}
+    </h5>
+  </div>
+  <p class="marginT10">{% if profile.position %}{{ profile.position }}{% else %}{{ profile.short }}{% endif %}</p>
+  {% if profile.long %}
+     <blockquote class="font14">{{ profile.long|safe }}</blockquote>
+  {% endif %}
+  {% if profile.mentoring %}
+    <dl class="font14 marginTB10">
+      <dt class="demiBold">{% trans "mentor presentation"|capfirst %}</dt>
+      <dd class="field-content width-full"><blockquote class="font14">{{ profile.mentoring|safe }}</blockquote></dd>
+    </dl>
+    <div class="marginB20 clearfix">
+      <dl class="list-inline pull-left font14 paddingR20">
+        <dt>{% trans "available as mentor for other communities"|capfirst %}</dt>
+        <dd>{% if profile.mentor_for_all %}{% trans "yes"|capfirst %}{% else %}{% trans "no"|capfirst %}{% endif %}</dd>
+      </dl>
+      <dl class="list-inline pull-left font14 paddingR20">
+        <dt>{% trans "currently available as mentor"|capfirst %}</dt>
+        <dd>{% if profile.mentor_unavailable %}{% trans "no"|capfirst %}{% else %}{% trans "yes"|capfirst %}{% endif %}</dd>
+      </dl>
+    </div>
+  {% endif %}
+  {% if roll_memberships %}
+    <h6 class="borderBottom borderColor-c0 paddingB5 marginT20">{% trans "rolls od mentors"|capfirst %}</h6>
+    <ul class="list-inline padding510 list-green">
+      {% for membership in roll_memberships %}
+        <li><a href="/project/{{ membership.project.slug }}/" title="{% trans "view roll of mentors" %}" target="_top">{{ membership.project.get_name }}</a></li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+  
+  <div><a href="/profile/{{ profile_user.username }}" title="" target="_top"></a></div>
+</body>
+{% endblock %}
+

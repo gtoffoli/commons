@@ -231,7 +231,15 @@ iframe {
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% include "_info_creator_date.html" with data=lp %}
         {% include "_resource_original_lang.html" %}
-        {% include "_change_state.html" with data=lp type_object="lp" %}
+        {% if project %}
+           {% include "_change_state.html" with data=lp type_object="lp" %}
+           {% if alert_ment %}
+              <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c1">{% trans "do not submit this LP for publication if you want that only your mentor see it"|capfirst %}</div>
+           {% endif %}
+        {% else %}
+           <div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ lp.get_title_color }};">{{ lp.get_state }}</span></div>
+           <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c1">{% trans "To submit for publication this LP, you must move it before to a project by using the tool"|capfirst %} <i class="fa fa-cut font07em c-white"></i></div>
+        {% endif %}
       </div>
     </div>
     {% if project %}

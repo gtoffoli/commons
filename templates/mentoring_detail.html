@@ -134,12 +134,13 @@ div.msg {
       {% with users=project.members %}
       {% for u in users %}
         <li class="marginB10">
+         <a href="{% if user.id == u.0.id %}/my_profile/{% else %}/profile/{{ u.0.username }}/{% endif %}" title="{% trans "view user profile" %}">
           {% if u.0.get_profile.avatar %}
             <img src="/media/{{  u.0.get_profile.avatar }}" class="avatar-medium">
           {% else %}
             <img src="/media/images/avatars/anonymous.png" class="avatar-medium">
-          {% endif %}
-            <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}" class="btn btn-default font12">{{ u.0.get_display_name }}<br><i>{% if u.1 %}{{ project.admin_name }}{% else %}{% trans "mentee" %}{% endif %}</i></a>
+          {% endif %}</a>
+            <a href="{% if user.id == u.0.id %}/my_profile/{% else %}/profile/{{ u.0.username }}/{% endif %}" title="{% trans "view user profile" %}" class="btn btn-default font12">{{ u.0.get_display_name }}<br><i>{% if u.1 %}{{ project.admin_name }}{% else %}{% trans "mentee" %}{% endif %}</i></a>
         </li>
       {% endfor %}
       {% if users|length == 1 %}
@@ -496,7 +497,43 @@ div.msg {
 {% endblock %}
 
 {% block extra_script %}
-{% if project.prototype %}
+{% if candidate_mentors %}
+<link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
+<style>
+	iframe {
+ width: 100%;
+ /*height: 350px;*/
+ border:0;
+}
+.ui-widget-overlay {
+	background: #444444;
+	opacity: .7;
+	filter: Alpha(Opacity=70); /* support: IE8 */
+}
+</style>
+<script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('a.mentorProfile').on('click', function(event){
+       event.preventDefault();
+       $('<div/>',{
+         'id':'link-'+($(this).index()+1)})
+       .html($('<iframe/>', {
+         'src': $(this).attr('href'),
+         'style': 'width:100%; height:90%'}))
+       .appendTo('body')
+       .dialog({
+         'width': 800,
+         'height': 450,
+         modal: true,
+         responsive: true,
+         clickOut: true,
+       });
+    });
+  });
+</script>
+{% elif project.prototype %}
 <script type="text/javascript">
 $(document).ready(function (){
 	$('a.toggleIcon').on('click', function(event){

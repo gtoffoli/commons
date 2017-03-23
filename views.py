@@ -288,6 +288,7 @@ def user_profile(request, username, user=None):
     # memberships = ProjectMember.objects.filter(user=user, state=1).order_by('project__proj_type__name')
 
     com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
+    roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
     if user.is_authenticated() and user==request.user:
         can_edit = True
@@ -295,7 +296,7 @@ def user_profile(request, username, user=None):
         can_edit = False
     profile = user.get_profile()
 	
-    var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'memberships': memberships, }
+    var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'roll_memberships': roll_memberships, 'memberships': memberships, }
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
     if profile:
@@ -319,6 +320,14 @@ def my_profile(request):
     if not user.is_authenticated():
         return HttpResponseForbidden()
     return user_profile(request, None, user=user)
+
+def user_strict_profile(request, username):
+    user = get_object_or_404(User, username=username)
+    roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
+    profile = user.get_profile()
+    var_dict = {'profile_user': user, 'profile': profile, 'roll_memberships': roll_memberships }
+    
+    return render_to_response('user_strict_profile.html', var_dict, context_instance=RequestContext(request))
 
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
@@ -1206,7 +1215,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
     var_dict['oers_last_evaluated'] = oers_last_evaluated[:MAX_OERS_EVALUATED]
     lps = LearningPath.objects.filter(project=project).order_by('-created')
-    lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_admin(user) or user.is_superuser]
+    lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_member(user) or user.is_superuser]
     var_dict['n_lps'] = len(lps)
     var_dict['lps'] = lps[:MAX_LPS]
     shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
@@ -3133,6 +3142,7 @@ def lp_detail(request, lp_id, lp=None):
     if user.is_authenticated():
         profile = user.get_profile()
         add_bookmarked = lp.project and is_published and profile and profile.get_completeness()
+        var_dict['alert_ment'] = lp.project.proj_type.name == 'ment' and lp.project.is_member(user)
     else:
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
@@ -4129,9 +4139,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
             request.session["post_dict"] = {}
         qs = LearningPath.objects.all()
         for q in qq:
-            qs = qs.filter(q)
+            qs = qs.filter(q).exclude(project__proj_type__name='roll')
         if not include_all:
-            qs = qs.filter(state=PUBLISHED)
+            qs = qs.filter(state=PUBLISHED).exclude(project__proj_type__name='roll')
         lps = qs.distinct().order_by('title')
     else:
         form = LpSearchForm()
@@ -4139,7 +4149,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         query = Q(state=PUBLISHED)
         for q in qq:
             query = query & q
-        lps = LearningPath.objects.filter(query).distinct().order_by('title')
+        lps = LearningPath.objects.filter(query).exclude(project__proj_type__name='roll').distinct().order_by('title')
         request.session["post_dict"] = {}
 
     context = {'lps': lps, 'n_lps': len(lps), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}

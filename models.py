@@ -1912,7 +1912,8 @@ class LearningPath(Resource, Publishable):
         if not user.is_authenticated():
             return False
         project = self.project
-        return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
+        # return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
+        return user.is_superuser or self.creator==user or (project and project.is_member(user))
 
     def can_play(self, request):
         if not self.get_nodes().count():
@@ -1932,8 +1933,10 @@ class LearningPath(Resource, Publishable):
         project = self.project
         if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
             return True
+        """
         if project and project.is_member(user):
             return True
+        """
         return False
 
     def can_delete(self, request):
@@ -1941,7 +1944,6 @@ class LearningPath(Resource, Publishable):
         if not user.is_authenticated():
             return False
         project = self.project
-        # return user.is_superuser or self.creator==user or project.is_admin(user)
         return user.is_superuser or self.creator==user or (project and project.is_admin(user))
 
     def lp_delete(self, request):

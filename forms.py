@@ -634,7 +634,7 @@ class UserChoiceField(forms.ModelChoiceField):
         # return obj.get_display_name()
         profile = UserProfile.objects.get(user=obj)
         # title="{% trans "view user profile"
-        link="/profile/%s/" % obj.username
+        link="/profile_strict/%s/" % obj.username
         if profile.avatar:
            avatar = "/media/%s" % profile.avatar
         else:
@@ -653,7 +653,7 @@ class UserChoiceField(forms.ModelChoiceField):
             description = force_text(profile.short)
         if len(description) > 95:
             description=description[:96]+'...'
-        return format_html('<div><a href="{}" {}><img src="{}" {}></a></div><div {}><a href="{}" {}>{}</a></div><div {}>{}</div>',
+        return format_html('<div><a href="{}" class="mentorProfile" {} target="_top"><img src="{}" {}></a></div><div {}><a href="{}" class="mentorProfile" {} target="_top">{}</a></div><div {}>{}</div>',
                             link,
                             flatatt(attrs_link),
                             avatar,
@@ -708,9 +708,10 @@ class FeaturedChangeForm(autocomplete.FutureModelForm):
         widget=autocomplete.QuerySetSequenceSelect2('featured-autocomplete'),
         )
 
+"""
 class FeaturedForm(forms.Form):
     text = forms.CharField(required=False, label=_('optional text'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
-
+"""
 class FlatPageForm(forms.Form):
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
     content = forms.CharField(required=False, label=_('page content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))

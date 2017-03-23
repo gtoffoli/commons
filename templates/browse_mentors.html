@@ -3,7 +3,21 @@
 {% load staticfiles i18n %}
 
 {% block head_title %}{% trans "mentors"|capfirst %}{% endblock %}
-
+{% block extra_style %}
+  <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
+<style>
+	iframe {
+ width: 100%;
+ /*height: 350px;*/
+ border:0;
+}
+.ui-widget-overlay {
+	background: #444444;
+	opacity: .7;
+	filter: Alpha(Opacity=70); /* support: IE8 */
+}
+</style>
+{% endblock %}
 {% block body_class %}mentors{% endblock %}
 {% block body %}
 <div class="panel panel-white marginTB30 borderColor-c0">
@@ -13,8 +27,8 @@
       <div class="list-m">
         {% for u in mentors %} 
           <div class="bc-white box-m">
-            <div><a href="/profile/{{ u.username }}/" title="{% trans "view user profile" %}"><img {% if u.get_profile.avatar %} src="/media/{{ u.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
-            <div class="title"><a href="/profile/{{ u.username }}/" title="{% trans "view user profile" %}">{{ u.get_display_name }}</a></small>
+            <div><a class="mentorProfile" id="u_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}"><img {% if u.get_profile.avatar %} src="/media/{{ u.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
+            <div class="title"><a class="mentorProfile" id="t_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}">{{ u.get_display_name }}</a></small>
           </div>
             <div class="description">{% if u.get_profile.position %}{{ u.get_profile.position|truncatechars:100 }}{% else %}{{ u.get_profile.short|truncatechars:100 }}{% endif %}</div>
           </div>
@@ -25,4 +39,29 @@
     <div class="padding510">{% trans "currently there aren't any mentors"|capfirst %}</div>
   {% endif %}
   </div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('a.mentorProfile').on('click', function(event){
+       event.preventDefault();
+       $('<div/>',{
+         'id':'link-'+($(this).index()+1)})
+       .html($('<iframe/>', {
+         'src': $(this).attr('href'),
+         'style': 'width:100%; height:90%'}))
+       .appendTo('body')
+       .dialog({
+         'width': 800,
+         'height': 450,
+         modal: true,
+         responsive: true,
+         clickOut: true,
+       });
+    });
+  });
+</script>
 {% endblock %}
