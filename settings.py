@@ -42,6 +42,26 @@ SOCIALACCOUNT_PROVIDERS = \
                          'public-profile-url']}}
 """
 
+# Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'default-cache',
+        'MAX_ENTRIES': 10000,
+    }
+}
+"""
+'default': {
+    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    'LOCATION': '127.0.0.1:11211',
+}
+"""
+# Number of seconds of inactivity before a user is marked offline
+USER_ONLINE_TIMEOUT = 300
+# Number of seconds that we will keep track of inactive users for before 
+# their last seen is removed from the cache
+USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
+
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     # 'corsheaders.middleware.CorsMiddleware',
@@ -55,6 +75,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     # 'dmuc.middleware.UserXMPPMiddleware',
+    'commons.middleware.ActiveUserMiddleware',
 )
 if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES

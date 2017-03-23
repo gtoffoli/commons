@@ -2,6 +2,8 @@
 
 import json
 from math import sqrt
+from datetime import timedelta
+from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _, string_concat
@@ -150,6 +152,23 @@ def user_has_xmpp_account(self):
 User.has_xmpp_account = user_has_xmpp_account
 
 User.inbox_count = inbox_count_for
+
+def user_last_seen(self):
+    return cache.get('seen_%s' % self.username)
+User.last_seen = user_last_seen
+
+def user_online(self):
+    last_seen = user_last_seen(self)
+    if last_seen:
+        now = timezone.now()
+        if now > last_seen + timedelta(
+                     seconds=settings.USER_ONLINE_TIMEOUT):
+            return False
+        else:
+            return True
+    else:
+        return False
+User.online = user_online
 
 def model_get_language_name(self):
     return dict(settings.LANGUAGES).get(settings.LANGUAGE_CODE, 'English')
