@@ -22,8 +22,8 @@ from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
-from models import UserProfile, Project, Repo, OER, LearningPath, PathNode
-from models import SUBMITTED, PUBLISHED, PROJECT_OPEN
+from models import UserProfile, Project, ProjectMember, Repo, OER, LearningPath, PathNode
+from models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
 from commons.settings import PRODUCTION, LANGUAGES
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
@@ -488,9 +488,65 @@ def get_similarity(userprofile_dict, profile_2, max_score):
                 break
     return score/max_score, matches
 
-def online_users(request):
+def get_active_users(users=None, max_users=20, max_days=30):
+    if not users:
+        users = User.objects.filter(is_active=True)
+    active_users = []
+    now = timezone.now()
+    for user in users:
+        try:
+            last_seen = user.last_seen()
+        except:
+            last_seen = False
+        if last_seen:
+            time_delta = now-last_seen
+            if time_delta.days <= max_days:
+                active_users.append({'user': user, 'online': user.online(), 'time_delta': time_delta.seconds, 'last_seen': last_seen})
+    if active_users:
+        active_users.sort(key=lambda x: x['time_delta'])
+    return active_users[:max_users]
+
+def get_user_projects(user):
+    return ProjectMember.objects.filter(user=user, state=MEMBERSHIP_ACTIVE, project__state=PROJECT_OPEN).values_list('project', flat=True).distinct()
+
+def get_comembers(user):
+    projects = get_user_projects(user)
+    user_ids = ProjectMember.objects.filter(project__in=projects, state=MEMBERSHIP_ACTIVE).exclude(user=user).values_list('user', flat=True).distinct()
+    return User.objects.filter(id__in=user_ids)
+
+def get_active_comembers(user, max_users=20, max_days=30):
+    comembers = get_comembers(user)
+    return get_active_users(users=comembers, max_users=max_users, max_days=max_days)
+
+def active_users(request):
     var_dict = {}
-    return render_to_response('online_users.html', var_dict, context_instance=RequestContext(request))
+    items = get_active_users()
+    onliners = []
+    others = []
+    for item in items:
+        if item['online']:
+            onliners.append(item)
+        else:
+            others.append(item)
+    var_dict['function'] = 'active_users'
+    var_dict['onliners'] = onliners
+    var_dict['others'] = others
+    return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
+
+def active_comembers(request):
+    var_dict = {}
+    items = get_active_comembers(request.user)
+    onliners = []
+    others = []
+    for item in items:
+        if item['online']:
+            onliners.append(item)
+        else:
+            others.append(item)
+    var_dict['function'] = 'active_comembers'
+    var_dict['onliners'] = onliners
+    var_dict['others'] = others
+    return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
 
 translate_map = getattr(settings, 'DATATRANS_TRANSLATE_MAP', None)
 from translations import ProjectTranslation, RepoTranslation, OerTranslation, LpTranslation, PathNodeTranslation
