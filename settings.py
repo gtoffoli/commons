@@ -45,16 +45,17 @@ SOCIALACCOUNT_PROVIDERS = \
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
 CACHES = {
     'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+        'MAX_ENTRIES': 2000,
+    }
+}
+"""
+    'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'LOCATION': 'default-cache',
         'MAX_ENTRIES': 10000,
     }
-}
-"""
-'default': {
-    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-    'LOCATION': '127.0.0.1:11211',
-}
 """
 # Number of seconds of inactivity before a user is marked offline
 USER_ONLINE_TIMEOUT = 300

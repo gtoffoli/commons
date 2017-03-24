@@ -1,0 +1,19 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "online users"|capfirst %}{% endblock %}
+
+{% block body %}
+    <section>
+        <div class="container">
+            <h1 class="marginT30">{% trans "online users"|capfirst %}</h1>
+
+		<table>
+		   <tr><th>{% trans "last seen"|capfirst %}</th><td>{% if user.last_seen %} {{ user.last_seen|timesince }} {% trans "ago"|capfirst %}{% else %}{% trans "awhile ago"|capfirst %}{% endif %}</td></tr>
+		   <tr><th>{% trans "online"|capfirst %}</th><td>{{ user.online }}</td></tr>
+		 </table>
+
+        </div>
+    </section>
+{% endblock %}

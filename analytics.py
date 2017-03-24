@@ -488,6 +488,10 @@ def get_similarity(userprofile_dict, profile_2, max_score):
                 break
     return score/max_score, matches
 
+def online_users(request):
+    var_dict = {}
+    return render_to_response('online_users.html', var_dict, context_instance=RequestContext(request))
+
 translate_map = getattr(settings, 'DATATRANS_TRANSLATE_MAP', None)
 from translations import ProjectTranslation, RepoTranslation, OerTranslation, LpTranslation, PathNodeTranslation
 
