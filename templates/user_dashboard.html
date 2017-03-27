@@ -409,6 +409,18 @@
                   <div class="padding510"><small>{% trans "no OER classified yet"|capfirst %}</small></div>
                 {% endif %}
               </div>
+              {% if oers_admin %}
+                <div class="panel-white">
+                  <div class="panel-heading-c2 padding510 demiBold">{% trans "OERs in supervisor project"|capfirst %}</div>
+                  <div {% if oers_admin|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                    <ul class="list-unstyled my-list-unstyled padding510">
+                    {% for oer in oers_admin %}
+                      <li><small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> <a href="/oer/{{oer.slug }}/"><small>{{ oer.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% endif %}
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
               <div class="panel-white">
@@ -425,6 +437,18 @@
                   <div class="padding510"><small>{% trans "no Learning Path created yet"|capfirst %}</small></div>
                 {% endif %}
               </div>
+              {% if lps_admin %}
+                <div class="panel-white">
+                  <div class="panel-heading-c1 padding510 demiBold">{% trans "Learning Paths in supervisor project"|capfirst %}</div>
+                  <div {% if lps_admin|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                    <ul class="list-unstyled my-list-unstyled padding510">
+                    {% for lp in lps_admin %}
+                      <li><small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> <a href="/lp/{{lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% endif %}
             </div>
           </div>
         </div>

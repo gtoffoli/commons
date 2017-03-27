@@ -35,7 +35,7 @@ from models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDo
 from models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from models import RepoType, RepoFeature
 from models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
-from models import DRAFT, PUBLISHED, UN_PUBLISHED
+from models import DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
@@ -357,16 +357,22 @@ def user_dashboard(request, username, user=None):
     var_dict['com_only_memberships'] = com_only_memberships
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp','sup',)).order_by('project__state','-project__created')
     adminships = []
+    adminlps = []
+    adminOers = []
     only_memberships = []
     for membership in memberships:
         if membership.project.is_admin(user):
             membership.proj_applications = membership.project.get_applications()
             adminships.append(membership)
+            if membership.project.proj_type.name == 'lp':
+                adminlps.append(membership.project_id)
+            elif membership.project.proj_type.name == 'oer':
+                adminOers.append(membership.project_id)
         else:
             only_memberships.append(membership)
     var_dict['adminships'] = adminships
     var_dict['only_memberships'] = only_memberships
-    
+
     var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
     var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
     var_dict['roll_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='roll').order_by('project__created')
@@ -389,12 +395,10 @@ def user_dashboard(request, username, user=None):
     var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
     var_dict['mentoring_rels_mentoring_request'] = get_mentoring_requests(user)
     var_dict['mentoring_rels_mentoring_requests_waiting'] = get_mentoring_requests_waiting(user)
-    """
-    var_dict['oers'] = OER.objects.filter(Q(creator=user) | Q(editor=user)).order_by('-modified')
-    var_dict['lps'] = LearningPath.objects.filter(Q(creator=user) | Q(editor=user), project__isnull=False).order_by('-modified')
-    """
-    var_dict['oers'] = OER.objects.filter(creator=user).order_by('-modified')
-    var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('-modified')
+    var_dict['oers'] = OER.objects.filter(creator=user).order_by('state','-modified')
+    var_dict['oers_admin'] = OER.objects.filter(project__in=adminOers, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
+    var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    var_dict['lps_admin'] = LearningPath.objects.filter(project__in=adminlps, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     user_preferences = user.get_preferences()
     if user_preferences:
