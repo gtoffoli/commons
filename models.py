@@ -1113,6 +1113,8 @@ class Project(Resource):
         user = application.user
         application.state = 1
         application.editor = request.user
+        application.accepted = timezone.now()
+        application.history = "Approved by %s %s [id: %s]" % (request.user.last_name, request.user.first_name, request.user.id)
         application.save()
         if not group in user.groups.all():
             user.groups.add(user)

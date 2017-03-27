@@ -9,10 +9,10 @@
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
 {% block extra_style %}
-{% if can_accept_member %}{% if proj_type_name == 'sup' or project.is_reserved_project %}
+{% if widget_autocomplete_select2 %}
     <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
     <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
-{% endif %}{% endif %}
+{% endif %}
 <style>
   div.contentBody {
     margin-top:30px;
@@ -408,14 +408,24 @@
             {% if proj_type_name == 'sup' or project.is_reserved_project %}
               <div class="borderTdotted padding510">
                 <form method="post" action="/project/{{ project.slug }}/add_member/" id="add_member_form">{% csrf_token %}
+                  {% for field in add_member_form.hidden_fields %}{{ field }}{% endfor %}
                   <div class="form-group"><label class="demiBold">{% trans "add a member by your initiative"|capfirst %}</label>{{ add_member_form.user }}</div>
                   <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
                 </form>
               </div>
             {% endif %}
          {% endif %}
+         {% if can_change_admin %}
+           <div class="borderTdotted padding510">
+             <form method="post" action="/project/{{ project.slug }}/add_member/" id="add_change_admin_form">{% csrf_token %}
+               {% for field in add_change_admin_form.hidden_fields %}{{ field }}{% endfor %}
+               <div class="form-group"><label class="demiBold">{% if proj_type.name == 'com' %}{% trans "new administrator"|capfirst %}{% else %}{% trans "new supervisor"|capfirst %}{% endif %}</label>{{ add_change_admin_form.user }}</div>
+               <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
+             </form>
+           </div>
+       {% endif %}
        </div>
-
+       
        {% if recent_actions %}
          <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
        {% endif %}
@@ -783,12 +793,12 @@
 {% endblock %}
 
 {% block extra_script %}
-{% if can_accept_member %}{% if proj_type_name == 'sup' or project.is_reserved_project %}
+{% if widget_autocomplete_select2 %}
    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
-{% endif %}{% endif %}
+{% endif %}
 	<script type="text/javascript">
 	{% if can_delegate %}
 		function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the admin or supervisor role to this member" %}?');}

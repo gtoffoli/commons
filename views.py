@@ -407,7 +407,7 @@ def user_dashboard(request, username, user=None):
     var_dict['max_days'] = max_days
     var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
-
+    
     return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
 
 def my_home(request):
@@ -979,10 +979,16 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
         else:
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
-        var_dict['can_delegate'] = user.is_superuser or user==project.get_senior_admin()
+        senior_admin = user==project.get_senior_admin()
+        var_dict['can_delegate'] = user.is_superuser or senior_admin
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
         if can_accept_member:
-            var_dict['add_member_form'] = ProjectAddMemberForm()
+            var_dict['add_member_form'] = ProjectAddMemberForm(initial={'role_member': 'member' })
+        var_dict['can_change_admin'] = can_change_admin = senior_admin and is_draft
+        if can_change_admin:
+            add_change_admin_form = ProjectAddMemberForm()
+            var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
+        var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project)) 
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -1239,10 +1245,21 @@ def project_add_member(request, project_slug):
      post = request.POST
      if post and post.get('add_member',''):
          user_id = post.get('user')
+         role_member = post.get('role_member')
          user_to_add = User.objects.get(pk=user_id)
          if not ProjectMember.objects.filter(project=project, user=user_to_add):
-             membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user)
+             history = "Added and approved by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
+             membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user, history=history)
              membership.save()
+             if role_member == 'senior_admin' and project.state == PROJECT_DRAFT:
+                 role_admin = Role.objects.get(name='admin')
+                 remove_local_role(project, user, role_admin)
+                 add_local_role(project, user_to_add, role_admin)
+                 history = "Assigned role Administrator/Supervisor by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
+                 membership.history = "%s\n%s" % (membership.history, history)
+                 membership.save()
+                 project.remove_member(user)
+             track_action(user, 'Approve', membership, target=project)
      return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
@@ -1545,7 +1562,6 @@ def apply_for_membership(request, username, project_slug):
         raise PermissionDenied
     if user.id == request.user.id:
         membership = project.add_member(user)
-        # track_action(user, 'Apply', project)
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
@@ -1560,7 +1576,6 @@ def accept_application(request, username, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     if not project.can_access(request.user):
         raise PermissionDenied
-    # membership = project.get_membership(request.user)
     users = User.objects.filter(username=username)
     if users and users.count()==1:
         applicant = users[0]
@@ -1568,8 +1583,10 @@ def accept_application(request, username, project_slug):
             application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
             project.accept_application(request, application)
             track_action(request.user, 'Approve', application, target=project)
-    # return render_to_response('project_detail.html', {'project': project, 'proj_type': project.proj_type, 'membership': membership,}, context_instance=RequestContext(request))
-    return HttpResponseRedirect('/project/%s/' % project.slug)    
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
+
+
 
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
@@ -1583,12 +1600,21 @@ def project_toggle_supervisor_role(request, project_id):
         username = request.POST.get('user', '')
         user = get_object_or_404(User, username=username)
         role_admin = Role.objects.get(name='admin')
+        membership = ProjectMember.objects.get(user=user, project=project, state=1)
         if project.is_admin(user):
             remove_local_role(project, user, role_admin)
+            text = 'Removed role Administrator/Supervisor by %s %s [id: %s].' % (user.last_name, user.first_name, user.id)
         else:
             add_local_role(project, user, role_admin)
+            text = text = 'Assigned role Administrator/Supervisor by %s %s [id: %s].' % (user.last_name, user.first_name, user.id)
+        if membership.history:
+            membership.history = '%s\n%s' % (membership.history,text)
+        else:
+            membership.history = text
+        membership.modified = timezone.now()
+        membership.save()
         project.editor = request.user
-        project.save
+        project.save()
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 
@@ -3142,7 +3168,7 @@ def lp_detail(request, lp_id, lp=None):
     if user.is_authenticated():
         profile = user.get_profile()
         add_bookmarked = lp.project and is_published and profile and profile.get_completeness()
-        var_dict['alert_ment'] = lp.project.proj_type.name == 'ment' and lp.project.is_member(user)
+        var_dict['alert_ment'] = lp.project and lp.project.proj_type.name == 'ment' and lp.project.is_member(user)
     else:
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
@@ -3597,9 +3623,9 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     node.save()
                 path = node.path
                 if node_id:
-                    track_action(request.user, 'Edit', node, target=path.project)
+                    track_action(request.user, 'Edit', node, target=path)
                 else:
-                    track_action(request.user, 'Create', node, target=path.project)
+                    track_action(request.user, 'Create', node, target=path)
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
                 if request.POST.get('save', ''):
