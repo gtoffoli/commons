@@ -419,8 +419,8 @@
            <div class="borderTdotted padding510">
              <form method="post" action="/project/{{ project.slug }}/add_member/" id="add_change_admin_form">{% csrf_token %}
                {% for field in add_change_admin_form.hidden_fields %}{{ field }}{% endfor %}
-               <div class="form-group"><label class="demiBold">{% if proj_type.name == 'com' %}{% trans "new administrator"|capfirst %}{% else %}{% trans "new supervisor"|capfirst %}{% endif %}</label>{{ add_change_admin_form.user }}</div>
-               <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "add"|capfirst %}</button></div>
+               <div class="form-group"><label class="demiBold">{% if proj_type.name == 'com' %}{% trans "select new administrator"|capfirst %}{% else %}{% trans "select new supervisor"|capfirst %}{% endif %}</label>{{ add_change_admin_form.user }}</div>
+               <div class="form-group"><button type="submit" name="add_member" id="add" value="add" class="btn btn-default">{% trans "apply"|capfirst %}</button></div>
              </form>
            </div>
        {% endif %}
