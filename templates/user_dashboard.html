@@ -411,7 +411,7 @@
               </div>
               {% if oers_admin %}
                 <div class="panel-white">
-                  <div class="panel-heading-c2 padding510 demiBold">{% trans "OERs in supervisor project"|capfirst %}</div>
+                  <div class="panel-heading-c2 padding510 demiBold">{% trans "unpublished OERs in supervised projects"|capfirst %}</div>
                   <div {% if oers_admin|length > 10 %} class="box-scroll box-medium" {% endif %}>
                     <ul class="list-unstyled my-list-unstyled padding510">
                     {% for oer in oers_admin %}
@@ -439,7 +439,7 @@
               </div>
               {% if lps_admin %}
                 <div class="panel-white">
-                  <div class="panel-heading-c1 padding510 demiBold">{% trans "Learning Paths in supervisor project"|capfirst %}</div>
+                  <div class="panel-heading-c1 padding510 demiBold">{% trans "unpublishd LPs in supervised projects"|capfirst %}</div>
                   <div {% if lps_admin|length > 10 %} class="box-scroll box-medium" {% endif %}>
                     <ul class="list-unstyled my-list-unstyled padding510">
                     {% for lp in lps_admin %}
