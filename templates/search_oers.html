@@ -7,8 +7,12 @@
 {% block body_class %}search_oers{% endblock %}
 
 {% block body %}
-  <h1 class="text-center">{% trans "OERs"|capfirst %}</h1>
-  <div class="row marginTB20">
+<div class="marginTB30">
+  <div class="panel-heading-c2">
+    <h1 class="text-center padding105 margin0">{% trans "OERs"|capfirst %}</h1>
+  </div>
+  <div class="body-panel borderBLRradius borderColor-c2 paddingT20">
+  <div class="row marginLR0">
     <div class="col-sm-6 col-md-5 col-lg-5">
       <div class="search-header">
         {% trans "search"|capfirst %} 
@@ -54,6 +58,8 @@
       {% endif %}
     </div>
   </div>
+  </div>
+</div>
 {% endblock %}
 
 {% block extra_script %}

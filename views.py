@@ -364,10 +364,12 @@ def user_dashboard(request, username, user=None):
         if membership.project.is_admin(user):
             membership.proj_applications = membership.project.get_applications()
             adminships.append(membership)
-            if membership.project.proj_type.name == 'lp':
-                adminlps.append(membership.project_id)
-            elif membership.project.proj_type.name == 'oer':
+            oers_proj = OER.objects.filter(project=membership.project)
+            lps_proj = LearningPath.objects.filter(project=membership.project)
+            if oers_proj:
                 adminOers.append(membership.project_id)
+            if lps_proj:
+                adminlps.append(membership.project_id)
         else:
             only_memberships.append(membership)
     var_dict['adminships'] = adminships
@@ -949,6 +951,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['proj_type_name'] = type_name = proj_type.name
     if type_name == 'roll':
         var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
+        var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
     if project.small_image:
         image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
@@ -992,7 +995,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         if can_change_admin:
             add_change_admin_form = ProjectAddMemberForm()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
-        var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project)) 
+        var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
         var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         if can_add_oer:
@@ -1206,26 +1209,29 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
         var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
     var_dict['repos'] = []
-    if project.is_admin(user) or user.is_superuser:
-        oers = OER.objects.filter(project_id=project_id).order_by('-created')       
+    """
     elif user.is_authenticated():
         oers = OER.objects.filter(project_id=project_id).filter(Q(state=PUBLISHED) | Q(creator=user)).order_by('-created')
+    """
+    if (user.is_authenticated() and project.is_member(user)) or user.is_superuser:
+        oers = OER.objects.filter(project=project).order_by('-created')
     else:
-        oers = OER.objects.filter(project_id=project_id, state=PUBLISHED).order_by('-created')
+        oers = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
     shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
     var_dict['shared_oers'] = [[shared_oer, shared_oer.can_delete(request)] for shared_oer in shared_oers]
-    """
-    oer_evaluations = project.get_oer_evaluations()
-    var_dict['n_oer_evaluations'] = oer_evaluations.count()
-    var_dict['oer_evaluations'] = oer_evaluations[:MAX_EVALUATIONS]
-    """
     oers_last_evaluated = project.get_oers_last_evaluated()
     var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
     var_dict['oers_last_evaluated'] = oers_last_evaluated[:MAX_OERS_EVALUATED]
+    """
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_member(user) or user.is_superuser]
+    """
+    if (user.is_authenticated() and project.is_member(user)) or user.is_superuser:
+        lps = LearningPath.objects.filter(project=project).order_by('-created')
+    else:
+        lps = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
     var_dict['n_lps'] = len(lps)
     var_dict['lps'] = lps[:MAX_LPS]
     shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
@@ -1249,13 +1255,15 @@ def project_add_member(request, project_slug):
      post = request.POST
      if post and post.get('add_member',''):
          user_id = post.get('user')
-         role_member = post.get('role_member')
+         post_role = post.get('role_member')
          user_to_add = User.objects.get(pk=user_id)
          if not ProjectMember.objects.filter(project=project, user=user_to_add):
              history = "Added and approved by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
              membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user, history=history)
              membership.save()
-             if role_member == 'senior_admin' and project.state == PROJECT_DRAFT:
+             if user_to_add in project.members(user_only=True):
+                 project.group.user_set.add(user_to_add)
+             if post_role == 'senior_admin' and project.state == PROJECT_DRAFT:
                  role_admin = Role.objects.get(name='admin')
                  remove_local_role(project, user, role_admin)
                  add_local_role(project, user_to_add, role_admin)

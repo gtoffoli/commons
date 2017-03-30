@@ -711,6 +711,10 @@ a.harvest-gold:focus {
 .bc-demigray {
 background:#f1f2f2;
 }
+.body-panel {
+ background: #EBEDED;
+ border:1px solid transparent;
+}
 .bc-white {
 background:white;
 }
@@ -1179,6 +1183,11 @@ ul.list-inline > li.list-back-c3 {
 .borderTLRradius {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
+}
+.borderTLRradius2 {
+	
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
 }
 .panel-footer-c0,
 .panel-footer-c1,

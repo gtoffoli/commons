@@ -108,7 +108,7 @@
    {% endif %}
    {{ proj_type.description }}
    {% if project.is_reserved_project %}
-   - {% trans "reserved project"|capfirst %}
+   <span class="font12"> [{% trans "reserved project"|capfirst %}]</span>
    {% endif %}
    {% if project.get_level > 1 %}
      {% if project.get_level == 2 %}
@@ -117,7 +117,7 @@
        {% endwith %}
      {% elif project.get_level == 3 %}
        {% with parent=project.get_parent %}
-           &nbsp; - &nbsp;{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+           &nbsp; - &nbsp;{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a> {% if parent.reserved %}<span class="font12"> [{% trans "reserved project"|capfirst %}]</span>{% endif %}
            &nbsp; - &nbsp;{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="{% trans "parent" %}">{{ parent.get_parent.get_name }}</a>
        {% endwith %}
      {% endif %}
@@ -222,8 +222,7 @@
               {% endif %}
               {% endif %}
             </ul>
-            
-            {% if is_admin and is_open %}
+            {% if project.get_level > 0 and is_admin and is_open %}
               {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
                 <ul class="list-inline marginLB020">
                   {% if not project.forum or proj_type.name == 'com' %}
@@ -265,6 +264,7 @@
         {% endif %}
 
 {% comment %} or view_chat{% endcomment %}
+        {% if project.get_level > 0 %}
         {% if view_shared_folder or can_send_message or project.forum %}
         <div>
           <ul class="list-inline marginLB020">
@@ -290,6 +290,7 @@
              </li>
            </ul>
         </div>
+        {% endif %}
         {% endif %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
@@ -346,6 +347,7 @@
           </div>
         {% endif %}
         {% endif %}
+        
      {% endif %}
 
    </div>
@@ -500,6 +502,7 @@
  </div>
  
 {% comment %} MENTORING {% endcomment %}
+{% if project.group.level > 0 %}
 {% if mentoring_block %}
   <div class="paddingLR15">
     <div class="clearfix">
@@ -619,7 +622,9 @@
      </ul>
    </div>
 {% endif %}
+{% endif %}
 {% else %}
+{% comment %} ROLL OF MENTORS {% endcomment %}
   <div class="row marginLR0 paddingT10">
     <div class="col-sm-7 col-md-7 col-lg-8">
       <article class="view-list">
@@ -752,6 +757,9 @@
         </ul>
       {% endif %}{% endif %}
       {% if is_member and can_add_lp %}
+        <div class="panel-white">
+          <div class="padding510 paddinB0 font12">{{ roll_lp_info|safe }}</div>
+        </div>
         <ul class="list-inline padding10510">
           <li class="list-back-c1 marginB5">
             <ul class="list-inline">

@@ -7,11 +7,12 @@
 {% block body_class %}browse-people{% endblock %}
 
 {% block body %}
-   <h1 class="text-center">{% trans "all people"|capfirst %}</h1>
-   <div class="panel panel-c0">
-   <div class="panel-heading panel-heading-c0"><i>{% trans "distribution of users based on self-compiled user profiles"|capfirst %}</i></div>
-   
-   <div class="panel-body">
+<div class="marginTB30">
+   <div class="panel-heading-c0">
+     <h1 class="text-center padding105 margin0">{% trans "all people"|capfirst %}</h1>
+   </div>
+   <div class="body-panel borderBLRradius borderColor-c0 paddingT10 paddingLR15">
+   <div class="text-center demiBold paddingB20 font16">{% trans "distribution of users based on self-compiled user profiles"|capfirst %}</div>
    <ul class="list-inline browse-list">
    {% for field_name, field_label, entries in people_browse_list %}
       <li>
@@ -26,5 +27,5 @@
    {% endfor %}
    </ul>
    </div>
-   </div>
+</div>
 {% endblock %}
