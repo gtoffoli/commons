@@ -22,6 +22,22 @@
     {% endif %}
   {% endif %}
 {% endif %}{% endblock %}
+{% if proj_type_name == 'ment' and info_proj_mentoring %}
+{% block extra_style %}
+<style>
+	div.msg {
+	background: white;
+	margin-top: 15px;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding: 5px;
+	border: 1px solid red;
+	color: red;
+	font-size:13px;
+}
+</style>
+{% endblock %}
+{% endif %}
 
 {% block body_class %}project_edit{% endblock %}
 {% block body %}
@@ -49,6 +65,9 @@
       {% endif %}
       </h2>
     </div>
+    {% if proj_type_name == 'ment' and info_proj_mentoring %}
+      <div class="msg">{{info_proj_mentoring|safe}}</div>
+    {% endif %}
     <form method="post" action="{{ action }}" id="edit_form" enctype="multipart/form-data">{% csrf_token %}
       {% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}">{% endif %}
       {% if proj_type %}<input type="hidden" id="proj_type" name="proj_type" value="{{ proj_type.id }}">{% endif %}

@@ -451,8 +451,8 @@
              <div class="panel-heading-c1 padding510 demiBold">{% trans "shared LPs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_lp, deletable in shared_lps %}
-               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/lp/{{ shared_lp.lp.slug }}/">{{ shared_lp.lp.title }}</a>
+               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><small><i class="fa fa-times-circle red"></i></small></a>{% endif %}
+                   <a href="/lp/{{ shared_lp.lp.slug }}/"><small>{{ shared_lp.lp.title }}</small></a>
                </li>
              {% endfor %}
              </ul>
@@ -476,8 +476,8 @@
              <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_oer, deletable in shared_oers %}
-               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><i class="fa fa-times-circle red"></i></a>{% endif %}
-                   <a href="/oer/{{ shared_oer.oer.slug }}/">{{ shared_oer.oer.title }}</a>
+               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><small><i class="fa fa-times-circle red"></i></small></a>{% endif %}
+                   <a href="/oer/{{ shared_oer.oer.slug }}/"><small>{{ shared_oer.oer.title }}</small></a>
                </li>
              {% endfor %}
              </ul>

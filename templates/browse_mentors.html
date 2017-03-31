@@ -21,7 +21,8 @@
 {% block body_class %}mentors{% endblock %}
 {% block body %}
 <div class="panel panel-white marginTB30 borderColor-c0">
-  <div class="panel-heading-c0"><h3 class="margin0 padding510 c-white demiBold text-center">{% trans "mentors"|capfirst %}</h3></div>
+  <div class="panel-heading-c0"><h3 class="margin0 padding510 c-white demiBold text-center">{% trans "all mentors"|capfirst %}</h3></div>
+  {% if info_all_mentors %}<div class="padding10 font13">{{info_all_mentors|safe}}</div>{% endif %}
   {% if mentors %}
     <div class="padding10">
       <div class="list-m">

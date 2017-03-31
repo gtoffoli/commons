@@ -742,11 +742,18 @@ color:#a7a7a7;
 .borderBottom {
  border-bottom:1px solid transparent;
 }
+.borderTB1 {
+	border-top:1px solid transparent;
+	border-bottom:1px solid transparent;
+}
 .borderAll4 {
 	border:4px solid transparent;
 }
 .borderColor-neutral {
 	border-color: #eee;
+}
+.borderColor-gray {
+	border-color: #ccc;
 }
 .borderColor-c0 {
 	border-color:#67AE73;

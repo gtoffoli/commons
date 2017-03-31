@@ -1297,7 +1297,9 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     data_dict['proj_type_list']=["ment", "roll",]
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if proj_type:
-       data_dict['proj_type_name'] = proj_type.name
+       data_dict['proj_type_name'] = proj_type_name = proj_type.name
+       if proj_type_name == 'ment':
+           data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
     if project_id:
         if project.can_edit(request):
             if not project.name:
@@ -1596,9 +1598,6 @@ def accept_application(request, username, project_slug):
             project.accept_application(request, application)
             track_action(request.user, 'Approve', application, target=project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
-
-
-
 
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
@@ -2464,7 +2463,8 @@ def browse_people(request):
 
 def browse_mentors(request):
     mentors = get_all_mentors ()
-    return render_to_response('browse_mentors.html', {'mentors': mentors,}, context_instance=RequestContext(request))
+    info_all_mentors = FlatPage.objects.get(url='/infotext/all-mentors/').content
+    return render_to_response('browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors}, context_instance=RequestContext(request))
   
 def oer_list(request, field_name='', field_value=None):
     oers = []
@@ -3175,6 +3175,22 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['object'] = lp
     var_dict['can_comment'] = lp.can_comment(request)
     var_dict['project'] = lp.project
+    can_delegate = lp.project and (user == lp.creator or lp.project.is_admin(user))
+    if can_delegate:
+        proj_members = lp.project.members(user_only=False)
+        proj_admins = [lp.creator]
+        for proj_admin in proj_members:
+             if proj_admin[1] and not proj_admin[0] == lp.creator:
+                 proj_admins.append(proj_admin[0])
+        memberships = ProjectMember.objects.filter(project=lp.project, state=1).exclude(user__in=proj_admins).order_by('user__last_name')
+        proj_candidate_lp_editors = []
+        for membership in memberships:
+            membership.is_editor = lp.can_edit(membership)
+            print lp.can_edit(membership)
+            proj_candidate_lp_editors.append([membership.user,lp.can_edit(membership)])
+        if len(proj_candidate_lp_editors) > 0:
+           var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
+           var_dict['can_delegate'] = can_delegate
     var_dict['is_published'] = is_published = lp.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     if user.is_authenticated():
@@ -3231,6 +3247,20 @@ def lp_detail_by_slug(request, lp_slug):
     # lp = LearningPath.objects.get(slug=lp_slug)
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_detail(request, lp.id, lp)
+
+def lp_toggle_editor_role(request, lp_id):
+    print "================== TEST ==============="
+    print 'entro'
+    lp = get_object_or_404(LearningPath, id=lp_id)
+    if not lp.can_edit(request):
+        raise PermissionDenied
+    if request.POST:
+        print "============== REQUEST ============"
+        print request.POST
+        username = request.POST.get('user', '')
+        user = get_object_or_404(User, username=username)
+        lp.toggle_editor_role(user)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def lp_play(request, lp_id, lp=None):
     if not lp:

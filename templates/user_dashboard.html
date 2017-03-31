@@ -247,7 +247,7 @@
                 {% for rel in rels %}
                   <li>
                     <span class="limegreen"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></span>
-                    <small><a href="/project/{{ rel.slug }}/">{{ rel.name }}</a></small>
+                    <small><a href="/project/{{ rel.slug }}/">{{ rel.name }} [{% trans "request of" %} {{rel.creator.last_name }} {{rel.creator.first_name }}]</a></small>
                   </li>
                 {% endfor %}
                 </ul>
@@ -261,7 +261,7 @@
                 {% for rel in rels %}
                   <li>
                       <span class="limegreen"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></span>
-                    <small><a href="/project/{{ rel.slug }}/">{{ rel.name }}</a></small>
+                    <small><a href="/project/{{ rel.slug }}/">{{ rel.name }} [{% trans "request of" %} {{rel.creator.last_name }} {{rel.creator.first_name }}]</a></small>
                   </li>
                 {% endfor %}
                 </ul>
@@ -275,7 +275,7 @@
                 {% for rel in rels %}
                   <li>
                       <span class="limegreen"><i class="fa fa-user" aria-hidden="true"></i><i class="fa fa-arrows-h" aria-hidden="true"></i><i class="fa fa-user" aria-hidden="true"></i></span>
-                    <small><a href="/project/{{ rel.project.slug }}/">{{ rel.project.name }}</a></small>
+                    <small><a href="/project/{{ rel.project.slug }}/">{{ rel.project.name }} [{% trans "request of" %} {{rel.project.creator.last_name }} {{rel.project.creator.first_name }}]</a></small>
                   </li>
                 {% endfor %}
                 </ul>
@@ -290,7 +290,7 @@
                     {% if rel.project.state == 3 %}
                       <span class="fa fa-lock neutral"></span> 
                     {% endif %}
-                    <small><a href="/project/{{ rel.project.slug }}/">{{ rel.project.name }}</a></small>
+                    <small><a href="/project/{{ rel.project.slug }}/">{{ rel.project.name }} [{% trans "request of" %} {{rel.project.creator.last_name }} {{rel.project.creator.first_name }}]</a></small>
                   </li>
                 {% endfor %}
                 </ul>
