@@ -47,6 +47,7 @@ from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
 from forms import ProjectMentoringModelForm, AcceptMentorForm
+from forms import repurpose_mentoring_form
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
 from permissions import ForumPermissionHandler
@@ -1304,17 +1305,20 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
+            data_dict['proj_type_name'] = proj_type_name = project.get_project_type()
             form = ProjectForm(instance=project)
             """
             data_dict = {'form': form, 'action': action, 'project': project, 'object': project,}
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
             """
+            if proj_type_name == 'ment':
+                data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
+                repurpose_mentoring_form(form)
             data_dict['form'] = form
             data_dict['project'] = project
             data_dict['object'] = project
             data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
-            data_dict['proj_type_name'] = project.get_project_type()
             return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1334,6 +1338,9 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             current_language = get_current_language()
             data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
             """
+            if proj_type_name == 'ment':
+                data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
+                repurpose_mentoring_form(form)
             data_dict['form'] = form
             data_dict['parent'] = parent
             data_dict['object'] = None
@@ -1347,8 +1354,11 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             project = get_object_or_404(Project, id=project_id)
             data_dict['project'] = project
             data_dict['object'] = project
-            data_dict['proj_type_name'] = project.get_type_name()
+            data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
             form = ProjectForm(request.POST, instance=project)
+            if proj_type_name == 'ment':
+                data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
+                repurpose_mentoring_form(form)
             data_dict['form'] = form
         elif parent_id:
             parent = get_object_or_404(Project, pk=parent_id)
@@ -1356,9 +1366,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             proj_type_id = request.POST.get('proj_type','')
             proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
             if proj_type:
-                data_dict['proj_type_name'] = proj_type.name
+                data_dict['proj_type_name'] = proj_type_name = proj_type.name
             name = request.POST.get('name', '')
             form = ProjectForm(request.POST)
+            if proj_type_name == 'ment':
+                data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
+                repurpose_mentoring_form(form)
             data_dict['form'] = form
         """
         else:

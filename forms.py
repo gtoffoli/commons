@@ -188,6 +188,10 @@ class ProjectForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
+def repurpose_mentoring_form(form):
+    form.fields['name'].label = _('title of the mentoring project')
+    form.fields['description'].label = _('short description of the mentoring project')
+
 class ProjectLogoForm(forms.ModelForm):
     class Meta:
         model = Project
