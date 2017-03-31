@@ -24,7 +24,9 @@ from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
-from roles.utils import get_roles, has_permission
+from roles.models import Role
+# from roles.utils import get_roles, has_permission
+from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission
 """
 from taggit.models import Tag
 from taggit.managers import TaggableManager
@@ -279,6 +281,19 @@ class Resource(models.Model):
             if not code in codes:
                 codes.append(code)
         return codes
+
+    def has_editor_role(self, user):
+        role_editor = Role.objects.get(name='editor')
+        return role_editor in get_local_roles(self, user)
+
+    def toggle_editor_role(self, user):
+        role_editor = Role.objects.get(name='editor')
+        if role_editor in get_local_roles(self, user):
+            remove_local_role(self, user, role_editor)
+            return False
+        else:
+            add_local_role(self, user, role_editor)
+            return True
 
 """ moved set_original_language to individual views
 @receiver(pre_save)
@@ -1951,13 +1966,15 @@ class LearningPath(Resource, Publishable):
         user = request.user
         if not user.is_authenticated():
             return False
+        # if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
+        if user.is_superuser or self.creator==user:
+            return True
         project = self.project
-        if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
-            return True
-        """
-        if project and project.is_member(user):
-            return True
-        """
+        if project:
+            if project.is_admin(user):
+                return True
+            if project.is_member(user) and self.has_editor_role(user):
+                return True
         return False
 
     def can_delete(self, request):
