@@ -372,12 +372,12 @@ def count_users(request):
     users = User.objects.filter(is_active=True)
     var_dict['n_active_user'] = users.count()
     for user in users:
-        profile = user.get_profile
+        profile = user.get_profile()
         if not profile:
             continue
         if profile.avatar:
             var_dict['n_has_avatar'] += 1
-        if user.is_completed_profile():
+        if profile.get_completeness():
             var_dict['n_profiled'] += 1
             memberships = ProjectMember.objects.filter(user=user)
             if memberships.count():
@@ -391,7 +391,7 @@ def count_users(request):
                         var_dict['n_community_member'] += 1
                         break
                 for membership in memberships:
-                    if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name=='proj':
+                    if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name!='com':
                         var_dict['n_project_member'] += 1
                         break
     return render_to_response('count_users.html', var_dict, context_instance=RequestContext(request))

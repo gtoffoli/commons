@@ -1,0 +1,34 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+</style>
+{% endblock %}
+
+{% block head_title %}{% trans "count of users and members"|capfirst %}{% endblock %}
+
+{% block body %}
+   <h1 class="text-center">{% trans "count of users and members"|capfirst %}</h1>
+    <section>
+        <div class="container">
+
+		<table class="table table-responsive table-bordered table-striped">
+			<thead>
+				<tr><th>{% trans "user class" %}</th><th style="text-align: center;">{% trans "user count" %}</th></tr>
+			</thead>
+			<tbody>
+				<tr><td>{% trans "all users"|capfirst %}</td><td style="text-align: center;">{{ n_active_user }}</td></tr>
+				<tr><td>{% trans "regular profiles"|capfirst %}</td><td style="text-align: center;">{{ n_profiled }}</td></tr>
+				<tr><td>{% trans "profiles with avatars"|capfirst %}</td><td style="text-align: center;">{{ n_has_avatar }}</td></tr>
+				<tr><td>{% trans "members"|capfirst %}</td><td style="text-align: center;">{{ n_member }}</td></tr>
+				<tr><td>{% trans "accepted members"|capfirst %}</td><td style="text-align: center;">{{ n_active_member }}</td></tr>
+				<tr><td>{% trans "community members"|capfirst %}</td><td style="text-align: center;">{{ n_community_member }}</td></tr>
+				<tr><td>{% trans "project members"|capfirst %}</td><td style="text-align: center;">{{ n_project_member }}</td></tr>
+		    </tbody>
+		</table>
+
+        </div>
+    </section>
+{% endblock %}
