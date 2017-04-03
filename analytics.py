@@ -367,6 +367,35 @@ def filter_users(profiled=None, member=None, count_only=False):
     else:
         return users
 
+def count_users(request):
+    var_dict = defaultdict(int)
+    users = User.objects.filter(is_active=True)
+    var_dict['n_active_user'] = users.count()
+    for user in users:
+        profile = user.get_profile
+        if not profile:
+            continue
+        if profile.avatar:
+            var_dict['n_has_avatar'] += 1
+        if user.is_completed_profile():
+            var_dict['n_profiled'] += 1
+            memberships = ProjectMember.objects.filter(user=user)
+            if memberships.count():
+                var_dict['n_member'] += 1
+                for membership in memberships:
+                    if membership.state==MEMBERSHIP_ACTIVE:
+                        var_dict['n_active_member'] += 1
+                        break
+                for membership in memberships:
+                    if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name=='com':
+                        var_dict['n_community_member'] += 1
+                        break
+                for membership in memberships:
+                    if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name=='proj':
+                        var_dict['n_project_member'] += 1
+                        break
+    return render_to_response('count_users.html', var_dict, context_instance=RequestContext(request))
+
 def oer_duplicates(request):
     published = request.GET.get('published', None)
     oers = OER.objects.exclude(url=u'')
@@ -501,7 +530,8 @@ def get_active_users(users=None, max_users=20, max_days=30):
         if last_seen:
             time_delta = now-last_seen
             if time_delta.days <= max_days:
-                active_users.append({'user': user, 'online': user.online(), 'time_delta': time_delta.seconds, 'last_seen': last_seen})
+                delta_seconds = time_delta.days * 24 * 3600 + time_delta.seconds
+                active_users.append({'user': user, 'online': user.online(), 'time_delta': delta_seconds, 'last_seen': last_seen})
     if active_users:
         active_users.sort(key=lambda x: x['time_delta'])
     return active_users[:max_users]
