@@ -190,7 +190,8 @@ class ProjectForm(forms.ModelForm):
 
 def repurpose_mentoring_form(form):
     form.fields['name'].label = _('title of the mentoring project')
-    form.fields['description'].label = _('short description of the mentoring project')
+    form.fields['description'].label = _('description of the mentoring project')
+    form.fields['info'].label = _('additional information')
 
 class ProjectLogoForm(forms.ModelForm):
     class Meta:

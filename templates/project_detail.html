@@ -696,7 +696,7 @@
           {% if profile_mentoring %}
             <a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a>
           {% else %}
-            <a class="btn btn-green" href="/profile/{{user.username }}/mentor_edit/" title="{% trans "edit mentor profile" %}">{% trans "add mentor presentation to your profile"|capfirst %}</a>
+            <a class="btn btn-green" href="/profile/{{user.username }}/mentor_edit/" title="{% trans "edit mentor profile" %}">{% trans "to apply you must fill the mentor presentation in your profile"|capfirst %}</a>
           {% endif %}
         </div>
       {% elif membership and membership.state == 0 %}
