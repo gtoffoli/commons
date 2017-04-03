@@ -497,6 +497,26 @@ div.msg {
 {% endblock %}
 
 {% block extra_script %}
+{% if project.info %}
+<script type="text/javascript">
+  $(document).ready(function() {
+	$('a.toggleInfoIcon').on('click', function(event){
+		event.preventDefault();
+			var accordion = $(this).parent();
+			var accordionContent = accordion.next('.field-content');
+			var accordionToggleInfoIcon = $(this);
+			accordion.toggleClass("open");
+			accordionContent.slideToggle(250);
+			if (accordion.hasClass("open")) {
+				accordionToggleInfoIcon.children('i').attr("class","fa fa-minus-circle c-fern");
+			} else {
+				accordionToggleInfoIcon.children('i').attr("class","fa fa-plus-circle c-fern");
+			}
+	});
+	});
+</script>
+{% endif %}
+
 {% if candidate_mentors %}
 <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
 <style>

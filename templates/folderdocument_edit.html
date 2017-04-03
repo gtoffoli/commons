@@ -22,8 +22,8 @@
         {% endwith %}{% endfor %}
       </fieldset>
       <div class="panel-footer-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
-        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %} {% trans "changes" %}</button>&nbsp;
-        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save and exit"|capfirst %}</button>&nbsp;
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "exit without saving"|capfirst %}</button>
       </div>
   </form>
 </div>

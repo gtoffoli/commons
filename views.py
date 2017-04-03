@@ -243,21 +243,16 @@ def press_releases(request):
     language_pr_list = sorted(language_pr_list, key=lambda x: x[1])
     var_dict['language_pr_list'] = language_pr_list
     var_dict['project'] = project
-    # var_dict['form'] = DocumentUploadForm()
     current_language_code = request.LANGUAGE_CODE
     if request.method == 'GET' and request.GET.get('doc', ''):
         doc_id = request.GET.get('doc', '')
         var_dict['docsel'] = int(doc_id)
-        print "DOC"
-        print doc_id
         var_dict['url'] = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], doc_id)
     elif current_language_code in language_pr_dict:
         last_release = language_pr_dict[current_language_code][0]
         var_dict['last_release'] = last_release
         if last_release:
             var_dict['docsel'] = last_release.document.id
-            print "LAST"
-            print last_release.document.id
             var_dict['url']= url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
     return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
 
@@ -1008,7 +1003,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             bookmarked_oers = oers_in_clipboard(request, 'bookmarked_oers')
             var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project and not SharedOer.objects.filter(project=project, oer=oer).count()]
         var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
-        print project.can_add_lp(user)
         if can_add_lp:
             """
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
@@ -1296,22 +1290,19 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         if not parent.can_access(user):
             raise PermissionDenied
     data_dict['proj_type_list']=["ment", "roll",]
+    """
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if proj_type:
        data_dict['proj_type_name'] = proj_type_name = proj_type.name
        if proj_type_name == 'ment':
            data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
+    """
     if project_id:
         if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
             data_dict['proj_type_name'] = proj_type_name = project.get_project_type()
             form = ProjectForm(instance=project)
-            """
-            data_dict = {'form': form, 'action': action, 'project': project, 'object': project,}
-            current_language = get_current_language()
-            data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-            """
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
@@ -1323,21 +1314,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
     elif parent_id:
-        if parent.can_edit(request) or (proj_type and proj_type.name=='ment'):
+        proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
+        data_dict['proj_type_name'] = proj_type_name = proj_type.name
+        if parent.can_edit(request) or (proj_type and proj_type_name == 'ment'):
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
-            # initial = {'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id}
-            """
-            if proj_type.name == 'roll':
-                initial['name'] = string_concat(capfirst(_('roll of mentors')), ' ', _('for'), ' ', parent.name)
-            elif proj_type.name == 'ment':
-                initial['name'] = string_concat(capfirst(_('mentoring request')), ' ', _('of'), ' ', user.get_display_name())
-            """
-            # form = ProjectForm(initial=initial)
-            """
-            data_dict = {'form': form, 'action': action, 'parent': parent, 'proj_type': proj_type, 'object': None,}
-            current_language = get_current_language()
-            data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-            """
+            # proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
+            # data_dict['proj_type_name'] = proj_type_name = proj_type.name
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
@@ -1437,14 +1419,18 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
+                    """
                     form = ProjectForm(request.POST, instance=project) # togliere ?
                     # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
-                    data_dict['form'] = form
-                    data_dict['proj_type_name'] = project.get_type_name()
+                    # data_dict['proj_type_name'] = project.get_type_name()
                     if project:
-                        data_dict['proj_type_name'] = project.get_type_name()
+                        data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
                     else:
-                        data_dict['proj_type_name'] = proj_type.name
+                        data_dict['proj_type_name'] = proj_type_name = proj_type.name
+                    if proj_type_name == 'ment':
+                        repurpose_mentoring_form(form)
+                    data_dict['form'] = form
+                    """
                     return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
             else:
                 print form.errors
@@ -2141,7 +2127,6 @@ def browse_repos(request):
             except:
                 prefix = ''
             n = Repo.objects.filter(**{field_name: entry}).count()
-            print entry, n
             entries.append([code, label, prefix, n])
         browse_list.append([field_name, field_label, entries])
     return render_to_response('browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,}, context_instance=RequestContext(request))
@@ -2174,7 +2159,6 @@ def browse(request):
                 except:
                     prefix = ''
                 n = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
-                # print entry, n
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2215,7 +2199,6 @@ def browse(request):
                 except:
                     prefix = ''
                 n = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
-                # print entry, n
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2253,7 +2236,6 @@ def browse(request):
             except:
                 prefix = ''
             n = Repo.objects.filter(Q(**{field_name: entry}) & Q(state=PUBLISHED)).count()
-            # print entry, n
             if n:
                 entries.append([code, label, prefix, n])
         repos_browse_list.append([field_name, field_label, entries])
@@ -2457,9 +2439,7 @@ def browse_people(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                # n = UserProfile.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
                 n = UserProfile.objects.filter(Q(**{field_name: entry}),).count()
-                # print entry, n
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2846,70 +2826,6 @@ def oer_evaluations(request, oer_slug):
     var_dict['evaluations']=oer.get_evaluations()
     return render_to_response('oer_evaluations.html', var_dict, context_instance=RequestContext(request))
 
-"""
-# @transaction.atomic
-def oer_evaluation_edit(request, evaluation_id=None, oer=None):
-    user = request.user
-    evaluation = None
-    action = '/oer_evaluation/edit/'
-    if evaluation_id:
-        evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
-        oer = evaluation.oer
-        action = '/oer_evaluation/%s/edit/' % evaluation_id
-    if request.POST:
-        evaluation_id = request.POST.get('id', '')
-        if evaluation_id:
-            evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
-            action = '/oer_evaluation/%s/edit/' % evaluation_id
-            oer = evaluation.oer
-        form = OerEvaluationForm(request.POST, instance=evaluation)
-        metadata_formset = OerQualityFormSet(request.POST, instance=evaluation)
-        if request.POST.get('save', '') or request.POST.get('continue', ''): 
-            if form.is_valid():
-                evaluation = form.save(commit=False)
-                evaluation.user = user
-                evaluation.save()
-                form.save_m2m()
-                evaluation = get_object_or_404(OerEvaluation, pk=evaluation.id)
-                track_action(request.user, 'Create', evaluation, target=oer.project)
-                n = len(metadata_formset)
-                for i in range(n):
-                    if request.POST.get('metadata_set-%d-DELETE' % i, None):
-                        quality_metadatum_id = request.POST.get('metadata_set-%d-id' % i, None)
-                        if quality_metadatum_id:
-                            quality_metadatum = OerMetadata.objects.get(id=metadatum_id)
-                            quality_metadatum.delete()
-                    metadata_form = metadata_formset[i]
-                    if metadata_form.is_valid():
-                        try:
-                            metadata_form.save()
-                        except:
-                            pass
-                action = '/oer_evaluation/%s/edit/' % evaluation.id
-                if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/oer/%s/' % oer.slug)
-            else:
-                print form.errors
-                print metadata_formset.errors
-            return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action,}, context_instance=RequestContext(request))
-        elif request.POST.get('cancel', ''):
-            if evaluation:
-                oer = evaluation.oer
-            else:
-                oer_id = oer and oer.id or request.POST.get('oer')
-                oer = get_object_or_404(OER, pk=oer_id)
-            return HttpResponseRedirect('/oer/%s/' % oer.slug)
-    elif evaluation:
-        form = OerEvaluationForm(instance=evaluation)
-        metadata_formset = OerQualityFormSet(instance=evaluation)
-        action = '/oer_evaluation/%s/edit/' % evaluation.id
-    else: # oer
-        form = OerEvaluationForm(initial={'oer': oer.id, 'user': user.id,})
-        metadata_formset = OerQualityFormSet()
-        action = '/oer/%s/evaluate/' % oer.slug
-    return render_to_response('oer_evaluation_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
-"""
-
 def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     user = request.user
     evaluation = None
@@ -3199,7 +3115,6 @@ def lp_detail(request, lp_id, lp=None):
         proj_candidate_lp_editors = []
         for membership in memberships:
             membership.is_editor = lp.can_edit(membership)
-            print lp.can_edit(membership)
             proj_candidate_lp_editors.append([membership.user,lp.can_edit(membership)])
         if len(proj_candidate_lp_editors) > 0:
            var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
@@ -3262,14 +3177,10 @@ def lp_detail_by_slug(request, lp_slug):
     return lp_detail(request, lp.id, lp)
 
 def lp_toggle_editor_role(request, lp_id):
-    print "================== TEST ==============="
-    print 'entro'
     lp = get_object_or_404(LearningPath, id=lp_id)
     if not lp.can_edit(request):
         raise PermissionDenied
     if request.POST:
-        print "============== REQUEST ============"
-        print request.POST
         username = request.POST.get('user', '')
         user = get_object_or_404(User, username=username)
         lp.toggle_editor_role(user)
@@ -3333,13 +3244,10 @@ def lp_play(request, lp_id, lp=None):
         if youtube:
             if youtube.count('embed'):
                 pass
-                print 1, youtube
             elif youtube.count('youtu.be/'):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
-                print 2, youtube
             elif youtube.count('watch?v='):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
-                print 3, youtube
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:
@@ -3377,6 +3285,8 @@ def lp_edit(request, lp_id=None, project_id=None):
     action = '/lp/edit/'
     if lp_id:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+        print lp_id
+        print lp.slug
         if not lp.can_access(user):
             raise PermissionDenied
         action = '/lp/%s/edit/' % lp.slug
@@ -3385,8 +3295,10 @@ def lp_edit(request, lp_id=None, project_id=None):
             return HttpResponseRedirect('/lp/%s/' % lp.slug)
     if request.POST:
         lp_id = request.POST.get('id', '')
+
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
+            print lp.slug
             action = '/lp/%s/edit/' % lp.slug
             group_id = lp.group_id
         form = LpForm(request.POST, instance=lp)
@@ -3402,11 +3314,13 @@ def lp_edit(request, lp_id=None, project_id=None):
                 else:
                     track_action(request.user, 'Create', lp, target=lp.project)
                 lp = get_object_or_404(LearningPath, id=lp.id)
+                action = '/lp/%s/edit/' % lp.slug
                 if request.POST.get('save', ''): 
-                    return HttpResponseRedirect('/lp/%s/' % lp.slug)
+                    return HttpResponseRedirect('/lp/%s/' % lp.slug) 
             else:
                 print form.errors
             return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action,}, context_instance=RequestContext(request))
+           
         elif request.POST.get('cancel', ''):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -3500,7 +3414,6 @@ def lp_add_node(request, lp_slug):
     path = get_object_or_404(LearningPath, slug=lp_slug)
     if not path.can_access(request.user):
         raise PermissionDenied
-    print request
     return pathnode_edit(request, path_id=path.id) 
 
 def lp_add_oer(request, lp_slug, oer_id):

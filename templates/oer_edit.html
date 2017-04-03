@@ -73,10 +73,8 @@
       </div>
     </fieldset>
     <div class="panel-footer-c2 padding1020">
-      <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}{% if oer %} {% trans "changes" %}{% endif %}</button>&nbsp;
-      <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save and continue"|capfirst %}</button>&nbsp;
-      <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
-     </div>
+      {% include "_edit_submit.html" %}
+    </div>
     </form>
   </div>
 {% endblock %}

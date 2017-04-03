@@ -1,12 +1,16 @@
 {% load i18n staticfiles %}
 
 <article class="panel-white padding10">
-<h4 class="c-fern marginT0 paddingB5 borderBottom borderColor-c0"><strong>{% trans "description of the mentoring project"|capfirst %}</strong></h4>
-  <p class="font16"><i>{{ project.description }}</i></p>
+<!--h4 class="c-fern marginT0 paddingB5 borderBottom borderColor-c0">
+	<strong>{% trans "description of the mentoring project"|capfirst %}</strong></h4-->
+  <dl class="font16">
+    <dt>{% trans "description of the mentoring project"|capfirst %}</dt>
+    <dd>{{ project.description }}</dd>
+  </dl>
   {% if project.info %}
-    <dl class="list-inline font14 clearfix">
-      <dt>{% trans "additional information"|capfirst %}</dt>
-      <dd class="field-content width-full"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
+    <dl>
+      <dt class="font16">{% trans "additional information"|capfirst %} <a href="#" class="toggleInfoIcon"><i class="fa fa-plus-circle c-fern"></i></a></dt>
+      <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
     </dl>
   {% endif %}
 

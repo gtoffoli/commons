@@ -26,8 +26,8 @@
     {% endwith %}{% endfor %}
 
    	</div></div>
-		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save"|capfirst %}{% if lp %} {% trans "changes" %}{% endif %}</button>&nbsp;
-		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "cancel"|capfirst %} ({% trans "user view" %})</button>
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and exit"|capfirst %}{% if lp %}{% endif %}</button>&nbsp;
+		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "exit without saving"|capfirst %}</button>
     </form>
     </section>
   </div>
