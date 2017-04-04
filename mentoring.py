@@ -36,9 +36,11 @@ def get_all_candidate_mentors(user, community):
         if community_mentors:
             community_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in community_mentors]).order_by('last_name','first_name')
         rolls = rolls.exclude(pk=roll.id)
-    if rolls:
+    # if rolls:
+    other_candidate_mentors = None
+    if rolls and community.allow_external_mentors:
         members = []
-        other_candidate_mentors = None
+        # other_candidate_mentors = None
         for roll in rolls:
             memberships = roll.get_memberships(state=1).order_by('user__last_name','user__first_name')
             for membership in memberships:

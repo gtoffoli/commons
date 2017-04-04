@@ -210,6 +210,13 @@ class ProjectMentoringModelForm(forms.ModelForm):
 
     mentoring_model = forms.ChoiceField(required=False, choices=MENTORING_MODEL_CHOICES, label=_('mentoring setup model'),widget=forms.RadioSelect)
 
+class ProjectMentoringPolicyForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ('allow_external_mentors',)
+
+    allow_external_mentors = forms.BooleanField(required=False, label=_('can choose mentor from other community'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}))
+
 N_MEMBERS_CHOICES = (
     (0, ''),
     (1, '5'),
@@ -339,9 +346,9 @@ class OerForm(forms.ModelForm):
 
     class Meta:
         model = OER
-        # exclude = ('slug', 'documents', 'metadata')
-        exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled')
-        # fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
+        ## fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
+        # exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled')
+        exclude = ('slug', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled', 'content', 'documents',)
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))

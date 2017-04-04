@@ -795,11 +795,14 @@ class Project(Resource):
     info = models.TextField(_('longer description'), blank=True, null=True)
     small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True, blank=True)
     big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True, blank=True)
-    reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
-    # mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, default=MENTORING_MODEL_A, null=True, verbose_name=_('mentoring model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+
     mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+    allow_external_mentors = models.BooleanField(default=False, verbose_name=_('allow external mentors'))
     prototype = models.ForeignKey('LearningPath', verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
+
+    reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
+
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
@@ -1444,8 +1447,6 @@ class OER(Resource, Publishable):
     license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='source type')
-    # documents = models.ManyToManyField(Document, blank=True, verbose_name='attached documents')
-    documents = models.ManyToManyField(Document, through='OerDocument', related_name='oer_document', blank=True, verbose_name='attached documents')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     translated = models.BooleanField(default=False, verbose_name=_('translated'))
     remixed = models.BooleanField(default=False, verbose_name=_('adapted / remixed'))
@@ -1453,10 +1454,8 @@ class OER(Resource, Publishable):
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed the OER view in an HTML page'))
     material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
-    # subjects = models.ManyToManyField(Subject, blank=True, verbose_name='Subject areas')
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
-    # tags = TaggableManager(blank=True, verbose_name='tags', help_text=_('comma separated strings; please try using suggestion of existing tags'))
     tags = models.ManyToManyField(Tag, through='TaggedOER', blank=True, verbose_name='tags')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
@@ -1466,12 +1465,12 @@ class OER(Resource, Publishable):
     big_image = AvatarField('', upload_to='images/oers/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     metadata = models.ManyToManyField(MetadataType, through='OerMetadata', related_name='oer_metadata', blank=True, verbose_name='metadata')
+
+    documents = models.ManyToManyField(Document, through='OerDocument', related_name='oer_document', blank=True, verbose_name='attached documents')
+    content = models.TextField(blank=True, null=True, verbose_name=_('content'), help_text=_('formal description of a problem or other original content'))
+
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    """
-    creator = models.ForeignKey(User, default=1, editable=False, verbose_name=_('creator'), related_name='oer_creator')
-    editor = models.ForeignKey(User, default=1, editable=False, verbose_name=_('last editor'), related_name='oer_editor')
-    """
     creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='oer_creator')
     editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='oer_editor')
 
