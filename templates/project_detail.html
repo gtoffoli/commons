@@ -508,15 +508,16 @@
     <div class="clearfix">
       {% if can_mentoring_model %}
         <dl class="pull-left marginB20 marginR10 panel-white">
-          <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring setup model"|capfirst %}</dt>
+          <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring policy"|capfirst %}</dt>
           {% if mentoring_model_C %}
-            <dd class="padding510">{{ mentoring_model_C_value }}</dd>
+            <dd class="padding510"><label style="display:block">{% trans "mentoring setup model"|capfirst %}</label>{{ mentoring_model_C_value }}</dd>
           {% elif mentoring_projects_all >= 1 %}
-            <dd  class="padding510">{{ mentoring_model_value }}</dd>
+            <dd  class="padding510"><label style="display:block">{% trans "mentoring setup model"|capfirst %}</label>{{ mentoring_model_value }}</dd>
           {% else %}
-            <dd class="padding510"><form method="post" id="mentoring_model" action="/project/{{ project.slug }}/edit_mm/">{% csrf_token %}
+            <dd class="padding510" style="padding-bottom:0"><form method="post" id="mentoring_model" action="/project/{{ project.slug }}/edit_mm/">{% csrf_token %}
               {% for field in form_memtoring_model.visible_fields %}
                 <div class="form-group">
+                  <label for="{{ field.name }}">{{field.label|capfirst }}</labe>
                   <span class="txt-error">{{ field.errors }}</span> {{ field }}
                   {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
                 </div>
@@ -524,6 +525,17 @@
               <div class="form-group"><button type="submit" id="save_mm" name="save" class="btn btn-default" value='{% trans "save"|capfirst %}'> {% trans "save" %}</button></div>
             </form></dd>
           {% endif %}
+          <hr>
+          <dd class="padding510" style="padding-top:0"><form method="post" id="mentoring_policy" action="/project/{{ project.slug }}/edit_mp/">{% csrf_token %}
+            {% for field in form_memtoring_policy.visible_fields %}
+              <div class="form-group">
+                <label for="{{ field.name }}">{{field.label|capfirst}}</labe>
+                  <span class="txt-error">{{ field.errors }}</span> {{ field }}
+                  {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+              </div>
+            {% endfor %}
+            <div class="form-group"><button type="submit" id="save_mp" name="save" class="btn btn-default" value='{% trans "save"|capfirst %}'> {% trans "save" %}</button></div>
+          </form></dd>
         </dl>
       {% endif %}
       {% if roll or can_add_roll %}
@@ -542,7 +554,8 @@
     </div>
     {% if not is_admin %}
       <div class="panel-white padding510">
-        {% trans "current mentoring setup model for this community"|capfirst %}: {{ mentoring_model_value }}
+        <p><span class="demiBold">{% trans "current mentoring setup model for this community"|capfirst %}:</span> {{ mentoring_model_value }}</p>
+        <p><span class="demiBold">{% trans "it is possible to choose a mentor from another community"|capfirst %}:</span> {% if project.allow_external_mentors %}{% trans "yes"|capfirst %}{% else %}{% trans "no"|capfirst %}{% endif %}</p>
       </div>
     {% endif %}
 {% comment %}

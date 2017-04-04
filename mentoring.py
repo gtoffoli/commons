@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
 from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from forms import ProjectMentoringModelForm, AcceptMentorForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
+from forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
 
 from analytics import notify_event, track_action
 
@@ -118,6 +118,17 @@ def project_mentoring_model_edit(request, project_slug):
         form = ProjectMentoringModelForm(request.POST, instance=project)
         if form.is_valid():
             project.mentoring_model = request.POST.get('mentoring_model','')
+            project.editor = user
+            project.save()
+     return HttpResponseRedirect('/project/%s/' % project.slug)
+
+def project_mentoring_policy_edit(request, project_slug):
+     user = request.user
+     project = get_object_or_404(Project, slug=project_slug)
+     if request.POST:
+        form = ProjectMentoringPolicyForm(request.POST, instance=project)
+        if form.is_valid():
+            project.allow_external_mentors = request.POST.get('allow_external_mentors','')
             project.editor = user
             project.save()
      return HttpResponseRedirect('/project/%s/' % project.slug)

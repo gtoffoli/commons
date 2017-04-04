@@ -46,7 +46,7 @@ from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, Docu
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
 from forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
-from forms import ProjectMentoringModelForm, AcceptMentorForm
+from forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
 from forms import repurpose_mentoring_form
 from forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
 
@@ -1053,6 +1053,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user,membership_state=1)
             var_dict['can_mentoring_model'] = can_mentoring_model = is_open and is_admin
             var_dict['hide_no_mentoring'] = can_mentoring_model and (roll or len(project.get_mentoring_projects()) >= 1)
+            var_dict['form_memtoring_policy'] = ProjectMentoringPolicyForm(instance=project)
             var_dict['form_memtoring_model'] = ProjectMentoringModelForm(instance=project)
             var_dict['mentoring_model_value'] = MENTORING_MODEL_DICT.get(project.mentoring_model);
             if project.mentoring_model == MENTORING_MODEL_C:

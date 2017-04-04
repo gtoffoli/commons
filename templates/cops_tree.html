@@ -7,9 +7,18 @@
 
 {% block body_class %}cops_tree{% endblock %}
 {% block body %}
-   <h1 class="text-center">{% trans "all communities"|capfirst %}</h1>
-   {{ info|safe }}
-   <section class="view-card">
+   <!--h1 class="text-center">{% trans "all communities"|capfirst %}</h1>
+   {{ info|safe }}-->
+<div class="marginTB30">
+  <div class="panel-heading-c4">
+    <h1 class="text-center padding105 margin0">{% trans "all communities"|capfirst %}</h1>
+  </div>
+  
+  <div class="body-panel bc-white borderBLRradius borderColor-c4 padding1020">
+
+  
+  <div>{{ info|safe }}</div>
+   <!--section class="view-card"-->
    {% if nodes %}
 <ul class="list-unstyled">
     {% recursetree nodes %}<li>
@@ -37,5 +46,6 @@
    {% else %}
        	<p>{% trans "no community"|capfirst %} {% trans "is present" %}.</p>
    {% endif %}
-      </section>
+      <!--/section-->
+    </div>
 {% endblock %}
