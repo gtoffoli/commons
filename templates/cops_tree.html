@@ -7,45 +7,118 @@
 
 {% block body_class %}cops_tree{% endblock %}
 {% block body %}
-   <!--h1 class="text-center">{% trans "all communities"|capfirst %}</h1>
-   {{ info|safe }}-->
 <div class="marginTB30">
   <div class="panel-heading-c4">
     <h1 class="text-center padding105 margin0">{% trans "all communities"|capfirst %}</h1>
   </div>
-  
-  <div class="body-panel bc-white borderBLRradius borderColor-c4 padding1020">
-
-  
-  <div>{{ info|safe }}</div>
-   <!--section class="view-card"-->
+  <div class="body-panel borderBLRradius borderColor-c4">
+    <div class="bc-white padding1020 font13 marginB10">{{ info|safe }}</div>
+{% comment %}
    {% if nodes %}
+   <div class="padding10">
 <ul class="list-unstyled">
     {% recursetree nodes %}<li>
    	{% with project=node.project %}
-   		{% if project and project.state == 2 %}
    			{% if project.proj_type.name == 'com' %}
    			<div style="margin-top: 1em; margin-bottom: 0,5em;">
-        <div style="font-size: larger; margin-left:-10px;"> &nbsp; <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>.</div>
+        <div style="font-size: larger; margin-left:-10px;"><a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a> <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a></div>
             <div><i>{{ project.description }}</i></div></div>
             {% else %}
-            	<a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
-				&nbsp;<i>({{ project.proj_type.description }})</i>.
+            	<div><a href="#" class="toggleIcon1"><i class="fa fa-plus-square-o"></i></a> <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
+				&nbsp;<i>({{ project.proj_type.description }})</i></div>
             {% endif %}
-   		{% else %}    	
-        		<div>{{ node.name }}</div>
-   		{% endif %}
         {% if not node.is_leaf_node %}
             <ul class="children">{{ children }}</ul>
         {% endif %}
    	{% endwith %}
-
     </li>
-    </article>{% endrecursetree %}
+   {% endrecursetree %}
 	</ul>
+</div>
    {% else %}
-       	<p>{% trans "no community"|capfirst %} {% trans "is present" %}.</p>
+       	<div class="padding10">{% trans "no community"|capfirst %} {% trans "is present" %}.</div>
    {% endif %}
-      <!--/section-->
-    </div>
+{% endcomment %}
+  <ul class="list-unstyled marginB0">
+  {% for com in com_tree %}
+    <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% endif %}">
+      <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a> {% endif %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a></h4>
+      <p {% if com.1|length > 0 %}class="paddingL20"{% endif %}><i>{{ com.0.description }}</i></p>
+      {% if com.1|length > 0 %}
+        <div class="children" style="display:none">
+        <ul class="list-unstyled paddingL20">
+        {% for proj in com.1 %}
+          <li>
+            <h5>{% if proj.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a> {% endif %}<a href="/project/{{proj.0.slug}}/">{{ proj.0.name }}</a> <small>[{{ proj.0.proj_type }}]</small></h5>
+            {% if proj.1|length > 0 %}
+              <h6 class="marginB20 paddingL20" style="line-height: 1.5; display:none">
+              {% for subproj in proj.1 %}
+                <a href="/project/{{ subproj.slug }}/">{{ subproj.name }}</a>{% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
+             {% endfor %}
+             </h6>
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+        </div>
+      {% endif %}
+    </li>
+  {% endfor %}
+  </ul>
+</div>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_script %}
+	<script type="text/javascript">
+$(document).ready(function (){
+$('h4 a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent().parent();
+		var accordionContent = accordion.children('div');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+		}
+	});
+	
+	$('h5 a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent().parent();
+		
+		var accordionContent = accordion.children('h6');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+			//accordion.children('h5').addClass('marginB0');
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+			//accordion.children('h5').removeClass('marginB0');
+		}
+	});
+	/*$('div a.toggleIcon1').on('click', function(event){
+		event.preventDefault();
+		var accordion = $(this).parent();
+		console.log(accordion);
+		var accordionContent = accordion.next('.children');
+		console.log('secondo: ');
+		
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+		}
+	});*/
+	});
+	</script>
 {% endblock %}

@@ -926,7 +926,8 @@ class Project(Resource):
             qs = qs.filter(proj_type__public=True)
         if states:
             qs = qs.filter(state__in=states)
-        return qs.order_by('group__name')
+        # return qs.order_by('group__name')
+        return qs.order_by('name')
 
     def admin_name(self):
         if self.get_project_type() == 'com':

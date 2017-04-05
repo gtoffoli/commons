@@ -648,12 +648,11 @@ def send_message_to(request, username):
     return message_compose(request, recipient=recipient_user.username)
 """
 
+"""
 def cops_tree(request):
-    """
-    groups = Group.objects.all()
-    groups = [group for group in groups if group_has_project(group)]
-    """
-    nodes = Group.objects.filter(level=0)
+    # groups = Group.objects.all()
+    # groups = [group for group in groups if group_has_project(group)]
+    nodes = Group.objects.filter(level=0) 
     if nodes:
         root = nodes[0]
         nodes = root.get_descendants()
@@ -664,6 +663,21 @@ def cops_tree(request):
                 filtered_nodes.append(node)
     info = FlatPage.objects.get(url='/info/communities/').content
     return render_to_response('cops_tree.html', {'nodes': filtered_nodes, 'info': info,}, context_instance=RequestContext(request))
+"""
+def cops_tree(request):
+    communities = Project.objects.filter(proj_type__name = 'com', state = PROJECT_OPEN, group__level=1).order_by ('name')
+    com_tree = proj_tree = []
+    for community in communities:
+        projects = community.get_children(states=[PROJECT_OPEN])
+        proj_tree=[]
+        for project in projects:
+            subprojects = project.get_children(states=[PROJECT_OPEN])
+            proj_tree.append([project,subprojects])
+        com_tree.append([community,proj_tree])
+
+    info = FlatPage.objects.get(url='/info/communities/').content
+    return render_to_response('cops_tree.html', {'com_tree':com_tree, 'info': info}, context_instance=RequestContext(request))
+
 
 def set_original_language(object):
     object.original_language = get_current_language()
@@ -2242,47 +2256,7 @@ def browse(request):
         repos_browse_list.append([field_name, field_label, entries])
     return render_to_response('browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
 
-"""
-def people_search(request):
-    query = qq = []
-    profiles = []
-    if request.method == 'POST': # If the form has been submitted...
-        form = PeopleSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            countries = request.POST.getlist('country')
-            if countries:
-                qq.append(Q(country__in=countries))
-            edu_levels = request.POST.getlist('edu_level')
-            if edu_levels:
-                qq.append(Q(edu_level__in=edu_levels))
-            pro_statuses = request.POST.getlist('pro_status')
-            if pro_statuses:
-                qq.append(Q(pro_status__in=pro_statuses))
-            edu_fields = request.POST.getlist('edu_field')
-            if edu_fields:
-                qq.append(Q(edu_field__in=edu_fields))
-            pro_fields = request.POST.getlist('pro_field')
-            if pro_fields:
-                qq.append(Q(pro_field__in=pro_fields))
-            subjects = request.POST.getlist('subjects')
-            if subjects:
-                qq.append(Q(subjects__in=subjects))
-            languages = request.POST.getlist('languages')
-            if languages:
-                qq.append(Q(languages__in=languages))
-            networks = request.POST.getlist('networks')
-            if networks:
-                qq.append(Q(networks__in=networks))
-            if qq:
-                query = qq.pop()
-                for q in qq:
-                    query = query & q
-                # profiles = UserProfile.objects.filter(query).distinct().order_by('title')
-                profiles = UserProfile.objects.filter(query).distinct()
-    else:
-        form = PeopleSearchForm()
-    return render_to_response('search_people.html', {'profiles': profiles, 'query': query, 'form': form,}, context_instance=RequestContext(request))
-"""
+
 @page_template('_people_index_page.html')
 def people_search(request, template='search_people.html', extra_context=None):
     qq = []
@@ -3727,41 +3701,6 @@ def project_add_lp(request, project_id):
 def user_add_lp(request):
     return lp_edit(request, project_id=0) 
 
-"""
-def repos_search(request):
-    query = qq = []
-    repos = []
-    include_all = ''
-    if request.method == 'POST': # If the form has been submitted...
-        form = RepoSearchForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            include_all = request.POST.get('include_all')
-            repo_types = request.POST.getlist('repo_type')
-            if repo_types:
-                qq.append(Q(repo_type_id__in=repo_types))
-            subjects = request.POST.getlist('subjects')
-            if subjects:
-                # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
-                qq.append(Q(state=PUBLISHED) & Q(subjects__in=subjects))
-            languages = request.POST.getlist('languages')
-            if languages:
-                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
-                qq.append(Q(state=PUBLISHED) & Q(languages__in=languages))
-            repo_features = request.POST.getlist('features')
-            if repo_features:
-                qq.append(Q(features__in=repo_features))
-            if qq:
-                if include_all:
-                    query = qq.pop()
-                else:
-                    query = Q(state=PUBLISHED)
-                for q in qq:
-                    query = query & q
-                repos = Repo.objects.filter(query).distinct().order_by('name')
-    else:
-        form = RepoSearchForm()
-    return render_to_response('search_repos.html', {'repos': repos, 'query': query, 'include_all': include_all, 'form': form,}, context_instance=RequestContext(request))
-"""
 @page_template('_repo_index_page.html')
 def repos_search(request, template='search_repos.html', extra_context=None):
     qq = []
