@@ -395,7 +395,8 @@ class OerScreenshotForm(forms.ModelForm):
 class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER
-        fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
+        # fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
+        fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
     # tags = TagField(required=False, widget=LabelWidget())
     tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 
