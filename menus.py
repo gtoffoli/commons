@@ -62,10 +62,12 @@ def projects_children(request):
          capfirst(_("browse mentors")),
          url='/browse_mentors/',
     ))
+    """
     children.append (MenuItem(
          capfirst(_("rolls of mentors")),
          url='/mentoring/',
         ))
+    """
     children.append (MenuItem(
          # string_concat(capfirst(_("projects")), ' - ', _("advanced search")),
          capfirst(_("projects")),

@@ -530,7 +530,10 @@ margin-right:0;
 .marginLR15 {
 	margin-left: 15px;
 	margin-right: 15px;
-} 
+}
+.marginL24 {
+	margin-left: 24px;
+}
 .marginLB020 {
 	margin-left:0;
   margin-bottom:20px;
@@ -1238,9 +1241,11 @@ ul.list-inline > li.list-back-c3 {
 .box-scroll {
   overflow: auto;
 }
+.box-large {
+height:340px;
+}
 .box-medium {
 height:250px;
-/*height:25vh;*/
 }
 .box-small {
 	height: 180px;

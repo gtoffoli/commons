@@ -1855,10 +1855,11 @@ def repo_list(request):
         repo_list.append([repo, n])
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list,}, context_instance=RequestContext(request))
 
+"""
 def mentoring(request):
     rolls = Project.objects.filter(proj_type__name='roll', state=PROJECT_OPEN)
     return render_to_response('mentoring_support.html', {'rolls': rolls,}, context_instance=RequestContext(request))
-
+"""
 def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)
     can_add = user.is_authenticated() and user.can_add_repo(request) and user==request.user
@@ -2432,7 +2433,9 @@ def browse_people(request):
 def browse_mentors(request):
     mentors = get_all_mentors ()
     info_all_mentors = FlatPage.objects.get(url='/infotext/all-mentors/').content
-    return render_to_response('browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors}, context_instance=RequestContext(request))
+    rolls = Project.objects.filter(proj_type__name='roll', state=PROJECT_OPEN).order_by('name')
+    roll_info = FlatPage.objects.get(url='/infotext/mentors/').content
+    return render_to_response('browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors, 'rolls': rolls, 'roll_info': roll_info}, context_instance=RequestContext(request))
   
 def oer_list(request, field_name='', field_value=None):
     oers = []

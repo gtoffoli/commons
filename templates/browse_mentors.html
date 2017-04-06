@@ -4,42 +4,91 @@
 
 {% block head_title %}{% trans "mentors"|capfirst %}{% endblock %}
 {% block extra_style %}
-  <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
+<link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
 <style>
-	iframe {
- width: 100%;
- /*height: 350px;*/
- border:0;
+iframe {
+width: 100%;
+border:0;
 }
 .ui-widget-overlay {
-	background: #444444;
-	opacity: .7;
-	filter: Alpha(Opacity=70); /* support: IE8 */
+background: #444444;
+opacity: .7;
+filter: Alpha(Opacity=70);
+}
+.nav-tabs {
+background: #EBEDED;
+}
+.nav-tabs > li {
+width:50%;
+font-size: 26px;
+text-align: center;
+}
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus  {
+color: white;
+cursor: pointer;
+background-color: #67AE73;
+border: 1px solid #67AE73;
+}
+.nav-tabs > li > a, .nav-tabs > li > a:hover, .nav-tabs > li > a:focus  {
+color: #67AE73;
+cursor: pointer;
+background-color: transparent;
+border: 1px solid transparent;
+border-bottom-color: #67AE73;
+margin-right:0;
+}
+.body-panel {
+border-top-width:0;
+background: white;
 }
 </style>
 {% endblock %}
+
 {% block body_class %}mentors{% endblock %}
 {% block body %}
   <div class="marginTB30">
-  <div class="panel-heading-c0">
-    <h1 class="text-center padding105 margin0">{% trans "all mentors"|capfirst %}</h1>
-  </div>
-  <div class="body-panel bc-white borderBLRradius borderColor-c0">
-    {% if info_all_mentors %}<div class="padding10 font13">{{info_all_mentors|safe}}</div>{% endif %}
-  {% if mentors %}
-    <div class="padding10">
-      <div class="list-m">
-        {% for u in mentors %} 
-          <div class="bc-white box-m">
-            <div><a class="mentorProfile" id="u_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}"><img {% if u.get_profile.avatar %} src="/media/{{ u.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
-            <div class="title"><a class="mentorProfile" id="t_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}">{{ u.get_display_name }}</a></div>
-            <div class="description">{% if u.get_profile.position %}{{ u.get_profile.position|truncatechars:100 }}{% else %}{{ u.get_profile.short|truncatechars:100 }}{% endif %}</div>
-          </div>
-        {% endfor %}
-      </div></div>
-  {% else %}
-    <div class="padding10">{% trans "currently there aren't any mentors"|capfirst %}</div>
-  {% endif %}
+    <ul class="nav nav-tabs borderTLRradius marginB0 borderColor-c0">
+      <li class="active"><a data-toggle="tab" href="#mentors">{% trans "all mentors"|capfirst %}</a></li>
+      <li><a data-toggle="tab" href="#rolls" class="c-white">{% trans "rolls of mentors"|capfirst %}</a></li>
+    </ul>
+    <div class="tab-content">
+       <div id="mentors" class=" body-panel borderBLRradius borderColor-c0 tab-pane fade in active">
+         {% if info_all_mentors %}<div class="padding1020 font13">{{info_all_mentors|safe}}</div>{% endif %}
+         {% if mentors %}
+           <div class="padding10">
+             <div class="list-m">
+             {% for u in mentors %} 
+               <div class="bc-white box-m">
+                 <div><a class="mentorProfile" id="u_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}"><img {% if u.get_profile.avatar %} src="/media/{{ u.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%}></a></div>
+                 <div class="title"><a class="mentorProfile" id="t_{{ forloop.counter0 }}" href="/profile_strict/{{ u.username }}/" title="{% trans "view user profile" %}">{{ u.get_display_name }}</a></div>
+                 <div class="description">{% if u.get_profile.position %}{{ u.get_profile.position|truncatechars:100 }}{% else %}{{ u.get_profile.short|truncatechars:100 }}{% endif %}</div>
+              </div>
+             {% endfor %}
+             </div>
+           </div>
+         {% else %}
+           <div class="padding10">{% trans "currently there aren't any mentors"|capfirst %}</div>
+         {% endif %}
+       </div>
+       <div id="rolls" class=" body-panel borderBLRradius borderColor-c0 tab-pane fade">
+         <div class="padding1020">
+           {% if roll_info %}<div class="font13 marginB20">{{ roll_info|safe }}</div>{% endif %}
+           {% if rolls %}
+             <ul class="list-unstyled">
+             {% for roll in rolls %}
+               <li class="marginB20">
+                 <h5 class="marginB5"><a href="/project/{{ roll.slug }}/">{{ roll.name }}</a></h5>
+                 <p class="marginB5"><i>{{ roll.description }}</i></p>
+                 <p class="font13">{% trans "community"|capfirst %}: <a href="/project/{{ roll.get_parent.slug }}/">{{ roll.get_parent.name }}</a></p>
+               </li>
+             {% endfor %}
+             </ul>
+           {% else %}
+             <p class="marginT10">{% trans "no mentoring activity started yet"|capfirst %}</p>
+           {% endif %}
+         </div>
+       </div>
+    </div>
 </div>
 {% endblock %}
 

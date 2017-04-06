@@ -7,12 +7,13 @@
 {% block body_class %}browse{% endblock %}
 
 {% block body %}
-   <h1 class="text-center">{% trans "educational library"|capfirst %}</h1>
+   <div class="marginTB30">
+   <h1 class="text-center marginT0 marginB20">{% trans "educational library"|capfirst %}</h1>
    <div class="panel-group" id="accordion">
    {% if lps_browse_list %}
       <div class="panel panel-c1">
          <div class="panel-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-1"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h4></a>
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-1"><h3 class="text-center marginTB0">{% trans "distributions"|capfirst %} {% trans "of the learning paths" %}</h3></a>
          </div>
          <div id="pannello-1" class="panel-collapse collapse out">
             <div class="panel-body">
@@ -20,7 +21,7 @@
                {% for field_name, field_label, entries in lps_browse_list %}
                   <li>
                      <div class="demiBold">{{ field_label|capfirst }}</div>
-                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                     <article class="view-list{% if entries|length > 15 %} box-scroll box-large{% endif %}">
                         <ul>
                            {% for code, label, prefix, n in entries %}
                               <li><form action="/lps/search/" method="post" id="lps_{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }}{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}"> (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
@@ -38,7 +39,7 @@
    {% if oers_browse_list %}
       <div class="panel panel-c2">
          <div class="panel-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-2"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the resources" %}</h4></a>
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-2"><h3 class="text-center marginTB0">{% trans "distributions"|capfirst %} {% trans "of the open educational resources" %} ({% trans "OERs" %})</h3></a>
          </div>
          <div id="pannello-2" class="panel-collapse collapse in">
             <div class="panel-body" >
@@ -46,7 +47,7 @@
                {% for field_name, field_label, entries in oers_browse_list %}
                   <li>
                      <div class="demiBold">{{ field_label|capfirst }}</div>
-                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                     <article class="view-list{% if entries|length > 15 %} box-scroll box-large{% endif %}">
                         <ul>
                            {% for code, label, prefix, n in entries %}
                               <li><form action="/oers/search/" method="post" id="oers_{{ code }}">{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }} (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
@@ -64,7 +65,7 @@
    {% if repos_browse_list  %}
       <div class="panel panel-c3"> 
          <div class="panel-heading">
-            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-3"><h4 class="panel-title text-center">{% trans "distributions"|capfirst %} {% trans "of the sources" %}</h4></a>
+            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#pannello-3"><h3 class="text-center marginTB0">{% trans "distributions"|capfirst %} {% trans "of the sources" %}</h3></a>
          </div>
          <div id="pannello-3" class="panel-collapse collapse out">
             <div class="panel-body">
@@ -72,7 +73,7 @@
                {% for field_name, field_label, entries in repos_browse_list %}
                   <li>
                      <div class="demiBold">{{ field_label|capfirst }}</div>
-                     <article {% if entries|length > 15 %} class="view-list box-scroll" style="height: 340px" {% else %} class="view-list" {% endif %}>
+                     <article class="view-list{% if entries|length > 15 %} box-scroll box-large{% endif %}">
                         <ul>
                            {% for code, label, prefix, n in entries %}
                               <li><form action="/repos/search/" method="post" id="repos_{{ code }}">{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">{% if prefix %}{{ prefix }} {% endif %}{{ label }} (<input type="submit" class="btn-link" value="{{ n }}">)</form></li>
@@ -87,4 +88,5 @@
       </div>
    {% endif %}
    </div>
+ </div>
 {% endblock %}

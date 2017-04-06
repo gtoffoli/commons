@@ -5,6 +5,18 @@
 
 {% block head_title %}{% trans "all communities"|capfirst %}{% endblock %}
 
+{% block extra_style %}
+<style>
+  .img_small {
+  	max-width:90px;
+  	height:auto;
+  	display:inline-block;
+  	padding-right:10px;
+  	vertical-align:middle;
+  }
+</style>
+{% endblock %}
+
 {% block body_class %}cops_tree{% endblock %}
 {% block body %}
 <div class="marginTB30">
@@ -13,60 +25,38 @@
   </div>
   <div class="body-panel borderBLRradius borderColor-c4">
     <div class="bc-white padding1020 font13 marginB10">{{ info|safe }}</div>
-{% comment %}
-   {% if nodes %}
-   <div class="padding10">
-<ul class="list-unstyled">
-    {% recursetree nodes %}<li>
-   	{% with project=node.project %}
-   			{% if project.proj_type.name == 'com' %}
-   			<div style="margin-top: 1em; margin-bottom: 0,5em;">
-        <div style="font-size: larger; margin-left:-10px;"><a href="#" class="toggleIcon"><i class="fa fa-plus-square-o"></i></a> <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a></div>
-            <div><i>{{ project.description }}</i></div></div>
-            {% else %}
-            	<div><a href="#" class="toggleIcon1"><i class="fa fa-plus-square-o"></i></a> <a href="/project/{{ project.slug }}/">{{ project.get_name }}</a>
-				&nbsp;<i>({{ project.proj_type.description }})</i></div>
-            {% endif %}
-        {% if not node.is_leaf_node %}
-            <ul class="children">{{ children }}</ul>
-        {% endif %}
-   	{% endwith %}
-    </li>
-   {% endrecursetree %}
-	</ul>
-</div>
-   {% else %}
-       	<div class="padding10">{% trans "no community"|capfirst %} {% trans "is present" %}.</div>
-   {% endif %}
-{% endcomment %}
-  <ul class="list-unstyled marginB0">
-  {% for com in com_tree %}
-    <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% endif %}">
-      <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a> {% endif %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a></h4>
-      <p {% if com.1|length > 0 %}class="paddingL20"{% endif %}><i>{{ com.0.description }}</i></p>
-      {% if com.1|length > 0 %}
-        <div class="children" style="display:none">
-        <ul class="list-unstyled paddingL20">
-        {% for proj in com.1 %}
-          <li>
-            <h5>{% if proj.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a> {% endif %}<a href="/project/{{proj.0.slug}}/">{{ proj.0.name }}</a> <small>[{{ proj.0.proj_type }}]</small></h5>
-            {% if proj.1|length > 0 %}
-              <h6 class="marginB20 paddingL20" style="line-height: 1.5; display:none">
-              {% for subproj in proj.1 %}
-                <a href="/project/{{ subproj.slug }}/">{{ subproj.name }}</a>{% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
-             {% endfor %}
-             </h6>
-            {% endif %}
-          </li>
-        {% endfor %}
-        </ul>
-        </div>
-      {% endif %}
-    </li>
-  {% endfor %}
-  </ul>
-</div>
-</div>
+    {% if com_tree|length > 0 %}
+      <ul class="list-unstyled marginB0">
+      {% for com in com_tree %}
+        <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% else %}borderBLRradius{% endif %}">
+          <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon paddingR10 c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}{% if com.0.small_image %}<img src="/media/{{ com.0.small_image }}" class="img_small">{% endif %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a></h4>
+          <p {% if com.1|length > 0 %}style="margin-left: 24px"{% endif %}>{{ com.0.description }}</i></p>
+          {% if com.1|length > 0 %}
+            <div class="children marginL24" style="display:none">
+              <ul class="list-unstyled paddingL20">
+                {% for proj in com.1 %}
+                  <li>
+                    <h5>{% if proj.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}<a href="/project/{{proj.0.slug}}/">{{ proj.0.name }}</a> <small>[{{ proj.0.proj_type }}]</small></h5>
+                     <p class="font13" {% if proj.1|length > 0 %}style="margin-left: 24px"{% endif %}>{{ proj.0.description|truncatechars:140 }}</i></p>
+                    {% if proj.1|length > 0 %}
+                      <h6 class="marginB20 paddingL24" style="line-height: 1.5; display:none">
+                        {% for subproj in proj.1 %}
+                          <a href="/project/{{ subproj.slug }}/">{{ subproj.name }}</a>{% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
+                        {% endfor %}
+                      </h6>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <div class="padding10">{% trans "no community"|capfirst %} {% trans "is present" %}.</div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}
 
