@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-04-06 13:42+0200\n"
-"PO-Revision-Date: 2017-04-06 11:51+0000\n"
+"PO-Revision-Date: 2017-04-06 12:06+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -2272,7 +2272,7 @@ msgstr "dos percursos de aprendizagem"
 
 #: .\templates\browse.html:42
 msgid "of the open educational resources"
-msgstr ""
+msgstr "de recursos educacionais abertos"
 
 #: .\templates\browse.html:68
 msgid "of the sources"
