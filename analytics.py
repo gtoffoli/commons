@@ -5,7 +5,7 @@ from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.db.models import Count, Q
 from django.template import RequestContext
@@ -48,6 +48,9 @@ def user_unviewed_posts_count(self):
 User.unviewed_posts_count = user_unviewed_posts_count
 
 def forum_analytics(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
     var_dict = {}
     topic_posts_dict = defaultdict(list)
     forum_topics_dict = defaultdict(list)
@@ -76,6 +79,9 @@ def forum_analytics(request):
     return render_to_response('forum_analytics.html', var_dict, context_instance=RequestContext(request))
 
 def message_analytics(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
     truncate_date = connection.ops.date_trunc_sql('month', 'sent_at')
     qs = Message.objects.extra({'month':truncate_date})
     report = qs.values('month').annotate(num_messages=Count('pk')).order_by('month')
@@ -290,6 +296,8 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
     return actions
 
 def activity_stream(request, user=None, max_actions=100, max_days=1):
+    if not request.user.is_authenticated() or not request.user.is_manager():
+        return HttpResponseForbidden()
     actions = []
     if user==request.user or request.user.is_superuser or (request.user.is_authenticated() and request.user.is_manager(1)):
         actions = filter_actions(user=user, max_days=max_days, max_actions=max_actions)
@@ -368,6 +376,9 @@ def filter_users(profiled=None, member=None, count_only=False):
         return users
 
 def count_users(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
     var_dict = defaultdict(int)
     users = User.objects.filter(is_active=True)
     var_dict['n_active_user'] = users.count()
@@ -549,6 +560,9 @@ def get_active_comembers(user, max_users=20, max_days=30):
     return get_active_users(users=comembers, max_users=max_users, max_days=max_days)
 
 def active_users(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
     var_dict = {}
     items = get_active_users()
     onliners = []
@@ -564,6 +578,9 @@ def active_users(request):
     return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
 
 def active_comembers(request):
+    user = request.user
+    if not user.is_authenticated():
+        return HttpResponseForbidden()
     var_dict = {}
     items = get_active_comembers(request.user)
     onliners = []

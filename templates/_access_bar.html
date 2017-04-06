@@ -25,6 +25,8 @@
            <li class="dropdown">
              <a href="#" class="dropdown-toggle c-white" data-toggle="dropdown"><i class="fa fa-bar-chart" aria-hidden="true"></i> <b class="caret"></b></a>
              <ul class="dropdown-menu">
+                <li><a href="{% url "count_users" %}">{% trans "registered users"|capfirst %}</a></li>
+                <li><a href="{% url "active_users" %}">{% trans "active users"|capfirst %}</a></li>
                 <li><a href="{% url "activity_stream" %}">{% trans "activity stream"|capfirst %}</a></li>
                 <li><a href="{% url "forum_analytics" %}">{% trans "forums"|capfirst %}</a></li>
                 <li><a href="{% url "message_analytics" %}">{% trans "messages"|capfirst %}</a></li>
