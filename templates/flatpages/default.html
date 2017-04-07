@@ -1,21 +1,25 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
 
 {% block head_title %}{{ flatpage.title }}{% endblock %}
 
 {% block body_class %}flatpage{% endblock %}
 
 {% block body %}
-	<h1 class="text-center">{{ flatpage.title }}
-	{% if request.user.is_staff %}
-		{% if request.LANGUAGE_CODE == 'en' %}
-			<small><a href="/admin/flatpages/flatpage/{{ flatpage.id }}/" title=""><i class="fa fa-edit"></i></a></small>
-		{% endif %}
-		<small><a href="/datatrans/translate/flatpage/{{ flatpage.id }}/" title=""><i class="fa fa-language"></i></a></small>
-	{% endif %}
-	</h1>
-	<section class="view-card">
-		{{ flatpage.content|safe }}
-	</section>
+<article class="marginTB30">
+  <div class="panel-heading-base">
+    <h1 class="text-center padding105 margin0">{{ flatpage.title }}
+    {% if request.user.is_staff %}
+      <small class="paddingL20">
+        {% if request.LANGUAGE_CODE == 'en' %}
+          <a href="/admin/flatpages/flatpage/{{ flatpage.id }}/" title="" class="c-white"><i class="fa fa-edit"></i></a>
+        {% endif %}
+        <a href="/datatrans/translate/flatpage/{{ flatpage.id }}/" title="" class="c-white"><i class="fa fa-language"></i></a>
+      </small>
+    {% endif %}
+    </h1>
+  </div>
+  <section class="base">{{ flatpage.content|safe }}</section>
+</article>
 {% endblock %}

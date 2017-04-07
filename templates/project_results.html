@@ -1,61 +1,147 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
 
 {% block head_title %}
 	{% trans "results of project"|capfirst %}: {{ project.get_name }}
 {% endblock %}
+{% block extra_style %}
+<style>
+ div.contentBody {
+margin-top:30px;
+margin-bottom:30px;
+background:#EBEDED;
+border-bottom: 6px solid transparent;
+border-bottom-left-radius: 6px;
+border-bottom-right-radius: 6px;
+}
 
+div.borderColor-orange {
+border-color: #FABE66;
+}
+.nav-tabs > li {
+font-size: 20px;
+text-align: center;
+}
+
+{% if project.get_type_name == 'lp' %}
+.nav-tabs > li {
+width:33.33%;
+}
+{% else %}
+.nav-tabs > li {
+width:50%;
+}
+{% endif %}
+.nav-tabs > li.active > a.c_blue, .nav-tabs > li.active > a.c_blue:hover, .nav-tabs > li.active > a.c_blue:focus  {
+color: white;
+cursor: default;
+background-color: #008BD2;
+border: 1px solid transparent;
+}
+
+.nav-tabs > li > a.c_blue, .nav-tabs > li > a.c_blue:hover, .nav-tabs > li > a.c_blue:focus  {
+color: #008BD2;
+cursor: pointer;
+background-color: #f1f2f2;
+border: 1px solid white;
+border-bottom-color: transparent;
+margin-right:0;
+}
+
+.nav-tabs > li.active > a.c_mulberry, .nav-tabs > li.active > a.c_mulberry:hover, .nav-tabs > li.active > a.c_mulberry:focus  {
+color: white;
+cursor: default;
+background-color:  #CB4F98;
+border: 1px solid  transparent;
+}
+
+.nav-tabs > li > a.c_mulberry, .nav-tabs > li > a.c_mulberry:hover, .nav-tabs > li > a.c_mulberry:focus  {
+color:  #CB4F98;
+cursor: pointer;
+background-color: #f1f2f2;
+border: 1px solid white;
+border-bottom-color:  transparent;
+margin-right:0;
+}
+
+</style>
+{% endblock %}
+{% block body_class %} project_result{% endblock %}
 {% block body %}
-    <h2 class="text-center" style="margin-bottom:20px"><span style="font-size: smaller;">{% trans "results of project"|capfirst %}</span> &nbsp;<a href="/project/{{ project.slug }}/"><i>{{ project.get_name }}</i></a></h2>
-    <div class="row">
-	    <div class="col-sm-9 col-md-9">
-	        {% if lps %}
-	    	    <a class="anchor" name="p_lps"></a><div class="row bc-demigray marginB20">
-	                <div class="col-sm-3 col-md-3 text-right">
-	            	    <h4 class="marginT20">{% trans "learning paths created"|capfirst %}</h4>
-	                </div>
-	                <div class="col-md-9">
-	                    {% for lp in lps %}
-	                        {% include "_lp_card.html" %}
-	                    {% endfor %}
-	                </div>
-	    	    </div>
-	        {% endif %}
-
-	        {% if oers %}
-	          <a class="anchor" name="p_oers"></a>
-	    	    <div class="row bc-demigray marginB20">
-	                <div class="col-sm-3 col-md-3 text-right">
-	            	    <h4 class="marginT20">{% trans "resources collected, adaped, created"|capfirst %}</h4>
-	                </div>
-	                <div class="col-sm-3 col-md-9">
-	                    {% for oer in oers %}
-	                        {% include "_oer_card.html" %}
-	                    {% endfor %}
-	                </div>
-	    	    </div>
-	        {% endif %}
-
-	        {% if oer_evaluations %}
-	        	<a class="anchor" name="p_evaluations"></a>
-	    	    <div class="row bc-demigray marginB20">
-	                <div class="col-sm-3 col-md-3 text-right">
- 	            	    <h4 class="marginT20">{% trans "OER evaluations"|capfirst %}</h4>
-	                </div>
-	                <div class="col-sm-9 col-md-9">
-	                {% for oer_evaluation in oer_evaluations %}
-	                    {% include "_oer_evaluation_card.html" %}
-        	        {% endfor %}
-	                 </div>
-	    	    </div>
-	        {% endif %}
-	    </div>
-	    <div class="col-sm-3 col-md-3">
-	    </div>
+<div class="contentBody borderColor-orange text-left">
+  <div class="panel-heading-c4 padding1020">
+    <h3 class="pull-left font_small marginTB5">{{ project.get_name }}</h3>
+    <p class="pull-right marginB0 font26 font_button_small">
+      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-list-alt font07em c-demiblack" aria-hidden="true"></i></a>
+    </p>
+    <div style="clear:both">
+      <h1 class="marginTB0"><small class="c-demiblack">{% trans "results of project"|capfirst %}</small></h1>
     </div>
+  </div>
+  <div class="padding20">
+    <ul class="nav nav-tabs borderTLRradius marginB0">
+      {% if project.get_type_name == 'lp' %}
+        <li id="p_lps"><a class="c_mulberry" data-toggle="tab" href="#lps">{% trans "learning paths"|capfirst %}</a></li>
+      {% endif %}
+      <li id="p_oers"><a class="c_blue" data-toggle="tab" href="#oers">{% trans "OERs"|capfirst %}</a></li>
+      <li id="p_evaluations"><a class="c_blue" data-toggle="tab" href="#evaluations">{% trans "OERs evaluated"|capfirst %}</a></li>
+    </ul>
+    <div class="tab-content">
+      <div id="lps" class="body-panel  borderColor-c1 tab-pane fade in">
+        {% if lps %}
+           <div class="borderBLRradius" style="margin-bottom:-10px">
+          {% for lp in lps %}
+            {% include "_lp_card.html" %}
+          {% endfor %}
+          </div>
+        {% else %}
+          <p class="padding20 marginB0 bc-white  borderBLRradius font18">{% trans "no Learning Path created yet"|capfirst %}</p>
+        {% endif %}
+      </div>
+      <div id="oers" class=" body-panel borderBLRradius borderColor-c2 tab-pane fade in">
+        {% if oers %}
+          <div class="borderBLRradius" style="margin-bottom:-10px">
+          {% for oer in oers %}
+            {% include "_oer_card.html" %}
+          {% endfor %}
+          </div>
+        {% else %}
+          <p class="bc-white marginB0 padding20  borderBLRradius font18">{% trans "no OER classified yet"|capfirst %}</p>
+        {% endif %}
+      </div>
+      <div id="evaluations" class="body-panel borderBLRradius borderColor-c2 tab-pane fade in">
+        {% if oer_evaluations %}
+          <div class="borderBLRradius" style="margin-bottom:-10px">
+          {% for oer_evaluation in oer_evaluations %}
+            <article class="view-card">
+              <p class="title-card"><a href="/oer/{{oer_evaluation.slug}}/evaluations/" title="{% trans "view evaluations" %}">{{ oer_evaluation.title }}</a></p>
+              <p>{% with stars=oer_evaluation.get_stars %}{% include "_view_rating.html" with color_class="c-pacific-blue" %}{% endwith %}</p>
+            </article>
+          {% endfor %}
+          </div>
+        {% else %}
+          <p class="bc-white marginB0 padding20 borderBLRradius font18">{% trans "no OER evaluated yet"|capfirst %}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
 
 {% block extra_script %}
-  {% include "_search_index_page_js.html" %}
+<script type="text/javascript">
+$(document).ready(function (){
+  var url = document.URL;
+  idx = url.indexOf("#") ;
+  var id = idx != -1 ? url.substring(idx+1) : "";
+  var idcontent = idx != -1 ? url.substring(idx+3) : "";
+  $(window).load(function(){
+    $('#'+id).addClass('active');
+    $('#'+idcontent).addClass('active');
+  });
+});
+</script>
+{% include "_search_index_page_js.html" %}
 {% endblock %}

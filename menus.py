@@ -73,10 +73,12 @@ def projects_children(request):
          capfirst(_("projects")),
          url='/projects/search',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("top contributors")),
          url='/resources/contributors/',
         ))
+    """
     children.append (MenuItem(
          capfirst(_("forums")),
          url='/forum/',

@@ -1918,6 +1918,7 @@ def repo_detail_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_detail(request, repo.id, repo)
 
+"""
 def repo_contributors(request):
     users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
     user_list = []
@@ -1938,6 +1939,7 @@ def oer_contributors(request):
             user_list.append(user)
     return render_to_response('oer_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
 
+# in ANALYTICS.PY
 def resource_contributors(request):
     users = User.objects.annotate(num_lps=Count('path_creator')).exclude(num_lps=0).order_by('-num_lps')
     var_dict = {}
@@ -1974,6 +1976,7 @@ def resource_contributors(request):
     var_dict['source_contributors'] = source_contributors
     # return render_to_response('contributors.html', { 'lp_contributors': lp_contributors, 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
     return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
+"""
 
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
@@ -1990,17 +1993,19 @@ def resources_by(request, username):
     return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user}, context_instance=RequestContext(request))
 
 def project_results(request, project_slug):
-    project = get_object_or_404(Project, slug=project_slug)
-    var_dict = { 'project': project }
     user = request.user
-    if project.is_admin(user) or user.is_superuser:
+    project = get_object_or_404(Project, slug=project_slug)
+    if not project.can_access(user):
+        raise PermissionDenied
+    var_dict = { 'project': project }
+    if project.is_member(user) or user.is_superuser:
         var_dict['lps'] = LearningPath.objects.filter(project=project).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project).order_by('-created')
     else:
         var_dict['lps'] = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
-    oer_evaluations = project.get_oer_evaluations()
-    var_dict['oer_evaluations'] = oer_evaluations
+    var_dict['oer_evaluations'] = project.get_oers_last_evaluated()
+    # var_dict['oer_evaluations'] = project.get_oer_evaluations()
     return render_to_response('project_results.html', var_dict, context_instance=RequestContext(request))
 
 def project_activity(request, project_slug):
