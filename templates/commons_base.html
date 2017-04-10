@@ -86,13 +86,21 @@
      {% endblock %}
 
      <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
+     <script type="text/javascript">
+        $(document).ready(function() {
+          $("a").on("click", function() {$("body").css("cursor","wait")});
+          $("button[type='submit']").on("click", function() {$("body").css("cursor", "wait")});
+          $("input[type='submit']").on("click", function() {$("body").css("cursor", "wait")});
+           $("input[type='reset']").on("click", function() {$("body").css("cursor", "wait")});
+        });
+      </script>
 
      {% block extra_head_base %}
        {% block extra_head %}{% endblock %}
      {% endblock %}
   </head>
 
-  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}">
+  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default">
     <div class="{% block wrapper_class %}wrapper{% endblock %}">
       {% block topbar_base %}
         <header>
@@ -183,9 +191,9 @@
          {% block footer %}
            <div class="row">
              <div class="col-sm-4 col-md-4">
-               <div class="footer-box">&copy; 2015 <a href="http://www.commonspaces.eu/" target="_blank">{% trans "the CommonS Consortium" %}</a><br>
+               <div class="footer-box">&copy; 2015-{% now 'Y' %} {% trans "the CommonS Consortium"|capfirst %}<br>
                  {% trans "built by"|capfirst %} <a href="http://www.linkroma.it" target="_blank">LINK srl</a>
-                 {% trans "with" %} <a href="https://www.python.org/" target="_blank"><i>Python</i></a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank"><i>Django</i></a>
+                 {% trans "with" %} <a href="https://www.python.org/" target="_blank">Python</a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank">Django</a>
                </div>
              </div>
              <div class="col-sm-4 col-md-4">
@@ -229,9 +237,9 @@
     {% block extra_body_base %}
       {% block extra_body %}{% endblock %}
       {% if rooms_count %}
-		<link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/css/converse.min.css">
-		<script src="https://cdn.conversejs.org/dist/converse.nojquery.min.js"></script>
-
+        <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/css/converse.min.css">
+        <script src="https://cdn.conversejs.org/dist/converse.nojquery.min.js"></script>
+        
         <style>
           form.add-chatroom { display: none; }
           a.s { display: none; }

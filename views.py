@@ -2598,11 +2598,6 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['evaluations'] = oer.get_evaluations()
     var_dict['user_evaluation'] = user.id != None and oer.get_evaluations(user)
     var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
-    """
-    if request.GET.get('core', ''):
-        return render_to_response('oer_core.html', var_dict, context_instance=RequestContext(request))
-    else:
-    """
     var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
     if user.is_authenticated():

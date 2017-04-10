@@ -33,14 +33,16 @@ $(document).ready(function (){
 		highlightTermsIn($("p.text-card"), parseSearchTerms(quickSearch));
 	}
 
-	$('.expand-description').on('click', function(event){
+	$('a.expand-description').on('click', function(event){
 		event.preventDefault();
+		$("body").css("cursor", "default");
 		var parent=$(this).parent().parent();
 		parent.children("p:first").css( "display", "none" );
 		parent.children("p:last").css( "display", "block");
 	});
-	$('.restrict-description').on('click', function(event){
+	$('a.restrict-description').on('click', function(event){
 		event.preventDefault();
+		$("body").css("cursor", "default");
 		var parent=$(this).parent().parent();
 		parent.children("p:first").css( "display", "block");
 		parent.children("p:last").css( "display", "none");

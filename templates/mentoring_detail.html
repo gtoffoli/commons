@@ -502,6 +502,7 @@ div.msg {
   $(document).ready(function() {
 	$('a.toggleInfoIcon').on('click', function(event){
 		event.preventDefault();
+			$("body").css("cursor", "default");
 			var accordion = $(this).parent();
 			var accordionContent = accordion.next('.field-content');
 			var accordionToggleInfoIcon = $(this);
@@ -550,6 +551,7 @@ div.msg {
          responsive: true,
          clickOut: true,
        });
+       $("body").css("cursor", "default");
     });
   });
 </script>
@@ -558,6 +560,7 @@ div.msg {
 $(document).ready(function (){
 	$('a.toggleIcon').on('click', function(event){
 		event.preventDefault();
+		$("body").css("cursor", "default");
 		if ($(this).children('i').hasClass("fa-plus-circle")) {
 			$(this).children('i').attr("class","fa fa-minus-circle c-fern font07em");
 			$("#table-out").css('display','none');
@@ -571,6 +574,7 @@ $(document).ready(function (){
 	
   $('a.clickNode').on('click', function(event){
     event.preventDefault();
+    $("body").css("cursor", "default");
     for (i=1; i<={{prototype_n_text_children}}; i++) {
       node = parent.$("#node_"+i);
       parentNode=node.parent().parent().parent();

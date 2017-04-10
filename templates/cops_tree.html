@@ -65,6 +65,7 @@
 $(document).ready(function (){
 $('h4 a.toggleIcon').on('click', function(event){
 		event.preventDefault();
+    $("body").css("cursor", "default");
 		var accordion = $(this).parent().parent();
 		var accordionContent = accordion.children('div');
 		var accordionToggleIcon = $(this);
@@ -79,36 +80,18 @@ $('h4 a.toggleIcon').on('click', function(event){
 	
 	$('h5 a.toggleIcon').on('click', function(event){
 		event.preventDefault();
+		$("body").css("cursor", "default");
 		var accordion = $(this).parent().parent();
-		
 		var accordionContent = accordion.children('h6');
 		var accordionToggleIcon = $(this);
 		accordion.toggleClass("open");
 		accordionContent.slideToggle(250);
 		if (accordion.hasClass("open")) {
 			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
-			//accordion.children('h5').addClass('marginB0');
 		} else {
 			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
-			//accordion.children('h5').removeClass('marginB0');
 		}
 	});
-	/*$('div a.toggleIcon1').on('click', function(event){
-		event.preventDefault();
-		var accordion = $(this).parent();
-		console.log(accordion);
-		var accordionContent = accordion.next('.children');
-		console.log('secondo: ');
-		
-		var accordionToggleIcon = $(this);
-		accordion.toggleClass("open");
-		accordionContent.slideToggle(250);
-		if (accordion.hasClass("open")) {
-			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
-		} else {
-			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
-		}
-	});*/
 	});
 	</script>
 {% endblock %}

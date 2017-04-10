@@ -67,6 +67,7 @@
 	$(document).ready(function (){
 $('dt a.toggleIcon').on('click', function(event){
 		event.preventDefault();
+		$("body").css("cursor", "default");
 		var accordion = $(this).parent();
 		var accordionContent = accordion.next('.field-content');
 		var accordionToggleIcon = $(this);
