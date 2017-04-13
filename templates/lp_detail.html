@@ -39,7 +39,7 @@ iframe {
 <article class="panel-white text-left marginTB30">
     {% if can_less_action %}
     <div class="row panel-c1 panel-heading-c1 marginLR0 padding1020">
-      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_remove %}<form class="view_inline" action="/lp/{{ lp.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2></h2>
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% if can_remove %}<form class="view_inline remove" action="/lp/{{ lp.id }}/delete/" method="post" id="delete_{{ lp.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ lp.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ lp.title }}</h2></h2>
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/lp/{{ lp.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/learningpath/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
@@ -132,22 +132,22 @@ iframe {
 
         <dl class="list-inline font14 ">
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
-          <dd>{% comment %}<form action="/lps/search/" method="post" id="path_type">{% csrf_token %}<button type="submit" class="btn-link" value="{{ lp.path_type }}">{{ lp.get_type }}</button></form>{% endcomment %}{{ lp.get_type }}
+          <dd>{{ lp.get_type }}
             {% if can_make_sequence %}
-            &nbsp; <a href="/lp/{{ lp.id }}/make_sequence/" title="{% trans "convert to sequence type" %}"><i class="fa fa-chain font07"></i></a>
+             &nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_sequence/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to sequence type" %}" id="submit_{{ lp.id }}"><i class="fa fa-chain"></i></button></form>
             {% endif %}
             {% if can_make_collection %}
-            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_collection/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-h font07"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_collection/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-h"></i></button></form>
             {% endif %}
-            {% comment %}&nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_linear_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "keeping the linear ordering" %}" id="submit_{{ lp.id }}"><i class="fa fa-long-arrow-down font07" style="font-weight: bold;"></i></button></form>{% endcomment %}
             {% if can_make_dag %}
-            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_{{ lp.id }}"><i class="fa fa-sitemap font07"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_{{ lp.id }}"><i class="fa fa-sitemap"></i></button></form>
             {% endif %}
             {% if can_make_unconnected_dag %}
-            &nbsp;&nbsp; <form class="view_inline" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" onsubmit="return confirm_convert(this);" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-v font07" style="font-weight: bold;"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-v"></i></button></form>
             {% endif %}
           </dd>
         </dl>
+        
 
         {% if lp.get_nodes or can_edit %}
           <dl style="position:relative" class="font14 marginB10">
@@ -161,7 +161,7 @@ iframe {
               {% for node in lp.get_ordered_nodes %}
                 <li class="marginB5">
                   <div class="paddingL3">
-                  	<ul class="list-unstyled {% if node.oer_id %}node-oer{% else %}node-text{% endif %}" style="padding-left:24px;"><li>
+                  	<ul class="list-unstyled paddingL24 {% if node.oer_id %}node-oer{% else %}node-text{% endif %}"><li>
                   	{% comment %} /pathnode/{{ node.id }}/delete/ {% endcomment %}
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% if lp.get_ordered_nodes|length > 1 %}
@@ -175,8 +175,7 @@ iframe {
                         {% endif %}
                       {% endif %}
                     {% endif %}
-                    {# /pathnode/{{ node.id }}/?node={{forloop.counter0}} #}
-                      <a class="viewNode" id="u_{{ node.id }}" href="/pathnode/{{node.id}}/" title="">{{ node.label }}</a>
+                      <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
                     </li></ul>
                   </div>
                 </li>
@@ -216,12 +215,12 @@ iframe {
                       <li>
                         <img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if  u.1 %}, <small><i>{% trans "editor" %}</i></small>{% endif %}
                            {% if not u.1 %}
-                            <form style="display:inline" action="/lp/{{ lp.id }}/toggle_editor_role/" method="post" onsubmit="return confirm_delegate(this);" id="delegate_{{ u.0.username }}">
+                            <form class="delegate" style="display:inline" action="/lp/{{ lp.id }}/toggle_editor_role/" method="post" id="delegate_{{ u.0.username }}">
                              {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
                              <button type="submit" class="btn-link padding0 bold" title="{% trans "grant role" %}" id="submit_{{ u.0.username }}"><i class="fa fa-plus font07em"></i></button>
                             </form>
                           {% else %}
-                            <form style="display:inline" action="/lp/{{ lp.id }}/toggle_editor_role/" method="post" onsubmit="return confirm_undelegate(this);" id="undelegate_{{ u.0.username }}">
+                            <form class="undelegate" style="display:inline" action="/lp/{{ lp.id }}/toggle_editor_role/" method="post" id="undelegate_{{ u.0.username }}">
                              {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
                              <button type="submit" class="btn-link padding0 bold" title="{% trans "remove role" %}" id="submit_{{ u.0.username }}"><i class="fa fa-minus font07em"></i></button>
                             </form>
@@ -254,78 +253,123 @@ iframe {
 <script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
 <script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
 
+{% if can_edit or can_delete or can_make_sequence or can_make_collection or can_make_dag or can_make_unconnected_dag or can_delegate %}
+   <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
+{% endif %}
+
 <script type="text/javascript">
-	{% if can_delegate %}
-		  function confirm_delegate(form) {return confirm('{% trans "do you really want to grant the editor role to this member" %}?');}
-		  function confirm_undelegate(form) {return confirm('{% trans "do you really want to remove this role" %}?');}
-	{% endif %}
-  {% if can_delete %}
-    function confirm_delete(form) {
-      return confirm('{% trans "do you really want to delete" %} {% trans "this learning path" %}?');
-    }
-  {% endif %}
-  function confirm_convert(form) {
-    return confirm('{% trans "do you really want to convert" %} {% trans "this learning path" %}?{% comment %}{% trans "this operation cannot be undone" %}{% endcomment %}');
-  }
   $(document).ready(function() {
+    {% if can_delete %}
+      {% trans "do you really want to delete" as translatemsg0 %}
+      {% trans "this learning path" as translatemsg1 %}
+      {% include "_data_confirm_js.html" with data_form='remove' data_msg=translatemsg0|add:' '|add:translatemsg1 %}
+    {% endif %}
 
-		$('dt a.toggleIcon').on('click', function(event){
-			event.preventDefault();
-			$("body").css("cursor", "default");
-			var accordion = $(this).parent();
-			var accordionContent = accordion.next('.field-content');
-			var accordionToggleIcon = $(this);
-			accordion.toggleClass("open");
-			accordionContent.slideToggle(250);
-			if (accordion.hasClass("open")) {
-				accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
-			} else {
-				accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
-			}
-		});
+    {% if can_make_sequence or can_make_collection or can_make_dag or can_make_unconnected_dag %}
+      {% trans "do you really want to convert" as translatemsg0 %}
+      {% trans "this learning path" as translatemsg1 %}
+      {% include "_data_confirm_js.html" with data_form='convert' data_msg=translatemsg0|add:' '|add:translatemsg1 %}
+    {% endif %}
+    
+    {% if can_delegate %}
+      $('div.editors a.toggleIcon').on('click', function(event){
+        event.preventDefault();
+        $("body").css("cursor", "default");
+        var accordion = $(this).parent();
+        var accordionContent = accordion.next('.panel-content');
+        var accordionToggleIcon = $(this);
+        accordion.toggleClass("open");
+        accordionContent.slideToggle(250);
+        if (accordion.hasClass("open")) {
+           accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+        } else {
+           accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+        }
+      });
+      {% trans "do you really want to grant the editor role to this member" as translatemsg %}
+      {% include "_data_confirm_js.html" with data_form='delegate' data_msg=translatemsg %}
+      {% trans "do you really want to remove this role" as translatemsg %}
+      {% include "_data_confirm_js.html" with data_form='undelegate' data_msg=translatemsg %}
+    {% endif %}
 
-		if ($('li div a').hasClass('deleteNode')) {
-			$('li div a.deleteNode').on('click', function(event){
-				event.preventDefault();
-				var node_id = $(this).attr('id');
-				node_id = node_id.substr(2);
-				$.ajax({
-					url: "/pathnode/"+node_id+"/delete/",
-					success: function(json){
-						if (json.data == 'ok')
-							location.reload();
-					}
-				});
-			});
-		}
-		if ($('li div a').hasClass('upNode')) {
-			$('li div a.upNode').on('click', function(event){
-				event.preventDefault();
-				var node_id = $(this).attr('id');
-				node_id = node_id.substr(2);
-				$.ajax({
-					url: "/pathnode/"+node_id+"/up/",
-					success: function(json){
-						if (json.data == 'ok')
-							location.reload();
-					}
-				});
-			});
-		}
-		if ($('li div a').hasClass('downNode')) {
-			$('li div a.downNode').on('click', function(event){
-				event.preventDefault();
-				var node_id = $(this).attr('id');
-				node_id = node_id.substr(2);
-				$.ajax({
-					url: "/pathnode/"+node_id+"/down/",
-					success: function(json){
-						if (json.data == 'ok')
-							location.reload();
-					}
-				});
-			});
-		}
+    {% if can_edit %}
+      if ($('li div a').hasClass('deleteNode')) {
+        $('li div a.deleteNode').on('click', function(event){
+          event.preventDefault();
+          $("body").css("cursor", "default");
+          var node_id = $(this).attr('id');
+          node_id = node_id.substr(2);
+          node_label=$('#v_'+node_id).text();
+          bootbox.confirm({
+            message: node_label+'<br>{% trans "do you really want to remove this node"|capfirst %}?',
+            buttons: {
+              confirm: {
+                label: '{% trans "Yes" %}',
+                className: 'btn-success'
+              },
+              cancel: {
+                label: '{% trans "No" %}',
+                className: 'btn-danger'
+              },
+            },
+            callback: function(result) {
+              if (result) {
+                $("body").css("cursor", "wait");
+                $.ajax({
+                  url: "/pathnode/"+node_id+"/delete/",
+                  success: function(json){
+                    if (json.data == 'ok')
+                      location.reload();
+                  }
+                });
+              }
+            }
+          });
+        });
+      }
+      if ($('li div a').hasClass('upNode')) {
+        $('li div a.upNode').on('click', function(event){
+          event.preventDefault();
+          var node_id = $(this).attr('id');
+          node_id = node_id.substr(2);
+          $.ajax({
+            url: "/pathnode/"+node_id+"/up/",
+            success: function(json){
+              if (json.data == 'ok')
+                location.reload();
+            }
+          });
+        });
+      }
+      if ($('li div a').hasClass('downNode')) {
+        $('li div a.downNode').on('click', function(event){
+          event.preventDefault();
+          var node_id = $(this).attr('id');
+          node_id = node_id.substr(2);
+          $.ajax({
+            url: "/pathnode/"+node_id+"/down/",
+            success: function(json){
+              if (json.data == 'ok')
+                location.reload();
+            }
+          });
+        });
+      }
+  {% endif %}
+    $('dt a.toggleIcon').on('click', function(event){
+      event.preventDefault();
+      $("body").css("cursor", "default");
+      var accordion = $(this).parent();
+      var accordionContent = accordion.next('.field-content');
+      var accordionToggleIcon = $(this);
+      accordion.toggleClass("open");
+      accordionContent.slideToggle(250);
+      if (accordion.hasClass("open")) {
+        accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+      } else {
+        accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+      }
+    });
     if ($('li a').hasClass('viewNode')) {
       $('li a.viewNode').on('click', function(event){
          event.preventDefault();
@@ -345,24 +389,7 @@ iframe {
          $("body").css("cursor", "default");
       });
     }
-    
-    {% if can_delegate %}
-      $('div.editors a.toggleIcon').on('click', function(event){
-        event.preventDefault();
-        $("body").css("cursor", "default");
-        var accordion = $(this).parent();
-        var accordionContent = accordion.next('.panel-content');
-        var accordionToggleIcon = $(this);
-        accordion.toggleClass("open");
-        accordionContent.slideToggle(250);
-        if (accordion.hasClass("open")) {
-           accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
-        } else {
-           accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
-        }
-      });
-    {% endif %}
-	});
+  });
 </script>
 
 {% if lp.path_type == 3 %}{% include "_lp_dag.html" %}{% endif %}

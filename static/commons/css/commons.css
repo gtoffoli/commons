@@ -1937,3 +1937,12 @@ sup.format {
   padding:1px 3px;
   font-weight: 600;
 }
+
+/*---------------------- BOOTBOX ---------------------------*/
+
+div.bootbox-confirm div.bootbox-body {
+	font-weight: 600;
+}
+div.bootbox-confirm div.modal-footer {
+	text-align: right;
+}

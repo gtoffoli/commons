@@ -1,0 +1,59 @@
+{% extends "commons_base.html" %}
+
+{% load i18n staticfiles %}
+
+{% block head_title %}{% trans "Signup" %}{% endblock %}
+
+{% block extra_style %}
+<style>
+	form.signup > p {
+	margin-bottom: 15px;
+}
+
+form.signup > p > input {
+    width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+form.signup > ul.errorlist {
+	color: red;
+}
+</style>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="marginTB30">
+  <div class="panel-heading-c0">
+    <h1 class="padding1020 margin0">{% trans "Sign Up" %}</h1>
+  </div>
+<div class="body-panel borderBLRradius borderColor-c0">
+<div class="padding1020">
+<p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
+
+<form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <button type="submit" class="btn btn-default">{% trans "Sign Up" %} &raquo;</button>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}

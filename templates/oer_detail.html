@@ -12,7 +12,7 @@
 <article class="panel-white text-left marginTB30">
   {% if can_less_action %}
     <div class="row panel-c2 panel-heading-c2 marginLR0 padding1020">
-      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0 font_small">{% if can_remove %}<form class="view_inline" action="/oer/{{ oer.id }}/delete/" method="post" onsubmit="return confirm_delete(this);" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0 font_small">{% if can_remove %}<form class="view_inline remove" action="/oer/{{ oer.id }}/delete/" method="post" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 font_button_small text-right paddingL0">
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/oer/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
@@ -158,7 +158,7 @@
                    </span>
                  {% endif %}
                {% endif %}
-               {{ document.label }} 
+               <span id="v_{{ document.id }}">{{ document.label }}</span>
                &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
                {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
              </dd>
@@ -227,8 +227,7 @@
 
 {% block extra_script %}
 {% if can_edit %}
-   <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
-
+<script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
 <script type="text/javascript">
        var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf";
        var appls = "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,video/mp3,video/mp4,application/rtf";
@@ -236,15 +235,19 @@
 </script>
      {% include "_validate_file.html" %}
 {% endif %}
+
+{% if can_remove or can_edit %}
+<script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
+{% endif %}
+
 <script type="text/javascript">
-	{% if can_remove %}
-		function confirm_delete(form) {
-			return confirm('{% trans "do you really want to delete" %} {% trans "this OER" %}?');
-		}
-	{% endif %}
-
-
 $(document).ready(function (){
+  {% if can_remove %}
+    {% trans "do you really want to delete" as translatemsg0 %}
+    {% trans "this OER" as translatemsg1 %}
+      {% include "_data_confirm_js.html" with data_form='remove' data_msg=translatemsg0|add:' '|add:translatemsg1 %}
+	{% endif %}
+	
 	$('dt a.toggleIcon').on('click', function(event){
 		event.preventDefault();
 		$("body").css("cursor", "default");
@@ -261,20 +264,42 @@ $(document).ready(function (){
 	});
 
 {% if can_edit %}
-	if ($('dd a').hasClass('deleteDoc')) {
-		$('dd a.deleteDoc').on('click', function(event){
-			event.preventDefault();
-			var node_id = $(this).attr('id');
-			doc_id = node_id.substr(2);
-			$.ajax({
-				url: "/document/"+doc_id+"/delete/",
-				success: function(json){
-					if (json.data == 'ok')
-						location.reload();
-				}
-			});
-		});
-	}
+{% trans "do you really want to delete" as translatemsg0 %}
+{% trans "this document" as translatemsg1 %}
+ if ($('dd a').hasClass('deleteDoc')) {
+    $('dd a.deleteDoc').on('click', function(event){
+      event.preventDefault();
+      $("body").css("cursor", "default");
+      var doc_id = $(this).attr('id');
+      doc_id = doc_id.substr(2);
+      doc_label=$('#v_'+doc_id).text();
+      bootbox.confirm({
+        message: doc_label+'<br>{{ translatemsg0|add:' '|add:translatemsg1|capfirst }}?',
+        buttons: {
+          confirm: {
+            label: '{% trans "Yes" %}',
+            className: 'btn-success'
+          },
+          cancel: {
+            label: '{% trans "No" %}',
+            className: 'btn-danger'
+          },
+        },
+        callback: function(result) {
+          if (result) {
+             $("body").css("cursor", "wait");
+             $.ajax({
+               url: "/document/"+doc_id+"/delete/",
+               success: function(json){
+               if (json.data == 'ok')
+                 location.reload();
+               }
+             });
+          }
+        }
+      });
+    });
+ }
 
 	if ($('dd span a').hasClass('upDoc')) {
 		$('dd span a.upDoc').on('click', function(event){

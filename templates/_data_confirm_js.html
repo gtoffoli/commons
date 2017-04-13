@@ -1,0 +1,26 @@
+{% load staticfiles i18n %}
+
+    $('form.{{ data_form }}').submit(function(e) {
+        e.preventDefault();
+        $("body").css("cursor", "default");
+        var currentForm = this;
+        bootbox.confirm({
+          message: '{{ data_msg|capfirst }}?',
+          buttons: {
+            confirm: {
+              label: '{% trans "Yes" %}',
+              className: 'btn-success'
+            },
+            cancel: {
+              label: '{% trans "No" %}',
+              className: 'btn-danger'
+            },
+          },
+          callback: function(result) {
+            if (result) {
+                $("body").css("cursor", "wait");
+                currentForm.submit();
+            }
+          }
+        });
+    });

@@ -1,0 +1,108 @@
+{% extends "commons_base.html" %}
+
+{% load i18n staticfiles %}
+{% load account socialaccount %}
+
+{% block head_title %}{% trans "Sign In" %}{% endblock %}
+
+{% block extra_style %}
+<style>
+	ul.socialaccount_providers {
+  padding-left: 0;
+  /* margin-left: -5px; */
+  list-style: none;
+  font-weight: 600;
+}
+ul.socialaccount_providers > li {
+  display: inline-block;
+ /* padding-right: 5px;
+  padding-left: 5px;*/
+}
+ul.socialaccount_providers > li:after {
+  content: '|';
+}
+ul.socialaccount_providers > li:last-child:after {
+  content: '';
+}
+	form.login > p {
+	margin-bottom: 15px;
+}
+
+form.login > p > input {
+    width: auto;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+}
+
+form.login > p > input[type='checkbox'] {
+    width: auto;
+    height: auto;
+    font-size: 20px;
+}
+form.login > ul.errorlist {
+	color: red;
+}
+</style>
+{% endblock %}
+
+{% block body %}
+
+<div class="marginTB30">
+  <div class="panel-heading-c0">
+    <h1 class="padding1020 margin0">{% trans "Sign In" %}</h1>
+  </div>
+<div class="body-panel borderBLRradius borderColor-c0">
+
+<div class="padding1020">
+{% get_providers as socialaccount_providers %}
+
+{% if socialaccount_providers %}
+<p>{% blocktrans with site.name as site_name %}Please sign in with one
+of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
+for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+
+<div class="socialaccount_ballot">
+
+  <ul class="socialaccount_providers">
+    {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+  </ul>
+
+
+{% include "socialaccount/snippets/login_extra.html" %}
+
+{% else %}
+
+<p class="font16">{% blocktrans %}If you have not created an account yet, then please
+<a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+
+{% endif %}
+</div>
+
+<div class="login-or demiBold marginTB30">{% trans 'or'|capfirst %}</div>
+
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  
+  <button class="btn btn-default marginB10" type="submit">{% trans "Sign In" %}</button><br>
+  <a class="button secondaryAction demiBold" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+</form>
+</div>
+</div>
+</div>
+{% endblock %}

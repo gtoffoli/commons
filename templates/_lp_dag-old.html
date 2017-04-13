@@ -15,18 +15,16 @@
 <link rel="stylesheet" href="{% static "jointjs/joint.css" %}">
 <link rel="stylesheet" href="{% static "jointjs/autolayout.css" %}">
 {# <script src="jquery.js"></script> #}
-{% if can_edit %}
-  <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
-{% endif %}
-<script type="text/javascript" src="{% static "jointjs/jquery-2.1.0.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/lodash.min.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/backbone-min.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/graphlib.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/dagre.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/joint.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/joint.layout.DirectedGraph.js" %}"></script>
-<script type="text/javascript" src="{% static "jointjs/autolayout.js" %}"></script>
-{# <script src="{% static "jointjs/svg-pan-zoom.js" %}"></script> #}
+
+<script src="{% static "jointjs/jquery-2.1.0.js" %}"></script>
+<script src="{% static "jointjs/lodash.min.js" %}"></script>
+<script src="{% static "jointjs/backbone-min.js" %}"></script>
+<script src="{% static "jointjs/graphlib.js" %}"></script>
+<script src="{% static "jointjs/dagre.js" %}"></script>
+<script src="{% static "jointjs/joint.js" %}"></script>
+<script src="{% static "jointjs/joint.layout.DirectedGraph.js" %}"></script>
+<script src="{% static "jointjs/autolayout.js"" %}"></script>
+<script src="{% static "jointjs/svg-pan-zoom.js"" %}"></script>
 
 <script type="text/javascript">
 
@@ -104,7 +102,7 @@ graph.getElements().forEach(function(node, index, array) {
   // label = (1+index).toString() + '.\n' + node.attr('text').text;
   label = (1+index).toString() + '.  ' + node.attr('nodetype') + '\n' + node.attr('text').text;
   node.attr({ text: { text: label, fill: text_color, 'font-family': 'Open Sans, sans-serif', 'font-size': 11, 'text-anchor':'middle', }});
-  //console.log(index, label);
+  console.log(index, label);
   width = label_width(label) + node_padding * 2;
   node.resize(width, node_height);
 });
@@ -149,43 +147,13 @@ paper.on('cell:pointerclick', function (cellView, evt, x, y) {
   paper.on('cell:pointerup', function (cellView, evt, x, y) {
     on_cell_dragged(cellView, x, y);
   });
-  paper.on('cell:pointerdown', function(cellView, evt, x, y) {
-    var toolRemove = $(evt.target).parents('.tool-remove')[0];
-    // If `.tool-remove` was clicked.
-    if (toolRemove) {
-        $("body").css("cursor", "default");
-        cell_id=cellView.id;
-        model_id=$('#'+cell_id).attr('model-id');
-        edge_id =  model_id.split('-')[1];
-        cellView.options.interactive = false;
-        window.bootbox.confirm({
-          message: '{% trans "do you really want to remove this edge"|capfirst %}?',
-          buttons: {
-            confirm: {
-              label: '{% trans "Yes" %}',
-              className: 'btn-success'
-            },
-            cancel: {
-              label: '{% trans "No" %}',
-              className: 'btn-danger'
-            },
-          },
-          callback: function(result) {
-            if (result) {
-                $("body").css("cursor", "wait");
-                 document.location.href = '/pathedge/{0}/delete/'.format(edge_id);
-                 console.log("A link was removed: " + edge_id); // a link was removed  (cell.id contains the ID of the removed link)
-            }
-          }
-        });
-    }
-  });
-{% comment %}
+  
 /*  paper.on('tool:remove', function(evt, linkView) {
     console.log("Removing link" + linkView.model.id);
     // linkView.model.remove();
-  });
- graph.on('remove', function(cell, collection, opt) {
+  });*/
+ /* graph.on('remove', function(cell, collection, opt) {
+  console.log(cell);
     if (cell.isLink()) {
       // console.log("A link was removed" + linkView.model.id); // a link was removed  (cell.id contains the ID of the removed link)
       var msg = 'Do you really want to remove this edge?';
@@ -196,7 +164,25 @@ paper.on('cell:pointerclick', function (cellView, evt, x, y) {
       }
     }
   });*/
-{% endcomment %}
+  paper.on('cell:pointerdown', function(cellView, evt, x, y) {
+    var toolRemove = $(evt.target).parents('.tool-remove')[0];
+    // If `.tool-remove` was clicked.
+    if (toolRemove) {
+        if (!confirm('Shall I remove this link?')) {
+            // `interactive === false` prevents any action inside joint.dia.Link>>pointerdown().
+            cellView.options.interactive = false;
+            // Put `interactive === true` back in the next turn to make the link interactive again
+            // after the user releases the mouse.
+            _.defer(function() { cellView.options.interactive = true; });
+        }
+        else {
+    cell_id=cellView.id;
+    model_id=$('#'+cell_id).attr('model-id');
+    edge_id =  model_id.split('-')[1];
+    document.location.href = '/pathedge/{0}/delete/'.format(edge_id);
+        }
+    }
+});
 {% endif %}
 
 //First, checks if it isn't implemented yet.
@@ -227,33 +213,11 @@ function on_cell_clicked(cellView, x, y) {
     action = cell.get('action');
     console.log('action: ', action);
     if (action == 'delete') {
-        $("body").css("cursor", "default");
-        window.bootbox.confirm({
-          message: label + '<br>{% trans "do you really want to remove this node"|capfirst %}?',
-          buttons: {
-            confirm: {
-              label: '{% trans "Yes" %}',
-              className: 'btn-success'
-            },
-            cancel: {
-              label: '{% trans "No" %}',
-              className: 'btn-danger'
-            },
-          },
-          callback: function(result) {
-            if (result) {
-                $("body").css("cursor", "wait");
-                document.location.href = '/pathnode/{0}/delete/'.format(id);
-            }
-          }
-        });
-    }
-{% comment %}
-    /* var msg = 'Do you really want to remove this node? ' + label;
+      var msg = 'Do you really want to remove this node? ' + label;
       if (window.confirm(msg))
         document.location.href = '/pathnode/{0}/delete/'.format(id);
     }
-	  
+	   	/*
 		else if (action == 'add_before') {
 			var msg = 'Add a node before this node? ' + label;
 			if (window.confirm(msg))
@@ -263,12 +227,16 @@ function on_cell_clicked(cellView, x, y) {
 			if (window.confirm(msg))
 				document.location.href = '/pathnode/{0}/add_after/'.format(id);
 		}
-	  */
-{% endcomment %}
+	   	*/
   } 
   else if (! cell.isLink()) {
     console.log('node clicked');
     id = cell.id.split('-')[1];
+{% comment %}    
+    {% if 'play' in request.path %}
+		document.location.href = '{{ request.path }}?node={0}'.format(cell.get('index'));
+{% else %}
+{% endcomment %}
     // document.location.href = '/pathnode/{0}/'.format(id);
     /*
     $.ajax({
@@ -280,7 +248,7 @@ function on_cell_clicked(cellView, x, y) {
         }
       }
     });*/
-    $("body").css("cursor", "default");
+    
     $('<div/>',{
      'id':'link-'+id})
      .html($('<iframe/>', {
@@ -294,6 +262,8 @@ function on_cell_clicked(cellView, x, y) {
        responsive: true,
        clickOut: true,
      });
+
+{# endif #}
   }
 }
 
