@@ -147,11 +147,11 @@
         <dl class="font14 marginB10">
            <dt class="demiBold">{% trans "attached documents"|capfirst %}</dt>
            {% for document in oer.get_sorted_documents %}
-             <dd>
+             <dd>{% if forloop.first != forloop.last %}<span class="demiBold" style="padding-right:10px">{{ forloop.counter }}.</span>{% endif %}
                {% if can_edit %}<a class="deleteDoc" id="u_{{ document.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                  {% if oer.get_sorted_documents|length > 1 %}
                    <span class="font12">
-                     {% if not forloop.first and not forloop.last %}<a class="upDoc" id="u_{{ document.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a class="downDoc" id="u_{{ document.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
+                     {% if not forloop.first and not forloop.last %} <a class="upDoc" id="u_{{ document.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a class="downDoc" id="u_{{ document.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
                      {% elif forloop.first %}<i class="fa fa-arrow-up c-white"></i> &nbsp; <a class="downDoc" id="u_{{ document.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
                      {% elif forloop.last %}<a class="upDoc" id="u_{{ document.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <i class="fa fa-arrow-down c-white"></i> &nbsp;
                      {% endif %}
