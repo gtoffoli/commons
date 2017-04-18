@@ -155,7 +155,7 @@ def help_children(request):
         ))
     children.append (MenuItem(
          capfirst(_("learning paths")),
-         url='/info/learn/',
+         url='/help/lp/',
         ))
     children.append (MenuItem(
          capfirst(_("mentoring")),
