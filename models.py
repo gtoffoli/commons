@@ -2500,7 +2500,6 @@ class PathNode(node_factory('PathEdge')):
             if not s:
                 continue
             if s.count('.'): # document number ?
-                # l = s.split('.')
                 l = [item.strip() for item in s.split('.')]
                 if len(l)>2 or not l[0].isdigit():
                     return None
@@ -2508,14 +2507,16 @@ class PathNode(node_factory('PathEdge')):
                 if document < 1:
                     return None
                 s = l[1]
+                if not s: # no page range at all ?
+                    ranges.append([document])
+                    continue
             if s.count('-'): # page range ?
-                # l = s.split('-')
                 l = [item.strip() for item in s.split('-')]
                 if len(l)>2 or not l[1].isdigit():
                     return None
                 last_page = int(l[1])
                 s = l[0]
-            if not s: # no page range at all or no first page
+            if not s: # no first page
                 s = '1'
             if not s.isdigit():
                 return None
