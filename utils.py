@@ -64,9 +64,9 @@ def write_pdf_pages(i_stream, writer, ranges):
             p = low - 1
             if len(r) == 2:
                 high = r[1]
-                if not isinstance(high, int) or high < low or high > n_pages:
+                if not isinstance(high, int) or high < low: # or high > n_pages:
                     raise 'invalid page range'
-            while p < high:
+            while p < high and p < n_pages:
                 writer.addPage(reader.getPage(p))
                 p += 1
     else:
