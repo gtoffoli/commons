@@ -2499,7 +2499,7 @@ class PathNode(node_factory('PathEdge')):
             s = s.strip()
             if not s:
                 continue
-            if s.count('.'):
+            if s.count('.'): # document number ?
                 # l = s.split('.')
                 l = [item.strip() for item in s.split('.')]
                 if len(l)>2 or not l[0].isdigit():
@@ -2508,13 +2508,15 @@ class PathNode(node_factory('PathEdge')):
                 if document < 1:
                     return None
                 s = l[1]
-            if s.count('-'):
+            if s.count('-'): # page range ?
                 # l = s.split('-')
                 l = [item.strip() for item in s.split('-')]
                 if len(l)>2 or not l[1].isdigit():
                     return None
                 last_page = int(l[1])
                 s = l[0]
+            if not s: # no page range at all or no first page
+                s = '1'
             if not s.isdigit():
                 return None
             first_page = int(s)
@@ -2532,46 +2534,50 @@ class PathNode(node_factory('PathEdge')):
     def make_document_stream(self, writer=None, mimetype=None):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
             from [multiple] documents attached to the associated OER """
-        oer = self.oer
-        if not oer:
-            return writer, mimetype
-        documents = oer.get_sorted_documents()
-        n_documents = len(documents)
-        if not n_documents:
-            return writer, mimetype
-        ranges = self.get_ranges()
         if not writer:
             writer = make_pdf_writer()
-        if ranges:
-            mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
-            for r in ranges:
-                i_document = r[0]
-                if i_document > n_documents:
-                    continue
-                document = documents[i_document-1]
-                if not document.viewerjs_viewable:
-                    continue
-                document_version = document.latest_version
-                if mimetype and not document_version.mimetype == mimetype:
-                    continue
-                mimetype = document_version.mimetype
-                i_stream = document_version.open()
-                pagerange = r[1:]
-                # get_pdf_pages(i_stream, stream, [pagerange])
-                write_pdf_pages(i_stream, writer, [pagerange])
-        else:
-            for document in documents:
-                document_version = document.latest_version
-                if not document.viewerjs_viewable:
-                    continue
-                if mimetype and not document_version.mimetype == mimetype:
-                    continue
-                mimetype = document_version.mimetype
-                i_stream = document_version.open()
-                """
-                stream.write(i_stream)
-                """
-                write_pdf_pages(i_stream, writer, None)
+        if self.oer:
+            documents = self.oer.get_sorted_documents()
+            n_documents = len(documents)
+            if not n_documents:
+                return writer, mimetype
+            ranges = self.get_ranges()
+            if ranges:
+                mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
+                for r in ranges:
+                    i_document = r[0]
+                    if i_document > n_documents:
+                        continue
+                    document = documents[i_document-1]
+                    if not document.viewerjs_viewable:
+                        continue
+                    document_version = document.latest_version
+                    if mimetype and not document_version.mimetype == mimetype:
+                        continue
+                    mimetype = document_version.mimetype
+                    i_stream = document_version.open()
+                    pagerange = r[1:]
+                    # get_pdf_pages(i_stream, stream, [pagerange])
+                    write_pdf_pages(i_stream, writer, [pagerange])
+            else:
+                for document in documents:
+                    document_version = document.latest_version
+                    if not document.viewerjs_viewable:
+                        continue
+                    if mimetype and not document_version.mimetype == mimetype:
+                        continue
+                    mimetype = document_version.mimetype
+                    i_stream = document_version.open()
+                    write_pdf_pages(i_stream, writer, None)
+        elif self.document:
+            if self.document.viewerjs_viewable:
+                document_version = self.document.latest_version
+                if not mimetype or document_version.mimetype == mimetype:
+                    mimetype = document_version.mimetype
+                    i_stream = document_version.open()
+                    write_pdf_pages(i_stream, writer, None)
+        elif self.text:
+            text = self.text
         # return stream, mimetype
         return writer, mimetype
 
