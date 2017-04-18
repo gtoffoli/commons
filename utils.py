@@ -28,6 +28,11 @@ writer.write(file)
 file.close
 """
 
+from PyPDF2.pdf import PdfFileReader, PdfFileWriter
+
+def make_pdf_writer():
+    return PdfFileWriter()
+
 def get_pdf_page(i_stream, o_stream, page):
     """ return ...
     """ 
@@ -40,41 +45,48 @@ def get_pdf_page(i_stream, o_stream, page):
     writer.addPage(page)
     writer.write(o_stream)
 
-def get_pdf_pages(i_stream, o_stream, pageranges):
+# def get_pdf_pages(i_stream, o_stream, pageranges):
+def write_pdf_pages(i_stream, writer, pageranges):
+    print 'pageranges: ', pageranges
     """ return or write an output stream with pages from the source PDF stream in range specified
     range is a list of elements:
     - int elements represent individual pages; numbering starts from 1
     - sequences of 2 elements [low, high] represent a page range
     """ 
-    from PyPDF2.pdf import PdfFileReader, PdfFileWriter
+    # from PyPDF2.pdf import PdfFileReader, PdfFileWriter
     reader = PdfFileReader(i_stream)
     n_pages = reader.getNumPages()
-    writer = PdfFileWriter()
-    for pr in pageranges:
-        if isinstance(pr, int):
-            page = reader.getPage(pr)
-            writer.addPage(page-1)
-            writer.write(o_stream)
-        elif isinstance(pr, (list, tuple)) and len(pr)==2:
-            low = pr[0]
-            high = pr[1]
-            if not isinstance(low, int) or low<1 or low>n_pages:
-                raise 'invalid page range'
-            if not isinstance(high, int) or high<low or high>n_pages:
-                raise 'invalid page range'
-            p = low-1
-            step = 1
-            while p < high:
-                page = reader.getPage(p)
+    if pageranges:
+        for pr in pageranges:
+            if isinstance(pr, int):
+                """
+                page = reader.getPage(pr)
+                writer.addPage(page-1)
+                """
+                page = reader.getPage(pr-1)
                 writer.addPage(page)
-                p += step
-            writer.write(o_stream)
-        else:
-            raise 'invalid page range'
-
+            elif isinstance(pr, (list, tuple)) and len(pr)==2:
+                low = pr[0]
+                high = pr[1]
+                if not isinstance(low, int) or low<1 or low>n_pages:
+                    raise 'invalid page range'
+                if not isinstance(high, int) or high<low or high>n_pages:
+                    raise 'invalid page range'
+                p = low-1
+                step = 1
+                while p < high:
+                    page = reader.getPage(p)
+                    writer.addPage(page)
+                    p += step
+            else:
+                raise 'invalid page range'
+    else:
+        writer.appendPagesFromReader(reader)
+    """
     file = open("page3", "wb")
     writer.write(file)
     file.close
+    """
 
 empty_words = ('and', 'the', 'not', 'non',)
 

@@ -2,6 +2,7 @@ import re
 import json
 import csv
 import uuid
+import StringIO
 from collections import defaultdict
 from datetime import datetime, timedelta
 
@@ -2457,7 +2458,7 @@ DOCUMENT_VIEW_TEMPLATE = """
 </iframe>
 """
 YOUTUBE_TEMPLATE = """
-<iframe src="%s?autoplay=1" id="iframe" allowfullscreen>
+<iframe src="%s" id="iframe" allowfullscreen>
 </iframe>
 """
 SLIDESHARE_TEMPLATE = """
@@ -2507,6 +2508,7 @@ def oer_view(request, oer_id, oer=None):
             youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
         elif youtube.count('watch?v='):
             youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+        youtube += '?autoplay=1'
         youtube = YOUTUBE_TEMPLATE % youtube
         var_dict['youtube'] = youtube
     elif ted_talk:
@@ -2937,10 +2939,11 @@ def document_download(request, document_id, document=None):
         save_as='"%s"' % document_version.document.label,
         content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
         )
+
+"""
 def parse_page_range(page_range):
-    """ parses the value of the page_range
-    as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
-    """
+    # parses the value of the page_range
+    # as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
     subranges = []
     splitted = page_range.split(',')
     for s in splitted:
@@ -2982,6 +2985,7 @@ def document_download_range(request, document_id, page_range):
     if file.len:
         response['Content-Length'] = file.len
     return response
+"""
 
 def document_view(request, document_id, node_oer=False, return_url=False, ):
     node = oer = project = ment_proj = 0
@@ -3024,10 +3028,11 @@ def document_view(request, document_id, node_oer=False, return_url=False, ):
             content_type=document_version.mimetype
             )
 
-# def document_view_range(request, document_id, page_range):
+"""
 def document_view_range(request, document_id, page_range, node_oer=False, return_url=False): # argomenti non usati !!!!!!!
     url = '/ViewerJS/#http://%s/document/%s/download_range/%s/' % (request.META['HTTP_HOST'], document_id, page_range)
     return url
+"""
 
 def document_delete(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
@@ -3194,7 +3199,10 @@ def lp_play(request, lp_id, lp=None):
     if oer:
         documents = oer.get_sorted_documents()
         page_range = current_node.range
+        if page_range:
+            page_range = page_range.strip()
         if documents:
+            """
             document = documents[0]
             if page_range:
                 splitted = page_range.split('.')
@@ -3211,6 +3219,8 @@ def lp_play(request, lp_id, lp=None):
                     url = document_view(request, document.id, node_oer=True, return_url=True)
             else:
                 url = document_view(request, document.id, node_oer=True, return_url=True)
+            """
+            url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
         var_dict['oer'] = oer
         var_dict['oer_url'] = url = oer.url
@@ -3226,6 +3236,9 @@ def lp_play(request, lp_id, lp=None):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
             elif youtube.count('watch?v='):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+            youtube += '?autoplay=1'
+            if page_range and page_range.isdigit():
+                youtube = youtube + '&start=' + page_range
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:
@@ -3253,9 +3266,19 @@ def lp_play(request, lp_id, lp=None):
     return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
 
 def lp_play_by_slug(request, lp_slug):
-    # lp = LearningPath.objects.get(slug=lp_slug)
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_play(request, lp.id, lp)
+
+def lp_download_by_slug(request, lp_slug):
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    writer, mimetype = lp.make_document_stream()
+    stream = StringIO.StringIO()
+    writer.write(stream)
+    response = HttpResponse(stream.getvalue(), mimetype)
+    if stream.len:
+        response['Content-Length'] = stream.len
+    response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % lp_slug
+    return response
 
 def lp_edit(request, lp_id=None, project_id=None):
     user = request.user
@@ -3610,6 +3633,19 @@ def pathnode_edit(request, node_id=None, path_id=None):
 
 def pathnode_edit_by_id(request, node_id):
     return pathnode_edit(request, node_id=node_id)
+
+def pathnode_download_range(request, node_id):
+    node = get_object_or_404(PathNode, pk=node_id)
+    # stream, mimetype = node.make_document_stream()
+    writer, mimetype = node.make_document_stream()
+    stream = StringIO.StringIO()
+    writer.write(stream)
+    if not stream:
+        return
+    response = HttpResponse(stream.getvalue(), mimetype)
+    if stream.len:
+        response['Content-Length'] = stream.len
+    return response
 
 def pathnode_delete(request, node_id):
     node = get_object_or_404(PathNode, id=node_id)

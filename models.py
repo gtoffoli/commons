@@ -46,7 +46,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
-from commons.utils import filter_empty_words, strings_from_html
+from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, write_pdf_pages
 
 
 # from analytics import filter_actions, post_views_by_user
@@ -2382,6 +2382,15 @@ class LearningPath(Resource, Publishable):
             superlist.append(sublist)
         return superlist
 
+    def make_document_stream(self):
+        """ make and return an IO stream by concatenating the documents streams
+            from the ordered nodes """
+        mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
+        writer = make_pdf_writer()
+        for node in self.get_ordered_nodes():
+            writer, mimetype = node.make_document_stream(writer=writer, mimetype=mimetype)
+        return writer, mimetype
+
 class SharedLearningPath(models.Model):
     """
     Link to an LearningPath created in another project
@@ -2473,13 +2482,15 @@ class PathNode(node_factory('PathEdge')):
     def can_translate(self, request):
         return self.can_edit(request)
 
-    def get_subranges(self, r=''):
-        """ parses the value of the field range and return subranges
+    def get_ranges(self, r=''):
+        """ parses the value of the field range and return ranges
         as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
         """
-        subranges = []
         if not r: # argument r useful only for offline testing
             r = self.range
+        if not r:
+            return None
+        ranges = []
         splitted = r.split(',')
         for s in splitted:
             document = 1
@@ -2507,16 +2518,60 @@ class PathNode(node_factory('PathEdge')):
             first_page = int(s)
             if first_page < 1:
                 return None
-            subrange = [document, first_page]
+            r = [document, first_page]
             if not last_page is None:
                 if last_page < first_page:
                     return None
-                subrange.append(last_page)
-            subranges.append(subrange)
-        return subranges            
+                r.append(last_page)
+            ranges.append(r)
+        return ranges            
 
-    def page_in_range(self, page):
-        return True
+    # def make_document_stream(self, stream=None, mimetype=None):
+    def make_document_stream(self, writer=None, mimetype=None):
+        """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
+            from [multiple] documents attached to the associated OER """
+        oer = self.oer
+        if not oer:
+            return writer, mimetype
+        documents = oer.get_sorted_documents()
+        n_documents = len(documents)
+        if not n_documents:
+            return writer, mimetype
+        ranges = self.get_ranges()
+        if not writer:
+            writer = make_pdf_writer()
+        if ranges:
+            mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
+            for r in ranges:
+                i_document = r[0]
+                if i_document > n_documents:
+                    continue
+                document = documents[i_document-1]
+                if not document.viewerjs_viewable:
+                    continue
+                document_version = document.latest_version
+                if mimetype and not document_version.mimetype == mimetype:
+                    continue
+                mimetype = document_version.mimetype
+                i_stream = document_version.open()
+                pagerange = r[1:]
+                # get_pdf_pages(i_stream, stream, [pagerange])
+                write_pdf_pages(i_stream, writer, [pagerange])
+        else:
+            for document in documents:
+                document_version = document.latest_version
+                if not document.viewerjs_viewable:
+                    continue
+                if mimetype and not document_version.mimetype == mimetype:
+                    continue
+                mimetype = document_version.mimetype
+                i_stream = document_version.open()
+                """
+                stream.write(i_stream)
+                """
+                write_pdf_pages(i_stream, writer, None)
+        # return stream, mimetype
+        return writer, mimetype
 
     def get_index(self):
         nodes = self.path.cached_ordered_nodes
