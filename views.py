@@ -257,24 +257,6 @@ def press_releases(request):
             var_dict['url']= url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
     return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
 
-def my_chat(request):
-    user = request.user
-    if not user.is_authenticated():
-        return HttpResponseForbidden()
-    rooms = []
-    # if user.is_authenticated():
-    xmpp_accounts = XMPPAccount.objects.filter(user=user)
-    for xmpp_account in xmpp_accounts:
-        room_members = RoomMember.objects.filter(xmpp_account=xmpp_account)
-        for room_member in room_members:
-            room = room_member.room
-            rooms.append(room)
-    chat_dict = {}
-    chat_dict['rooms'] = rooms
-    info = FlatPage.objects.get(url='/info/chatrooms/').content
-    chat_dict['info'] = info
-    return render_to_response('chat.html', chat_dict, context_instance=RequestContext(request))
-
 def user_profile(request, username, user=None):
     # assert username or (user and user.is_authenticated())
     if not username and (not user or not user.is_authenticated()):
@@ -3239,6 +3221,7 @@ def lp_play(request, lp_id, lp=None):
             youtube += '?autoplay=1'
             if page_range and page_range.isdigit():
                 youtube = youtube + '&start=' + page_range
+            print page_range
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:
