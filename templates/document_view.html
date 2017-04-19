@@ -42,7 +42,11 @@
   <div class="container-fluid margin0 padding0">
     <div class="iframe-container">
     {% if url %}
-      <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+    	{% if document.viewerjs_viewable %}
+      		<iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+	    {% else %}
+	    	<img src="{{ url }}">
+	    {% endif %}
     {% endif %}
     </div>
   </div>

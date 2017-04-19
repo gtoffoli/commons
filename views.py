@@ -2909,7 +2909,8 @@ def oer_add_document(request):
             oer.save()
         return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
-def document_download(request, document_id, document=None):
+# def document_download(request, document_id, document=None):
+def document_serve(request, document_id, document=None, save=False):
     if not document:
         document = get_object_or_404(Document, pk=document_id)
     document_version = document.latest_version
@@ -2918,56 +2919,12 @@ def document_download(request, document_id, document=None):
     return serve_file(
         request,
         document_version.file,
-        save_as='"%s"' % document_version.document.label,
+        save_as = save and '"%s"' % document_version.document.label or None,
         content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
         )
 
-"""
-def parse_page_range(page_range):
-    # parses the value of the page_range
-    # as a list of lists of 2 or 3 integers: [document, first_page, last_page (optional)]
-    subranges = []
-    splitted = page_range.split(',')
-    for s in splitted:
-        first_page = 1
-        last_page = None
-        s = s.strip()
-        if not s:
-            continue
-        if s.count('-'):
-            l = s.split('-')
-            if len(l)>2 or not l[1].isdigit():
-                return None
-            last_page = int(l[1])
-            s = l[0]
-        if not s.isdigit():
-            return None
-        first_page = int(s)
-        if first_page < 1:
-            return None
-        subrange = [first_page]
-        if not last_page is None:
-            if last_page < first_page:
-                return None
-            subrange.append(last_page)
-        subranges.append(subrange)
-    return subranges
-
-def document_download_range(request, document_id, page_range):
-    document = get_object_or_404(Document, pk=document_id)
-    document_version = document.latest_version
-    pageranges = parse_page_range(page_range)
-    document_version.get_pages(pageranges)
-    # return serve_file( ... )
-    file = document_version.o_stream
-    if not file:
-        return
-    content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
-    response = HttpResponse(file.getvalue(), content_type=content_type)
-    if file.len:
-        response['Content-Length'] = file.len
-    return response
-"""
+def document_download(request, document_id, document=None):
+    return document_serve(request, document_id, document=document, save=True)
 
 def document_view(request, document_id, node_oer=False, return_url=False, ):
     node = oer = project = ment_proj = 0
@@ -2976,32 +2933,36 @@ def document_view(request, document_id, node_oer=False, return_url=False, ):
     ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
     profile = request.GET.get('profile', '')
-    if document.viewerjs_viewable:
-       if node_doc:
-           if not node_oer:
-               node = PathNode.objects.get(document_id=document_id)
-           else:
-               oer_document = OerDocument.objects.get(document_id=document_id)
-       elif ment_node_doc:
+    if document.viewable:
+        domain = request.META['HTTP_HOST']
+        if node_doc:
+            if not node_oer:
+                node = PathNode.objects.get(document_id=document_id)
+            else:
+                oer_document = OerDocument.objects.get(document_id=document_id)
+        elif ment_node_doc:
             node = PathNode.objects.get(document_id=document_id)
             list=ment_node_doc.split('-')
             ment_proj = Project.objects.get(pk = int(list[1]))
-       elif proj:
-           folder_document = FolderDocument.objects.get(document_id=document_id)
-           project = Project.objects.get(pk = proj)
-       elif profile:
-           profile_document = UserProfile.objects.get(curriculum_id=document_id)
-           user = User.objects.get(username = profile)
-           profile = user.get_profile()
-       else:
-           oer_document = OerDocument.objects.get(document_id=document_id)
-           oer = OER.objects.get(pk = oer_document.oer_id)
-       url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], document_id)
-       if return_url:
-           return url
-       else:
+        elif proj:
+            folder_document = FolderDocument.objects.get(document_id=document_id)
+            project = Project.objects.get(pk = proj)
+        elif profile:
+            profile_document = UserProfile.objects.get(curriculum_id=document_id)
+            user = User.objects.get(username = profile)
+            profile = user.get_profile()
+        else:
+            oer_document = OerDocument.objects.get(document_id=document_id)
+            oer = OER.objects.get(pk = oer_document.oer_id)
+        if document.viewerjs_viewable:
+            url = '/ViewerJS/#http://%s/document/%s/download/' % (domain, document_id)
+        else:
+            url = 'http://%s/document/%s/serve/' % (domain, document_id)
+        if return_url:
+            return url
+        else:
             # return HttpResponseRedirect(url)
-           return render_to_response('document_view.html', {'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
+           return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(
