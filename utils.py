@@ -28,10 +28,21 @@ writer.write(file)
 file.close
 """
 
+import StringIO
 from PyPDF2.pdf import PdfFileReader, PdfFileWriter
+from weasyprint import HTML, CSS
+
+def text_to_html(text):
+    return text.replace('\n', '<br/>')
 
 def make_pdf_writer():
     return PdfFileWriter()
+
+def html_to_writer(html, writer):
+    stylesheet = CSS(string='body { font-family: Arial }')
+    i_stream = StringIO.StringIO()
+    HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
+    write_pdf_pages(i_stream, writer, None)
 
 def get_pdf_page(i_stream, o_stream, page):
     """ return ...

@@ -3,6 +3,8 @@
 import json
 from math import sqrt
 from datetime import timedelta
+import StringIO
+from weasyprint import HTML, CSS
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.utils.functional import cached_property
@@ -46,7 +48,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
-from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, write_pdf_pages
+from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, html_to_writer, write_pdf_pages, text_to_html
 
 
 # from analytics import filter_actions, post_views_by_user
@@ -2540,10 +2542,14 @@ class PathNode(node_factory('PathEdge')):
         if self.oer:
             documents = self.oer.get_sorted_documents()
             n_documents = len(documents)
-            if not n_documents:
-                return writer, mimetype
             ranges = self.get_ranges()
-            if ranges:
+            if not n_documents:
+                html = "<h1>%s</h1>" % self.label or self.oer.title
+                html += "<div><i>(Cannot convert to PDF a node referring an OER of this type)</i></div>"
+                html += "<h2>Description</h2>"
+                html += "<div>%s</div>" % text_to_html(self.oer.description)
+                html_to_writer(html, writer)
+            elif ranges:
                 mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
                 for r in ranges:
                     i_document = r[0]
@@ -2558,18 +2564,26 @@ class PathNode(node_factory('PathEdge')):
                     mimetype = document_version.mimetype
                     i_stream = document_version.open()
                     pagerange = r[1:]
-                    # get_pdf_pages(i_stream, stream, [pagerange])
                     write_pdf_pages(i_stream, writer, [pagerange])
             else:
                 for document in documents:
                     document_version = document.latest_version
+                    """
                     if not document.viewerjs_viewable:
                         continue
                     if mimetype and not document_version.mimetype == mimetype:
                         continue
-                    mimetype = document_version.mimetype
-                    i_stream = document_version.open()
-                    write_pdf_pages(i_stream, writer, None)
+                    """
+                    if document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
+                        mimetype = document_version.mimetype
+                        i_stream = document_version.open()
+                        write_pdf_pages(i_stream, writer, None)
+                    else:
+                        title = """<h1>%s</h1>
+""" % self.label
+                        html = "<div>Cannot convert to PDF a document of mimetipe %s.</div>" % document_version.mimetype
+                        html = title + html
+                        html_to_writer(html, writer)
         elif self.document:
             if self.document.viewerjs_viewable:
                 document_version = self.document.latest_version
@@ -2578,8 +2592,18 @@ class PathNode(node_factory('PathEdge')):
                     i_stream = document_version.open()
                     write_pdf_pages(i_stream, writer, None)
         elif self.text:
-            text = self.text
-        # return stream, mimetype
+            domain = "www.commonspaces.eu"
+            title = """<h1>%s</h1>
+""" % self.label
+            html = self.text
+            html = html.replace("../../../media", "http://%s/media" % domain)
+            html = title + html
+            """
+            i_stream = StringIO.StringIO()
+            HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
+            write_pdf_pages(i_stream, writer, None)
+            """
+            html_to_writer(html, writer)
         return writer, mimetype
 
     def get_index(self):
