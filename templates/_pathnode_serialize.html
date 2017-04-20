@@ -1,0 +1,20 @@
+{% load staticfiles i18n %}
+
+<style>
+  .ui { font-style: italic; }
+</style>
+
+<h1>{% if node.label %}{{ node.label }}{% else %}{{ node.oer.title }}{% endif %}</h1>
+
+{% if node.description %}
+<div style="margin-top: 1.0em;">
+<span class="ui"><strong>{% trans "description"|capfirst %}</strong></span><br />
+{{ node.description }}
+</div>
+{% endif %}
+
+{% if text %}
+<div style="margin-top: 1.0em;">
+{{ text|safe }}
+</div>
+{% endif %}

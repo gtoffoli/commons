@@ -2543,7 +2543,14 @@ class PathNode(node_factory('PathEdge')):
             ranges.append(r)
         return ranges            
 
-    # def make_document_stream(self, stream=None, mimetype=None):
+    def serialize_text(self, request, writer):
+        html_template = get_template('_pathnode_serialize.html')
+        domain = request.META['HTTP_HOST']
+        text = self.text.replace("../../../media", "http://%s/media" % domain)
+        context = { 'request': request, 'node': self, 'text': text }
+        rendered_html = html_template.render(context)
+        html_to_writer(rendered_html, writer)    
+
     def make_document_stream(self, request, writer=None, mimetype=None):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
             from [multiple] documents attached to the associated OER """
@@ -2578,19 +2585,12 @@ class PathNode(node_factory('PathEdge')):
             else:
                 for document in documents:
                     document_version = document.latest_version
-                    """
-                    if not document.viewerjs_viewable:
-                        continue
-                    if mimetype and not document_version.mimetype == mimetype:
-                        continue
-                    """
                     if document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
                         mimetype = document_version.mimetype
                         i_stream = document_version.open()
                         write_pdf_pages(i_stream, writer, None)
                     else:
-                        title = """<h1>%s</h1>
-""" % self.label
+                        title = """<h1>%s</h1>""" % self.label
                         html = "<div>Cannot convert to PDF a document of mimetipe %s.</div>" % document_version.mimetype
                         html = title + html
                         html_to_writer(html, writer)
@@ -2602,18 +2602,7 @@ class PathNode(node_factory('PathEdge')):
                     i_stream = document_version.open()
                     write_pdf_pages(i_stream, writer, None)
         elif self.text:
-            domain = "www.commonspaces.eu"
-            title = """<h1>%s</h1>
-""" % self.label
-            html = self.text
-            html = html.replace("../../../media", "http://%s/media" % domain)
-            html = title + html
-            """
-            i_stream = StringIO.StringIO()
-            HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
-            write_pdf_pages(i_stream, writer, None)
-            """
-            html_to_writer(html, writer)
+            self.serialize_text(request, writer)
         return writer, mimetype
 
     def get_index(self):

@@ -1,27 +1,31 @@
 {% load staticfiles i18n %}
 
+<style>
+  .ui { font-style: italic; }
+</style>
+
 <h1>{{ lp.title }}</h1>
 
 {% if lp.short %}<div><strong>{{ lp.short }}</strong></div>{% endif %}
 
 <div style="margin-top: 1.0em;">
-{% trans "learning path"|capfirst %} {% trans "submitted by" %} {{ lp.creator.get_display_name }}
-{% trans "in the project" %} <strong>{{ lp.project.name }}</strong>
+<span class="ui">{% trans "learning path"|capfirst %} {% trans "submitted by" %}</span> {{ lp.creator.get_display_name }}
+<span class="ui">{% trans "in the project" %}</span> <strong>{{ lp.project.name }}</strong>
 </div>
 
-<div>URL {{ url }}</div>
+<div><span class="ui">URL</span> {{ url }}</div>
 
 {% if lp.long %}
 <div style="margin-top: 1.0em;">
-<strong>{% trans "description"|capfirst %}</strong><br />
+<span class="ui"><strong>{% trans "description"|capfirst %}</strong></span><br />
 {{ lp.long|safe }}
 </div>
 {% endif %}
 
 <div style="margin-top: 1.0em;">
-{% trans "IMPORTANT NOTICE" %}
+<span class="ui">{% trans "IMPORTANT NOTICE" %}</span>
 <div style="font-size: small;">
-{% trans "this document has been produced by"|capfirst %} {{ request.user.get_display_name }}
-{% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.
+<span class="ui">{% trans "this document has been produced by"|capfirst %}</span> {{ request.user.get_display_name }}
+<span class="ui">{% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.</span>
 </div>
 </div>
