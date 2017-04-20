@@ -17,6 +17,7 @@ from django.db.models import Max
 from django.db.models.signals import pre_save, post_save
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
+from django.template.loader import get_template
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -2384,13 +2385,21 @@ class LearningPath(Resource, Publishable):
             superlist.append(sublist)
         return superlist
 
-    def make_document_stream(self):
+    def serialize_cover(self, request, writer):
+        html_template = get_template('_lp_serialize.html')
+        url = 'http://www.commonspaces.eu' + self.get_absolute_url()
+        context = { 'request': request, 'lp': self, 'url': url }
+        rendered_html = html_template.render(context)
+        html_to_writer(rendered_html, writer)    
+
+    def make_document_stream(self, request):
         """ make and return an IO stream by concatenating the documents streams
             from the ordered nodes """
         mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
         writer = make_pdf_writer()
+        self.serialize_cover(request, writer)
         for node in self.get_ordered_nodes():
-            writer, mimetype = node.make_document_stream(writer=writer, mimetype=mimetype)
+            writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
         return writer, mimetype
 
 class SharedLearningPath(models.Model):
@@ -2534,7 +2543,7 @@ class PathNode(node_factory('PathEdge')):
         return ranges            
 
     # def make_document_stream(self, stream=None, mimetype=None):
-    def make_document_stream(self, writer=None, mimetype=None):
+    def make_document_stream(self, request, writer=None, mimetype=None):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
             from [multiple] documents attached to the associated OER """
         if not writer:

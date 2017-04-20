@@ -3215,7 +3215,7 @@ def lp_play_by_slug(request, lp_slug):
 
 def lp_download_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
-    writer, mimetype = lp.make_document_stream()
+    writer, mimetype = lp.make_document_stream(request)
     stream = StringIO.StringIO()
     writer.write(stream)
     response = HttpResponse(stream.getvalue(), mimetype)
@@ -3581,7 +3581,7 @@ def pathnode_edit_by_id(request, node_id):
 def pathnode_download_range(request, node_id):
     node = get_object_or_404(PathNode, pk=node_id)
     # stream, mimetype = node.make_document_stream()
-    writer, mimetype = node.make_document_stream()
+    writer, mimetype = node.make_document_stream(request)
     stream = StringIO.StringIO()
     writer.write(stream)
     if not stream:

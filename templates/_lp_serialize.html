@@ -1,0 +1,27 @@
+{% load staticfiles i18n %}
+
+<h1>{{ lp.title }}</h1>
+
+{% if lp.short %}<div><strong>{{ lp.short }}</strong></div>{% endif %}
+
+<div style="margin-top: 1.0em;">
+{% trans "learning path"|capfirst %} {% trans "submitted by" %} {{ lp.creator.get_display_name }}
+{% trans "in the project" %} <strong>{{ lp.project.name }}</strong>
+</div>
+
+<div>URL {{ url }}</div>
+
+{% if lp.long %}
+<div style="margin-top: 1.0em;">
+<strong>{% trans "description"|capfirst %}</strong><br />
+{{ lp.long|safe }}
+</div>
+{% endif %}
+
+<div style="margin-top: 1.0em;">
+{% trans "IMPORTANTE NOTICE" %}
+<div style="font-size: small;">
+{% trans "this document has been produced by"|capfirst %} {{ request.user.get_display_name }}
+{% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.
+</div>
+</div>

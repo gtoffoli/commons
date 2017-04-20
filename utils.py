@@ -39,7 +39,7 @@ def make_pdf_writer():
     return PdfFileWriter()
 
 def html_to_writer(html, writer):
-    stylesheet = CSS(string='body { font-family: Arial }')
+    stylesheet = CSS(string='body { font-family: Arial; }; a { text-decoration: none; };')
     i_stream = StringIO.StringIO()
     HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
     write_pdf_pages(i_stream, writer, None)
