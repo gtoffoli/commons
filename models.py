@@ -2499,6 +2499,7 @@ class PathNode(node_factory('PathEdge')):
         """
         if not r: # argument r useful only for offline testing
             r = self.range
+        r = r and r.strip()
         if not r:
             return None
         ranges = []

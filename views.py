@@ -2435,6 +2435,9 @@ def oer_list(request, field_name='', field_value=None):
 
 TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
 
+IMAGE_VIEW_TEMPLATE = """
+<img src="%s">
+"""
 DOCUMENT_VIEW_TEMPLATE = """
 <iframe src="%s" id="iframe" allowfullscreen>
 </iframe>
@@ -3112,6 +3115,25 @@ def lp_toggle_editor_role(request, lp_id):
         lp.toggle_editor_role(user)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
+def get_compatible_viewable_documents(documents, ranges):
+    """ return only viewable documents with the same mimetype
+        possibly after filtering them based on the ranges """
+    out_documents = []
+    if ranges:
+        for r in ranges:
+            out_documents.append(documents[r[0]-1])
+        documents = list(out_documents)
+    mimetype = None
+    out_documents = []
+    for document in documents:
+        if not document.viewable:
+            continue
+        mt = document.latest_version.mimetype
+        if not mimetype or mt == mimetype:
+            out_documents.append(document)
+            mimetype = mt
+    return out_documents, mimetype
+
 def lp_play(request, lp_id, lp=None):
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
@@ -3139,32 +3161,23 @@ def lp_play(request, lp_id, lp=None):
     oer = current_node.oer
     current_document = current_node.document
     current_text = current_node.text
+    page_range = current_node.range
     if oer:
         documents = oer.get_sorted_documents()
-        page_range = current_node.range
-        if page_range:
-            page_range = page_range.strip()
-        if documents:
-            """
-            document = documents[0]
-            if page_range:
-                splitted = page_range.split('.')
-                if len(splitted)==2:
-                    i_document = splitted[0].strip()
-                    page_range = splitted[1].strip()
-                    if i_document.isdigit():
-                        i_document = int(i_document)
-                        if i_document >= 1 and i_document <= len(documents):
-                            document = documents[i_document-1]
-                if page_range:
-                    url = document_view_range(request, document.id, page_range, node_oer=True, return_url=True)
-                else:
-                    url = document_view(request, document.id, node_oer=True, return_url=True)
-            else:
-                url = document_view(request, document.id, node_oer=True, return_url=True)
-            """
-            url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
-            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+        ranges = current_node.get_ranges()
+        viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
+        if viewable_documents:
+            if mimetype == 'application/pdf':
+                url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
+                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+            elif documents[0].viewerjs_viewable: # view only first non-PDF
+                url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], documents[0].id)
+                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+            elif mimetype.count('image/'): # view only first non-PDF
+                url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], documents[0].id)
+                var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+        else:
+            pass # ?
         var_dict['oer'] = oer
         var_dict['oer_url'] = url = oer.url
         var_dict['oer_is_published'] = oer.state == PUBLISHED
@@ -3182,7 +3195,6 @@ def lp_play(request, lp_id, lp=None):
             youtube += '?autoplay=1'
             if page_range and page_range.isdigit():
                 youtube = youtube + '&start=' + page_range
-            print page_range
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:
@@ -3230,8 +3242,6 @@ def lp_edit(request, lp_id=None, project_id=None):
     action = '/lp/edit/'
     if lp_id:
         lp = get_object_or_404(LearningPath, pk=lp_id)
-        print lp_id
-        print lp.slug
         if not lp.can_access(user):
             raise PermissionDenied
         action = '/lp/%s/edit/' % lp.slug
@@ -3243,7 +3253,6 @@ def lp_edit(request, lp_id=None, project_id=None):
 
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
-            print lp.slug
             action = '/lp/%s/edit/' % lp.slug
             group_id = lp.group_id
         form = LpForm(request.POST, instance=lp)
