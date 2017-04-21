@@ -2438,6 +2438,12 @@ TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
 IMAGE_VIEW_TEMPLATE = """
 <div class="marginT30 marginB10 text-center"><img src="%s" class="img-responsive" style="display:inline"></div>
 """
+VIDEO_VIEW_TEMPLATE = """
+<div class="marginT30 marginB10 text-center"><video src="%s" preload="auto" autoplay controls class="img-responsive" style="display:inline"></video></div>
+"""
+AUDIO_VIEW_TEMPLATE = """
+<div class="marginT30 marginB10 text-center"><audio src="%s" preload="auto" autoplay controls class="img-responsive" style="display:inline"></audio><h5 class="marginB10">%s</h5></div>
+"""
 DOCUMENT_VIEW_TEMPLATE = """
 <iframe src="%s" id="iframe" allowfullscreen>
 </iframe>
@@ -2961,6 +2967,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, ):
             url = '/ViewerJS/#http://%s/document/%s/download/' % (domain, document_id)
         else:
             url = 'http://%s/document/%s/serve/' % (domain, document_id)
+            mimetype = document.latest_version.mimetype
         if return_url:
             return url
         else:
@@ -3178,7 +3185,15 @@ def lp_play(request, lp_id, lp=None):
                 elif mimetype.count('image/'): # view only first non-PDF
                     url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
-                    var_dict['image_view'] = True
+                    var_dict['media_view'] = True
+                elif mimetype.count('video/'): # view only first non-PDF
+                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
+                    var_dict['media_view'] = True
+                elif mimetype.count('audio/'): # view only first non-PDF
+                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
+                    var_dict['media_view'] = True
             else:
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
@@ -4161,3 +4176,7 @@ def lp_autocomplete(request):
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
+
+
+def video(request):
+    return render_to_response('video.html', context_instance=RequestContext(request))
