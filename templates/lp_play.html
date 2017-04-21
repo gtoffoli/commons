@@ -63,11 +63,14 @@
 <div class="col-sm-9 col-md-9 col-lg-9 bc-white" id="right">
   <div class="clearfix marginTB0 marginLR-12 bc-white padding812">
     <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-    <div class="text-center pull-left" style="width:80%">{{ i_node|add:"1" }}/{{ nodes|length }}
-    	&nbsp; {{ current_node.label }}
+    <div class="text-center pull-left" style="width:80%"><span class="paddingR10">{{ i_node|add:"1" }}/{{ nodes|length }}</span>
+    {% if current_node.oer %} <a href="/oer/{{ oer.slug }}/"><span class="c-pacific-blue">OER <i class="fa fa-list-alt c-pacific-blue" aria-hidden="true"></i></span></a>
+{% elif current_node.document %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}</span>
 		{% if can_edit and not language_mismatch %}
 		&nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
 		{% endif %}
+		{% if current_node.oer %}
+		{% endif %} 
 	</div>
     <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
   </div>
@@ -81,6 +84,8 @@
   {% if oer_is_published %}
     {% if document_view %}
       {{ document_view|safe }}
+    {% elif no_viewable_document %}
+       <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>
     {% elif youtube %}
       {{ youtube|safe }}
     {% elif ted_talk %}

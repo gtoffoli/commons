@@ -5,6 +5,25 @@
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
+{% block extra_style %}
+<style>
+dl.eval {
+	background: white;
+	margin-bottom:5px;
+}
+dl.eval dd {
+	padding:5px;
+}
+dl.eval dd:nth-child(odd) {
+    background: transparent;
+}
+dl.eval dd:nth-child(even) {
+    background: #f8f8f8;
+}
+
+</style>
+{% endblock %}
+
 {% block body_class %}oer_detail{% endblock %}
 
 {% block body %}
@@ -36,7 +55,7 @@
       {% if oer.url and oer.description %}
         <div class="hidden-xs">
            <div class="posRel">
-              <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>{%endif%}
+              <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>{%endif%}
                 <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
@@ -44,7 +63,7 @@
         <div class="visible-xs">
            {% if oer.small_image %}
            <div class="posRel">
-              <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"><br>
+              <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>
                 <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
@@ -55,7 +74,7 @@
         </div>
       {% elif oer.small_image and oer.description %}
         <div class="posRel">
-            <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive" style="margin-top:5px; padding-right:10px"></div>
+            <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"></div>
             <p>{{ oer.description }}</p>
         </div>
 
@@ -146,8 +165,10 @@
       {% if oer.documents.all %}
         <dl class="font14 marginB10">
            <dt class="demiBold">{% trans "attached documents"|capfirst %}</dt>
+           {% with oer.get_sorted_documents|length as n_documents %}
            {% for document in oer.get_sorted_documents %}
-             <dd>{% if forloop.first != forloop.last %}<span class="demiBold" style="padding-right:10px">{{ forloop.counter }}.</span>{% endif %}
+           {# if forloop.first != forloop.last or forloop.counter > forloop.first or forloop.counter < forloop.last #}
+             <dd>{% if n_documents > 1 %}<span class="demiBold paddingR10">{{ forloop.counter }}.</span>{% endif %}
                {% if can_edit %}<a class="deleteDoc" id="u_{{ document.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                  {% if oer.get_sorted_documents|length > 1 %}
                    <span class="font12">
@@ -159,10 +180,11 @@
                  {% endif %}
                {% endif %}
                <span id="v_{{ document.id }}">{{ document.label }}</span>
-               &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
+               &nbsp;&nbsp;<a href="/document/{{ document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
                {% if document.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
              </dd>
            {% endfor %}
+           {% endwith %}
         </dl>
       {% endif %}
       {% comment %}{% if oer.oer_type == 3 and can_edit %}{% endcomment %}
@@ -208,10 +230,10 @@
           {% endif %}
         {% endif %}
         {% if lps %}
-          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
+          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted eval">
             <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
               {% for lp in lps %}
-                <dd><a href="/lp/{{ lp.slug }}/">{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}</a></dd>
+                <dd>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}<a href="/lp/{{ lp.slug }}/" class="paddingL10"><i class="fa fa-list-alt c-mulberry" aria-hidden="true"></i></a><a href="/lp/{{ lp.slug }}/play/?node=0" title="{% trans "show player view" %}" class="paddingL10"><i class="fa fa-youtube-play c-mulberry font16" aria-hidden="true"></i></a></dd>
               {% endfor %}
           </dl>
         {% endif %}
@@ -296,6 +318,7 @@ $(document).ready(function (){
                }
              });
           }
+          
         }
       });
     });

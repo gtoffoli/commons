@@ -40,15 +40,15 @@
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">
-    <div class="iframe-container">
     {% if url %}
-    	{% if document.viewerjs_viewable %}
-      		<iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
-	    {% else %}
-	    	<img src="{{ url }}">
-	    {% endif %}
+      {% if document.viewerjs_viewable %}
+        <div class="iframe-container">
+          <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+        </div>
+      {% else %}
+        <div class="marginT30 marginB10 text-center"><img src="{{ url }}" class="img-responsive" style="display:inline"></div>
+      {% endif %}
     {% endif %}
-    </div>
   </div>
 {% endblock %}
 

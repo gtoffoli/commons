@@ -3164,20 +3164,21 @@ def lp_play(request, lp_id, lp=None):
     page_range = current_node.range
     if oer:
         documents = oer.get_sorted_documents()
-        ranges = current_node.get_ranges()
-        viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
-        if viewable_documents:
-            if mimetype == 'application/pdf':
-                url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
-                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-            elif documents[0].viewerjs_viewable: # view only first non-PDF
-                url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], documents[0].id)
-                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-            elif mimetype.count('image/'): # view only first non-PDF
-                url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], documents[0].id)
-                var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
-        else:
-            pass # ?
+        if documents:
+            ranges = current_node.get_ranges()
+            viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
+            if viewable_documents:
+                if mimetype == 'application/pdf':
+                    url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
+                    var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+                elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
+                    url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+                elif mimetype.count('image/'): # view only first non-PDF
+                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+            else:
+                var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
         var_dict['oer_url'] = url = oer.url
         var_dict['oer_is_published'] = oer.state == PUBLISHED
@@ -4065,9 +4066,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
             request.session["post_dict"] = {}
         qs = LearningPath.objects.all()
         for q in qq:
-            qs = qs.filter(q).exclude(project__proj_type__name='roll')
+            qs = qs.filter(q)
         if not include_all:
-            qs = qs.filter(state=PUBLISHED).exclude(project__proj_type__name='roll')
+            qs = qs.filter(state=PUBLISHED)
         lps = qs.distinct().order_by('title')
     else:
         form = LpSearchForm()
@@ -4075,7 +4076,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         query = Q(state=PUBLISHED)
         for q in qq:
             query = query & q
-        lps = LearningPath.objects.filter(query).exclude(project__proj_type__name='roll').distinct().order_by('title')
+        lps = LearningPath.objects.filter(query).distinct().order_by('title')
         request.session["post_dict"] = {}
 
     context = {'lps': lps, 'n_lps': len(lps), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}

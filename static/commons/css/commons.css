@@ -377,6 +377,9 @@ margin-right:0;
 .paddingL3 {
 	padding-left:3px;
 }
+.paddingL10 {
+	padding-left:10px;
+}
 .paddingL16 {
 	padding-left:16px;
 }
@@ -442,6 +445,9 @@ margin-right:0;
 }
 .paddingT3 {
 	padding-top:3px;
+}
+.paddingT5 {
+	padding-top:5px;
 }
 .paddingT6 {
 	padding-top:6px;
@@ -1656,7 +1662,8 @@ color: #333;
 font-size: 10px;
 font-weight: 600;
 }
-dt.node-text:before {
+dt.node-text:before,
+span.node-text:before {
 content: "T";
 border: 1px solid #333;
 border-radius: 3px;
@@ -1676,7 +1683,8 @@ color: #333;
 font-size: 10px;
 font-weight: 600;
 }
-dt.node-doc:before {
+dt.node-doc:before,
+span.node-doc:before {
 content: "D";
 border: 1px solid #333;
 border-radius: 3px;
@@ -1696,7 +1704,8 @@ color: #008BD2;
 font-size: 10px;
 font-weight: 600;
 }
-dt.node-oer:before {
+dt.node-oer:before,
+span.node-oer:before {
 content: "O";
 border: 1px solid #008BD2;
 border-radius: 3px;
