@@ -2436,7 +2436,7 @@ def oer_list(request, field_name='', field_value=None):
 TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
 
 IMAGE_VIEW_TEMPLATE = """
-<img src="%s">
+<div class="marginT30 marginB10 text-center"><img src="%s" class="img-responsive" style="display:inline"></div>
 """
 DOCUMENT_VIEW_TEMPLATE = """
 <iframe src="%s" id="iframe" allowfullscreen>
@@ -3167,6 +3167,7 @@ def lp_play(request, lp_id, lp=None):
         if documents:
             ranges = current_node.get_ranges()
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
+            var_dict['image_view'] = False
             if viewable_documents:
                 if mimetype == 'application/pdf':
                     url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
@@ -3177,6 +3178,7 @@ def lp_play(request, lp_id, lp=None):
                 elif mimetype.count('image/'): # view only first non-PDF
                     url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+                    var_dict['image_view'] = True
             else:
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
