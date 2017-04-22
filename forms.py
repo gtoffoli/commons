@@ -1,10 +1,5 @@
-'''
-Created on 16/apr/2015
-
-@author: giovanni
-'''
-
-# from django.core.files.images import get_image_dimensions
+import re
+from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -554,6 +549,13 @@ class LpSearchForm(forms.Form):
         label=_('learning path type'), required=False,
         widget=forms.CheckboxSelectMultiple())
 
+range_document = ' *[1-9]\.'
+range_page_open = '[0-9]+(-[0-9]*)?'
+range_page_close = '-[0-9]+'
+range_page = '%s|%s' % (range_page_open, range_page_close)
+range_document_page = ' *%s *| *%s *| *%s *%s *' % (range_document, range_page, range_document, range_page)
+range_ok_re = '^%s(, *%s *)*$' % (range_document_page, range_document_page)
+range_ko_re = '[^0-9\.\-\,\ ]+'
 
 class PathNodeForm(forms.ModelForm):
     class Meta:
@@ -562,12 +564,13 @@ class PathNodeForm(forms.ModelForm):
         fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'text', 'creator', 'editor', )
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
-    # path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), label=_('learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), widget=forms.HiddenInput())
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    # oer = forms.ModelChoiceField(required=True,label=_('oer'), queryset=OER.objects.all().order_by('title'), widget=forms.Select(attrs={'class':'form-control',}))
     oer = forms.ModelChoiceField(required=False,label=_('OER'), queryset=OER.objects.all().order_by('title'), widget=autocomplete.ModelSelect2(url='oer-autocomplete', attrs={'style': 'width: 100%;'}))
-    range = forms.CharField(required=False, label=_('display range'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('possibly specify document and page display range'))
+    range = forms.CharField(required=False, label=_('display range'),
+        validators=[RegexValidator(range_ok_re, message=_("invalid range expression")), RegexValidator(range_ko_re, inverse_match=True, message=_("invalid range expression"))],
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder': string_concat(_("simple example"), ": 1-5; ", _("complex example"), ": 1., 2.1-5, 2.10-"),}),
+        help_text=string_concat(_('Possibly specify document number and page range(s) for document(s) attached to the OER'), ": ", _('see the help pages on LPs for details')))
     remove_document = forms.BooleanField(required=False, label= 'delete', widget=forms.CheckboxInput())
     document = forms.ModelChoiceField(required=False, queryset=Document.objects.all(), widget=forms.HiddenInput())
     new_document = forms.FileField(required=False,
