@@ -1945,6 +1945,22 @@ class LearningPath(Resource, Publishable):
     def get_link_color(self):
         return PUBLICATION_LINK_DICT[self.state]
 
+    def get_contributors(self, nodes=None):
+        if not nodes:
+            nodes = self.get_nodes()
+        creator_id = self.creator.id
+        user_ids = []
+        for node in nodes:
+            user_ids.append(node.creator.id)
+            user_ids.append(node.editor.id)
+            oer = node.oer
+            if oer:
+                user_ids.append(oer.creator.id)
+                user_ids.append(oer.editor.id)
+        user_ids = [id for id in user_ids if not id == creator_id]
+        users = User.objects.filter(id__in=user_ids).distinct().order_by('last_name', 'first_name')
+        return users
+
     def can_access(self, user):
         if self.state==PUBLISHED:
             return True
@@ -2013,35 +2029,59 @@ class LearningPath(Resource, Publishable):
             nodes = self.get_nodes()
         return [node for node in nodes if node.is_island()]
 
-    def get_ordered_nodes(self):
+    # def get_ordered_nodes(self):
+    def get_ordered_nodes(self, with_levels=False):
         nodes = PathNode.objects.filter(path=self).order_by('created')
-        if nodes.count() <= 1:
+        n_nodes = nodes.count()
+        if n_nodes <= 1:
+            if with_levels:
+                return zip(nodes, [0] * n_nodes, [None] * n_nodes)
             return nodes
         path_type = self.path_type
         if path_type == LP_COLLECTION:
+            if with_levels:
+                return zip(nodes, [0] * n_nodes, [None] * n_nodes)
             return nodes
         roots = self.get_roots(nodes=nodes)
         if path_type == LP_SEQUENCE:
             assert len(roots) == 1
+            if with_levels:
+                return zip(nodes, [0] * n_nodes, [None] * n_nodes)
+            return nodes
         elif len(roots) > 1:
             roots = list(roots)
             roots.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
         visited = []
+        levels = []
+        parents = []
         for root in roots:
-            stack = [root]
-            while stack:
-                node = stack.pop()
+            node_stack = [root]
+            level_stack = [0]
+            parent_stack = [None]
+            while node_stack:
+                node = node_stack.pop()
+                level = level_stack.pop()
+                parent = parent_stack.pop()
                 if node not in visited:
                     visited.append(node)
+                    levels.append(level)
+                    parents.append(parent)
+                    parent = node
                     children = [edge.child for edge in node.ordered_out_edges()]
                     children.reverse()
-                    stack.extend([node for node in children if not node in visited])
+                    node_stack.extend([node for node in children if not node in visited])
+                    level_stack.extend([level+1 for node in children if not node in visited])
+                    parent_stack.extend([parent for node in children if not node in visited])
         if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
             if len(islands) > 1:
                 islands.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
             visited.extend(islands)
+            levels.extend([0] * len(islands))
+            parents.extend([None] * len(islands))
         assert len(visited) == len(nodes)
+        if with_levels:
+            return zip(visited, levels, parents)
         return visited
 
     @cached_property
@@ -2388,7 +2428,8 @@ class LearningPath(Resource, Publishable):
     def serialize_cover(self, request, writer):
         html_template = get_template('_lp_serialize.html')
         url = 'http://www.commonspaces.eu' + self.get_absolute_url()
-        context = { 'request': request, 'lp': self, 'url': url }
+        contributors = self.get_contributors()
+        context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)    
 
@@ -2398,8 +2439,30 @@ class LearningPath(Resource, Publishable):
         mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
-        for node in self.get_ordered_nodes():
-            writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
+        # for node in self.get_ordered_nodes():
+        nodes_with_levels = self.get_ordered_nodes(with_levels=True)
+        node_bookmark_dict = {}
+        for node, level, parent in nodes_with_levels:
+            pagenum = writer.getNumPages()
+            # writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
+            viewable_documents = []
+            oer = node.oer
+            if oer:
+                documents = oer.get_sorted_documents()
+                viewable_documents = [document for document in documents if document.viewable]
+            if node.document or (oer and viewable_documents):
+                writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
+            elif node.text:
+                node.serialize_textnode(request, writer)
+            else:
+                html_template = get_template('_cannot_serialize.html')
+                context = { 'request': request, 'node': node }
+                rendered_html = html_template.render(context)
+                html_to_writer(rendered_html, writer)    
+            if writer.getNumPages() > pagenum:
+                parent_bookmark = level and parent and node_bookmark_dict.get(parent.id) or None
+                prefix = node.get_nodetype() + ' - '
+                node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
         return writer, mimetype
 
 class SharedLearningPath(models.Model):
@@ -2467,6 +2530,9 @@ class PathNode(node_factory('PathEdge')):
     def get_nodetype(self):
         return (self.oer and 'OER') or (self.document and 'DOC') or (self.text and 'TXT') or ''
 
+    def get_label(self):
+        oer = self.oer
+        return self.label or (oer and oer.name) or 'node %d' % self.id
 
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
@@ -2543,8 +2609,8 @@ class PathNode(node_factory('PathEdge')):
             ranges.append(r)
         return ranges            
 
-    def serialize_text(self, request, writer):
-        html_template = get_template('_pathnode_serialize.html')
+    def serialize_textnode(self, request, writer):
+        html_template = get_template('_textnode_serialize.html')
         domain = request.META['HTTP_HOST']
         text = self.text.replace("../../../media", "http://%s/media" % domain)
         context = { 'request': request, 'node': self, 'text': text }
@@ -2560,6 +2626,7 @@ class PathNode(node_factory('PathEdge')):
             documents = self.oer.get_sorted_documents()
             n_documents = len(documents)
             ranges = self.get_ranges()
+            """
             if not n_documents:
                 html = "<h1>%s</h1>" % self.label or self.oer.title
                 html += "<div><i>(Cannot convert to PDF a node referring an OER of this type)</i></div>"
@@ -2567,6 +2634,8 @@ class PathNode(node_factory('PathEdge')):
                 html += "<div>%s</div>" % text_to_html(self.oer.description)
                 html_to_writer(html, writer)
             elif ranges:
+            """
+            if n_documents and ranges:
                 mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
                 for r in ranges:
                     i_document = r[0]
@@ -2601,8 +2670,10 @@ class PathNode(node_factory('PathEdge')):
                     mimetype = document_version.mimetype
                     i_stream = document_version.open()
                     write_pdf_pages(i_stream, writer, None)
+        """
         elif self.text:
             self.serialize_text(request, writer)
+        """
         return writer, mimetype
 
     def get_index(self):

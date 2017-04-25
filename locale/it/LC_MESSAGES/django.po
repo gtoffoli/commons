@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-22 23:14+0200\n"
-"PO-Revision-Date: 2017-04-22 21:28+0000\n"
+"POT-Creation-Date: 2017-04-25 15:26+0200\n"
+"PO-Revision-Date: 2017-04-25 14:30+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -332,7 +332,7 @@ msgstr "testo nel nome e nella descrizione breve"
 msgid "communities"
 msgstr "comunità"
 
-#: .\forms.py:245 .\views.py:768
+#: .\forms.py:245 .\views.py:769
 msgid "minimum number of members"
 msgstr "numero minimo di membri"
 
@@ -340,7 +340,7 @@ msgstr "numero minimo di membri"
 msgid "minimum number of learning paths"
 msgstr "numero minimo di percorsi di apprendimento"
 
-#: .\forms.py:247 .\views.py:784
+#: .\forms.py:247 .\views.py:785
 msgid "minimum number of OERs"
 msgstr "numero minimo di OER"
 
@@ -354,7 +354,7 @@ msgid "search by name"
 msgstr "cerca per nome"
 
 #: .\forms.py:254 .\forms.py:267 .\forms.py:568 .\models.py:424
-#: .\models.py:2428 .\models.py:2453
+#: .\models.py:2491 .\models.py:2516
 msgid "label"
 msgstr "etichetta"
 
@@ -403,7 +403,7 @@ msgstr "commenti"
 msgid "evaluation"
 msgstr "valutazione"
 
-#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2759
+#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2830
 #: .\templates\_change_state.html:4 .\templates\_change_state.html.py:6
 #: .\templates\_change_state.html:16 .\templates\lp_detail.html:242
 msgid "publication state"
@@ -541,7 +541,7 @@ msgid ""
 msgstr "caratteristiche dell'OER che ne facilitano l'utilizzo, in particolare a utenti con deficit senso-motori; le opzioni sono state prese da www.oercommons.org; una pagina di aiuto è in preparazione"
 
 #: .\forms.py:368 .\forms.py:509 .\models.py:1304 .\models.py:1879
-#: .\models.py:2742 .\templates\mentoring_detail.html:5
+#: .\models.py:2813 .\templates\mentoring_detail.html:5
 #: .\templates\project_detail.html:7 .\templates\project_detail.html.py:191
 #: .\templates\project_detail.html:241 .\templates\project_edit.html:20
 #: .\templates\project_edit.html.py:61 .\templates\project_folder.html:5
@@ -654,7 +654,7 @@ msgid "objectives"
 msgstr "obbiettivi"
 
 #: .\forms.py:511 .\models.py:696 .\models.py:1344 .\models.py:1878
-#: .\templates\_lp_serialize.html:20 .\templates\_pathnode_serialize.html:11
+#: .\templates\_lp_serialize.html:27 .\templates\_textnode_serialize.html:11
 #: .\templates\lp_detail.html:128
 msgid "description"
 msgstr "descrizione"
@@ -678,7 +678,7 @@ msgstr "tipo di percorso di apprendimento"
 msgid "OER"
 msgstr "OER"
 
-#: .\forms.py:570 .\models.py:2455 .\templates\_pathnode_detail.html:25
+#: .\forms.py:570 .\models.py:2518 .\templates\_pathnode_detail.html:25
 #: .\templates\pathnode_detail.html:89
 msgid "display range"
 msgstr "intervallo/i di visualizzazione"
@@ -705,7 +705,7 @@ msgstr "Puoi specificare numero del documento e intervallo/i di pagina per i doc
 msgid "see the help pages on LPs for details"
 msgstr "vedi le pagine di aiuto per dettagli sui LP"
 
-#: .\forms.py:577 .\models.py:423 .\models.py:2457
+#: .\forms.py:577 .\models.py:423 .\models.py:2520
 #: .\templates\_pathnode_detail.html:31 .\templates\document_view.html:5
 #: .\templates\pathnode_detail.html:95 .\templates\pathnode_edit.html:62
 msgid "document"
@@ -806,7 +806,7 @@ msgstr "per favore, spiega le motivazioni della tua scelta"
 msgid "my mentoring journey"
 msgstr "il mio percorso di mentoring"
 
-#: .\forms.py:721 .\models.py:2751
+#: .\forms.py:721 .\models.py:2822
 msgid "optional text"
 msgstr "testo facoltativo"
 
@@ -1030,9 +1030,9 @@ msgstr "commenti abilitati"
 msgid "Allows comments if checked."
 msgstr "Seleziona per consentire i commenti."
 
-#: .\models.py:270 .\models.py:2488 .\views.py:1014 .\views.py:1277
-#: .\views.py:1885 .\views.py:2069 .\views.py:2571 .\views.py:2680
-#: .\views.py:3076 .\views.py:3323 .\views.py:3495 .\views.py:3600
+#: .\models.py:270 .\models.py:2554 .\views.py:1015 .\views.py:1278
+#: .\views.py:1886 .\views.py:2070 .\views.py:2572 .\views.py:2681
+#: .\views.py:3077 .\views.py:3325 .\views.py:3497 .\views.py:3602
 msgid "unknown"
 msgstr "sconosciuto/a"
 
@@ -1052,13 +1052,13 @@ msgstr "Pubblicato"
 msgid "Un-published"
 msgstr "Ritirato"
 
-#: .\models.py:384 .\models.py:2763
+#: .\models.py:384 .\models.py:2834
 msgid "User"
 msgstr "Utente"
 
 #: .\models.py:385 .\models.py:809 .\models.py:1377 .\models.py:1476
-#: .\models.py:1729 .\models.py:1885 .\models.py:2411 .\models.py:2430
-#: .\models.py:2458 .\models.py:2764
+#: .\models.py:1729 .\models.py:1885 .\models.py:2474 .\models.py:2493
+#: .\models.py:2521 .\models.py:2835
 msgid "created"
 msgstr "creato"
 
@@ -1179,7 +1179,7 @@ msgstr "area tematica"
 msgid "subjects"
 msgstr "aree tematiche"
 
-#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2749
+#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2820
 msgid "sort order"
 msgstr "ordinamento"
 
@@ -1301,18 +1301,18 @@ msgid "reserved"
 msgstr "riservato"
 
 #: .\models.py:810 .\models.py:1378 .\models.py:1477 .\models.py:1813
-#: .\models.py:1886 .\models.py:2431 .\models.py:2459 .\models.py:2765
+#: .\models.py:1886 .\models.py:2494 .\models.py:2522 .\models.py:2836
 msgid "modified"
 msgstr "modificato"
 
 #: .\models.py:811 .\models.py:1379 .\models.py:1478 .\models.py:1887
-#: .\models.py:2432 .\models.py:2460
+#: .\models.py:2495 .\models.py:2523
 msgid "creator"
 msgstr "creatore"
 
 #: .\models.py:812 .\models.py:1380 .\models.py:1479 .\models.py:1730
-#: .\models.py:1814 .\models.py:1888 .\models.py:2412 .\models.py:2433
-#: .\models.py:2461
+#: .\models.py:1814 .\models.py:1888 .\models.py:2475 .\models.py:2496
+#: .\models.py:2524
 msgid "last editor"
 msgstr "ultimo redattore"
 
@@ -1448,7 +1448,7 @@ msgstr "adattato / remixato"
 msgid "reference"
 msgstr "riferimento"
 
-#: .\models.py:1474 .\models.py:2429
+#: .\models.py:1474 .\models.py:2492
 msgid "content"
 msgstr "contenuto"
 
@@ -1491,7 +1491,7 @@ msgstr "metadati aggiuntivi"
 msgid "referenced OER"
 msgstr "OER a cui si fa riferimento"
 
-#: .\models.py:1728 .\models.py:2410
+#: .\models.py:1728 .\models.py:2473
 msgid "referencing project"
 msgstr "progetto che fa riferimento"
 
@@ -1569,125 +1569,125 @@ msgstr "gruppo"
 msgid "learning path"
 msgstr "percorso di apprendimento"
 
-#: .\models.py:2409
+#: .\models.py:2472
 msgid "referenced Learning Path"
 msgstr "Learning Path a cui si fa riferimento"
 
-#: .\models.py:2416
+#: .\models.py:2479
 msgid "shared Learning Path"
 msgstr "Learning Path condiviso"
 
-#: .\models.py:2417
+#: .\models.py:2480
 msgid "shared Learning Paths"
 msgstr "Learning Path condivisi"
 
-#: .\models.py:2436
+#: .\models.py:2499
 msgid "path edge"
 msgstr "arco del percorso"
 
-#: .\models.py:2437
+#: .\models.py:2500
 msgid "path edges"
 msgstr "archi del percorso"
 
-#: .\models.py:2452
+#: .\models.py:2515
 msgid "learning path or collection"
 msgstr "percorso di apprendimento o collezione"
 
-#: .\models.py:2454
+#: .\models.py:2517
 msgid "stands for"
 msgstr "sta per"
 
-#: .\models.py:2456
+#: .\models.py:2519
 msgid "own text content"
 msgstr "contenuto proprio: testo"
 
-#: .\models.py:2464
+#: .\models.py:2527
 msgid "path node"
 msgstr "nodo del percorso"
 
-#: .\models.py:2465 .\templates\lp_detail.html:154
+#: .\models.py:2528 .\templates\lp_detail.html:154
 msgid "path nodes"
 msgstr "nodi del percorso"
 
-#: .\models.py:2703
+#: .\models.py:2774
 msgid "Tagged OER"
 msgstr "OER taggato"
 
-#: .\models.py:2704
+#: .\models.py:2775
 msgid "Tagged OERs"
 msgstr "OER taggati"
 
-#: .\models.py:2717
+#: .\models.py:2788
 msgid "Tagged LP"
 msgstr "LP taggato"
 
-#: .\models.py:2718
+#: .\models.py:2789
 msgid "Tagged LPss"
 msgstr "LP taggati"
 
-#: .\models.py:2740
+#: .\models.py:2811
 msgid "any"
 msgstr "qualsiasi"
 
-#: .\models.py:2741
+#: .\models.py:2812
 msgid "global"
 msgstr "globale"
 
-#: .\models.py:2744 .\models.py:2777
+#: .\models.py:2815 .\models.py:2848
 msgid "featured item"
 msgstr "elemento in evidenza"
 
-#: .\models.py:2745
+#: .\models.py:2816
 msgid "featured items"
 msgstr "elementi in evidenza"
 
-#: .\models.py:2747
+#: .\models.py:2818
 msgid "is lead item"
 msgstr "è un item di testa"
 
-#: .\models.py:2748
+#: .\models.py:2819
 msgid "group name"
 msgstr "nome del gruppo"
 
-#: .\models.py:2748
+#: .\models.py:2819
 msgid "Entries can be aggregated by group name."
 msgstr "Gli elementi possono essere aggregati per nome di gruppo"
 
-#: .\models.py:2749
+#: .\models.py:2820
 msgid "Used to sort in ascending order, not to filter."
 msgstr "Usato per ordinare in senso crescente, non per litrare."
 
-#: .\models.py:2750
+#: .\models.py:2821
 msgid "priority"
 msgstr "priorità"
 
-#: .\models.py:2750
+#: .\models.py:2821
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
 msgstr "Usato per filtrare, eventualmente in combinazione con altri attributi, non per ordinare. Un numero grande rappresenta una priorità elevata."
 
-#: .\models.py:2751
+#: .\models.py:2822
 msgid "In the case of a \"lead\" item, probably you will provide this text."
 msgstr "nel caso di un \"item di testa\", è possibile visualizzare questo testo"
 
-#: .\models.py:2752
+#: .\models.py:2823
 msgid "scope"
 msgstr "ambito"
 
-#: .\models.py:2760
+#: .\models.py:2831
 msgid "start publication"
 msgstr "inizio pubblicazione"
 
-#: .\models.py:2760
+#: .\models.py:2831
 msgid "Optional start date of publication."
 msgstr "Data opzionale di inizio pubblicazione."
 
-#: .\models.py:2761
+#: .\models.py:2832
 msgid "end publication"
 msgstr "fine pubblicazione"
 
-#: .\models.py:2761
+#: .\models.py:2832
 msgid "Optional end date of publication."
 msgstr "Data opzonale di fine pubblicazione."
 
@@ -1784,6 +1784,10 @@ msgstr "delega l'amministratore della comunità"
 #: .\templates\_candidate_mentors.html:53
 msgid "currently there aren't any mentors available"
 msgstr "al momento non vi sono mentori disponibili"
+
+#: .\templates\_cannot_serialize.html:16 .\templates\_lp_serialize.html:21
+msgid "URL"
+msgstr "URL"
 
 #: .\templates\_change_state.html:8
 msgid "submit for publication"
@@ -1891,10 +1895,10 @@ msgid "submitted by"
 msgstr "proposto da"
 
 #: .\templates\_info_creator_date.html:4
-#: .\templates\_info_creator_date.html:11 .\templates\_pathnode_detail.html:44
-#: .\templates\_pathnode_detail.html:45 .\templates\oer_evaluations.html:61
-#: .\templates\project_folder.html:45 .\templates\resources_by.html:40
-#: .\templates\resources_by.html.py:41
+#: .\templates\_info_creator_date.html:11 .\templates\_lp_serialize.html:36
+#: .\templates\_pathnode_detail.html:44 .\templates\_pathnode_detail.html:45
+#: .\templates\oer_evaluations.html:61 .\templates\project_folder.html:45
+#: .\templates\resources_by.html:40 .\templates\resources_by.html.py:41
 msgid "on"
 msgstr "il"
 
@@ -1926,19 +1930,27 @@ msgstr "sei sicuro di voler rimuovere questo arco"
 msgid "do you really want to remove this node"
 msgstr "sei sicuro di voler rimuovere questo nodo"
 
-#: .\templates\_lp_serialize.html:26
+#: .\templates\_lp_serialize.html:14
+msgid "last modified on"
+msgstr "ultima modifica il"
+
+#: .\templates\_lp_serialize.html:15
+msgid "other contributors"
+msgstr "hanno contribuito anche"
+
+#: .\templates\_lp_serialize.html:33
 msgid "IMPORTANT NOTICE"
 msgstr "AVVERTIMENTO IMPORTANTE"
 
-#: .\templates\_lp_serialize.html:28
+#: .\templates\_lp_serialize.html:35
 msgid "this document has been produced by"
 msgstr "questo documento è stato prodotto da"
 
-#: .\templates\_lp_serialize.html:29
+#: .\templates\_lp_serialize.html:37
 msgid "for personal use"
 msgstr "per uso personale"
 
-#: .\templates\_lp_serialize.html:29
+#: .\templates\_lp_serialize.html:37
 msgid "restrictions could apply to some of its contents"
 msgstr "potrebbero applicarsi delle restrizioni ad alcuni dei contenuti"
 
@@ -2193,8 +2205,8 @@ msgstr "Esegui"
 msgid "Reset"
 msgstr "Reset"
 
-#: .\templates\_search_form.html:16 .\views.py:788 .\views.py:3780
-#: .\views.py:3979 .\views.py:4077
+#: .\templates\_search_form.html:16 .\views.py:789 .\views.py:3782
+#: .\views.py:3981 .\views.py:4079
 msgid "include non published items"
 msgstr "includi gli elementi non pubblicati"
 
@@ -2220,23 +2232,23 @@ msgstr "Conferm Indirizzo E-mail"
 msgid ""
 "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
 "address for user %(user_display)s."
-msgstr ""
+msgstr "Per favore conferma che <a href=\"mailto:%(email)s\">%(email)s</a> è un indirizzo e-mail per  l'utente %(user_display)s."
 
 #: .\templates\account\email_confirm.html:25
 msgid "Confirm"
-msgstr ""
+msgstr "Conferma"
 
 #: .\templates\account\email_confirm.html:32
 #, python-format
 msgid ""
 "This e-mail confirmation link expired or is invalid. Please <a "
 "href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-msgstr ""
+msgstr "Questo link di conferma dell'e-mail è scaduto o non valido. Ti chiediamo di <a href=\"%(email_url)s\">ripetere la richiesta di conferma via e-mail</a>."
 
 #: .\templates\account\login.html:6 .\templates\account\login.html.py:64
 #: .\templates\account\login.html:102
 msgid "Sign In"
-msgstr ""
+msgstr "Accedi"
 
 #: .\templates\account\login.html:72
 #, python-format
@@ -2244,14 +2256,14 @@ msgid ""
 "Please sign in with one\n"
 "of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
 "for a %(site_name)s account and sign in below:"
-msgstr ""
+msgstr "Per favore accedi con uno\ndei tuoi account sociali. O <a href=\"%(signup_url)s\">registra</a>\nun account per %(site_name)s e accedi:"
 
 #: .\templates\account\login.html:87
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"
 "<a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
+msgstr "Se non hai ancora creato un account,\n<a href=\"%(signup_url)s\">registrati</a>."
 
 #: .\templates\account\login.html:93
 #: .\templates\flatpages\why_register.html:47
@@ -2264,38 +2276,38 @@ msgstr "o"
 #: .\templates\account\password_reset_done.html:6
 #: .\templates\account\password_reset_done.html:11
 msgid "Password Reset"
-msgstr ""
+msgstr "Reimpostazione della Password"
 
 #: .\templates\account\password_reset.html:50
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you"
 " an e-mail allowing you to reset it."
-msgstr ""
+msgstr "Hai dimenticato la password? Se inserisci il tuo indirizzo e-mail qui sotto, ti invieremo una mail con un link per reimpostarla."
 
 #: .\templates\account\password_reset.html:55
 msgid "Reset My Password"
-msgstr ""
+msgstr "Reimposta la Password"
 
 #: .\templates\account\password_reset.html:57
 msgid "Please contact us if you have any trouble resetting your password."
-msgstr ""
+msgstr "Se hai qualche problema a reimpostare la password, contattaci."
 
 #: .\templates\account\password_reset_done.html:19
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "Ti abbiamo appena inviato una mail. Contattaci se non la ricevi entro qualche minuto."
 
 #: .\templates\account\password_reset_from_key.html:4
 #: .\templates\account\password_reset_from_key.html:38
 #: .\templates\account\password_reset_from_key_done.html:4
 #: .\templates\account\password_reset_from_key_done.html:9
 msgid "Change Password"
-msgstr ""
+msgstr "Cambia la Password"
 
 #: .\templates\account\password_reset_from_key.html:38
 msgid "Bad Token"
-msgstr ""
+msgstr "Token non valido"
 
 #: .\templates\account\password_reset_from_key.html:45
 #, python-format
@@ -2303,42 +2315,42 @@ msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
 "reset</a>."
-msgstr ""
+msgstr "Il link per reimpostare la password non era valido, forse perché già usato. Per favora effettua una <a href=\"%(passwd_reset_url)s\">nuova reimpostazione della password</a>."
 
 #: .\templates\account\password_reset_from_key.html:51
 msgid "change password"
-msgstr ""
+msgstr "cambia password"
 
 #: .\templates\account\password_reset_from_key.html:54
 #: .\templates\account\password_reset_from_key_done.html:13
 msgid "Your password is now changed."
-msgstr ""
+msgstr "Password modificata."
 
 #: .\templates\account\signup.html:5
 msgid "Signup"
-msgstr ""
+msgstr "Registrazione"
 
 #: .\templates\account\signup.html:42 .\templates\account\signup.html.py:54
 msgid "Sign Up"
-msgstr ""
+msgstr "Registrati"
 
 #: .\templates\account\signup.html:46
 #, python-format
 msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
-msgstr ""
+msgstr "Possiedi già un account? Allora <a href=\"%(login_url)s\">accedi</a>, per favore."
 
 #: .\templates\account\verification_sent.html:5
 #: .\templates\account\verification_sent.html:10
 msgid "Verify Your E-mail Address"
-msgstr ""
+msgstr "Verifica il tuo Indirizzo E-mail"
 
 #: .\templates\account\verification_sent.html:14
 msgid ""
 "We have sent an e-mail to you for verification. Follow the link provided to "
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "Ti abbiamo inviato una e-mail per verifica. Segui il link che troverai in essa per completare la procedura di registrazione. Per favore contattaci se non la ricevi entro pochi minuti."
 
 #: .\templates\active_users.html:10 .\templates\active_users.html.py:16
 msgid "recently active users"
@@ -2912,19 +2924,19 @@ msgstr "argomenti dei forum per numero di post"
 msgid "edit forum"
 msgstr "modifica forum"
 
-#: .\templates\homepage.html:6 .\views.py:113
+#: .\templates\homepage.html:6 .\views.py:114
 msgid "Learn with others, Create, Reuse"
 msgstr "Impara con gli altri, Crea, Riusa"
 
-#: .\templates\homepage.html:147 .\views.py:110
+#: .\templates\homepage.html:147 .\views.py:111
 msgid "learning in online communities of practice"
 msgstr "imparare in comunità di pratica online"
 
-#: .\templates\homepage.html:148 .\views.py:110
+#: .\templates\homepage.html:148 .\views.py:111
 msgid "reusing resources to build learning paths"
 msgstr "riusare risorse per costruire percorsi di apprendimento"
 
-#: .\templates\homepage.html:149 .\views.py:110
+#: .\templates\homepage.html:149 .\views.py:111
 msgid "browsing collections in our library of OERs"
 msgstr "esplorare raccolte di OER nella nostra biblioteca"
 
@@ -4460,45 +4472,45 @@ msgid ""
 "the link above to access it directly"
 msgstr "è proibito l'inserimento all'interno di una pagina della vista di questa risorsa: usa il link soprastante per accedere ad essa direttamente"
 
-#: .\views.py:776
+#: .\views.py:777
 msgid "minimum number of LPs"
 msgstr "numero minimo di LP"
 
-#: .\views.py:1100
+#: .\views.py:1101
 msgid ""
 "this request is waiting since long time: if you want to retract it, please "
 "write a notice for the mentor and push the button below"
 msgstr "questa richiesta è in attesa da molto tempo: se vuoi ritirarla, per favore scrivi un messaggio per il mentore e premi il bottone qui sotto"
 
-#: .\views.py:1121
+#: .\views.py:1122
 msgid ""
 "if you aren't able to choose another mentor, please write a notice for both "
 "the mentee and the mentor and push the button below"
 msgstr "se non sei in grado di scegliere un altro mentore, per favore scrivi un messaggio per il mentee e per il mentore a premi il bottone qui sotto"
 
-#: .\views.py:1142
+#: .\views.py:1143
 msgid ""
 "this request is waiting since long time: please write a notice for both the "
 "mentee and the mentor and push the button below"
 msgstr "questa richiesta è in attesa da molto tempo:  per favore scrivi un messaggio per il mentee e per il mentore a premi il bottone qui sotto "
 
-#: .\views.py:1579
+#: .\views.py:1580
 msgid "membership application"
 msgstr "richiesta di adesione"
 
-#: .\views.py:1579
+#: .\views.py:1580
 msgid "has applied for membership in"
 msgstr "ha presentato la richiesta di adesione"
 
-#: .\views.py:1579
+#: .\views.py:1580
 msgid " "
 msgstr ""
 
-#: .\views.py:1712
+#: .\views.py:1713
 msgid "thematic forum"
 msgstr "forum a tema"
 
-#: .\views.py:1712
+#: .\views.py:1713
 msgid "please change this name"
 msgstr "per favore modifica questo nome"
 

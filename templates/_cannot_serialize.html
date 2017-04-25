@@ -1,0 +1,22 @@
+{% load staticfiles i18n %}
+
+<style>
+  .ui { font-style: italic; }
+</style>
+
+<h1>{{ node.get_label }}</h1>
+
+
+{% if node.oer.description %}
+<div><strong>{{ node.oer.description }}</strong></div>
+{% endif %}
+
+{% if node.oer.url %}
+<div style="margin-top: 1.0em;">
+<span class="ui"><strong>{% trans "URL" %}</strong></span><br />
+<a href="{{ node.oer.url }}">{{ node.oer.url }}</a>
+</div>
+{% endif %}
+
+<div style="margin-top: 1.0em;"><i>(Cannot convert to PDF a node referring an OER of this type)</i></div>
+

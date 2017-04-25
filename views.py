@@ -15,6 +15,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
 from django.utils.text import capfirst
@@ -3243,6 +3244,7 @@ def lp_play_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_play(request, lp.id, lp)
 
+@login_required
 def lp_download_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     writer, mimetype = lp.make_document_stream(request)
