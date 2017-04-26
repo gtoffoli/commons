@@ -153,7 +153,7 @@ import urllib2
 class HeadRequest(urllib2.Request):
     def get_method(self):
         return "HEAD"
-def get_headers(url):
+def get_request_headers(url):
     """ tries to open the resource at the given url;
         returns the HTTP headers as a dict or a dict including only the exception object """
     request = HeadRequest(url)
@@ -164,10 +164,22 @@ def get_headers(url):
     except Exception as e:
         return { 'error': e}
 
+def get_request_content(url):
+    request = urllib2.Request(url)
+    stream = StringIO.StringIO()
+    try:
+        response = urllib2.urlopen(request)
+        if response.getcode() in [200]:
+            stream = StringIO.StringIO(response.read())
+            return stream
+    except:
+        pass
+    return None
+
 def x_frame_protection(url):
     """ returns an empty string if the resource at the given url can be loaded inside an i-frame;
         otherways returns a localized error message """
-    headers = get_headers(url)
+    headers = get_request_headers(url)
     """
     e = headers.get('error', None)
     if e:

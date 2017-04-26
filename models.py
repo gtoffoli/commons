@@ -50,7 +50,7 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, html_to_writer, write_pdf_pages, text_to_html
-
+from commons.utils import get_request_headers, get_request_content
 
 # from analytics import filter_actions, post_views_by_user
 
@@ -2439,12 +2439,10 @@ class LearningPath(Resource, Publishable):
         mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
-        # for node in self.get_ordered_nodes():
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
         for node, level, parent in nodes_with_levels:
             pagenum = writer.getNumPages()
-            # writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
             viewable_documents = []
             oer = node.oer
             if oer:
@@ -2454,15 +2452,15 @@ class LearningPath(Resource, Publishable):
                 writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
             elif node.text:
                 node.serialize_textnode(request, writer)
-            else:
-                html_template = get_template('_cannot_serialize.html')
-                context = { 'request': request, 'node': node, 'oer': node.oer }
-                rendered_html = html_template.render(context)
-                html_to_writer(rendered_html, writer)    
-            if writer.getNumPages() > pagenum:
-                parent_bookmark = level and parent and node_bookmark_dict.get(parent.id) or None
-                prefix = node.get_nodetype() + ' - '
-                node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
+            elif oer.url:
+                writer, content_type = node.make_document_stream(request, writer)
+            if not writer.getNumPages() > pagenum:
+                    html_template = get_template('_cannot_serialize.html')
+                    context = { 'request': request, 'node': node, 'oer': oer }
+                    rendered_html = html_template.render(context)
+                    html_to_writer(rendered_html, writer)    
+            parent_bookmark = level and parent and node_bookmark_dict.get(parent.id) or None
+            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
         return writer, mimetype
 
 class SharedLearningPath(models.Model):
@@ -2623,7 +2621,8 @@ class PathNode(node_factory('PathEdge')):
         if not writer:
             writer = make_pdf_writer()
         if self.oer:
-            documents = self.oer.get_sorted_documents()
+            oer = self.oer
+            documents = oer.get_sorted_documents()
             n_documents = len(documents)
             ranges = self.get_ranges()
             if n_documents and ranges:
@@ -2651,9 +2650,22 @@ class PathNode(node_factory('PathEdge')):
                         write_pdf_pages(i_stream, writer, None)
                     else:
                         html_template = get_template('_cannot_serialize.html')
-                        context = { 'request': request, 'node': self, 'oer': self.oer, 'mimetype': document.document_version.mimetype }
+                        context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document.document_version.mimetype }
                         rendered_html = html_template.render(context)
                         html_to_writer(rendered_html, writer)
+            elif oer.url:
+                try:
+                    headers = get_request_headers(oer.url)
+                    content_length = headers.get('content-length', 0)
+                    content_type = headers.get('content-type', 'text/plain')
+                except:
+                    content_type = ''
+                if content_type == 'application/pdf':
+                    stream = get_request_content(oer.url)
+                    if stream:
+                        mimetype = 'application/pdf'
+                        pageranges = ranges and [ranges[0][1:]] or None
+                        write_pdf_pages(stream, writer, pageranges)
         elif self.document:
             document_version = self.document.latest_version
             if self.document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
