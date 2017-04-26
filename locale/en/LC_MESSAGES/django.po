@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-25 15:26+0200\n"
+"POT-Creation-Date: 2017-04-26 11:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -399,7 +399,7 @@ msgstr ""
 msgid "evaluation"
 msgstr ""
 
-#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2830
+#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2821
 #: .\templates\_change_state.html:4 .\templates\_change_state.html.py:6
 #: .\templates\_change_state.html:16 .\templates\lp_detail.html:242
 msgid "publication state"
@@ -537,7 +537,7 @@ msgid ""
 msgstr ""
 
 #: .\forms.py:368 .\forms.py:509 .\models.py:1304 .\models.py:1879
-#: .\models.py:2813 .\templates\mentoring_detail.html:5
+#: .\models.py:2804 .\templates\mentoring_detail.html:5
 #: .\templates\project_detail.html:7 .\templates\project_detail.html.py:191
 #: .\templates\project_detail.html:241 .\templates\project_edit.html:20
 #: .\templates\project_edit.html.py:61 .\templates\project_folder.html:5
@@ -802,7 +802,7 @@ msgstr ""
 msgid "my mentoring journey"
 msgstr ""
 
-#: .\forms.py:721 .\models.py:2822
+#: .\forms.py:721 .\models.py:2813
 msgid "optional text"
 msgstr ""
 
@@ -1048,13 +1048,13 @@ msgstr ""
 msgid "Un-published"
 msgstr ""
 
-#: .\models.py:384 .\models.py:2834
+#: .\models.py:384 .\models.py:2825
 msgid "User"
 msgstr ""
 
 #: .\models.py:385 .\models.py:809 .\models.py:1377 .\models.py:1476
 #: .\models.py:1729 .\models.py:1885 .\models.py:2474 .\models.py:2493
-#: .\models.py:2521 .\models.py:2835
+#: .\models.py:2521 .\models.py:2826
 msgid "created"
 msgstr ""
 
@@ -1175,7 +1175,7 @@ msgstr ""
 msgid "subjects"
 msgstr ""
 
-#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2820
+#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2811
 msgid "sort order"
 msgstr ""
 
@@ -1297,7 +1297,7 @@ msgid "reserved"
 msgstr ""
 
 #: .\models.py:810 .\models.py:1378 .\models.py:1477 .\models.py:1813
-#: .\models.py:1886 .\models.py:2494 .\models.py:2522 .\models.py:2836
+#: .\models.py:1886 .\models.py:2494 .\models.py:2522 .\models.py:2827
 msgid "modified"
 msgstr ""
 
@@ -1605,85 +1605,85 @@ msgstr ""
 msgid "path nodes"
 msgstr ""
 
-#: .\models.py:2774
+#: .\models.py:2765
 msgid "Tagged OER"
 msgstr ""
 
-#: .\models.py:2775
+#: .\models.py:2766
 msgid "Tagged OERs"
 msgstr ""
 
-#: .\models.py:2788
+#: .\models.py:2779
 msgid "Tagged LP"
 msgstr ""
 
-#: .\models.py:2789
+#: .\models.py:2780
 msgid "Tagged LPss"
 msgstr ""
 
-#: .\models.py:2811
+#: .\models.py:2802
 msgid "any"
 msgstr ""
 
-#: .\models.py:2812
+#: .\models.py:2803
 msgid "global"
 msgstr ""
 
-#: .\models.py:2815 .\models.py:2848
+#: .\models.py:2806 .\models.py:2839
 msgid "featured item"
 msgstr ""
 
-#: .\models.py:2816
+#: .\models.py:2807
 msgid "featured items"
 msgstr ""
 
-#: .\models.py:2818
+#: .\models.py:2809
 msgid "is lead item"
 msgstr ""
 
-#: .\models.py:2819
+#: .\models.py:2810
 msgid "group name"
 msgstr ""
 
-#: .\models.py:2819
+#: .\models.py:2810
 msgid "Entries can be aggregated by group name."
 msgstr ""
 
-#: .\models.py:2820
+#: .\models.py:2811
 msgid "Used to sort in ascending order, not to filter."
 msgstr ""
 
-#: .\models.py:2821
+#: .\models.py:2812
 msgid "priority"
 msgstr ""
 
-#: .\models.py:2821
+#: .\models.py:2812
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
 msgstr ""
 
-#: .\models.py:2822
+#: .\models.py:2813
 msgid "In the case of a \"lead\" item, probably you will provide this text."
 msgstr ""
 
-#: .\models.py:2823
+#: .\models.py:2814
 msgid "scope"
 msgstr ""
 
-#: .\models.py:2831
+#: .\models.py:2822
 msgid "start publication"
 msgstr ""
 
-#: .\models.py:2831
+#: .\models.py:2822
 msgid "Optional start date of publication."
 msgstr ""
 
-#: .\models.py:2832
+#: .\models.py:2823
 msgid "end publication"
 msgstr ""
 
-#: .\models.py:2832
+#: .\models.py:2823
 msgid "Optional end date of publication."
 msgstr ""
 
@@ -1780,8 +1780,20 @@ msgstr ""
 msgid "currently there aren't any mentors available"
 msgstr ""
 
-#: .\templates\_cannot_serialize.html:16 .\templates\_lp_serialize.html:21
+#: .\templates\_cannot_serialize.html:15 .\templates\_lp_serialize.html:21
 msgid "URL"
+msgstr ""
+
+#: .\templates\_cannot_serialize.html:21
+msgid "cannot convert to PDF"
+msgstr ""
+
+#: .\templates\_cannot_serialize.html:21
+msgid "a document of mimetype"
+msgstr ""
+
+#: .\templates\_cannot_serialize.html:22
+msgid "this node refers to an OER that you can access online through its URL"
 msgstr ""
 
 #: .\templates\_change_state.html:8

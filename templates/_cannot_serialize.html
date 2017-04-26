@@ -6,7 +6,6 @@
 
 <h1>{{ node.get_label }}</h1>
 
-
 {% if node.oer.description %}
 <div><strong>{{ node.oer.description }}</strong></div>
 {% endif %}
@@ -18,5 +17,8 @@
 </div>
 {% endif %}
 
-<div style="margin-top: 1.0em;"><i>(Cannot convert to PDF a node referring an OER of this type)</i></div>
+<div style="margin-top: 1.0em;">
+(<i>{% trans "cannot convert to PDF"|capfirst %}</i>{% if mimetype %}<i> {% trans "a document of mimetype" %}</i> {{ mimetype }}{% endif %}.{% if node.oer.url %}<br>
+<i>{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}</i>.{% endif %})
+</div>
 

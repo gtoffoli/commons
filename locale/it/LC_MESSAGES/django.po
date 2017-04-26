@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-04-25 15:26+0200\n"
-"PO-Revision-Date: 2017-04-25 14:30+0000\n"
+"POT-Creation-Date: 2017-04-26 11:18+0200\n"
+"PO-Revision-Date: 2017-04-26 09:21+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -403,7 +403,7 @@ msgstr "commenti"
 msgid "evaluation"
 msgstr "valutazione"
 
-#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2830
+#: .\forms.py:286 .\forms.py:369 .\forms.py:515 .\models.py:2821
 #: .\templates\_change_state.html:4 .\templates\_change_state.html.py:6
 #: .\templates\_change_state.html:16 .\templates\lp_detail.html:242
 msgid "publication state"
@@ -541,7 +541,7 @@ msgid ""
 msgstr "caratteristiche dell'OER che ne facilitano l'utilizzo, in particolare a utenti con deficit senso-motori; le opzioni sono state prese da www.oercommons.org; una pagina di aiuto è in preparazione"
 
 #: .\forms.py:368 .\forms.py:509 .\models.py:1304 .\models.py:1879
-#: .\models.py:2813 .\templates\mentoring_detail.html:5
+#: .\models.py:2804 .\templates\mentoring_detail.html:5
 #: .\templates\project_detail.html:7 .\templates\project_detail.html.py:191
 #: .\templates\project_detail.html:241 .\templates\project_edit.html:20
 #: .\templates\project_edit.html.py:61 .\templates\project_folder.html:5
@@ -806,7 +806,7 @@ msgstr "per favore, spiega le motivazioni della tua scelta"
 msgid "my mentoring journey"
 msgstr "il mio percorso di mentoring"
 
-#: .\forms.py:721 .\models.py:2822
+#: .\forms.py:721 .\models.py:2813
 msgid "optional text"
 msgstr "testo facoltativo"
 
@@ -1052,13 +1052,13 @@ msgstr "Pubblicato"
 msgid "Un-published"
 msgstr "Ritirato"
 
-#: .\models.py:384 .\models.py:2834
+#: .\models.py:384 .\models.py:2825
 msgid "User"
 msgstr "Utente"
 
 #: .\models.py:385 .\models.py:809 .\models.py:1377 .\models.py:1476
 #: .\models.py:1729 .\models.py:1885 .\models.py:2474 .\models.py:2493
-#: .\models.py:2521 .\models.py:2835
+#: .\models.py:2521 .\models.py:2826
 msgid "created"
 msgstr "creato"
 
@@ -1179,7 +1179,7 @@ msgstr "area tematica"
 msgid "subjects"
 msgstr "aree tematiche"
 
-#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2820
+#: .\models.py:697 .\models.py:1325 .\models.py:1345 .\models.py:2811
 msgid "sort order"
 msgstr "ordinamento"
 
@@ -1301,7 +1301,7 @@ msgid "reserved"
 msgstr "riservato"
 
 #: .\models.py:810 .\models.py:1378 .\models.py:1477 .\models.py:1813
-#: .\models.py:1886 .\models.py:2494 .\models.py:2522 .\models.py:2836
+#: .\models.py:1886 .\models.py:2494 .\models.py:2522 .\models.py:2827
 msgid "modified"
 msgstr "modificato"
 
@@ -1609,85 +1609,85 @@ msgstr "nodo del percorso"
 msgid "path nodes"
 msgstr "nodi del percorso"
 
-#: .\models.py:2774
+#: .\models.py:2765
 msgid "Tagged OER"
 msgstr "OER taggato"
 
-#: .\models.py:2775
+#: .\models.py:2766
 msgid "Tagged OERs"
 msgstr "OER taggati"
 
-#: .\models.py:2788
+#: .\models.py:2779
 msgid "Tagged LP"
 msgstr "LP taggato"
 
-#: .\models.py:2789
+#: .\models.py:2780
 msgid "Tagged LPss"
 msgstr "LP taggati"
 
-#: .\models.py:2811
+#: .\models.py:2802
 msgid "any"
 msgstr "qualsiasi"
 
-#: .\models.py:2812
+#: .\models.py:2803
 msgid "global"
 msgstr "globale"
 
-#: .\models.py:2815 .\models.py:2848
+#: .\models.py:2806 .\models.py:2839
 msgid "featured item"
 msgstr "elemento in evidenza"
 
-#: .\models.py:2816
+#: .\models.py:2807
 msgid "featured items"
 msgstr "elementi in evidenza"
 
-#: .\models.py:2818
+#: .\models.py:2809
 msgid "is lead item"
 msgstr "è un item di testa"
 
-#: .\models.py:2819
+#: .\models.py:2810
 msgid "group name"
 msgstr "nome del gruppo"
 
-#: .\models.py:2819
+#: .\models.py:2810
 msgid "Entries can be aggregated by group name."
 msgstr "Gli elementi possono essere aggregati per nome di gruppo"
 
-#: .\models.py:2820
+#: .\models.py:2811
 msgid "Used to sort in ascending order, not to filter."
 msgstr "Usato per ordinare in senso crescente, non per litrare."
 
-#: .\models.py:2821
+#: .\models.py:2812
 msgid "priority"
 msgstr "priorità"
 
-#: .\models.py:2821
+#: .\models.py:2812
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
 msgstr "Usato per filtrare, eventualmente in combinazione con altri attributi, non per ordinare. Un numero grande rappresenta una priorità elevata."
 
-#: .\models.py:2822
+#: .\models.py:2813
 msgid "In the case of a \"lead\" item, probably you will provide this text."
 msgstr "nel caso di un \"item di testa\", è possibile visualizzare questo testo"
 
-#: .\models.py:2823
+#: .\models.py:2814
 msgid "scope"
 msgstr "ambito"
 
-#: .\models.py:2831
+#: .\models.py:2822
 msgid "start publication"
 msgstr "inizio pubblicazione"
 
-#: .\models.py:2831
+#: .\models.py:2822
 msgid "Optional start date of publication."
 msgstr "Data opzionale di inizio pubblicazione."
 
-#: .\models.py:2832
+#: .\models.py:2823
 msgid "end publication"
 msgstr "fine pubblicazione"
 
-#: .\models.py:2832
+#: .\models.py:2823
 msgid "Optional end date of publication."
 msgstr "Data opzonale di fine pubblicazione."
 
@@ -1785,9 +1785,21 @@ msgstr "delega l'amministratore della comunità"
 msgid "currently there aren't any mentors available"
 msgstr "al momento non vi sono mentori disponibili"
 
-#: .\templates\_cannot_serialize.html:16 .\templates\_lp_serialize.html:21
+#: .\templates\_cannot_serialize.html:15 .\templates\_lp_serialize.html:21
 msgid "URL"
 msgstr "URL"
+
+#: .\templates\_cannot_serialize.html:21
+msgid "cannot convert to PDF"
+msgstr "non posso convertire in PDF"
+
+#: .\templates\_cannot_serialize.html:21
+msgid "a document of mimetype"
+msgstr "un documento con mimetype"
+
+#: .\templates\_cannot_serialize.html:22
+msgid "this node refers to an OER that you can access online through its URL"
+msgstr "questo nodo fa riferimento ad un OER al quale puoi accedere online usando il suo URL"
 
 #: .\templates\_change_state.html:8
 msgid "submit for publication"

@@ -2456,7 +2456,7 @@ class LearningPath(Resource, Publishable):
                 node.serialize_textnode(request, writer)
             else:
                 html_template = get_template('_cannot_serialize.html')
-                context = { 'request': request, 'node': node }
+                context = { 'request': request, 'node': node, 'oer': node.oer }
                 rendered_html = html_template.render(context)
                 html_to_writer(rendered_html, writer)    
             if writer.getNumPages() > pagenum:
@@ -2626,15 +2626,6 @@ class PathNode(node_factory('PathEdge')):
             documents = self.oer.get_sorted_documents()
             n_documents = len(documents)
             ranges = self.get_ranges()
-            """
-            if not n_documents:
-                html = "<h1>%s</h1>" % self.label or self.oer.title
-                html += "<div><i>(Cannot convert to PDF a node referring an OER of this type)</i></div>"
-                html += "<h2>Description</h2>"
-                html += "<div>%s</div>" % text_to_html(self.oer.description)
-                html_to_writer(html, writer)
-            elif ranges:
-            """
             if n_documents and ranges:
                 mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
                 for r in ranges:
@@ -2651,7 +2642,7 @@ class PathNode(node_factory('PathEdge')):
                     i_stream = document_version.open()
                     pagerange = r[1:]
                     write_pdf_pages(i_stream, writer, [pagerange])
-            else:
+            elif documents:
                 for document in documents:
                     document_version = document.latest_version
                     if document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
@@ -2659,21 +2650,21 @@ class PathNode(node_factory('PathEdge')):
                         i_stream = document_version.open()
                         write_pdf_pages(i_stream, writer, None)
                     else:
-                        title = """<h1>%s</h1>""" % self.label
-                        html = "<div>Cannot convert to PDF a document of mimetipe %s.</div>" % document_version.mimetype
-                        html = title + html
-                        html_to_writer(html, writer)
+                        html_template = get_template('_cannot_serialize.html')
+                        context = { 'request': request, 'node': self, 'oer': self.oer, 'mimetype': document.document_version.mimetype }
+                        rendered_html = html_template.render(context)
+                        html_to_writer(rendered_html, writer)
         elif self.document:
-            if self.document.viewerjs_viewable:
-                document_version = self.document.latest_version
-                if not mimetype or document_version.mimetype == mimetype:
-                    mimetype = document_version.mimetype
-                    i_stream = document_version.open()
-                    write_pdf_pages(i_stream, writer, None)
-        """
-        elif self.text:
-            self.serialize_text(request, writer)
-        """
+            document_version = self.document.latest_version
+            if self.document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
+                mimetype = document_version.mimetype
+                i_stream = document_version.open()
+                write_pdf_pages(i_stream, writer, None)
+            else:
+                html_template = get_template('_cannot_serialize.html')
+                context = { 'request': request, 'node': self, 'mimetype': document_version.mimetype }
+                rendered_html = html_template.render(context)
+                html_to_writer(rendered_html, writer)    
         return writer, mimetype
 
     def get_index(self):
