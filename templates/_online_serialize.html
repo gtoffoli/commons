@@ -18,8 +18,6 @@
 {% endif %}
 
 <div style="margin-top: 1.0em;">
-{% if mimetype %}<i>{% trans "cannot convert to PDF a document of mimetype"|capfirst %}</i> {{ mimetype }}.{% endif %}
-{% if mimetype and node.oer.url %}<br>{% endif %}
-{% if node.oer.url %}<i>{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}</i>.{% endif %}
+<i>{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}</i>.
+   {% if mimetype %}<br><i>{% trans "the associated resource has content type"|capfirst %}</i> {{ mimetype }}{% endif %}.
 </div>
-

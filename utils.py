@@ -38,13 +38,25 @@ def text_to_html(text):
 def make_pdf_writer():
     return PdfFileWriter()
 
-def html_to_writer(html, writer):
-    stylesheet = CSS(string='body { font-family: Arial; }; a { text-decoration: none; };')
+def url_to_writer(url, writer, ranges=None):
     i_stream = StringIO.StringIO()
-    HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
-    write_pdf_pages(i_stream, writer, None)
+    stylesheets = [CSS(string='@page { size: A4 landscape; }')]
+    HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
+    write_pdf_pages(i_stream, writer, ranges=ranges)
 
-def get_pdf_page(i_stream, o_stream, page):
+def html_to_writer(html, writer, css=None, ranges=None):
+    i_stream = StringIO.StringIO()
+    """
+    stylesheet = CSS(string='body { font-family: Arial; }; a { text-decoration: none; };')
+    HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
+    """
+    if css is None:
+        css = 'body { font-family: Arial; };'
+    stylesheets = css and [CSS(string=css)] or None
+    HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
+    write_pdf_pages(i_stream, writer, ranges=ranges)
+
+def get_pdf_page(i_stream, o_stream):
     """ return ...
     """ 
     from PyPDF2.pdf import PdfFileReader, PdfFileWriter
@@ -56,7 +68,7 @@ def get_pdf_page(i_stream, o_stream, page):
     writer.addPage(page)
     writer.write(o_stream)
 
-def write_pdf_pages(i_stream, writer, ranges):
+def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified
         range is a list of 2 elements: [low, high]
     """ 
@@ -166,12 +178,14 @@ def get_request_headers(url):
 
 def get_request_content(url):
     request = urllib2.Request(url)
-    stream = StringIO.StringIO()
     try:
         response = urllib2.urlopen(request)
         if response.getcode() in [200]:
+            """
             stream = StringIO.StringIO(response.read())
             return stream
+            """
+            return response.read()
     except:
         pass
     return None

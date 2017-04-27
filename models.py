@@ -49,7 +49,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
-from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, html_to_writer, write_pdf_pages, text_to_html
+from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
 
 # from analytics import filter_actions, post_views_by_user
@@ -2431,7 +2431,8 @@ class LearningPath(Resource, Publishable):
         contributors = self.get_contributors()
         context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors }
         rendered_html = html_template.render(context)
-        html_to_writer(rendered_html, writer)    
+        css = 'body { font-family: Arial; };'
+        html_to_writer(rendered_html, writer, css=css)    
 
     def make_document_stream(self, request):
         """ make and return an IO stream by concatenating the documents streams
@@ -2439,6 +2440,7 @@ class LearningPath(Resource, Publishable):
         mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
+        writer.addBookmark(str(_('Cover page')), 0)
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
         for node, level, parent in nodes_with_levels:
@@ -2449,11 +2451,11 @@ class LearningPath(Resource, Publishable):
                 documents = oer.get_sorted_documents()
                 viewable_documents = [document for document in documents if document.viewable]
             if node.document or (oer and viewable_documents):
-                writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype)
+                writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.text:
                 node.serialize_textnode(request, writer)
             elif oer.url:
-                writer, content_type = node.make_document_stream(request, writer)
+                writer, content_type = node.make_document_stream(request, writer, export=True)
             if not writer.getNumPages() > pagenum:
                     html_template = get_template('_cannot_serialize.html')
                     context = { 'request': request, 'node': node, 'oer': oer }
@@ -2615,7 +2617,13 @@ class PathNode(node_factory('PathEdge')):
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)    
 
-    def make_document_stream(self, request, writer=None, mimetype=None):
+    def serialize_oernode(self, request, writer, mimetype):
+        html_template = get_template('_online_serialize.html')
+        context = { 'request': request, 'node': self, 'mimetype': mimetype, }
+        rendered_html = html_template.render(context)
+        html_to_writer(rendered_html, writer)    
+
+    def make_document_stream(self, request, writer=None, mimetype=None, export=False):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
             from [multiple] documents attached to the associated OER """
         if not writer:
@@ -2640,14 +2648,14 @@ class PathNode(node_factory('PathEdge')):
                     mimetype = document_version.mimetype
                     i_stream = document_version.open()
                     pagerange = r[1:]
-                    write_pdf_pages(i_stream, writer, [pagerange])
+                    write_pdf_pages(i_stream, writer, ranges=[pagerange])
             elif documents:
                 for document in documents:
                     document_version = document.latest_version
                     if document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
                         mimetype = document_version.mimetype
                         i_stream = document_version.open()
-                        write_pdf_pages(i_stream, writer, None)
+                        write_pdf_pages(i_stream, writer)
                     else:
                         html_template = get_template('_cannot_serialize.html')
                         context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document.document_version.mimetype }
@@ -2659,19 +2667,25 @@ class PathNode(node_factory('PathEdge')):
                     content_length = headers.get('content-length', 0)
                     content_type = headers.get('content-type', 'text/plain')
                 except:
+                    content_length = 0
                     content_type = ''
-                if content_type == 'application/pdf':
-                    stream = get_request_content(oer.url)
-                    if stream:
-                        mimetype = 'application/pdf'
-                        pageranges = ranges and [ranges[0][1:]] or None
-                        write_pdf_pages(stream, writer, pageranges)
+                if content_length > 0 and content_type in ['application/pdf', 'text/html']:
+                    if export:
+                        self.serialize_oernode(request, writer, content_type)
+                    if (ranges or not export):
+                        pageranges = ranges and [r[1:] for r in ranges] or None
+                        if content_type == 'application/pdf':
+                            stream = StringIO.StringIO(get_request_content(oer.url))
+                            mimetype = 'application/pdf'
+                            write_pdf_pages(stream, writer, ranges=pageranges)
+                        elif content_type == 'text/html':
+                            url_to_writer(oer.url, writer, ranges=pageranges)
         elif self.document:
             document_version = self.document.latest_version
             if self.document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):
                 mimetype = document_version.mimetype
                 i_stream = document_version.open()
-                write_pdf_pages(i_stream, writer, None)
+                write_pdf_pages(i_stream, writer)
             else:
                 html_template = get_template('_cannot_serialize.html')
                 context = { 'request': request, 'node': self, 'mimetype': document_version.mimetype }
