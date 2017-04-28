@@ -150,8 +150,8 @@ def help_children(request):
          url='/help/search/',
         ))
     children.append (MenuItem(
-         capfirst(_("cataloguing and evaluating resources")),
-         url='/help/catalog/',
+         capfirst(_("open resources")),
+         url='/help/oer/',
         ))
     children.append (MenuItem(
          capfirst(_("learning paths")),
