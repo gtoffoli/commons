@@ -79,7 +79,7 @@
     <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
   {% endif %}
 {% endif %}
-<div class="iframe-container" {% if image_view %}style="padding-bottom:0; height:auto"{% endif %}>
+<div class="iframe-container" {% if image_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
 {% if oer %}
   {% if oer_is_published %}
     {% if document_view or media_view %}
@@ -107,6 +107,7 @@
     {{ document_view|safe }}
   {% elif text_view %}
     {{ text_view|safe }}
+    <div style="clear:both"></div>
   {% endif %}
 {% endif %}
   </div>
