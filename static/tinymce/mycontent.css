@@ -2,12 +2,12 @@ body, td, pre {color:#555; font-family: 'Open Sans', sans-serif; font-size:14px;
 body {background:#fff;}
 body.mceForceColors {background:#FFF; color:#555;}
 body.mceBrowserDefaults {background:transparent; color:inherit; font-size:inherit; font-family:inherit;}
-h1 {font-size: 2em}
-h2 {font-size: 1.5em}
-h3 {font-size: 1.17em}
-h4 {font-size: 1em}
-h5 {font-size: .83em}
-h6 {font-size: .75em}
+h1 {/* font-size: 2em; */ font-size: 26px;}
+h2 {/* font-size: 1.5em */ font-size: 24px;}
+h3 {/* font-size: 1.17em */ font-size: 22px;}
+h4 {/* font-size: 1em */ font-size: 20px;}
+h5 {/* font-size: .83em */ font-size: 18px;}
+h6 {/* font-size: .75em */ font-size: 16px;}
 .mceItemTable, .mceItemTable td, .mceItemTable th, .mceItemTable caption, .mceItemVisualAid {border: 1px dashed #BBB;}
 a.mceItemAnchor {display:inline-block; -webkit-user-select:all; -webkit-user-modify:read-only; -moz-user-select:all; -moz-user-modify:read-only; width:11px !important; height:11px !important; background:url(img/items.gif) no-repeat center center}
 span.mceItemNbsp {background: #DDD}
