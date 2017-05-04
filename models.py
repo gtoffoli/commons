@@ -2045,9 +2045,11 @@ class LearningPath(Resource, Publishable):
         roots = self.get_roots(nodes=nodes)
         if path_type == LP_SEQUENCE:
             assert len(roots) == 1
+            """
             if with_levels:
                 return zip(nodes, [0] * n_nodes, [None] * n_nodes)
             return nodes
+            """
         elif len(roots) > 1:
             roots = list(roots)
             roots.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
