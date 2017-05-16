@@ -497,6 +497,15 @@ div.msg {
 {% endblock %}
 
 {% block extra_script %}
+{% if can_send_message and is_member %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('ul.nav-tabs > li > a').on('click', function(){
+      $("body").css("cursor", "default");
+    });
+   });
+</script>
+{% endif %}
 {% if project.info %}
 <script type="text/javascript">
   $(document).ready(function() {

@@ -3,17 +3,80 @@
 	<script type="text/javascript" src="{% static "tinymce/js/tinymce/tinymce.min.js" %}"></script>
 	
 	<script type="text/javascript">
+  var language = ('{{LANGUAGE_CODE}}' == 'pt')?'pt_PT':'{{LANGUAGE_CODE}}';
+  {% if request.user.is_staff %}
+    var types_media = 'image'
+  {% else %}
+    var types_media = 'none'
+  {% endif %}
 	tinymce.init({
 	    schema: "html5",
 	    mode: "specific_textareas",
 	    editor_selector: "richtext",
 	    resize: "both",
-		menubar: false,
-		height : 350,
-	    /* width: "100%",
-	    theme: "advanced",*/
-	    plugins: "advlist charmap textcolor colorpicker link image visualblocks code fullscreen preview",
-	    toolbar: 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | link unlink image | visualblocks code fullscreen preview',
+      menubar: false,
+      height : 350,
+      branding: false,
+      language: language,
+	    plugins: "lists advlist charmap textcolor colorpicker table link image visualblocks code fullscreen preview",
+	    toolbar: 'undo redo removeformat | formatselect styleselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink image | visualblocks code fullscreen preview',
+      style_formats: [
+        {title: '10px', inline: 'span', styles: {'font-size': '10px'}},
+        {title: '11px', inline: 'span', styles: {'font-size': '11px'}},
+        {title: '12px', inline: 'span', styles: {'font-size': '12px'}},
+        {title: '13px', inline: 'span', styles: {'font-size': '13px'}},
+        {title: '14px', inline: 'span', styles: {'font-size': '14px'}},
+        {title: '15px', inline: 'span', styles: {'font-size': '15px'}},
+        {title: '16px', inline: 'span', styles: {'font-size': '16px'}},
+        {title: '17px', inline: 'span', styles: {'font-size': '17px'}},
+        {title: '18px', inline: 'span', styles: {'font-size': '18px'}},
+        {title: 'clear floats', block: 'div', styles: {'clear': 'both'}},
+      ],
+	    image_advtab : true,
+	    image_caption: false,
+	    image_class_list: [
+        {title: 'select', value: ''},
+        {title: 'image responsive center', value: 'img-responsive-basic center-block'},
+        {title: 'image responsive left', value: 'img-responsive-basic pull-left marginR10'},
+        {title: 'image responsive right', value: 'img-responsive-basic pull-right margin-L10'}],
+      paste_data_images: true,
+      table_class_list: [
+        {title: 'select', value: ''},
+        {title: 'table responsive', value: 'table-responsive'},
+        {title: 'table responsive width 100%', value: 'table-responsive width-full'},],
+      file_browser_callback: function add_file(input_id, input_value, type, win){
+          var cmsURL = '/admin/filebrowser/browse/?pop=4';
+          cmsURL = cmsURL + '&type=' + type;
+          tinymce.activeEditor.windowManager.open({
+            file: cmsURL,
+            width: 800,  // Your dimensions may differ - toy around with them!
+            height: 500,
+            resizable: 'yes',
+            scrollbars: 'yes',
+            inline: 'no',  // This parameter only has an effect if you use the inlinepopups plugin!
+            close_previous: 'no'
+          }, {
+            window: win,
+            input: input_id,
+          });
+          return false;
+      },
+      file_browser_callback_types: types_media,
 	    content_css : "{% static "tinymce/mycontent.css" %}",
-	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea"
-	});	</script>
+	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea",
+/*
+	    setup: function(editor) {
+        editor.addButton('class2list', {
+          text: 'ul inline',
+          icon: false,
+          onclick: function() {
+            // Adds a class to a specific element in the current page
+            tinyMCE.activeEditor.dom.addClass(tinyMCE.activeEditor.dom.select('ul'), 'list-inline');
+          }
+        });
+      }
+*/
+
+	});	
+
+	</script>

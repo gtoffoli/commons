@@ -420,7 +420,7 @@ AUTHENTICATION_BACKENDS = (
 
 # TinyMCE settings (from roma APP of RomaPaese project)
 # TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
-TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/js/tinymce/tinymce.min.js')
+# TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/js/tinymce/tinymce.min.js')
 """
 TINYMCE_COMPRESSOR = True
 """
@@ -429,26 +429,58 @@ TINYMCE_DEFAULT_CONFIG = {
     'schema': "html5",
     'resize' : "both",
     'height': 350,
+    'branding': False,
     # 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
-    'plugins': "advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
+    'plugins': "lists advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
     # 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
-    'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
+    'toolbar': 'undo redo | formatselect styleselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
     'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
+    'style_formats': [
+      {'title': '10px', 'inline': 'span', 'styles': {'font-size': '10px'}},
+      {'title': '11px', 'inline': 'span', 'styles': {'font-size': '11px'}},
+      {'title': '12px', 'inline': 'span', 'styles': {'font-size': '12px'}},
+      {'title': '13px', 'inline': 'span', 'styles': {'font-size': '13px'}},
+      {'title': '14px', 'inline': 'span', 'styles': {'font-size': '14px'}},
+      {'title': '15px', 'inline': 'span', 'styles': {'font-size': '15px'}},
+      {'title': '16px', 'inline': 'span', 'styles': {'font-size': '16px'}},
+      {'title': '17px', 'inline': 'span', 'styles': {'font-size': '17px'}},
+      {'title': '18px', 'inline': 'span', 'styles': {'font-size': '18px'}},
+      {'title': 'clear floats', 'block': 'div', 'styles': {'clear': 'both'}},
+    ],
     'plugin_preview_width' : 800,
     'plugin_preview_height' : 600,
+    'advlist_class_list' : [
+        {'title': 'select', 'value': ''},
+        {'title': 'image responsive', 'value': 'img-responsive-basic center-block'},
+        {'title': 'image responsive left', 'value': 'img-responsive-basic pull-left'},
+        {'title': 'image responsive right', 'value': 'img-responsive-basic pull-right'}],
+    'image_advtab' : True,
+    'image_caption': False,
+    'image_class_list' : [
+        {'title': 'select', 'value': ''},
+        {'title': 'image responsive', 'value': 'img-responsive-basic center-block'},
+        {'title': 'image responsive left', 'value': 'img-responsive-basic pull-left marginR10'},
+        {'title': 'image responsive right', 'value': 'img-responsive-basic pull-right marginL10'}],
+    'paste_data_images': True,
+    'table_class_list': [
+        {'title': 'select', 'value': ''},
+        {'title': 'table responsive', 'value': 'table-responsive'},
+        {'title': 'table responsive width 100%', 'value': 'table-responsive width-full'},],
+    'file_browser_callback_types': 'image',
     # URL settings
     # 'convert_urls' : False,
     'relative_urls' : False,
-    }
+}
 
 FILEBROWSER_DIRECTORY = 'ugc_upload/'
 FILEBROWSER_EXTENSIONS = {
 # 'Image': ['.jpg','.jpeg','.gif','.png','.tif','.tiff'],
 'Image': ['.jpg','.jpeg','.gif','.png'],
-'Document': ['.pdf','.doc','.rtf','.txt','.xls','.csv'],
+# 'Document': ['.pdf','.doc','.rtf','.txt','.xls','.csv'],
 # 'Video': ['.mov','.wmv','.mpeg','.mpg','.avi','.rm'],
 # 'Audio': ['.mp3','.mp4','.wav','.aiff','.midi','.m4p']
 }
+FILEBROWSER_MAX_UPLOAD_SIZE = '2097152'
 
 # configure graph_models command of django-extensions
 GRAPH_MODELS = {
