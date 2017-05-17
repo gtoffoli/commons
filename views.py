@@ -2608,8 +2608,6 @@ def oer_detail_by_slug(request, oer_slug):
 def oer_edit(request, oer_id=None, project_id=None):
     user = request.user
     oer = None
-    print "================ TEST ============"
-    print project_id
     action = '/oer/edit/'
     if oer_id:
         oer = get_object_or_404(OER, pk=oer_id)
@@ -2621,13 +2619,19 @@ def oer_edit(request, oer_id=None, project_id=None):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if request.POST:
         oer_id = request.POST.get('id', '')
+
         if oer_id:
             oer = get_object_or_404(OER, id=oer_id)
             action = '/oer/%s/edit/' % oer.slug
             project_id = oer.project_id
+        if not project_id:
+            projectId = request.POST.get('project', '')
+            current_project = get_object_or_404(Project, id=projectId)
+        else:
+            current_project = None
         form = OerForm(request.POST, instance=oer)
         metadata_formset = OerMetadataFormSet(request.POST, instance=oer)
-        if request.POST.get('save', '') or request.POST.get('continue', ''): 
+        if request.POST.get('save', '') or request.POST.get('continue', ''):
             if form.is_valid():
                 oer = form.save(commit=False)
                 oer.editor = user
@@ -2662,7 +2666,7 @@ def oer_edit(request, oer_id=None, project_id=None):
             else:
                 print form.errors
                 print metadata_formset.errors
-            return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action,}, context_instance=RequestContext(request))
+            return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if oer:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)

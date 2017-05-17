@@ -51,7 +51,7 @@
         </div>
         {% if field.name == 'subjects' %}</div>{% endif %}
     {% else %}
-      <div class="form-group">
+      <div class="form-group" {% if field.name in 'project,state'%} style="display: none" {% endif %} >
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>{{ field }}
         {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
