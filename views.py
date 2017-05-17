@@ -2608,6 +2608,8 @@ def oer_detail_by_slug(request, oer_slug):
 def oer_edit(request, oer_id=None, project_id=None):
     user = request.user
     oer = None
+    print "================ TEST ============"
+    print project_id
     action = '/oer/edit/'
     if oer_id:
         oer = get_object_or_404(OER, pk=oer_id)
@@ -2678,6 +2680,10 @@ def oer_edit(request, oer_id=None, project_id=None):
     # return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action}, context_instance=RequestContext(request))
     data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer, 'action': action}
     current_language = get_current_language()
+    if project_id:
+       data_dict['current_project'] = get_object_or_404(Project, id=project_id)
+    else:
+       data_dict['current_project'] = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
     return render_to_response('oer_edit.html', data_dict, context_instance=RequestContext(request))
@@ -3270,7 +3276,7 @@ def lp_edit(request, lp_id=None, project_id=None):
             return HttpResponseRedirect('/lp/%s/' % lp.slug)
     if request.POST:
         lp_id = request.POST.get('id', '')
-
+        projectId = request.POST.get('project', '')
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
             action = '/lp/%s/edit/' % lp.slug
@@ -3293,8 +3299,11 @@ def lp_edit(request, lp_id=None, project_id=None):
                     return HttpResponseRedirect('/lp/%s/' % lp.slug) 
             else:
                 print form.errors
-            return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action,}, context_instance=RequestContext(request))
-           
+            if projectId:
+               current_project = get_object_or_404(Project, id=projectId)
+            else:
+               current_project = None
+            return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -3322,6 +3331,10 @@ def lp_edit(request, lp_id=None, project_id=None):
     # return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
+    if project_id and project_id > 0:
+        data_dict['current_project'] = get_object_or_404(Project, id=project_id)
+    else:
+        data_dict['current_project'] = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = lp and lp.original_language and not lp.original_language==current_language or False
     return render_to_response('lp_edit.html', data_dict, context_instance=RequestContext(request))

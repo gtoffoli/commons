@@ -11,34 +11,52 @@
 {% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="panel-heading-c1 padding1020">
-    <h2 class="marginTB5">{% if lp %}<small class="c-white">{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
+    <h2 class="marginTB5">{% if lp %}<small class="c-white">{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }} <small class="c-white">[{{ lp.get_state }}]</small>{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
+    <h4>{% if lp and lp.project or current_project %}<small class="c-white">{% trans "in the project" %}</small> {% if lp and lp.project %}{{lp.project}}{% elif current_project %}{{current_project.get_name}}{% endif %}{% endif %}</h4>
+
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
     {% if lp %}<input type="hidden" id="id" name="id" value="{{ lp.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    {% for field in form.visible_fields %}
     {% if field.name == 'tags' %}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>
         <div class="btn-group" id="{{ field.name }}" data-toggle="buttons">
+        {% if current_language == 'en' %}
         {% for checkbox in field %}
           <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}
+        {% else %}
+        {% for checkbox in field|dictsort:"choice_label" %}
+          <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
+           {{ checkbox.tag }} {{ checkbox.choice_label }}
+          </label>
+        {% endfor %}
+        {% endif %}
         </div>
         {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
       </div>
+    {% elif field.name in 'levels,subjects' %}
+      {% if field.name == 'levels' %}<div class="row">{% endif %}
+        <div class="col-sm-6 col-md-6 col-lg-6 form-group" >
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+        </div>
+        {% if field.name == 'subjects' %}</div>{% endif %}
     {% else %}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>{{ field }}
         {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
       </div>
-    {% endif %}{% endwith %}{% endfor %}
+    {% endif %}{% endfor %}
     </fieldset>
     <div class="panel-footer-c1 padding1020">
       {% include "_edit_submit.html" %}

@@ -16,7 +16,8 @@
 {% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c2 text-left marginTB30">
   <div class="panel-heading-c2 padding1020">
-    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ oer.title }} <small class="c-white">[{{ oer.get_state }}]</small>{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+    <h4><small class="c-white">{% trans "in the project" %}</small> {% if oer %}{{oer.project}}{% elif current_project %}{{current_project.get_name}}{% endif %}</h4>
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}
@@ -30,33 +31,71 @@
       </div>
       {% endif %}
     {% endif %}
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
+    {% for field in form.visible_fields %}
+    {% if field.name in 'title,material' %}
+      <fieldset class="marginT20"><legend class="marginB10 paddingN3 font18 c-pacific-blue borderColor-c2 demiBold">{% if field.name == 'title' %}{% trans "general information"|capfirst %}{% else %}{% trans "classification metadata"|capfirst %}{% endif %}</legend>
+    {% elif field.name == 'source' %}
+      <fieldset class="marginT20"><legend class="marginB10 paddingN3 font18 c-pacific-blue borderColor-c2 demiBold"> <a href="#" class="toggleIcon paddingR10 c-pacific-blue demiBold"><i class="fa fa-plus-square-o"></i></a> {% trans "source and derivation"|capfirst %}</legend>
+      <div style="display:none">
+    {% endif %}
     {% if field.name == 'tags' %}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>
         <div class="btn-group" id="{{ field.name }}" data-toggle="buttons">
+        {% if current_language == 'en' %} 
         {% for checkbox in field %}
           <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}
+        {% else %}
+        {% for checkbox in field|dictsort:"choice_label" %}
+          <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
+           {{ checkbox.tag }} {{ checkbox.choice_label }}
+          </label>
+        {% endfor %}
+        {% endif %}
         </div>
         {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
       </div>
+    {% elif field.name in 'translated,remixed' %}
+       {% if field.name == 'translated' %}<div class="row">{% endif %}
+       	<div class="col-sm-6 col-md-6 col-lg-6 form-group" >
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+        </div>
+      {% if field.name == 'remixed' %}</div>{% endif %}
+    {% elif field.name in 'levels,subjects' %}
+       {% if field.name == 'levels' %}<div class="row">{% endif %}
+       	<div class="col-sm-6 col-md-6 col-lg-6 form-group" >
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+        </div>
+      {% if field.name == 'subjects' %}</div>{% endif %}
+    {% elif field.name in 'languages, media, accessibility' %}
+       {% if field.name == 'languages' %}<div class="row">{% endif %}
+       	<div class="col-sm-4 col-md-4 col-lg-4 form-group" >
+        <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+        <span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+        </div>
+      {% if field.name == 'accessibility' %}</div>{% endif %}
     {% else %}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>{{ field }}
         {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
       </div>
-    {% endif %}{% endwith %}{% endfor %}
-
+    {% endif %}
+    {% if field.name in 'embed_code,remixed,accessibility' %}{% if field.name == 'remixed' %}</div>{%endif%}</fieldset>{% endif %}{% endfor %}
+    <fieldset class="marginT20 marginB5" ><legend class="marginB10 paddingN3 font18 c-pacific-blue borderColor-c2 demiBold"><a href="#" class="toggleIcon paddingR10 c-pacific-blue demiBold"><i class="fa fa-plus-square-o"></i></a> {% trans "additional metadata"|capfirst %}</legend>
       <input id="id_metadata_set-TOTAL_FORMS" type="hidden" value="5" name="metadata_set-TOTAL_FORMS">
       <input id="id_metadata_set-INITIAL_FORMS" type="hidden" value="0" name="metadata_set-INITIAL_FORMS">
       <input id="id_metadata_set-MAX_NUM_FORMS" type="hidden" value="1000" name="metadata_set-MAX_NUM_FORMS">
-      <div class="form-group">
-        <label>{% trans "additional metadata"|capfirst %}</label>
+      <div class="form-group" style="display:none">
         {% for fm in metadata_formset %}
         {% if forloop.first %}
           <table class="grid-table">
@@ -71,6 +110,7 @@
         {% endif %}
         {% endfor %}
       </div>
+    </fieldset>
     </fieldset>
     <div class="panel-footer-c2 padding1020">
       {% include "_edit_submit.html" %}
@@ -96,6 +136,21 @@
  $(document).ready(function() {
    setDisabled('id_project');
    setDisabled('id_state');
+   
+   $('legend a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+    $("body").css("cursor", "default");
+		var accordion = $(this).parent().parent();
+		var accordionContent = accordion.children('div');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+		}
+	});
  })
 </script>
 
