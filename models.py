@@ -1811,7 +1811,8 @@ class OerEvaluation(models.Model):
     review = models.TextField(blank=True, null=True, verbose_name=_('free text review'))
     quality_metadata = models.ManyToManyField(QualityFacet, through='OerQualityMetadata', related_name='quality_metadata', blank=True, verbose_name='quality metadata')
     modified = ModificationDateTimeField(_('modified'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
+    # user = models.ForeignKey(User, verbose_name=_('last editor'))
+    user = models.ForeignKey(User, verbose_name=_('evaluator'), related_name='oer_evaluator')
 
     def __unicode__(self):
         return '%s evaluated by %s' % (self.oer.title, self.user.get_display_name())

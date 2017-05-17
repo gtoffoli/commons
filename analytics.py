@@ -7,7 +7,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response
-from django.db.models import Count, Q
+from django.db.models import Q, Count, Case, When
 from django.template import RequestContext
 from django.db import connection
 from django.utils import timezone
@@ -659,40 +659,22 @@ def content_languages(request):
     # return content_language_dict
     return render_to_response('content_languages.html', var_dict, context_instance=RequestContext(request))
 
-  
 def resource_contributors(request):
-    users = User.objects.annotate(num_lps=Count('path_creator')).exclude(num_lps=0).order_by('-num_lps')
     var_dict = {}
-    lp_contributors = []
-    for user in users:
-        n = LearningPath.objects.filter(creator=user).count()
-        if n:
-            user.num_lps = n
-            lp_contributors.append(user)
+    lp_contributors = User.objects.annotate(num_lps=Count(Case(
+                           When(path_creator__state=PUBLISHED, then=1)))
+                       ).exclude(num_lps=0).order_by('-num_lps')
     var_dict['lp_contributors'] = lp_contributors
-    users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
-    oer_evaluation_contributors = []
-    for user in users:
-        n = OerEvaluation.objects.filter(user=user).count()
-        if n:
-            user.num_oer_evaluations = n
-            oer_evaluation_contributors.append(user)
+    oer_evaluation_contributors = User.objects.annotate(num_oer_evaluations=Count(Case(
+                           When(oer_evaluator__oer__state=PUBLISHED, then=1)))
+                       ).exclude(num_oer_evaluations=0).order_by('-num_oer_evaluations')
     var_dict['oer_evaluation_contributors'] = oer_evaluation_contributors
-    resource_contributors = []
-    for user in users:
-        n = OER.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_oers = n
-            resource_contributors.append(user)
+    resource_contributors = User.objects.annotate(num_oers=Count(Case(
+                           When(oer_creator__state=PUBLISHED, then=1)))
+                       ).exclude(num_oers=0).order_by('-num_oers')
     var_dict['resource_contributors'] = resource_contributors
-    users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
-    source_contributors = []
-    for user in users:
-        n = Repo.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_repos = n
-            source_contributors.append(user)
+    source_contributors = User.objects.annotate(num_repos=Count(Case(
+                           When(repo_creator__state=PUBLISHED, then=1)))
+                       ).exclude(num_repos=0).order_by('-num_repos')
     var_dict['source_contributors'] = source_contributors
     return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
-
-
