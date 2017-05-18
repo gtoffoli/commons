@@ -13,7 +13,8 @@ def online_users_count():
 def processor(request):
     path = request.path
     for language in settings.LANGUAGES:
-        path = path.replace('/%s' % language[0], '')
+        # path = path.replace('/%s' % language[0], '')
+        path = path.replace('/%s/' % language[0], '/')
     return {
         'site_name': settings.SITE_NAME,
         'users_count': online_users_count(),
