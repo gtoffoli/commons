@@ -416,11 +416,15 @@ class Folder(MPTTModel):
 
 class FolderDocument(models.Model, Publishable):
     """
-    Link a document to a folder; documents are ordered
+    Link a document or an online external resource to a folder; documents are ordered
+    one, and only one, out of document and embed_code fields must be non-null
+    see forms FolderDocumentForm and FolderOnlineResourceForm
     """
     order = models.IntegerField()
     folder = models.ForeignKey(Folder, related_name='folderdocument_folder', verbose_name=_('folder'))
-    document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
+    # document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
+    document = models.ForeignKey(Document, blank=True, null=True, related_name='folderdocument_document', verbose_name=_('document'))
+    embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'))
     label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     user = models.ForeignKey(User, verbose_name=_('user'))

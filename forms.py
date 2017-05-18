@@ -260,12 +260,17 @@ class DocumentForm(forms.Form):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        # exclude = ('folder', 'document', 'user')
         fields = ('label','document')
         
-    # order = forms.IntegerField(required=True, label=_('sort order'))
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    # state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+
+class FolderOnlineResourceForm(forms.ModelForm):
+    class Meta:
+        model = FolderDocument
+        fields = ('label','embed_code')
+        
+    label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the view of an online resource in an HTML page'))
 
 class RepoForm(forms.ModelForm):
     class Meta:
