@@ -397,7 +397,8 @@ class Folder(MPTTModel):
 
     def remove_document(self, document, request):
         folderdocument = FolderDocument.objects.get(folder=self, document=document)
-        document.delete()
+        if folderdocument.document_id:
+            document.delete()
         folderdocument.delete()
 
     def get_title(self):
@@ -407,6 +408,11 @@ class Folder(MPTTModel):
             projects = Project.objects.filter(folders=self)
             if projects:
                 return projects[0].get_name()
+
+    def get_project(self):
+        projects = Project.objects.filter(folders=self)
+        if projects:
+            return projects[0]
 
     """
     @models.permalink
@@ -428,6 +434,7 @@ class FolderDocument(models.Model, Publishable):
     label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     user = models.ForeignKey(User, verbose_name=_('user'))
+    created = CreationDateTimeField(_('created'), default=None, null=True)
 
     def __unicode__(self):
         return unicode(self.document.label)
@@ -446,6 +453,17 @@ class FolderDocument(models.Model, Publishable):
                 last_order = 0
             self.order = last_order+1
         super(FolderDocument, self).save(*args, **kwargs) # Call the "real" save() method.
+        
+    def can_access(self, user):
+        folder = self.folder
+        project = folder.get_project()
+        if self.state==PUBLISHED and project.state in (PROJECT_OPEN,PROJECT_CLOSED):
+            return True
+        if self.state==PUBLISHED and project.state in (PROJECT_DRAFT, PROJECT_SUBMITTED):
+            if user.is_superuser or project.is_admin(user):
+                return True
+            else:
+                return False
 
 GENDERS = (
    ('-', _('not specified')),

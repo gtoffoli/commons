@@ -43,7 +43,7 @@ from models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from models import LP_COLLECTION, LP_SEQUENCE
 from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
 from metadata import QualityFacet
-from forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm
+from forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm, FolderOnlineResourceForm
 from forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
@@ -860,11 +860,27 @@ def project_add_document(request):
         track_action(request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
+def project_add_resource_online(request):
+    project_id = request.POST.get('project', '')
+    project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(request.user):
+        raise PermissionDenied
+    folder = project.get_folder()
+    if (request.POST):
+        form = FolderOnlineResourceForm(request.POST)
+        if form.is_valid():
+            data=form.cleaned_data
+            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
+            folderdocument.save()
+            track_action(request.user, 'Create', folderdocument, target=project)
+    return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    
 def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     projects = Project.objects.filter(folders = folder)
     project = projects and projects[0]
+    
     if request.POST:
         form = FolderDocumentForm(request.POST, instance=folderdocument)
         if form.is_valid():
@@ -880,7 +896,28 @@ def folderdocument_edit(request, folderdocument_id):
         else:
             proj_type_name = ''
         return render_to_response('folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
- 
+
+def online_resource_edit(request, folderdocument_id):
+    folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
+    folder = folderdocument.folder
+    projects = Project.objects.filter(folders = folder)
+    project = projects and projects[0]
+    action = '/online_resource/%d/edit/' % folderdocument.id
+    if project:
+        proj_type_name = project.proj_type.name
+    else:
+        proj_type_name = ''
+    if request.POST:
+        form = FolderOnlineResourceForm(request.POST, instance=folderdocument)
+        if form.is_valid():
+            if request.POST.get('save', ''):
+                form.save()
+            if project:
+                return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    else:
+        form = FolderOnlineResourceForm(instance=folderdocument)
+    return render_to_response('online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
+
 def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
@@ -900,14 +937,17 @@ def project_folder(request, project_slug):
     proj_type = project.proj_type
     ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
     var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
+    n_selected_mentors = 0
     selected_mentors = []
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
-    var_dict['can_share'] = can_share = user.is_superuser or project.is_member(user) or (selected_mentors.count() > 0 and selected_mentors[0])
+        n_selected_mentors = selected_mentors.count()
+    var_dict['can_share'] = can_share = user.is_superuser or project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['folder'] = project.get_folder()
     var_dict['folderdocuments'] = project.get_folderdocuments(user)
     var_dict['form'] = DocumentUploadForm()
+    var_dict['form_res'] = FolderOnlineResourceForm()
     return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
 
 def oers_in_clipboard(request, key):
@@ -2991,6 +3031,17 @@ def document_view(request, document_id, node_oer=False, return_url=False, ):
             document_version.file,
             content_type=document_version.mimetype
             )
+
+def online_resource_view(request,folderdocument_id):
+    user = request.user
+    online_resource = get_object_or_404(FolderDocument, pk=folderdocument_id)
+    if not online_resource.can_access(user):
+        raise PermissionDenied
+    folder_id = online_resource.folder_id
+    folder = get_object_or_404(Folder, pk=folder_id)
+    project = folder.get_project()
+    view_folder = user.is_authenticated() and (project.is_member(user) or user.is_superuser)
+    return render_to_response('online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder}, context_instance=RequestContext(request))
 
 """
 def document_view_range(request, document_id, page_range, node_oer=False, return_url=False): # argomenti non usati !!!!!!!

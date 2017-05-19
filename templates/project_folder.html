@@ -41,19 +41,28 @@ dl.eval dd:nth-child(even) {
            <dd>
              <div class="row">
                <div class="col-sm-7 col-md-7 col-lg-7">
-                 <p id="v_{{ folderdocument.id }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
-                 <p class="font12"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
+                 {% if folderdocument.embed_code %}
+                   <p id="v_{{ folderdocument.id }}">{{ folderdocument.label|safe }}</p>
+                   <p class="font12"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
+                 {% else %}
+                   <p id="v_{{ folderdocument.id }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
+                   <p class="font12"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
+                 {% endif %}
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
                     {% if not ment_proj_submitted %}
                     {% if is_admin or user.is_superuser or user = folderdocument.user %}
                       <li class="marginR10"><a id="r_{{ folderdocument.id }}" class="deleteDoc" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
-                      <li class="marginR20"><a href="/folderdocument/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
+                      <li class="marginR20"><a href="/{% if folderdocument.embed_code %}online_resource{% else %}folderdocument{% endif %}/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}{% endif %}
+                    {% if folderdocument.embed_code %}
+                       <li class="marginR10"><a href="/online_resource/{{ folderdocument.id }}/view" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                    {% else %}
                     <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
                     {% if document.viewable %}
                       <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                    {% endif %}
                     {% endif %}
                  </ul>
                </div>
@@ -67,6 +76,8 @@ dl.eval dd:nth-child(even) {
        {% endif %}
     </dl>
     {% if not ment_proj_submitted %}
+    <div class="row margin0 bc-white">
+    <div class="col-md-6 col-lg-6 padding0">
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
       <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/project/add_document/">{% csrf_token %}
@@ -77,7 +88,27 @@ dl.eval dd:nth-child(even) {
             {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
           </div>
       </form></dd>
-    </dl>{% endif %}
+    </dl>
+    </div>
+    <div class="col-md-6 col-lg-6 padding0">
+    <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
+      <dt class="demiBold marginB5">{% trans "add online resource"|capfirst %}</dt>
+      <dd><form method="post" id="add_resource_online" action="/project/add_resource_online/">{% csrf_token %}
+        <input type="hidden" id="project" name="project" value="{{ project.id }}">
+        <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
+        {% for field in form_res.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>
+              <span class="txt-error">{{ field.errors }}</span>{{ field }}
+              {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+            </div>
+        {% endfor %}
+        <div><button type="submit" id="save" name="save" class="btn btn-default" value='{% trans "save"|capfirst %}'>{% trans "save" %}</button>
+      </form></dd>
+    </dl>
+    </div>
+    </div>
+    {% endif %}
   {% endif %}
 </div>
 {% endblock %}

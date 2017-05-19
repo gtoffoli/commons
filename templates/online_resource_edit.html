@@ -1,0 +1,34 @@
+{% extends "commons_base.html" %}
+
+{% load staticfiles i18n%}
+
+{% block head_title %}{% trans "edit resource online in folder"|capfirst %}: &nbsp;{{ folder.get_title }}{% endblock %}
+
+{% block body_class %}folder_online_resource_edit{% endblock %}
+
+{% block body %}
+<div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
+  <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
+    <h2 class="marginTB5"><small {% if proj_type_name in 'roll,ment' %}class="c-white"{% endif %}>{% trans "edit resource online in folder"|capfirst %}:</small> {{ folder.get_title }}</h2>
+  </div>
+  <form method="post" action="{{ action }}" id="online_resource_edit_form">{% csrf_token %}
+    <input type="hidden" id="project" name="project" value="{{ project.id }}">
+    <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
+    <fieldset class="padding1020">
+       {% for field in form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>
+              <span class="txt-error">{{ field.errors }}</span>{{ field }}
+              {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+            </div>
+        {% endfor %}
+      </fieldset>
+      <div class="panel-footer-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
+        <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save and exit"|capfirst %}</button>&nbsp;
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "exit without saving"|capfirst %}</button>
+      </div>
+  </form>
+</div>
+
+{% endblock %}
+
