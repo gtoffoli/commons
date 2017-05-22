@@ -935,6 +935,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     MAX_OERS_EVALUATED = 5
     MAX_LPS = 5
     MAX_MESSAGES = 5
+    MAX_ADMINS = 3
     if not project:
         project = get_object_or_404(Project, pk=project_id)
     user = request.user
@@ -982,6 +983,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         senior_admin = user==project.get_senior_admin()
         var_dict['can_delegate'] = user.is_superuser or senior_admin
+        var_dict['no_max_admins'] = len(project.get_admins()) < MAX_ADMINS
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
         if can_accept_member:
             var_dict['add_member_form'] = ProjectAddMemberForm(initial={'role_member': 'member' })

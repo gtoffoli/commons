@@ -384,7 +384,7 @@
               <input type="submit" class="btn-link padding0 bold" title="{% trans "call back supervisor role" %}" value="&#x25BE;" id="submit_{{ u.0.username }}">
               </form>{% endif %}
             {% else %}
-              {% if can_delegate %}<form class="delegate" style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" id="delegate_{{ u.0.username }}">
+              {% if can_delegate and no_max_admins %}<form class="delegate" style="display:inline" action="/project/{{ project.id }}/toggle_supervisor_role/" method="post" id="delegate_{{ u.0.username }}">
                 {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
                 <input type="submit" class="btn-link padding0 bold" title="{% trans "grant supervisor role" %}" value="&#x25B4;" id="submit_{{ u.0.username }}">
                 </form>
