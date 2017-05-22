@@ -1,0 +1,27 @@
+{% extends "commons_base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}{{online_resource.label}}{% endblock %}
+{% block body_class %}online_resource_view{% endblock %}
+
+{% block nav %}
+  <div class="navbar">
+    <h5 {% if view_folder %}class="pull-left"{% endif %}> {{ project.name }}{% if view_folder %}<br><small>{% trans "shared folder"|capfirst %}</small>{% endif %}</h5>
+    {% if view_folder %}
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18 c-black" aria-hidden="true"></i></a>
+    </p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+{% block body_base %}
+  <div class="container-fluid margin0 padding0">
+      {% if view_folder %}<p class="marginT20 text-center">{{ online_resource.label}}</p>{% endif %}
+      <div class="iframe-container">
+        {{ online_resource.embed_code|safe }}
+      </div>
+  </div>
+{% endblock %}
+
