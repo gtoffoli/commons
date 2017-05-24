@@ -1,0 +1,41 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+</style>
+{% endblock %}
+
+{% block head_title %}{% trans "adding members in bulk to commmunity/project"|capfirst %} {{ project.name }}{% endblock %}
+
+{% block body %}
+   <h1 class="text-center">{% trans "adding members in bulk to commmunity/project"|capfirst %} {{ project.name }}</h1>
+
+    <section>
+        <div class="container">
+
+		<div> {{ n_records }} {% trans "records found in file" %} {{ filename }}.</div>
+		<div> {{ n_accounts }} {% trans "members added" %}.</div>
+
+
+    {% if n_accounts %}
+		<label style="margin-top: 1em;">{% trans "receivers list"|capfirst %} {% trans "for mailing from a plain client" %}</label>
+		<div>
+    	{% for email, first_name, last_name in accounts %}
+    		{{ first_name }} {{ last_name }} &lt;{{ email }}&gt;{% if not forloop.last %},{% endif %}
+    	{% endfor %}</div>
+
+		<label style="margin-top: 1em;">{% trans "receivers list"|capfirst %} {% trans "in CSV format for MailChimp" %}</label>
+		<div>
+    	{% for email, first_name, last_name in accounts %}
+    		{{ email }}&#09;{{ first_name }}&#09;{{ last_name }}<br />
+    	{% endfor %}
+    	</div>
+    {% endif %}
+
+		<div style="margin-top: 1em;"><a href="/project/{{ project.slug }}/">{% trans "back to the community/project home"|capfirst %}</a></div>	
+
+        </div>
+    </section>
+{% endblock %}

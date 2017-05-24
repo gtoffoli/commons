@@ -1,0 +1,30 @@
+{% extends "commons_base.html" %}
+
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+</style>
+{% endblock %}
+
+{% block head_title %}{{ page_title|capfirst }}{% endblock %}
+
+{% block body %}
+   <h1 class="text-center">{{ page_title|capfirst }}</h1>
+   {% if page_subtitle %}<h3 class="text-center">{{ page_subtitle }}</h3>{% endif %}
+
+    <section>
+        <div class="container">
+
+		<form enctype="multipart/form-data" method="post" id="bulk_add_members" action="/project/{{ project.slug }}/bulk_add_members/">{% csrf_token %}
+        <input type="hidden" id="id" name="project" value="{{ project.id }}">
+        <div>{{ form.non_field_errors }}</div>
+        <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
+        <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
+           {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
+        </div>
+        </form>
+
+        </div>
+    </section>
+{% endblock %}

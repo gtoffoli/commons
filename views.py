@@ -5,9 +5,11 @@ import uuid
 import StringIO
 from collections import defaultdict
 from datetime import datetime, timedelta
+import pyexcel
 
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
+from django.core.validators import EmailValidator
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
@@ -15,6 +17,7 @@ from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
+from allauth.account.models import EmailAddress
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, render_to_response, get_object_or_404
@@ -1285,31 +1288,6 @@ def project_detail_by_slug(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     return project_detail(request, project.id, project)
 
-def project_add_member(request, project_slug):
-     user = request.user
-     project = get_object_or_404(Project, slug=project_slug)
-     post = request.POST
-     if post and post.get('add_member',''):
-         user_id = post.get('user')
-         post_role = post.get('role_member')
-         user_to_add = User.objects.get(pk=user_id)
-         if not ProjectMember.objects.filter(project=project, user=user_to_add):
-             history = "Added and approved by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
-             membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user, history=history)
-             membership.save()
-             if user_to_add in project.members(user_only=True):
-                 project.group.user_set.add(user_to_add)
-             if post_role == 'senior_admin' and project.state == PROJECT_DRAFT:
-                 role_admin = Role.objects.get(name='admin')
-                 remove_local_role(project, user, role_admin)
-                 add_local_role(project, user_to_add, role_admin)
-                 history = "Assigned role Administrator/Supervisor by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
-                 membership.history = "%s\n%s" % (membership.history, history)
-                 membership.save()
-                 project.remove_member(user)
-             track_action(user, 'Approve', membership, target=project)
-     return HttpResponseRedirect('/project/%s/' % project.slug)
-
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     """
     project_id: edit existent project
@@ -1639,6 +1617,114 @@ def accept_application(request, username, project_slug):
             track_action(request.user, 'Approve', application, target=project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
+def project_add_member(request, project_slug):
+    user = request.user
+    project = get_object_or_404(Project, slug=project_slug)
+    post = request.POST
+    if post and post.get('add_member',''):
+        user_id = post.get('user')
+        post_role = post.get('role_member')
+        user_to_add = User.objects.get(pk=user_id)
+        if not ProjectMember.objects.filter(project=project, user=user_to_add):
+            history = "Added and approved by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
+            membership = ProjectMember(project=project, user=user_to_add, state=1, accepted=timezone.now(), editor=user, history=history)
+            membership.save()
+            if user_to_add in project.members(user_only=True):
+                project.group.user_set.add(user_to_add)
+            if post_role == 'senior_admin' and project.state == PROJECT_DRAFT:
+                role_admin = Role.objects.get(name='admin')
+                remove_local_role(project, user, role_admin)
+                add_local_role(project, user_to_add, role_admin)
+                history = "Assigned role Administrator/Supervisor by %s %s [id: %s]." % (user.last_name, user.first_name, user.id)
+                membership.history = "%s\n%s" % (membership.history, history)
+                membership.save()
+                project.remove_member(user)
+            track_action(user, 'Approve', membership, target=project)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
+def bulk_add_member(request, project, record, email_validator):
+    """ add a member to a project after creating the user account if missing """
+    first_name = record.get('first_name', '')
+    last_name = record.get('last_name', '')
+    email = record.get('email', '')
+    if not (first_name and last_name and email):
+        return None
+    try:
+        email_validator(email)
+    except:
+        return None
+    try:
+        user = User.objects.get(first_name=first_name, last_name=last_name, email=email)
+    except:
+        username = '%s.%s' % (first_name.lower(), last_name.lower())
+        if User.objects.filter(first_name=first_name, last_name=last_name).count():
+            return None
+        if User.objects.filter(username=username).count():
+            return None
+        if User.objects.filter(email=email).count():
+            return None
+        user = User.objects.create_user(username=username, email=email, first_name=first_name, last_name=last_name)
+        user.set_unusable_password()
+        user.save()
+        address = EmailAddress(user=user, email=email, verified=True, primary=True)
+        address.save()
+        profile = user.get_profile()
+        if record.get('gender', ''):
+            profile.gender = record['gender'].lower()
+        if record.get('birth_date', ''):
+            profile.dob = record['birth_date']
+        if record.get('country', ''):
+            profile.country_id = record['country'].upper()
+        if record.get('edu_level', ''):
+            profile.edu_level_id = record['edu_level']
+        if record.get('pro_status', ''):
+            profile.pro_status_id = record['pro_status']
+        if record.get('short', ''):
+            profile.short = record['short']
+        profile.save()
+    if not project.is_member(user):
+        membership = project.add_member(user)
+        project.accept_application(request, membership)
+        return [email, first_name, last_name]
+    return None
+
+@login_required
+def bulk_add_members(request, project_slug=None):
+    """ upload a list of candidates from an Excel file
+        create user accounts if missing and add them as members to the project """
+    project = get_object_or_404(Project, slug=project_slug)
+    var_dict = {}
+    var_dict['project'] = project
+    if not project.get_community().is_admin(request.user):
+        raise PermissionDenied
+    if request.POST:
+        form = DocumentUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            uploaded_file = request.FILES['docfile']
+            filename = uploaded_file.name
+            extension = filename.split(".")[-1]
+            content = uploaded_file.read()
+            records = pyexcel.get_records(file_type=extension, file_content=content)
+            n_records = len(records)
+            email_validator = EmailValidator()
+            accounts = []
+            for record in records:
+                try:
+                    account = bulk_add_member(request, project, record, email_validator)
+                    if account:
+                        accounts.append(account)
+                except:
+                    pass
+            var_dict['filename'] = filename
+            var_dict['n_records'] = n_records
+            var_dict['n_accounts'] = len(accounts)
+            var_dict['accounts'] = accounts
+            return render_to_response('bulk_add_members.html', var_dict, context_instance=RequestContext(request))
+    var_dict['page_title'] = _('upload file with list of candidate members')
+    var_dict['page_subtitle'] = string_concat(_('community or project: '), project.name)
+    var_dict['form'] = DocumentUploadForm()
+    return render_to_response('file_upload.html', var_dict, context_instance=RequestContext(request))
+        
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
     return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
