@@ -95,16 +95,16 @@
  </div>
  <p class="bc-white padding615">
    {% if is_closed %}
-     <span class="fa fa-lock neutral"></span>
+     <span class="fa fa-lock neutral" aria-hidden="true"></span>
    {% endif %}	
    {% if is_draft %}
-     <span class="fa fa-group orange"></span>
+     <span class="fa fa-group orange" aria-hidden="true"></span>
    {% elif is_submitted %}
-     <span class="fa fa-group limegreen"></span>
+     <span class="fa fa-group limegreen" aria-hidden="true"></span>
    {% elif is_open or is_closed %}
-     <span class="fa fa-group neutral"></span>
+     <span class="fa fa-group neutral" aria-hidden="true"></span>
    {% elif is_deleted %}
-     <span class="fa fa-group red"></span>
+     <span class="fa fa-group red" aria-hidden="true"></span>
    {% endif %}
    {{ proj_type.description }}
    {% if project.is_reserved_project %}
@@ -132,7 +132,7 @@
        {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
        {% if project.info %}
          <dl class="list-inline font14 clearfix">
-            <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+            <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
             <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
          </dl>
        {% endif %}
@@ -148,16 +148,16 @@
                    <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 3 %}
                    {% comment %} closed {% endcomment %}
-                   <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><span class="fa fa-lock neutral"></span> {{ subproject.get_name }}</a></li>
+                   <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><span class="fa fa-lock neutral" aria-hidden="true"></span> {{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 0 %}
                    {% comment %} draft {% endcomment %}
-                   <li><span class="fa fa-group orange"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                   <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 4 %}
                   {% comment %} deleted {% endcomment %}
-                  <li><span class="fa fa-group red"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                  <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 1 %}
                   {% comment %} submitted {% endcomment %}
-                  <li><span class="fa fa-group limegreen"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
+                  <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% endif %}
              {% endfor %}{% endwith %}
              </ul>
@@ -183,12 +183,12 @@
                  <ul class="list-inline">
                     <li><div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}</div>
                        <ul class="list-inline list-last">
-                       {% if can_edit and not language_mismatch %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
-                       {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
+                       {% if can_edit and not language_mismatch %}<li class="marginB5"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit" aria-hidden="true"></i> {% trans "modify" %}</a></li>{% endif %}
+                       {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language" aria-hidden="true"></i> {% trans "translate" %}</a></li>{% endif %}
                        {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/logo/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endif %}
                        {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/image/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload image" %}</a></li>{% endif %}
-                       {% if can_open %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
-                       {% if can_close %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
+                       {% if can_open %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock" aria-hidden="true"></i> {% trans "open" %}</a></li>{% endif %}
+                       {% if can_close %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock" aria-hidden="true"></i> {% trans "close" %}</a></li>{% endif %}
                        </ul>
                     </li>
                  </ul>
@@ -203,17 +203,17 @@
                         <ul class="list-inline list-last">
                           {% for projType in proj_types %}
                             {% if projType.name != 'com' and is_open %}
-                              <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange"></span> {{ projType.description }}</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ projType.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {{ projType.description }}</a></li>
                             {% endif %}
                           {% endfor %}
                           {% if proj_type.name == 'com' %}
-                           <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" class="btn btn-default"><span class="fa fa-group orange"></span> {{ proj_type_sup.description }}</a></li>
+                           <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {{ proj_type_sup.description }}</a></li>
                           {% endif %}
                         </ul>
                       {% else %}
                         <div class="marginB5 demiBold">{% trans "new community"|capfirst %}</div>
                         <ul class="list-inline list-last">
-                         <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/com/" title="{% trans "create community" %}" class="btn btn-default"><span class="fa fa-group orange"></span> {% trans "community"|capfirst %}</a></li>
+                         <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/com/" title="{% trans "create community" %}" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {% trans "community"|capfirst %}</a></li>
                         </ul>
                       {% endif %}
                      </li>
@@ -231,10 +231,10 @@
                          <li><div class="c-white marginB5 demiBold">{% trans "new forum"|capfirst %}</div>
                             <ul class="list-inline list-last">
                               {% if not project.forum %}
-                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o"></i> {% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
+                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o" aria-hidden="true"></i> {% if proj_type.name == 'com' %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
                               {% endif %}
                               {% if proj_type.name == 'com' %}
-                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o"></i> {% trans "thematic" %}</a></li>
+                                <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o" aria-hidden="true"></i> {% trans "thematic" %}</a></li>
                               {% endif %}
                             </ul>
                          </li>
@@ -247,10 +247,10 @@
                          <li><div class="c-white marginB5 demiBold">{% trans "chatroom"|capfirst %}</div>
                             <ul class="list-inline list-last">
                               {% if project.need_create_room %}
-                                <li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create" %}</a></li>
+                                <li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o" aria-hidden="true"></i> {% trans "create" %}</a></li>
                               {% endif %}
                               {% if project.need_sync_xmppaccounts %}
-                                <li class="marginB5"><a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts"|capfirst %}</a></li>
+                                <li class="marginB5"><a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user" aria-hidden="true"></i> {% trans "add missing accounts"|capfirst %}</a></li>
                               {% endif %}
                             </ul>
                          </li> 
@@ -271,19 +271,19 @@
              <li class="list-back-black">
                 <ul class="list-inline">
                 {% if view_shared_folder %}
-                  <li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a></li>
+                  <li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o" aria-hidden="true"></i> {% trans "shared folder"|capfirst %}</a></li>
                 {% endif %}
                 {% if can_send_message %}
                    <li class="marginB5">
                      <form action="/project/{{ project.id }}/compose_message/" method="post">
                      {% csrf_token %}
-                     <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o"></i> {% trans "message to members"|capfirst %}</button>
+                     <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o" aria-hidden="true"></i> {% trans "message to members"|capfirst %}</button>
                      </form>
                    </li>
                 {% endif %}
 
                 {% if project.forum %}
-                   <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
+                   <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
                   	   {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
                 {% endif %}
                 </ul>
@@ -303,7 +303,7 @@
                    <ul class="list-inline">
                       <li class="marginB5"><div class="c-white marginB5 demiBold">{% trans "external repository"|capfirst %}</div>
                          <ul class="list-inline list-last">
-                            <li><a href="/repo/new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
+                            <li><a href="/repo/new/" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i> {% trans "classify"|capfirst %}</a></li>
                          </ul>
                       </li>
                    </ul>
@@ -314,12 +314,12 @@
                    <ul class="list-inline">
                       <li><div class="c-white marginB5 demiBold">{% trans "OER" %}</div>
                          <ul class="list-inline list-last">
-                            <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
+                            <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i> {% trans "classify"|capfirst %}</a></li>
                             {% if cut_oers %}{% for oer in cut_oers %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                             {% if shareable_oers %}{% for oer in shareable_oers %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-share-alt" aria-hidden="true"></i> {% trans "share"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -331,12 +331,15 @@
                    <ul class="list-inline">
                       <li><div class="c-white marginB5 demiBold">{% trans "LP" %}</div>
                          <ul class="list-inline list-last">
-                            <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
+                            <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o" aria-hidden="true"></i> {% trans "create"|capfirst %}</a></li>
                             {% if cut_lps %}{% for lp in cut_lps %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                             {% if shareable_lps %}{% for lp in shareable_lps %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt" aria-hidden="true"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                            {% endfor %}{% endif %}
+                            {% if bookmarked_lps %}{% for lp in bookmarked_lps %}
+                              <li class="marginB5"><a href="/project/{{ project.id }}/clone_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-clone" aria-hidden="true"></i> {% trans "clone"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
                          </ul>
                       </li>
@@ -401,7 +404,7 @@
               <div class="padding510"><div class="bold marginB5" >{% trans "applications"|capfirst %}</div>
                 <ul class="list-unstyled my-list-unstyled">
                 {% for application in applications %}
-                  <li><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><small>{{ application.user.get_display_name }}</small></a><small> &nbsp;<a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus font07em"></i></a></small></li>
+                  <li><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><small>{{ application.user.get_display_name }}</small></a><small> &nbsp;<a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus font07em" aria-hidden="true"></i></a></small></li>
                 {% endfor %}
                 </ul>
               </div>
@@ -451,7 +454,7 @@
              <div class="panel-heading-c1 padding510 demiBold">{% trans "shared LPs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_lp, deletable in shared_lps %}
-               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><small><i class="fa fa-times-circle red"></i></small></a>{% endif %}
+               <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><small><i class="fa fa-times-circle red" aria-hidden="true"></i></small></a>{% endif %}
                    <a href="/lp/{{ shared_lp.lp.slug }}/"><small>{{ shared_lp.lp.title }}</small></a>
                </li>
              {% endfor %}
@@ -476,7 +479,7 @@
              <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for shared_oer, deletable in shared_oers %}
-               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><small><i class="fa fa-times-circle red"></i></small></a>{% endif %}
+               <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><small><i class="fa fa-times-circle red" aria-hidden="true"></i></small></a>{% endif %}
                    <a href="/oer/{{ shared_oer.oer.slug }}/"><small>{{ shared_oer.oer.title }}</small></a>
                </li>
              {% endfor %}
@@ -644,7 +647,7 @@
         {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
         {% if project.info %}
           <dl class="list-inline font14 clearfix">
-            <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle"></i></a></dt>
+            <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
             <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
           </dl>
         {% endif %}
@@ -654,12 +657,12 @@
         <ul class="list-inline marginLB020">
           <li class="list-back-c0 paddingB0">
             <ul class="list-inline">
-              {% if can_edit and not language_mismatch %}<li class="marginB10"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>{% endif %}
-              {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language"></i> {% trans "translate" %}</a></li>{% endif %}
+              {% if can_edit and not language_mismatch %}<li class="marginB10"><a href="/project/{{ project.slug }}/edit/" title="{% trans "show edit view" %}" class="btn btn-default"><i class="fa fa-edit" aria-hidden="true"></i> {% trans "modify" %}</a></li>{% endif %}
+              {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language" aria-hidden="true"></i> {% trans "translate" %}</a></li>{% endif %}
               {% if can_edit %}<li class="marginB10"><a href="/project/{{ project.slug }}/upload/logo/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endif %}
               {% if can_edit %}<li class="marginB10"><a href="/project/{{ project.slug }}/upload/image/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload image" %}</a></li>{% endif %}
-              {% if can_open %}<li class="marginB10"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li>{% endif %}
-              {% if can_close %}<li class="marginB10"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li>{% endif %}
+              {% if can_open %}<li class="marginB10"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock" aria-hidden="true"></i> {% trans "open" %}</a></li>{% endif %}
+              {% if can_close %}<li class="marginB10"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock" aria-hidden="true"></i> {% trans "close" %}</a></li>{% endif %}
             </ul>
           </li>
         </ul>
@@ -675,9 +678,9 @@
               {% if project.need_create_room or project.need_sync_xmppaccounts %}
                 <li class="list-back-black paddingRB10 marginB5">
                   {% if project.need_create_room %}
-                    <a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "create chatroom" %}</a>
+                    <a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o" aria-hidden="true"></i> {% trans "create chatroom" %}</a>
                   {% elif project.need_sync_xmppaccounts %}
-                    <a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user"></i> {% trans "add missing accounts of chatroom" %}</a>
+                    <a href="/project/{{ project.id }}/sync_xmpp/" class="btn btn-default"><i class="fa fa-user" aria-hidden="true"></i> {% trans "add missing accounts of chatroom" %}</a>
                   {% endif %}
                 </li>
               {% endif %}
@@ -694,7 +697,7 @@
               {% for application in applications %}
                 <div class="bc-white">
                   <div><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} style="width:100%; height:auto"></a></div>
-                  <div class="marginT5 font12 demiBold" style="line-height:1.0"><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> <span class="font10"><a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this roll of mentors" %}"><i class="fa fa-plus"></i></a></span></div>
+                  <div class="marginT5 font12 demiBold" style="line-height:1.0"><a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}">{{ application.user.get_display_name }}</a> <span class="font10"><a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this roll of mentors" %}"><i class="fa fa-plus" aria-hidden="true"></i></a></span></div>
                   <div class="marginT5" style="font-size:10.5px">{{ application.user.get_profile.mentoring|safe|truncatechars_html:100 }}</div>
 
                 </div>
@@ -753,17 +756,17 @@
         <ul class="list-inline marginLB020">
           {% if view_shared_folder %}
             <li class="list-back-black paddingRB10 marginB5">
-              <a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "shared folder"|capfirst %}</a>
+              <a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o" aria-hidden="true"></i> {% trans "shared folder"|capfirst %}</a>
             </li>
           {% endif %}
           {% if project.forum  %}
-            <li class="list-back-black paddingRB10 marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o"></i>
+            <li class="list-back-black paddingRB10 marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
               {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
           {% endif %}
           {% if can_send_message %}
             <li class="list-back-black paddingRB10 marginB5">
               <form action="/project/{{ project.id }}/compose_message/" method="post">{% csrf_token %}
-                <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o"></i> {% trans "message to members"|capfirst %}</button>
+                <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o" aria-hidden="true"></i> {% trans "message to members"|capfirst %}</button>
               </form>
             </li>
           {% endif %}
@@ -778,14 +781,14 @@
             <ul class="list-inline">
               <li><div class="c-white marginB5 demiBold">{% trans "LP" %}</div>
                 <ul class="list-inline list-last">
-                  <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
+                  <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o" aria-hidden="true"></i> {% trans "create"|capfirst %}</a></li>
                   {% if cut_lps %}{% for lp in cut_lps %}
-                    <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                    <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                   {% endfor %}{% endif %}
 
 {% comment %}
                             {% if shareable_lps %}{% for lp in shareable_lps %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
+                              <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt" aria-hidden="true"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
 {% endcomment %}
                 </ul>

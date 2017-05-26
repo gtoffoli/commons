@@ -1054,6 +1054,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             """
             var_dict['cut_lps'] = lps_in_clipboard(request, 'cut_lps')
             bookmarked_lps = lps_in_clipboard(request, 'bookmarked_lps')
+            var_dict['bookmarked_lps'] = bookmarked_lps
             var_dict['shareable_lps'] = [lp for lp in bookmarked_lps if not lp.project==project and not SharedLearningPath.objects.filter(project=project, lp=lp).count()]
         var_dict['can_edit'] = project.can_edit(request)
         var_dict['can_translate'] = project.can_translate(request)

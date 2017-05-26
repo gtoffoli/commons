@@ -19,11 +19,11 @@
            {% endif %}{% if not user.is_completed_profile %}<sup class="fa fa-exclamation-triangle" style="border-top-left-radius:10px; background:#222; margin-left:-10px; font-size:13px; color:yellow;" aria-hidden="true"></sup>{% endif %} <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
          </a></li>
          {% if user.is_completed_profile %}
-         <li><a href="/my_mail/" title="{% trans "my messages" %}"><div class="fa fa-envelope">{% if user.inbox_count %}<div class="txt-over">{{ user.inbox_count}}</div>{% endif %}</div></a></li>
-         <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><div class="fa fa-comment">{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<div class="txt-over">{{ unviewed_posts_count}}</div>{% endif %}{% endwith %}</div></a></li>
+         <li><a href="/my_mail/" title="{% trans "my messages" %}"><i class="fa fa-envelope" aria-hidden="true"></i>{% if user.inbox_count %}<sup class="format" style="margin-left:-3px;">{{ user.inbox_count}}</sup>{% endif %}</a></li>
+         <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><i class="fa fa-comment" aria-hidden="true"></i>{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format" style="margin-left:-3px;">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</a></li>
          {% include "_menu_analytics.html" with data='N' %}
          {% if request.user.is_staff and request.LANGUAGE_CODE == 'en' %}
-           <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog"></span></a></li>
+           <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog" aria-hidden="true"></span></a></li>
          {% endif %}
          {% endif %}
          <li>
@@ -31,7 +31,7 @@
              {% if redirect_field_value %}
                <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
              {% endif %}
-             <button type="submit" class="btn btn-logout" title="{% trans "Log out" %}"><span class="fa fa-power-off"></span></button>
+             <button type="submit" class="btn btn-logout" title="{% trans "Log out" %}"><span class="fa fa-power-off" aria-hidden="true"></span></button>
            </form>
          </li>
        </ul>
@@ -46,7 +46,7 @@
              <input name="password" id="id_password" type="password" size="15" class="form-control" placeholder="{% trans "password"|capfirst %}">
            </span>
            <a data-placement="bottom" style="color:#ccc" title="{% trans "Forgot Password?" %}" href="/accounts/password/reset/" class="button secondaryAction">
-             <span class="fa fa-question-circle"></span>
+             <span class="fa fa-question-circle" aria-hidden="true"></span>
            </a>
          </div>
          <label id="form-login-remember">
@@ -80,7 +80,7 @@
        <div class="navbar-form pull-right mylogin-xs visible-xs">
        <!-- MOBILE LOGIN BUTTON -->
          <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
-           <i class="fa fa-sign-in"></i>
+           <i class="fa fa-sign-in" aria-hidden="true"></i>
              {% trans "Log in" %}
          </button>
          <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
@@ -88,7 +88,7 @@
        <div class="navbar-form pull-right mylogin-xs visible-sm">
        <!-- MOBILE LOGIN SOCIAL LOGIN BUTTON-->
          <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modal-login">
-           <i class="fa fa-sign-in"></i>
+           <i class="fa fa-sign-in" aria-hidden="true"></i>
            {% trans "Log in" %}
          </button>
          <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>

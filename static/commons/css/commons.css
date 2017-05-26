@@ -621,7 +621,7 @@ margin-right:0;
 }
 /* FONT */
 .font07em {
-	font-size:0.7em;
+	font-size:0.7em !important;
 }
 .font10 {
 	font-size: 10px;
@@ -1083,7 +1083,7 @@ ul.list-inline > li.list-back-c3 {
   border: none;
   background: #FFFFE6;
 }
-.txt-over {
+/*.txt-over {
 	position:absolute;
 	top:-5px;
 	left:8px;
@@ -1093,7 +1093,7 @@ ul.list-inline > li.list-back-c3 {
 	font-size:10px;
 	color:white;
 	text-align:center;
-}
+}*/
 
 /* panel */
 .panel,
