@@ -2123,15 +2123,7 @@ class LearningPath(Resource, Publishable):
         see: http://wisercoder.com/how-to-clone-model-instances-in-django/
         """
         user = request.user
-        title = self.title
-        split_title = title.split()
-        suffix = split_title[-1]
-        if suffix.isdecimal():
-            title = ' '.join(split_title[:-1] + [str(int(suffix)+1)])
-        else:
-            suffix = str(project.id)
-            title = title[:200-len(suffix)-1]
-            title = '%s %s' % (title, suffix)
+        title = ('copy of ' + self.title)[:200]
         short = string_concat('[', _('this LP was created by cloning a LP with title'), ' "', self.title, '"] ', self.short or '')
         lp = LearningPath(title=title, path_type=self.path_type, short=short, project=project, long=self.long, small_image=self.small_image, big_image=self.big_image, state=DRAFT, creator=user, editor=user, original_language=self.original_language)
         lp.cloned_from = self
