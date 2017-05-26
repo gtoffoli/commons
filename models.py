@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-"""
 
+import os
 import json
 from math import sqrt
 from datetime import timedelta
@@ -1892,6 +1893,7 @@ LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 # class LearningPath(models.Model, Publishable):
 class LearningPath(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
+    cloned_from = models.ForeignKey('self', verbose_name=_('original learning path'), blank=True, null=True, related_name='cloned_path')
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     short = models.TextField(blank=True, verbose_name=_('objectives'))
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
@@ -2112,6 +2114,59 @@ class LearningPath(Resource, Publishable):
     @cached_property
     def cached_ordered_nodes(self):
         return self.get_ordered_nodes()
+
+    def clone(self, request, project):
+        """
+        make a DRAFT duplicate of the LP inside the project specified:
+        structure, nodes and edges are cloned;
+        the attached file of document node is removed and its name is written in the text field
+        see: http://wisercoder.com/how-to-clone-model-instances-in-django/
+        """
+        user = request.user
+        title = self.title
+        split_title = title.split()
+        suffix = split_title[-1]
+        if suffix.isdecimal():
+            title = ' '.join(split_title[:-1] + [str(int(suffix)+1)])
+        else:
+            suffix = str(project.id)
+            title = title[:200-len(suffix)-1]
+            title = '%s %s' % (title, suffix)
+        short = string_concat('[', _('this LP was created by cloning a LP with title'), ' "', self.title, '"] ', self.short or '')
+        lp = LearningPath(title=title, path_type=self.path_type, short=short, project=project, long=self.long, small_image=self.small_image, big_image=self.big_image, state=DRAFT, creator=user, editor=user, original_language=self.original_language)
+        lp.cloned_from = self
+        lp.save()
+        for level in self.levels.all():
+            lp.levels.add(level)
+        for subject in self.subjects.all():
+            lp.subjects.add(subject)
+        for tag in self.tags.all():
+            tagged_lp = TaggedLP(object=lp, tag=tag)
+            tagged_lp.save()
+        node_map = {}
+        for node in self.get_nodes():
+            node_id = node.id
+            node.id = None
+            node.path_id = lp.id
+            if node.document:
+                # filename = os.path.basename(node.document.latest_version.file.name)
+                filename = node.document.label
+                node.text = string_concat('[', _('this node derives from a document node; the name of the attached file was'), ' "', filename, '"]')
+                node.document = None
+            node.creator = user
+            node.editor = user
+            node.save()
+            node_map[node_id] = node.id
+        for edge in self.get_edges():
+            edge.id = None
+            parent_id = node_map[edge.parent.id]
+            child_id = node_map[edge.child.id]
+            edge.parent_id = parent_id
+            edge.child_id = child_id
+            edge.creator = user
+            edge.editor = user
+            edge.save(disable_circular_check=True)
+        return lp
 
     def get_ordered_edges(self, nodes=None):
         if nodes is None:

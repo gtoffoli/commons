@@ -1830,6 +1830,20 @@ def project_paste_lp(request, project_id, lp_id):
     set_clipboard(request, key='cut_lps', value=cut_lps or None)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
+def project_clone_lp(request, project_id, lp_id):
+    """ derived from project_add_shared_lp """
+    user = request.user
+    lp_id = int(lp_id)
+    project = get_object_or_404(Project, id=project_id)
+    if user.is_authenticated() and project.can_add_lp(user):
+        bookmarked_ids = get_clipboard(request, key='bookmarked_lps') or []
+        if lp_id in bookmarked_ids:
+            lp = get_object_or_404(LearningPath, id=lp_id)
+            lp.clone(request, project)
+            bookmarked_ids.remove(lp_id)
+            set_clipboard(request, key='bookmarked_lps', value=bookmarked_ids or None)
+    return HttpResponseRedirect('/project/%s/' % project.slug)
+
 def project_create_forum(request, project_id):
     user = request.user
     project = get_object_or_404(Project, id=project_id)
