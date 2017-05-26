@@ -2,7 +2,7 @@
 
  {% load staticfiles i18n %}
 
-<article class="view-card">
+<article class="view-card roundCorner">
 	<p class="title-card">{% if lp.state != 3 %}<small style="color: {{lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/">{{ lp.title }}</a></p>
 
 	{% if lp.short|length > 140 %}

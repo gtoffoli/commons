@@ -114,7 +114,7 @@ margin-right:0;
         {% if oer_evaluations %}
           <div class="borderBLRradius" style="margin-bottom:-10px">
           {% for oer_evaluation in oer_evaluations %}
-            <article class="view-card">
+            <article class="view-card roundCorner">
               <p class="title-card"><a href="/oer/{{oer_evaluation.slug}}/evaluations/" title="{% trans "view evaluations" %}">{{ oer_evaluation.title }}</a></p>
               <p>{% with stars=oer_evaluation.get_stars %}{% include "_view_rating.html" with color_class="c-pacific-blue" %}{% endwith %}</p>
             </article>
@@ -140,6 +140,9 @@ $(document).ready(function (){
   $(window).load(function(){
     $('#'+id).addClass('active');
     $('#'+idcontent).addClass('active');
+  });
+  $('ul.nav-tabs > li > a').on('click', function(){
+      $("body").css("cursor", "default");
   });
 });
 </script>

@@ -7,53 +7,97 @@
 {% block body_class %}home{% endblock %}
 
 {% block body %}
-
-            <h1 class="text-center">{% trans "top contributors"|capfirst %}</h1>
-<section class="view-card">
-    {% if lp_contributors %}
-            <h3>{% trans "creation of learning paths"|capfirst %}</h3>
-	<ul class="list-unstyled">
-        {% for user in lp_contributors %}
-        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_lps > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_lps }}</a>{% else %}{{ user.num_lps }}{% endif %})
-        </li>
-        {% endfor %}
-	</ul>
-    {% endif %}
-
-
-    {% if oer_evaluation_contributors %}
-            <h3>{% trans "evaluation of OERs"|capfirst %}</h3>
-	<ul class="list-unstyled">
-        {% for user in oer_evaluation_contributors %}
-        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_oer_evaluations > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_oer_evaluations }}</a>{% else %}{{ user.num_oer_evaluations }}{% endif %})
-        </li>
-        {% endfor %}
-	</ul>
-    {% endif %}
-
-    {% if resource_contributors %}
-            <h3>{% trans "cataloguing of OERs"|capfirst %}</h3>
-	<ul class="list-unstyled">
-        {% for user in resource_contributors %}
-        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_oers > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_oers }}</a>{% else %}{{ user.num_oers }}{% endif %})
-        </li>
-        {% endfor %}
-	</ul>
-    {% endif %}
-
-    {% if source_contributors %}
-            <h3>{% trans "cataloguing of OER sources"|capfirst %}</h3>
-	<ul class="list-unstyled">
-        {% for user in source_contributors %}
-        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
-            ({% if user.num_repos > 0 %}<a href="/resources_by/{{ user.username }}/">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
-        </li>
-        {% endfor %}
-	</ul>
-    {% endif %}
-
-    </section>
+<div class="marginTB30">
+  <div class="panel-heading-c0">
+    <h1 class="text-center padding105 margin0">{% trans "top contributors"|capfirst %}</h1>
+  </div>
+  <div class="body-panel borderColor-c0 paddingTB10">
+    <div class="row marginLR0">
+      <div class="col-sm-6 col-md-3 col-lg-3  paddingLR5">
+        <div class="panel-heading-c1 padding812"><h2 class="margin0 bold"><small class="c-white">{% trans "creation of learning paths"|capfirst %}</small></h2></div>
+        <div class="body-panel borderColor-c1">
+          <article class="view-list box-scroll" style="margin-bottom:0; border:0; height:60vh">
+            {% if lp_contributors %}
+              <ul>
+                {% for user in lp_contributors %}
+                  <li class="marginB10"><a href="/profile/{{ user.username }}/" title="{% trans "view user profile" %}">{% if user.get_profile.avatar %}
+                      <img src="/media/{{ user.get_profile.avatar }}" class="avatar-small">
+                      {% else %}
+                        <img src="/media/images/avatars/anonymous.png" class="avatar-small">{% endif %} {{ user.first_name }} {{ user.last_name }}</a>
+                      ({% if user.num_lps > 0 %}<a href="/resources_by/{{ user.username }}/" title="{% trans "view resources" %}">{{ user.num_lps }}</a>{% else %}{{ user.num_lps }}{% endif %})
+                  </li>
+               {% endfor %}
+              </ul>
+            {% else %}
+              <ul><li>---</li></ul>
+            {% endif %}
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-3 paddingLR5">
+        <div class="panel-heading-c2 padding812"><h2 class="margin0 bold"><small class="c-white">{% trans "cataloguing of OERs"|capfirst %}</small></h2></div>
+        <div class="body-panel borderColor-c2">
+          <article class="view-list box-scroll" style="margin-bottom:0; border:0; height:60vh">
+            {% if resource_contributors %}
+              <ul>
+                {% for user in resource_contributors %}
+                  <li class="marginB10"><a href="/profile/{{ user.username }}/" title="{% trans "view user profile" %}">{% if user.get_profile.avatar %}
+                      <img src="/media/{{ user.get_profile.avatar }}" class="avatar-small">
+                      {% else %}
+                        <img src="/media/images/avatars/anonymous.png" class="avatar-small">{% endif %} {{ user.first_name }} {{ user.last_name }}</a>
+                      ({% if user.num_oers > 0 %}<a href="/resources_by/{{ user.username }}/" title="{% trans "view resources" %}">{{ user.num_oers }}</a>{% else %}{{ user.num_oers }}{% endif %})
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <ul><li>---</li></ul>
+            {% endif %}
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-3  paddingLR5">
+        <div class="panel-heading-c2 padding812"><h2 class="margin0 bold"><small class="c-white">{% trans "evaluation of OERs"|capfirst %}</small></h2></div>
+        <div class="body-panel borderColor-c2">
+          <article class="view-list box-scroll" style="margin-bottom:0; border:0; height:60vh">
+            {% if oer_evaluation_contributors %}
+              <ul>
+                {% for user in oer_evaluation_contributors %}
+                  <li class="marginB10"><a href="/profile/{{ user.username }}/" title="{% trans "view user profile" %}">{% if user.get_profile.avatar %}
+                      <img src="/media/{{ user.get_profile.avatar }}" class="avatar-small">
+                      {% else %}
+                        <img src="/media/images/avatars/anonymous.png" class="avatar-small">{% endif %} {{ user.first_name }} {{ user.last_name }}</a>
+                      ({% if user.num_oer_evaluations > 0 %}<a href="/resources_by/{{ user.username }}/" title="{% trans "view resources" %}">{{ user.num_oer_evaluations }}</a>{% else %}{{ user.num_oer_evaluations }}{% endif %})
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <ul><li>---</li></ul>
+            {% endif %}
+          </article>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 col-lg-3 paddingLR5">
+        <div class="panel-heading-c3 padding812"><h2 class="margin0 bold"><small class="c-white">{% trans "cataloguing of OER sources"|capfirst %}</small></h2></div>
+        <div class="body-panel borderColor-c3">
+          <article class="view-list box-scroll" style="margin-bottom:0; border:0; height:60vh">
+            {% if source_contributors %}
+              <ul>
+                {% for user in source_contributors %}
+                  <li class="marginB10"><a href="/profile/{{ user.username }}/"  title="{% trans "view user profile" %}">{% if user.get_profile.avatar %}
+                      <img src="/media/{{ user.get_profile.avatar }}" class="avatar-small">
+                      {% else %}
+                        <img src="/media/images/avatars/anonymous.png" class="avatar-small">{% endif %} {{ user.first_name }} {{ user.last_name }}</a>
+                      ({% if user.num_repos > 0 %}<a href="/resources_by/{{ user.username }}/" title="{% trans "view resources" %}">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <ul><li>---</li></ul>
+            {% endif %}
+          </article>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

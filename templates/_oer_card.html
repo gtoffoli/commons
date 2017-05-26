@@ -2,7 +2,7 @@
 
  {% load staticfiles i18n %}
 
-<article class="view-card">
+<article class="view-card roundCorner">
 {% if oer.small_image %}<img src="/media/{{oer.small_image}}" class="img-responsive" style="float:left; padding-top: 5px; padding-right:10px; max-width:20%">{% endif %}
   <p class="title-card">{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></p>
   <p class="text-card">Rating &nbsp;

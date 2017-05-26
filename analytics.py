@@ -663,18 +663,18 @@ def resource_contributors(request):
     var_dict = {}
     lp_contributors = User.objects.annotate(num_lps=Count(Case(
                            When(path_creator__state=PUBLISHED, then=1)))
-                       ).exclude(num_lps=0).order_by('-num_lps')
+                       ).exclude(num_lps=0).order_by('-num_lps','last_name','first_name')
     var_dict['lp_contributors'] = lp_contributors
     oer_evaluation_contributors = User.objects.annotate(num_oer_evaluations=Count(Case(
                            When(oer_evaluator__oer__state=PUBLISHED, then=1)))
-                       ).exclude(num_oer_evaluations=0).order_by('-num_oer_evaluations')
+                       ).exclude(num_oer_evaluations=0).order_by('-num_oer_evaluations','last_name','first_name')
     var_dict['oer_evaluation_contributors'] = oer_evaluation_contributors
     resource_contributors = User.objects.annotate(num_oers=Count(Case(
                            When(oer_creator__state=PUBLISHED, then=1)))
-                       ).exclude(num_oers=0).order_by('-num_oers')
+                       ).exclude(num_oers=0).order_by('-num_oers','last_name','first_name')
     var_dict['resource_contributors'] = resource_contributors
     source_contributors = User.objects.annotate(num_repos=Count(Case(
                            When(repo_creator__state=PUBLISHED, then=1)))
-                       ).exclude(num_repos=0).order_by('-num_repos')
+                       ).exclude(num_repos=0).order_by('-num_repos','last_name','first_name')
     var_dict['source_contributors'] = source_contributors
     return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))

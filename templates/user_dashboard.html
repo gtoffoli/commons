@@ -411,6 +411,18 @@
                   </div>
                 </div>
               {% endif %}
+              {% if oer_evaluations %}
+                <div class="panel-white">
+                  <div class="panel-heading-c2 padding510 demiBold">{% trans "my OER evaluations"|capfirst %}</div>
+                  <div {% if oer_evaluated|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                    <ul class="list-unstyled my-list-unstyled padding510">
+                    {% for evaluation in oer_evaluations %}
+                      <li><a href="/oer/{{evaluation.oer.slug }}/evaluations/"><small>{{ evaluation.oer.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                </div>
+              {% endif %}
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
               <div class="panel-white">

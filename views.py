@@ -315,7 +315,7 @@ def user_strict_profile(request, username):
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated()):
         return HttpResponseRedirect('/')
-    MAX_REPOS = MAX_OERS = MAX_LP = 5
+    # MAX_REPOS = MAX_OERS = MAX_LP = MAX_OERS_EVALUATED = 5
     var_dict = {}
     var_dict['user'] = user = request.user
     var_dict['profile'] = profile = user.get_profile()
@@ -382,6 +382,7 @@ def user_dashboard(request, username, user=None):
     var_dict['mentoring_rels_mentoring_requests_waiting'] = get_mentoring_requests_waiting(user)
     var_dict['oers'] = OER.objects.filter(creator=user).order_by('state','-modified')
     var_dict['oers_admin'] = OER.objects.filter(project__in=adminOers, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
+    var_dict['oer_evaluations'] = OerEvaluation.objects.filter(user=user).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['lps_admin'] = LearningPath.objects.filter(project__in=adminlps, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
@@ -2097,11 +2098,10 @@ def oers_by_user(request, username):
 
 def resources_by(request, username):
     user = get_object_or_404(User, username=username)
-    # lps = LearningPath.objects.filter(creator=user, state=PUBLISHED)
-    lps = LearningPath.objects.filter(creator=user)
-    oer_evaluations = OerEvaluation.objects.filter(user=user)
-    oers = OER.objects.filter(creator=user, state=PUBLISHED)
-    repos = Repo.objects.filter(creator=user, state=PUBLISHED)
+    lps = LearningPath.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    oer_evaluations = OerEvaluation.objects.filter(user=user).order_by('-modified')
+    oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user}, context_instance=RequestContext(request))
 
 def project_results(request, project_slug):
