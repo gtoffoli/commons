@@ -501,8 +501,8 @@ class LpGroupChoiceField(forms.ModelChoiceField):
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
-        # exclude = ('slug', 'group',)
-        exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
+        # exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
+        exclude = ('slug', 'cloned_from', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
