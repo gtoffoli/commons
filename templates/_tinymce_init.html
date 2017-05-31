@@ -18,7 +18,7 @@
       height : 350,
       branding: false,
       language: language,
-	    plugins: "lists advlist charmap textcolor colorpicker table link image visualblocks code fullscreen preview",
+	    plugins: "paste lists advlist charmap textcolor colorpicker table link image visualblocks code fullscreen preview",
 	    toolbar: 'undo redo removeformat | formatselect styleselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink image | visualblocks code fullscreen preview',
       style_formats: [
         {title: '10px', inline: 'span', styles: {'font-size': '10px'}},
@@ -62,6 +62,7 @@
           return false;
       },
       file_browser_callback_types: types_media,
+      paste_as_text: true,            
 	    content_css : "{% static "tinymce/mycontent.css" %}",
 	    invalid_elements: "script,applet,embed,meta,object,style,button,fieldset,form,input,label,legend,link,noscript,optgroup,option,param,select,textarea",
 /*

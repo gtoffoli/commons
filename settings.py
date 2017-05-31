@@ -431,7 +431,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'height': 350,
     'branding': False,
     # 'plugins': "advlist charmap textcolor colorpicker table link anchor image media visualblocks code fullscreen preview",
-    'plugins': "lists advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
+    'plugins': "paste lists advlist charmap textcolor colorpicker table link anchor image visualblocks code fullscreen preview",
     # 'toolbar': 'undo redo | formatselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image media | cut copy paste removeformat | visualblocks code fullscreen preview',
     'toolbar': 'undo redo | formatselect styleselect bold italic underline | alignleft aligncenter alignright alignjustify | forecolor backcolor subscript superscript charmap | bullist numlist outdent indent | table link unlink anchor image | cut copy paste removeformat | visualblocks code fullscreen preview',
     'content_css' : os.path.join(STATIC_URL,"tinymce/mycontent.css"),
@@ -467,6 +467,7 @@ TINYMCE_DEFAULT_CONFIG = {
         {'title': 'table responsive', 'value': 'table-responsive'},
         {'title': 'table responsive width 100%', 'value': 'table-responsive width-full'},],
     'file_browser_callback_types': 'image',
+    'paste_as_text': True,
     # URL settings
     # 'convert_urls' : False,
     'relative_urls' : False,
