@@ -2736,21 +2736,24 @@ class PathNode(node_factory('PathEdge')):
             elif oer.url:
                 try:
                     headers = get_request_headers(oer.url)
-                    content_length = headers.get('content-length', 0)
+                    # content_length = headers.get('content-length', 0)
                     content_type = headers.get('content-type', 'text/plain')
                 except:
-                    content_length = 0
+                    # content_length = 0
                     content_type = ''
-                if content_length > 0 and content_type in ['application/pdf', 'text/html']:
+                # if content_length > 0 and content_type in ['application/pdf', 'text/html']:
+                if content_type.count('application/pdf') or content_type.count('text/html'):
                     if export:
                         self.serialize_oernode(request, writer, content_type)
                     if (ranges or not export):
                         pageranges = ranges and [r[1:] for r in ranges] or None
-                        if content_type == 'application/pdf':
+                        # if content_type == 'application/pdf':
+                        if content_type.count('application/pdf'):
                             stream = StringIO.StringIO(get_request_content(oer.url))
                             mimetype = 'application/pdf'
                             write_pdf_pages(stream, writer, ranges=pageranges)
-                        elif content_type == 'text/html':
+                        # elif content_type == 'text/html':
+                        elif content_type.count('text/html'):
                             url_to_writer(oer.url, writer, ranges=pageranges)
         elif self.document:
             document_version = self.document.latest_version
