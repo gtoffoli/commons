@@ -1,39 +1,31 @@
+{% extends "commons_print_template.html" %}
 {% load staticfiles i18n %}
-
-<style>
-  .ui { font-style: italic; }
-</style>
-
+{% block body %}
+<div class="content">
 <h1>{{ lp.title }}</h1>
 
-{% if lp.short %}<div><strong>{{ lp.short }}</strong></div>{% endif %}
+{% if lp.short %}<p class="font14">{{ lp.short }}</p>{% endif %}
 
-<div style="margin-top: 1.0em;">
-<span class="ui">{% trans "learning path"|capfirst %} {% trans "submitted by" %}</span> {{ lp.creator.get_display_name }}<br>
-<span class="ui">{% trans "in the project" %}</span> {{ lp.project.name }}<br>
-<span class="ui">{% trans "last modified on" %}</span> {{ lp.modified|date:"d/m/Y" }}<br>
-{% if contributors %}<span class="ui">{% trans "other contributors" %}:</span>
-{% for contributor in contributors %}{{ contributor.get_display_name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+<p>
+{% trans "learning path"|capfirst %} {% trans "submitted by" %} <strong>{{ lp.creator.get_display_name }}</strong>
+{% if lp.project.name %}{% trans "in the project" %}  <strong>{{ lp.project.name }}</strong>{% endif %}
+{% if contributors %}<br>{% trans "other contributors" %}
+{% for contributor in contributors %}<strong>{{ contributor.get_display_name }}</strong>{% if not forloop.last %}, {% endif %}{% endfor %}<br>
 {% endif %}
-</div>
+{% trans "last modified on" %} <strong>{{ lp.modified|date:"d/m/Y" }}</strong>
+</p>
 
-<div style="margin-top: 1.0em;">
-<span class="ui">{% trans "URL" %}</span><br />
-<a href="{{ url }}">{{ url }}</a>
-</div>
+<p>{% trans "URL" %}: <a href="{{ url }}" target="_blank">{{ url }}</a></p>
 
 {% if lp.long %}
-<div style="margin-top: 1.0em;">
-<span class="ui"><strong>{% trans "description"|capfirst %}</strong></span><br />
-{{ lp.long|safe }}
-</div>
+<div class="text-long">{{ lp.long|safe }}</div>
 {% endif %}
-
-<div style="margin-top: 1.0em;">
-<span class="ui">{% trans "IMPORTANT NOTICE" %}</span>
-<div style="font-size: small;">
-<span class="ui">{% trans "this document has been produced by"|capfirst %}</span> {{ request.user.get_display_name }}
-<span class="ui">{% trans "on" %}</span> {% now "d/m/Y" %}
-<span class="ui">{% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.</span>
 </div>
-</div>
+<p class="text-notice">
+___________________________<br>
+{% trans "IMPORTANT NOTICE" %}<br>
+{% trans "this document has been produced by"|capfirst %} <strong>{{ request.user.get_display_name }}</strong>
+{% trans "on" %} <strong>{% now "d/m/Y" %}</strong>
+{% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.
+</p>
+{% endblock %}

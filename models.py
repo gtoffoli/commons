@@ -2499,17 +2499,22 @@ class LearningPath(Resource, Publishable):
 
     def serialize_cover(self, request, writer):
         html_template = get_template('_lp_serialize.html')
+        domain = request.META['HTTP_HOST']
         url = 'http://www.commonspaces.eu' + self.get_absolute_url()
         contributors = self.get_contributors()
-        context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors }
+        context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors, 'domain': domain }
         rendered_html = html_template.render(context)
+        """
         css = 'body { font-family: Arial; };'
-        html_to_writer(rendered_html, writer, css=css)    
+        html_to_writer(rendered_html, writer, css=css)
+        """
+        html_to_writer(rendered_html, writer)
 
     def make_document_stream(self, request):
         """ make and return an IO stream by concatenating the documents streams
             from the ordered nodes """
         mimetype = 'application/pdf' # currently page ranges are supported only for PDF files
+        domain = request.META['HTTP_HOST']
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
         writer.addBookmark(str(_('Cover page')), 0)
@@ -2519,18 +2524,34 @@ class LearningPath(Resource, Publishable):
             pagenum = writer.getNumPages()
             viewable_documents = []
             oer = node.oer
+            """
             if oer:
                 documents = oer.get_sorted_documents()
                 viewable_documents = [document for document in documents if document.viewable]
             if node.document or (oer and viewable_documents):
                 writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.text:
-                node.serialize_textnode(request, writer)
+               node.serialize_textnode(request, writer)
+               # writer, content_type = node.make_document_stream(request, writer, export=True)
             elif oer.url:
                 writer, content_type = node.make_document_stream(request, writer, export=True)
+            """
+            if oer:
+                documents = oer.get_sorted_documents()
+                viewable_documents = [document for document in documents if document.viewable]
+                if viewable_documents:
+                    writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
+                elif oer.url or oer.embed_code:
+                    writer, content_type = node.make_document_stream(request, writer, export=True)
+            elif node.document:
+                writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
+            elif node.text:
+               node.serialize_textnode(request, writer)
+               # writer, content_type = node.make_document_stream(request, writer, export=True)
             if not writer.getNumPages() > pagenum:
                     html_template = get_template('_cannot_serialize.html')
-                    context = { 'request': request, 'node': node, 'oer': oer }
+                    domain = request.META['HTTP_HOST']
+                    context = { 'request': request, 'node': node, 'oer': oer, 'domain': domain }
                     rendered_html = html_template.render(context)
                     html_to_writer(rendered_html, writer)    
             parent_bookmark = level and parent and node_bookmark_dict.get(parent.id) or None
@@ -2583,6 +2604,7 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
         return json
 
 import string
+from commons.google_api import youtube_search, video_getdata
 class PathNode(node_factory('PathEdge')):
     path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
     label = models.TextField(blank=True, verbose_name=_('label'))
@@ -2685,15 +2707,34 @@ class PathNode(node_factory('PathEdge')):
         html_template = get_template('_textnode_serialize.html')
         domain = request.META['HTTP_HOST']
         text = self.text.replace("../../../media", "http://%s/media" % domain)
-        context = { 'request': request, 'node': self, 'text': text }
+        context = { 'request': request, 'node': self, 'text': text, 'domain': domain }
         rendered_html = html_template.render(context)
-        html_to_writer(rendered_html, writer)    
+        html_to_writer(rendered_html, writer)
 
     def serialize_oernode(self, request, writer, mimetype):
         html_template = get_template('_online_serialize.html')
-        context = { 'request': request, 'node': self, 'mimetype': mimetype, }
+        domain = request.META['HTTP_HOST']
+        youtube_url = self.oer.url and (self.oer.url.count('youtube.com') or self.oer.url.count('youtu.be')) and self.oer.url or ''
+        youtube_embed = self.oer.embed_code and self.oer.embed_code.count('youtube.com/embed/') and not self.oer.embed_code.count('youtube.com/embed/videoseries?') and self.oer.embed_code or ''
+        videoID = ''
+        video_data = {}
+        if youtube_embed:
+            index = youtube_embed.index('embed/')
+            videoID = youtube_embed[index+6:index+17]
+        elif youtube_url:
+            if youtube_url.count('youtu.be/'):
+                index=youtube_url.index('youtu.be/')
+                videoID = youtube_url[index+9:index+20]
+            elif youtube_url.count('watch?v='):
+                index = youtube_url.index('watch?v=')
+                videoID = youtube_url[index+8:index+19]
+        if videoID:
+            videos = youtube_search(videoID, part='snippet', max_results=1)
+            if videos:
+                video_data=video_getdata(videos[0])
+        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'domain': domain }
         rendered_html = html_template.render(context)
-        html_to_writer(rendered_html, writer)    
+        html_to_writer(rendered_html, writer)
 
     def make_document_stream(self, request, writer=None, mimetype=None, export=False):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
@@ -2730,7 +2771,8 @@ class PathNode(node_factory('PathEdge')):
                         write_pdf_pages(i_stream, writer)
                     else:
                         html_template = get_template('_cannot_serialize.html')
-                        context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document.document_version.mimetype }
+                        domain = request.META['HTTP_HOST']
+                        context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document.document_version.mimetype, 'domain': domain }
                         rendered_html = html_template.render(context)
                         html_to_writer(rendered_html, writer)
             elif oer.url:
@@ -2763,7 +2805,8 @@ class PathNode(node_factory('PathEdge')):
                 write_pdf_pages(i_stream, writer)
             else:
                 html_template = get_template('_cannot_serialize.html')
-                context = { 'request': request, 'node': self, 'mimetype': document_version.mimetype }
+                domain = request.META['HTTP_HOST']
+                context = { 'request': request, 'node': self, 'mimetype': document_version.mimetype, 'domain': domain }
                 rendered_html = html_template.render(context)
                 html_to_writer(rendered_html, writer)    
         return writer, mimetype

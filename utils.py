@@ -33,7 +33,7 @@ from PyPDF2.pdf import PdfFileReader, PdfFileWriter
 from weasyprint import HTML, CSS
 
 def text_to_html(text):
-    return text.replace('\n', '<br/>')
+    return text.replace('\n', '<br>')
 
 def make_pdf_writer():
     return PdfFileWriter()
@@ -47,13 +47,15 @@ def url_to_writer(url, writer, ranges=None):
 def html_to_writer(html, writer, css=None, ranges=None):
     i_stream = StringIO.StringIO()
     """
-    stylesheet = CSS(string='body { font-family: Arial; }; a { text-decoration: none; };')
+    stylesheet = CSS(string='body { font-family: Arial; } a { text-decoration: none; };')
     HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])
-    """
+    
     if css is None:
         css = 'body { font-family: Arial; };'
     stylesheets = css and [CSS(string=css)] or None
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
+    """
+    HTML(string=html).write_pdf(i_stream)
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
 def get_pdf_page(i_stream, o_stream):

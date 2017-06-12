@@ -1,25 +1,21 @@
+{% extends "commons_print_template.html" %}
 {% load staticfiles i18n %}
+{% block body %}
 
-<style>
-  .ui { font-style: italic; }
-</style>
+<h2>{{ node.get_label }}</h2>
 
-<h1>{{ node.get_label }}</h1>
-
-{% if node.oer.description %}
-<div><strong>{{ node.oer.description }}</strong></div>
-{% endif %}
+<p class="font15">{{ node.oer.description }}</p>
 
 {% if node.oer.url %}
-<div style="margin-top: 1.0em;">
-<span class="ui"><strong>{% trans "URL" %}</strong></span><br />
-<a href="{{ node.oer.url }}">{{ node.oer.url }}</a>
-</div>
+   <p>{% trans "URL" %}: <a href="{{ node.oer.url }}" target="_blank">{{ node.oer.url }}</a></p>
 {% endif %}
 
-<div style="margin-top: 1.0em;">
-{% if mimetype %}<i>{% trans "cannot convert to PDF a document of mimetype"|capfirst %}</i> {{ mimetype }}.{% endif %}
+<p class="text-note">
+	______<br>
+{% trans "NOTE" %}<br>
+{% if mimetype %}{% trans "cannot convert to PDF a document of mimetype"|capfirst %} <b>{{ mimetype }}</b>.{% endif %}
 {% if mimetype and node.oer.url %}<br>{% endif %}
-{% if node.oer.url %}<i>{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}</i>.{% endif %}
-</div>
+{% if node.oer.url %}{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}.{% endif %}
+</p>
 
+{% endblock %}

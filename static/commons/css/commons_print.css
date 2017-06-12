@@ -1,0 +1,25 @@
+/* commons_print.css */
+
+html, body {height: 100%;}
+body {font-family: "Times New Roman", Times, serif; font-size: 12pt; line-height: 100%; background:white; color:#333;}
+h1 {font-size: 19.5pt;}
+h2 {font-size: 18pt;}
+h3,.font17 {font-size: 17pt;}
+h4,.font15 {font-size: 15pt;}
+h5 {font-size: 13.5pt;}
+h6 {font-size: 12pt;}
+p {margin: 0 0 15pt 0;}
+a {color: #0000ff; text-decoration: none !important;}
+.content {min-height: 84%; height: auto;}
+.footer {height: 10%;}
+.font14 {font-size:14pt;}
+.text-long {margin:7.5pt 20pt 7.5pt 0pt; padding: 10pt 15pt; border:0.75pt solid #666666; border-radius:4pt;}
+.text-note,.text-notice {font-family: Arial, Helevetica, sans-serif; font-size:11pt; color:#555555;}
+.text-note {margin-top: 60pt;}
+.img-responsive-basic {max-width : 100%; height: auto;}
+.marginL10 {margin-left: 7.5pt;}
+.marginR10 {margin-right: 7.5pt;}
+.center-block {display: block; margin-right: auto; margin-left: auto;}
+.pull-left {display: inline-block; width:36%;}
+.pull-right {display: inline-block; width:36%;}
+.width-full {width: 100%;}

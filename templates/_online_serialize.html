@@ -1,23 +1,26 @@
+{% extends "commons_print_template.html" %}
 {% load staticfiles i18n %}
+{% block body %}
 
-<style>
-  .ui { font-style: italic; }
-</style>
+<h2>{{ node.get_label }}</h2>
 
-<h1>{{ node.get_label }}</h1>
+<p class="font15">{{ node.oer.description }}</p>
 
-{% if node.oer.description %}
-<div><strong>{{ node.oer.description }}</strong></div>
+{% if videoID %}
+   <p><a href="{{node.oer.url}}" target="_blank"><img src="{% if video_data.image %}{{video_data.image}}{% else %}http://img.youtube.com/vi/{{videoID}}/hqdefault.jpg{% endif %}" class="img-responsive-basic"></a></p>
 {% endif %}
 
 {% if node.oer.url %}
-<div style="margin-top: 1.0em;">
-<span class="ui"><strong>{% trans "URL" %}</strong></span><br />
-<a href="{{ node.oer.url }}">{{ node.oer.url }}</a>
-</div>
+   <p>{% trans "URL" %}: <a href="{{ node.oer.url }}" target="_blank">{{ node.oer.url }}</a></p>
 {% endif %}
 
-<div style="margin-top: 1.0em;">
-<i>{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}</i>.
-   {% if mimetype %}<br><i>{% trans "the associated resource has content type"|capfirst %}</i> {{ mimetype }}{% endif %}.
-</div>
+{% if not videoID %}
+<p class="text-note">
+	______<br>
+{% trans "NOTE" %}<br>
+{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}.
+{% if mimetype %}<br>{% trans "the associated resource has content type"|capfirst %} <b>{{ mimetype }}</b>{% endif %}.
+</p>
+{% endif %}
+{% endblock %}
+
