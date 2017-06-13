@@ -2759,9 +2759,11 @@ class PathNode(node_factory('PathEdge')):
                         i_stream = document_version.open()
                         write_pdf_pages(i_stream, writer)
                     else:
-                        html_template = get_template('_cannot_serialize.html')
+                        # html_template = get_template('_cannot_serialize.html')
+                        template_name = document_version.mimetype.count('image') and '_image_serialize.html' or '_cannot_serialize.html'
+                        html_template = get_template(template_name)
                         domain = request.META['HTTP_HOST']
-                        context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document.document_version.mimetype, 'domain': domain }
+                        context = { 'request': request, 'node': self, 'oer': oer, 'mimetype': document_version.mimetype, 'domain': domain }
                         rendered_html = html_template.render(context)
                         html_to_writer(rendered_html, writer)
             elif oer.url:
