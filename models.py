@@ -2518,24 +2518,13 @@ class LearningPath(Resource, Publishable):
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
         writer.addBookmark(str(_('Cover page')), 0)
+        is_dag = self.path_type==LP_DAG
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
         for node, level, parent in nodes_with_levels:
             pagenum = writer.getNumPages()
             viewable_documents = []
             oer = node.oer
-            """
-            if oer:
-                documents = oer.get_sorted_documents()
-                viewable_documents = [document for document in documents if document.viewable]
-            if node.document or (oer and viewable_documents):
-                writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
-            elif node.text:
-               node.serialize_textnode(request, writer)
-               # writer, content_type = node.make_document_stream(request, writer, export=True)
-            elif oer.url:
-                writer, content_type = node.make_document_stream(request, writer, export=True)
-            """
             if oer:
                 documents = oer.get_sorted_documents()
                 viewable_documents = [document for document in documents if document.viewable]
@@ -2546,15 +2535,14 @@ class LearningPath(Resource, Publishable):
             elif node.document:
                 writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.text:
-               node.serialize_textnode(request, writer)
-               # writer, content_type = node.make_document_stream(request, writer, export=True)
+                node.serialize_textnode(request, writer)
             if not writer.getNumPages() > pagenum:
                     html_template = get_template('_cannot_serialize.html')
                     domain = request.META['HTTP_HOST']
                     context = { 'request': request, 'node': node, 'oer': oer, 'domain': domain }
                     rendered_html = html_template.render(context)
                     html_to_writer(rendered_html, writer)    
-            parent_bookmark = level and parent and node_bookmark_dict.get(parent.id) or None
+            parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
             node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
         return writer, mimetype
 
@@ -2735,6 +2723,7 @@ class PathNode(node_factory('PathEdge')):
         context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'domain': domain }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)
+        return videoID
 
     def make_document_stream(self, request, writer=None, mimetype=None, export=False):
         """ make and return an IO stream by concatenating entire documents or ranges of PDF pages
@@ -2786,8 +2775,8 @@ class PathNode(node_factory('PathEdge')):
                 # if content_length > 0 and content_type in ['application/pdf', 'text/html']:
                 if content_type.count('application/pdf') or content_type.count('text/html'):
                     if export:
-                        self.serialize_oernode(request, writer, content_type)
-                    if (ranges or not export):
+                        videoID = self.serialize_oernode(request, writer, content_type)
+                    if (ranges or not export) and not videoID:
                         pageranges = ranges and [r[1:] for r in ranges] or None
                         # if content_type == 'application/pdf':
                         if content_type.count('application/pdf'):
