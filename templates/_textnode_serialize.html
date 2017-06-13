@@ -1,6 +1,22 @@
+{% load staticfiles i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <meta charset="utf-8">
+    <link href="http://{{domain}}/static/commons/css/commons_print.css" rel="stylesheet">
+  </head>
+  <body>
+  {% block body %}
+    {{ text|safe}}
+  {% endblock %}
+</body>
+</html>
+
+{% comment %}
 {% extends "commons_print_template.html" %}
 {% load staticfiles i18n %}
 
 {% block body %}
   {{ text|safe}}
 {% endblock %}
+{% endcomment %}

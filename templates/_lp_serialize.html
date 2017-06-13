@@ -22,8 +22,7 @@
 {% endif %}
 </div>
 <p class="text-notice">
-___________________________<br>
-{% trans "IMPORTANT NOTICE" %}<br>
+<span class="border-padding-top">{% trans "IMPORTANT NOTICE" %} </span><br>
 {% trans "this document has been produced by"|capfirst %} <strong>{{ request.user.get_display_name }}</strong>
 {% trans "on" %} <strong>{% now "d/m/Y" %}</strong>
 {% trans "for personal use" %}: {% trans "restrictions could apply to some of its contents" %}.

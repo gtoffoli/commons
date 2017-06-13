@@ -1,0 +1,7 @@
+{% extends "commons_print_template.html" %}
+{% load staticfiles i18n %}
+
+{% block body %}
+<h2>{{node.get_label}}</h2>
+<p><img src="http://{{domain}}/document/{{node.document.id}}/serve/" class="img-responsive-basic center-block"></p>
+{% endblock %}

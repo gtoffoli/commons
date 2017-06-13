@@ -1,6 +1,6 @@
 /* commons_print.css */
 
-/*html, body {height: 100%;}
+html, body {height: 100%;}
 body {font-family: "Times New Roman", Times, serif; font-size: 12pt;  line-height: 100%; background:white; color:#333;}
 h1 {font-size: 19.5pt;}
 h2 {font-size: 18pt;}
@@ -17,7 +17,6 @@ a {color: #0000ff; text-decoration: none !important;}
 .text-note,.text-notice {font-family: Arial, Helevetica, sans-serif; font-size:11pt; color:#555555;}
 .text-note {margin-top: 60pt;}
 .border-padding-top {border-top: 0.75pt solid #555555; padding-top: 7.5pt;}
-*/
 .img-responsive-basic {max-width : 100%; height: auto;}
 .marginL10 {margin-left: 7.5pt;}
 .marginR10 {margin-right: 7.5pt;}

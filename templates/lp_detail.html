@@ -161,7 +161,7 @@ iframe {
               {% for node in lp.get_ordered_nodes %}
                 <li class="marginB5">
                   <div class="paddingL3">
-                  	<ul class="list-unstyled paddingL24 {% if node.oer_id %}node-oer{% else %}node-text{% endif %}"><li>
+                  	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc {% else %}node-text{% endif %}"><li>
                   	{% comment %} /pathnode/{{ node.id }}/delete/ {% endcomment %}
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% if lp.get_ordered_nodes|length > 1 %}

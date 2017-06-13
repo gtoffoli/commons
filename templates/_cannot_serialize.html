@@ -11,8 +11,7 @@
 {% endif %}
 
 <p class="text-note">
-	______<br>
-{% trans "NOTE" %}<br>
+<span class="border-padding-top">{% trans "NOTE" %} </span><br>
 {% if mimetype %}{% trans "cannot convert to PDF a document of mimetype"|capfirst %} <b>{{ mimetype }}</b>.{% endif %}
 {% if mimetype and node.oer.url %}<br>{% endif %}
 {% if node.oer.url %}{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}.{% endif %}

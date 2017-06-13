@@ -3089,7 +3089,7 @@ def document_serve(request, document_id, document=None, save=False):
 def document_download(request, document_id, document=None):
     return document_serve(request, document_id, document=document, save=True)
 
-def document_view(request, document_id, node_oer=False, return_url=False, ):
+def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False):
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
     node_doc = request.GET.get('node', '')
@@ -3119,11 +3119,12 @@ def document_view(request, document_id, node_oer=False, return_url=False, ):
             oer = OER.objects.get(pk = oer_document.oer_id)
         if document.viewerjs_viewable:
             url = '/ViewerJS/#http://%s/document/%s/download/' % (domain, document_id)
+            mimetype=document.latest_version.mimetype
         else:
             url = 'http://%s/document/%s/serve/' % (domain, document_id)
             mimetype = document.latest_version.mimetype
         if return_url:
-            return url
+            return url, mimetype
         else:
             # return HttpResponseRedirect(url)
            return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
@@ -3393,8 +3394,11 @@ def lp_play(request, lp_id, lp=None):
             var_dict['x_frame_protection'] = x_frame_protection(url)
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
-        url = document_view(request, current_document.id, return_url=True)
-        var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+        url,mimetype = document_view(request, current_document.id, return_url=True, return_mimetype=True)
+        if mimetype.count('image/'):
+            var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+        else:
+            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     user = request.user

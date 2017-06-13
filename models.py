@@ -2699,7 +2699,7 @@ class PathNode(node_factory('PathEdge')):
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)
 
-    def serialize_oernode(self, request, writer, mimetype):
+    def serialize_oernode(self, request, writer, mimetype, ranges=0):
         html_template = get_template('_online_serialize.html')
         domain = request.META['HTTP_HOST']
         youtube_url = self.oer.url and (self.oer.url.count('youtube.com') or self.oer.url.count('youtu.be')) and self.oer.url or ''
@@ -2720,7 +2720,7 @@ class PathNode(node_factory('PathEdge')):
             videos = youtube_search(videoID, part='snippet', max_results=1)
             if videos:
                 video_data=video_getdata(videos[0])
-        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'domain': domain }
+        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'ranges': ranges, 'domain': domain }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)
         return videoID
@@ -2777,7 +2777,7 @@ class PathNode(node_factory('PathEdge')):
                 # if content_length > 0 and content_type in ['application/pdf', 'text/html']:
                 if content_type.count('application/pdf') or content_type.count('text/html'):
                     if export:
-                        videoID = self.serialize_oernode(request, writer, content_type)
+                        videoID = self.serialize_oernode(request, writer, content_type, ranges=ranges)
                     if (ranges or not export) and not videoID:
                         pageranges = ranges and [r[1:] for r in ranges] or None
                         # if content_type == 'application/pdf':
@@ -2795,7 +2795,9 @@ class PathNode(node_factory('PathEdge')):
                 i_stream = document_version.open()
                 write_pdf_pages(i_stream, writer)
             else:
-                html_template = get_template('_cannot_serialize.html')
+                # html_template = get_template('_cannot_serialize.html')
+                template_name = document_version.mimetype.count('image') and '_image_serialize.html' or '_cannot_serialize.html'
+                html_template = get_template(template_name)
                 domain = request.META['HTTP_HOST']
                 context = { 'request': request, 'node': self, 'mimetype': document_version.mimetype, 'domain': domain }
                 rendered_html = html_template.render(context)
