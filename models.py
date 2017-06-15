@@ -435,7 +435,8 @@ class FolderDocument(models.Model, Publishable):
     label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     user = models.ForeignKey(User, verbose_name=_('user'))
-    created = CreationDateTimeField(_('created'), default=None, null=True)
+    # created = CreationDateTimeField(_('created'), default=None, null=True)
+    created = CreationDateTimeField(_('created'), null=True)
 
     def __unicode__(self):
         return unicode(self.document.label)
