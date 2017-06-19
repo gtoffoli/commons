@@ -3334,11 +3334,12 @@ def lp_play(request, lp_id, lp=None):
     oer = current_node.oer
     current_document = current_node.document
     current_text = current_node.text
-    page_range = current_node.range
+    # page_range = current_node.range
+    ranges = current_node.get_ranges()
     if oer:
         documents = oer.get_sorted_documents()
         if documents:
-            ranges = current_node.get_ranges()
+            # ranges = current_node.get_ranges()
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
             var_dict['image_view'] = False
             if viewable_documents:
@@ -3377,8 +3378,17 @@ def lp_play(request, lp_id, lp=None):
             elif youtube.count('watch?v='):
                 youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
             youtube += '?autoplay=1'
+            # ranges = current_node.get_ranges()
+            if ranges:
+                range = ranges[0]
+                if len(range) > 1:
+                    youtube = youtube + '&start=' + str(range[1])
+                if len(range) == 3:
+                    youtube = youtube + '&end=' + str(range[2])
+            """
             if page_range and page_range.isdigit():
                 youtube = youtube + '&start=' + page_range
+            """
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:

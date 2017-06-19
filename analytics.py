@@ -89,8 +89,8 @@ def message_analytics(request):
     xdata = []
     ydata = []
     for item in report:
-        # month = item['month'].month
-        month = item['month'].strftime('%B')
+        #month = item['month'].month
+        month = item['month'].strftime('%m/%y')
         num_messages =item['num_messages']
         total += num_messages
         xdata.append(month)
@@ -110,7 +110,7 @@ def message_analytics(request):
         }
     }
     data['total'] = total
-    # print data
+    #print data
     return render_to_response('message_analytics.html', data, context_instance=RequestContext(request))
 
 def topic_readmarks(topic, user=None, since=None):
