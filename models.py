@@ -2617,6 +2617,20 @@ class PathNode(node_factory('PathEdge')):
         oer = self.oer
         return self.label or (oer and oer.name) or 'node %d' % self.id
 
+    def is_flatpage(self):
+        text = self.text
+        return text and len(text)<32 and text.count('/')==4
+
+    def get_text(self):
+        text = self.text
+        if self.is_flatpage():
+            url = text.replace('<p>','').replace('</p>','')
+            flatpage = FlatPage.objects.get(url=url)
+            text = flatpage.content
+            title = self.label or flatpage.title
+            text = '<h1 style="text-align: center;">%s</h1>\n%s' % (title, text)
+        return text
+
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
         return {
@@ -2695,10 +2709,13 @@ class PathNode(node_factory('PathEdge')):
     def serialize_textnode(self, request, writer):
         html_template = get_template('_textnode_serialize.html')
         domain = request.META['HTTP_HOST']
-        text = self.text.replace("../../../media", "http://%s/media" % domain)
+        # text = self.text.replace("../../../media", "http://%s/media" % domain)
+        text = self.get_text()
+        text = text.replace("/media/ugc_upload/", "http://%s/media/ugc_upload/" % domain)
+        text = text.replace("../../../media", "http://%s/media" % domain)
         context = { 'request': request, 'node': self, 'text': text, 'domain': domain }
         rendered_html = html_template.render(context)
-        html_to_writer(rendered_html, writer)
+        html_to_writer(rendered_html, writer, landscape=self.is_flatpage())
 
     def serialize_oernode(self, request, writer, mimetype, ranges=0):
         html_template = get_template('_online_serialize.html')

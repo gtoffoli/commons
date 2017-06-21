@@ -44,7 +44,9 @@ def url_to_writer(url, writer, ranges=None):
     HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
-def html_to_writer(html, writer, css=None, ranges=None):
+# def html_to_writer(html, writer, css=None, ranges=None):
+def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
+    stylesheets = landscape and [CSS(string='@page { size: A4 landscape; }')] or None
     i_stream = StringIO.StringIO()
     """
     stylesheet = CSS(string='body { font-family: Arial; } a { text-decoration: none; };')
@@ -55,7 +57,8 @@ def html_to_writer(html, writer, css=None, ranges=None):
     stylesheets = css and [CSS(string=css)] or None
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     """
-    HTML(string=html).write_pdf(i_stream)
+    # HTML(string=html).write_pdf(i_stream)
+    HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
 def get_pdf_page(i_stream, o_stream):

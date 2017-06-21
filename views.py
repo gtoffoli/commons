@@ -3333,7 +3333,8 @@ def lp_play(request, lp_id, lp=None):
     var_dict['current_node'] = current_node
     oer = current_node.oer
     current_document = current_node.document
-    current_text = current_node.text
+    # current_text = current_node.text
+    current_text = current_node.get_text()
     # page_range = current_node.range
     ranges = current_node.get_ranges()
     if oer:
