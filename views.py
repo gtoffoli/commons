@@ -3338,9 +3338,11 @@ def lp_play(request, lp_id, lp=None):
     # page_range = current_node.range
     ranges = current_node.get_ranges()
     def handle_view_template(mimetype, url, document=None):
+        """
         if mimetype == 'application/pdf':
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-        elif mimetype.count('image/'): # view only first non-PDF
+        """
+        if mimetype.count('image/'): # view only first non-PDF
             var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
             var_dict['media_view'] = True
         elif mimetype.count('video/'): # view only first non-PDF
@@ -3349,6 +3351,8 @@ def lp_play(request, lp_id, lp=None):
         elif mimetype.count('audio/'): # view only first non-PDF
             var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
             var_dict['media_view'] = True
+        else:
+            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     if oer:
         documents = oer.get_sorted_documents()
         if documents:
@@ -3362,6 +3366,8 @@ def lp_play(request, lp_id, lp=None):
                     # var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                     handle_view_template(mimetype, url)
                 elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
+                    print "============= TEST ==============="
+                    print "passo qui doc OER"  
                     url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                 elif mimetype.count('image/'): # view only first non-PDF
@@ -3403,10 +3409,6 @@ def lp_play(request, lp_id, lp=None):
                     youtube = youtube + '&start=' + str(range[1])
                 if len(range) == 3:
                     youtube = youtube + '&end=' + str(range[2])
-            """
-            if page_range and page_range.isdigit():
-                youtube = youtube + '&start=' + page_range
-            """
             youtube = YOUTUBE_TEMPLATE % youtube
             var_dict['youtube'] = youtube
         elif ted_talk:

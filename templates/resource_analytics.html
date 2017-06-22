@@ -1,0 +1,56 @@
+{% extends "commons_base.html" %}
+
+{% load i18n staticfiles %}
+{% load nvd3_tags %}
+
+{% block head_title %}{{ title|capfirst }}{% endblock %}
+{% block extra_style %}
+<style>
+.table-bordered {border:0}
+</style>
+{% endblock %}
+table-bordered
+{% block extra_head %}
+    {% include_chart_jscss %}
+    {% load_chart charttype chartdata chartcontainer extra %}
+{% endblock extra_head %}
+
+{% block body_class %}resource_analytics{% endblock %}
+{% block body %}
+<div class="marginTB30">
+  <div class="panel-heading-c{% if resource = 'OER' %}2{% else %}1{% endif %}">
+    <h1 class="text-center padding105 margin0">{{ title|capfirst }}</h1>
+  </div>
+  <div class="body-panel borderColor-c{% if resource = 'OER' %}2{% else %}1{% endif %} padding1020 bc-white">
+    <h5 class="text-center">{{subtitle|capfirst}}: {{ total }} [ {% trans "published" %}: {{ total_pub }} ] </h5>
+
+<div class="table-responsive">
+<table class="width-full"><tr><td>
+<div>{{legenda|capfirst}}</div>
+    {% include_container chartcontainer '500' '1000' %}
+    </td></tr></table>
+  </div>
+<div class="table-responsive marginT30 marginB20 font12">
+    <table class="table-bordered width-full">
+      <tbody>
+        <tr>
+        	<th class="padding5" style="border:0"></th>
+     {% for x in resources_all.x %}
+	        <th class="padding5 text-center">{{x}}</th>
+	   {% endfor %}
+        </tr>
+	<tr><th class="padding5">{% trans "all"|capfirst %}</th>{% for y in resources_all.y%}
+	<td class="padding5 text-center">{{y}}</td>
+	{% endfor %}</tr>
+		<tr><th class="padding5">{% trans "published"|capfirst %}</th>
+			{% for y in resources_pub.y %}
+
+			          <td class="padding5 text-center">{{ y }}</td>
+{% endfor %}</tr>
+	</tbody>
+	</table>
+</div>
+  </div>
+</div>
+
+{% endblock %}

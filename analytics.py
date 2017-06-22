@@ -14,6 +14,7 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
+from django.utils.translation import pgettext, ugettext_lazy as _
 
 from datatrans.models import KeyValue
 
@@ -678,3 +679,93 @@ def resource_contributors(request):
                        ).exclude(num_repos=0).order_by('-num_repos','last_name','first_name')
     var_dict['source_contributors'] = source_contributors
     return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
+
+def make_qs(resource):
+    truncate_date = connection.ops.date_trunc_sql('month', 'created')
+    qs = resource.objects.extra({'month':truncate_date})
+    report_all = qs.values('month').annotate(num_resources=Count('pk')).order_by('month')
+    qs = resource.objects.filter(state=PUBLISHED)
+    qs = qs.extra({'month':truncate_date})
+    report_pub = qs.values('month').annotate(num_resources=Count('pk')).order_by('month')
+    return report_all, report_pub
+
+def make_data_chart (report):
+    total = 0
+    total_pub = 0
+    xdata = []
+    ydata = []
+    xdata_all = []
+    ydata_all = []
+    xdata_pub = []
+    ydata_pub = []
+    ydata_pub_final = []
+    for item in report[0]:
+        month = item['month'].strftime('%m/%y')
+        num_resources =item['num_resources'] 
+        total += num_resources
+        xdata.append(month)
+        ydata.append(num_resources)
+        xdata_all.append(month)
+        ydata_all.append(num_resources)
+    for item in report[1]:
+        month = item['month'].strftime('%m/%y')
+        num_resources =item['num_resources']
+        total_pub += num_resources
+        xdata.append(month)
+        ydata.append(num_resources)
+        xdata_pub.append(month)
+        ydata_pub.append(num_resources)
+    chartdata = {'x': xdata, 'y': ydata}
+    charttype = "discreteBarChart"
+    chartcontainer = 'barchart_container'
+    data = {
+        'charttype': charttype,
+        'chartdata': chartdata,
+        'chartcontainer': chartcontainer,
+        'extra': {
+            'x_is_date': False,
+            'x_axis_format': '%s',
+            'tag_script_js': True,
+            'jquery_on_ready': False,
+            'color_category': 'category20b',
+        }
+    }
+    for x in xdata_all:
+        if x in xdata_pub:
+            index = xdata_pub.index(x)
+            ydata_pub_final.append(ydata_pub[index])
+        else:
+            ydata_pub_final.append('--')
+    data['resources_all'] = {'x': xdata_all, 'y': ydata_all }
+    data['resources_pub'] = {'x': xdata_all, 'y': ydata_pub_final }
+    data['total'] = total
+    data['total_pub'] = total_pub
+    return data
+    
+def oer_analytics(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
+    report = make_qs(OER)
+    data = make_data_chart(report)
+    data['resource'] = 'OER'
+    data['title'] = _("OERs analytics")
+    data['subtitle'] = _("OERs")
+    data['subtitle_pub'] = _("published OERs")
+    data['legenda'] = _("OERs by month")
+    return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
+    
+def lp_analytics(request):
+    user = request.user
+    if not user.is_authenticated() or not user.is_manager():
+        return HttpResponseForbidden()
+    report = make_qs(LearningPath)
+    data = make_data_chart(report)
+    data['resource'] = 'LP'
+    data['title'] = _("Learning paths analytics")
+    data['subtitle'] = _("LPs")
+    data['subtitle_pub'] = _("published LPs")
+    data['legenda'] = _("LP by month")
+    return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
+    
+    
