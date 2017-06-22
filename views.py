@@ -3337,6 +3337,18 @@ def lp_play(request, lp_id, lp=None):
     current_text = current_node.get_text()
     # page_range = current_node.range
     ranges = current_node.get_ranges()
+    def handle_view_template(mimetype, url, document=None):
+        if mimetype == 'application/pdf':
+            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+        elif mimetype.count('image/'): # view only first non-PDF
+            var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+            var_dict['media_view'] = True
+        elif mimetype.count('video/'): # view only first non-PDF
+            var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
+            var_dict['media_view'] = True
+        elif mimetype.count('audio/'): # view only first non-PDF
+            var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
+            var_dict['media_view'] = True
     if oer:
         documents = oer.get_sorted_documents()
         if documents:
@@ -3344,24 +3356,29 @@ def lp_play(request, lp_id, lp=None):
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
             var_dict['image_view'] = False
             if viewable_documents:
+                current_document = viewable_documents[0]
                 if mimetype == 'application/pdf':
                     url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
-                    var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+                    # var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+                    handle_view_template(mimetype, url)
                 elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
                     url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                 elif mimetype.count('image/'): # view only first non-PDF
                     url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
-                    var_dict['media_view'] = True
+                    # var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+                    # var_dict['media_view'] = True
+                    handle_view_template(mimetype, url)
                 elif mimetype.count('video/'): # view only first non-PDF
                     url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
-                    var_dict['media_view'] = True
+                    # var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
+                    # var_dict['media_view'] = True
+                    handle_view_template(mimetype, url)
                 elif mimetype.count('audio/'): # view only first non-PDF
                     url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
-                    var_dict['media_view'] = True
+                    # var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
+                    # var_dict['media_view'] = True
+                    handle_view_template(mimetype, url, document=current_document)
             else:
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
@@ -3405,11 +3422,18 @@ def lp_play(request, lp_id, lp=None):
             var_dict['x_frame_protection'] = x_frame_protection(url)
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
-        url,mimetype = document_view(request, current_document.id, return_url=True, return_mimetype=True)
-        if mimetype.count('image/'):
-            var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+        if current_document.viewable:
+            url, mimetype = document_view(request, current_document.id, return_url=True, return_mimetype=True)
+            """
+            if mimetype.count('image/'):
+                var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
+            else:
+                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+            """
+            handle_view_template(mimetype, url, document=current_document)
         else:
-            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
+            var_dict['document_view'] = 'no_view'
+            var_dict['no_viewable_document'] = current_document
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     user = request.user
