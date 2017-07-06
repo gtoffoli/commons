@@ -32,7 +32,8 @@ from models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES,
 from models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
 class UserChangeForm(UserWithMPTTChangeForm):
-    groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
+    # groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
+    groups = TreeNodeMultipleChoiceField(required=False, queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
 
 class UserProfileChangeForm(forms.ModelForm):
     class Meta:
