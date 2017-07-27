@@ -29,8 +29,15 @@ file.close
 """
 
 import StringIO
+import urllib2
 from PyPDF2.pdf import PdfFileReader, PdfFileWriter
 from weasyprint import HTML, CSS
+
+try:
+    import nbformat
+    from nbconvert import HTMLExporter, PDFExporter
+except:
+    pass
 
 def text_to_html(text):
     return text.replace('\n', '<br>')
@@ -38,10 +45,43 @@ def text_to_html(text):
 def make_pdf_writer():
     return PdfFileWriter()
 
-def url_to_writer(url, writer, ranges=None):
-    i_stream = StringIO.StringIO()
-    stylesheets = [CSS(string='@page { size: A4 landscape; }')]
-    HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
+def ipynb_to_html(data):
+        notebook = nbformat.reads(data, as_version=4)
+        html_exporter = HTMLExporter()
+        body, resources = html_exporter.from_notebook_node(notebook)
+        return body
+
+def ipynb_url_to_html(url):
+        data = urllib2.urlopen(url).read().decode()
+        return ipynb_to_html(data)
+
+def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'):
+    if mimetype=='application/x-ipynb+json':
+        f = document.open()
+        data = f.read()
+        f.close
+        notebook = nbformat.reads(data, as_version=4)
+        pdf_exporter = PDFExporter()
+        pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
+        i_stream = StringIO.StringIO(pdf_data)
+    else:
+        return
+    write_pdf_pages(i_stream, writer, ranges=ranges)
+
+# def url_to_writer(url, writer, ranges=None):
+def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
+    if mimetype=='text/html':
+        i_stream = StringIO.StringIO()
+        stylesheets = [CSS(string='@page { size: A4 landscape; }')]
+        HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
+    elif mimetype=='application/x-ipynb+json':
+        response = urllib2.urlopen(url).read().decode()
+        notebook = nbformat.reads(response, as_version=4)
+        pdf_exporter = PDFExporter()
+        pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
+        i_stream = StringIO.StringIO(pdf_data)
+    else:
+        return
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
 # def html_to_writer(html, writer, css=None, ranges=None):
@@ -165,7 +205,6 @@ see http://stackoverflow.com/questions/843392/python-get-http-headers-from-urlli
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django.utils.text import capfirst
 
-import urllib2
 """ a Request using the HEAD method in place of the default one (GET or PUT) """
 class HeadRequest(urllib2.Request):
     def get_method(self):

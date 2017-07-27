@@ -50,7 +50,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
-from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, html_to_writer, write_pdf_pages, text_to_html
+from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
 
 # from analytics import filter_actions, post_views_by_user
@@ -2776,6 +2776,8 @@ class PathNode(node_factory('PathEdge')):
                         mimetype = document_version.mimetype
                         i_stream = document_version.open()
                         write_pdf_pages(i_stream, writer)
+                    elif document_version.mimetype.count('ipynb'):
+                        document_to_writer(document, writer, mimetype='application/x-ipynb+json')
                     else:
                         # html_template = get_template('_cannot_serialize.html')
                         template_name = document_version.mimetype.count('image') and '_image_serialize.html' or '_cannot_serialize.html'
@@ -2806,6 +2808,8 @@ class PathNode(node_factory('PathEdge')):
                         # elif content_type == 'text/html':
                         elif content_type.count('text/html'):
                             url_to_writer(oer.url, writer, ranges=pageranges)
+                elif content_type.count('ipynb') or oer.url.endswith('ipynb'):
+                    url_to_writer(oer.url, writer, mimetype='application/x-ipynb+json')
         elif self.document:
             document_version = self.document.latest_version
             if self.document.viewerjs_viewable and (not mimetype or document_version.mimetype == mimetype):

@@ -40,20 +40,24 @@
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">
-    {% if url %}
+    {% if url %}{% with mimetype=document.latest_version.mimetype %}
       {% if document.viewerjs_viewable %}
         <div class="iframe-container">
           <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
         </div>
-      {% elif 'image/' in document.latest_version.mimetype %}
+      {% elif 'image/' in mimetype %}
         <div class="marginT30 marginB10 text-center"><img src="{{ url }}" class="img-responsive" style="display:inline"></div>
-      {% elif 'video/' in document.latest_version.mimetype %}
+      {% elif 'video/' in mimetype %}
         <div class="marginT30 marginB10 text-center"><video src="{{ url }}" preload="auto" autoplay controls class="img-responsive" style="display:inline"></video></div>
-      {% elif 'audio/' in document.latest_version.mimetype %}
+      {% elif 'audio/' in mimetype %}
         <div class="marginT60 marginB10 text-center"><audio src="{{ url }}" preload="auto" autoplay controls class="img-responsive" style="display:inline"></audio></div>
         <h5 class="marginB10 text-center">{{ document.label }}</h5>
+      {% elif 'ipynb' in mimetype %}
+        <div class="iframe-container">
+          <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+        </div>
       {% endif %}
-    {% endif %}
+    {% endwith %}{% endif %}
   </div>
 {% endblock %}
 

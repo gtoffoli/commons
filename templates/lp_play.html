@@ -92,6 +92,8 @@
       {{ ted_talk|safe }}
     {% elif slideshare %}
       {{ slideshare|safe }}
+    {% elif ipynb %}
+      {{ ipynb|safe }}
     {% elif embed_code %}
       {{ embed_code|safe }}
     {% elif x_frame_protection %}

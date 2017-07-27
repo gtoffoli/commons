@@ -43,6 +43,7 @@ VIEWABLE_MIMETYPES = (
   'opendocument.text',
   'opendocument.spreadsheet',
   'opendocument.presentation',
+  'application/x-ipynb+json',
 )
 
 VIEWERJS_MIMETYPES = (
@@ -79,7 +80,12 @@ def get_mimetype(file_description, filepath, mimetype_only=False):
     """
     file_mimetype = None
     file_mime_encoding = None
-    if USE_PYTHON_MAGIC:
+
+    path, filename = os.path.split(filepath)
+    if filename.endswith('ipynb'):
+        file_mimetype = 'application/x-ipynb+json'
+
+    elif USE_PYTHON_MAGIC:
         mime = magic.Magic(mime=True)
         file_mimetype = mime.from_buffer(file_description.read())
         if not mimetype_only:
@@ -87,7 +93,7 @@ def get_mimetype(file_description, filepath, mimetype_only=False):
             mime_encoding = magic.Magic(mime_encoding=True)
             file_mime_encoding = mime_encoding.from_buffer(file_description.read())
     else:
-        path, filename = os.path.split(filepath)
+        # path, filename = os.path.split(filepath)
         file_mimetype, file_mime_encoding = mimetypes.guess_type(filename)
 
     file_description.close()

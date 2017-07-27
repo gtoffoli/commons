@@ -39,6 +39,8 @@
       {{ slideshare|safe }}
     {% elif embed_code %}
       {{ embed_code|safe }}
+    {% elif ipynb %}
+      {{ ipynb|safe }}
     {% elif x_frame_protection %}
        <h5 class="marginTB30 text-center demiBold">{{ x_frame_protection }}</h5>
     {% else %}

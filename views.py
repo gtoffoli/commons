@@ -60,7 +60,7 @@ from session import get_clipboard, set_clipboard
 from analytics import notify_event, track_action
 from analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
-from utils import x_frame_protection
+from utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
 
 from mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
 
@@ -2602,6 +2602,10 @@ SLIDESHARE_TEMPLATE = """
 TED_TALK_TEMPLATE = """
 <iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
 """
+IPYNB_TEMPLATE = """
+<iframe src="http://%s/serve_ipynb_url/?url=%s" id="iframe" allowfullscreen>
+</iframe>
+"""
 
 def oer_view(request, oer_id, oer=None):
     if not oer:
@@ -2636,6 +2640,7 @@ def oer_view(request, oer_id, oer=None):
     ted_talk = url and url.count('www.ted.com/talks/') and url or ''
     reference = oer.reference
     slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
+    ipynb = url and url.endswith('ipynb')
     if youtube:
         if youtube.count('embed'):
             pass
@@ -2656,6 +2661,10 @@ def oer_view(request, oer_id, oer=None):
     elif slideshare:
         slideshare = SLIDESHARE_TEMPLATE % slideshare
         var_dict['slideshare'] = slideshare
+    elif ipynb:
+        domain = request.META['HTTP_HOST']
+        ipynb = IPYNB_TEMPLATE % (domain, url)
+        var_dict['ipynb'] = ipynb
     else:
         var_dict['x_frame_protection'] = x_frame_protection(url)
     var_dict['embed_code'] = oer.embed_code
@@ -3072,22 +3081,36 @@ def oer_add_document(request):
             oer.save()
         return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
+def serve_ipynb_url(request):
+    url = request.GET.get('url', '')
+    html = ipynb_url_to_html(url)
+    return HttpResponse(html, 'text/html')
+
 # def document_download(request, document_id, document=None):
-def document_serve(request, document_id, document=None, save=False):
+def document_serve(request, document_id, document=None, save=False, forse_download=False):
     if not document:
         document = get_object_or_404(Document, pk=document_id)
-    document_version = document.latest_version
+    latest_version = document.latest_version
+    mimetype = latest_version.mimetype
+    """ a che serviva ?
     file_descriptor = document_version.open()
     file_descriptor.close()
+    """
+    if mimetype=='application/x-ipynb+json' and not forse_download:
+        f = latest_version.open()
+        data = f.read()
+        f.close()
+        html = ipynb_to_html(data)
+        return HttpResponse(html, 'text/html')
     return serve_file(
         request,
-        document_version.file,
-        save_as = save and '"%s"' % document_version.document.label or None,
-        content_type=document_version.mimetype if document_version.mimetype else 'application/octet-stream'
+        latest_version.file,
+        save_as = save and '"%s"' % latest_version.document.label or None,
+        content_type=latest_version.mimetype or 'application/octet-stream' # if latest_version.mimetype else 'application/octet-stream'
         )
 
 def document_download(request, document_id, document=None):
-    return document_serve(request, document_id, document=document, save=True)
+    return document_serve(request, document_id, document=document, save=True, forse_download=True)
 
 # def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False):
 def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False, node_doc=False):
@@ -3129,7 +3152,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             return url, mimetype
         else:
             # return HttpResponseRedirect(url)
-           return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
+            return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
         return serve_file(
@@ -3315,6 +3338,7 @@ def lp_play(request, lp_id, lp=None):
     if not lp.can_access(request.user):
         raise PermissionDenied
     language = request.LANGUAGE_CODE
+    domain = request.META['HTTP_HOST']
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
     var_dict['is_published'] = lp.state == PUBLISHED
@@ -3353,7 +3377,7 @@ def lp_play(request, lp_id, lp=None):
         elif mimetype.count('audio/'): # view only first non-PDF
             var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
             var_dict['media_view'] = True
-        else:
+        else: # including ipynb
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     if oer:
         documents = oer.get_sorted_documents()
@@ -3387,6 +3411,9 @@ def lp_play(request, lp_id, lp=None):
                     # var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
                     # var_dict['media_view'] = True
                     handle_view_template(mimetype, url, document=current_document)
+                elif mimetype.count('ipynb'): # view only first non-PDF
+                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    handle_view_template(mimetype, url)
             else:
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
@@ -3394,6 +3421,7 @@ def lp_play(request, lp_id, lp=None):
         var_dict['oer_is_published'] = oer.state == PUBLISHED
         youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
         ted_talk = url and url.count('www.ted.com/talks/') and url or ''
+        ipynb = url and url.endswith('ipynb')
         reference = oer.reference
         slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
         if youtube:
@@ -3422,6 +3450,9 @@ def lp_play(request, lp_id, lp=None):
             var_dict['ted_talk'] = ted_talk
         elif slideshare:
             var_dict['slideshare'] = slideshare
+        elif ipynb:
+            ipynb = IPYNB_TEMPLATE % (domain, url)
+            var_dict['ipynb'] = ipynb
         else:
             var_dict['x_frame_protection'] = x_frame_protection(url)
         var_dict['embed_code'] = oer.embed_code
