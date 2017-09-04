@@ -4,6 +4,7 @@ from django.views.generic import TemplateView
 
 from django.contrib import admin
 admin.autodiscover()
+from django.contrib.flatpages import views as flatpages_views
 
 from django.conf.urls.static import static
 from filebrowser.sites import site
@@ -53,8 +54,7 @@ urlpatterns = patterns('',
     # url(r'^sources', include('sources.urls')),
     # url(r'^documents/', include('documents.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^info/', include('django.contrib.flatpages.urls')),
-    # url(r"^$", TemplateView.as_view(template_name="homepage.html"), name="commons.home"),
+    # url(r'^info/', include('django.contrib.flatpages.urls')),
     url(r"^$", 'commons.views.home', name="commons.home"),
     url(r"^press_releases/$", 'commons.views.press_releases', name="press_releases"),
     url(r"^test/$", TemplateView.as_view(template_name="test.html"), name="home"),
@@ -231,6 +231,7 @@ urlpatterns += i18n_patterns('',
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", 'commons.views.oer_detail_by_slug', name="oer_detail"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", 'commons.views.lp_detail_by_slug', name="lp_detail"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/$", 'commons.views.pathnode_detail', name="pathnode_detail"),
+    url(r'^(?P<url>.*)$', flatpages_views.flatpage, name='django.contrib.flatpages.views.flatpage'),
 )
 
 if settings.USE_HAYSTACK:

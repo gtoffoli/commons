@@ -4,6 +4,8 @@
 
 {% block head_title %}{{ flatpage.title }}{% endblock %}
 
+{% block languages %}{% with object=flatpage %}{% include "_hreflang.html" %}{% endwith %}{% endblock %}
+
 {% block body_class %}flatpage{% endblock %}
 
 {% block body %}
