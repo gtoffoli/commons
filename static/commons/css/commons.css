@@ -814,7 +814,17 @@ article.roundCorner:last-child {
 	border-bottom-left-radius:4px;
 	border-bottom-right-radius:4px;
 }
-
+article.view-card img.img-responsive-in-article {
+    float:left;
+    padding-top: 5px;
+    padding-right:10px;
+    max-width:20%;
+    height: auto;
+}
+div.large-view article.view-card img.img-responsive-in-article {
+    max-width:10%;
+}
+  
 section.base {
    border:1px solid #E8561A;
    border-top-width: 0;

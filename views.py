@@ -2125,7 +2125,7 @@ def project_results(request, project_slug):
     if not project.can_access(user):
         raise PermissionDenied
     var_dict = { 'project': project }
-    if project.is_member(user) or user.is_superuser:
+    if user.is_authenticated() and project.is_member(user) or user.is_superuser:
         var_dict['lps'] = LearningPath.objects.filter(project=project).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project).order_by('-created')
     else:
