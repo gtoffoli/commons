@@ -41,6 +41,11 @@ SOCIALACCOUNT_PROVIDERS = \
                          'picture-url',
                          'public-profile-url']}}
 """
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        'VERSION': 'v2.12',
+    }
+}
 
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
 CACHES = {
