@@ -3549,19 +3549,12 @@ def lp_edit(request, lp_id=None, project_id=None):
                     return my_home(request)
     elif lp:
         form = LpForm(instance=lp)
+        if lp.get_nodes().count() > 1:
+            form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
     else:
-        """
-        if project_id:
-            project = get_object_or_404(Project, id=project_id)
-            group_id = project.group_id
-        else:
-            group_id = 0
-        form = LpForm(initial={'group': group_id, 'creator': user.id, 'editor': user.id})
-        """
         if not project_id:
             project_id = 0
         form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
-    # return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action}, context_instance=RequestContext(request))
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
     if project_id and project_id > 0:
