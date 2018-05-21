@@ -14,6 +14,7 @@ from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
 # from django.db import transaction
+from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
@@ -3504,7 +3505,6 @@ def lp_edit(request, lp_id=None, project_id=None):
         if not lp.can_access(user):
             raise PermissionDenied
         action = '/lp/%s/edit/' % lp.slug
-        # if not user.can_edit(request):
         if not lp.can_edit(request):
             return HttpResponseRedirect('/lp/%s/' % lp.slug)
     if request.POST:
@@ -3513,8 +3513,12 @@ def lp_edit(request, lp_id=None, project_id=None):
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
             action = '/lp/%s/edit/' % lp.slug
-            group_id = lp.group_id
+            # group_id = lp.group_id
         form = LpForm(request.POST, instance=lp)
+        if lp and lp.get_nodes().count() > 1:
+            # form.fields['path_type'].widget = forms.HiddenInput()
+            form.fields['path_type'].required = False
+            form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
@@ -3533,9 +3537,9 @@ def lp_edit(request, lp_id=None, project_id=None):
             else:
                 print form.errors
             if projectId:
-               current_project = get_object_or_404(Project, id=projectId)
+                current_project = get_object_or_404(Project, id=projectId)
             else:
-               current_project = None
+                current_project = None
             return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project}, context_instance=RequestContext(request))
         elif request.POST.get('cancel', ''):
             if lp:
@@ -3549,12 +3553,14 @@ def lp_edit(request, lp_id=None, project_id=None):
                     return my_home(request)
     elif lp:
         form = LpForm(instance=lp)
-        if lp.get_nodes().count() > 1:
-            form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
     else:
         if not project_id:
             project_id = 0
         form = LpForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
+    if lp and lp.get_nodes().count() > 1:
+        # form.fields['path_type'].widget = forms.HiddenInput()
+        form.fields['path_type'].required = False
+        form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
     if project_id and project_id > 0:
