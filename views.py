@@ -227,6 +227,7 @@ class FeaturedAutocompleteView(Select2QuerySetSequenceView):
             return qs
 
 def press_releases(request):
+    protocol = request.is_secure() and 'https' or 'http'
     var_dict = {}
     projects = Project.objects.filter(slug='editorial-staff')
     project = projects and projects[0] or None
@@ -253,13 +254,13 @@ def press_releases(request):
     if request.method == 'GET' and request.GET.get('doc', ''):
         doc_id = request.GET.get('doc', '')
         var_dict['docsel'] = int(doc_id)
-        var_dict['url'] = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], doc_id)
+        var_dict['url'] = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (request.META['HTTP_HOST'], doc_id)
     elif current_language_code in language_pr_dict:
         last_release = language_pr_dict[current_language_code][0]
         var_dict['last_release'] = last_release
         if last_release:
             var_dict['docsel'] = last_release.document.id
-            var_dict['url']= url = '/ViewerJS/#http://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
+            var_dict['url']= '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
     return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
 
 def user_profile(request, username, user=None):
@@ -976,6 +977,7 @@ def lps_in_clipboard(request, key):
 MENTORING_MAX_DELAY = 14 # (days) set to 0 for test
 
 def project_detail(request, project_id, project=None, accept_mentor_form=None, select_mentoring_journey=None):
+    protocol = request.is_secure() and 'https' or 'http'
     MAX_OERS = 5
     MAX_OERS_EVALUATED = 5
     MAX_LPS = 5
@@ -993,7 +995,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
         var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
     if project.small_image:
-        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
+        image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -2004,12 +2006,13 @@ def repos_by_user(request, username):
     return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
 
 def repo_detail(request, repo_id, repo=None):
+    protocol = request.is_secure() and 'https' or 'http'
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
     user = request.user
     var_dict = { 'repo': repo, }
     if repo.small_image:
-        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
+        image = protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,repo.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -2604,11 +2607,12 @@ TED_TALK_TEMPLATE = """
 <iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
 """
 IPYNB_TEMPLATE = """
-<iframe src="http://%s/serve_ipynb_url/?url=%s" id="iframe" allowfullscreen>
+<iframe src="https://%s/serve_ipynb_url/?url=%s" id="iframe" allowfullscreen>
 </iframe>
 """
 
 def oer_view(request, oer_id, oer=None):
+    protocol = request.is_secure() and 'https' or 'http'
     if not oer:
         oer_id = int(oer_id)
         oer = get_object_or_404(OER, pk=oer_id)
@@ -2646,9 +2650,9 @@ def oer_view(request, oer_id, oer=None):
         if youtube.count('embed'):
             pass
         elif youtube.count('youtu.be/'):
-            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
+            youtube = protocol + '://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
         elif youtube.count('watch?v='):
-            youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+            youtube = protocol + '://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
         youtube += '?autoplay=1'
         youtube = YOUTUBE_TEMPLATE % youtube
         var_dict['youtube'] = youtube
@@ -2677,6 +2681,7 @@ def oer_view_by_slug(request, oer_slug):
     return oer_view(request, oer.id, oer)
 
 def oer_detail(request, oer_id, oer=None):
+    protocol = request.is_secure() and 'https' or 'http'
     if not oer:
         oer_id = int(oer_id)
         oer = get_object_or_404(OER, pk=oer_id)
@@ -2689,7 +2694,7 @@ def oer_detail(request, oer_id, oer=None):
 
     var_dict = { 'oer': oer, }
     if oer.small_image:
-        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,oer.small_image)
+        image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'], settings.MEDIA_URL, oer.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -3115,6 +3120,7 @@ def document_download(request, document_id, document=None):
 
 # def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False):
 def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False, node_doc=False):
+    protocol = request.is_secure() and 'https' or 'http'
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
     # node_doc = request.GET.get('node', '')
@@ -3144,15 +3150,14 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             oer_document = OerDocument.objects.get(document_id=document_id)
             oer = OER.objects.get(pk = oer_document.oer_id)
         if document.viewerjs_viewable:
-            url = '/ViewerJS/#http://%s/document/%s/download/' % (domain, document_id)
+            url = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (domain, document_id)
             mimetype=document.latest_version.mimetype
         else:
-            url = 'http://%s/document/%s/serve/' % (domain, document_id)
+            url = protocol + '://%s/document/%s/serve/' % (domain, document_id)
             mimetype = document.latest_version.mimetype
         if return_url:
             return url, mimetype
         else:
-            # return HttpResponseRedirect(url)
             return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
     else:
         document_version = document.latest_version
@@ -3208,6 +3213,7 @@ def project_add_oer(request, project_id):
     return oer_edit(request, project_id=project_id) 
 
 def lp_detail(request, lp_id, lp=None):
+    protocol = request.is_secure() and 'https' or 'http'
     if not lp:
         lp_id = int(lp_id)
         lp = get_object_or_404(LearningPath, pk=lp_id)
@@ -3218,7 +3224,7 @@ def lp_detail(request, lp_id, lp=None):
         raise PermissionDenied
     var_dict = { 'lp': lp, }
     if lp.small_image:
-        image='http://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,lp.small_image)
+        image = protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,lp.small_image)
     else:
         image = ''
     var_dict['meta'] =  {
@@ -3334,6 +3340,7 @@ def get_compatible_viewable_documents(documents, ranges):
     return out_documents, mimetype
 
 def lp_play(request, lp_id, lp=None):
+    protocol = request.is_secure() and 'https' or 'http'
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
     if not lp.can_access(request.user):
@@ -3389,31 +3396,31 @@ def lp_play(request, lp_id, lp=None):
             if viewable_documents:
                 current_document = viewable_documents[0]
                 if mimetype == 'application/pdf':
-                    url = '/ViewerJS/#http://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
+                    url = '/ViewerJS/#' + protocol + '://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
                     # var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                     handle_view_template(mimetype, url)
                 elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
                     print "============= TEST ==============="
                     print "passo qui doc OER"  
-                    url = '/ViewerJS/#http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    url = '/ViewerJS/#' + protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                 elif mimetype.count('image/'): # view only first non-PDF
-                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     # var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
                     # var_dict['media_view'] = True
                     handle_view_template(mimetype, url)
                 elif mimetype.count('video/'): # view only first non-PDF
-                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     # var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
                     # var_dict['media_view'] = True
                     handle_view_template(mimetype, url)
                 elif mimetype.count('audio/'): # view only first non-PDF
-                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     # var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
                     # var_dict['media_view'] = True
                     handle_view_template(mimetype, url, document=current_document)
                 elif mimetype.count('ipynb'): # view only first non-PDF
-                    url = 'http://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     handle_view_template(mimetype, url)
             else:
                 var_dict['no_viewable_document'] = documents[0]
@@ -3429,9 +3436,9 @@ def lp_play(request, lp_id, lp=None):
             if youtube.count('embed'):
                 pass
             elif youtube.count('youtu.be/'):
-                youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
+                youtube = protocol + '://www.youtube.com/embed/%s' % youtube[youtube.index('youtu.be/')+9:]
             elif youtube.count('watch?v='):
-                youtube = 'http://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
+                youtube = protocol + '://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
             youtube += '?autoplay=1'
             # ranges = current_node.get_ranges()
             if ranges:
@@ -4423,7 +4430,6 @@ def lp_autocomplete(request):
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
-
 
 def video(request):
     return render_to_response('video.html', context_instance=RequestContext(request))

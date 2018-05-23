@@ -5,7 +5,7 @@
 {% generate_menu %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" xmlns:og="http://ogp.me/ns#">
+<html lang="{{ LANGUAGE_CODE }}" xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
     <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
@@ -36,7 +36,7 @@
        {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> {% endcomment %}
        <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
-       <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
+       <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
        <style>
        ul.ul-left {
          margin-left:-15px;
@@ -196,7 +196,7 @@
            <div class="row">
              <div class="col-sm-4 col-md-4">
                <div class="footer-box">&copy; 2015-{% now 'Y' %} {% trans "the CommonS Consortium"|capfirst %}<br>
-                 {% trans "built by"|capfirst %} <a href="http://www.linkroma.it" target="_blank">LINK srl</a>
+                 {% trans "built by"|capfirst %} <a href="{{ PROTOCOL }}://www.linkroma.it" target="_blank">LINK srl</a>
                  {% trans "with" %} <a href="https://www.python.org/" target="_blank">Python</a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank">Django</a>
                </div>
              </div>

@@ -12,6 +12,7 @@ def online_users_count():
 # def sitename(request):
 def processor(request):
     path = request.path
+    protocol = request.is_secure() and 'https' or 'http'
     for language in settings.LANGUAGES:
         # path = path.replace('/%s' % language[0], '')
         path = path.replace('/%s/' % language[0], '/')
@@ -20,4 +21,5 @@ def processor(request):
         'users_count': online_users_count(),
         'path_no_language': path,
         'PRODUCTION': settings.PRODUCTION,
+        'PROTOCOL': protocol,
     }

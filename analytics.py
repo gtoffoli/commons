@@ -31,7 +31,7 @@ verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View'
 
 notification_template = """%s
 
-Sent from: http://%s
+Sent from: https://%s
 This is an automatic notification message: please do not reply to it. """
 from django.core.mail import send_mail
 def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):

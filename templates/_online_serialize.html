@@ -7,7 +7,7 @@
 <p class="font15">{{ node.oer.description }}</p>
 
 {% if videoID %}
-   <p><a href="{{node.oer.url}}" target="_blank"><img src="{% if video_data.image %}{{video_data.image}}{% else %}http://img.youtube.com/vi/{{videoID}}/hqdefault.jpg{% endif %}" class="img-responsive-basic"></a></p>
+   <p><a href="{{node.oer.url}}" target="_blank"><img src="{% if video_data.image %}{{video_data.image}}{% else %}{{ PROTOCOL }}://img.youtube.com/vi/{{videoID}}/hqdefault.jpg{% endif %}" class="img-responsive-basic"></a></p>
 {% endif %}
 
 {% if node.oer.url %}

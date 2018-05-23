@@ -3,5 +3,5 @@
 
 {% block body %}
 <h2>{{node.get_label}}</h2>
-<p><img src="http://{{domain}}/document/{{node.document.id}}/serve/" class="img-responsive-basic center-block"></p>
+<p><img src="{{ PROTOCOL }}://{{domain}}/document/{{node.document.id}}/serve/" class="img-responsive-basic center-block"></p>
 {% endblock %}
