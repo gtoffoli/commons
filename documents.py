@@ -204,9 +204,13 @@ class Document(models.Model):
     def __unicode__(self):
         return self.label
 
+    """
     @models.permalink
     def get_absolute_url(self):
         return ('documents:document_preview', [self.pk])
+    """
+    def get_absolute_url(self):
+        return '/document/%d/view/' % self.pk
 
     def save(self, *args, **kwargs):
         user = kwargs.pop('user', None)

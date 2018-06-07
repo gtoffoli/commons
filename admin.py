@@ -18,6 +18,7 @@ from taggit_labels.widgets import LabelWidget
 
 from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
+from .documents import DocumentType, Document, DocumentVersion
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
@@ -34,7 +35,6 @@ class UserProfileInline(admin.StackedInline):
 
 class UserPreferencesInline(admin.StackedInline):
     model = UserPreferences
-    # form = UserProfileChangeForm
     can_delete = False
     verbose_name_plural = 'user preferences'
 
@@ -44,6 +44,17 @@ class UserAdmin(UserWithMPTTAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+class DocumentTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name',]
+
+class DocumentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'uuid', 'document_type', 'label', 'date_added', 'language']
+    search_fields = ['label',]
+
+class DocumentVersionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'document', 'timestamp', 'file', 'mimetype', 'encoding']
+    search_fields = ['document__label', 'file',]
 
 class FolderAdmin(MPTTModelAdmin):
     fieldset = ['title', 'parent', 'tree_id',]
@@ -59,7 +70,6 @@ class ProjTypeAdmin(admin.ModelAdmin):
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
     list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
-    # search_fields = ['description', 'proj_type',]
     search_fields = ['name', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -82,7 +92,6 @@ class ProjAdmin(admin.ModelAdmin):
         obj.save()
 
 class ProjectMemberAdmin(admin.ModelAdmin):
-    # fieldsets = []
     list_display = ('id', 'project', 'user_fullname', 'state', 'created', 'accepted', 'modified', 'editor', 'history',)
     search_fields = ['project__name', 'user__username',]
 
@@ -90,22 +99,18 @@ class ProjectMemberAdmin(admin.ModelAdmin):
         return obj.user.get_full_name()
 
 class LanguageAdmin(admin.ModelAdmin):
-    # fieldsets = [(None, {'fields': ['code', 'name',]}),]
     list_display = ('code', 'name',)
     search_fields = ['code', 'name',]
 
 class SubjectAdmin(admin.ModelAdmin):
-    # fieldsets = [(None, {'fields': ['code', 'name',]}),]
     list_display = ('code', 'name',)
     search_fields = ['code', 'name',]
 
 class RepoTypeAdmin(admin.ModelAdmin):
-    # fieldsets = [(None, {'fields': ['name', 'description', 'order',]}),]
     list_display = ('name', 'description', 'order',)
     search_fields = ['name',]
 
 class RepoFeatureAdmin(admin.ModelAdmin):
-    # fieldsets = [(None, {'fields': ['name', 'order',]}),]
     list_display = ('id', 'name', 'order',)
 
 class RepoAdmin(admin.ModelAdmin):
@@ -134,7 +139,6 @@ class OerMetadataInline(admin.TabularInline):
 
 class OERAdmin(admin.ModelAdmin):
     form = OerChangeForm
-    # fieldsets = []
     inlines = (OerMetadataInline,)
     list_display = ('id', 'title', 'slug', 'source', 'project', 'state', 'creator_fullname', 'created',)
     search_fields = ['title', 'description',]
@@ -170,7 +174,6 @@ class OERAdmin(admin.ModelAdmin):
         return obj.creator.get_full_name()
 
 class OerMetadataAdmin(admin.ModelAdmin):
-    # fieldsets = []
     list_display = ('oer', 'metadata_type', 'value',)
 
 class SharedOerAdmin(admin.ModelAdmin):
@@ -187,12 +190,10 @@ class OerQualityMetadataInline(admin.TabularInline):
     extra = 4 # how many rows to show
 
 class OerEvaluationAdmin(admin.ModelAdmin):
-    # fieldsets = []
     inlines = (OerQualityMetadataInline,)
 
 class LearningPathAdmin(admin.ModelAdmin):
     form = LpChangeForm
-    # fieldsets = []
     list_display = ('id', 'title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
@@ -209,7 +210,6 @@ class LearningPathAdmin(admin.ModelAdmin):
         obj.save()
 
 class PathNodeAdmin(admin.ModelAdmin):
-    # fieldsets = []
     list_display = ('id', 'path', 'label', 'oer_title', 'list_children', 'creator', 'created',)
 
     def oer_title(self, obj):
@@ -226,7 +226,6 @@ class PathNodeAdmin(admin.ModelAdmin):
         obj.save()
 
 class PathEdgeAdmin(admin.ModelAdmin):
-    # fieldsets = []
     list_display = ('id', 'label', 'parent', 'child', 'order', 'creator', 'created',)
 
     def save_model(self, request, obj, form, change):
@@ -271,6 +270,9 @@ class FeaturedAdmin(admin.ModelAdmin):
             assert obj.lead or leads
         obj.save()
     
+admin.site.register(DocumentType, DocumentTypeAdmin)
+admin.site.register(Document, DocumentAdmin)
+admin.site.register(DocumentVersion, DocumentVersionAdmin)
 admin.site.register(Folder, FolderAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
