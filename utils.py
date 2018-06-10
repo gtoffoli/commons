@@ -124,7 +124,8 @@ def write_pdf_pages(i_stream, writer, ranges=None):
             if not isinstance(r, (list, tuple)):
                 continue
             if len(r) > 2:
-                raise 'invalid page range'
+                # raise 'invalid page range'
+                continue
             elif r:
                 low = r[0]
                 high = low
@@ -132,12 +133,14 @@ def write_pdf_pages(i_stream, writer, ranges=None):
                 low = 1
                 high = n_pages
             if not isinstance(low, int) or low < 1 or low > n_pages:
-                raise 'invalid page range'
+                # raise 'invalid page range'
+                continue
             p = low - 1
             if len(r) == 2:
                 high = r[1]
                 if not isinstance(high, int) or high < low:
-                    raise 'invalid page range'
+                    # raise 'invalid page range'
+                    continue
             while p < high and p < n_pages:
                 writer.addPage(reader.getPage(p))
                 p += 1
