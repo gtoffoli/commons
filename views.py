@@ -3496,7 +3496,10 @@ def lp_download_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     writer, mimetype = lp.make_document_stream(request)
     stream = StringIO.StringIO()
-    writer.write(stream)
+    try:
+        writer.write(stream)
+    except:
+        pass
     response = HttpResponse(stream.getvalue(), mimetype)
     if stream.len:
         response['Content-Length'] = stream.len
