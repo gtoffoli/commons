@@ -4121,7 +4121,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='repo')
         track_action(user, 'Search', None, description='repo')
-    return render_to_response(template, context, context_instance=RequestContext(request))
+    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 def clean_term(term):
