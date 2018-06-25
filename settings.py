@@ -8,7 +8,18 @@ DEBUG_TOOLBAR= False
 # from mayan.settings.base import *
 # from base import *
 
-from private import *
+import six
+if six.PY3:
+    HAS_DMUC = False
+    HAS_ZINNIA = False
+else:
+    HAS_DMUC = True
+    HAS_ZINNIA = True
+
+import django
+DJANGO_VERSION = django.VERSION[0]
+
+from commons.private import *
 if PRODUCTION:
     DEBUG = False
     ALLOWED_HOSTS = ['*']
@@ -68,23 +79,40 @@ USER_ONLINE_TIMEOUT = 300
 # their last seen is removed from the cache
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
-MIDDLEWARE_CLASSES = (
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'pybb.middleware.PybbMiddleware',
-    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    # 'dmuc.middleware.UserXMPPMiddleware',
-    'commons.middleware.ActiveUserMiddleware',
-)
-if DEBUG and DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
+if DJANGO_VERSION > 1:
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+        # 'corsheaders.middleware.CorsMiddleware',
+        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+        'pybb.middleware.PybbMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
+        # 'commons.middleware.ActiveUserMiddleware',
+    ]
+else:
+    MIDDLEWARE_CLASSES = (
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        # 'corsheaders.middleware.CorsMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+        'pybb.middleware.PybbMiddleware',
+        # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        'django.middleware.locale.LocaleMiddleware',
+        'django.middleware.security.SecurityMiddleware',
+        # 'dmuc.middleware.UserXMPPMiddleware',
+        'commons.middleware.ActiveUserMiddleware',
+    )
+    if DEBUG and DEBUG_TOOLBAR:
+        MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
 
 INSTALLED_APPS = (
     'haystack',
@@ -136,7 +164,6 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.linkedin_oauth2',
     'tinymce',
-    # django-autocomplete-light
     'queryset_sequence',
     'dal',
     'dal_select2',
@@ -145,27 +172,19 @@ INSTALLED_APPS = (
     # from pinax project
     "pinax_theme_bootstrap",
     "bootstrapform",
-    # pinax starter project ?
-    # "pinax",
-    # "pinax.notifications",
     "notification",
-    # menus and ...
     'menu',
     'taggit',
     'taggit_labels',
     # 'taggit_live',
     'datatrans',
-    # muc
-    'conversejs',
-    'dmuc',
-    # blog
+    # 'conversejs',
+    # 'dmuc',
     'tagging',
     'zinnia',
-    # forum
     'pybb',
     # commons project
     'viewerjs',
-    # 'mailer',
     'django_messages',
     'roles',
     'django_dag',
@@ -179,6 +198,8 @@ INSTALLED_APPS = (
     'django_nvd3',
 	'awesome_avatar',
 )
+if True: # HAS_DMUC:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs', 'dmuc']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
@@ -201,7 +222,8 @@ TEMPLATES = [
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
-                'django.core.context_processors.request',
+                # 'django.core.context_processors.request',
+                'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
                 'django.template.context_processors.debug',
@@ -217,12 +239,17 @@ TEMPLATES = [
                 'django_messages.context_processors.inbox',
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
-                'dmuc.context_processors.rooms',
+                # 'dmuc.context_processors.rooms',
                 'commons.context_processors.processor',
             ],
         },
     },
 ]
+
+if True: # HAS_DMUC:
+    TEMPLATE = TEMPLATES[0]
+    TEMPLATE['OPTIONS']['context_processors'] += ['dmuc.context_processors.rooms']
+    TEMPLATES = [TEMPLATE]
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

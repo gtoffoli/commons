@@ -1,20 +1,15 @@
 from __future__ import unicode_literals
 
-import zipfile
+from six import StringIO
 
+import zipfile
 try:
     import zlib
     COMPRESSION = zipfile.ZIP_DEFLATED
 except:
     COMPRESSION = zipfile.ZIP_STORED
 
-try:
-    from cStringIO import StringIO
-except ImportError:
-    from StringIO import StringIO
-
 from django.core.files.uploadedfile import SimpleUploadedFile
-
 
 class NotACompressedFile(Exception):
     pass

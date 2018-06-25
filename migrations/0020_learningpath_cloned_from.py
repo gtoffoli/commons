@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learningpath',
             name='cloned_from',
-            field=models.ForeignKey(related_name='cloned_path', verbose_name='original learning path', blank=True, to='commons.LearningPath', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='cloned_path', verbose_name='original learning path', blank=True, to='commons.LearningPath', null=True),
         ),
     ]

@@ -20,9 +20,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
-                ('lp', models.ForeignKey(verbose_name='referenced Learning Path', to='commons.LearningPath')),
-                ('project', models.ForeignKey(verbose_name='referencing project', to='commons.Project')),
-                ('user', models.ForeignKey(verbose_name='last editor', to=settings.AUTH_USER_MODEL)),
+                ('lp', models.ForeignKey(on_delete=models.CASCADE, verbose_name='referenced Learning Path', to='commons.LearningPath')),
+                ('project', models.ForeignKey(on_delete=models.CASCADE, verbose_name='referencing project', to='commons.Project')),
+                ('user', models.ForeignKey(on_delete=models.CASCADE, verbose_name='last editor', to=settings.AUTH_USER_MODEL)),
             ],
             options={
                 'verbose_name': 'shared Learning Path',

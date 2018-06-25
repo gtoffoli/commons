@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='userprofile',
             name='curriculum',
-            field=models.ForeignKey(related_name='curriculum', verbose_name='curriculum', blank=True, to='commons.Document', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='curriculum', verbose_name='curriculum', blank=True, to='commons.Document', null=True),
         ),
         migrations.AddField(
             model_name='userprofile',

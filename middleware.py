@@ -6,7 +6,7 @@ class ActiveUserMiddleware:
 
     def process_request(self, request):
         user = request.user
-        if user.is_authenticated():
+        if user.is_authenticated:
             now = timezone.now()
             cache.set('seen_%s' % (user.username), now, 
                            settings.USER_LASTSEEN_TIMEOUT)

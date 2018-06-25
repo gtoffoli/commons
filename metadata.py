@@ -1,3 +1,6 @@
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
+
 from django.utils.translation import ugettext_lazy as _
 from dateutil.parser import parse
 from django.db import models
@@ -16,6 +19,7 @@ class MetadataTypeManager(models.Manager):
     def get_by_natural_key(self, name):
         return self.get(name=name)
 
+@python_2_unicode_compatible
 class MetadataType(models.Model):
     """
     Define a type of metadata
@@ -36,7 +40,7 @@ class MetadataType(models.Model):
     # available now that we removed these from the help_text
     objects = MetadataTypeManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def natural_key(self):

@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='prototype',
-            field=models.ForeignKey(related_name='prototype_project', verbose_name='prototypical Learning Path', blank=True, to='commons.LearningPath', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='prototype_project', verbose_name='prototypical Learning Path', blank=True, to='commons.LearningPath', null=True),
         ),
         migrations.AlterField(
             model_name='project',

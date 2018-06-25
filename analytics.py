@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-"""
 
+from django.conf import settings
+
 import math
 from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render_to_response
+# from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.db.models import Q, Count, Case, When
 from django.template import RequestContext
 from django.db import connection
@@ -23,9 +26,8 @@ from actstream.models import Action
 
 from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
-from models import UserProfile, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
-from models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
-from commons.settings import PRODUCTION, LANGUAGES
+from commons.models import UserProfile, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
+from commons.models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
 
 verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
 
@@ -35,7 +37,7 @@ Sent from: https://%s
 This is an automatic notification message: please do not reply to it. """
 from django.core.mail import send_mail
 def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):
-    if not PRODUCTION:
+    if not settings.PRODUCTION:
         return
     site = Site.objects.get_current()
     subject = '%s - %s' % (site.name, subject)
@@ -50,7 +52,7 @@ User.unviewed_posts_count = user_unviewed_posts_count
 
 def forum_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = {}
     topic_posts_dict = defaultdict(list)
@@ -77,11 +79,12 @@ def forum_analytics(request):
         topics_list = [[topic_posts_dict[topic.id], topic] for topic in topics_list]
         forum_topics_list.append([forum, num_posts, topics_list])
     var_dict['forum_topics_list'] = forum_topics_list
-    return render_to_response('forum_analytics.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('forum_analytics.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'forum_analytics.html', var_dict)
 
 def message_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     truncate_date = connection.ops.date_trunc_sql('month', 'sent_at')
     qs = Message.objects.extra({'month':truncate_date})
@@ -111,8 +114,8 @@ def message_analytics(request):
         }
     }
     data['total'] = total
-    #print data
-    return render_to_response('message_analytics.html', data, context_instance=RequestContext(request))
+    # return render_to_response('message_analytics.html', data, context_instance=RequestContext(request))
+    return render(request, 'message_analytics.html', data)
 
 def topic_readmarks(topic, user=None, since=None):
     qs = TopicReadTracker.objects.filter(topic=topic)
@@ -187,7 +190,7 @@ def unviewed_posts(user, count_only=True):
         if forums_list:
             category_entry = [category, forums_list]
             categories_list.append(category_entry)
-    print '%d unread posts in %d topics' % (n_posts, n_topics)
+    print ('%d unread posts in %d topics' % (n_posts, n_topics))
     return categories_list
 
 def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_only=True):
@@ -246,7 +249,7 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
             if forums_list:
                 category_entry = [category, forums_list]
                 categories_list.append(category_entry)
-    print '%d unread posts in %d topics' % (n_posts, n_topics)
+    print ('%d unread posts in %d topics' % (n_posts, n_topics))
     return categories_list
 
 def track_action(actor, verb, action_object, target=None, description=None, latency=0):
@@ -297,15 +300,16 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
     return actions
 
 def activity_stream(request, user=None, max_actions=100, max_days=1):
-    if not request.user.is_authenticated() or not request.user.is_manager():
+    if not request.user.is_authenticated or not request.user.is_manager():
         return HttpResponseForbidden()
     actions = []
-    if user==request.user or request.user.is_superuser or (request.user.is_authenticated() and request.user.is_manager(1)):
+    if user==request.user or request.user.is_superuser or (request.user.is_authenticated and request.user.is_manager(1)):
         actions = filter_actions(user=user, max_days=max_days, max_actions=max_actions)
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
-    return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'activity_stream.html', var_dict)
 
 contenttype_weigth_dict = {
     'project': 1,
@@ -378,7 +382,7 @@ def filter_users(profiled=None, member=None, count_only=False):
 
 def count_users(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = defaultdict(int)
     users = User.objects.filter(is_active=True)
@@ -406,7 +410,8 @@ def count_users(request):
                     if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name!='com':
                         var_dict['n_project_member'] += 1
                         break
-    return render_to_response('count_users.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('count_users.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'count_users.html', var_dict)
 
 def oer_duplicates(request):
     published = request.GET.get('published', None)
@@ -562,7 +567,7 @@ def get_active_comembers(user, max_users=20, max_days=30):
 
 def active_users(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = {}
     items = get_active_users()
@@ -576,11 +581,12 @@ def active_users(request):
     var_dict['function'] = 'active_users'
     var_dict['onliners'] = onliners
     var_dict['others'] = others
-    return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'active_users.html', var_dict)
 
 def active_comembers(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     var_dict = {}
     items = get_active_comembers(request.user)
@@ -594,10 +600,11 @@ def active_comembers(request):
     var_dict['function'] = 'active_comembers'
     var_dict['onliners'] = onliners
     var_dict['others'] = others
-    return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'active_users.html', var_dict)
 
 translate_map = getattr(settings, 'DATATRANS_TRANSLATE_MAP', None)
-from translations import ProjectTranslation, RepoTranslation, OerTranslation, LpTranslation, PathNodeTranslation
+from commons.translations import ProjectTranslation, RepoTranslation, OerTranslation, LpTranslation, PathNodeTranslation
 
 content_classes = [Project, Repo, OER, LearningPath, PathNode]
 content_language_map = {
@@ -608,11 +615,11 @@ content_language_map = {
     PathNode: [PathNodeTranslation, SUBMITTED, PUBLISHED],
 }
 
-languages = [('', 'unknown')] + list(LANGUAGES)
+languages = [('', 'unknown')] + list(settings.LANGUAGES)
 
 def content_languages(request):
     var_dict = {}
-    var_dict['LANGUAGES'] = LANGUAGES
+    var_dict['LANGUAGES'] = settings.LANGUAGES
     var_dict['languages'] = languages
     var_dict['contents'] = [[content_class._meta.object_name, content_class._meta.verbose_name_plural] for content_class in content_classes]
     content_language_dict = {}
@@ -628,7 +635,7 @@ def content_languages(request):
         else:
             qs = qs.filter(state__in=states)
         n = qs.count()
-        print class_name, n
+        print (class_name, n)
         source_dict = {}
         for source_code, source_name in languages:
             if source_code:
@@ -637,7 +644,7 @@ def content_languages(request):
                 else:
                     source_objects = qs.filter(original_language=source_code)
             else:
-                other_codes = [language[0] for language in LANGUAGES if not language[0]==source_code]
+                other_codes = [language[0] for language in settings.LANGUAGES if not language[0]==source_code]
                 if content_class == PathNode:
                     source_objects = qs.exclude(path__original_language__in=other_codes)
                 else:
@@ -654,11 +661,12 @@ def content_languages(request):
                         # print translations.count(), 'translations'
                         target_dict[target_code] += 1
             source_dict[source_code] = target_dict
-            print class_name, source_name, n_source
+            print (class_name, source_name, n_source)
         content_language_dict[class_name] = source_dict
     var_dict['content_language_dict'] = content_language_dict
     # return content_language_dict
-    return render_to_response('content_languages.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('content_languages.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'content_languages.html', var_dict)
 
 def resource_contributors(request):
     var_dict = {}
@@ -678,7 +686,8 @@ def resource_contributors(request):
                            When(repo_creator__state=PUBLISHED, then=1)))
                        ).exclude(num_repos=0).order_by('-num_repos','last_name','first_name')
     var_dict['source_contributors'] = source_contributors
-    return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
+    # return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
+    return render(request, 'contributors.html', var_dict)
 
 def make_qs(resource):
     truncate_date = connection.ops.date_trunc_sql('month', 'created')
@@ -744,7 +753,7 @@ def make_data_chart (report):
     
 def oer_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     report = make_qs(OER)
     data = make_data_chart(report)
@@ -753,11 +762,12 @@ def oer_analytics(request):
     data['subtitle'] = _("OERs")
     data['subtitle_pub'] = _("published OERs")
     data['legenda'] = _("OERs by month")
-    return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
-    
+    # return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
+    return render(request, 'resource_analytics.html', data)
+
 def lp_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     report = make_qs(LearningPath)
     data = make_data_chart(report)
@@ -766,6 +776,7 @@ def lp_analytics(request):
     data['subtitle'] = _("LPs")
     data['subtitle_pub'] = _("published LPs")
     data['legenda'] = _("LP by month")
-    return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
+    # return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
+    return render(request, 'resource_analytics.html', data)
     
     

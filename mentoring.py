@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
-from django.shortcuts import render, render_to_response, get_object_or_404
+# from django.shortcuts import render, render_to_response, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.core.exceptions import PermissionDenied
 from django_messages.models import Message
@@ -8,12 +9,12 @@ from roles.utils import add_local_role, remove_local_role, grant_permission, get
 from roles.models import Role
 from django.contrib.auth.models import User
 
-from models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
-from models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
-from models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
+from .models import UserProfile, ProjType, Project, ProjectMember, ProjectMessage
+from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
+from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
+from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
 
-from analytics import notify_event, track_action
+from .analytics import notify_event, track_action
 
 
 def get_all_mentors():

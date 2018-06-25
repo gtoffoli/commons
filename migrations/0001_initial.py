@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
                 ('mimetype', models.CharField(max_length=255, null=True, editable=False, blank=True)),
                 ('encoding', models.CharField(max_length=64, null=True, editable=False, blank=True)),
                 ('checksum', models.TextField(verbose_name='Checksum', null=True, editable=False, blank=True)),
-                ('document', models.ForeignKey(related_name='versions', verbose_name='Document', to='commons.Document')),
+                ('document', models.ForeignKey(on_delete=models.CASCADE, related_name='versions', verbose_name='Document', to='commons.Document')),
             ],
             options={
                 'verbose_name': 'Document version',
@@ -133,7 +133,7 @@ class Migration(migrations.Migration):
                 ('end_publication', models.DateTimeField(help_text='Optional end date of publication.', null=True, verbose_name='end publication', blank=True)),
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
-                ('content_type', models.ForeignKey(verbose_name=b'Optional reference to a project, a resource, an article or a post.', blank=True, to='contenttypes.ContentType', null=True)),
+                ('content_type', models.ForeignKey(on_delete=models.CASCADE, verbose_name=b'Optional reference to a project, a resource, an article or a post.', blank=True, to='contenttypes.ContentType', null=True)),
             ],
             options={
                 'verbose_name': 'featured item',
@@ -164,8 +164,8 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField()),
                 ('label', models.TextField(null=True, verbose_name='label', blank=True)),
                 ('state', models.IntegerField(default=1, null=True, verbose_name=b'publication state', choices=[(1, 'Draft'), (2, 'Submitted'), (3, 'Published'), (4, 'Un-published')])),
-                ('document', models.ForeignKey(related_name='folderdocument_document', verbose_name='document', to='commons.Document')),
-                ('folder', models.ForeignKey(related_name='folderdocument_folder', verbose_name='folder', to='commons.Folder')),
+                ('document', models.ForeignKey(on_delete=models.CASCADE, related_name='folderdocument_document', verbose_name='document', to='commons.Document')),
+                ('folder', models.ForeignKey(on_delete=models.CASCADE, related_name='folderdocument_folder', verbose_name='folder', to='commons.Folder')),
             ],
             options={
                 'verbose_name': 'folder document',
@@ -218,7 +218,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', mptt.fields.TreeForeignKey(related_name='children', blank=True, to='commons.LevelNode', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(on_delete=models.CASCADE, related_name='children', blank=True, to='commons.LevelNode', null=True)),
             ],
             options={
                 'verbose_name': 'level',
@@ -235,7 +235,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', mptt.fields.TreeForeignKey(related_name='children', blank=True, to='commons.LicenseNode', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(on_delete=models.CASCADE, related_name='children', blank=True, to='commons.LicenseNode', null=True)),
             ],
             options={
                 'verbose_name': 'license',
@@ -329,8 +329,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('order', models.IntegerField()),
-                ('document', models.ForeignKey(related_name='document', verbose_name='Document', to='commons.Document')),
-                ('oer', models.ForeignKey(related_name='oer', verbose_name='OER', to='commons.OER')),
+                ('document', models.ForeignKey(on_delete=models.CASCADE, related_name='document', verbose_name='Document', to='commons.Document')),
+                ('oer', models.ForeignKey(on_delete=models.CASCADE, related_name='oer', verbose_name='OER', to='commons.OER')),
             ],
             options={
                 'verbose_name': 'attached document',
@@ -344,7 +344,7 @@ class Migration(migrations.Migration):
                 ('overall_score', models.IntegerField(verbose_name=b'overall quality assessment', choices=[(b'', b'---------'), (1, 'poor'), (2, 'fair'), (3, 'good'), (4, 'very good'), (5, 'excellent')])),
                 ('review', models.TextField(null=True, verbose_name='free text review', blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
-                ('oer', models.ForeignKey(related_name='evaluated_oer', verbose_name='OER', to='commons.OER')),
+                ('oer', models.ForeignKey(on_delete=models.CASCADE, related_name='evaluated_oer', verbose_name='OER', to='commons.OER')),
             ],
             options={
                 'verbose_name': 'OER evaluation',
@@ -356,8 +356,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('value', models.CharField(db_index=True, max_length=255, null=True, verbose_name='Value', blank=True)),
-                ('metadata_type', models.ForeignKey(related_name='metadata_type', verbose_name='Metadatum type', to='commons.MetadataType')),
-                ('oer', models.ForeignKey(related_name='metadata_set', verbose_name='OER', to='commons.OER')),
+                ('metadata_type', models.ForeignKey(on_delete=models.CASCADE, related_name='metadata_type', verbose_name='Metadatum type', to='commons.MetadataType')),
+                ('oer', models.ForeignKey(on_delete=models.CASCADE, related_name='metadata_set', verbose_name='OER', to='commons.OER')),
             ],
             options={
                 'verbose_name': 'additional metadatum',
@@ -369,7 +369,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('value', models.IntegerField(verbose_name='facet-related score', choices=[(b'', b'---------'), (1, 'poor'), (2, 'fair'), (3, 'good'), (4, 'very good'), (5, 'excellent')])),
-                ('oer_evaluation', models.ForeignKey(related_name='oer_evaluation', verbose_name='OER evaluation', to='commons.OerEvaluation')),
+                ('oer_evaluation', models.ForeignKey(on_delete=models.CASCADE, related_name='oer_evaluation', verbose_name='OER evaluation', to='commons.OerEvaluation')),
             ],
             options={
                 'verbose_name': 'quality metadatum',
@@ -437,7 +437,7 @@ class Migration(migrations.Migration):
                 ('state', models.IntegerField(default=0, null=True, verbose_name=b'project state', choices=[(0, 'draft proposal'), (1, 'proposal submitted'), (2, 'project open'), (3, 'project closed'), (4, 'project deleted')])),
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
-                ('chat_room', models.ForeignKey(related_name='project', verbose_name='chatroom', blank=True, to='dmuc.Room', null=True)),
+                ('chat_room', models.ForeignKey(on_delete=models.CASCADE, related_name='project', verbose_name='chatroom', blank=True, to='dmuc.Room', null=True)),
             ],
             options={
                 'verbose_name': 'project / community',
@@ -484,7 +484,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', mptt.fields.TreeForeignKey(related_name='children', blank=True, to='commons.ProStatusNode', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(on_delete=models.CASCADE, related_name='children', blank=True, to='commons.ProStatusNode', null=True)),
             ],
             options={
                 'verbose_name': 'study or work status',
@@ -577,7 +577,7 @@ class Migration(migrations.Migration):
                 ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
                 ('level', models.PositiveIntegerField(editable=False, db_index=True)),
-                ('parent', mptt.fields.TreeForeignKey(related_name='children', blank=True, to='commons.SubjectNode', null=True)),
+                ('parent', mptt.fields.TreeForeignKey(on_delete=models.CASCADE, related_name='children', blank=True, to='commons.SubjectNode', null=True)),
             ],
             options={
                 'verbose_name': 'subject',
@@ -600,7 +600,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserPreferences',
             fields=[
-                ('user', models.OneToOneField(related_name='preferences', primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(on_delete=models.CASCADE, related_name='preferences', primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('enable_email_notifications', models.PositiveIntegerField(default=0, null=True, verbose_name='email notifications', choices=[(0, 'do not notify me of new private messages'), (1, 'notify me only of individual messages'), (2, 'notify me of individual and group messages')])),
                 ('stream_max_days', models.PositiveIntegerField(default=90, help_text='Max age of actions to list in my dashboard.', null=True, verbose_name='activity stream max days')),
                 ('stream_max_actions', models.PositiveIntegerField(default=30, help_text='Max number of actions to list in my dashboard.', null=True, verbose_name='activity stream max actions ')),
@@ -609,7 +609,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                ('user', models.OneToOneField(related_name='profile', primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
+                ('user', models.OneToOneField(on_delete=models.CASCADE, related_name='profile', primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('gender', models.CharField(default=b'-', max_length=1, null=True, blank=True, choices=[(b'-', 'not specified'), (b'm', 'male'), (b'f', 'female')])),
                 ('dob', models.DateField(help_text='format: dd/mm/yyyy', null=True, verbose_name='date of birth', blank=True)),
                 ('city', models.CharField(max_length=250, null=True, verbose_name='city', blank=True)),
@@ -620,25 +620,25 @@ class Migration(migrations.Migration):
                 ('url', models.CharField(blank=True, max_length=200, verbose_name='web site', validators=[django.core.validators.URLValidator()])),
                 ('avatar', awesome_avatar.fields.AvatarField(upload_to=b'images/avatars/', verbose_name=b'')),
                 ('enable_email_notifications', models.PositiveIntegerField(default=0, null=True, verbose_name='email notifications', choices=[(0, 'do not notify me of new private messages'), (1, 'notify me only of individual messages'), (2, 'notify me of individual and group messages')])),
-                ('country', models.ForeignKey(verbose_name='country', blank=True, to='commons.CountryEntry', null=True)),
-                ('edu_field', models.ForeignKey(verbose_name='field of study', blank=True, to='commons.EduFieldEntry', null=True)),
-                ('edu_level', models.ForeignKey(verbose_name='education level', blank=True, to='commons.EduLevelEntry', null=True)),
+                ('country', models.ForeignKey(on_delete=models.CASCADE, verbose_name='country', blank=True, to='commons.CountryEntry', null=True)),
+                ('edu_field', models.ForeignKey(on_delete=models.CASCADE, verbose_name='field of study', blank=True, to='commons.EduFieldEntry', null=True)),
+                ('edu_level', models.ForeignKey(on_delete=models.CASCADE, verbose_name='education level', blank=True, to='commons.EduLevelEntry', null=True)),
                 ('languages', models.ManyToManyField(help_text='The UI will support only EN, IT and PT.', to='commons.Language', verbose_name=b'known languages', blank=True)),
                 ('networks', models.ManyToManyField(to='commons.NetworkEntry', verbose_name='online networks / services used', blank=True)),
-                ('pro_field', models.ForeignKey(verbose_name='work sector', blank=True, to='commons.ProFieldEntry', null=True)),
-                ('pro_status', models.ForeignKey(verbose_name='study or work status', blank=True, to='commons.ProStatusNode', null=True)),
+                ('pro_field', models.ForeignKey(on_delete=models.CASCADE, verbose_name='work sector', blank=True, to='commons.ProFieldEntry', null=True)),
+                ('pro_status', models.ForeignKey(on_delete=models.CASCADE, verbose_name='study or work status', blank=True, to='commons.ProStatusNode', null=True)),
                 ('subjects', models.ManyToManyField(to='commons.SubjectNode', verbose_name=b'interest areas', blank=True)),
             ],
         ),
         migrations.AddField(
             model_name='repo',
             name='creator',
-            field=models.ForeignKey(related_name='repo_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='repo_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='repo',
             name='editor',
-            field=models.ForeignKey(related_name='repo_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='repo_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='repo',
@@ -653,7 +653,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='repo',
             name='repo_type',
-            field=models.ForeignKey(related_name='repositories', verbose_name='repository type', to='commons.RepoType'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='repositories', verbose_name='repository type', to='commons.RepoType'),
         ),
         migrations.AddField(
             model_name='repo',
@@ -663,27 +663,27 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='projectmember',
             name='editor',
-            field=models.ForeignKey(related_name='membership_editor', verbose_name='last state modifier', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='membership_editor', verbose_name='last state modifier', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='projectmember',
             name='project',
-            field=models.ForeignKey(related_name='member_project', verbose_name='community or project', to='commons.Project', help_text='the project the user belongs or applies to'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='member_project', verbose_name='community or project', to='commons.Project', help_text='the project the user belongs or applies to'),
         ),
         migrations.AddField(
             model_name='projectmember',
             name='user',
-            field=models.ForeignKey(related_name='membership_user', verbose_name='user', to=settings.AUTH_USER_MODEL, help_text='the user belonging or applying to the project'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='membership_user', verbose_name='user', to=settings.AUTH_USER_MODEL, help_text='the user belonging or applying to the project'),
         ),
         migrations.AddField(
             model_name='project',
             name='creator',
-            field=models.ForeignKey(related_name='project_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='project_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='project',
             name='editor',
-            field=models.ForeignKey(related_name='project_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='project_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='project',
@@ -693,67 +693,67 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='forum',
-            field=models.ForeignKey(related_name='project_forum', verbose_name='project forum', blank=True, to='pybb.Forum', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='project_forum', verbose_name='project forum', blank=True, to='pybb.Forum', null=True),
         ),
         migrations.AddField(
             model_name='project',
             name='group',
-            field=models.OneToOneField(related_name='project', verbose_name='associated user group', to='auth.Group'),
+            field=models.OneToOneField(on_delete=models.CASCADE, related_name='project', verbose_name='associated user group', to='auth.Group'),
         ),
         migrations.AddField(
             model_name='project',
             name='proj_type',
-            field=models.ForeignKey(related_name='projects', verbose_name='Project type', to='commons.ProjType'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='projects', verbose_name='Project type', to='commons.ProjType'),
         ),
         migrations.AddField(
             model_name='pathnode',
             name='creator',
-            field=models.ForeignKey(related_name='pathnode_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='pathnode_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='pathnode',
             name='document',
-            field=models.ForeignKey(related_name='pathnode_document', verbose_name='document', blank=True, to='commons.Document', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='pathnode_document', verbose_name='document', blank=True, to='commons.Document', null=True),
         ),
         migrations.AddField(
             model_name='pathnode',
             name='editor',
-            field=models.ForeignKey(related_name='pathnode_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='pathnode_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='pathnode',
             name='oer',
-            field=models.ForeignKey(verbose_name='stands for', blank=True, to='commons.OER', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='stands for', blank=True, to='commons.OER', null=True),
         ),
         migrations.AddField(
             model_name='pathnode',
             name='path',
-            field=models.ForeignKey(related_name='path_node', verbose_name='learning path or collection', to='commons.LearningPath'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='path_node', verbose_name='learning path or collection', to='commons.LearningPath'),
         ),
         migrations.AddField(
             model_name='pathedge',
             name='child',
-            field=models.ForeignKey(related_name='PathNode_parent', to='commons.PathNode'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='PathNode_parent', to='commons.PathNode'),
         ),
         migrations.AddField(
             model_name='pathedge',
             name='creator',
-            field=models.ForeignKey(related_name='pathedge_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='pathedge_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='pathedge',
             name='editor',
-            field=models.ForeignKey(related_name='pathedge_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='pathedge_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='pathedge',
             name='parent',
-            field=models.ForeignKey(related_name='PathNode_child', to='commons.PathNode'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='PathNode_child', to='commons.PathNode'),
         ),
         migrations.AddField(
             model_name='oerqualitymetadata',
             name='quality_facet',
-            field=models.ForeignKey(related_name='quality_facet', verbose_name='quality facet', to='commons.QualityFacet'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='quality_facet', verbose_name='quality facet', to='commons.QualityFacet'),
         ),
         migrations.AddField(
             model_name='oerevaluation',
@@ -763,12 +763,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='oerevaluation',
             name='user',
-            field=models.ForeignKey(verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='oer',
             name='creator',
-            field=models.ForeignKey(related_name='oer_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='oer_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='oer',
@@ -778,7 +778,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='oer',
             name='editor',
-            field=models.ForeignKey(related_name='oer_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='oer_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='oer',
@@ -793,12 +793,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='oer',
             name='license',
-            field=models.ForeignKey(verbose_name='terms of use', blank=True, to='commons.LicenseNode', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='terms of use', blank=True, to='commons.LicenseNode', null=True),
         ),
         migrations.AddField(
             model_name='oer',
             name='material',
-            field=models.ForeignKey(verbose_name='type of material', blank=True, to='commons.MaterialEntry', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='type of material', blank=True, to='commons.MaterialEntry', null=True),
         ),
         migrations.AddField(
             model_name='oer',
@@ -818,12 +818,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='oer',
             name='project',
-            field=models.ForeignKey(related_name='oer_project', to='commons.Project', help_text='where the OER has been cataloged or created'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='oer_project', to='commons.Project', help_text='where the OER has been cataloged or created'),
         ),
         migrations.AddField(
             model_name='oer',
             name='source',
-            field=models.ForeignKey(verbose_name='source repository', blank=True, to='commons.Repo', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='source repository', blank=True, to='commons.Repo', null=True),
         ),
         migrations.AddField(
             model_name='oer',
@@ -838,17 +838,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learningpath',
             name='creator',
-            field=models.ForeignKey(related_name='path_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='path_creator', verbose_name='creator', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='learningpath',
             name='editor',
-            field=models.ForeignKey(related_name='path_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='path_editor', verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='learningpath',
             name='group',
-            field=models.ForeignKey(related_name='lp_group', verbose_name='group', blank=True, to='auth.Group', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='lp_group', verbose_name='group', blank=True, to='auth.Group', null=True),
         ),
         migrations.AddField(
             model_name='learningpath',
@@ -858,7 +858,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='learningpath',
             name='project',
-            field=models.ForeignKey(related_name='lp_project', verbose_name='project', blank=True, to='commons.Project', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='lp_project', verbose_name='project', blank=True, to='commons.Project', null=True),
         ),
         migrations.AddField(
             model_name='learningpath',
@@ -873,7 +873,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='folderdocument',
             name='user',
-            field=models.ForeignKey(verbose_name='user', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='user', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='folder',
@@ -883,22 +883,22 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='folder',
             name='parent',
-            field=mptt.fields.TreeForeignKey(related_name='subfolders', blank=True, to='commons.Folder', null=True),
+            field=mptt.fields.TreeForeignKey(on_delete=models.CASCADE, related_name='subfolders', blank=True, to='commons.Folder', null=True),
         ),
         migrations.AddField(
             model_name='folder',
             name='user',
-            field=models.ForeignKey(verbose_name='User', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='User', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AddField(
             model_name='featured',
             name='user',
-            field=models.ForeignKey(verbose_name='User', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='User', blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AddField(
             model_name='document',
             name='document_type',
-            field=models.ForeignKey(related_name='documents', verbose_name='Document type', to='commons.DocumentType'),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='documents', verbose_name='Document type', to='commons.DocumentType'),
         ),
         migrations.AlterUniqueTogether(
             name='oerqualitymetadata',

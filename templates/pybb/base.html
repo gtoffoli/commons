@@ -1,6 +1,6 @@
 {% extends "commons_base.html" %}
 {% load i18n pybb_tags %}
-{% load url from future %} 
+{% comment %}{% load url from future %}{% endcomment %} 
 
 {% comment %}{% block title %}{{ PYBB_DEFAULT_TITLE }}{% endblock title %}{% endcomment %}
 {
@@ -29,7 +29,7 @@
 
 {% comment %}
 {% extends PYBB_TEMPLATE|default:"base.html" %}
-{% load url from future %}
+{% comment %}{% load url from future %}{% endcomment %}
 {% load i18n pybb_tags %}
 {% block title %}{{ PYBB_DEFAULT_TITLE }}{% endblock title %}
 

@@ -28,7 +28,7 @@ def entry_post_save_handler(sender, **kwargs):
 def entry_m2m_changed_handler(sender, **kwargs):
     entry = kwargs['instance']
     action = kwargs['action']
-    print entry, action, entry.authors.all()
+    print (entry, action, entry.authors.all())
     if action == 'post_add':
         authors = entry.authors.all()
         for user in authors:

@@ -1,11 +1,8 @@
-'''
-Created on 06/mag/2015
-@author: giovanni
-'''
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
-# from django.db.models.query import Q
 from django.contrib import admin
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
@@ -14,6 +11,7 @@ from django.utils.html import format_html
 
 # ABSTRACT CLASSES
 
+@python_2_unicode_compatible
 class VocabularyEntry(models.Model):
     name = models.CharField(max_length=100, unique=True)
     order = models.IntegerField(default=100)
@@ -24,12 +22,12 @@ class VocabularyEntry(models.Model):
     def option_label(self):
         return self.name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
 class VocabularyNode(MPTTModel, VocabularyEntry):
-    # parent = TreeForeignKey('self', null=True, blank=True, related_name = 'children', limit_choices_to=Q(parent__isnull=True))
-    parent = TreeForeignKey('self', null=True, blank=True, related_name = 'children')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name = 'children')
     class MPTTMeta:
         order_insertion_by = ('order',)
     class Meta:
@@ -43,8 +41,7 @@ class VocabularyNode(MPTTModel, VocabularyEntry):
             indent += ' '
         return '%s%s' % (indent, self.name)
 
-    def __unicode__(self):
-        #return self.name
+    def __str__(self):
         return format_html(self.option_label())
 
 def expand_to_descendants(klass, pk_list):
@@ -59,6 +56,7 @@ def expand_to_descendants(klass, pk_list):
                 expanded.append(pk)
     return expanded
 
+@python_2_unicode_compatible
 class CodedEntry(models.Model):
     """
     Abstract class for classification entries with control on key
@@ -76,7 +74,7 @@ class CodedEntry(models.Model):
     def only_name (self):
         return '%s' % (self.name)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 # OER METADATA MODEL

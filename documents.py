@@ -1,21 +1,20 @@
 from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
 
-# import base64
+from six import StringIO
+
 import hashlib
 import logging
 import os
-import StringIO
-# import tempfile
 import uuid
 
 from django.core.files.storage import FileSystemStorage
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
-# from django.utils.importlib import import_module
-from compressed_files import CompressedFile, NotACompressedFile
-import utils
+from commons.compressed_files import CompressedFile, NotACompressedFile
+import commons.utils
+from django.conf import settings
 
-import settings
 # CACHE_PATH = os.path.join(settings.MEDIA_ROOT, 'image_cache')
 LANGUAGE = 'en'
 LANGUAGE_CHOICES = settings.LANGUAGES
@@ -104,6 +103,7 @@ class DocumentTypeManager(models.Manager):
     def get_by_natural_key(self, name):
         return self.get(name=name)
 
+@python_2_unicode_compatible
 class DocumentType(models.Model):
     """
     Define document types or classes to which a specific set of
@@ -122,7 +122,7 @@ class DocumentType(models.Model):
 
     objects = DocumentTypeManager()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def natural_key(self):
@@ -139,7 +139,7 @@ class DocumentManager(models.Manager):
                 count = 1
                 for compressed_file_child in compressed_file.children():
                     if command_line:
-                        print 'Uploading file #%d: %s' % (count, compressed_file_child)
+                        print ('Uploading file #%d: %s' % (count, compressed_file_child))
                     versions_created.append(self.upload_single_document(document_type=document_type, file_object=compressed_file_child, description=description, label=unicode(compressed_file_child), language=language or LANGUAGE, user=user))
                     compressed_file_child.close()
                     count += 1
@@ -162,6 +162,7 @@ class DocumentManager(models.Manager):
         document.set_document_type(document_type, force=True)
         return version
 
+@python_2_unicode_compatible
 class Document(models.Model):
     """
     Defines a single document with it's fields and properties
@@ -169,7 +170,7 @@ class Document(models.Model):
 
     # uuid = models.CharField(default=lambda: UUID_FUNCTION(), max_length=48, editable=False)
     uuid = models.CharField(default=UUID_FUNCTION, max_length=48, editable=False)
-    document_type = models.ForeignKey(DocumentType, verbose_name=_('Document type'), related_name='documents')
+    document_type = models.ForeignKey(DocumentType, on_delete=models.CASCADE, verbose_name=_('Document type'), related_name='documents')
     label = models.CharField(max_length=255, default=_('Uninitialized document'), db_index=True, help_text=_('The name of the document'), verbose_name=_('Label'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
     date_added = models.DateTimeField(verbose_name=_('Added'), auto_now_add=True)
@@ -201,7 +202,7 @@ class Document(models.Model):
                 os.unlink(file_path)
     """
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     """
@@ -384,7 +385,7 @@ class Document(models.Model):
     @property
     def viewable(self):
         mimetype = self.file_mimetype
-        print mimetype
+        # print mimetype
         if not mimetype:
             return False
         for mt in VIEWABLE_MIMETYPES:
@@ -400,6 +401,7 @@ class Document(models.Model):
                 return True
         return False
 
+@python_2_unicode_compatible
 class DocumentVersion(models.Model):
     """
     Model that describes a document version and its properties
@@ -415,7 +417,7 @@ class DocumentVersion(models.Model):
     def register_post_save_hook(cls, order, func):
         cls._post_save_hooks[order] = func
 
-    document = models.ForeignKey(Document, verbose_name=_('Document'), related_name='versions')
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, verbose_name=_('Document'), related_name='versions')
     timestamp = models.DateTimeField(verbose_name=_('Timestamp'), auto_now_add=True)
     comment = models.TextField(blank=True, verbose_name=_('Comment'))
 
@@ -432,7 +434,7 @@ class DocumentVersion(models.Model):
         verbose_name = _('Document version')
         verbose_name_plural = _('Document version')
 
-    def __unicode__(self):
+    def __str__(self):
         return '{0} - {1}'.format(self.document, self.timestamp)
 
     def save(self, *args, **kwargs):
@@ -604,13 +606,13 @@ class DocumentVersion(models.Model):
     def get_page(self, page):
         if self.mimetype.lower().count('pdf'):
             i_stream = self.open()
-            self.o_stream = StringIO.StringIO()
+            self.o_stream = StringIO()
             utils.get_pdf_page(i_stream, self.o_stream, page)
 
     def get_pages(self, pageranges):
         if self.mimetype.lower().count('pdf'):
             i_stream = self.open()
-            self.o_stream = StringIO.StringIO()
+            self.o_stream = StringIO()
             utils.get_pdf_pages(i_stream, self.o_stream, pageranges)
 
 """

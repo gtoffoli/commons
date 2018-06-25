@@ -11,7 +11,7 @@ from pybb.models import Topic
 from actstream import action, registry
 registry.register(Topic)
 """
-from analytics import track_action
+from commons.analytics import track_action
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
@@ -33,11 +33,11 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         if not project:
             return True
         # return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp',] or self.is_member(user) or user.is_superuser)
-        return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp', 'roll'] or project.is_member(user) or user.is_superuser)
+        return user.is_authenticated and (project.get_type_name() in ['com', 'oer', 'lp', 'roll'] or project.is_member(user) or user.is_superuser)
 
     def may_create_topic(self, user, forum):
         """ return True if `user` is allowed to create a new topic in `forum` """
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if user.is_superuser:
             return True
@@ -53,12 +53,12 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         """ return True if user may view this topic, False otherwise """
         # print 'may_view_topic: ', user.username, topic.name
         # action.send(user, verb='View', action_object=topic)
-        if user.is_authenticated():
+        if user.is_authenticated:
             track_action(user, 'View', topic)
         forum = topic.forum
         project = forum.get_project()
         if project:
-            return user.is_authenticated()
+            return user.is_authenticated
         else:
             return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
     
@@ -87,7 +87,7 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         if self.may_create_topic(user, topic.forum):
             return True
         
-        return user.is_authenticated() and not topic.forum.get_project()
+        return user.is_authenticated and not topic.forum.get_project()
 
     def may_view_post(self, user, post):
         """ return True if `user` may view `post`, False otherwise """
@@ -95,6 +95,6 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         forum = topic.forum
         project = forum.get_project()
         if project:
-            return user.is_authenticated()
+            return user.is_authenticated
         else:
             return (not post.on_moderation) or (user==post.user) or (user in forum.moderators.all())

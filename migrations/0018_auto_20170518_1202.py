@@ -20,11 +20,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='folderdocument',
             name='document',
-            field=models.ForeignKey(related_name='folderdocument_document', verbose_name='document', blank=True, to='commons.Document', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='folderdocument_document', verbose_name='document', blank=True, to='commons.Document', null=True),
         ),
         migrations.AlterField(
             model_name='oerevaluation',
             name='user',
-            field=models.ForeignKey(related_name='oer_evaluator', verbose_name='evaluator', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='oer_evaluator', verbose_name='evaluator', to=settings.AUTH_USER_MODEL),
         ),
     ]

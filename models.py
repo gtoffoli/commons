@@ -1,11 +1,22 @@
 # -*- coding: utf-8 -*-"""
 
+from __future__ import unicode_literals
+from django.utils.encoding import python_2_unicode_compatible
+
+from six import StringIO
+
+from django.conf import settings
+# if settings.HAS_DMUC:
+from conversejs.models import XMPPAccount
+from dmuc.models import Room, RoomMember
+
 import os
 import json
 from math import sqrt
+import functools
 from datetime import timedelta
-import StringIO
 from weasyprint import HTML, CSS
+
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.utils.functional import cached_property
@@ -29,22 +40,14 @@ from mptt.fields import TreeForeignKey
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
 from roles.models import Role
-# from roles.utils import get_roles, has_permission
 from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission
-"""
-from taggit.models import Tag
-from taggit.managers import TaggableManager
-"""
 from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
-from conversejs.models import XMPPAccount
-from dmuc.models import Room, RoomMember
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
 from django_messages.models import Message
 
-from commons import settings
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
@@ -52,16 +55,8 @@ from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
+from six import iteritems
 
-# from analytics import filter_actions, post_views_by_user
-
-# indexable_models = [UserProfile, Project, OER, LearningPath]
-
-"""
-# 150402 Giovanni.Toffoli - see django-extensions and django-organizations
-CreationDateTimeField(_('created')).contribute_to_class(Group, 'created')
-ModificationDateTimeField(_('modified')).contribute_to_class(Group, 'modified')
-"""
 def group_project(self):
     projects = Project.objects.filter(group=self)
     if len(projects) == 1:
@@ -78,7 +73,7 @@ User.get_display_name = get_display_name
 
 def user_can_edit(self, request):
     user = request.user
-    return user.is_authenticated() and (user.is_superuser or user.id==self.id)
+    return user.is_authenticated and (user.is_superuser or user.id==self.id)
 User.can_edit = user_can_edit
 
 def user_get_profile(self):
@@ -205,6 +200,7 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
+@python_2_unicode_compatible
 class Tag(models.Model):
     name = models.CharField(verbose_name=_('Name'), unique=True, max_length=100)
     slug = AutoSlugField(unique=True, populate_from='name')
@@ -214,7 +210,7 @@ class Tag(models.Model):
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 from filebrowser.fields import FileBrowseField
@@ -262,7 +258,7 @@ class Resource(models.Model):
     def can_comment(self, request):
         user = request.user
         # return user.is_authenticated() and user.profile and user.profile.get_completeness()
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         profile = user.get_profile()
         return profile and profile.get_completeness()
@@ -374,15 +370,16 @@ class Publishable(object):
             self.state = UN_PUBLISHED
             self.save()
 
+@python_2_unicode_compatible
 class Folder(MPTTModel):
        
     """
     title = models.CharField(max_length=128, verbose_name=_('Title'), db_index=True)
     """
     title = models.CharField(max_length=128, verbose_name=_('Title'))
-    parent = TreeForeignKey('self', null=True, blank=True, related_name = 'subfolders')
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name = 'subfolders')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('User'))
     documents = models.ManyToManyField(Document, through='FolderDocument', related_name='document_folder', blank=True, verbose_name='documents')
-    user = models.ForeignKey(User, verbose_name=_('User'))
     created = CreationDateTimeField(verbose_name=_('created'))
 
     class Meta:
@@ -393,7 +390,7 @@ class Folder(MPTTModel):
         verbose_name = _('folder')
         verbose_name_plural = _('folders')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def remove_document(self, document, request):
@@ -421,6 +418,7 @@ class Folder(MPTTModel):
         return ('folders:folder_view', [self.pk])
     """
 
+@python_2_unicode_compatible
 class FolderDocument(models.Model, Publishable):
     """
     Link a document or an online external resource to a folder; documents are ordered
@@ -428,18 +426,17 @@ class FolderDocument(models.Model, Publishable):
     see forms FolderDocumentForm and FolderOnlineResourceForm
     """
     order = models.IntegerField()
-    folder = models.ForeignKey(Folder, related_name='folderdocument_folder', verbose_name=_('folder'))
-    # document = models.ForeignKey(Document, related_name='folderdocument_document', verbose_name=_('document'))
-    document = models.ForeignKey(Document, blank=True, null=True, related_name='folderdocument_document', verbose_name=_('document'))
+    folder = models.ForeignKey(Folder, on_delete=models.PROTECT, related_name='folderdocument_folder', verbose_name=_('folder'))
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True, related_name='folderdocument_document', verbose_name=_('document'))
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('user'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'))
     label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
-    user = models.ForeignKey(User, verbose_name=_('user'))
-    # created = CreationDateTimeField(_('created'), default=None, null=True)
     created = CreationDateTimeField(_('created'), null=True)
 
-    def __unicode__(self):
-        return unicode(self.document.label)
+    def __str__(self):
+        # return unicode(self.document.label)
+        return self.document.label
 
     class Meta:
         unique_together = ('folder', 'document',)
@@ -503,7 +500,7 @@ mentor_fitness_metrics = {
 }
 
 class UserPreferences(models.Model):
-    user = models.OneToOneField(User, primary_key=True, related_name='preferences')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='preferences')
     enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'), help_text=_('Do you want that private messages from other members be notified to you by email? In any case, they will not know your email address.'))
     stream_max_days = models.PositiveIntegerField(default=90, null=True, verbose_name=_('activity stream max days'), help_text=_('Max age of actions to list in my dashboard.'))
     stream_max_actions = models.PositiveIntegerField(default=30, null=True, verbose_name=_('activity stream max actions '), help_text=_('Max number of actions to list in my dashboard.'))
@@ -511,18 +508,18 @@ class UserPreferences(models.Model):
 
 from awesome_avatar.fields import AvatarField
 class UserProfile(models.Model):
-    # user = models.OneToOneField(User, unique=True)
-    user = models.OneToOneField(User, primary_key=True, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name='profile')
     gender = models.CharField(max_length=1, blank=True, null=True,
                                   choices=GENDERS, default='-')
     dob = models.DateField(blank=True, null=True, verbose_name=_('date of birth'), help_text=_('format: dd/mm/yyyy'))
-    country = models.ForeignKey(CountryEntry, blank=True, null=True, verbose_name=_('country'))
     city = models.CharField(max_length=250, null=True, blank=True, verbose_name=_('city'))
-    edu_level = models.ForeignKey(EduLevelEntry, blank=True, null=True, verbose_name=_('education level'))
-    pro_status = models.ForeignKey(ProStatusNode, blank=True, null=True, verbose_name=_('study or work status'))
+    country = models.ForeignKey(CountryEntry, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('country'))
+    edu_level = models.ForeignKey(EduLevelEntry, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('education level'))
+    pro_status = models.ForeignKey(ProStatusNode, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('study or work status'))
+    edu_field = models.ForeignKey(EduFieldEntry, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('field of study'))
+    pro_field = models.ForeignKey(ProFieldEntry, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('work sector'))
+    curriculum = models.ForeignKey(Document, on_delete=models.SET_NULL, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
     position = models.TextField(blank=True, null=True, verbose_name=_('study or work position'))
-    edu_field = models.ForeignKey(EduFieldEntry, blank=True, null=True, verbose_name=_('field of study'))
-    pro_field = models.ForeignKey(ProFieldEntry, blank=True, null=True, verbose_name=_('work sector'))
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='interest areas')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='known languages', help_text=_('The UI will support only EN, IT and PT.'))
     other_languages = models.TextField(blank=True, verbose_name=_('known languages not listed above'), help_text=_('list one per line.'))
@@ -530,7 +527,6 @@ class UserProfile(models.Model):
     long = models.TextField(blank=True, verbose_name=_('longer presentation'))
     url = models.CharField(max_length=200, blank=True, verbose_name=_('web site'), validators=[URLValidator()])
     networks = models.ManyToManyField(NetworkEntry, blank=True, verbose_name=_('online networks / services used'))
-    # avatar = models.ImageField('profile picture', upload_to='images/avatars/', null=True, blank=True)
     avatar = AvatarField('', upload_to='images/avatars/', width=100, height=100)
     enable_email_notifications = models.PositiveIntegerField(choices=EMAIL_NOTIFICATION_CHOICES, default=0, null=True, verbose_name=_('email notifications'))
     skype = models.CharField(max_length=50, null=True, blank=True, verbose_name=_('skype id'))
@@ -538,11 +534,9 @@ class UserProfile(models.Model):
     mentoring = models.TextField(blank=True, verbose_name=_('mentor presentation'))
     mentor_for_all = models.BooleanField(default=False, verbose_name=_('available as mentor for other communities'), help_text=_('available to act as mentor also for members of other communities.'))
     mentor_unavailable = models.BooleanField(default=False, verbose_name=_('currently not available as mentor'), help_text=_('temporarily unavailable to accept (more) requests by mentees.'))
-    curriculum = models.ForeignKey(Document, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
 
-    def __unicode__(self):
-        # return u'%s profile' % self.user.username
-        return u'profile of %s %s' % (self.user.first_name, self.user.last_name)
+    def __str__(self):
+        return 'profile of %s %s' % (self.user.first_name, self.user.last_name)
 
     def get_absolute_url(self):
         return '/profile/%s/' % self.user.username
@@ -597,7 +591,8 @@ class UserProfile(models.Model):
         profile_2 = user.get_profile()
         if not profile_2:
             return score, matches
-        for field_name, weight in userprofile_similarity_metrics.iteritems():
+        # for field_name, weight in userprofile_similarity_metrics.iteritems():
+        for field_name, weight in iteritems(userprofile_similarity_metrics):
             max_score += weight
             field_score = 0
             field = UserProfile._meta.get_field(field_name)
@@ -638,7 +633,7 @@ class UserProfile(models.Model):
                     if mentor == self.user:
                         continue
                     score, matches = self.get_mentor_fitness(mentor)
-                    print score, matches
+                    print (score, matches)
                     if score > threshold:
                         avatar = mentor.get_profile().avatar
                         best_mentors.append([score, mentor, avatar])
@@ -651,7 +646,8 @@ class UserProfile(models.Model):
         profile_2 = user.get_profile()
         if not self.pro_status or not profile_2 or not profile_2.pro_status:
             return score, matches
-        for field_name, weight in mentor_fitness_metrics.iteritems():
+        # for field_name, weight in mentor_fitness_metrics.iteritems():
+        for field_name, weight in iteritems(mentor_fitness_metrics):
             max_score += weight
             field = UserProfile._meta.get_field(field_name)
             value_1 = getattr(self, field_name)
@@ -688,6 +684,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 post_save.connect(create_user_profile, sender=User,
                  dispatch_uid="create_user_profile")
 
+@python_2_unicode_compatible
 class Subject(models.Model):
     """
     Enumerate languages referred by Repos and OERs
@@ -709,9 +706,10 @@ class Subject(models.Model):
                 label = '--' + label
         return label
 
-    def __unicode__(self):
+    def __str__(self):
         return self.option_label()
 
+@python_2_unicode_compatible
 class ProjType(models.Model):
     """
     Define project/community types
@@ -730,7 +728,7 @@ class ProjType(models.Model):
         # return '%s - %s' % (self.name, self.description)
         return self.description
 
-    def __unicode__(self):
+    def __str__(self):
         return self.option_label()
 
 CHAT_TYPE_CHOICES = (
@@ -790,33 +788,25 @@ MENTORING_MODEL_CHOICES = (
 )
 MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 
-"""
-class ProjectBase(models.Model):
-    class Meta:
-        abstract = True
-
-class Project(ProjectBase):
-"""
-# class Project(models.Model):
+@python_2_unicode_compatible
 class Project(Resource):
 
     class Meta:
         verbose_name = _('project / community')
         verbose_name_plural = _('projects')
 
-    group = models.OneToOneField(Group, verbose_name=_('associated user group'), related_name='project')
+    group = models.OneToOneField(Group, on_delete=models.PROTECT, verbose_name=_('associated user group'), related_name='project')
     """
-    # name = models.CharField(max_length=100, verbose_name=_('name'))
     name = models.CharField(max_length=50, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True)
     """
     name = models.CharField(max_length=78, verbose_name=_('name')) # the slug is used as the group name (max 80 chars)
     slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
-    proj_type = models.ForeignKey(ProjType, verbose_name=_('Project type'), related_name='projects')
-    # chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=0, null=True, verbose_name='chat type')
+    proj_type = models.ForeignKey(ProjType, on_delete=models.PROTECT, verbose_name=_('Project type'), related_name='projects')
+    forum = models.ForeignKey(Forum, on_delete=models.SET_NULL, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
+    # if settings.HAS_DMUC:
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
     chat_room = models.ForeignKey(Room, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
-    forum = models.ForeignKey(Forum, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
@@ -825,15 +815,15 @@ class Project(Resource):
 
     mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     allow_external_mentors = models.BooleanField(default=False, verbose_name=_('allow external mentors'))
-    prototype = models.ForeignKey('LearningPath', verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
+    prototype = models.ForeignKey('LearningPath', on_delete=models.SET_NULL, verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
 
     reserved = models.BooleanField(default=False, verbose_name=_('reserved'))
     state = models.IntegerField(choices=PROJECT_STATE_CHOICES, default=PROJECT_DRAFT, null=True, verbose_name='project state')
 
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='project_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='project_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='project_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='project_editor')
 
     def get_absolute_url(self):
         return '/project/%s/' % self.slug
@@ -917,7 +907,7 @@ class Project(Resource):
     def get_name(self):
         return self.name or self.group.name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.get_name()
 
     def get_project_type(self):
@@ -964,51 +954,33 @@ class Project(Resource):
         else:
             return _('supervisor')
 
-    """
-    def can_access(self, user):
-        # if self.state==PROJECT_OPEN:
-        if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
-            return True
-        if not user.is_authenticated():
-            return False
-        parent = self.get_parent()
-        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
-    """
-
     def can_access(self, user):
         parent = self.get_parent()
         if self.proj_type.name == 'ment':
-            if not user.is_authenticated():
+            if not user.is_authenticated:
                 return False
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED) and (self.is_member(user) or (parent and parent.is_admin(user))):
-                print "================ PASSO UNO ====================="
                 return True
             if self.state == PROJECT_DRAFT and self.is_member(user):
-                print "================ PASSO DUE ====================="
                 return True
             if self.state == PROJECT_DRAFT and (not self.is_member(user) or (parent and parent.is_admin(user))):
-                print "================ PASSO TRE ====================="
                 return False
             if self.state == PROJECT_SUBMITTED and (self.is_member(user)):
-                print "================ PASSO QUATTRO ====================="
                 return True
             if self.state == PROJECT_SUBMITTED and (ProjectMember.objects.filter(project=self, user=user, state=0, refused=None)):
-                print "================ PASSO CINQUE ====================="
                 return True
             if self.state == PROJECT_SUBMITTED and parent and parent.is_admin(user) and (parent.mentoring_model == MENTORING_MODEL_B or (parent.mentoring_model == MENTORING_MODEL_C and self.mentoring_model == MENTORING_MODEL_B)):
-                print "================ PASSO SEI ====================="
                 return True
         else: 
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
                 return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
 
-    # def can_edit(self, user):
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if user.is_superuser: return True
         if self.get_type_name()=='ment':
@@ -1044,11 +1016,14 @@ class Project(Resource):
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
 
     def can_chat(self, user):
-        if not (user.is_authenticated() and self.is_member(user)) :
+        if settings.HAS_DMUC:
+            if not (user.is_authenticated and self.is_member(user)) :
+                return False
+            if not (self.chat_type in [1] and self.chat_room):
+                return False
+            return self.is_room_member(user)
+        else:
             return False
-        if not (self.chat_type in [1] and self.chat_room):
-            return False
-        return self.is_room_member(user)
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -1100,7 +1075,7 @@ class Project(Resource):
         membership.delete()
 
     def get_memberships(self, state=None, user=None):
-        if user and user.is_authenticated():
+        if user and user.is_authenticated:
             memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
@@ -1175,32 +1150,43 @@ class Project(Resource):
         return has_permission(self, user, 'add-oer')
  
     def has_chat_room(self):
-        return self.chat_type in [1] and self.chat_room
+        if settings.HAS_DMUC:
+            return self.chat_type in [1] and self.chat_room
+        else:
+            return False
 
     def need_create_room(self):
-        # return self.chat_type in [1] and not self.chat_room
-        return self.chat_type in [1] and not self.chat_room and self.state==PROJECT_OPEN and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
+        if settings.HAS_DMUC:
+            return self.chat_type in [1] and not self.chat_room and self.state==PROJECT_OPEN and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
+        else:
+            return False
 
     def is_room_member(self, user):
-        if not user.is_active:
+        if settings.HAS_DMUC:
+            if not user.is_active:
+                return False
+            assert self.chat_room
+            xmpp_accounts = XMPPAccount.objects.filter(user=user)
+            if not xmpp_accounts:
+                return False
+            room_members = RoomMember.objects.filter(xmpp_account=xmpp_accounts[0], room=self.chat_room)
+            return room_members and True or False
+        else:
             return False
-        assert self.chat_room
-        xmpp_accounts = XMPPAccount.objects.filter(user=user)
-        if not xmpp_accounts:
-            return False
-        room_members = RoomMember.objects.filter(xmpp_account=xmpp_accounts[0], room=self.chat_room)
-        return room_members and True or False
 
     def need_sync_xmppaccounts(self):
-        if not self.chat_type in [1]:
+        if settings.HAS_DMUC:
+            if not self.chat_type in [1]:
+                return False
+            if not self.chat_room:
+                return False
+            users = self.members(user_only=True)
+            for user in users:
+                if user.is_active and not self.is_room_member(user):
+                    return True
             return False
-        if not self.chat_room:
+        else:
             return False
-        users = self.members(user_only=True)
-        for user in users:
-            if user.is_active and not self.is_room_member(user):
-                return True
-        return False
 
     def get_oers(self, states=[PUBLISHED], order_by='-created'):
         qs = OER.objects.filter(project=self.id)
@@ -1306,14 +1292,14 @@ def forum_get_project(self):
 Forum.get_project = forum_get_project
    
 class ProjectMember(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'), related_name='member_project')
-    user = models.ForeignKey(User, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'), related_name='member_project')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
     state = models.IntegerField(choices=MEMBERSHIP_STATE_CHOICES, default=0, null=True, verbose_name='membership state')
     created = CreationDateTimeField(_('request created'))
     accepted = models.DateTimeField(_('last acceptance'), default=None, null=True)
     refused = models.DateTimeField(_('last refusal'), default=None, null=True)
     modified = ModificationDateTimeField(_('last state change'))
-    editor = models.ForeignKey(User, verbose_name=_('last state modifier'), related_name='membership_editor')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last state modifier'), related_name='membership_editor')
     history = models.TextField(_('history of state changes'), blank=True, null=True)
 
     class Meta:
@@ -1325,8 +1311,8 @@ class ProjectMember(models.Model):
         return user and user[0] or None
    
 class ProjectMessage(models.Model):
-    project = models.ForeignKey(Project, verbose_name=_('project'), related_name='message_project')
-    message = models.ForeignKey(Message, verbose_name=_('message'),  related_name='project_message')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('project'), related_name='message_project')
+    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name=_('message'),  related_name='project_message')
 
     class Meta:
         verbose_name = _('project message')
@@ -1357,9 +1343,10 @@ class RepoFeature(models.Model):
         # return '%s - %s' % (self.code, self.name)
         return self.name
 
-    def __unicode__(self):
+    def __str__(self):
         return self.option_label()
 
+@python_2_unicode_compatible
 class RepoType(models.Model):
     """
     Define repository types
@@ -1377,17 +1364,17 @@ class RepoType(models.Model):
     def option_label(self):
         return self.description
 
-    def __unicode__(self):
+    def __str__(self):
         return self.option_label()
 
     def natural_key(self):
         return (self.name,)
 
-# class Repo(models.Model, Publishable):
+@python_2_unicode_compatible
 class Repo(Resource, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
-    repo_type = models.ForeignKey(RepoType, verbose_name=_('repository type'), related_name='repositories')
+    repo_type = models.ForeignKey(RepoType, on_delete=models.PROTECT, verbose_name=_('repository type'), related_name='repositories')
     url = models.CharField(max_length=200,  null=True, blank=True, verbose_name=_('URL of the repository site'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     features = models.ManyToManyField(RepoFeature, blank=True, verbose_name='repository features')
@@ -1400,15 +1387,15 @@ class Repo(Resource, Publishable):
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='repo_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='repo_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='repo_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='repo_editor')
 
     class Meta:
         verbose_name = _('external repository')
         verbose_name_plural = _('external repositories')
         # ordering = ['name']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     def get_absolute_url(self):
@@ -1427,7 +1414,7 @@ class Repo(Resource, Publishable):
 
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         return user.is_superuser or self.creator==user or user.can_add_repo(request)
 
@@ -1465,30 +1452,29 @@ SOURCE_TYPE_CHOICES = (
     (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 
-# class OER(models.Model, Publishable):
+@python_2_unicode_compatible
 class OER(Resource, Publishable):
-    # oer_type = models.ForeignKey(OerType, verbose_name=_('OER type'), related_name='oers')
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
-    license = models.ForeignKey(LicenseNode, blank=True, null=True, verbose_name=_('terms of use'))
+    license = models.ForeignKey(LicenseNode, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('terms of use'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='source type')
     oers = models.ManyToManyField('self', symmetrical=False, related_name='derived_from', blank=True, verbose_name='derived from')
     translated = models.BooleanField(default=False, verbose_name=_('translated'))
     remixed = models.BooleanField(default=False, verbose_name=_('adapted / remixed'))
-    source = models.ForeignKey(Repo, blank=True, null=True, verbose_name=_('source repository'))
+    source = models.ForeignKey(Repo, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_('source repository'))
     reference = models.TextField(blank=True, null=True, verbose_name=_('reference'), help_text=_('other info to identify/access the OER in the source'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed the OER view in an HTML page'))
-    material = models.ForeignKey(MaterialEntry, blank=True, null=True, verbose_name=_('type of material'))
+    material = models.ForeignKey(MaterialEntry, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('type of material'))
     levels = models.ManyToManyField(LevelNode, blank=True, verbose_name='Levels')
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     tags = models.ManyToManyField(Tag, through='TaggedOER', blank=True, verbose_name='tags')
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
-    project = models.ForeignKey(Project, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
     small_image = AvatarField('screenshot', upload_to='images/oers/', width=300, height=300, null=True)
     big_image = AvatarField('', upload_to='images/oers/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
@@ -1499,15 +1485,15 @@ class OER(Resource, Publishable):
 
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='oer_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='oer_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='oer_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='oer_editor')
 
     class Meta:
         verbose_name = _('OER')
         verbose_name_plural = _('OERs')
         # ordering = ['title']
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def get_absolute_url(self):
@@ -1534,7 +1520,7 @@ class OER(Resource, Publishable):
         if not user.is_authenticated():
             return False
         """
-        if not user.is_authenticated() and self.state in (DRAFT, SUBMITTED):
+        if not user.is_authenticated and self.state in (DRAFT, SUBMITTED):
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -1543,7 +1529,7 @@ class OER(Resource, Publishable):
     def can_republish(self, user):
         if self.state!=UN_PUBLISHED:
             return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -1552,14 +1538,14 @@ class OER(Resource, Publishable):
     # def can_edit(self, user):
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.can_add_oer(user)
         return user.is_superuser or self.creator==user or project.is_admin(user)
  
     def can_delete(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.is_admin(user)
@@ -1623,7 +1609,7 @@ class OER(Resource, Publishable):
             return { 'n': n }
 
     def can_evaluate(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if self.state not in [PUBLISHED]:
             return False
@@ -1702,16 +1688,18 @@ def update_oer_type(sender, **kwargs):
 
 post_save.connect(update_oer_type, sender=OER)
    
+@python_2_unicode_compatible
 class OerDocument(models.Model):
     """
     Link an OER to an attached document; attachments are ordered
     """
     order = models.IntegerField()
-    oer = models.ForeignKey(OER, related_name='oer', verbose_name=_('OER'))
-    document = models.ForeignKey(Document, related_name='document', verbose_name=_('Document'))
+    oer = models.ForeignKey(OER, on_delete=models.CASCADE, related_name='oer', verbose_name=_('OER'))
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='document', verbose_name=_('Document'))
 
-    def __unicode__(self):
-        return unicode(self.document.label)
+    def __str__(self):
+        # return unicode(self.document.label)
+        return self.document.label
 
     class Meta:
         unique_together = ('oer', 'document',)
@@ -1728,42 +1716,45 @@ class OerDocument(models.Model):
             self.order = last_order+1
         super(OerDocument, self).save(*args, **kwargs) # Call the "real" save() method.
        
+@python_2_unicode_compatible
 class OerMetadata(models.Model):
     """
     Link an OER to a specific instance of a metadata type with it's current value
     """
-    oer = models.ForeignKey(OER, related_name='metadata_set', verbose_name=_('OER')) # here related_name is critical !
-    metadata_type = models.ForeignKey(MetadataType, related_name='metadata_type', verbose_name=_('Metadatum type'))
+    oer = models.ForeignKey(OER, on_delete=models.CASCADE, related_name='metadata_set', verbose_name=_('OER')) # here related_name is critical !
+    metadata_type = models.ForeignKey(MetadataType, on_delete=models.PROTECT, related_name='metadata_type', verbose_name=_('Metadatum type'))
     value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
 
-    def __unicode__(self):
-        return unicode(self.metadata_type)
+    def __str__(self):
+        # return unicode(self.metadata_type)
+        return str(self.metadata_type)
 
     class Meta:
         unique_together = ('oer', 'metadata_type', 'value')
         verbose_name = _('additional metadatum')
         verbose_name_plural = _('additional metadata')
 
+@python_2_unicode_compatible
 class SharedOer(models.Model):
     """
     Link to an OER catalogued in another project
     """
-    oer = models.ForeignKey(OER, verbose_name=_('referenced OER'))
-    project = models.ForeignKey(Project, verbose_name=_('referencing project'))
+    oer = models.ForeignKey(OER, on_delete=models.CASCADE, verbose_name=_('referenced OER'))
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, verbose_name=_('referencing project'))
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'))
     created = CreationDateTimeField(_('created'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
 
     class Meta:
         unique_together = ('oer', 'project')
         verbose_name = _('shared OER')
         verbose_name_plural = _('shared OERs')
 
-    def __unicode__(self):
+    def __str__(self):
         return '\u21D2 %s' % self.oer.title
 
     def can_delete(self, request):
         user = request.user
-        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+        return user==self.user or (user.is_authenticated and self.project.is_admin(user))
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -1826,19 +1817,19 @@ def score_to_stars(score):
     empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
     return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': stars }
 
+@python_2_unicode_compatible
 class OerEvaluation(models.Model):
     """
     Link an OER to instances of quality metadata
     """
-    oer = models.ForeignKey(OER, related_name='evaluated_oer', verbose_name=_('OER'))
+    oer = models.ForeignKey(OER, on_delete=models.CASCADE, related_name='evaluated_oer', verbose_name=_('OER'))
     overall_score = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name='overall quality assessment')
     review = models.TextField(blank=True, null=True, verbose_name=_('free text review'))
     quality_metadata = models.ManyToManyField(QualityFacet, through='OerQualityMetadata', related_name='quality_metadata', blank=True, verbose_name='quality metadata')
     modified = ModificationDateTimeField(_('modified'))
-    # user = models.ForeignKey(User, verbose_name=_('last editor'))
-    user = models.ForeignKey(User, verbose_name=_('evaluator'), related_name='oer_evaluator')
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('evaluator'), related_name='oer_evaluator')
 
-    def __unicode__(self):
+    def __str__(self):
         return '%s evaluated by %s' % (self.oer.title, self.user.get_display_name())
 
     class Meta:
@@ -1852,16 +1843,18 @@ class OerEvaluation(models.Model):
     def get_stars(self):
         return score_to_stars(self.overall_score)
 
+@python_2_unicode_compatible
 class OerQualityMetadata(models.Model):
     """
     Link an OER evaluation to a specific instance of a quality facet with it's current value
     """
-    oer_evaluation = models.ForeignKey(OerEvaluation, related_name='oer_evaluation', verbose_name=_('OER evaluation'))
-    quality_facet = models.ForeignKey(QualityFacet, related_name='quality_facet', verbose_name=_('quality facet'))
+    oer_evaluation = models.ForeignKey(OerEvaluation, on_delete=models.CASCADE, related_name='oer_evaluation', verbose_name=_('OER evaluation'))
+    quality_facet = models.ForeignKey(QualityFacet, on_delete=models.PROTECT, related_name='quality_facet', verbose_name=_('quality facet'))
     value = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name=_('facet-related score'))
 
-    def __unicode__(self):
-        return unicode(self.quality_facet)
+    def __str__(self):
+        # return unicode(self.quality_facet)
+        return str(self.quality_facet)
 
     class Meta:
         unique_together = ('oer_evaluation', 'quality_facet')
@@ -1891,10 +1884,10 @@ LP_TYPE_CHOICES = (
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
-# class LearningPath(models.Model, Publishable):
+@python_2_unicode_compatible
 class LearningPath(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
-    cloned_from = models.ForeignKey('self', verbose_name=_('original learning path'), blank=True, null=True, related_name='cloned_path')
+    cloned_from = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name=_('original learning path'), blank=True, null=True, related_name='cloned_path')
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     short = models.TextField(blank=True, verbose_name=_('objectives'))
     path_type = models.IntegerField(choices=LP_TYPE_CHOICES, validators=[MinValueValidator(1)], verbose_name='path type')
@@ -1902,22 +1895,21 @@ class LearningPath(Resource, Publishable):
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='Subject areas')
     tags = models.ManyToManyField(Tag, through='TaggedLP', blank=True, verbose_name='tags')
     long = models.TextField(blank=True, verbose_name=_('description'))
-    project = models.ForeignKey(Project, verbose_name=_('project'), blank=True, null=True, related_name='lp_project')
-    # user = models.ForeignKey(User, verbose_name=_(u"User"), blank=True, null=True, related_name='lp_user',)
-    group = models.ForeignKey(Group, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, verbose_name=_('project'), blank=True, null=True, related_name='lp_project')
+    group = models.ForeignKey(Group, on_delete=models.PROTECT, verbose_name=_(u"group"), blank=True, null=True,  related_name='lp_group',)
     small_image = AvatarField(_('logo'), upload_to='images/lps/', width=120, height=120, null=True)
     big_image = AvatarField(_('featured image'), upload_to='images/lps/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='path_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='path_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='path_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='path_editor')
 
     class Meta:
         verbose_name = _('learning path')
         verbose_name_plural = _('learning paths')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.title
 
     def make_json(self):
@@ -1990,7 +1982,7 @@ class LearningPath(Resource, Publishable):
     def can_access(self, user):
         if self.state==PUBLISHED:
             return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -2002,14 +1994,14 @@ class LearningPath(Resource, Publishable):
         if self.state == PUBLISHED:
             return True
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or user==self.creator or (project and project.is_admin(user))
 
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         # if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
         if user.is_superuser or self.creator==user:
@@ -2024,7 +2016,7 @@ class LearningPath(Resource, Publishable):
 
     def can_delete(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or self.creator==user or (project and project.is_admin(user))
@@ -2078,7 +2070,8 @@ class LearningPath(Resource, Publishable):
             """
         elif len(roots) > 1:
             roots = list(roots)
-            roots.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
+            # roots.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
+            roots.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y)))
         visited = []
         levels = []
         parents = []
@@ -2103,7 +2096,8 @@ class LearningPath(Resource, Publishable):
         if path_type == LP_DAG:
             islands = self.get_islands(nodes=nodes)
             if len(islands) > 1:
-                islands.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
+                # islands.sort(cmp=lambda x,y: cmp_pathnode_order(x, y))
+                islands.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y)))
             visited.extend(islands)
             levels.extend([0] * len(islands))
             parents.extend([None] * len(islands))
@@ -2548,26 +2542,27 @@ class LearningPath(Resource, Publishable):
             node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
         return writer, mimetype
 
+@python_2_unicode_compatible
 class SharedLearningPath(models.Model):
     """
     Link to an LearningPath created in another project
     """
-    lp = models.ForeignKey(LearningPath, verbose_name=_('referenced Learning Path'))
-    project = models.ForeignKey(Project, verbose_name=_('referencing project'))
+    lp = models.ForeignKey(LearningPath, on_delete=models.CASCADE, verbose_name=_('referenced Learning Path'))
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, verbose_name=_('referencing project'))
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'))
     created = CreationDateTimeField(_('created'))
-    user = models.ForeignKey(User, verbose_name=_('last editor'))
 
     class Meta:
         unique_together = ('lp', 'project')
         verbose_name = _('shared Learning Path')
         verbose_name_plural = _('shared Learning Paths')
 
-    def __unicode__(self):
+    def __str__(self):
         return '\u21D2 %s' % self.lp.title
 
     def can_delete(self, request):
         user = request.user
-        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+        return user==self.user or (user.is_authenticated and self.project.is_admin(user))
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
     order = models.IntegerField(default=0)
@@ -2575,8 +2570,8 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
     content = models.TextField(blank=True, verbose_name=_('content'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathedge_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathedge_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='pathedge_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='pathedge_editor')
 
     class Meta:
         verbose_name = _('path edge')
@@ -2596,16 +2591,16 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
 import string
 from commons.google_api import youtube_search, video_getdata
 class PathNode(node_factory('PathEdge')):
-    path = models.ForeignKey(LearningPath, verbose_name=_('learning path or collection'), related_name='path_node')
     label = models.TextField(blank=True, verbose_name=_('label'))
-    oer = models.ForeignKey(OER, blank=True, null=True, verbose_name=_('stands for'))
+    path = models.ForeignKey(LearningPath, on_delete=models.CASCADE, verbose_name=_('learning path or collection'), related_name='path_node')
+    oer = models.ForeignKey(OER, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('stands for'))
+    document = models.ForeignKey(Document, on_delete=models.SET_NULL, blank=True, null=True, related_name='pathnode_document', verbose_name=_('document'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
     text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
-    document = models.ForeignKey(Document, blank=True, null=True, related_name='pathnode_document', verbose_name=_('document'))
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
-    creator = models.ForeignKey(User, verbose_name=_('creator'), related_name='pathnode_creator')
-    editor = models.ForeignKey(User, verbose_name=_('last editor'), related_name='pathnode_editor')
+    creator = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('creator'), related_name='pathnode_creator')
+    editor = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('last editor'), related_name='pathnode_editor')
 
     class Meta:
         verbose_name = _('path node')
@@ -2804,7 +2799,7 @@ class PathNode(node_factory('PathEdge')):
                         pageranges = ranges and [r[1:] for r in ranges] or None
                         # if content_type == 'application/pdf':
                         if content_type.count('application/pdf'):
-                            stream = StringIO.StringIO(get_request_content(oer.url))
+                            stream = StringIO(get_request_content(oer.url))
                             mimetype = 'application/pdf'
                             write_pdf_pages(stream, writer, ranges=pageranges)
                         # elif content_type == 'text/html':
@@ -2853,7 +2848,8 @@ class PathNode(node_factory('PathEdge')):
 
     def get_ordered_children(self):
         children = list(self.children.all())
-        children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        # children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return children
 
     def get_ordered_text_children(self):
@@ -2862,7 +2858,8 @@ class PathNode(node_factory('PathEdge')):
         for child in children:
            if child.get_nodetype() == 'TXT':
               txt_children.append(child)
-        txt_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        # txt_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        txt_children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return txt_children
     
     def get_ordered_doc_children(self):
@@ -2871,7 +2868,8 @@ class PathNode(node_factory('PathEdge')):
         for child in children:
            if child.get_nodetype() == 'DOC':
               doc_children.append(child)
-        doc_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        # doc_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+        doc_children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return doc_children
 
     def ordered_out_edges(self):
@@ -2916,9 +2914,9 @@ def cmp_pathnode_order(node_1, node_2, parent=None):
 # Use commons.TaggedOER's Manager instead.
 #   tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 class TaggedOER(models.Model):
-    content_type = models.ForeignKey(ContentType, default='84')
-    object = models.ForeignKey('OER')
-    tag = models.ForeignKey(Tag)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, default='84')
+    object = models.ForeignKey('OER', on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.PROTECT)
  
     class Meta:
         db_table = 'taggit_taggeditem'
@@ -2930,9 +2928,9 @@ class TaggedOER(models.Model):
 # Use commons.TaggedLP's Manager instead.
 #   tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 class TaggedLP(models.Model):
-    content_type = models.ForeignKey(ContentType, default='118')
-    object = models.ForeignKey('LearningPath')
-    tag = models.ForeignKey(Tag)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT, default='118')
+    object = models.ForeignKey('LearningPath', on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.PROTECT)
  
     class Meta:
         db_table = 'taggit_taggeditem'
@@ -2983,7 +2981,7 @@ class Featured(models.Model):
     start_publication = models.DateTimeField(_('start publication'), blank=True, null=True, help_text=_('Optional start date of publication.'))
     end_publication = models.DateTimeField(_('end publication'), blank=True, null=True, help_text=_('Optional end date of publication.'))
 
-    user = models.ForeignKey(User, verbose_name=_('User'), blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('User'), blank=True, null=True)
     created = CreationDateTimeField(_('created'))
     modified = ModificationDateTimeField(_('modified'))
 
@@ -2991,7 +2989,8 @@ class Featured(models.Model):
     def title(self):
         title = ''
         if self.featured_object:
-            title = self.featured_object.__unicode__()
+            # title = self.featured_object.__unicode__()
+            title = str(self.featured_object)
         elif self.text:
             strings = strings_from_html(self.text, fragment=True)
             if strings:
@@ -3053,4 +3052,4 @@ class Featured(models.Model):
         return dict(settings.LANGUAGES).get(settings.LANGUAGE_CODE, 'English')
 
 # from commons.metadata_models import *
-from translations import *
+from commons.translations import *

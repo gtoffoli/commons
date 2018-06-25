@@ -9,10 +9,10 @@ from datatrans.utils import register as register_translations
 from django.contrib.flatpages.models import FlatPage
 from zinnia.models import Entry as BlogArticle
 # from taggit.models import Tag
-from models import Tag, ProjType, RepoType, RepoFeature, Featured
-from models import Project, Repo, OER, LearningPath, PathNode
-from vocabularies import EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
+from commons.models import Tag, ProjType, RepoType, RepoFeature, Featured
+from commons.models import Project, Repo, OER, LearningPath, PathNode
+from commons.vocabularies import EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
+from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry
 
 class FlatPageTranslation(object):
     fields = ('title', 'content',)

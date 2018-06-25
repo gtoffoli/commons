@@ -1,4 +1,6 @@
+
 import re
+from django.conf import settings
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _, string_concat
 from django import forms
@@ -14,22 +16,24 @@ from taggit.models import Tag
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
 """
-from models import Tag
+
+from commons.models import Tag
 from django_messages.forms import ComposeForm
 from django_messages.fields import CommaSeparatedUserField
 from zinnia.models import Entry
 from pybb.models import Forum
 from dal import autocomplete
 
-import settings
-from dmuc.models import Room
-from models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
-from models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
-from models import LearningPath, PathNode, Featured
-from models import ProjectMember
-from models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
-from models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
+if settings.HAS_DMUC:
+    from dmuc.models import Room
+from commons.models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
+from commons.models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
+from commons.models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
+from commons.models import LearningPath, PathNode, Featured
+from commons.models import ProjectMember
+from commons.models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
+from commons.models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
+
 
 class UserChangeForm(UserWithMPTTChangeForm):
     # groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
@@ -164,22 +168,19 @@ class UserProfileExtendedForm(UserProfileForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        # exclude = ('slug', 'group', 'forum', 'folders',)
-        # exclude = ('slug', 'group', 'forum', 'folders', 'deleted', 'small_image', 'big_image',)
-        # fields = ('slug', 'proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
-        fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+        if settings.HAS_DMUC:
+            fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+        else:
+            fields = ('proj_type', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('max length is 78 characters, but less is better'))
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
-    # proj_type = forms.ModelChoiceField(required=True, queryset=ProjType.objects.all(), label=_('project type'), widget=forms.Select(attrs={'class':'form-control',}))
     proj_type = forms.ModelChoiceField(required=False, queryset=ProjType.objects.all(), widget=forms.HiddenInput())
-    # chat_type = forms.ChoiceField(required=True, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.Select(attrs={'class':'form-control',}))
-    chat_type = forms.ChoiceField(required=False, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.HiddenInput())
-    chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
+    if settings.HAS_DMUC:
+        chat_type = forms.ChoiceField(required=False, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.HiddenInput())
+        chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, }))
-    # big_image = forms.ImageField(required=False, label=_('image'), widget=forms.ClearableFileInput)
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
-    # state = forms.ChoiceField(required=True, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.Select(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=False, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -347,9 +348,6 @@ class OerForm(forms.ModelForm):
 
     class Meta:
         model = OER
-        ## fields = ['title', 'description', 'oer_type', 'source_type', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'creator', 'editor',]
-        # exclude = ('slug', 'documents', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled')
-        # exclude = ('slug', 'metadata', 'deleted', 'small_image', 'big_image', 'oer_type', 'source_type', 'original_language','comment_enabled', 'content', 'documents',)
         fields = ['project', 'state', 'title', 'description', 'license', 'url', 'embed_code', 'source', 'reference', 'oers', 'translated', 'remixed', 'material', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'creator', 'editor',]
 
     # slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -694,9 +692,15 @@ class MatchMentorForm(forms.Form):
     mentor = UserChoiceField(required=False, label='', empty_label=_('none'), queryset=Language.objects.none(), widget=forms.RadioSelect(),)
     message = forms.CharField(required=False, label=_('message'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, enter a notice for the mentor, to motivate your choice'))
 
-class HorizontalRadioRenderer(forms.RadioSelect.renderer):
-    def render(self):
-        return mark_safe(u'\n'.join([u'%s &nbsp; \n' %  w for w in self]))
+# see https://stackoverflow.com/questions/47355837/type-object-radioselect-has-no-attribute-renderer
+if settings.DJANGO_VERSION > 1:
+    class HorizontalRadioRenderer(forms.RadioSelect):
+        def render(self):
+            return mark_safe('\n'.join([u'%s &nbsp; \n' %  w for w in self]))
+else:
+    class HorizontalRadioRenderer(forms.RadioSelect.renderer):
+        def render(self):
+            return mark_safe('\n'.join([u'%s &nbsp; \n' %  w for w in self]))
 
 class AcceptMentorForm(forms.ModelForm):
     class Meta:
@@ -704,7 +708,10 @@ class AcceptMentorForm(forms.ModelForm):
         fields = ['project',]
 
     project = forms.IntegerField(widget=forms.HiddenInput())
-    accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
+    if settings.DJANGO_VERSION > 1:
+        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=HorizontalRadioRenderer(),)
+    else:
+        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
     description = forms.CharField(required=True, label=_('Reason'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, explain the motivations of your acceptation or refusal'))
 
 class SelectMentoringJourneyForm(forms.ModelForm):

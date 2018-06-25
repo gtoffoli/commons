@@ -1,6 +1,7 @@
-{% load staticfiles dmuc %}
+{% load staticfiles %}
 {% load i18n %}
-{% load url from future %}
+{% comment %}{% load dmuc %}{% endcomment %}
+{% comment %}{% load url from future %}{% endcomment %}
 {% load menu %}
 {% generate_menu %}
 
@@ -257,8 +258,9 @@
           .rooms-list dt { display: none; }
         </style>
         
-        {% dmuc_conversejs_initialize %}
+        {% comment %}{% dmuc_conversejs_initialize %}
         <div id="conversejs"></div>
+        {% endcomment %}
       {% endif %}
 
       {% if request.get_host == 'www.commonspaces.eu' %}

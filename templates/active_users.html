@@ -14,7 +14,7 @@
         <div class="container">
             <h1 class="marginT30">
             {% trans "recently active users"|capfirst %}
-            {% if function = 'active_comembers' %}<small>{% trans "being members of projects shared with me" %}</small>{% endif %}
+            {% if function == 'active_comembers' %}<small>{% trans "being members of projects shared with me" %}</small>{% endif %}
             </h1>
 
        	{% if onliners %}

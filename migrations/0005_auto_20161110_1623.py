@@ -80,17 +80,17 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='sharedoer',
             name='oer',
-            field=models.ForeignKey(verbose_name='referenced OER', to='commons.OER'),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='referenced OER', to='commons.OER'),
         ),
         migrations.AddField(
             model_name='sharedoer',
             name='project',
-            field=models.ForeignKey(verbose_name='referencing project', to='commons.Project'),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='referencing project', to='commons.Project'),
         ),
         migrations.AddField(
             model_name='sharedoer',
             name='user',
-            field=models.ForeignKey(verbose_name='last editor', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(on_delete=models.CASCADE, verbose_name='last editor', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterUniqueTogether(
             name='sharedoer',

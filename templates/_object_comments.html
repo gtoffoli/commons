@@ -17,7 +17,7 @@
     {% block comments-loop %}
       {% for comment in comment_list %}
         <dd id="comment-{{ comment.pk }}-by-{{ comment.user_name|slugify }}"
-            class="comment vcard {% cycle box1,box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
+            class="comment vcard {% cycle box1 box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
           {% block comment-info %}
             <p class="comment-info">
               {% block comment-image %}

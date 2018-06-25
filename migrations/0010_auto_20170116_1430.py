@@ -39,6 +39,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='userprofile',
             name='curriculum',
-            field=models.ForeignKey(related_name='profile_curriculum', verbose_name='curriculum', blank=True, to='commons.Document', null=True),
+            field=models.ForeignKey(on_delete=models.CASCADE, related_name='profile_curriculum', verbose_name='curriculum', blank=True, to='commons.Document', null=True),
         ),
     ]

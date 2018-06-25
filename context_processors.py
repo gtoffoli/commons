@@ -22,4 +22,7 @@ def processor(request):
         'path_no_language': path,
         'PRODUCTION': settings.PRODUCTION,
         'PROTOCOL': protocol,
+        'HAS_DMUC': settings.HAS_DMUC,
+        'HAS_ZINNIA': settings.HAS_ZINNIA,
+        'DJANGO_VERSION': settings.DJANGO_VERSION,
     }

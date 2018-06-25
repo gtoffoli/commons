@@ -3,6 +3,8 @@ Created on 03/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
+from django.conf import settings
+
 from django.db import models
 from django.forms import TextInput, Textarea, Select, SelectMultiple
 from django.contrib import admin
@@ -11,10 +13,6 @@ from django.contrib.contenttypes.models import ContentType
 from mptt.admin import MPTTModelAdmin
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
-"""
-from taggit.forms import TagField
-from taggit_labels.widgets import LabelWidget
-"""
 
 from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
@@ -69,7 +67,10 @@ class ProjTypeAdmin(admin.ModelAdmin):
 
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
-    list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
+    if settings.HAS_DMUC:
+        list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
+    else:
+        list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['name', 'description',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
