@@ -130,7 +130,7 @@ def user_can_add_repo(self, request):
 User.can_add_repo = user_can_add_repo
 
 def user_is_community_manager(self):
-    if self.is_authenticated():
+    if self.is_authenticated:
         root_groups = Group.objects.filter(level=0)
         if root_groups.count() == 1:
             root_project = root_groups[0].project
@@ -139,7 +139,7 @@ def user_is_community_manager(self):
 User.is_community_manager = user_is_community_manager
 
 def user_is_manager(self, level=1):
-    if self.is_authenticated():
+    if self.is_authenticated:
         groups = Group.objects.filter(level__lt=level+1)
         for group in groups:
             project = group.project
