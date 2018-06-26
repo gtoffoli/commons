@@ -273,7 +273,7 @@ def press_releases(request):
 
 def user_profile(request, username, user=None):
     # assert username or (user and user.is_authenticated()
-    if not username and (not user or not user.is_authenticated()):
+    if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
     MAX_LIKES = 10
     if not user:
@@ -283,7 +283,7 @@ def user_profile(request, username, user=None):
     com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
-    if user.is_authenticated() and user==request.user:
+    if user.is_authenticated and user==request.user:
         can_edit = True
     else:
         can_edit = False
@@ -302,7 +302,7 @@ def user_profile(request, username, user=None):
         likes = get_likes(profile)[:MAX_LIKES]
         var_dict['likes'] = [[score, profile.user, profile.avatar] for score, profile in likes]
      
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if not profile or not request.user == profile.user:
             # actstream.action.send(request.user, verb='View', action_object=profile)
             track_action(request.user, 'View', profile)
@@ -311,7 +311,7 @@ def user_profile(request, username, user=None):
 
 def my_profile(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     return user_profile(request, None, user=user)
 
@@ -324,7 +324,7 @@ def user_strict_profile(request, username):
     return render(request, 'user_strict_profile.html', var_dict)
 
 def user_dashboard(request, username, user=None):
-    if not username and (not user or not user.is_authenticated()):
+    if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
     # MAX_REPOS = MAX_OERS = MAX_LP = MAX_OERS_EVALUATED = 5
     var_dict = {}
@@ -414,7 +414,7 @@ def user_dashboard(request, username, user=None):
 
 def my_home(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     return user_dashboard(request, None, user=user)
 
@@ -560,14 +560,14 @@ def profile_delete_document(request, username):
 
 def my_preferences(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     # return render_to_response('user_preferences.html', {'user': user, 'profile': user.get_profile(),}, context_instance=RequestContext(request))
     return render(request, 'user_preferences.html', {'user': user, 'profile': user.get_profile(),})
  
 def edit_preferences(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     called_by = request.GET.get('next','')
     users_preferences = UserPreferences.objects.filter(user=user)
@@ -604,7 +604,7 @@ def new_posts(request, username):
 
 def user_activity(request, username):
     user = request.user
-    if user.is_authenticated():
+    if user.is_authenticated:
         if username and (user.is_superuser or user.is_manager(1)):
             user = get_object_or_404(User, username=username)
     actions = filter_actions(user=user, max_days=7, max_actions=100)
@@ -616,7 +616,7 @@ def user_activity(request, username):
 
 def mailing_list(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_staff:
+    if not user.is_authenticated or not user.is_staff:
         return HttpResponseForbidden()
     profiled = request.GET.get('profiled', None)
     if profiled:
@@ -860,7 +860,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
         context.update(extra_context)
 
     user = request.user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         track_action(user, 'Search', None, description='project')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
@@ -959,7 +959,7 @@ def project_folder(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     if not project.can_access(user):
         raise PermissionDenied
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return project_detail(request, project.id, project=project)
     proj_type = project.proj_type
     ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
@@ -1039,7 +1039,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
     var_dict['block_mentoring']=''
-    if user.is_authenticated():
+    if user.is_authenticated:
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
         var_dict['parent'] = parent = project.get_parent()
@@ -1280,7 +1280,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     elif user.is_authenticated():
         oers = OER.objects.filter(project_id=project_id).filter(Q(state=PUBLISHED) | Q(creator=user)).order_by('-created')
     """
-    if (user.is_authenticated() and project.is_member(user)) or user.is_superuser:
+    if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         oers = OER.objects.filter(project=project).order_by('-created')
     else:
         oers = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
@@ -1295,7 +1295,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     lps = LearningPath.objects.filter(project=project).order_by('-created')
     lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_member(user) or user.is_superuser]
     """
-    if (user.is_authenticated() and project.is_member(user)) or user.is_superuser:
+    if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         lps = LearningPath.objects.filter(project=project).order_by('-created')
     else:
         lps = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
@@ -1307,7 +1307,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         # return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
         return render(request, 'mentoring_detail.html', var_dict)
     else:
-        if user.is_authenticated():
+        if user.is_authenticated:
             if project.state == PROJECT_OPEN and not user == project.creator:
                 # actstream.action.send(user, verb='View', action_object=project)
                 track_action(user, 'View', project)
@@ -1799,7 +1799,7 @@ def project_add_shared_oer(request, project_id, oer_id):
     user = request.user
     oer_id = int(oer_id)
     project = get_object_or_404(Project, id=project_id)
-    if user.is_authenticated() and project.can_add_oer(user):
+    if user.is_authenticated and project.can_add_oer(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_oers') or []
         if oer_id in bookmarked_ids:
             oer = get_object_or_404(OER, id=oer_id)
@@ -1824,7 +1824,7 @@ def project_paste_oer(request, project_id, oer_id):
     user = request.user
     if not project.can_access(user):
         raise PermissionDenied
-    if user.is_authenticated() and project.can_add_oer(user) and oer_id in cut_oers:
+    if user.is_authenticated and project.can_add_oer(user) and oer_id in cut_oers:
         oer = get_object_or_404(OER, pk=oer_id)
         oer.project = project
         oer.save()
@@ -1836,7 +1836,7 @@ def project_add_shared_lp(request, project_id, lp_id):
     user = request.user
     lp_id = int(lp_id)
     project = get_object_or_404(Project, id=project_id)
-    if user.is_authenticated() and project.can_add_lp(user):
+    if user.is_authenticated and project.can_add_lp(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_lps') or []
         if lp_id in bookmarked_ids:
             lp = get_object_or_404(LearningPath, id=lp_id)
@@ -1861,7 +1861,7 @@ def project_paste_lp(request, project_id, lp_id):
     user = request.user
     if not project.can_access(user):
         raise PermissionDenied
-    if user.is_authenticated() and project.can_add_lp(user) and lp_id in cut_lps:
+    if user.is_authenticated and project.can_add_lp(user) and lp_id in cut_lps:
         lp = get_object_or_404(LearningPath, pk=lp_id)
         lp.project = project
         lp.save()
@@ -1874,7 +1874,7 @@ def project_clone_lp(request, project_id, lp_id):
     user = request.user
     lp_id = int(lp_id)
     project = get_object_or_404(Project, id=project_id)
-    if user.is_authenticated() and project.can_add_lp(user):
+    if user.is_authenticated and project.can_add_lp(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_lps') or []
         if lp_id in bookmarked_ids:
             lp = get_object_or_404(LearningPath, id=lp_id)
@@ -2014,7 +2014,7 @@ def project_mailing_list(request, project_slug):
 
 def repo_list(request):
     user = request.user
-    can_add = user.is_authenticated() and user.can_add_repo(request)
+    can_add = user.is_authenticated and user.can_add_repo(request)
     repo_list = []
     for repo in Repo.objects.filter(state=PUBLISHED).order_by('name'):
         oers = OER.objects.filter(source=repo, state=PUBLISHED)
@@ -2025,7 +2025,7 @@ def repo_list(request):
 
 def repos_by_user(request, username):
     user = get_object_or_404(User, username=username)
-    can_add = user.is_authenticated() and user.can_add_repo(request) and user==request.user
+    can_add = user.is_authenticated and user.can_add_repo(request) and user==request.user
     if user == request.user:
         repos = Repo.objects.filter(creator=user).order_by('-created')
     else:
@@ -2071,9 +2071,9 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['can_reject'] = repo.can_reject(request)
     var_dict['can_publish'] = repo.can_publish(request)
     var_dict['can_un_publish'] = repo.can_un_publish(request)
-    var_dict['can_toggle_comments'] = user.is_authenticated() and (user.is_superuser or repo.creator==user)
+    var_dict['can_toggle_comments'] = user.is_authenticated and (user.is_superuser or repo.creator==user)
     var_dict['view_comments'] = is_published or is_un_published
-    if user.is_authenticated():
+    if user.is_authenticated:
         if not user == repo.creator:
             # actstream.action.send(user, verb='View', action_object=repo)
             track_action(request.user, 'View', repo)
@@ -2165,7 +2165,7 @@ def project_results(request, project_slug):
     if not project.can_access(user):
         raise PermissionDenied
     var_dict = { 'project': project }
-    if user.is_authenticated() and project.is_member(user) or user.is_superuser:
+    if user.is_authenticated and project.is_member(user) or user.is_superuser:
         var_dict['lps'] = LearningPath.objects.filter(project=project).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project).order_by('-created')
     else:
@@ -2561,7 +2561,7 @@ def people_search(request, template='search_people.html', extra_context=None):
         context.update(extra_context)
 
     user = request.user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='message')
         track_action(user, 'Search', None, description='user profile')
     # return render_to_response(template, context, context_instance=RequestContext(request))
@@ -2672,7 +2672,7 @@ def oer_view(request, oer_id, oer=None):
     var_dict['oer_url'] = oer.url
     var_dict['is_published'] = oer.state == PUBLISHED
     var_dict['is_un_published'] = un_published = oer.state == UN_PUBLISHED
-    if user.is_authenticated():
+    if user.is_authenticated:
         profile = user.get_profile()
         add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
     else:
@@ -2757,7 +2757,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
     var_dict['is_published'] = is_published = oer.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = oer.state == UN_PUBLISHED
-    if user.is_authenticated():
+    if user.is_authenticated:
         profile = user.get_profile()
         completed_profile = profile and profile.get_completeness()
         add_bookmarked = is_published and profile and profile.get_completeness()
@@ -2799,7 +2799,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
     var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
-    if user.is_authenticated():
+    if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
             # actstream.action.send(user, verb='View', action_object=oer)
             track_action(user, 'View', oer, target=oer.project)
@@ -3101,7 +3101,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
 def oer_evaluate_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseRedirect('/oer/%s/' % oer.slug)
     evaluations = oer.get_evaluations(user)
     if evaluations:
@@ -3231,7 +3231,7 @@ def online_resource_view(request,folderdocument_id):
     folder_id = online_resource.folder_id
     folder = get_object_or_404(Folder, pk=folder_id)
     project = folder.get_project()
-    view_folder = user.is_authenticated() and (project.is_member(user) or user.is_superuser)
+    view_folder = user.is_authenticated and (project.is_member(user) or user.is_superuser)
     # return render_to_response('online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder}, context_instance=RequestContext(request))
     return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder})
 
@@ -3312,7 +3312,7 @@ def lp_detail(request, lp_id, lp=None):
            var_dict['can_delegate'] = can_delegate
     var_dict['is_published'] = is_published = lp.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
-    if user.is_authenticated():
+    if user.is_authenticated:
         profile = user.get_profile()
         add_bookmarked = lp.project and is_published and profile and profile.get_completeness()
         var_dict['alert_ment'] = lp.project and lp.project.proj_type.name == 'ment' and lp.project.is_member(user)
@@ -3356,7 +3356,7 @@ def lp_detail(request, lp_id, lp=None):
     """
     var_dict['can_toggle_comments'] = lp.project and (user.is_superuser or lp.creator==user or lp.project.is_admin(user))
     var_dict['view_comments'] = is_published or is_un_published
-    if user.is_authenticated():
+    if user.is_authenticated:
         if lp.state == PUBLISHED and not user == lp.creator:
             track_action(user, 'View', lp, target=lp.project)
     # return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
@@ -3538,7 +3538,7 @@ def lp_play(request, lp_id, lp=None):
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     user = request.user
-    if user.is_authenticated():
+    if user.is_authenticated:
         if from_start:
             track_action(user, 'Play', lp, target=lp.project)
         track_action(user, 'Play', current_node, target=lp.project)
@@ -4118,7 +4118,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
         context.update(extra_context)
 
     user = request.user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='repo')
         track_action(user, 'Search', None, description='repo')
     # return render_to_response(template, context, context_instance=RequestContext(request))
@@ -4318,7 +4318,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         context.update(extra_context)
 
     user = request.user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='oer')
         track_action(user, 'Search', None, description='oer')
     # return render_to_response(template, context, context_instance=RequestContext(request))
@@ -4422,7 +4422,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         context.update(extra_context)
 
     user = request.user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='learningpath')
         track_action(user, 'Search', None, description='learningpath')
     # return render_to_response(template, context, context_instance=RequestContext(request))
@@ -4468,7 +4468,7 @@ def repo_autocomplete(request):
     q = request.GET.get('q', None)
     create_option = []
     results = []
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = Repo.objects.filter(state=PUBLISHED, name__icontains=q).order_by('name')
             results = [{'id': repo.id, 'text': repo.name[:80]} for repo in qs] + create_option
@@ -4480,7 +4480,7 @@ def oer_autocomplete(request):
     q = request.GET.get('q', None)
     create_option = []
     results = []
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = OER.objects.filter(state=PUBLISHED, title__icontains=q).order_by('title')
             results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
@@ -4492,7 +4492,7 @@ def lp_autocomplete(request):
     q = request.GET.get('q', None)
     create_option = []
     results = []
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = LearningPath.objects.filter(state=PUBLISHED, project__proj_type__name = 'roll', title__icontains=q).order_by('title')
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
