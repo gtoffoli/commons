@@ -73,7 +73,7 @@ User.get_display_name = get_display_name
 
 def user_can_edit(self, request):
     user = request.user
-    return user.is_authenticated() and (user.is_superuser or user.id==self.id)
+    return user.is_authenticated and (user.is_superuser or user.id==self.id)
 User.can_edit = user_can_edit
 
 def user_get_profile(self):
@@ -258,7 +258,7 @@ class Resource(models.Model):
     def can_comment(self, request):
         user = request.user
         # return user.is_authenticated() and user.profile and user.profile.get_completeness()
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         profile = user.get_profile()
         return profile and profile.get_completeness()
@@ -957,7 +957,7 @@ class Project(Resource):
     def can_access(self, user):
         parent = self.get_parent()
         if self.proj_type.name == 'ment':
-            if not user.is_authenticated():
+            if not user.is_authenticated:
                 return False
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED) and (self.is_member(user) or (parent and parent.is_admin(user))):
                 return True
@@ -974,13 +974,13 @@ class Project(Resource):
         else: 
             if self.state in (PROJECT_OPEN, PROJECT_CLOSED):
                 return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
 
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if user.is_superuser: return True
         if self.get_type_name()=='ment':
@@ -1017,7 +1017,7 @@ class Project(Resource):
 
     def can_chat(self, user):
         if settings.HAS_DMUC:
-            if not (user.is_authenticated() and self.is_member(user)) :
+            if not (user.is_authenticated and self.is_member(user)) :
                 return False
             if not (self.chat_type in [1] and self.chat_room):
                 return False
@@ -1075,7 +1075,7 @@ class Project(Resource):
         membership.delete()
 
     def get_memberships(self, state=None, user=None):
-        if user and user.is_authenticated():
+        if user and user.is_authenticated:
             memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
@@ -1414,7 +1414,7 @@ class Repo(Resource, Publishable):
 
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         return user.is_superuser or self.creator==user or user.can_add_repo(request)
 
@@ -1520,7 +1520,7 @@ class OER(Resource, Publishable):
         if not user.is_authenticated():
             return False
         """
-        if not user.is_authenticated() and self.state in (DRAFT, SUBMITTED):
+        if not user.is_authenticated and self.state in (DRAFT, SUBMITTED):
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -1529,7 +1529,7 @@ class OER(Resource, Publishable):
     def can_republish(self, user):
         if self.state!=UN_PUBLISHED:
             return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -1538,14 +1538,14 @@ class OER(Resource, Publishable):
     # def can_edit(self, user):
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.can_add_oer(user)
         return user.is_superuser or self.creator==user or project.is_admin(user)
  
     def can_delete(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or self.creator==user or project.is_admin(user)
@@ -1609,7 +1609,7 @@ class OER(Resource, Publishable):
             return { 'n': n }
 
     def can_evaluate(self, user):
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         if self.state not in [PUBLISHED]:
             return False
@@ -1754,7 +1754,7 @@ class SharedOer(models.Model):
 
     def can_delete(self, request):
         user = request.user
-        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+        return user==self.user or (user.is_authenticated and self.project.is_admin(user))
 
 """ OER Evaluations will be user volunteered paradata
 from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
@@ -1982,7 +1982,7 @@ class LearningPath(Resource, Publishable):
     def can_access(self, user):
         if self.state==PUBLISHED:
             return True
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
@@ -1994,14 +1994,14 @@ class LearningPath(Resource, Publishable):
         if self.state == PUBLISHED:
             return True
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or user==self.creator or (project and project.is_admin(user))
 
     def can_edit(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         # if user.is_superuser or self.creator==user or (project and project.is_admin(user)):
         if user.is_superuser or self.creator==user:
@@ -2016,7 +2016,7 @@ class LearningPath(Resource, Publishable):
 
     def can_delete(self, request):
         user = request.user
-        if not user.is_authenticated():
+        if not user.is_authenticated:
             return False
         project = self.project
         return user.is_superuser or self.creator==user or (project and project.is_admin(user))
@@ -2562,7 +2562,7 @@ class SharedLearningPath(models.Model):
 
     def can_delete(self, request):
         user = request.user
-        return user==self.user or (user.is_authenticated() and self.project.is_admin(user))
+        return user==self.user or (user.is_authenticated and self.project.is_admin(user))
 
 class PathEdge(edge_factory('PathNode', concrete = False)):
     order = models.IntegerField(default=0)
