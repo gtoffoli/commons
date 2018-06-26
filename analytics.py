@@ -52,7 +52,7 @@ User.unviewed_posts_count = user_unviewed_posts_count
 
 def forum_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = {}
     topic_posts_dict = defaultdict(list)
@@ -84,7 +84,7 @@ def forum_analytics(request):
 
 def message_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     truncate_date = connection.ops.date_trunc_sql('month', 'sent_at')
     qs = Message.objects.extra({'month':truncate_date})
@@ -300,10 +300,10 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
     return actions
 
 def activity_stream(request, user=None, max_actions=100, max_days=1):
-    if not request.user.is_authenticated() or not request.user.is_manager():
+    if not request.user.is_authenticated or not request.user.is_manager():
         return HttpResponseForbidden()
     actions = []
-    if user==request.user or request.user.is_superuser or (request.user.is_authenticated() and request.user.is_manager(1)):
+    if user==request.user or request.user.is_superuser or (request.user.is_authenticated and request.user.is_manager(1)):
         actions = filter_actions(user=user, max_days=max_days, max_actions=max_actions)
     var_dict = {}
     var_dict['actor'] = user
@@ -382,7 +382,7 @@ def filter_users(profiled=None, member=None, count_only=False):
 
 def count_users(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = defaultdict(int)
     users = User.objects.filter(is_active=True)
@@ -567,7 +567,7 @@ def get_active_comembers(user, max_users=20, max_days=30):
 
 def active_users(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     var_dict = {}
     items = get_active_users()
@@ -586,7 +586,7 @@ def active_users(request):
 
 def active_comembers(request):
     user = request.user
-    if not user.is_authenticated():
+    if not user.is_authenticated:
         return HttpResponseForbidden()
     var_dict = {}
     items = get_active_comembers(request.user)
@@ -753,7 +753,7 @@ def make_data_chart (report):
     
 def oer_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     report = make_qs(OER)
     data = make_data_chart(report)
@@ -767,7 +767,7 @@ def oer_analytics(request):
 
 def lp_analytics(request):
     user = request.user
-    if not user.is_authenticated() or not user.is_manager():
+    if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
     report = make_qs(LearningPath)
     data = make_data_chart(report)
