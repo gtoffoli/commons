@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
         ('auth', '0006_require_contenttypes_0002'),
         ('dmuc', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('pybb', '0005_auto_20160909_1157'),
+        # ('pybb', '0005_auto_20160909_1157'),
+        ('pybb', '0004_slugs_required'),
         ('contenttypes', '0002_remove_content_type_name'),
     ]
 

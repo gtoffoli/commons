@@ -13,7 +13,7 @@ if six.PY3:
     HAS_DMUC = False
     HAS_ZINNIA = False
 else:
-    HAS_DMUC = True
+    HAS_DMUC = False
     HAS_ZINNIA = True
 
 import django
@@ -246,7 +246,7 @@ TEMPLATES = [
     },
 ]
 
-if True: # HAS_DMUC:
+if HAS_DMUC:
     TEMPLATE = TEMPLATES[0]
     TEMPLATE['OPTIONS']['context_processors'] += ['dmuc.context_processors.rooms']
     TEMPLATES = [TEMPLATE]

@@ -806,7 +806,7 @@ class Project(Resource):
     forum = models.ForeignKey(Forum, on_delete=models.SET_NULL, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
     # if settings.HAS_DMUC:
     chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
-    chat_room = models.ForeignKey(Room, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
+    chat_room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
