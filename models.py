@@ -6,8 +6,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from six import StringIO
 
 from django.conf import settings
-# if settings.HAS_DMUC:
-from conversejs.models import XMPPAccount
+if settings.HAS_DMUC:
+    from conversejs.models import XMPPAccount
 from dmuc.models import Room, RoomMember
 
 import os
@@ -148,11 +148,12 @@ def user_is_manager(self, level=1):
     return False
 User.is_manager = user_is_manager
 
-def user_has_xmpp_account(self):
-    return XMPPAccount.objects.filter(user=self)
-User.has_xmpp_account = user_has_xmpp_account
-
-User.inbox_count = inbox_count_for
+if settings.HAS_DMUC:
+    def user_has_xmpp_account(self):
+        return XMPPAccount.objects.filter(user=self)
+    User.has_xmpp_account = user_has_xmpp_account
+    
+    User.inbox_count = inbox_count_for
 
 def user_last_seen(self):
     return cache.get('seen_%s' % self.username)

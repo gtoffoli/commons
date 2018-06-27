@@ -10,9 +10,11 @@ DEBUG_TOOLBAR= False
 
 import six
 if six.PY3:
+    HAS_XMPP = False
     HAS_DMUC = False
     HAS_ZINNIA = False
 else:
+    HAS_XMPP = False
     HAS_DMUC = False
     HAS_ZINNIA = True
 
@@ -179,7 +181,7 @@ INSTALLED_APPS = (
     # 'taggit_live',
     'datatrans',
     # 'conversejs',
-    # 'dmuc',
+    'dmuc',
     'tagging',
     'zinnia',
     'pybb',
@@ -198,8 +200,8 @@ INSTALLED_APPS = (
     'django_nvd3',
 	'awesome_avatar',
 )
-if True: # HAS_DMUC:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs', 'dmuc']
+if True: # HAS_XMPP:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
