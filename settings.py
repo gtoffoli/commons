@@ -200,7 +200,7 @@ INSTALLED_APPS = (
     'django_nvd3',
 	'awesome_avatar',
 )
-if True: # HAS_XMPP:
+if HAS_XMPP:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
