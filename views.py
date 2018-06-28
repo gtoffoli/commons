@@ -80,8 +80,10 @@ from notification import models as notification
 from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
 from zinnia.models.author import Author
-
-from endless_pagination.decorators import page_template
+if settings.DJANGO_VERSION == 1:
+    from endless_pagination.decorators import page_template
+if settings.DJANGO_VERSION == 2:
+    from el_pagination.decorators import page_template
 
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)

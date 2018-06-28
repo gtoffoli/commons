@@ -195,11 +195,15 @@ INSTALLED_APPS = (
     # Must be last on Django < 1.7 as per documentation
     # https://django-activity-stream.readthedocs.org/en/latest/installation.html
     'actstream',
-    'endless_pagination',
+    # 'endless_pagination',
     'djangobower',
     'django_nvd3',
 	'awesome_avatar',
 )
+if DJANGO_VERSION == 1:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['endless_pagination']
+if DJANGO_VERSION == 2:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
 if HAS_XMPP:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
 if DEBUG and DEBUG_TOOLBAR:
@@ -351,9 +355,9 @@ LANGUAGES = (
 )
 """
 LANGUAGES = (
-    ('en', 'English'),
-    ('it', 'Italiano'),
-    ('pt', 'Português'),
+    ('en', u'English'),
+    ('it', u'Italiano'),
+    ('pt', u'Português'),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
