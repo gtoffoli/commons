@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auth', '0006_require_contenttypes_0002'),
-        ('dmuc', '0001_initial'),
+        # ('dmuc', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         # ('pybb', '0005_auto_20160909_1157'),
         ('pybb', '0004_slugs_required'),
@@ -438,7 +438,7 @@ class Migration(migrations.Migration):
                 ('state', models.IntegerField(default=0, null=True, verbose_name=b'project state', choices=[(0, 'draft proposal'), (1, 'proposal submitted'), (2, 'project open'), (3, 'project closed'), (4, 'project deleted')])),
                 ('created', django_extensions.db.fields.CreationDateTimeField(default=django.utils.timezone.now, verbose_name='created', editable=False, blank=True)),
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(default=django.utils.timezone.now, verbose_name='modified', editable=False, blank=True)),
-                ('chat_room', models.ForeignKey(on_delete=models.CASCADE, related_name='project', verbose_name='chatroom', blank=True, to='dmuc.Room', null=True)),
+                # ('chat_room', models.ForeignKey(on_delete=models.CASCADE, related_name='project', verbose_name='chatroom', blank=True, to='dmuc.Room', null=True)),
             ],
             options={
                 'verbose_name': 'project / community',

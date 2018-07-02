@@ -8,7 +8,7 @@ from six import StringIO
 from django.conf import settings
 if settings.HAS_DMUC:
     from conversejs.models import XMPPAccount
-from dmuc.models import Room, RoomMember
+    from dmuc.models import Room, RoomMember
 
 import os
 import json
@@ -805,9 +805,9 @@ class Project(Resource):
     slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
     proj_type = models.ForeignKey(ProjType, on_delete=models.PROTECT, verbose_name=_('Project type'), related_name='projects')
     forum = models.ForeignKey(Forum, on_delete=models.SET_NULL, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
-    # if settings.HAS_DMUC:
-    chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
-    chat_room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
+    if settings.HAS_DMUC:
+        chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
+        chat_room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
@@ -1327,6 +1327,7 @@ def message_project(self):
     return None
 Message.project = message_project
 
+@python_2_unicode_compatible
 class RepoFeature(models.Model):
     """
     Define a repertoire of miscellaneous repository features

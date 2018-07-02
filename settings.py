@@ -181,7 +181,7 @@ INSTALLED_APPS = (
     # 'taggit_live',
     'datatrans',
     # 'conversejs',
-    'dmuc',
+    # 'dmuc',
     'tagging',
     'zinnia',
     'pybb',
@@ -355,9 +355,9 @@ LANGUAGES = (
 )
 """
 LANGUAGES = (
-    ('en', u'English'),
-    ('it', u'Italiano'),
-    ('pt', u'Português'),
+    (u'en', u'English'),
+    (u'it', u'Italiano'),
+    (u'pt', u'Português'),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
