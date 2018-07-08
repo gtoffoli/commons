@@ -193,7 +193,7 @@ else:
 if HAS_XMPP:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
 if HAS_SAML2:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['djcelery', 'djangosaml2']
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['djangosaml2']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
