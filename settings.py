@@ -5,8 +5,6 @@ Django settings for commons project.
 
 PRODUCTION = False
 DEBUG_TOOLBAR= False
-# from mayan.settings.base import *
-# from base import *
 
 import six
 if six.PY3:
@@ -17,9 +15,6 @@ else:
     HAS_XMPP = False
     HAS_DMUC = False
     HAS_ZINNIA = True
-
-import django
-DJANGO_VERSION = django.VERSION[0]
 
 from commons.private import *
 if PRODUCTION:
@@ -33,6 +28,14 @@ if CONVERSEJS_ENABLED:
 
 PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
+
+import django
+DJANGO_VERSION = django.VERSION[0]
+if DJANGO_VERSION == 2:
+    HAS_SAML2 = True
+    from commons.sso_config import *
+else:
+    HAS_SAML2 = False
 
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
 ACCOUNT_USERNAME_REQUIRED = False # True
@@ -134,26 +137,9 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # 3rd party
     'compressor',
-    # 'corsheaders',
-    # 'djcelery',
     'filebrowser',
     'filetransfers',
     'mptt',
-    # 'rest_framework',
-    # 'rest_framework.authtoken',
-    # 'solo',
-    # 'south',
-    # Base generic
-    # 'acls',
-    # 'permissions',
-    # 'smart_settings',
-    # 'user_management',
-    # Mayan EDMS
-    # 'checkouts',
-    # 'document_acls',
-    # 'documents',
-    # 'metadata',
-    # 'events',
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
@@ -172,7 +158,7 @@ INSTALLED_APPS = (
     'dal_queryset_sequence',
     'dal_select2_queryset_sequence',
     # from pinax project
-    "pinax_theme_bootstrap",
+    # "pinax_theme_bootstrap",
     "bootstrapform",
     "notification",
     'menu',
@@ -200,12 +186,14 @@ INSTALLED_APPS = (
     'django_nvd3',
 	'awesome_avatar',
 )
-if DJANGO_VERSION == 1:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['endless_pagination']
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
+else:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['endless_pagination']
 if HAS_XMPP:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
+if HAS_SAML2:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['djcelery', 'djangosaml2']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
@@ -272,8 +260,6 @@ if not PRODUCTION:
         'django.template.loaders.app_directories.Loader',
     )
 
-# ========= FROM MAYAN
-
 # --------- Pagination ----------------
 PAGINATION_INVALID_PAGE_RAISES_404 = True
 # ---------- Search ------------------
@@ -306,8 +292,6 @@ SWAGGER_SETTINGS = {
     'api_version': '0',  # Specify your API's version
 }
 
-# ========= MAYAN'S IMPROVEMENTS
-
 # --------- CONVERTERS ----------------
 if os.name == 'nt':
     CONVERTER_IM_CONVERT_PATH = '\\Program Files\\ImageMagick-6.9.0-Q8\\convert.exe'
@@ -322,15 +306,9 @@ else:
     CONVERTER_LIBREOFFICE_PATH = '/usr/bin/libreoffice'
     CONVERTER_PDFTOPPM_PATH = '/usr/bin/pdftoppm'
 
-# ========= DON'T KNOW WHY THIS NEEDED
-
-# import mayan.apps
-# sys.path.append(os.path.dirname(os.path.abspath(mayan.apps.__file__)))
-
 # ========= COMMONS' CUSTOMIZATIONS
 
 PROJECT_TITLE = 'CommonSpaces'
-# PROJECT_NAME = 'mayan'
 PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = '/' 
@@ -373,10 +351,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "commons", "static"),
-    os.path.join(BASE_DIR, "pinax", "static"),
-)
+if False:
+    STATICFILES_DIRS = (
+        os.path.join(BASE_DIR, "commons", "static"),
+        os.path.join(BASE_DIR, "pinax", "static"),
+    )
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 # --------- TEMPORARY_DIRECTORY ----------------
@@ -385,7 +364,7 @@ if os.name == 'nt':
 else:
     COMMON_TEMPORARY_DIRECTORY = '/tmp'
 
-# --------- Django (were redefined by Mayan) -------------------
+# ----------------------------
 LOGIN_URL = 'account_login'
 LOGIN_REDIRECT_URL = 'commons.home'
 
@@ -455,6 +434,8 @@ AUTHENTICATION_BACKENDS = (
     # `allauth` specific authentication methods, such as login by e-mail
     "allauth.account.auth_backends.AuthenticationBackend",
 )
+if HAS_SAML2:
+    AUTHENTICATION_BACKENDS = list(AUTHENTICATION_BACKENDS) + ['djangosaml2.backends.Saml2Backend']
 
 # TinyMCE settings (from roma APP of RomaPaese project)
 # TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')

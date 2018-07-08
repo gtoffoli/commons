@@ -2515,7 +2515,8 @@ class LearningPath(Resource, Publishable):
         domain = request.META['HTTP_HOST']
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
-        writer.addBookmark(str(_('Cover page')), 0)
+        # writer.addBookmark(str(_('Cover page')), 0)
+        writer.addBookmark(str(_('Cover page')).encode('utf-8'), 0)
         is_dag = self.path_type==LP_DAG
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
@@ -2541,7 +2542,8 @@ class LearningPath(Resource, Publishable):
                     rendered_html = html_template.render(context)
                     html_to_writer(rendered_html, writer)    
             parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
-            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
+            # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
+            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label().encode('utf-8'), pagenum, parent=parent_bookmark)               
         return writer, mimetype
 
 @python_2_unicode_compatible

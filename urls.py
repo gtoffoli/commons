@@ -15,6 +15,8 @@ import commons
 from commons import search_indexes
 from commons.forms import MessageComposeForm
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
+if settings.HAS_SAML2:
+    from djangosaml2.urls import urlpatterns as saml2_urls
 
 if settings.DJANGO_VERSION > 1:
     from django.urls import path
@@ -217,6 +219,11 @@ urlpatterns += [
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
+
+if settings.HAS_SAML2:
+    urlpatterns += [
+        path('saml2/', include(saml2_urls)),
+    ]
 
 if settings.HAS_DMUC:
     urlpatterns += [
