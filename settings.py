@@ -31,11 +31,6 @@ PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
 
 import django
 DJANGO_VERSION = django.VERSION[0]
-if DJANGO_VERSION == 2:
-    HAS_SAML2 = True
-    from commons.sso_config import *
-else:
-    HAS_SAML2 = False
 
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
 ACCOUNT_USERNAME_REQUIRED = False # True
