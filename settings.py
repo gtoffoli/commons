@@ -6,6 +6,12 @@ Django settings for commons project.
 PRODUCTION = False
 DEBUG_TOOLBAR= False
 
+import os
+if os.name == 'nt':
+    IS_LINUX = False
+else:
+    IS_LINUX = True
+
 import six
 if six.PY3:
     HAS_XMPP = False
@@ -19,9 +25,12 @@ else:
 from commons.private import *
 if PRODUCTION:
     DEBUG = False
-    ALLOWED_HOSTS = ['*']
 else:
     DEBUG = True
+
+if IS_LINUX:
+    ALLOWED_HOSTS = ['*']
+else:
     ALLOWED_HOSTS = []
 if CONVERSEJS_ENABLED:
     ALLOWED_HOSTS.append(XMPP_SERVER)
