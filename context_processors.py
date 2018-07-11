@@ -22,6 +22,7 @@ def processor(request):
         'path_no_language': path,
         'PRODUCTION': settings.PRODUCTION,
         'PROTOCOL': protocol,
+        'HAS_SAML2': settings.HAS_SAML2,
         'HAS_XMPP': settings.HAS_XMPP,
         'HAS_DMUC': settings.HAS_DMUC,
         'HAS_ZINNIA': settings.HAS_ZINNIA,
