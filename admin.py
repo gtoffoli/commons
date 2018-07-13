@@ -3,6 +3,10 @@ Created on 03/apr/2015
 @author: Giovanni Toffoli - LINK srl
 '''
 
+# Python 2 - Python 3 compatibility
+from __future__ import unicode_literals
+from builtins import str
+
 from django.conf import settings
 
 from django.db import models

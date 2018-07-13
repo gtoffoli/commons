@@ -1,9 +1,12 @@
+# Python 2 - Python 3 compatibility
+from __future__ import unicode_literals
+from builtins import str
 import six
+from six import StringIO
 if six.PY3:
     import urllib.request as urllib2
 else:
     import urllib2
-from six import StringIO
 
 import os
 if os.name == "nt":
