@@ -4,6 +4,7 @@
 from __future__ import unicode_literals
 from builtins import str
 from django.utils.encoding import python_2_unicode_compatible
+import six
 from six import StringIO
 
 from django.conf import settings
@@ -2518,7 +2519,8 @@ class LearningPath(Resource, Publishable):
         self.serialize_cover(request, writer)
         # writer.addBookmark(str(_('Cover page')), 0)
         # writer.addBookmark(str(_('Cover page')).encode('utf-8'), 0)
-        writer.addBookmark(str(_('Cover page')), 0)
+        s = str(_('Cover page'))
+        writer.addBookmark(s, 0)
         is_dag = self.path_type==LP_DAG
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
@@ -2545,7 +2547,11 @@ class LearningPath(Resource, Publishable):
                     html_to_writer(rendered_html, writer)    
             parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
             # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
-            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label().encode('utf-8'), pagenum, parent=parent_bookmark)               
+            # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label().encode('utf-8'), pagenum, parent=parent_bookmark)
+            s = node.get_label()
+            if six.PY2:
+                s = s.encode('utf-8')
+            node_bookmark_dict[node.id] = writer.addBookmark(s, pagenum, parent=parent_bookmark)
         return writer, mimetype
 
 @python_2_unicode_compatible

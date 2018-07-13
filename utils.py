@@ -2,7 +2,8 @@
 from __future__ import unicode_literals
 from builtins import str
 import six
-from six import StringIO
+# from six import StringIO
+from six import BytesIO
 if six.PY3:
     import urllib.request as urllib2
 else:
@@ -70,7 +71,8 @@ def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'
         notebook = nbformat.reads(data, as_version=4)
         pdf_exporter = PDFExporter()
         pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
-        i_stream = StringIO(pdf_data)
+        # i_stream = StringIO(pdf_data)
+        i_stream = BytesIO(pdf_data)
     else:
         return
     write_pdf_pages(i_stream, writer, ranges=ranges)
@@ -78,7 +80,8 @@ def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'
 # def url_to_writer(url, writer, ranges=None):
 def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
     if mimetype=='text/html':
-        i_stream = StringIO()
+        # i_stream = StringIO()
+        i_stream = BytesIO()
         stylesheets = [CSS(string='@page { size: A4 landscape; }')]
         HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
     elif mimetype=='application/x-ipynb+json':
@@ -86,7 +89,8 @@ def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
         notebook = nbformat.reads(response, as_version=4)
         pdf_exporter = PDFExporter()
         pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
-        i_stream = StringIO(pdf_data)
+        # i_stream = StringIO(pdf_data)
+        i_stream = BytesIO(pdf_data)
     else:
         return
     write_pdf_pages(i_stream, writer, ranges=ranges)
@@ -94,7 +98,8 @@ def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
 # def html_to_writer(html, writer, css=None, ranges=None):
 def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = landscape and [CSS(string='@page { size: A4 landscape; }')] or None
-    i_stream = StringIO()
+    # i_stream = StringIO()
+    i_stream = BytesIO()
     """
     stylesheet = CSS(string='body { font-family: Arial; } a { text-decoration: none; };')
     HTML(string=html).write_pdf(i_stream, stylesheets=[stylesheet])

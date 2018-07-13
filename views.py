@@ -1,10 +1,12 @@
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
 from builtins import str
-from six import StringIO
+# from six import StringIO
+from six import BytesIO
 
 from django.conf import settings
 
+import os
 import re
 import json
 import csv
@@ -3558,14 +3560,21 @@ def lp_play_by_slug(request, lp_slug):
 def lp_download_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     writer, mimetype = lp.make_document_stream(request)
-    stream = StringIO()
+    # stream = StringIO()
+    stream = BytesIO()
     try:
         writer.write(stream)
     except:
         pass
     response = HttpResponse(stream.getvalue(), mimetype)
+    """
     if stream.len:
         response['Content-Length'] = stream.len
+    """
+    stream.seek(0, os.SEEK_END)
+    l = stream.tell()
+    if l:
+        response['Content-Length'] = l       
     response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % lp_slug
     return response
 
@@ -3932,13 +3941,20 @@ def pathnode_download_range(request, node_id):
     node = get_object_or_404(PathNode, pk=node_id)
     # stream, mimetype = node.make_document_stream()
     writer, mimetype = node.make_document_stream(request)
-    stream = StringIO()
+    # stream = StringIO()
+    stream = BytesIO()
     writer.write(stream)
     if not stream:
         return
     response = HttpResponse(stream.getvalue(), mimetype)
+    """
     if stream.len:
         response['Content-Length'] = stream.len
+    """
+    stream.seek(0, os.SEEK_END)
+    l = stream.tell()
+    if l:
+        response['Content-Length'] = l       
     return response
 
 def pathnode_delete(request, node_id):
