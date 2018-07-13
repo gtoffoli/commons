@@ -2517,7 +2517,8 @@ class LearningPath(Resource, Publishable):
         writer = make_pdf_writer()
         self.serialize_cover(request, writer)
         # writer.addBookmark(str(_('Cover page')), 0)
-        writer.addBookmark(str(_('Cover page')).encode('utf-8'), 0)
+        # writer.addBookmark(str(_('Cover page')).encode('utf-8'), 0)
+        writer.addBookmark(str(_('Cover page')), 0)
         is_dag = self.path_type==LP_DAG
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
         node_bookmark_dict = {}
