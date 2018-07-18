@@ -67,7 +67,7 @@ if settings.HAS_SAML2:
 
     def custom_update_user(sender, instance, attributes, user_modified, **kargs):
         community = Project.objects.get(slug='up2u')
-        community.add_member(sender, editor=sender, state=1)
+        community.add_member(instance, editor=instance, state=1)
         return True  # I modified the user object
 
     pre_user_save.connect(custom_update_user, sender=User)
