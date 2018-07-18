@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-"""
 
+from django.conf import settings
 from django.db.models.signals import post_save, m2m_changed
 from actstream.models import Action
 from zinnia.models.entry import Entry
@@ -59,3 +60,14 @@ m2m_changed.connect(entry_m2m_changed_handler, sender=Entry.authors.through)
 post_save.connect(topic_post_save_handler, sender=Topic)
 # post_save.connect(post_post_save_handler, sender=Post)
 
+if settings.HAS_SAML2:
+    from djangosaml2.signals import pre_user_save
+    from django.contrib.auth.models import User, Group
+    from commons.models import Project, ProjectMember
+
+    def custom_update_user(sender, instance, attributes, user_modified, **kargs):
+        community = Project.objects.get(slug='up2u')
+        community.add_member(sender, editor=sender, state=1)
+        return True  # I modified the user object
+
+    pre_user_save.connect(custom_update_user, sender=User)

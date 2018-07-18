@@ -16,6 +16,7 @@ from commons import search_indexes
 from commons.forms import MessageComposeForm
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 if settings.HAS_SAML2:
+    import djangosaml2
     from djangosaml2.urls import urlpatterns as saml2_urls
 
 if settings.DJANGO_VERSION > 1:
@@ -61,7 +62,7 @@ urlpatterns += [
     url(r'^tinymce/', include('tinymce.urls')),
     url(r"^$", commons.views.home, name="commons.home"),
     url(r"^press_releases/$", commons.views.press_releases, name="press_releases"),
-    url(r"^test/$", TemplateView.as_view(template_name="test.html"), name="home"),
+    url(r"^template_test/$", TemplateView.as_view(template_name="test.html"), name="test"),
     url(r"^cops/$", commons.views.cops_tree, name="cops_tree"),
     url(r"^create_project_folders/$", commons.views.create_project_folders, name="create_project_folders"),
     url(r"^projects/search/$", commons.views.projects_search, name="projects_search"),
@@ -223,6 +224,7 @@ urlpatterns += [
 if settings.HAS_SAML2:
     urlpatterns += [
         path('saml2/', include(saml2_urls)),
+        url(r'^test/', djangosaml2.views.echo_attributes, name="echo_attributes"),
     ]
 
 if settings.HAS_DMUC:
