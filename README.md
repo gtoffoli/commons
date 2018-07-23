@@ -5,7 +5,7 @@ CommonS (= common spaces) was an [*Erasmus+*](http://ec.europa.eu/programmes/era
 
 Among the main results of the Erasmus+ project CommonS (September 2014 - August 2017) there are:
 - the *Commons Platform* (a software and its deployment)
-- *CommonSpaces*, a federation of Communities and Projects hosted and supported by the CommonS Platform (at http://www.commonspaces.eu).
+- *CommonSpaces*, a federation of Communities and Projects hosted and supported by the CommonS Platform (at https://www.commonspaces.eu).
 
 We often use the term CommonSpaces to denote both things
 
