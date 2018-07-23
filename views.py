@@ -28,7 +28,7 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
 from allauth.account.models import EmailAddress
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 # from django.shortcuts import render, render_to_response, get_object_or_404
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import capfirst
@@ -54,7 +54,8 @@ from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
 from .metadata import QualityFacet
-from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm, FolderDocumentForm, FolderOnlineResourceForm
+from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
+from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
 from .forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
 from .forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
 from .forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
@@ -872,6 +873,40 @@ def projects_search(request, template='search_projects.html', extra_context=None
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
+@login_required
+def folder_add_subfolder(request):
+    folder_id = request.POST.get('id', '')
+    folder = get_object_or_404(Folder, id=folder_id)
+    project = folder.get_project()
+    form = FolderForm(request.POST)
+    if form.is_valid():
+        data=form.cleaned_data
+        subfolder = Folder(title=data['title'], parent=folder, user=request.user)
+        subfolder.save()
+        track_action(request.user, 'Create', subfolder, target=project)
+    return HttpResponseRedirect('/folder/%s/' % project.slug)
+
+@login_required
+def folder_add_document(request):
+    folder_id = request.POST.get('id', '')
+    folder = get_object_or_404(Folder, id=folder_id)
+    project = folder.get_project()
+    if not project.can_access(request.user):
+        raise PermissionDenied
+    form = DocumentUploadForm(request.POST, request.FILES)
+    if form.is_valid():
+        uploaded_file = request.FILES['docfile']
+        try:
+            uploaded_file = request.FILES['docfile']
+        except:
+            return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+        version = handle_uploaded_file(uploaded_file)
+        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
+        folderdocument.save()
+        track_action(request.user, 'Create', folderdocument, target=project)
+    return HttpResponseRedirect(folder.get_absolute_url())
+
+@login_required
 def project_add_document(request):
     project_id = request.POST.get('id', '')
     project = get_object_or_404(Project, id=project_id)
@@ -910,8 +945,11 @@ def project_add_resource_online(request):
 def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
+    """
     projects = Project.objects.filter(folders = folder)
     project = projects and projects[0]
+    """
+    project = folder.get_project()
     
     if request.POST:
         form = FolderDocumentForm(request.POST, instance=folderdocument)
@@ -919,7 +957,8 @@ def folderdocument_edit(request, folderdocument_id):
             if request.POST.get('save', ''): 
                 form.save()
             if project:
-                return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+                # return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+                return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderDocumentForm(instance=folderdocument)
         action = '/folderdocument/%d/edit/' % folderdocument.id
@@ -956,9 +995,10 @@ def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     document = folderdocument.document
-    project = Project.objects.get(folders=folder)
+    # project = Project.objects.get(folders=folder)
     folder.remove_document(document, request)
-    return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    # return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+    return HttpResponseRedirect(folder.get_absolute_url())
 
 def project_folder(request, project_slug):
     user = request.user
@@ -984,6 +1024,99 @@ def project_folder(request, project_slug):
     var_dict['form_res'] = FolderOnlineResourceForm()
     # return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'project_folder.html', var_dict)
+
+def folder_delete(request, folder_id):
+    folder = get_object_or_404(Folder, id=folder_id)
+    project = parent = None
+    if folder.parent:
+        parent = folder.parent
+    else:
+        project = folder.get_project()
+    folder.delete()
+    if parent:
+        return HttpResponseRedirect(parent.get_absolute_url())
+    else:
+        return HttpResponseRedirect('/project/%/' % project.slug)
+
+def folder_edit(request, folder_id):
+    folder = get_object_or_404(Folder, id=folder_id)
+    project = folder.get_project()
+    
+    if request.POST:
+        form = FolderForm(request.POST, instance=folder)
+        if form.is_valid():
+            if request.POST.get('save', ''): 
+                form.save()
+            if folder.parent:
+                folder = folder.parent
+            return HttpResponseRedirect(folder.get_absolute_url())
+    else:
+        form = FolderForm(instance=folder)
+        action = '/folder/%d/edit/' % folder.id
+        if project:
+            proj_type_name = project.proj_type.name
+        else:
+            proj_type_name = ''
+        return render(request, 'folder_edit.html', {'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
+
+def folder_detail(request, project_slug='', folder=None):
+    user = request.user
+    if folder:
+        project = folder.get_project()
+    else:
+        project = get_object_or_404(Project, slug=project_slug)
+        folder = project.get_folder()
+    folderdocuments = folder.get_documents(user, project=project)
+    subfolders = folder.get_children()
+    """
+    if not project.can_access(user):
+        raise PermissionDenied
+    if not user.is_authenticated:
+        return project_detail(request, project.id, project=project)
+    """
+    proj_type = project.proj_type
+    ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
+    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
+    n_selected_mentors = 0
+    selected_mentors = []
+    if ment_proj_submitted:
+        selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
+        n_selected_mentors = selected_mentors.count()
+    var_dict['can_share'] = user.is_superuser or project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
+    var_dict['is_admin'] = project.is_admin(user)
+    var_dict['folder'] = folder
+    var_dict['folderdocuments'] = folderdocuments
+    var_dict['subfolders'] = subfolders
+    var_dict['subfolder_form'] = FolderForm()
+    var_dict['form'] = DocumentUploadForm()
+    var_dict['form_res'] = FolderOnlineResourceForm()
+    return render(request, 'folder_detail.html', var_dict)
+
+# see view library_traverse in https://github.com/joelburton/library-mptt/blob/master/project/library/views.py
+def library_traverse(request, path):
+    """View that traverses to correct folder/document.
+    This view turns a path like 'folder-a/folder-b/document/' into the end document-view,
+    and a path like 'folder-a/folder-b/' into the end folder-view.
+    """
+    slugs = path.strip().split('/')
+    if len(slugs) < 2 or len(slugs[-1]) > 0:
+        return HttpResponseNotFound()
+    slugs = slugs[:-1]
+    slugs.reverse()
+    slug = slugs.pop()
+    folder = get_object_or_404(Folder, slug=slug)
+    while slugs and folder:
+        slug = slugs.pop()
+        try:
+            folder = Folder.objects.get(slug=slug, parent=folder)
+        except Folder.DoesNotExist:
+            folderdocument = get_object_or_404(FolderDocument, slug=slug, folder=folder)
+            if not slugs:
+                return document_serve(request, folderdocument.document.id)
+    if folder and not slugs:
+        return folder_detail(request, folder=folder)
+    else:
+        return HttpResponseNotFound()
 
 def oers_in_clipboard(request, key):
     oers = []
@@ -1052,7 +1185,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['parent'] = parent = project.get_parent()
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
         if is_admin or is_parent_admin or user.is_superuser:
-            var_dict['project_children'] = project.get_children
+            # var_dict['project_children'] = project.get_children
+            var_dict['project_children'] = project.get_children()
             var_dict['project_support_child'] = project.get_children(proj_type_name='sup')
             var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
         else:
@@ -3125,7 +3259,7 @@ def oer_evaluation_edit_by_id(request, evaluation_id):
 def handle_uploaded_file(file_object):
     document_type = DocumentType.objects.get(pk=2) # OER file type ??? non usato
     # from documents.settings import LANGUAGE
-    from documents import LANGUAGE
+    from .documents import LANGUAGE
     version = Document.objects.upload_single_document(document_type, file_object, language=LANGUAGE)
     return version
 

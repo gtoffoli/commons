@@ -271,7 +271,7 @@
              <li class="list-back-black">
                 <ul class="list-inline">
                 {% if view_shared_folder %}
-                  <li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o" aria-hidden="true"></i> {% trans "shared folder"|capfirst %}</a></li>
+                  <li class="marginB5"><a href="{% if DJANGO_VERSION == 2 %}{{ project.get_folder.get_absolute_url }}{% else %}/project/{{ project.slug }}/folder/{% endif %}" class="btn btn-default"><i class="fa fa-folder-open-o" aria-hidden="true"></i> {% trans "shared folder"|capfirst %}</a></li>
                 {% endif %}
                 {% if can_send_message %}
                    <li class="marginB5">

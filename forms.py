@@ -27,7 +27,7 @@ from dal import autocomplete
 if settings.HAS_DMUC:
     from dmuc.models import Room
 from commons.models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from commons.models import Project, ProjType, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
+from commons.models import Project, ProjType, Folder, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from commons.models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
 from commons.models import LearningPath, PathNode, Featured
 from commons.models import ProjectMember
@@ -251,13 +251,20 @@ class ProjectSearchForm (forms.Form):
 class ProjectAddMemberForm (forms.Form):
     user = forms.ModelChoiceField(required=False, queryset=User.objects.all(), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
     role_member = forms.CharField(required=False, widget=forms.HiddenInput())
-    
+
 class DocumentForm(forms.Form): 
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     language = forms.ModelChoiceField(required=False, label=_('language'), queryset=Language.objects.all(), widget=forms.Select(attrs={'class':'form-control',}))
     docfile = forms.FileField(
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
+
+class FolderForm(forms.ModelForm):
+    class Meta:
+        model = Folder
+        fields = ('title',)
+        
+    title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('please use a short title'))
 
 class FolderDocumentForm(forms.ModelForm):
     class Meta:

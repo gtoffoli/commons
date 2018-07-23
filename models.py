@@ -373,6 +373,9 @@ class Publishable(object):
             self.state = UN_PUBLISHED
             self.save()
 
+def Folder_slug_populate_from(instance):
+    return instance.get_title()
+
 @python_2_unicode_compatible
 class Folder(MPTTModel):
        
@@ -380,6 +383,8 @@ class Folder(MPTTModel):
     title = models.CharField(max_length=128, verbose_name=_('Title'), db_index=True)
     """
     title = models.CharField(max_length=128, verbose_name=_('Title'))
+    slug = AutoSlugField(unique=True, populate_from=Folder_slug_populate_from, blank=True, editable=True, overwrite=True, max_length=80)
+    description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name = 'subfolders')
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('User'))
     documents = models.ManyToManyField(Document, through='FolderDocument', related_name='document_folder', blank=True, verbose_name='documents')
@@ -409,17 +414,55 @@ class Folder(MPTTModel):
             projects = Project.objects.filter(folders=self)
             if projects:
                 return projects[0].get_name()
+            return ''
 
     def get_project(self):
-        projects = Project.objects.filter(folders=self)
+        folder = self
+        while folder.parent:
+            folder = folder.parent
+        projects = Project.objects.filter(folders=folder)
         if projects:
             return projects[0]
+
+    def get_parent(self):
+        return self.parent or self.get_project()
+
+    def get_documents(self, user, project=None):
+        if not project:
+            project = self.get_project()
+        documents = []
+        if project.is_member(user) or user.is_superuser:
+            documents = FolderDocument.objects.filter(folder=self).order_by('order')
+        else:
+            documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED).order_by('order')
+        return documents
+
+    def get_absolute_url(self):
+        url = "/%s/" % self.slug
+        folder = self
+        while folder.parent:
+            url = "/%s%s" % (folder.parent.slug, url)
+            folder = folder.parent
+        return '/folder' + url
+
+    def get_breadcrumbs(self):
+        folder = self
+        breadcrumbs = [[folder, '%s/' % folder.slug]]
+        while folder.parent:
+            folder = folder.parent
+            breadcrumbs = [[folder, '']] + breadcrumbs
+            breadcrumbs = [[f, '%s/%s' % (folder.slug, url)] for [f, url] in breadcrumbs] 
+        breadcrumbs = [[folder, '/folder/' + url] for [folder, url] in breadcrumbs] 
+        return breadcrumbs
 
     """
     @models.permalink
     def get_absolute_url(self):
         return ('folders:folder_view', [self.pk])
     """
+
+def FolderDocument_slug_populate_from(instance):
+    return instance.__str__()
 
 @python_2_unicode_compatible
 class FolderDocument(models.Model, Publishable):
@@ -431,15 +474,18 @@ class FolderDocument(models.Model, Publishable):
     order = models.IntegerField()
     folder = models.ForeignKey(Folder, on_delete=models.PROTECT, related_name='folderdocument_folder', verbose_name=_('folder'))
     document = models.ForeignKey(Document, on_delete=models.CASCADE, blank=True, null=True, related_name='folderdocument_document', verbose_name=_('document'))
+    label = models.TextField(blank=True, null=True, verbose_name=_('label'))
+    slug = AutoSlugField(unique=True, populate_from=FolderDocument_slug_populate_from, blank=True, editable=True, overwrite=True, max_length=80)
+    description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('user'))
     embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'))
-    label = models.TextField(blank=True, null=True, verbose_name=_('label'))
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
     created = CreationDateTimeField(_('created'), null=True)
 
     def __str__(self):
         # return unicode(self.document.label)
-        return self.document.label
+        # return self.document.label
+        return self.label or self.document.label
 
     class Meta:
         unique_together = ('folder', 'document',)
@@ -466,6 +512,9 @@ class FolderDocument(models.Model, Publishable):
                 return True
             else:
                 return False
+
+    def get_absolute_url(self):
+        return '%s%s/' % (self.folder.get_absolute_url(), self.slug)
 
 GENDERS = (
    ('-', _('not specified')),
@@ -883,6 +932,7 @@ class Project(Resource):
 
     def get_folderdocuments(self, user):
         folder = self.get_folder()
+        """
         folderdocuments = []
         if folder:
             if self.is_member(user) or user.is_superuser:
@@ -890,28 +940,17 @@ class Project(Resource):
             else:
                 folderdocuments = FolderDocument.objects.filter(folder=folder, state=PUBLISHED).order_by('order')
         return folderdocuments
-
-    """ this logic must be in views.py, where the parent project is known
-    def save(self, *args, **kwargs):
-        new = self.pk is None
-        try:
-            group = self.group
-        except:
-            # group_name = slugify(self.name)[:50]
-            group_name = uuid.uuid4()
-            group = Group(name=group_name)
-            group.save()
-            self.group = group
-        super(Project, self).save(*args, **kwargs) # Call the "real" save() method.
-        if new:
-            self.create_folder()
-    """
+        """
+        return folder and folder.get_documents(user, project=self) or []
 
     def get_name(self):
         return self.name or self.group.name
 
     def __str__(self):
         return self.get_name()
+
+    def get_title(self):
+        return self.name
 
     def get_project_type(self):
         return self.proj_type.name

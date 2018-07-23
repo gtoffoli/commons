@@ -60,10 +60,15 @@ class DocumentVersionAdmin(admin.ModelAdmin):
 
 class FolderAdmin(MPTTModelAdmin):
     fieldset = ['title', 'parent', 'tree_id',]
-    list_display = ('id', 'title', 'parent_name', 'level', 'tree_id', 'id', 'lft', 'rght',)
+    list_display = ('title', 'slug', 'level', 'tree_id', 'id', 'lft', 'rght', 'parent_name')
+    list_display_links = ('id', 'title',)
+    ordering = ('id', 'title', 'level',)
+    list_filter = ('level',)
+    search_fields = ('title',)
+    list_per_page = 100
 
     def parent_name(self, obj):
-        return obj.parent.name
+        return obj.parent and obj.parent.get_title() or ''
 
 class ProjTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'description', 'public', 'order',]

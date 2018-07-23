@@ -26,16 +26,38 @@ dl.eval dd:nth-child(even) {
 
 <div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
   <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
-    <h3 class="pull-left font_small marginTB5">{{ project.get_name }}</h3>
+    <h3 class="pull-left font_small marginTB5">{% trans "shared folder for"|capfirst %}  {% if proj_type.name == 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}: {{ folder.get_project.get_title }}</h3>
     <p class="pull-right marginB0 font26 font_button_small">
-      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-list-alt font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
+      <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
     </p>
     <div style="clear:both">
-      <h1 class="marginTB0"><small class="c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}">{% trans "shared folder"|capfirst %}</small></h1>
+      <h1 class="marginTB0"><small class="c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}">
+      	{% for folder, url in folder.get_breadcrumbs %}{% if not forloop.last %}<a href="{{ url }}">{% endif %}{{ folder.get_title }}{% if not forloop.last %}</a>, {% endif %}{% endfor %}
+      </small></h1>
     </div>
   </div>
   {% if can_share %}
     <dl class="eval">
+       {% if subfolders %}
+         {% for sub in subfolders %}
+           <dd>
+             <div class="row">
+               <div class="col-sm-7 col-md-7 col-lg-7">
+                   <p id="v_{{ sub.id }}"><a href="{{ sub.get_absolute_url }}"><i class="fa fa-folder-o font07em" aria-hidden="true"></i> {{ sub.get_title }}</a></p>
+                   <p class="font12"><span class="demiBold">{% trans "created by"|capfirst %}</span> <a href="/profile/{{ sub.user.username }}">{{ sub.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ sub.created|date:"d/m/Y" }}</p>
+               </div>
+               <div class="col-sm-5 col-md-5 col-lg-5">
+                 <ul class="list-inline">
+                    {% if is_admin or user.is_superuser or user == sub.user %}
+                      <li class="marginR10"><a id="r_{{ sub.id }}" class="deleteFolder" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
+                      <li class="marginR20"><a href="/folder/{{ sub.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
+                    {% endif %}
+                 </ul>
+               </div>
+             </div>
+           </dd>
+         {% endfor %}
+       {% endif %}
        {% if folderdocuments %}
          {% for folderdocument in folderdocuments %}{% with document=folderdocument.document %}
            <dd>
@@ -45,7 +67,7 @@ dl.eval dd:nth-child(even) {
                    <p id="v_{{ folderdocument.id }}">{{ folderdocument.label|safe }}</p>
                    <p class="font12"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
                  {% else %}
-                   <p id="v_{{ folderdocument.id }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
+                   <p id="v_{{ folderdocument.id }}"><a href="{{ folderdocument.get_absolute_url }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</a></p>
                    <p class="font12"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
                  {% endif %}
                </div>
@@ -69,24 +91,39 @@ dl.eval dd:nth-child(even) {
              </div>
            </dd>
          {% endwith %}{% endfor %}
-       {% else %}
+       {% endif %}
+       {% if not subfolders %}{% if not folderdocuments %}
          <dd>
            <p>{% trans "no shared documents are present"|capfirst %}</p>
          </dd>
-       {% endif %}
+       {% endif %}{% endif %}
     </dl>
     {% if not ment_proj_submitted %}
     <div class="row margin0 bc-white">
     <div class="col-md-6 col-lg-6 padding0">
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
-      <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/project/add_document/">{% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ project.id }}">
+      <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/folder/add_document/">{% csrf_token %}
+        <input type="hidden" id="id" name="id" value="{{ folder.id }}">
         <div>{{ form.non_field_errors }}</div>
         <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
           <div><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
             {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
           </div>
+      </form></dd>
+    </dl>
+    <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
+      <dt class="demiBold marginB5">{% trans "add subfolder"|capfirst %}</dt>
+      <dd><form method="post" id="add_subfolder" action="/folder/add_subfolder/">{% csrf_token %}
+        <input type="hidden" id="id" name="id" value="{{ folder.id }}">
+        {% for field in subfolder_form.visible_fields %}
+            <div class="form-group">
+              <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>
+              <span class="txt-error">{{ field.errors }}</span>{{ field }}
+              {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+            </div>
+        {% endfor %}
+        <div><button type="submit" id="create" name="create" class="btn btn-default" value='{% trans "create"|capfirst %}'> {% trans "create" %}</button></div>
       </form></dd>
     </dl>
     </div>
@@ -131,6 +168,7 @@ dl.eval dd:nth-child(even) {
 $(document).ready(function (){
 {% trans "do you really want to delete" as translatemsg0 %}
 {% trans "this document" as translatemsg1 %}
+{% trans "this folder with its contents" as translatemsg2 %}
  if ($('li a').hasClass('deleteDoc')) {
     $('li a.deleteDoc').on('click', function(event){
       event.preventDefault();
@@ -159,6 +197,35 @@ $(document).ready(function (){
       });
     });
  }
+
+ if ($('li a').hasClass('deleteFolder')) {
+	    $('li a.deleteFolder').on('click', function(event){
+	      event.preventDefault();
+	      $("body").css("cursor", "default");
+	      var folder_id = $(this).attr('id');
+	      folder_id = folder_id.substr(2);
+	      folder_label=$('#v_'+folder_id).text();
+	      bootbox.confirm({
+	        message: folder_label+'<br>{{ translatemsg0|add:' '|add:translatemsg2|capfirst }}?',
+	        buttons: {
+	          confirm: {
+	            label: '{% trans "Yes" %}',
+	            className: 'btn-success'
+	          },
+	          cancel: {
+	            label: '{% trans "No" %}',
+	            className: 'btn-danger'
+	          },
+	        },
+	        callback: function(result) {
+	          if (result) {
+	             $("body").css("cursor", "wait");
+	             document.location.href="/folder/"+folder_id+"/delete/";
+	          }
+	        }
+	      });
+	    });
+	 }
 });
 </script>
 {% endif %}
