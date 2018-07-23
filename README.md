@@ -1,11 +1,12 @@
 # commons
 **Platform for the communities of the CommonS Erasmus+ Project**
 
-CommonS (= Common Spaces) was an [*Erasmus+*](http://ec.europa.eu/programmes/erasmus-plus/index_en.htm) project funded by the EU, aimed at experimenting new forms of co-learning, e-tutoring and e-mentoring.
+CommonS (= common spaces) was an [*Erasmus+*](http://ec.europa.eu/programmes/erasmus-plus/index_en.htm) project funded by the EU, aimed at experimenting new forms of co-learning, e-tutoring and e-mentoring.
 
 Among the main results of the Erasmus+ project CommonS (September 2014 - August 2017) there are:
 - the *Commons Platform* (a software and its deployment)
 - *CommonSpaces*, a federation of Communities and Projects hosted and supported by the CommonS Platform (at http://www.commonspaces.eu).
+
 We often use the term CommonSpaces to denote both things
 
 CommonSpaces supports Communities of Practice (CoPs) in their activities. CoPs comprise teachers, students, young and senior professionals; they work mainly to the retrieval, adaptation (including translation), reuse and remix of available educational contents, to be used as building blocks of learning pathways.
@@ -18,6 +19,7 @@ The CommonSpaces provides functions for
 - prototyping of Learning Pathways
 - support to mentoring: the Mentoring relationship is modeled as a special type of Project
 - multi-language support.
+
 A User Guide is available online as a number of help pages under the Help menu of CommonSpaces. A deployment guide was also produced.
 
 Previously, my organization had much experience in developing applications and tools with OS software, but this was our first attempt at using Git and GitHub.
