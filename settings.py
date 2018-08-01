@@ -16,10 +16,12 @@ import six
 if six.PY3:
     HAS_XMPP = False
     HAS_DMUC = False
+    HAS_KNOCKPLOP = True
     HAS_ZINNIA = False
 else:
     HAS_XMPP = False
     HAS_DMUC = False
+    HAS_KNOCKPLOP = False
     HAS_ZINNIA = True
 
 from commons.private import *

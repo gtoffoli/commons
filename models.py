@@ -1067,6 +1067,13 @@ class Project(Resource):
         else:
             return False
 
+    if settings.HAS_KNOCKPLOP:
+        def get_room_name(self):
+            return self.slug
+    
+        def get_room_url(self):
+            return settings.KNOCKPLOP_SERVER + '/' + self.get_room_name()
+
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
         users = [membership.user for membership in memberships]

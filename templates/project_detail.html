@@ -286,6 +286,12 @@
                    <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
                   	   {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
                 {% endif %}
+
+                {% if HAS_KNOCKPLOP %}
+                   <li class="marginB5"><a href="javascript:window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
+                  	   {% trans "meeting"|capfirst %}</div></a></li>
+                {% endif %}
+
                 </ul>
              </li>
            </ul>
