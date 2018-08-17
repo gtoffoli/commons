@@ -54,7 +54,7 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         # print 'may_view_topic: ', user.username, topic.name
         # action.send(user, verb='View', action_object=topic)
         if user.is_authenticated:
-            track_action(user, 'View', topic)
+            track_action(None, user, 'View', topic)
         forum = topic.forum
         project = forum.get_project()
         if project:

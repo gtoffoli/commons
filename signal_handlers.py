@@ -24,7 +24,7 @@ def entry_post_save_handler(sender, **kwargs):
     authors = entry.authors.all()
     if not created:
         for user in authors:
-            track_action(user, 'Edit', entry)
+            track_action(None, user, 'Edit', entry)
 
 def entry_m2m_changed_handler(sender, **kwargs):
     entry = kwargs['instance']
@@ -34,21 +34,21 @@ def entry_m2m_changed_handler(sender, **kwargs):
         authors = entry.authors.all()
         for user in authors:
             if not Action.objects.filter(verb='Create', actor_object_id=user.id, action_object_object_id=entry.id):
-                track_action(user, 'Create', entry)
+                track_action(None, user, 'Create', entry)
 
 def topic_post_save_handler(sender, **kwargs):
     topic = kwargs['instance']
     created = kwargs['created']
     user = topic.user
     verb = created and 'Create' or 'Edit'
-    track_action(user, verb, topic)
+    track_action(None, user, verb, topic)
 
 def post_post_save_handler(sender, **kwargs):
     post = kwargs['instance']
     created = kwargs['created']
     user = post.user
     verb = created and 'Create' or 'Edit'
-    track_action(user, verb, post)
+    track_action(None, user, verb, post)
 
 post_save.connect(project_post_save_handler, sender=Project)
 """

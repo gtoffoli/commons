@@ -313,7 +313,7 @@ def user_profile(request, username, user=None):
     if request.user.is_authenticated:
         if not profile or not request.user == profile.user:
             # actstream.action.send(request.user, verb='View', action_object=profile)
-            track_action(request.user, 'View', profile)
+            track_action(request, request.user, 'View', profile)
     # return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'user_profile.html', var_dict)
 
@@ -445,7 +445,7 @@ def profile_edit(request, username):
                 user.first_name = request.POST.get('first_name', '')
                 user.last_name = request.POST.get('last_name', '')
                 user.save()
-                track_action(user, 'Edit', profile, latency=0)
+                track_action(request, user, 'Edit', profile, latency=0)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/my_profile/')
                 else: 
@@ -478,7 +478,7 @@ def profile_mentor_edit(request, username):
             if request.POST.get('save', '') or request.POST.get('continue', ''): 
                 if form.is_valid():
                     form.save()
-                    track_action(user, 'Edit', profile, latency=0)
+                    track_action(request, user, 'Edit', profile, latency=0)
                     if request.POST.get('save', ''): 
                         return HttpResponseRedirect('/my_profile/')
                     else: 
@@ -869,7 +869,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(user, 'Search', None, description='project')
+        track_action(request, user, 'Search', None, description='project')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
@@ -883,7 +883,7 @@ def folder_add_subfolder(request):
         data=form.cleaned_data
         subfolder = Folder(title=data['title'], parent=folder, user=request.user)
         subfolder.save()
-        track_action(request.user, 'Create', subfolder, target=project)
+        track_action(request, request.user, 'Create', subfolder, target=project)
     return HttpResponseRedirect('/folder/%s/' % project.slug)
 
 @login_required
@@ -903,7 +903,7 @@ def folder_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
         folderdocument.save()
-        track_action(request.user, 'Create', folderdocument, target=project)
+        track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect(folder.get_absolute_url())
 
 @login_required
@@ -924,7 +924,7 @@ def project_add_document(request):
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
         folderdocument.save()
         # track_action(request.user, 'Upload', folderdocument)
-        track_action(request.user, 'Create', folderdocument, target=project)
+        track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
 def project_add_resource_online(request):
@@ -939,7 +939,7 @@ def project_add_resource_online(request):
             data=form.cleaned_data
             folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
             folderdocument.save()
-            track_action(request.user, 'Create', folderdocument, target=project)
+            track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     
 def folderdocument_edit(request, folderdocument_id):
@@ -1451,7 +1451,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         if user.is_authenticated:
             if project.state == PROJECT_OPEN and not user == project.creator:
                 # actstream.action.send(user, verb='View', action_object=project)
-                track_action(user, 'View', project)
+                track_action(request, user, 'View', project)
         # return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
         return render(request, 'project_detail.html', var_dict)
 
@@ -1583,7 +1583,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.save()
                     group = project.group
                     project.create_folder()
-                    track_action(request.user, 'Create', project)
+                    track_action(request, request.user, 'Create', project)
 
                     role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
@@ -1607,7 +1607,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.editor = user
                     set_original_language(project)
                     project.save()
-                    track_action(request.user, 'Edit', project)
+                    track_action(request, request.user, 'Edit', project)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
@@ -1666,7 +1666,7 @@ Please, look at your user dashboard for more specific information."""
 Some action is requested by you.
 Please, look at your user dashboard for more specific information."""
             notify_event(recipients, subject, body)
-    track_action(request.user, 'Submit', project)
+    track_action(request, request.user, 'Submit', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_open(request, project_id):
@@ -1674,7 +1674,7 @@ def project_open(request, project_id):
     if not project.can_access(request.user):
         raise PermissionDenied
     project.open(request)
-    track_action(request.user, 'Approve', project)
+    track_action(request, request.user, 'Approve', project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 def project_close(request, project_id):
     project = Project.objects.get(pk=project_id)
@@ -1778,7 +1778,7 @@ def apply_for_membership(request, username, project_slug):
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
             if settings.PRODUCTION:
                 notification.send(receivers, 'membership_application', extra_content)
-            track_action(user, 'Submit', membership, target=project)
+            track_action(request, user, 'Submit', membership, target=project)
             # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
@@ -1792,7 +1792,7 @@ def accept_application(request, username, project_slug):
         if project.can_accept_member(request.user):
             application = get_object_or_404(ProjectMember, user=applicant, project=project, state=0)
             project.accept_application(request, application)
-            track_action(request.user, 'Approve', application, target=project)
+            track_action(request, request.user, 'Approve', application, target=project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def project_add_member(request, project_slug):
@@ -1817,7 +1817,7 @@ def project_add_member(request, project_slug):
                 membership.history = "%s\n%s" % (membership.history, history)
                 membership.save()
                 project.remove_member(user)
-            track_action(user, 'Approve', membership, target=project)
+            track_action(request, user, 'Approve', membership, target=project)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def bulk_add_member(request, project, record, email_validator):
@@ -2043,7 +2043,7 @@ def project_create_forum(request, project_id):
     forum = Forum(name=name, category_id=category.id)
     forum.save()
     # actstream.action.send(user, verb='Create', action_object=forum, target=project)
-    track_action(user, 'Create', forum, target=project)
+    track_action(request, user, 'Create', forum, target=project)
     if type_name == 'com' and request.GET.get('thematic', ''):
         forum.moderators.add(user)
         return HttpResponseRedirect('/forum/forum/%d/' % forum.id)    
@@ -2102,7 +2102,7 @@ if settings.HAS_DMUC:
         if project.get_type_name() == 'ment':
             project_sync_xmppaccounts(request, project_id, project=project, no_response=True)
         # actstream.action.send(request.user, verb='Create', action_object=room, target=project)
-        track_action(request.user, 'Create', room, target=project)
+        track_action(request, request.user, 'Create', room, target=project)
         if not no_response:
             return project_detail(request, project_id, project=project)    
     
@@ -2138,7 +2138,7 @@ def project_compose_message(request, project_id):
     members = project.members(user_only=True)
     # recipient_filter = [member.username for member in members]
     recipient_filter = [member.username for member in members if not member==request.user]
-    track_action(request.user, 'Send', None, target=project)
+    track_action(request, request.user, 'Send', None, target=project)
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):
@@ -2217,7 +2217,7 @@ def repo_detail(request, repo_id, repo=None):
     if user.is_authenticated:
         if not user == repo.creator:
             # actstream.action.send(user, verb='View', action_object=repo)
-            track_action(request.user, 'View', repo)
+            track_action(request, request.user, 'View', repo)
     # return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'repo_detail.html', var_dict)
 
@@ -2365,9 +2365,9 @@ def repo_save(request, repo=None):
                 set_original_language(repo)
                 repo.save()
                 if repo_id:
-                    track_action(request.user, 'Edit', repo)
+                    track_action(request, request.user, 'Edit', repo)
                 else:
-                    track_action(request.user, 'Create', repo)
+                    track_action(request, request.user, 'Create', repo)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/repo/%s/' % repo.slug)
                 else:
@@ -2415,7 +2415,7 @@ def repo_toggle_comments(request, repo_id):
 def repo_submit(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     repo.submit(request)
-    track_action(request.user, 'Submit', repo)
+    track_action(request, request.user, 'Submit', repo)
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 def repo_withdraw(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
@@ -2428,7 +2428,7 @@ def repo_reject(request, repo_id):
 def repo_publish(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     repo.publish(request)
-    track_action(request.user, 'Approve', repo)
+    track_action(request, request.user, 'Approve', repo)
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 def repo_un_publish(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
@@ -2704,7 +2704,7 @@ def people_search(request, template='search_people.html', extra_context=None):
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='message')
-        track_action(user, 'Search', None, description='user profile')
+        track_action(request, user, 'Search', None, description='user profile')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
@@ -2943,7 +2943,7 @@ def oer_detail(request, oer_id, oer=None):
     if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
             # actstream.action.send(user, verb='View', action_object=oer)
-            track_action(user, 'View', oer, target=oer.project)
+            track_action(request, user, 'View', oer, target=oer.project)
     # return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'oer_detail.html', var_dict)
 
@@ -3000,9 +3000,9 @@ def oer_edit(request, oer_id=None, project_id=None):
                         except:
                             pass
                 if oer_id:
-                    track_action(request.user, 'Edit', oer, target=oer.project)
+                    track_action(request, request.user, 'Edit', oer, target=oer.project)
                 else:
-                    track_action(request.user, 'Create', oer, target=oer.project)
+                    track_action(request, request.user, 'Create', oer, target=oer.project)
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -3087,7 +3087,7 @@ def oer_submit(request, oer_id):
     if not oer.can_access(request.user):
         raise PermissionDenied
     oer.submit(request)
-    track_action(request.user, 'Submit', oer, target=oer.project)
+    track_action(request, request.user, 'Submit', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_withdraw(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -3106,7 +3106,7 @@ def oer_publish(request, oer_id):
     if not oer.can_access(request.user):
         raise PermissionDenied
     oer.publish(request)
-    track_action(request.user, 'Approve', oer, target=oer.project)
+    track_action(request, request.user, 'Approve', oer, target=oer.project)
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_un_publish(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
@@ -3187,7 +3187,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
                 evaluation.overall_score = data['overall_score']
                 evaluation.save()
                 if not evaluation_id:
-                    track_action(request.user, 'Create', evaluation, target=oer.project)
+                    track_action(request, request.user, 'Create', evaluation, target=oer.project)
                 for i in range(1,5):
                     facet_field_name = 'facet_%d_score' % i
                     new_score = data[facet_field_name]
@@ -3499,7 +3499,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['view_comments'] = is_published or is_un_published
     if user.is_authenticated:
         if lp.state == PUBLISHED and not user == lp.creator:
-            track_action(user, 'View', lp, target=lp.project)
+            track_action(request, user, 'View', lp, target=lp.project)
     # return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'lp_detail.html', var_dict)
 
@@ -3681,8 +3681,8 @@ def lp_play(request, lp_id, lp=None):
     user = request.user
     if user.is_authenticated:
         if from_start:
-            track_action(user, 'Play', lp, target=lp.project)
-        track_action(user, 'Play', current_node, target=lp.project)
+            track_action(request, user, 'Play', lp, target=lp.project)
+        track_action(request, user, 'Play', current_node, target=lp.project)
     # return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'lp_play.html', var_dict)
 
@@ -3743,9 +3743,9 @@ def lp_edit(request, lp_id=None, project_id=None):
                 lp.save()
                 form.save_m2m()
                 if lp_id:
-                    track_action(request.user, 'Edit', lp, target=lp.project)
+                    track_action(request, request.user, 'Edit', lp, target=lp.project)
                 else:
-                    track_action(request.user, 'Create', lp, target=lp.project)
+                    track_action(request, request.user, 'Create', lp, target=lp.project)
                 lp = get_object_or_404(LearningPath, id=lp.id)
                 action = '/lp/%s/edit/' % lp.slug
                 if request.POST.get('save', ''): 
@@ -3808,7 +3808,7 @@ def lp_submit(request, lp_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.submit(request)
-    track_action(request.user, 'Submit', lp, target=lp.project)
+    track_action(request, request.user, 'Submit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_withdraw(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
@@ -3827,7 +3827,7 @@ def lp_publish(request, lp_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.publish(request)
-    track_action(request.user, 'Approve', lp, target=lp.project)
+    track_action(request, request.user, 'Approve', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_un_publish(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
@@ -4028,9 +4028,9 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     node.save()
                 path = node.path
                 if node_id:
-                    track_action(request.user, 'Edit', node, target=path)
+                    track_action(request, request.user, 'Edit', node, target=path)
                 else:
-                    track_action(request.user, 'Create', node, target=path)
+                    track_action(request, request.user, 'Create', node, target=path)
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
                 if request.POST.get('save', ''):
@@ -4096,9 +4096,9 @@ def pathnode_delete(request, node_id):
     lp = node.path
     if not lp.can_access(request.user):
         raise PermissionDenied
-    track_action(request.user, 'Delete', node, target=lp.project)
+    track_action(request, request.user, 'Delete', node, target=lp.project)
     lp.remove_node(node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -4110,7 +4110,7 @@ def pathnode_move_before(request, node_id, other_node_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.move_node_before(node, other_node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_move_after(request, node_id, other_node_id):
     node = get_object_or_404(PathNode, id=node_id)
@@ -4119,7 +4119,7 @@ def pathnode_move_after(request, node_id, other_node_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.move_node_after(node, other_node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_link_after(request, node_id, other_node_id):
@@ -4129,7 +4129,7 @@ def pathnode_link_after(request, node_id, other_node_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.link_node_after(node, other_node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathnode_up(request, node_id):
@@ -4138,7 +4138,7 @@ def pathnode_up(request, node_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.node_up(node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -4148,7 +4148,7 @@ def pathnode_down(request, node_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     lp.node_down(node, request)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -4161,7 +4161,7 @@ def pathedge_delete(request, edge_id):
         raise PermissionDenied
     assert edge.child.path == lp
     edge.delete()
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def pathedge_move_after(request, edge_id, other_edge_id):
@@ -4172,7 +4172,7 @@ def pathedge_move_after(request, edge_id, other_edge_id):
         raise PermissionDenied
     assert other_edge.parent == edge.parent
     lp.move_edge_after(edge, other_edge)
-    track_action(request.user, 'Edit', lp, target=lp.project)
+    track_action(request, request.user, 'Edit', lp, target=lp.project)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
 def project_add_lp(request, project_id):
@@ -4275,7 +4275,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='repo')
-        track_action(user, 'Search', None, description='repo')
+        track_action(request, user, 'Search', None, description='repo')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
@@ -4475,7 +4475,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='oer')
-        track_action(user, 'Search', None, description='oer')
+        track_action(request, user, 'Search', None, description='oer')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
@@ -4579,7 +4579,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='learningpath')
-        track_action(user, 'Search', None, description='learningpath')
+        track_action(request, user, 'Search', None, description='learningpath')
     # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 

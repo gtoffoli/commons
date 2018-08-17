@@ -2671,6 +2671,9 @@ class PathNode(node_factory('PathEdge')):
         oer = self.oer
         return self.label or (oer and oer.name) or 'node %d' % self.id
 
+    def __str__(self):
+        return self.get_label()
+
     def is_flatpage(self):
         text = self.text
         return text and len(text)<32 and text.count('/')==4

@@ -265,11 +265,11 @@ def mentoring_project_accept_mentor(request, project_detail):
                 membership.save()
                 role_admin = Role.objects.get(name='admin')
                 add_local_role(project, user, role_admin)
-                track_action(user, 'Accept', membership, target=project, description=description)
+                track_action(request, user, 'Accept', membership, target=project, description=description)
                 project.state=PROJECT_OPEN
                 project.editor=user
                 project.save()
-                track_action(user, 'Approve', project)
+                track_action(request, user, 'Approve', project)
                 # send notification
                 recipients = community_admins + [mentee]
                 subject = 'The chosen mentor has accepted the request'
@@ -282,7 +282,7 @@ Please, look at your user dashboard for more specific information.""" % descript
             else: # refusal
                 membership.refused=timezone.now()
                 membership.save()
-                track_action(user, 'Reject', membership, target=project, description=data['description'])
+                track_action(request, user, 'Reject', membership, target=project, description=data['description'])
                 subject = "The chosen mentor didn't accept the request"
                 if ((community.mentoring_model == MENTORING_MODEL_B) or (community.mentoring_model == MENTORING_MODEL_C and project.mentoring_model == MENTORING_MODEL_B)):
                     project.state = PROJECT_DRAFT
@@ -387,7 +387,7 @@ def mentoring_project_select_mentoring_journey(request, project_detail):
                 project.editor=data['editor']
                 project.save()
                 children = pathnode.get_ordered_text_children()
-                track_action(user, 'Enabled', children[0], target=project)
+                track_action(request, user, 'Enabled', children[0], target=project)
         else:
             return project_detail(request, project.id, project=project, select_mentoring_journey={'post': post})
     return HttpResponseRedirect('/project/%s/' % project_slug)
@@ -413,10 +413,10 @@ def set_prototype_state(request,project_id):
                     for child in children:
                         if child.id == int(prototype_current_state):
                             if next and i < (n_children - 1):
-                                track_action(user, 'Enabled', children[i+1], target=project)
+                                track_action(request, user, 'Enabled', children[i+1], target=project)
                                 break
                             elif prev and i > 0:
-                                track_action(user, 'Enabled', children[i-1], target=project)
+                                track_action(request, user, 'Enabled', children[i-1], target=project)
                                 break
                         i += 1
     return HttpResponseRedirect('/project/%s/' % project.slug)

@@ -3,6 +3,7 @@
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
 from builtins import str
+import six
 
 from django.conf import settings
 
@@ -24,6 +25,7 @@ from django.contrib.sites.models import Site
 from django.utils.translation import pgettext, ugettext_lazy as _
 
 from datatrans.models import KeyValue
+from datatrans.utils import get_current_language
 
 import actstream
 from actstream.models import Action
@@ -32,8 +34,10 @@ from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
 from commons.models import UserProfile, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
 from commons.models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
+from commons.xapi_vocabularies import xapi_namespaces, xapi_verbs, xapi_activities, xapi_contexts
+from commons.xapi import put_statement
 
-verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
+# verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
 
 notification_template = """%s
 
@@ -194,7 +198,7 @@ def unviewed_posts(user, count_only=True):
         if forums_list:
             category_entry = [category, forums_list]
             categories_list.append(category_entry)
-    print ('%d unread posts in %d topics' % (n_posts, n_topics))
+    # print ('%d unread posts in %d topics' % (n_posts, n_topics))
     return categories_list
 
 def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_only=True):
@@ -253,13 +257,34 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
             if forums_list:
                 category_entry = [category, forums_list]
                 categories_list.append(category_entry)
-    print ('%d unread posts in %d topics' % (n_posts, n_topics))
+    # print ('%d unread posts in %d topics' % (n_posts, n_topics))
     return categories_list
 
+def get_description(obj):
+    description = ''
+    if hasattr(obj, 'description'):
+        description = obj.description
+    if hasattr(obj, 'short'):
+        description = obj.short
+    return description
+
+def get_language(obj):
+    original_language = hasattr(obj, 'original_language') and obj.original_language or None;
+    current_language = get_current_language()
+    if original_language:
+        if current_language == original_language:
+            return original_language
+    return original_language or current_language
+
+"""
 def track_action(actor, verb, action_object, target=None, description=None, latency=0):
+"""
+def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
+    if request and not actor:
+        actor = request.user
+    if not (actor and verb and action_object):
+        return
     try:
-        if not (actor and verb and action_object):
-            return
         if latency:
             min_time = timezone.now()-timedelta(days=latency)
             actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
@@ -268,6 +293,30 @@ def track_action(actor, verb, action_object, target=None, description=None, late
         actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
     except:
         pass
+    if settings.PRODUCTION or six.PY2:
+        return
+    action = action_object and action_object.__class__.__name__ or None
+    print (action_object, verb, verb in xapi_verbs, action in xapi_activities)
+    if action_object and verb in xapi_verbs and action in xapi_activities:
+        activity_type = xapi_activities[action_object.__class__.__name__]['type']
+        if hasattr(action_object, 'absolute_url'):
+            location = action_object.absolute_url()
+        elif hasattr(action_object, 'get_absolute_url'):
+            location = action_object.get_absolute_url()
+        else:
+            location = '/%s/%d/' % (action, action_object.id)
+        if request:
+            object_id = request.build_absolute_uri(location)
+        elif not location.count('http'):
+            object_id = '%s://%s%s' % (settings.PROTOCOL, settings.HOST, location)
+        object_name = hasattr(action_object, '__str__') and action_object.__str__() or ''
+        object_description = get_description(action_object)
+        object_language = get_language(action_object)
+        verb_value = xapi_verbs[verb]
+        verb_id = verb_value['id']
+        put_statement(actor, verb_id, object_id,
+                      verb_display=verb_value['display'], activity_type=activity_type,
+                      object_name=object_name, object_description=object_description, object_language=object_language)
 
 # def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
 def filter_actions(user=None, verbs=[], object_content_type=None, project=None, max_days=1, from_time=None, to_time=None, max_actions=None, no_sort=False, expires=True):
@@ -639,7 +688,7 @@ def content_languages(request):
         else:
             qs = qs.filter(state__in=states)
         n = qs.count()
-        print (class_name, n)
+        # print (class_name, n)
         source_dict = {}
         for source_code, source_name in languages:
             if source_code:
@@ -665,7 +714,7 @@ def content_languages(request):
                         # print translations.count(), 'translations'
                         target_dict[target_code] += 1
             source_dict[source_code] = target_dict
-            print (class_name, source_name, n_source)
+            # print (class_name, source_name, n_source)
         content_language_dict[class_name] = source_dict
     var_dict['content_language_dict'] = content_language_dict
     # return content_language_dict

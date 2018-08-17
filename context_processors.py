@@ -13,6 +13,7 @@ def online_users_count():
 def processor(request):
     path = request.path
     protocol = request.is_secure() and 'https' or 'http'
+    host = request.META['HTTP_HOST']
     for language in settings.LANGUAGES:
         # path = path.replace('/%s' % language[0], '')
         path = path.replace('/%s/' % language[0], '/')
@@ -22,6 +23,7 @@ def processor(request):
         'path_no_language': path,
         'PRODUCTION': settings.PRODUCTION,
         'PROTOCOL': protocol,
+        'HOST': host,
         'HAS_SAML2': settings.HAS_SAML2,
         'HAS_XMPP': settings.HAS_XMPP,
         'HAS_DMUC': settings.HAS_DMUC,
