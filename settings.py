@@ -18,7 +18,7 @@ if DJANGO_VERSION > 1:
     HAS_XMPP = False
     HAS_DMUC = False
     HAS_KNOCKPLOP = True
-    HAS_ZINNIA = True
+    HAS_ZINNIA = False
     HAS_SAML2 = True
     from commons.sso_config import *
 else:
