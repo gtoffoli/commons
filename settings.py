@@ -3,7 +3,6 @@
 Django settings for commons project.
 """
 
-PRODUCTION = False
 DEBUG_TOOLBAR= False
 
 import os
@@ -12,23 +11,29 @@ if os.name == 'nt':
 else:
     IS_LINUX = True
 
-import six
-if six.PY3:
+import django
+DJANGO_VERSION = django.VERSION[0]
+
+if DJANGO_VERSION > 1:
     HAS_XMPP = False
     HAS_DMUC = False
     HAS_KNOCKPLOP = True
-    HAS_ZINNIA = False
+    HAS_ZINNIA = True
+    HAS_SAML2 = True
+    from commons.sso_config import *
 else:
     HAS_XMPP = False
     HAS_DMUC = False
     HAS_KNOCKPLOP = False
     HAS_ZINNIA = True
+    HAS_SAML2 = False
 
 from commons.private import *
-if PRODUCTION:
+if IS_LINUX:
     DEBUG = False
 else:
     DEBUG = True
+    TEMPLATE_STRING_IF_INVALID = '%s'
 
 if IS_LINUX:
     ALLOWED_HOSTS = ['*']
@@ -40,9 +45,6 @@ if CONVERSEJS_ENABLED:
 PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
 
-import django
-DJANGO_VERSION = django.VERSION[0]
-
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
 ACCOUNT_USERNAME_REQUIRED = False # True
 ACCOUNT_EMAIL_REQUIRED = True # False
@@ -52,21 +54,22 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = "none" # ACCOUNT_EMAIL_VERIFICATION
 
 ACCOUNT_ADAPTER = 'commons.adapter.MyAccountAdapter'
 
-"""
-SOCIALACCOUNT_PROVIDERS = \
-    {'linkedin':
-      {'SCOPE': ['r_emailaddress'],
-       'PROFILE_FIELDS': ['id',
-                         'first-name',
-                         'last-name',
-                         'email-address',
-                         'picture-url',
-                         'public-profile-url']}}
-"""
 SOCIALACCOUNT_PROVIDERS = {
     'facebook': {
         'VERSION': 'v2.12',
-    }
+    },
+    'linkedin_oauth2': { # added 180826
+        'SCOPE': [
+            'r_emailaddress',
+            'r_basicprofile',
+        ],
+        'PROFILE_FIELDS': [
+            'id',
+            'first-name',
+            'last-name',
+            'email-address',
+        ],
+    },
 }
 
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
@@ -77,13 +80,7 @@ CACHES = {
         'MAX_ENTRIES': 2000,
     }
 }
-"""
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'default-cache',
-        'MAX_ENTRIES': 10000,
-    }
-"""
+
 # Number of seconds of inactivity before a user is marked offline
 USER_ONLINE_TIMEOUT = 300
 # Number of seconds that we will keep track of inactive users for before 
@@ -99,12 +96,10 @@ if DJANGO_VERSION > 1:
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-
         # 'corsheaders.middleware.CorsMiddleware',
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
         'pybb.middleware.PybbMiddleware',
         'django.middleware.locale.LocaleMiddleware',
-        # 'commons.middleware.ActiveUserMiddleware',
     ]
 else:
     MIDDLEWARE_CLASSES = (
@@ -259,8 +254,7 @@ STATICFILES_FINDERS = (
 )
 
 # in development, disable template caching
-# if os.name == 'nt':
-if not PRODUCTION:
+if not IS_LINUX:
     TEMPLATE_LOADERS = (
         'django.template.loaders.filesystem.Loader',
         'django.template.loaders.app_directories.Loader',
@@ -331,13 +325,6 @@ USE_TZ = True
 TIME_ZONE = 'Europe/Rome'
 
 LANGUAGE_CODE = 'en'
-"""
-LANGUAGES = (
-    ('en', _('English')),
-    ('it', _('Italian')),
-    ('pt', _('Portuguese')),
-)
-"""
 LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
