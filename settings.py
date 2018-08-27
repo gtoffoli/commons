@@ -18,7 +18,7 @@ if DJANGO_VERSION > 1:
     HAS_XMPP = False
     HAS_DMUC = False
     HAS_KNOCKPLOP = True
-    HAS_ZINNIA = False
+    HAS_ZINNIA = True
     HAS_SAML2 = True
     from commons.sso_config import *
 else:
@@ -204,6 +204,10 @@ BOWER_INSTALLED_APPS = (
     'd3#3.5.16',
     'nvd3#1.8.1',
 )
+
+MIGRATION_MODULES = {
+    'roles': None,
+}
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
