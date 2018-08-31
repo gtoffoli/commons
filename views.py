@@ -3288,16 +3288,13 @@ def serve_ipynb_url(request):
     html = ipynb_url_to_html(url)
     return HttpResponse(html, 'text/html')
 
-# def document_download(request, document_id, document=None):
 def document_serve(request, document_id, document=None, save=False, forse_download=False):
     if not document:
         document = get_object_or_404(Document, pk=document_id)
     latest_version = document.latest_version
+    if not latest_version.exists():
+        return HttpResponseNotFound()
     mimetype = latest_version.mimetype
-    """ a che serviva ?
-    file_descriptor = document_version.open()
-    file_descriptor.close()
-    """
     if mimetype=='application/x-ipynb+json' and not forse_download:
         f = latest_version.open()
         data = f.read()
@@ -3314,12 +3311,10 @@ def document_serve(request, document_id, document=None, save=False, forse_downlo
 def document_download(request, document_id, document=None):
     return document_serve(request, document_id, document=document, save=True, forse_download=True)
 
-# def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False):
 def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False, node_doc=False):
     protocol = request.is_secure() and 'https' or 'http'
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
-    # node_doc = request.GET.get('node', '')
     node_doc = node_doc or request.GET.get('node', '')
     ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
@@ -3328,23 +3323,32 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         domain = request.META['HTTP_HOST']
         if node_doc:
             if not node_oer:
-                node = PathNode.objects.get(document_id=document_id)
+                # node = PathNode.objects.get(document_id=document_id)
+                node = get_object_or_404(PathNode, document_id=document_id)
             else:
-                oer_document = OerDocument.objects.get(document_id=document_id)
+                # oer_document = OerDocument.objects.get(document_id=document_id)
+                oer_document = get_object_or_404(OerDocument, document_id=document_id)
         elif ment_node_doc:
-            node = PathNode.objects.get(document_id=document_id)
-            list=ment_node_doc.split('-')
-            ment_proj = Project.objects.get(pk = int(list[1]))
+            # node = PathNode.objects.get(document_id=document_id)
+            node = get_object_or_404(PathNode, document_id=document_id)
+            list = ment_node_doc.split('-')
+            # ment_proj = Project.objects.get(pk = int(list[1]))
+            ment_proj = get_object_or_404(Project, pk=int(list[1]))
         elif proj:
-            folder_document = FolderDocument.objects.get(document_id=document_id)
-            project = Project.objects.get(pk = proj)
+            # folder_document = FolderDocument.objects.get(document_id=document_id)
+            folder_document = get_object_or_404(FolderDocument, document_id=document_id)
+            # project = Project.objects.get(pk = proj)
+            project = get_object_or_404(Project, pk=proj)
         elif profile:
-            profile_document = UserProfile.objects.get(curriculum_id=document_id)
-            user = User.objects.get(username = profile)
+            #? profile_document = UserProfile.objects.get(curriculum_id=document_id)
+            # user = User.objects.get(username = profile)
+            user = get_object_or_404(User, username=profile)
             profile = user.get_profile()
         else:
-            oer_document = OerDocument.objects.get(document_id=document_id)
-            oer = OER.objects.get(pk = oer_document.oer_id)
+            # oer_document = OerDocument.objects.get(document_id=document_id)
+            oer_document = get_object_or_404(OerDocument, document_id=document_id)
+            # oer = OER.objects.get(pk = oer_document.oer_id)
+            oer = get_object_or_404(OER, pk=oer_document.oer_id)
         if document.viewerjs_viewable:
             url = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (domain, document_id)
             mimetype=document.latest_version.mimetype
@@ -3358,6 +3362,8 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             return render(request, 'document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
     else:
         document_version = document.latest_version
+        if not document_version.exists():
+            return HttpResponseNotFound()
         return serve_file(
             request,
             document_version.file,
