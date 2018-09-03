@@ -205,9 +205,10 @@ BOWER_INSTALLED_APPS = (
     'nvd3#1.8.1',
 )
 
-MIGRATION_MODULES = {
-    'roles': None,
-}
+if DJANGO_VERSION > 1:
+    MIGRATION_MODULES = {
+        'roles': None,
+    }
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
