@@ -24,7 +24,7 @@ if DJANGO_VERSION > 1:
 else:
     HAS_XMPP = False
     HAS_DMUC = False
-    HAS_KNOCKPLOP = False
+    HAS_KNOCKPLOP = True # False
     HAS_ZINNIA = True
     HAS_SAML2 = False
 
