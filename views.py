@@ -929,6 +929,22 @@ def project_add_document(request):
         track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
+@login_required
+def folder_add_resource_online(request):
+    folder_id = request.POST.get('folder', '')
+    folder = get_object_or_404(Folder, id=folder_id)
+    project = folder.get_project()
+    if not project.can_access(request.user):
+        raise PermissionDenied
+    if (request.POST):
+        form = FolderOnlineResourceForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
+            folderdocument.save()
+            track_action(request, request.user, 'Create', folderdocument, target=project)
+    return HttpResponseRedirect(folder.get_absolute_url())
+
 def project_add_resource_online(request):
     project_id = request.POST.get('project', '')
     project = get_object_or_404(Project, id=project_id)
@@ -938,7 +954,7 @@ def project_add_resource_online(request):
     if (request.POST):
         form = FolderOnlineResourceForm(request.POST)
         if form.is_valid():
-            data=form.cleaned_data
+            data = form.cleaned_data
             folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
             folderdocument.save()
             track_action(request, request.user, 'Create', folderdocument, target=project)
@@ -2039,7 +2055,8 @@ def project_create_forum(request, project_id):
     else:
         # assert not project.forum
         if project.forum:
-            return project_detail(request, project_id, project=project)    
+            # return project_detail(request, project_id, project=project)
+            return HttpResponseRedirect('/project/%s/' % project.slug)
         position = 2
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
@@ -2053,7 +2070,8 @@ def project_create_forum(request, project_id):
         project.forum = forum
         project.editor = user
         project.save()
-        return project_detail(request, project_id, project=project)    
+        # return project_detail(request, project_id, project=project)    
+        return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def forum_edit(request, forum_id=None):
     user = request.user
@@ -3317,6 +3335,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
     protocol = request.is_secure() and 'https' or 'http'
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
+    folder = None
     node_doc = node_doc or request.GET.get('node', '')
     ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
@@ -3341,6 +3360,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             folder_document = get_object_or_404(FolderDocument, document_id=document_id)
             # project = Project.objects.get(pk = proj)
             project = get_object_or_404(Project, pk=proj)
+            folder = folder_document.folder
         elif profile:
             #? profile_document = UserProfile.objects.get(curriculum_id=document_id)
             # user = User.objects.get(username = profile)
@@ -3361,7 +3381,8 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             return url, mimetype
         else:
             # return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
-            return render(request, 'document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
+            # return render(request, 'document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
+            return render(request, 'document_view.html', {'document': document, 'folder': folder, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
     else:
         document_version = document.latest_version
         if not document_version.exists():
@@ -3381,8 +3402,8 @@ def online_resource_view(request,folderdocument_id):
     folder = get_object_or_404(Folder, pk=folder_id)
     project = folder.get_project()
     view_folder = user.is_authenticated and (project.is_member(user) or user.is_superuser)
-    # return render_to_response('online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder}, context_instance=RequestContext(request))
-    return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder})
+    # return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder})
+    return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'folder': folder, 'project': project,'view_folder': view_folder})
 
 """
 def document_view_range(request, document_id, page_range, node_oer=False, return_url=False): # argomenti non usati !!!!!!!

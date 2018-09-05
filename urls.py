@@ -104,6 +104,7 @@ urlpatterns += [
     url(r"^project/(?P<project_slug>[\w-]+)/folder/$", commons.views.project_folder, name="project_folder"),
     url(r"^folder/add_subfolder/$", commons.views.folder_add_subfolder, name="folder_add_subfolder"),
     url(r"^folder/add_document/$", commons.views.folder_add_document, name="folder_add_document"),
+    url(r"^folder/add_resource_online/$", commons.views.folder_add_resource_online, name="folder_add_resource_online"),
     url(r"^folder/(?P<folder_id>[\d-]+)/edit/$", commons.views.folder_edit, name="folder_edit"),
     url(r"^folder/(?P<folder_id>[\d-]+)/delete/$", commons.views.folder_delete, name="folder_delete"),
     url(r"^folder/(?P<project_slug>[\w-]+)/$", commons.views.folder_detail, name="folder_detail"),

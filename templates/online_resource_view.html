@@ -7,10 +7,18 @@
 
 {% block nav %}
   <div class="navbar">
+{% comment %}
     <h5 {% if view_folder %}class="pull-left"{% endif %}> {{ project.name }}{% if view_folder %}<br><small>{% trans "shared folder"|capfirst %}</small>{% endif %}</h5>
     {% if view_folder %}
     <p class="pull-right paddingT10 paddingLR5">
        <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18 c-black" aria-hidden="true"></i></a>
+    </p>
+    {% endif %}
+{% endcomment %}
+    {% if view_folder %}
+    <h5 class="pull-left">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</h5>
+    <p class="pull-right paddingT10 paddingLR5">
+       <a href="/project/{{ project.slug }}/"><i class="fa fa-list-alt font18 c-black" aria-hidden="true"></i></a>
     </p>
     {% endif %}
   </div>
