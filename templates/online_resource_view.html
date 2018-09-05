@@ -18,7 +18,7 @@
     {% if view_folder %}
     <h5 class="pull-left">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</h5>
     <p class="pull-right paddingT10 paddingLR5">
-       <a href="/project/{{ project.slug }}/"><i class="fa fa-list-alt font18 c-black" aria-hidden="true"></i></a>
+       <a href="/project/{{ project.slug }}/"><i class="fa fa-group font18 c-black" aria-hidden="true"></i></a>
     </p>
     {% endif %}
   </div>
