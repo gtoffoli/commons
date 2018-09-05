@@ -1,6 +1,8 @@
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
-from builtins import str
+# from builtins import str
+import future
+from future.builtins import str
 # from six import StringIO
 from six import BytesIO
 
