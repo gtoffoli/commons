@@ -903,7 +903,7 @@ def folder_add_document(request):
         except:
             return HttpResponseRedirect('/project/%s/folder/' % project.slug)
         version = handle_uploaded_file(uploaded_file)
-        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
+        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=DRAFT)
         folderdocument.save()
         track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect(folder.get_absolute_url())
@@ -940,7 +940,7 @@ def folder_add_resource_online(request):
         form = FolderOnlineResourceForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
+            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=DRAFT, created=timezone.now())
             folderdocument.save()
             track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect(folder.get_absolute_url())
@@ -3358,6 +3358,8 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         elif proj:
             # folder_document = FolderDocument.objects.get(document_id=document_id)
             folder_document = get_object_or_404(FolderDocument, document_id=document_id)
+            if not folder_document.can_access(user):
+                raise PermissionDenied
             # project = Project.objects.get(pk = proj)
             project = get_object_or_404(Project, pk=proj)
             folder = folder_document.folder

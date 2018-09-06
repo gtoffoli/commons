@@ -20,9 +20,9 @@ from mptt.admin import MPTTModelAdmin
 from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
 
-from .models import Tag, UserProfile, UserPreferences, Folder, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
-from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
 from .documents import DocumentType, Document, DocumentVersion
+from .models import Tag, UserProfile, UserPreferences, Folder, FolderDocument, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
@@ -71,6 +71,9 @@ class FolderAdmin(MPTTModelAdmin):
 
     def parent_name(self, obj):
         return obj.parent and obj.parent.get_title() or ''
+
+class FolderDocumentAdmin(admin.ModelAdmin):
+    list_display = ['id', 'folder', 'document', 'label', 'slug', 'user', 'state', 'created']
 
 class ProjTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'description', 'public', 'order',]
@@ -286,6 +289,7 @@ admin.site.register(DocumentType, DocumentTypeAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentVersion, DocumentVersionAdmin)
 admin.site.register(Folder, FolderAdmin)
+admin.site.register(FolderDocument, FolderDocumentAdmin)
 admin.site.register(ProjType, ProjTypeAdmin)
 admin.site.register(Project, ProjAdmin)
 admin.site.register(ProjectMember, ProjectMemberAdmin)

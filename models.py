@@ -507,13 +507,20 @@ class FolderDocument(models.Model, Publishable):
     def can_access(self, user):
         folder = self.folder
         project = folder.get_project()
-        if self.state==PUBLISHED and project.state in (PROJECT_OPEN,PROJECT_CLOSED):
+        if self.state==PUBLISHED and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
+            return True
+        """
+        if project.state in (PROJECT_OPEN, PROJECT_CLOSED) and project.is_member(user):
             return True
         if self.state==PUBLISHED and project.state in (PROJECT_DRAFT, PROJECT_SUBMITTED):
             if user.is_superuser or project.is_admin(user):
                 return True
             else:
                 return False
+        """
+        if project.is_member(user) or user.is_superuser:
+            return True
+        return False
 
     def get_absolute_url(self):
         return '%s%s/' % (self.folder.get_absolute_url(), self.slug)
@@ -1126,8 +1133,15 @@ class Project(Resource):
         membership.delete()
 
     def get_memberships(self, state=None, user=None):
+        """
         if user and user.is_authenticated:
             memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
+        """
+        if user:
+            if user.is_authenticated:
+                memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
+            else:
+                return []
         elif state is not None:
             memberships = ProjectMember.objects.filter(project=self, state=state)
         else:
