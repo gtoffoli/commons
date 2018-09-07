@@ -3332,6 +3332,7 @@ def document_download(request, document_id, document=None):
     return document_serve(request, document_id, document=document, save=True, forse_download=True)
 
 def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False, node_doc=False):
+    user = request.user
     protocol = request.is_secure() and 'https' or 'http'
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
