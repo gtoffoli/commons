@@ -12,6 +12,8 @@ private.py
 *.egg
 *.egg-info
 *Copia.*
+*.bak
+*.old
 dist/
 build/
 eggs/
