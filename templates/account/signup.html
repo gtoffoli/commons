@@ -9,7 +9,6 @@
 	form.signup > p {
 	margin-bottom: 15px;
 }
-
 form.signup > p > input {
     width: auto;
     height: 34px;
@@ -29,11 +28,13 @@ form.signup > p > input {
 }
 
 form.signup > ul.errorlist {
-	color: red;
+    color: red;
 }
+
 </style>
 {% endblock %}
 
+{% block extra_head %}<script src="https://www.google.com/recaptcha/api.js?hl={{LANGUAGE_CODE}}" async defer></script>{% endblock %}
 
 {% block body %}
 
@@ -46,14 +47,15 @@ form.signup > ul.errorlist {
 <p>{% blocktrans %}Already have an account? Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}</p>
 
 <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  {% if redirect_field_value %}
-  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
-  {% endif %}
-  <button type="submit" class="btn btn-default">{% trans "Sign Up" %} &raquo;</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <button type="submit" class="btn btn-default">{% trans "Sign Up" %} &raquo;</button>
 </form>
 </div>
 </div>
 </div>
+
 {% endblock %}

@@ -185,7 +185,8 @@ INSTALLED_APPS = (
     # 'endless_pagination',
     'djangobower',
     'django_nvd3',
-	'awesome_avatar',
+    'awesome_avatar',
+    'snowpenguin.django.recaptcha2',
 )
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
