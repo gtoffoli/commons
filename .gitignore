@@ -1,0 +1,23 @@
+private.py
+*.key
+*.pem
+
+#############
+## Python
+#############
+
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+*Copia.*
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+static/converse.js/
