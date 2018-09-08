@@ -1,5 +1,5 @@
 {% load comments i18n %}
-{% load firstof from future %}
+{% comment %}{% load firstof from future %}{% endcomment %}
 <form action="{% comment_form_target %}" method="post" id="comment-form">
   <div>{% csrf_token %}</div>
   {% if form.non_field_errors %}
