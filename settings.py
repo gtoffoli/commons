@@ -34,11 +34,12 @@ if IS_LINUX:
 else:
     DEBUG = True
     TEMPLATE_STRING_IF_INVALID = '%s'
-
+"""
 if IS_LINUX:
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = []
+"""
 if CONVERSEJS_ENABLED:
     ALLOWED_HOSTS.append(XMPP_SERVER)
 

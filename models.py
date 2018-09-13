@@ -157,7 +157,7 @@ if settings.HAS_DMUC:
         return XMPPAccount.objects.filter(user=self)
     User.has_xmpp_account = user_has_xmpp_account
     
-    User.inbox_count = inbox_count_for
+User.inbox_count = inbox_count_for
 
 def user_last_seen(self):
     return cache.get('seen_%s' % self.username)
@@ -1206,14 +1206,17 @@ class Project(Resource):
             user.groups.add(user)
 
     def can_add_repo(self, user):
-        return has_permission(self, user, 'add-repository')
+        # return has_permission(self, user, 'add-repository')
+        return self.state==PROJECT_OPEN and self.is_member(user) and has_permission(self, user, 'add-repository')
 
     def can_add_lp(self, user):
-        return has_permission(self, user, 'add-lp')
+        # return has_permission(self, user, 'add-lp')
+        return self.state==PROJECT_OPEN and self.is_member(user) and has_permission(self, user, 'add-lp')
 
     def can_add_oer(self, user):
-        return has_permission(self, user, 'add-oer')
- 
+        # return has_permission(self, user, 'add-oer')
+        return self.state==PROJECT_OPEN and self.is_member(user) and has_permission(self, user, 'add-oer')
+
     def has_chat_room(self):
         if settings.HAS_DMUC:
             return self.chat_type in [1] and self.chat_room

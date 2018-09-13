@@ -1178,14 +1178,17 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
         image = ''
-    var_dict['meta'] =  {
-        'description':project.description,
-        'og:title': project.name,
-        'og:description': project.description,
-        'og:type': 'article',
-        'og:url': request.build_absolute_uri,
-        'og:image': image,
-    }
+    if (proj_type.public):
+        var_dict['meta'] =  {
+            'description':project.description,
+            'og:title': project.name,
+            'og:description': project.description,
+            'og:type': 'article',
+            'og:url': request.build_absolute_uri,
+            'og:image': image,
+        }
+    else:
+        var_dict['meta'] = {}
     var_dict['object'] = project
     proj_types = ProjType.objects.filter(public=True)
     if not user.is_superuser:
@@ -1207,6 +1210,10 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['project_children'] = project.get_children()
             var_dict['project_support_child'] = project.get_children(proj_type_name='sup')
             var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
+            var_dict['proj_type_lp'] = ProjType.objects.get(name='lp')
+        elif is_member:
+            var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            var_dict['project_support_child'] = project.get_children(proj_type_name='sup',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         else:
             var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         senior_admin = user==project.get_senior_admin()
@@ -1220,8 +1227,10 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             add_change_admin_form = ProjectAddMemberForm()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
         var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
-        var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
-        var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
+        # 180912 MMR var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
+        var_dict['can_add_repo'] = project.can_add_repo(user)
+        # 180912 MMR var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
+        var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user)
         if can_add_oer:
             """
             var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
@@ -1230,7 +1239,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['cut_oers'] = oers_in_clipboard(request, 'cut_oers')
             bookmarked_oers = oers_in_clipboard(request, 'bookmarked_oers')
             var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project and not SharedOer.objects.filter(project=project, oer=oer).count()]
-        var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
+        # 180912 MMR var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
+        var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user)
         if can_add_lp:
             """
             var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
@@ -1610,10 +1620,20 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     if not proj_type_name == 'ment':
                         role_admin = Role.objects.get(name='admin')
                         add_local_role(project, user, role_admin)
+                        
+                    """
+                    180912 MMR
                     if proj_type_name == 'oer':
                         grant_permission(project, role_member, 'add-repository')
                         grant_permission(project, role_member, 'add-oer')
                     elif proj_type_name == 'lp':
+                    """
+                    if proj_type_name == 'lp':
+                        grant_permission(project, role_member, 'add-oer')
+                        grant_permission(project, role_member, 'add-lp') 
+                    elif proj_type_name == 'sup':
+                        # 180912 MMR added grant_permission for proj_type SUPPORT
+                        grant_permission(project, role_member, 'add-repository')
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp')
                     elif proj_type_name == 'ment':
@@ -3630,8 +3650,6 @@ def lp_play(request, lp_id, lp=None):
                     # var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                     handle_view_template(mimetype, url)
                 elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
-                    # print ("============= TEST ===============")
-                    # print ("passo qui doc OER")
                     url = '/ViewerJS/#' + protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                 elif mimetype.count('image/'): # view only first non-PDF

@@ -137,26 +137,22 @@
          </dl>
        {% endif %}
      </article>
-
+{% comment %}
+180912 MMR old view project_children
      {% if not proj_type_name == 'sup' and project_children %}
         <div class="panel-white">
           <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 0 %} {% trans "communities"|capfirst %} {% elif project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
             <ul class="list-inline padding10510 list-orange">
              {% with subprojects=project_children %}{% for subproject in subprojects %}
                 {% if subproject.state == 2 %}
-                   {% comment %} open {% endcomment %}
                    <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 3 %}
-                   {% comment %} closed {% endcomment %}
                    <li><a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}"><span class="fa fa-lock neutral" aria-hidden="true"></span> {{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 0 %}
-                   {% comment %} draft {% endcomment %}
                    <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 4 %}
-                  {% comment %} deleted {% endcomment %}
                   <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% elif subproject.state == 1 %}
-                  {% comment %} submitted {% endcomment %}
                   <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% trans "view child project" %}">{{ subproject.get_name }}</a></li>
                 {% endif %}
              {% endfor %}{% endwith %}
@@ -174,7 +170,60 @@
               </ul>
           </div>
         {% endif %}
+    {% endif %}
+{% endcomment %}
 
+    {% if project_children %}
+        <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 0 %} {% trans "communities"|capfirst %} {% elif project.get_level == 1 %}{% trans "projects"|capfirst %}{% else %}{% trans "child projects"|capfirst %}{% endif %}</div>
+            <ul class="list-inline padding10510 list-orange">
+            {% with subprojects=project_children %}{% for subproject in subprojects %}
+                {% if subproject.state == 2 %}
+                    {% comment %} open {% endcomment %}
+                    <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 3 %}
+                    {% comment %} closed {% endcomment %}
+                    <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 0 %}
+                    {% comment %} draft {% endcomment %}
+                    <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 4 %}
+                    {% comment %} deleted {% endcomment %}
+                    <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 1 %}
+                    {% comment %} submitted {% endcomment %}
+                    <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title={% if project.get_level == 0 %}"{% trans "view project" %}"{% else %}"{% trans "view child project" %}"{% endif %}>{{ subproject.get_name }}</a></li>
+                {% endif %}
+            {% endfor %}{% endwith %}
+            </ul>
+        </div>
+     {% endif %}
+     {% if project_support_child %}
+        <div class="panel-white">
+            <div class="panel-heading-c4 padding510 demiBold">{% if project.get_level == 1 %}{% trans "support projects"|capfirst %}{% else %}{% trans "child support projects"|capfirst %}{% endif %}</div>
+            <ul class="list-inline padding10510 list-orange">
+                {% with subprojects=project_support_child %}{% for subproject in subprojects %}
+                {% if subproject.state == 2 %}
+                   {% comment %} open {% endcomment %}
+                   <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 3 %}
+                   {% comment %} closed {% endcomment %}
+                   <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 0 %}
+                   {% comment %} draft {% endcomment %}
+                   <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 4 %}
+                  {% comment %} deleted {% endcomment %}
+                  <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% elif subproject.state == 1 %}
+                  {% comment %} submitted {% endcomment %}
+                  <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                {% endif %}
+             {% endfor %}{% endwith %}
+             </ul>
+        </div>
+    {% endif %}
+{% if user.is_authenticated %}
 {% comment %} AMMINISTRAZIONE {% endcomment %}
         {% if can_edit or can_open or can_close or is_admin %}
           <div>
@@ -193,6 +242,8 @@
                     </li>
                  </ul>
               </li>
+{% comment %}
+180912 MMR
               {% if not proj_type_name == 'sup' %}
               {% if can_edit and not project_no_children and is_open %}
                 <li class="list-back-c4 marginB5">
@@ -220,6 +271,30 @@
                    </ul>
                 </li>
               {% endif %}
+              {% endif %}
+{% endcomment %}
+
+              {% if can_edit and not project_no_children and is_open %}
+                <li class="list-back-c4 marginB5">
+                   <ul class="list-inline">
+                     <li>
+                      {% if project.get_level > 0  %}
+                        <div class="marginB5 demiBold">{% if proj_type.name == 'com' %} {% trans "new project"|capfirst %} {% else %} {% trans "new child project"|capfirst %} {% endif %}</div>
+                        <ul class="list-inline list-last">
+                          {% if not proj_type_name == 'sup' %}
+                          <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ proj_type_lp.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {{ proj_type_lp.description }}</a></li>
+                          {% endif %}
+                          <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/{{ proj_type_sup.name }}/" title="{% if project.get_level == 1 %} {% trans "create project" %}{% else %}{% trans "create child project" %}{% endif %}" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {{ proj_type_sup.description }}</a></li>
+                        </ul>
+                      {% else %}
+                        <div class="marginB5 demiBold">{% trans "new community"|capfirst %}</div>
+                        <ul class="list-inline list-last">
+                         <li class="marginB5"><a href="/project/{{ project.slug }}/project_new/com/" title="{% trans "create community" %}" class="btn btn-default"><span class="fa fa-group orange" aria-hidden="true"></span> {% trans "community"|capfirst %}</a></li>
+                        </ul>
+                      {% endif %}
+                     </li>
+                   </ul>
+                </li>
               {% endif %}
             </ul>
             {% if project.get_level > 0 and is_admin and is_open %}
@@ -301,7 +376,8 @@
         {% endif %}
 
 {% comment %} CONTRIBUISCI {% endcomment %}
-        {% if is_member and not proj_type_name == 'sup' %}
+        {# comment 180912 if is_member and not proj_type_name == 'sup' endcomment #}
+        {% if is_member %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
