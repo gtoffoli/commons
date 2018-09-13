@@ -86,6 +86,7 @@ class ProjAdmin(admin.ModelAdmin):
     else:
         list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
     search_fields = ['name', 'description',]
+    exclude = ('small_image', 'big_image')
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
