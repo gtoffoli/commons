@@ -1589,6 +1589,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         else: # Save or Save & continue
             if form.is_valid():
                 project = form.save(commit=False)
+                role_member = Role.objects.get(name='member')
                 data_dict['project'] = project
                 data_dict['object'] = project
                 data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
@@ -1613,7 +1614,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.create_folder()
                     track_action(request, request.user, 'Create', project)
 
-                    role_member = Role.objects.get(name='member')
+                    # role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
                     membership = project.add_member(user)
                     project.accept_application(request, membership)
@@ -1628,6 +1629,8 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-oer')
                     elif proj_type_name == 'lp':
                     """
+                    """
+                    180913 GT: moved to project method define_permissions (see below)
                     if proj_type_name == 'lp':
                         grant_permission(project, role_member, 'add-oer')
                         grant_permission(project, role_member, 'add-lp') 
@@ -1641,11 +1644,13 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-lp')
                     elif proj_type_name == 'roll':
                         grant_permission(project, role_member, 'add-lp')
+                    """
                 else:
                     project.editor = user
                     set_original_language(project)
                     project.save()
                     track_action(request, request.user, 'Edit', project)
+                project.define_permissions(role=role_member) # 180913 GT: added
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue

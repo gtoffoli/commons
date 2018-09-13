@@ -43,8 +43,8 @@ from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField, AutoSlugField
 from django_dag.models import node_factory, edge_factory
-from roles.models import Role
-from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission
+from roles.models import Role, ObjectPermission
+from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission, grant_permission
 from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
@@ -1004,6 +1004,32 @@ class Project(Resource):
             return _('mentor')
         else:
             return _('supervisor')
+
+    def define_permissions(self, role=None):
+        """ grant to project proper permissions for role, on creation, based on project_type
+            and possibly fix them on edit or on request """
+        proj_type_name = self.get_project_type()
+        content_type = ContentType.objects.get_for_model(self)
+        if not role:
+            role = Role.objects.get(name='member')
+        if proj_type_name == 'oer':
+            permissions = ('add-repository', 'add-oer',)
+        elif proj_type_name == 'lp':
+            permissions = ('add-oer', 'add-lp',)
+        elif proj_type_name == 'sup': # 180912 MMR added grant_permission for proj_type SUPPORT
+            permissions = ('add-repository', 'add-oer', 'add-lp',)
+        elif proj_type_name == 'ment':
+            permissions = ('add-oer', 'add-lp',)
+        elif proj_type_name == 'roll':
+            permissions = ('add-lp',)
+        object_permissions = ObjectPermission.objects.filter(role=role, content_type = content_type, content_id=self.id)
+        current_permissions = [op.permission.codename for op in object_permissions]
+        for object_permission in object_permissions:
+            if not object_permission.permission.codename in permissions:
+                object_permission.delete()
+        for permission in permissions:
+            if not permission in current_permissions:
+                grant_permission(self, role, permission)
 
     def can_access(self, user):
         parent = self.get_parent()
