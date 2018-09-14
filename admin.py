@@ -82,9 +82,10 @@ class ProjTypeAdmin(admin.ModelAdmin):
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
     if settings.HAS_DMUC:
-        list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
+        list_display = ('id', 'project_name', 'slug', 'description', 'proj_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
     else:
-        list_display = ('id', 'project_name', 'slug', 'description', 'project_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
+        list_display = ('id', 'project_name', 'slug', 'description', 'proj_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
+    list_filter = ('proj_type', 'state',)
     search_fields = ['name', 'description',]
     exclude = ('small_image', 'big_image')
     formfield_overrides = {
@@ -94,9 +95,6 @@ class ProjAdmin(admin.ModelAdmin):
 
     def project_name(self, obj):
         return obj.get_name()
-
-    def project_type(self, obj):
-        return obj.proj_type.description
 
     def project_state(self, obj):
         return obj.get_state()
@@ -163,7 +161,6 @@ class OERAdmin(admin.ModelAdmin):
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
        models.ForeignKey:  {'widget': Select(attrs={'class': 'span4',})},
        models.ManyToManyField: {'widget': SelectMultiple(attrs={'class': 'span4', 'size':'12'})},
-       # TagField: {'widget': LabelWidget()},
        }
 
     class Media:
