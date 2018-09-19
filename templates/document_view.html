@@ -23,12 +23,11 @@
        <a href="/oer/{{ oer.slug }}/"><i class="fa fa-list-alt font18 c-pacific-blue" aria-hidden="true"></i></a>
     </p>
   {% elif project %}
-{% comment %}
-    <h5 class="pull-left">{% trans "shared folder for"|capfirst %} {% if project.get_type_name == 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}: {{ project.name }}</h5>
-{% endcomment %}
-    <h5 class="pull-left">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</h5>
+    <p class="pull-left paddingT10 demiBold">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %} <i class="fa fa-angle-double-right" aria-hidden="true"></i> {% endif %}{% endfor %}
+        <i class="fa fa-angle-double-right" aria-hidden="true"></i> {{ document.label}}
+    </p>
     <p class="pull-right paddingT10 paddingLR5">
-       <a href="/project/{{ project.slug }}/"><i class="fa fa-group font18" aria-hidden="true"></i></a>
+       <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font18 c-black" aria-hidden="true"></i></a>
     </p>
   {% elif profile %}
      <h5 class="pull-left ">{% trans "curriculum"|capfirst %}: {{  profile.get_display_name }}</h5>

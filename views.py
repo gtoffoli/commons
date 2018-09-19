@@ -886,7 +886,7 @@ def folder_add_subfolder(request):
         subfolder = Folder(title=data['title'], parent=folder, user=request.user)
         subfolder.save()
         track_action(request, request.user, 'Create', subfolder, target=project)
-    return HttpResponseRedirect('/folder/%s/' % project.slug)
+    return HttpResponseRedirect(folder.get_absolute_url())
 
 @login_required
 def folder_add_document(request):
@@ -990,8 +990,11 @@ def folderdocument_edit(request, folderdocument_id):
 def online_resource_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
+    project = folder.get_project()
+    """
     projects = Project.objects.filter(folders = folder)
     project = projects and projects[0]
+    """
     action = '/online_resource/%d/edit/' % folderdocument.id
     if project:
         proj_type_name = project.proj_type.name
@@ -1002,8 +1005,12 @@ def online_resource_edit(request, folderdocument_id):
         if form.is_valid():
             if request.POST.get('save', ''):
                 form.save()
+            """
+            180914
             if project:
                 return HttpResponseRedirect('/project/%s/folder/' % project.slug)
+            """
+            return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderOnlineResourceForm(instance=folderdocument)
     # return render_to_response('online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
@@ -1174,6 +1181,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     if type_name == 'roll':
         var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
         var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
+    elif type_name == 'sup':
+        var_dict['member_info'] = FlatPage.objects.get(url='/infotext/project-support-member/').content
     if project.small_image:
         image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
     else:
@@ -1507,7 +1516,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     elif parent:
         if not parent.can_access(user):
             raise PermissionDenied
-    data_dict['proj_type_list']=["ment", "roll",]
+    data_dict['proj_type_list']=["ment", "roll"]
     """
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if proj_type:
@@ -1647,8 +1656,14 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     """
                 else:
                     project.editor = user
-                    set_original_language(project)
+                    set_original_language(project) 
                     project.save()
+                    project.update_folder()
+                    forum=project.forum
+                    if forum != None and project.name != forum.name:
+                        forum.name = project.name
+                        forum.slug = project.slug
+                        forum.save()
                     track_action(request, request.user, 'Edit', project)
                 project.define_permissions(role=role_member) # 180913 GT: added
                 if request.POST.get('save', ''): 

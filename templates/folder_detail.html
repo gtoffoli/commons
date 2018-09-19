@@ -10,7 +10,7 @@ dl.eval {
 	margin-bottom:5px;
 }
 dl.eval dd {
-	padding:20px 20px 10px 20px;
+	padding:10px 20px 5px 20px;
 }
 dl.eval dd:nth-child(odd) {
     background: transparent;
@@ -26,14 +26,12 @@ dl.eval dd:nth-child(even) {
 
 <div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
   <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
-    <h3 class="pull-left font_small marginTB5">{% trans "shared folder for"|capfirst %}  {% if proj_type.name == 'com' %}{% trans "community" %}{% else %}{% trans "project" %}{% endif %}: {{ folder.get_project.get_title }}</h3>
+    <h3 class="pull-left font_small marginTB5 marginB0"><i class="fa fa-folder-open" aria-hidden="true"></i> {{ project.get_name }}</h3>
     <p class="pull-right marginB0 font26 font_button_small">
       <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
     </p>
-    <div style="clear:both">
-      <h1 class="marginTB0"><small class="c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}">
-      	{% for folder, url in folder.get_breadcrumbs %}{% if not forloop.last %}<a href="{{ url }}">{% endif %}{{ folder.get_title }}{% if not forloop.last %}</a>, {% endif %}{% endfor %}
-      </small></h1>
+    <div style="clear:both;">
+      <p class="marginB0 paddingT10 demiBold">{% for folder, url in folder.get_breadcrumbs %}{% if not forloop.last %}<a href="{{ url }}">{% endif %}{{ folder.get_title }}{% if not forloop.last %}</a> <i class="fa fa-angle-double-right" aria-hidden="true"></i> {% endif %}{% endfor %}</p>
     </div>
   </div>
   {% if can_share %}
@@ -43,8 +41,8 @@ dl.eval dd:nth-child(even) {
            <dd>
              <div class="row">
                <div class="col-sm-7 col-md-7 col-lg-7">
-                   <p id="v_{{ sub.id }}"><a href="{{ sub.get_absolute_url }}"><i class="fa fa-folder-o font07em" aria-hidden="true"></i> {{ sub.get_title }}</a></p>
-                   <p class="font12"><span class="demiBold">{% trans "created by"|capfirst %}</span> <a href="/profile/{{ sub.user.username }}">{{ sub.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ sub.created|date:"d/m/Y" }}</p>
+                   <p id="v_{{ sub.id }}" class="marginB0"><a href="{{ sub.get_absolute_url }}"><i class="fa fa-folder" aria-hidden="true"></i> {{ sub.get_title }}</a></p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "created by"|capfirst %}</span> <a href="/profile/{{ sub.user.username }}">{{ sub.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ sub.created|date:"d/m/Y" }}</p>
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
@@ -64,11 +62,11 @@ dl.eval dd:nth-child(even) {
              <div class="row">
                <div class="col-sm-7 col-md-7 col-lg-7">
                  {% if folderdocument.embed_code %}
-                   <p id="v_{{ folderdocument.id }}">{{ folderdocument.label|safe }}</p>
-                   <p class="font12"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
+                   <p id="v_{{ folderdocument.id }}" class="marginB0">{{ folderdocument.label|safe }}</p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
                  {% else %}
-                   <p id="v_{{ folderdocument.id }}"><a href="{{ folderdocument.get_absolute_url }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</a></p>
-                   <p class="font12"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
+                   <p id="v_{{ folderdocument.id }}"  class="marginB0"><a href="{{ folderdocument.get_absolute_url }}">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</a></p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
                  {% endif %}
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
@@ -104,7 +102,7 @@ dl.eval dd:nth-child(even) {
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
       <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/folder/add_document/">{% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ folder.id }}">
+        <input type="hidden" id="d_id" name="id" value="{{ folder.id }}">
         <div>{{ form.non_field_errors }}</div>
         <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
           <div><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
@@ -115,7 +113,7 @@ dl.eval dd:nth-child(even) {
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add subfolder"|capfirst %}</dt>
       <dd><form method="post" id="add_subfolder" action="/folder/add_subfolder/">{% csrf_token %}
-        <input type="hidden" id="id" name="id" value="{{ folder.id }}">
+        <input type="hidden" id="f_id" name="id" value="{{ folder.id }}">
         {% for field in subfolder_form.visible_fields %}
             <div class="form-group">
               <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>

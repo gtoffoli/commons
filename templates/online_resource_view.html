@@ -6,27 +6,19 @@
 {% block body_class %}online_resource_view{% endblock %}
 
 {% block nav %}
-  <div class="navbar">
-{% comment %}
-    <h5 {% if view_folder %}class="pull-left"{% endif %}> {{ project.name }}{% if view_folder %}<br><small>{% trans "shared folder"|capfirst %}</small>{% endif %}</h5>
-    {% if view_folder %}
-    <p class="pull-right paddingT10 paddingLR5">
-       <a href="/project/{{ project.slug }}/folder/"><i class="fa fa-list-alt font18 c-black" aria-hidden="true"></i></a>
-    </p>
-    {% endif %}
-{% endcomment %}
-    {% if view_folder %}
-    <h5 class="pull-left">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</h5>
-    <p class="pull-right paddingT10 paddingLR5">
-       <a href="/project/{{ project.slug }}/"><i class="fa fa-group font18 c-black" aria-hidden="true"></i></a>
-    </p>
-    {% endif %}
-  </div>
+    <div class="navbar">
+        <p class="pull-left paddingT10 demiBold">{% for folder, url in folder.get_breadcrumbs %}<a href="{{ url }}">{{ folder.get_title }}</a>{% if not forloop.last %} <i class="fa fa-angle-double-right" aria-hidden="true"></i> {% endif %}{% endfor %}
+            <i class="fa fa-angle-double-right" aria-hidden="true"></i> {{ online_resource.label}}
+        </p>
+        <p class="pull-right paddingT10 paddingLR5">
+            <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font18 c-black" aria-hidden="true"></i></a>
+        </p>
+    </div>
 {% endblock %}
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">
-      {% if view_folder %}<p class="marginT20 text-center">{{ online_resource.label}}</p>{% endif %}
+      {% comment %}{% if view_folder %}<p class="marginT20 text-center">{{ online_resource.label}}</p>{% endif %}{% endcomment %}
       <div class="iframe-container">
         {{ online_resource.embed_code|safe }}
       </div>

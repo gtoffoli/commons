@@ -934,6 +934,13 @@ class Project(Resource):
             return folder
         else:
             return None
+    
+    def update_folder(self):
+        folder=self.get_folder()
+        if self.name != folder.title:
+            folder.title = self.name
+            folder.slug = self.slug
+            folder.save()
 
     def get_folder(self):
         folders = self.folders.all()

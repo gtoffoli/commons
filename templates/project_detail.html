@@ -300,6 +300,7 @@
             {% if project.get_level > 0 and is_admin and is_open %}
               {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
                 <ul class="list-inline marginLB020">
+
                   {% if not project.forum or proj_type.name == 'com' %}
                     <li class="list-back-black">
                        <ul class="list-inline">
@@ -316,6 +317,7 @@
                        </ul>
                     </li>
                   {% endif %}
+
                   {% if project.need_create_room or project.need_sync_xmppaccounts %}
                     <li class="list-back-black">
                        <ul class="list-inline">
@@ -358,6 +360,7 @@
                    </li>
                 {% endif %}
 
+
                 {% if project.forum %}
                    <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
                   	   {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
@@ -377,7 +380,6 @@
 
 {% comment %} CONTRIBUISCI {% endcomment %}
         {# comment 180912 if is_member and not proj_type_name == 'sup' endcomment #}
-        {% if is_member %}
         {% if can_add_repo or can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">
@@ -432,10 +434,7 @@
             </ul>
           </div>
         {% endif %}
-        {% endif %}
-        
      {% endif %}
-
    </div>
    <div class="col-sm-5 col-md-5 col-lg-4">
      {% if is_open %}
@@ -446,10 +445,24 @@
            {% if membership.state == 0 %}
              <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
            {% endif %}
+         {% elif proj_type_name == 'sup' %}
+            <div class="panel-white">
+                <div class="padding510 paddinB0 font12">
+                    {{ member_info|safe }}
+                </div>
+            </div>
+            <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a></div>
          {% elif not project.is_reserved_project %}
            <div class="marginB10"><a class="btn btn-green" href="/user_welcome/" title="">
             {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
          {% endif %}
+       {% elif proj_type_name == 'sup' %}
+            <div class="panel-white">
+                <div class="padding510 paddinB0 font12">
+                    {{ member_info|safe }}
+                </div>
+            </div>
+            <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a></div>
        {% elif not project.is_reserved_project %}
          <div class="marginB10"><a class="btn btn-green" href="/why_register/" title="">
           {% if proj_type_name == 'com' %}{% trans "to join this community"|capfirst %}{% else %}{% trans "to join this project"|capfirst %}{% endif %}</a></div>
@@ -518,7 +531,7 @@
          <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
        {% endif %}
 
-       {% if proj_type_name == 'oer' or proj_type_name == 'lp' %}
+       {% if proj_type_name == 'lp' or proj_type_name == 'sup' or proj_type_name == 'oer' %}
          {% if lps %}
            <div class="panel-white">
              <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>

@@ -82,7 +82,7 @@
               {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
             </div>
          {% else %}
-           {% if not proj_type_name in proj_type_list %}
+           {% if not proj_type_name == 'sup' and not proj_type_name in proj_type_list %}
              <div class="form-group">
                <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
                <span class="txt-error">{{ field.errors }}</span>{{ field }}
