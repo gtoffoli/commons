@@ -29,7 +29,7 @@ def entry_post_save_handler(sender, **kwargs):
 def entry_m2m_changed_handler(sender, **kwargs):
     entry = kwargs['instance']
     action = kwargs['action']
-    print (entry, action, entry.authors.all())
+    # print (entry, action, entry.authors.all())
     if action == 'post_add':
         authors = entry.authors.all()
         for user in authors:
@@ -40,15 +40,23 @@ def topic_post_save_handler(sender, **kwargs):
     topic = kwargs['instance']
     created = kwargs['created']
     user = topic.user
+    """
+    180921 MMR
     verb = created and 'Create' or 'Edit'
-    track_action(None, user, verb, topic)
+    track_action(None, user, verb, topic, target=topic.forum)
+    """
+    forum = topic.forum
+    if created:
+        track_action(None, user, 'Create', topic, target=forum)
 
 def post_post_save_handler(sender, **kwargs):
     post = kwargs['instance']
     created = kwargs['created']
     user = post.user
-    verb = created and 'Create' or 'Edit'
-    track_action(None, user, verb, post)
+    topic = post.topic
+    forum = topic.forum
+    #180921 MMR verb = created and 'Create' or 'Edit'
+    track_action(None, user, 'Create', post, target=forum)
 
 post_save.connect(project_post_save_handler, sender=Project)
 """
@@ -58,7 +66,7 @@ post_save.connect(entry_post_save_handler, sender=Entry)
 m2m_changed.connect(entry_m2m_changed_handler, sender=Entry.authors.through)
 """
 post_save.connect(topic_post_save_handler, sender=Topic)
-# post_save.connect(post_post_save_handler, sender=Post)
+post_save.connect(post_post_save_handler, sender=Post)
 
 if settings.HAS_SAML2:
     from djangosaml2.signals import pre_user_save

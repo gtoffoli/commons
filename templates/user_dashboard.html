@@ -330,15 +330,22 @@
                  <ul class="list-unstyled my-list-unstyled padding510">
                  {% for action in my_last_actions %}
                     {% with action.action_object|object_class as obj_type %}
-                    <li><small>{{ action.timestamp|date:"d.m.Y" }} - {{ action.verb }}  {{action.action_object_content_type }}: 
-                    {% if action.action_object.get_absolute_url and not obj_type == 'PathNode' %}
-                      <a href="{{ action.action_object.get_absolute_url }}">{% endif %}<span class="demiBold">
+                    <li><small>{{ action.timestamp|date:"d.m.Y" }} - {{ action.verb }} {{action.action_object_content_type|lower }}: 
+                    {% if action.action_object.get_absolute_url and not obj_type == 'PathNode' and not obj_type == 'FolderDocument' %}
+                      <a href="{{ action.action_object.get_absolute_url }}">
+                    {% elif action.action_object.get_absolute_url and obj_type == 'FolderDocument' %}
+                        <a href="{{ action.action_object.folder.get_absolute_url }}">
+                    {% endif %}<span class="demiBold">
                     {% if action.action_object.name %}
                        {{ action.action_object.name|truncatechars:60 }}
                     {% elif action.action_object.title %}
                       {{ action.action_object.title|truncatechars:60 }}
                     {% elif action.action_object.label %}
                       {{ action.action_object.label|truncatechars:60 }}
+                    {% elif action.action_object.topic %}
+                       {{ action.action_object.body|truncatechars:60 }}
+                    {% elif action.action_object.folder %}
+                       {{ action.action_object.folder|truncatechars:60 }}
                     {% endif %}</span>
                     {% if action.action_object.get_absolute_url and not obj_type == 'PathNode' %}</a>{% endif %}
                     {% if action.action_object.user_data.username %}
@@ -349,9 +356,9 @@
                   {% if action.action_object.user_data.username %}</a>{% endif %}
                   {% if action.target or action.description %} &nbsp; 
                   [{% if action.target %}
-                  {{action.target_content_type}}: 
+                  {% if action.target_content_type.model|lower == 'forum' and action.action_object.topic %}topic: <span class="demiBold">{{action.action_object.topic }}</span> - {% endif %}{{action.target_content_type|lower}}: 
                   {% if obj_type == 'PathNode' %}<a href="/{% if action.target_content_type == 'LearningPath' %}lp/{% else %}project/{% endif %}{{action.target}}/">{% endif %}
-                    <span class="demiBold">{{ action.target }}</span>
+                    <span class="demiBold"> {{ action.target }} </span>
                        {% if obj_type == 'PathNode' %}</a>{% endif %}{% endif %}
                      {% if action.description %}<span class="demiBold"> - {{ action.description }}</span>{% endif %}]{% endif %}</small></li>
                   {% endwith %}

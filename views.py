@@ -221,7 +221,11 @@ def home(request):
             wall_dict['popular_oer'] = oer
             break
     if settings.HAS_ZINNIA:
-        wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+        #180924 MMR wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
+        qend = timezone.now()
+        articles = Entry.objects.filter(status=2).order_by('-creation_date')[:MAX_ARTICLES]
+        if articles and (qend - articles[0].creation_date).days < 365:
+            wall_dict['articles'] = articles
     # return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
     return render(request, 'homepage.html', wall_dict)
 
