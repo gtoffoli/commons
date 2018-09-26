@@ -1019,7 +1019,9 @@ class Project(Resource):
         content_type = ContentType.objects.get_for_model(self)
         if not role:
             role = Role.objects.get(name='member')
-        if proj_type_name == 'oer':
+        if proj_type_name == 'com':
+            permissions =('')
+        elif proj_type_name == 'oer':
             permissions = ('add-repository', 'add-oer',)
         elif proj_type_name == 'lp':
             permissions = ('add-oer', 'add-lp',)

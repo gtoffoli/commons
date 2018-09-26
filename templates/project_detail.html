@@ -300,7 +300,6 @@
             {% if project.get_level > 0 and is_admin and is_open %}
               {% if not project.forum or proj_type.name == 'com' or project.need_create_room or project.need_sync_xmppaccounts %}
                 <ul class="list-inline marginLB020">
-
                   {% if not project.forum or proj_type.name == 'com' %}
                     <li class="list-back-black">
                        <ul class="list-inline">
@@ -317,7 +316,6 @@
                        </ul>
                     </li>
                   {% endif %}
-
                   {% if project.need_create_room or project.need_sync_xmppaccounts %}
                     <li class="list-back-black">
                        <ul class="list-inline">
@@ -342,7 +340,7 @@
 
 {% comment %} or view_chat{% endcomment %}
         {% if project.get_level > 0 %}
-        {% if view_shared_folder or can_send_message or project.forum %}
+        {% if view_shared_folder or can_send_message or view_forum or meeting %}
         <div>
           <ul class="list-inline marginLB020">
              <li class="list-back-black">
@@ -360,13 +358,12 @@
                    </li>
                 {% endif %}
 
-
-                {% if project.forum %}
+                {% if view_forum %}
                    <li class="marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
                   	   {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
                 {% endif %}
 
-                {% if HAS_KNOCKPLOP %}
+                {% if meeting %}
                    <li class="marginB5"><a href="javascript:window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
                   	   {% trans "meeting"|capfirst %}</div></a></li>
                 {% endif %}
@@ -848,14 +845,14 @@
         <div class="padding510 paddinB0 font12">{{ roll_info|safe }}</div>
       </div>
       {% if user.is_authenticated %}
-      {% if view_shared_folder or can_send_message or project.forum %}
+      {% if view_shared_folder or can_send_message or view_forum or meeting %}
         <ul class="list-inline marginLB020">
           {% if view_shared_folder %}
             <li class="list-back-black paddingRB10 marginB5">
               <a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o" aria-hidden="true"></i> {% trans "shared folder"|capfirst %}</a>
             </li>
           {% endif %}
-          {% if project.forum  %}
+          {% if view_forum %}
             <li class="list-back-black paddingRB10 marginB5"><a href="{{ project.forum.get_absolute_url }}" class="btn btn-default"><div><i class="fa fa-comment-o" aria-hidden="true"></i>
               {% trans "forum"|capfirst %}{% with unviewed_posts_count=project.forum|forum_unviewed_posts_count:user %}{% if is_member and unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
           {% endif %}
@@ -865,6 +862,10 @@
                 <button type="submit" class="btn btn-default" value="{{ project.id }}"><i class="fa fa-envelope-o" aria-hidden="true"></i> {% trans "message to members"|capfirst %}</button>
               </form>
             </li>
+          {% endif %}
+          {% if meeting %}
+            <li class="list-back-black paddingRB10 marginB5"><a href="javascript:window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
+              {% trans "meeting"|capfirst %}</div></a></li>
           {% endif %}
         </ul>
       {% endif %}{% endif %}

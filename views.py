@@ -1272,6 +1272,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['can_close'] = project.can_close(user)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or user.is_superuser
         var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
+        var_dict['view_forum'] = project.forum and (is_member or user.is_superuser)
+        var_dict['meeting'] = settings.HAS_KNOCKPLOP and (is_member or user.is_superuser)
         var_dict['can_chat'] = can_chat = project.can_chat(user) and is_open
         if settings.HAS_DMUC:
             var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
@@ -1506,14 +1508,15 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     parent_id: create sub-project
     """
     data_dict = {}
+    action = '/project/edit/'
+    data_dict['action'] = action
     current_language = get_current_language()
     current_language_name = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['current_language_name'] = current_language_name
-    action = '/project/edit/'
-    data_dict['action'] = action
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
+
     if project:
         if not project.can_access(user):
             raise PermissionDenied
@@ -1570,6 +1573,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             data_dict['project'] = project
             data_dict['object'] = project
             data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
+            project_state = project.state
             form = ProjectForm(request.POST, instance=project)
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
@@ -1583,6 +1587,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             if proj_type:
                 data_dict['proj_type_name'] = proj_type_name = proj_type.name
             name = request.POST.get('name', '')
+            project_state = PROJECT_DRAFT
             form = ProjectForm(request.POST)
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
@@ -1606,23 +1611,28 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 data_dict['project'] = project
                 data_dict['object'] = project
                 data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
+                project.state = project_state
+                project.editor = user
                 if parent:
                     """
                     group_name = slugify(name[:50])
                     """
-                    group_name = uuid.uuid4()
+                    group_name = str(uuid.uuid4())
                     group = Group(name=group_name)
                     group.parent = parent.group
                     group.save()
                     project.group = group
+                    group_id = group.id
                     project.creator = user
-                    project.editor = user
                     if proj_type_name == 'com':
                         project.mentoring_model = NO_MENTORING
                     if proj_type_name == 'ment' and parent.mentoring_model == MENTORING_MODEL_C:
                         project.mentoring_model = MENTORING_MODEL_B
                     set_original_language(project)
                     project.save()
+                    group = Group.objects.get(pk=group_id)
+                    group.name='%s-%s' % (project.id, slugify(project.name[:50]))
+                    group.save()
                     group = project.group
                     project.create_folder()
                     track_action(request, request.user, 'Create', project)
@@ -1659,9 +1669,12 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         grant_permission(project, role_member, 'add-lp')
                     """
                 else:
-                    project.editor = user
                     set_original_language(project) 
                     project.save()
+                    group = project.group
+                    group = Group.objects.get(pk=group.id)
+                    group.name='%s-%s' % (project.id, slugify(project.name[:50]))
+                    group.save()
                     project.update_folder()
                     forum=project.forum
                     if forum != None and project.name != forum.name:
