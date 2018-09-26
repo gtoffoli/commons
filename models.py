@@ -99,6 +99,11 @@ def user_get_preferences(self):
     return preferences and preferences[0] or None
 User.get_preferences = user_get_preferences
 
+def user_get_languages(self):
+    profile = self.get_profile()
+    return [l.code for l in profile.languages.all()]
+User.get_languages = user_get_languages
+
 def user_get_email_notifications(self):
     preferences = self.get_preferences()
     if not preferences:

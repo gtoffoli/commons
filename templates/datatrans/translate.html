@@ -8,7 +8,7 @@
 
 {% block body %}
  <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 5px;">
-  {% trans "Please, note that the translation functionality is affected by the original editing language of this content" %} (<span style="color: black;">{{ object.get_language_name }}</span>).
+  {% trans "Please, note that the translation functionality is affected by the original editing language of this content" %} (<span style="color: black;">{{ object.get_language_name }}</span>) {% trans "and by the languages known by the user as declared in the user profile" %}.
   {% trans "The current active language" %} (<span style="color: black;">{{ current_language_name }}</span>) {% trans "affects only the UI messages of this view" %}.
  </div>
 
