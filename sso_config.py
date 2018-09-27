@@ -62,7 +62,7 @@ SAML_CONFIG = {
           # 'required_attributes': ['uid', 'mail'],
 
           # attributes that may be useful to have but not required
-          'optional_attributes': ['eduPersonAffiliation'],
+          'optional_attributes': ['eduPersonAffiliation', 'eduPersonTargetedID',],
           # 'optional_attributes': ['eppn', 'eduPersonAffiliation'],
 
           # in this section the list of IdPs we talk to are defined
