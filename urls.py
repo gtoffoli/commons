@@ -15,6 +15,7 @@ import commons
 from commons import search_indexes
 from commons.forms import MessageComposeForm
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
+from commons import bookmarklets
 if settings.HAS_SAML2:
     import djangosaml2
     from djangosaml2.urls import urlpatterns as saml2_urls
@@ -208,6 +209,7 @@ urlpatterns += [
     url('oer-autocomplete/$', commons.views.oer_autocomplete, name='oer-autocomplete',),
     url('lp-autocomplete/$', commons.views.lp_autocomplete, name='lp-autocomplete',),
     url('featured-autocomplete/$', FeaturedAutocompleteView.as_view(), name='featured-autocomplete'),
+    url(r"^report_pageview/$", commons.bookmarklets.report_pageview, name="report_pageview"),
     url(r"^analytics/activity_stream/$", commons.analytics.activity_stream, name="activity_stream"),
     url(r"^analytics/user_activity/(?P<username>[\w\.-]+)/$", commons.views.user_activity, name="user_activity"),
     url(r"^analytics/project_activity/(?P<project_slug>[\w-]+)/$",commons.views.project_activity, name="project_activity"),

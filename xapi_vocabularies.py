@@ -6,13 +6,15 @@ xapi_namespaces = {
   'as': 'activitystrea.ms',
 }
 
-verbs = ['Accept', 'Approve', 'Create', 'Delete', 'Edit', 'Play', 'Reject', 'Search', 'Send', 'Submit', 'View']
+verbs = ['Accept', 'Approve', 'Bookmark', 'Create', 'Delete', 'Edit', 'Play', 'Reject', 'Search', 'Send', 'Submit', 'View']
 
 xapi_verbs = {
     'Accept': {'id': 'http://activitystrea.ms/schema/1.0/accept',
              'display': {'en-US': 'accepted', 'it-IT': 'ha accettato' }},
     'Approve': {'id': 'http://activitystrea.ms/schema/1.0/approve',
              'display': {'en-US': 'approved', 'it-IT': 'ha approvato' }},
+    'Bookmark': {'id': 'http://id.tincanapi.com/verb/bookmarked',
+             'display': {'en-US': 'bookmarked', 'it-IT': 'ha creato un segnalibro per' }},
     'Create': {'id': 'http://activitystrea.ms/schema/1.0/create',
              'display': {'en-US': 'approved', 'it-IT': 'ha approvato' }},
     'Delete': {'id': 'http://activitystrea.ms/schema/1.0/delete',
@@ -75,6 +77,9 @@ xapi_activities = {
         },
     Entry.__name__: {
         'type': 'http://activitystrea.ms/schema/1.0/article',
+        },
+    'Webpage': {
+        'type': 'http://activitystrea.ms/schema/1.0/page',
         },
 }
 

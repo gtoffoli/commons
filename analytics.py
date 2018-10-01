@@ -298,9 +298,15 @@ def track_action(request, actor, verb, action_object, target=None, description=N
     if settings.PRODUCTION or six.PY2:
         return
     action = action_object and action_object.__class__.__name__ or None
-    print (action_object, verb, verb in xapi_verbs, action in xapi_activities)
+    if verb == 'Bookmark' and action == 'OER':
+        action = 'Webpage' 
+    print (action_object, verb, action, verb in xapi_verbs, action in xapi_activities)
+    """
     if action_object and verb in xapi_verbs and action in xapi_activities:
         activity_type = xapi_activities[action_object.__class__.__name__]['type']
+    """
+    if action and verb in xapi_verbs and action in xapi_activities:
+        activity_type = xapi_activities[action]['type']
         if hasattr(action_object, 'absolute_url'):
             location = action_object.absolute_url()
         elif hasattr(action_object, 'get_absolute_url'):
