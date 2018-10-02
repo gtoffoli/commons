@@ -878,8 +878,8 @@ class Project(Resource):
     info = models.TextField(_('longer description'), blank=True, null=True)
     small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True, blank=True)
     big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True, blank=True)
-
-    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, blank=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+    mentoring_available = models.BooleanField(default=False, verbose_name=_('mentoring is available'))
+    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     allow_external_mentors = models.BooleanField(default=False, verbose_name=_('allow external mentors'))
     prototype = models.ForeignKey('LearningPath', on_delete=models.SET_NULL, verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
 
@@ -898,12 +898,6 @@ class Project(Resource):
         return filter_empty_words(self.name)
     def indexable_text(self):
         return filter_empty_words(self.description)
-
-    def get_community(self):
-        project = self
-        while project.get_level() > 1:
-            project = project.get_parent()
-        return project
 
     def is_reserved_project(self):
         level = self.get_level()
@@ -974,8 +968,9 @@ class Project(Resource):
         return self.name
 
     def get_project_type(self):
-        return self.proj_type.name
-
+        # return self.proj_type.name
+        return self.proj_type
+        
     def get_type_name(self):
         return self.proj_type.name
 
@@ -987,8 +982,20 @@ class Project(Resource):
     def get_link_color(self):
         return PROJECT_LINK_DICT[self.state]
 
+    def get_community(self):
+        project = self
+        while project.proj_type.name != 'com':
+            project = project.get_parent()
+        return project
+
     def get_level(self):
         return self.group.level
+
+    def get_nesting_level(self):
+        if self.get_type_name() == 'com':
+            return self.get_level()
+        com = self.get_community()
+        return self.get_level() - com.get_level()
 
     def get_parent(self):
         parent_group = self.group.parent
@@ -1003,16 +1010,16 @@ class Project(Resource):
         if proj_type_name:
             qs = qs.filter(proj_type__name=proj_type_name)
         else:
-            qs = qs.filter(proj_type__public=True)
+            qs = qs.filter(proj_type__public=True).exclude(proj_type__name='com')
         if states:
             qs = qs.filter(state__in=states)
         # return qs.order_by('group__name')
         return qs.order_by('name')
 
     def admin_name(self):
-        if self.get_project_type() == 'com':
+        if self.get_type_name() == 'com':
             return _('administrator')
-        elif self.get_project_type() == 'ment':
+        elif self.get_type_name() == 'ment':
             return _('mentor')
         else:
             return _('supervisor')
@@ -1020,7 +1027,7 @@ class Project(Resource):
     def define_permissions(self, role=None):
         """ grant to project proper permissions for role, on creation, based on project_type
             and possibly fix them on edit or on request """
-        proj_type_name = self.get_project_type()
+        proj_type_name = self.get_type_name()
         content_type = ContentType.objects.get_for_model(self)
         if not role:
             role = Role.objects.get(name='member')
@@ -1583,7 +1590,7 @@ class OER(Resource, Publishable):
     languages = models.ManyToManyField(Language, blank=True, verbose_name='languages of OER')
     media = models.ManyToManyField(MediaEntry, blank=True, verbose_name='media formats')
     accessibility = models.ManyToManyField(AccessibilityEntry, blank=True, verbose_name='accessibility features')
-    project = models.ForeignKey(Project, on_delete=models.PROTECT, help_text=_('where the OER has been cataloged or created'), related_name='oer_project')
+    project = models.ForeignKey(Project, on_delete=models.PROTECT, help_text=_('where the OER has been cataloged or created'), blank=True, null=True, related_name='oer_project')
     small_image = AvatarField('screenshot', upload_to='images/oers/', width=300, height=300, null=True)
     big_image = AvatarField('', upload_to='images/oers/', width=1100, height=180, null=True)
     state = models.IntegerField(choices=PUBLICATION_STATE_CHOICES, default=DRAFT, null=True, verbose_name='publication state')
