@@ -40,6 +40,7 @@ SAML_CONFIG = {
       'sp' : {
           'name': 'CommonSpaces at Sapienza',
           'name_id_format': saml2.saml.NAMEID_FORMAT_PERSISTENT,
+          'allow_unsolicited': True,
           'endpoints': {
               # url and binding to the assertion consumer service view
               # do not change the binding or service name
