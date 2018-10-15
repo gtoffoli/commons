@@ -16,9 +16,9 @@
     {% trans "add" %} {% trans "roll of mentors" %}
   {% else %}
     {% trans "add" %}
-    {% if parent.get_level == 0 %} {% trans "community" %}
-    {% elif parent.get_level == 1 %} {% trans "project" %}
-    {% elif parent.get_level == 2 %} {% trans "child project" %}
+    {% if proj_type_name == 'com' %} {% trans "community" %}
+    {% elif parent.get_type_name == 'com' %} {% trans "project" %}
+    {% elif parent.get_type_name != 'com' %} {% trans "child project" %}
     {% endif %}
   {% endif %}
 {% endif %}{% endblock %}
@@ -44,22 +44,22 @@
 {% if not proj_type_name == 'ment' %}
 {% include "_resource_edit_lang_msg.html" %}
 {% endif %}
-  <div class="panel panel-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} text-left marginTB30">
-    <div class="panel-heading-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} padding1020">
+  <div class="panel panel-c{% if not proj_type_name in proj_type_list|slice:":2" %}4{% else %}0{% endif %} text-left marginTB30">
+    <div class="panel-heading-c{% if not proj_type_name in proj_type_list|slice:":2" %}4{% else %}0{% endif %} padding1020">
       <h2 class="marginTB5">
       {% if project %}
-        <small class="c-{% if not proj_type_name in proj_type_list %}black{% else %}white{% endif %}">{% trans "edit"|capfirst %}:</small> {{ project.get_name }}
+        <small class="c-{% if not proj_type_name in proj_type_list|slice:":2" %}black{% else %}white{% endif %}">{% trans "edit"|capfirst %}:</small> {{ project.get_name }}
       {% else %}
-        {{ parent.get_name }}: <small class="c-{% if not proj_type_name in proj_type_list %}c-black{%else%}white{%endif%}">
+        {{ parent.get_name }}: <small class="c-{% if not proj_type_name in proj_type_list|slice:":2" %}c-black{%else%}white{%endif%}">
         {% if proj_type_name == proj_type_list.0 %}
           {% trans "request a mentor" %}
         {% elif proj_type_name == proj_type_list.1 %}
           {% trans "add" %} {% trans "roll of mentors" %}
         {% else %}
           {% trans "add" %} 
-          {% if parent.get_level == 0 %} {% trans "community" %}
-          {% elif parent.get_level == 1 %} {% trans "project" %}
-          {% elif parent.get_level == 2 %} {% trans "child project" %}
+          {% if proj_type_name == 'com' %} {% trans "community" %}
+          {% elif parent.get_type_name == 'com' %} {% trans "project" %}
+          {% elif parent.get_type_name != 'com' %} {% trans "child project" %}
           {% endif %}
         {% endif %}</small>
       {% endif %}
@@ -75,24 +75,28 @@
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       <fieldset class="padding1020">
         {% for field in form.visible_fields %}
-          {% if not field.name == "reserved" %}
+          {% if not field.name == "reserved" and not field.name == "mentoring_available" %}
             <div class="form-group">
               <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
               <span class="txt-error">{{ field.errors }}</span>{{ field }}
               {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
             </div>
-         {% else %}
-           {% if not proj_type_name == 'sup' and not proj_type_name in proj_type_list %}
+         {% elif field.name == "mentoring_available" and proj_type_name == 'com' %}
              <div class="form-group">
                <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
                <span class="txt-error">{{ field.errors }}</span>{{ field }}
                {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
              </div>
-           {% endif %}
+         {% elif field.name == "reserved" and not proj_type_name in proj_type_list %}
+             <div class="form-group">
+               <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
+               <span class="txt-error">{{ field.errors }}</span>{{ field }}
+               {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
+             </div>
          {% endif %}
         {% endfor %}
       </fieldset>
-      <div class="panel-footer-c{% if not proj_type_name in proj_type_list %}4{% else %}0{% endif %} padding1020">
+      <div class="panel-footer-c{% if not proj_type_name in proj_type_list|slice:":2" %}4{% else %}0{% endif %} padding1020">
         {% include "_edit_submit.html" %}
       </div>
     </form>

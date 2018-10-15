@@ -77,7 +77,7 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
 
   <ul class="socialaccount_providers">
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    {% if HAS_SAML2 %} <li><a href="/saml2/login/">Up2U</a></li> {% endif %}
+    {% if HAS_SAML2 %} <li><a href="/saml2/login/" title="Up2U">Up2U</a></li> {% endif %}
   </ul>
 
 

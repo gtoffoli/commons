@@ -18,16 +18,14 @@
     {% endif %}
     {{ project.proj_type }}, {% trans "number of members" %}: {{ project.members|length }}
     {% if project.get_level > 1 %}
-    {% if project.get_level == 2 %}
-        {% with parent=project.get_parent %}
-          <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
-        {% endwith %}
-      {% elif project.get_level == 3 %}
-        {% with parent=project.get_parent %}
-            <span style="padding:0 4px 0 6px">-</span>{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
-            <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="{% trans "parent" %}">{{ parent.get_parent.get_name }}</a>
-        {% endwith %}
-      {% endif %}
+    {% with parent=project.get_parent %}
+    {% if parent.get_type_name == 'com' %}
+      <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+    {% else %}
+      <span style="padding:0 4px 0 6px">-</span>{% trans "child project of" %}: <a href="/project/{{ parent.slug }}/">{{ parent.get_name }}</a>
+      <span style="padding:0 4px 0 6px">-</span>{% trans "community"|capfirst %}: <a href="/project/{{ parent.get_parent.slug }}/" title="{% trans "parent" %}">{{ parent.get_parent.get_name }}</a>
+    {% endif %}
+      {% endwith %}
     {% endif %}
   </p>
   {% if project.description|length > 140 %}

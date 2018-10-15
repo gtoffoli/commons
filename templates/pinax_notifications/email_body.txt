@@ -1,1 +1,0 @@
-{% load i18n %}{{ user_name }} {% blocktrans %}{{ body }}{% endblocktrans %} "{{ project_name }}".

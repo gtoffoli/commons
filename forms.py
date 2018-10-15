@@ -169,11 +169,11 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         if settings.HAS_DMUC:
-            fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+            fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'mentoring_available', 'reserved',)
         else:
-            fields = ('proj_type', 'state', 'creator', 'editor', 'name', 'description', 'info', 'reserved',)
+            fields = ('proj_type', 'state', 'creator', 'editor', 'name', 'description', 'info','mentoring_available', 'reserved',)
 
-    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('max length is 78 characters, but less is better'))
+    name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('max length is 78 characters, but less is better'),)
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     proj_type = forms.ModelChoiceField(required=False, queryset=ProjType.objects.all(), widget=forms.HiddenInput())
     if settings.HAS_DMUC:
@@ -184,6 +184,9 @@ class ProjectForm(forms.ModelForm):
     state = forms.ChoiceField(required=False, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
+    def clean_name(self):
+        return self.cleaned_data['name'].strip()
 
 def repurpose_mentoring_form(form):
     form.fields['name'].label = _('title of the mentoring project')
@@ -382,6 +385,8 @@ class OerForm(forms.ModelForm):
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     
+    def clean_title(self):
+        return self.cleaned_data['title'].strip()
 
     def clean(self):
         cd = self.cleaned_data
@@ -527,6 +532,9 @@ class LpForm(forms.ModelForm):
     state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
+
+    def clean_title(self):
+        return self.cleaned_data['title'].strip()
 
 class LpChangeForm(forms.ModelForm):
     class Meta:

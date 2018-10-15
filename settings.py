@@ -161,7 +161,7 @@ INSTALLED_APPS = (
     'dal_select2_queryset_sequence',
     # from pinax project
     # "pinax_theme_bootstrap",
-    "bootstrapform",
+    # "bootstrapform",
     "notification",
     'menu',
     'taggit',
@@ -533,7 +533,8 @@ ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 0 # 0 means no comments enabled at all
 ZINNIA_AUTO_CLOSE_PINGBACKS_AFTER = 0 # 0 means disabling pingbacks completely
 ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely.
 
-COMMONS_PROJECTS_MAX_DEPTH = 3
+COMMONS_COMMUNITIES_MAX_DEPTH = 2
+COMMONS_PROJECTS_MAX_DEPTH = 2
 COMMONS_PROJECTS_NO_APPLY = ('sup',)
 COMMONS_PROJECTS_NO_CHAT = ('com',)
 

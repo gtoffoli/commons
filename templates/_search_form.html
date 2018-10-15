@@ -10,7 +10,8 @@
    </div>
  </div>
  <fieldset class="borderTBdotted">
-   {% if user.is_full_member %}
+   {# 180928 MMR if user.is_full_member #}
+   {% if user.is_superuser %}
      <div class="form-group">
        <div class="font12"><input id="id_include_all" type="checkbox" name="include_all" value="checked" {% if include_all %}checked{% endif %}> {% trans "include non published items" %}</div>
      </div>

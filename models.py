@@ -879,7 +879,7 @@ class Project(Resource):
     small_image = AvatarField(_('logo'), upload_to='images/projects/', width=100, height=100, null=True, blank=True)
     big_image = AvatarField(_('featured image'), upload_to='images/projects/', width=1100, height=300, null=True, blank=True)
     mentoring_available = models.BooleanField(default=False, verbose_name=_('mentoring is available'))
-    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
+    mentoring_model = models.PositiveIntegerField(choices=MENTORING_MODEL_CHOICES, null=True, blank=True, verbose_name=_('mentoring setup model'), help_text=_('once mentoring projects exist, you can only move from model A or B to A+B.'))
     allow_external_mentors = models.BooleanField(default=False, verbose_name=_('allow external mentors'))
     prototype = models.ForeignKey('LearningPath', on_delete=models.SET_NULL, verbose_name=_('prototypical Learning Path'), null=True, blank=True, related_name='prototype_project')
 
@@ -1004,13 +1004,15 @@ class Project(Resource):
         else:
             return None
 
-    def get_children(self, proj_type_name=None, states=None):
+    def get_children(self, proj_type_name=None, states=None, all_proj_type_public=False):
         children_groups = self.group.get_children()
         qs = Project.objects.filter(group__in=children_groups)
         if proj_type_name:
             qs = qs.filter(proj_type__name=proj_type_name)
         else:
-            qs = qs.filter(proj_type__public=True).exclude(proj_type__name='com')
+            qs = qs.filter(proj_type__public=True)
+            if not all_proj_type_public:
+                qs = qs.exclude(proj_type__name='com')
         if states:
             qs = qs.filter(state__in=states)
         # return qs.order_by('group__name')

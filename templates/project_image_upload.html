@@ -9,11 +9,11 @@
 
 {% block body_class %}image_project_upload{% endblock %}
 {% block body %}
-  <div class="panel panel-c4 text-left marginTB30">
-    <div class="panel-heading-c4 padding1020">
+  <div class="panel panel-c{% if not project.get_type_name == 'roll' %}4{% else %}0{% endif %} text-left marginTB30">
+    <div class="panel-heading-c{% if not project.get_type_name == 'roll' %}4{% else %}0{% endif %} padding1020">
       <h2 class="marginTB5">
       {% if project %}
-        <small class="c-black">{% trans "upload image of project"|capfirst %}:</small> {{ project.get_name }}
+        <small class="c-{% if not project.get_type_name == 'roll' %}black{% else %}white{% endif %}">{% trans "upload image of project"|capfirst %}:</small> {{ project.get_name }}
       {% endif %}
       </h2>
     </div>
@@ -30,9 +30,9 @@
         {% endfor %}
         <div class="form-group"><input type="checkbox" name="remove" value="1"> <label>{% trans "remove image" %}</label></div>
       </fieldset>
-      <div class="panel-footer-c4 padding1020">
+      <div class="panel-footer-c{% if not project.get_type_name == 'roll' %}4{% else %}0{% endif %} padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save"|capfirst %}</button>&nbsp;
-        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}{% if project %} ({% trans "user view" %}){% endif %}</button>
+        <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "exit without saving"|capfirst %}</button>
       </div>
     </form>
    </div>

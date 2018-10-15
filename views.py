@@ -418,7 +418,7 @@ def user_dashboard(request, username, user=None):
     else:
         max_days = 90
         max_actions = 30
-    actions = filter_actions(user=user, verbs=['Accept','Create','Edit','Submit','Approve','Reject','Enabled',], max_days=max_days, max_actions=max_actions)
+    actions = filter_actions(user=user, verbs=['Accept','Create','Edit','Submit','Approve','Reject','Bookmark'], max_days=max_days, max_actions=max_actions)
     var_dict['max_days'] = max_days
     var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
@@ -668,7 +668,6 @@ def send_message_to(request, username):
     print request.user, 'Send', None, recipient_user
     return message_compose(request, recipient=recipient_user.username)
 """
-
 """
 def cops_tree(request):
     # groups = Group.objects.all()
@@ -685,15 +684,27 @@ def cops_tree(request):
     info = FlatPage.objects.get(url='/info/communities/').content
     return render_to_response('cops_tree.html', {'nodes': filtered_nodes, 'info': info,}, context_instance=RequestContext(request))
 """
+
 def cops_tree(request):
     communities = Project.objects.filter(proj_type__name = 'com', state = PROJECT_OPEN, group__level=1).order_by ('name')
     com_tree = proj_tree = []
+
     for community in communities:
-        projects = community.get_children(states=[PROJECT_OPEN])
+        projects = community.get_children(states=[PROJECT_OPEN],all_proj_type_public=True)
         proj_tree=[]
         for project in projects:
             subprojects = project.get_children(states=[PROJECT_OPEN])
-            proj_tree.append([project,subprojects])
+            if project.get_type_name() == 'com':
+                tmp_proj_tree = []
+                for subproject in subprojects:
+                    subproj_tree=[]
+                    subsubprojects = subproject.get_children(states=[PROJECT_OPEN])
+                    if subsubprojects.count() > 0:
+                        subproj_tree.append(subsubprojects)
+                    tmp_proj_tree.append([subproject,subproj_tree])
+                proj_tree.append([project,tmp_proj_tree])
+            else:
+                proj_tree.append([project,subprojects])
         com_tree.append([community,proj_tree])
 
     info = FlatPage.objects.get(url='/info/communities/').content
@@ -1166,7 +1177,6 @@ def lps_in_clipboard(request, key):
     return lps
 
 MENTORING_MAX_DELAY = 14 # (days) set to 0 for test
-
 def project_detail(request, project_id, project=None, accept_mentor_form=None, select_mentoring_journey=None):
     protocol = request.is_secure() and 'https' or 'http'
     MAX_OERS = 5
@@ -1179,13 +1189,20 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     user = request.user
     if not project.can_access(user):
         raise PermissionDenied
-    proj_type = project.proj_type
-    var_dict = {'project': project, 'proj_type': proj_type,}
-    var_dict['proj_type_name'] = type_name = proj_type.name
-    if type_name == 'roll':
+    proj_type = project.get_project_type()
+    proj_type_name = project.get_type_name()
+    proj_is_com = proj_type_name == 'com'
+    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type_name, 'proj_is_com' : proj_is_com}
+    """
+    proj_types = ProjType.objects.filter(public=True)
+    if not user.is_superuser:
+        proj_types = proj_types.exclude(name='com') 
+    var_dict['proj_types'] = proj_types
+    """
+    if proj_type_name == 'roll':
         var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
         var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
-    elif type_name == 'sup':
+    elif proj_type_name == 'sup':
         var_dict['member_info'] = FlatPage.objects.get(url='/infotext/project-support-member/').content
     if project.small_image:
         image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
@@ -1202,33 +1219,33 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         }
     else:
         var_dict['meta'] = {}
-    var_dict['object'] = project
-    proj_types = ProjType.objects.filter(public=True)
-    if not user.is_superuser:
-        proj_types = proj_types.exclude(name='com') 
-    var_dict['proj_types'] = proj_types
+    # 180928 MMR var_dict['object'] = project
     var_dict['is_draft'] = is_draft = project.state==PROJECT_DRAFT
     var_dict['is_submitted'] = is_submitted = project.state==PROJECT_SUBMITTED
     var_dict['is_open'] = is_open = project.state==PROJECT_OPEN
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
-    var_dict['block_mentoring']=''
+    var_dict['parent'] = parent = project.get_parent()
     if user.is_authenticated:
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
-        var_dict['parent'] = parent = project.get_parent()
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
         if is_admin or is_parent_admin or user.is_superuser:
-            # var_dict['project_children'] = project.get_children
-            var_dict['project_children'] = project.get_children()
-            var_dict['project_support_child'] = project.get_children(proj_type_name='sup')
+            if proj_type_name == 'com':
+                var_dict['communities_children'] = project.get_children(proj_type_name='com')
+            var_dict['projects_children'] = project.get_children()
+            var_dict['projects_support_children'] = project.get_children(proj_type_name='sup')
             var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
             var_dict['proj_type_lp'] = ProjType.objects.get(name='lp')
         elif is_member:
-            var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
-            var_dict['project_support_child'] = project.get_children(proj_type_name='sup',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            if proj_type_name == 'com':
+                var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            var_dict['projects_support_children'] = project.get_children(proj_type_name='sup',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         else:
-            var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            if proj_type_name == 'com':
+                var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+            var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         senior_admin = user==project.get_senior_admin()
         var_dict['can_delegate'] = user.is_superuser or senior_admin
         var_dict['no_max_admins'] = len(project.get_admins()) < MAX_ADMINS
@@ -1240,25 +1257,14 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             add_change_admin_form = ProjectAddMemberForm()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
         var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
-        # 180912 MMR var_dict['can_add_repo'] = not user.is_superuser and project.can_add_repo(user) and is_open
         var_dict['can_add_repo'] = project.can_add_repo(user)
-        # 180912 MMR var_dict['can_add_oer'] = can_add_oer = not user.is_superuser and project.can_add_oer(user) and is_open
         var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user)
         if can_add_oer:
-            """
-            var_dict['cut_oers'] = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='cut_oers') or []]
-            bookmarked_oers = [get_object_or_404(OER, pk=oer_id) for oer_id in get_clipboard(request, key='bookmarked_oers') or []]
-            """
             var_dict['cut_oers'] = oers_in_clipboard(request, 'cut_oers')
             bookmarked_oers = oers_in_clipboard(request, 'bookmarked_oers')
             var_dict['shareable_oers'] = [oer for oer in bookmarked_oers if not oer.project==project and not SharedOer.objects.filter(project=project, oer=oer).count()]
-        # 180912 MMR var_dict['can_add_lp'] = can_add_lp = not user.is_superuser and project.can_add_lp(user) and is_open
         var_dict['can_add_lp'] = can_add_lp = project.can_add_lp(user)
         if can_add_lp:
-            """
-            var_dict['cut_lps'] = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='cut_lps') or []]
-            bookmarked_lps = [get_object_or_404(LearningPath, pk=lp_id) for lp_id in get_clipboard(request, key='bookmarked_lps') or []]
-            """
             var_dict['cut_lps'] = lps_in_clipboard(request, 'cut_lps')
             bookmarked_lps = lps_in_clipboard(request, 'bookmarked_lps')
             var_dict['bookmarked_lps'] = bookmarked_lps
@@ -1272,16 +1278,17 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['can_close'] = project.can_close(user)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or user.is_superuser
         var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
-        var_dict['view_forum'] = project.forum and (is_member or user.is_superuser)
+        var_dict['view_forum'] = project.forum and (is_member or user.is_superuser) and is_open
         var_dict['meeting'] = settings.HAS_KNOCKPLOP and (is_member or user.is_superuser)
-        var_dict['can_chat'] = can_chat = project.can_chat(user) and is_open
         if settings.HAS_DMUC:
+            can_chat = project.can_chat(user) and is_open
             var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
             var_dict['xmpp_server'] = settings.XMPP_SERVER
             var_dict['room_label'] = project.slug
             var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
-        var_dict['project_no_children'] = project.group.level >= settings.COMMONS_PROJECTS_MAX_DEPTH
+        var_dict['communities_no_children'] = project.get_nesting_level() >= settings.COMMONS_COMMUNITIES_MAX_DEPTH
+        var_dict['project_no_children'] = project.get_nesting_level() >= settings.COMMONS_PROJECTS_MAX_DEPTH
         var_dict['membership'] = membership = project.get_membership(user)
         var_dict['recent_actions'] = filter_actions(project=project, max_days=7, max_actions=100)
         profile = user.get_profile()
@@ -1293,10 +1300,10 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         if parent and not proj_type.public:
             can_apply = can_apply and parent.is_member(user)
         var_dict['can_apply'] = can_apply
-        if type_name=='roll':
+        if proj_type_name=='roll':
             var_dict['profile_mentoring'] = profile and profile.mentoring or None
             var_dict['can_apply'] = is_open and parent.is_member(user) and not membership
-        if type_name=='com':
+        if proj_type_name=='com':
             if is_admin or user.is_superuser:
                 var_dict['roll'] = roll = project.get_roll_of_mentors()
             else:
@@ -1318,7 +1325,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             # var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user)))
             var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and project.mentoring_model in [MENTORING_MODEL_A,MENTORING_MODEL_B,MENTORING_MODEL_C]
             var_dict['mentoring_block']= can_mentoring_model or roll or can_add_roll or can_request_mentor or mentoring
-        elif type_name=='ment':
+        elif proj_type_name=='ment':
             can_propose = project.can_propose(user)
             parent_mentoring_model = project.get_parent().mentoring_model
             if can_propose:
@@ -1453,17 +1460,15 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                         var_dict['select_mentoring_journey'] = SelectMentoringJourneyForm(select_mentoring_journey['post'], instance=project)
                     else:
                         var_dict['select_mentoring_journey'] = SelectMentoringJourneyForm(initial={'slug':project.slug, 'editor': user.id})
-        elif type_name=='sup':
+        elif proj_type_name=='sup':
             var_dict['support'] = project
     else:
-        if type_name=='com':
+        if proj_type_name=='com':
             var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
-        var_dict['project_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
+            var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
+        var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
     var_dict['repos'] = []
-    """
-    elif user.is_authenticated():
-        oers = OER.objects.filter(project_id=project_id).filter(Q(state=PUBLISHED) | Q(creator=user)).order_by('-created')
-    """
+ 
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         oers = OER.objects.filter(project=project).order_by('-created')
     else:
@@ -1475,10 +1480,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     oers_last_evaluated = project.get_oers_last_evaluated()
     var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
     var_dict['oers_last_evaluated'] = oers_last_evaluated[:MAX_OERS_EVALUATED]
-    """
-    lps = LearningPath.objects.filter(project=project).order_by('-created')
-    lps = [lp for lp in lps if lp.state==PUBLISHED or project.is_member(user) or user.is_superuser]
-    """
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         lps = LearningPath.objects.filter(project=project).order_by('-created')
     else:
@@ -1516,14 +1517,13 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     user = request.user
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
-
     if project:
         if not project.can_access(user):
             raise PermissionDenied
     elif parent:
         if not parent.can_access(user):
             raise PermissionDenied
-    data_dict['proj_type_list']=["ment", "roll"]
+    data_dict['proj_type_list']=["ment", "roll","sup"]
     """
     proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
     if proj_type:
@@ -1535,8 +1535,10 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
-            data_dict['proj_type_name'] = proj_type_name = project.get_project_type()
+            data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
             form = ProjectForm(instance=project)
+            if proj_type_name == 'com' and project.get_children(proj_type_name='roll'):
+                form.fields['mentoring_available'].widget.attrs['disabled'] = 'disabled'
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
@@ -4554,6 +4556,8 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         oers = OER.objects.filter(state=PUBLISHED).distinct().order_by('title')
         request.session["post_dict"] = {}
 
+    oers = sorted(oers, key = lambda x: x.title.strip())
+        
     context = {'oers': oers, 'n_oers': len(oers), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 
     if extra_context is not None:

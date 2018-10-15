@@ -40,10 +40,10 @@
        <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}" method="post" name="form-login" id="form-login">{% csrf_token %}
          <div class="form-group">
            <span id="form-login-username">
-             <input name="login" id="id_login" type="email" size="15" class="form-control" placeholder="{% trans "email address"|capfirst %}">
+             <input name="login" id="id_log_login" type="email" size="15" class="form-control" placeholder="{% trans "email address"|capfirst %}">
            </span>
            <span id="form-login-password">
-             <input name="password" id="id_password" type="password" size="15" class="form-control" placeholder="{% trans "password"|capfirst %}">
+             <input name="password" id="id_log_password" type="password" size="15" class="form-control" placeholder="{% trans "password"|capfirst %}">
            </span>
            <a data-placement="bottom" style="color:#ccc" title="{% trans "Forgot Password?" %}" href="/accounts/password/reset/" class="button secondaryAction">
              <span class="fa fa-question-circle" aria-hidden="true"></span>
@@ -51,7 +51,7 @@
          </div>
          <label id="form-login-remember">
            <span for="remember">
-             {% trans "Remember Me" %}: <input class="checkbox" type="checkbox" name="remember" id="id_remember" value="yes">
+             {% trans "Remember Me" %}: <input class="checkbox" type="checkbox" name="remember" id="id_log_remember" value="yes">
            </span>
          </label>
          <button type="submit" name="Submit" class="btn btn-sm btn-primary primaryAction">{% trans "Log in" %}</button>
@@ -61,17 +61,22 @@
              <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2"%}{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
              <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+           {% if HAS_SAML2 %}
+             <a id="sc_up2u" href="/saml2/login/"%}{% if not "saml2" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
+               <img src="{% static "commons/img/up2u_icon.png" %}" alt="{% trans "Login With" %} Up2U" title="{% trans "Login With" %} Up2U "></a>
+           {% endif %}
          </div>
          <script type="text/javascript">
            $(document).ready(function(event) {
              $("#form-login").submit( function () {
-               email = $.trim($("#id_login").val());
-               pwd = $.trim($("#id_password").val());
+               email = $.trim($("#id_log_login").val());
+               pwd = $.trim($("#id_log_password").val());
                if (email != '' && pwd != '') {
-                 $("#id_login").val(email);
-                 $("#id_password").val(pwd);
+                 $("#id_log_login").val(email);
+                 $("#id_log_password").val(pwd);
                    return true;
                }
+               $("body").css("cursor","default");
                return false;
              })
            })
@@ -97,6 +102,10 @@
              <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
              <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
+           {% if HAS_SAML2 %}
+             <a id="sc_up2u" href="/saml2/login/{% if not "saml2" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
+               <img src="{% static "commons/img/up2u_icon.png" %}" alt="{% trans "Login With" %} Up2U" title="{% trans "Login With" %} Up2U "></a>
+           {% endif %}
          </div>
        </div>
      {% endif %}
