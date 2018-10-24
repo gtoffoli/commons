@@ -46,7 +46,7 @@ dl.eval dd:nth-child(even) {
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
-                    {% if is_admin or user.is_superuser or user == sub.user %}
+                    {% if user == sub.user or is_admin %}
                       <li class="marginR10"><a id="r_{{ sub.id }}" class="deleteFolder" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
                       <li class="marginR20"><a href="/folder/{{ sub.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}
@@ -72,7 +72,7 @@ dl.eval dd:nth-child(even) {
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
                     {% if not ment_proj_submitted %}
-                    {% if is_admin or user.is_superuser or user == folderdocument.user %}
+                    {% if is_admin or user == folderdocument.user %}
                       <li class="marginR10"><a id="r_{{ folderdocument.id }}" class="deleteDoc" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
                       <li class="marginR20"><a href="/{% if folderdocument.embed_code %}online_resource{% else %}folderdocument{% endif %}/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}{% endif %}
@@ -96,6 +96,8 @@ dl.eval dd:nth-child(even) {
          </dd>
        {% endif %}{% endif %}
     </dl>
+  {% endif %}
+  {% if can_add %}
     {% if not ment_proj_submitted %}
     <div class="row margin0 bc-white">
     <div class="col-md-6 col-lg-6 padding0">
@@ -152,7 +154,7 @@ dl.eval dd:nth-child(even) {
 {% endblock %}
 
 {% block extra_script %}
-{% if can_share %}
+{% if can_add %}
 <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
 
 <script type="text/javascript">

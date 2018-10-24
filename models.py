@@ -438,7 +438,7 @@ class Folder(MPTTModel):
         if not project:
             project = self.get_project()
         documents = []
-        if project.is_member(user) or user.is_superuser:
+        if project.is_member(user) or project.is_admin_community(user) or user.is_superuser:
             documents = FolderDocument.objects.filter(folder=self).order_by('order')
         else:
             documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED).order_by('order')
@@ -523,7 +523,10 @@ class FolderDocument(models.Model, Publishable):
             else:
                 return False
         """
-        if project.is_member(user) or user.is_superuser:
+        parent = project.get_parent()
+        is_parent_admin = parent and parent.is_admin(user)
+        is_community_parent = project.is_admin_community(user)
+        if project.is_member(user) or is_parent_admin or is_community_parent or user.is_superuser:
             return True
         return False
 
@@ -982,9 +985,12 @@ class Project(Resource):
     def get_link_color(self):
         return PROJECT_LINK_DICT[self.state]
 
-    def get_community(self):
+    def get_community(self,proj_type_name=None):
         project = self
-        while project.proj_type.name != 'com':
+        if (proj_type_name != 'com'):
+            while project.get_type_name() != 'com':
+                project = project.get_parent()
+        else:
             project = project.get_parent()
         return project
 
@@ -1026,6 +1032,16 @@ class Project(Resource):
         else:
             return _('supervisor')
 
+    def is_admin_community (self,user):
+        com = self.get_community()
+        com_is_admin = com.is_admin(user)
+        if com.get_level() == 2:
+            com_level_1 = com.get_community(proj_type_name='com')
+            com_level_1_is_admin = com_level_1.is_admin(user)
+        else:
+            com_level_1_is_admin = False
+        return (com_is_admin or com_level_1_is_admin)
+      
     def define_permissions(self, role=None):
         """ grant to project proper permissions for role, on creation, based on project_type
             and possibly fix them on edit or on request """
@@ -1076,7 +1092,7 @@ class Project(Resource):
                 return True
         if not user.is_authenticated:
             return False
-        return user.is_superuser or self.is_admin(user) or (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or (parent and parent.is_admin(user))
+        return (self.is_member(user) and self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED,)) or self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser
 
     def can_edit(self, request):
         user = request.user
@@ -1089,7 +1105,15 @@ class Project(Resource):
             if self.state == PROJECT_OPEN and self.is_admin(user):
                 return True
             return False
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user)) 
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user) or self.is_admin_community (user) or user.is_superuser) 
+
+    def can_create_project (self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return False
+        if user.is_superuser: return True
+        
+        return self.state == PROJECT_OPEN and (self.is_admin(user)) 
 
     """
     def can_propose(self, user):
@@ -1107,13 +1131,14 @@ class Project(Resource):
         return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and ((parent_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_B and self.is_member(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B and self.is_member(user)))
     def can_open(self, user):
         parent = self.get_parent()
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser) 
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser) 
     def can_close(self, user):
         parent = self.get_parent()
-        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or user.is_superuser)
+        com = self.get_community()
+        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user))  or self.is_admin_community (user) or user.is_superuser)
     def can_delete(self, user):
         parent = self.get_parent()
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)))
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser)
 
     def can_chat(self, user):
         if settings.HAS_DMUC:

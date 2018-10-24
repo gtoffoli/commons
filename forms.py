@@ -662,9 +662,10 @@ class ForumForm(forms.ModelForm):
     headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
 
 from django.utils.safestring import mark_safe
-from django.utils.html import format_html
+from django.utils.html import format_html, escape
 from django.forms.utils import flatatt
 from django.utils.encoding import force_text
+from bs4.dammit import EntitySubstitution
 
 class UserChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
@@ -690,6 +691,7 @@ class UserChoiceField(forms.ModelChoiceField):
             description = force_text(profile.short)
         if len(description) > 95:
             description=description[:96]+'...'
+        escaper = EntitySubstitution()
         return format_html('<div><a href="{}" class="mentorProfile" {} target="_top"><img src="{}" {}></a></div><div {}><a href="{}" class="mentorProfile" {} target="_top">{}</a></div><div {}>{}</div>',
                             link,
                             flatatt(attrs_link),
@@ -700,7 +702,7 @@ class UserChoiceField(forms.ModelChoiceField):
                             flatatt(attrs_link),
                             force_text(obj.get_display_name()),
                             flatatt(attrs_descr),
-                            description)
+                            mark_safe(escaper.substitute_html(description)))
 
 class MatchMentorForm(forms.Form):
     project = forms.IntegerField(widget=forms.HiddenInput())

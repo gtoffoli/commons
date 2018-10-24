@@ -128,12 +128,22 @@
             <div class="col-sm-7 col-md-7 col-lg-8">
                 <article class="view-list">
                 {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
-                {% if project.info %}
+                
                     <dl class="list-inline font14 clearfix">
                         <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
-                        <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
+                        <dd class="field-content width-full" style="display:none">
+                            {% if project.info %}<blockquote class="font14">{{ project.info|safe }}</blockquote>{% endif %}
+                            <ul class="list-unstyled paddingT10 font13">
+                                <li class="marginT5"><span class="demiBold">{% trans "created by"|capfirst %}</span> <img {% if project.creator.get_profile.avatar %} src="/media/{{ project.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ project.creator.username }}">{{ project.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ project.created|date:"d/m/Y" }}
+                                {% if project.editor.id == project.creator.id %}
+                                    <span class="demiBold">{% trans "last updated" %} {% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}
+                                {% endif %}
+                                </li>
+                                {% if project.editor.id != project.creator.id %}<li class="marginT5"><span class="demiBold">{% trans "last updated"|capfirst %}</span> <span class="demiBold">{% trans "by" %}</span> <img {% if project.editor.get_profile.avatar %} src="/media/{{ project.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ project.editor.username }}">{{ project.editor.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}</li>{% endif %}
+                            </ul>
+                        </dd>
                     </dl>
-                {% endif %}
+                
                 </article>
 {% comment %} LIST CHILDREN PROJECT {% endcomment %}
                 {% if communities_children %}
@@ -168,19 +178,19 @@
                         {% with subprojects=projects_children %}{% for subproject in subprojects %}
                         {% if subproject.state == 2 %}
                             {% comment %} open {% endcomment %}
-                            <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 3 %}
                             {% comment %} closed {% endcomment %}
-                            <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 0 %}
                             {% comment %} draft {% endcomment %}
-                            <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 4 %}
                             {% comment %} deleted {% endcomment %}
-                            <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 1 %}
                             {% comment %} submitted {% endcomment %}
-                            <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title={% if project.get_level == 0 %}"{% trans "view project" %}"{% else %}"{% trans "view child project" %}"{% endif %}>{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title={% if project.get_level == 1 or proj_type_name == 'com'%}"{% trans "view project" %}"{% else %}"{% trans "view child project" %}"{% endif %}>{{ subproject.get_name }}</a></li>
                         {% endif %}
                         {% endfor %}{% endwith %}
                         </ul>
@@ -193,26 +203,26 @@
                         {% with subprojects=projects_support_children %}{% for subproject in subprojects %}
                         {% if subproject.state == 2 %}
                             {% comment %} open {% endcomment %}
-                            <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 3 %}
                             {% comment %} closed {% endcomment %}
-                            <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-lock neutral" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 0 %}
                             {% comment %} draft {% endcomment %}
-                            <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group orange" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 4 %}
                             {% comment %} deleted {% endcomment %}
-                            <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group red" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% elif subproject.state == 1 %}
                             {% comment %} submitted {% endcomment %}
-                            <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
+                            <li><span class="fa fa-group limegreen" aria-hidden="true"></span> <a href="/project/{{ subproject.slug }}/" title="{% if project.get_level == 1 or proj_type_name == 'com' %}{% trans "view project" %}{% else %}{% trans "view child project" %}{% endif %}">{{ subproject.get_name }}</a></li>
                         {% endif %}
                         {% endfor %}{% endwith %}
                         </ul>
                     </div>
                 {% endif %}
             {% if user.is_authenticated %}
-                {% if can_edit or can_open or can_close or is_admin %}
+                {% if can_edit or can_open or can_close or can_create_project or is_admin %}
                     <ul class="list-inline marginLB020">
 {% comment %} ACTIONS PROJECT {% endcomment %}
                         <li class="list-back-c4 marginB5">
@@ -230,7 +240,7 @@
                             </ul>
                         </li>
 {% comment %} ADD CHILDREN PROJECT {% endcomment %}
-                        {% if can_edit and is_open %}
+                        {% if can_create_project %}
                             {% if not communities_no_children and proj_is_com %}
                                 <li class="list-back-c4 marginB5">
                                     <div class="marginB5 demiBold">{% trans "new community"|capfirst %}</div>
@@ -563,6 +573,7 @@
 {% comment %} MENTORING MODEL {% endcomment %}
                     {% if can_mentoring_model %}
                         <dl class="pull-left marginB20 marginR10 panel-white">
+{% comment %} definizione modello di mentoring {% endcomment %}
                             <dt class="panel-heading-c0 padding10510 demiBold">{% trans "mentoring policy"|capfirst %}</dt>
                             {% if mentoring_model_C %}
                                 <dd class="padding510"><label style="display:block">{% trans "mentoring setup model"|capfirst %}</label>{{ mentoring_model_C_value }}</dd>
@@ -581,6 +592,7 @@
                                 </form></dd>
                             {% endif %}
                             <dd><hr></dd>
+{% comment %} MENTORI ALTRE COMUNITA' {% endcomment %}
                             <dd class="padding510 paddingT0"><form method="post" id="mentoring_policy" action="/project/{{ project.slug }}/edit_mp/">{% csrf_token %}
                             {% for field in form_memtoring_policy.visible_fields %}
                                 <div class="form-group">
@@ -651,12 +663,12 @@
                         </ul>
                     {% endif %}
 
-{% comment %} LIST MENTORING REQUESTS {% endcomment %}
-                    {% if is_admin and mentoring_projects %}
+{% comment %} LIST MENTORING REQUESTS MENTORING MODEL A{% endcomment %}
+                    {% if is_admin and mentoring_projects_model_A %}
                         <div class="panel-white">
                         <div class="panel-heading-c4 padding10510 demiBold">{% trans "mentoring requests"|capfirst %}</div>
                             <ul class="list-inline padding10510 list-green">
-                            {% for mentoring_project in mentoring_projects %}
+                            {% for mentoring_project in mentoring_projects_model_A %}
                                 <li><div class="c-white marginB5 demiBold">
                                         <a href="/project/{{ mentoring_project.slug }}/" title="{% trans "mentoring project" %}">
                                         {% if mentoring_project.state != 2 %}

@@ -1044,6 +1044,9 @@ def project_folder(request, project_slug):
     user = request.user
     # assert user.is_authenticated()
     project = get_object_or_404(Project, slug=project_slug)
+    parent = project.get_parent()
+    is_parent_admin = parent and parent.is_admin(user)
+    is_community_admin = project.is_admin_community(user)
     if not project.can_access(user):
         raise PermissionDenied
     if not user.is_authenticated:
@@ -1056,7 +1059,7 @@ def project_folder(request, project_slug):
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
-    var_dict['can_share'] = can_share = user.is_superuser or project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
+    var_dict['can_share'] = can_share = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['folder'] = project.get_folder()
     var_dict['folderdocuments'] = project.get_folderdocuments(user)
@@ -1114,6 +1117,9 @@ def folder_detail(request, project_slug='', folder=None):
     if not user.is_authenticated:
         return project_detail(request, project.id, project=project)
     """
+    parent = project.get_parent()
+    is_parent_admin = parent and parent.is_admin(user)
+    is_community_admin = project.is_admin_community(user)
     proj_type = project.proj_type
     ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
     var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
@@ -1122,8 +1128,11 @@ def folder_detail(request, project_slug='', folder=None):
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
-    var_dict['can_share'] = user.is_superuser or project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
+    var_dict['can_share'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
+    var_dict['can_add'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
     var_dict['is_admin'] = project.is_admin(user)
+    var_dict['is_parent_admin'] = is_parent_admin
+    var_dict['is_community_admin'] = is_community_admin
     var_dict['folder'] = folder
     var_dict['folderdocuments'] = folderdocuments
     var_dict['subfolders'] = subfolders
@@ -1230,7 +1239,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
-        if is_admin or is_parent_admin or user.is_superuser:
+        is_community_admin = project.is_admin_community (user)
+        if is_admin or is_parent_admin or is_community_admin or user.is_superuser:
             if proj_type_name == 'com':
                 var_dict['communities_children'] = project.get_children(proj_type_name='com')
             var_dict['projects_children'] = project.get_children()
@@ -1276,10 +1286,11 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
         var_dict['can_open'] = project.can_open(user)
         var_dict['can_close'] = project.can_close(user)
-        var_dict['view_shared_folder'] = view_shared_folder = is_member or user.is_superuser
+        var_dict['can_create_project'] = project.can_create_project(request)
+        var_dict['view_shared_folder'] = view_shared_folder = is_member or is_parent_admin or is_community_admin or user.is_superuser
         var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
         var_dict['view_forum'] = project.forum and (is_member or user.is_superuser) and is_open
-        var_dict['meeting'] = settings.HAS_KNOCKPLOP and (is_member or user.is_superuser)
+        var_dict['meeting'] = settings.HAS_KNOCKPLOP and is_member
         if settings.HAS_DMUC:
             can_chat = project.can_chat(user) and is_open
             var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
@@ -1310,7 +1321,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                 var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
             var_dict['mentoring_projects_all'] = len(project.get_mentoring_projects(states=[PROJECT_DRAFT,PROJECT_SUBMITTED]))
             if project.mentoring_model == MENTORING_MODEL_A:
-                var_dict['mentoring_projects'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
+                var_dict['mentoring_projects_model_A'] = project.get_mentoring_projects(states=[PROJECT_SUBMITTED,])
             var_dict['mentoring'] = mentoring = project.get_mentoring(user=user)
             var_dict['mentoring_mentee'] = project.get_mentoring_mentee(user=user,membership_state=1)
             var_dict['can_mentoring_model'] = can_mentoring_model = is_open and is_admin
@@ -1537,8 +1548,10 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 project.name = project.group.name
             data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
             form = ProjectForm(instance=project)
+            """
             if proj_type_name == 'com' and project.get_children(proj_type_name='roll'):
                 form.fields['mentoring_available'].widget.attrs['disabled'] = 'disabled'
+            """
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
