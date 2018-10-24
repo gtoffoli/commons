@@ -2,7 +2,7 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% if proj_type.name = 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 

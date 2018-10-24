@@ -27,7 +27,7 @@ def get_all_mentors():
 
 def get_all_candidate_mentors(user, community):
     community_candidate_mentors = communities_candidate_mentors = None
-    proj_type_roll = ProjType.objects.filter(name='roll')
+    proj_type_roll = ProjType.objects.get(name='roll')
     roll = community.get_roll_of_mentors(states=[PROJECT_OPEN])
     rolls = Project.objects.filter(proj_type_id=proj_type_roll, state__in=[PROJECT_OPEN])
     if roll:

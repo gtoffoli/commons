@@ -662,7 +662,7 @@ class ForumForm(forms.ModelForm):
     headline = forms.CharField(required=False, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('better specify the purpose of this forum'))
 
 from django.utils.safestring import mark_safe
-from django.utils.html import format_html, escape
+from django.utils.html import format_html
 from django.forms.utils import flatatt
 from django.utils.encoding import force_text
 from bs4.dammit import EntitySubstitution
