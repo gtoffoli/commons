@@ -387,12 +387,16 @@ div.msg {
      {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
          <ul class="list-inline marginLB020">
          {% if view_shared_folder %}
-           <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.slug }}/folder/" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
+           <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="{{ project.get_folder.get_absolute_url }}" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
          {% endif %}
-         {% if is_admin and is_open and project.need_create_room %}
-           <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/create_room/" class="btn btn-default"><i class="fa fa-comments-o"></i> {% trans "enable chatroom" %}</a></li></ul></li> 
-         {% endif %}
-       </ul>
+         {% if meeting %}
+           <li class="list-back-black marginB5">
+             <ul class="list-inline">
+                <li class="marginB5">
+                    <a href="javascript:window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><i class="fa fa-tv" aria-hidden="true"></i> {% trans "meeting"|capfirst %}</a></li></ul>
+           </li>
+           {% endif %}
+         </ul>
           {% if can_add_oer or can_add_lp %}
           <div>
             <ul class="list-inline padding10510">

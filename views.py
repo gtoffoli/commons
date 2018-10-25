@@ -1040,6 +1040,7 @@ def folderdocument_delete(request, folderdocument_id):
     # return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     return HttpResponseRedirect(folder.get_absolute_url())
 
+"""
 def project_folder(request, project_slug):
     user = request.user
     # assert user.is_authenticated()
@@ -1067,6 +1068,7 @@ def project_folder(request, project_slug):
     var_dict['form_res'] = FolderOnlineResourceForm()
     # return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'project_folder.html', var_dict)
+"""
 
 def folder_delete(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)

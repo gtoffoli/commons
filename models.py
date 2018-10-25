@@ -1105,7 +1105,8 @@ class Project(Resource):
             if self.state == PROJECT_OPEN and self.is_admin(user):
                 return True
             return False
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user) or self.is_admin_community (user) or user.is_superuser) 
+        # return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and (self.is_admin(user) or  self.get_parent().is_admin(user) or self.is_admin_community (user) or user.is_superuser) 
+        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_OPEN,) and self.is_admin(user) 
 
     def can_create_project (self, request):
         user = request.user

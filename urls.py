@@ -102,7 +102,6 @@ urlpatterns += [
     url(r"^project/(?P<project_slug>[\w-]+)/project_new/(?P<type_name>[\w-]+)/$", commons.views.project_new_by_slug, name="create_subproject"),
     url(r"^project/(?P<project_slug>[\w-]+)/oers/$", commons.views.oer_list, name="oer_list"),
     url(r"^project/(?P<project_slug>[\w-]+)/project_results/$", commons.views.project_results, name="project_results"),
-    url(r"^project/(?P<project_slug>[\w-]+)/folder/$", commons.views.project_folder, name="project_folder"),
     url(r"^folder/add_subfolder/$", commons.views.folder_add_subfolder, name="folder_add_subfolder"),
     url(r"^folder/add_document/$", commons.views.folder_add_document, name="folder_add_document"),
     url(r"^folder/add_resource_online/$", commons.views.folder_add_resource_online, name="folder_add_resource_online"),
