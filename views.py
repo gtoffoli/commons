@@ -1123,15 +1123,17 @@ def folder_detail(request, project_slug='', folder=None):
     is_parent_admin = parent and parent.is_admin(user)
     is_community_admin = project.is_admin_community(user)
     proj_type = project.proj_type
-    ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
+    ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED
     var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
+    var_dict['project_is_closed'] = project_is_closed = project.state == PROJECT_CLOSED
     n_selected_mentors = 0
     selected_mentors = []
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
     var_dict['can_share'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
-    var_dict['can_add'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0])
+    var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]))
+    var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['is_parent_admin'] = is_parent_admin
     var_dict['is_community_admin'] = is_community_admin
@@ -1290,9 +1292,14 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['can_close'] = project.can_close(user)
         var_dict['can_create_project'] = project.can_create_project(request)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or is_parent_admin or is_community_admin or user.is_superuser
-        var_dict['can_send_message'] = not proj_type.name == 'com' and is_member and is_open
+        if proj_type.name in 'ment': 
+            var_dict['can_send_message'] = is_member and (is_open or is_closed)
+        elif not proj_type.name in 'com':
+            var_dict['can_send_message'] = is_member and is_open
+        else:
+            var_dict['can_send_message'] = False
         var_dict['view_forum'] = project.forum and (is_member or user.is_superuser) and is_open
-        var_dict['meeting'] = settings.HAS_KNOCKPLOP and is_member
+        var_dict['meeting'] = settings.HAS_KNOCKPLOP and is_member and is_open
         if settings.HAS_DMUC:
             can_chat = project.can_chat(user) and is_open
             var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
@@ -1433,7 +1440,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                             var_dict['accept_mentor_form'] = AcceptMentorForm(initial={'project': project_id})
                         var_dict['can_draft_back'] = False 
                         var_dict['view_shared_folder'] = view_shared_folder or user.id == requested_mentors[0].user_id
-            if is_open and is_member:
+            if is_member and (is_open or is_closed):
                 var_dict['mentor'] = mentor = project.get_mentor(state=1)
                 mentor_user = mentor and mentor.user
                 if user==mentor_user:

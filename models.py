@@ -1131,12 +1131,17 @@ class Project(Resource):
         project_mentoring_model = self.mentoring_model
         return self.state in (PROJECT_SUBMITTED,) and self.get_type_name()=='ment' and ((parent_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_B and self.is_member(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_A and parent.is_admin(user)) or (parent_mentoring_model == MENTORING_MODEL_C and project_mentoring_model == MENTORING_MODEL_B and self.is_member(user)))
     def can_open(self, user):
-        parent = self.get_parent()
-        return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser) 
+        if self.get_type_name()=='ment':
+            return self.state in (PROJECT_CLOSED,) and (self.is_admin(user) or user.is_superuser) 
+        else:
+            parent = self.get_parent()
+            return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser) 
     def can_close(self, user):
-        parent = self.get_parent()
-        com = self.get_community()
-        return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user))  or self.is_admin_community (user) or user.is_superuser)
+        if self.get_type_name()=='ment':
+            return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or user.is_superuser) 
+        else:
+            parent = self.get_parent()
+            return self.state in (PROJECT_OPEN,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser)
     def can_delete(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser)

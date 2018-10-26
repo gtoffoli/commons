@@ -46,9 +46,11 @@ dl.eval dd:nth-child(even) {
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
+                    {% if can_edit_delete %}
                     {% if user == sub.user or is_admin %}
                       <li class="marginR10"><a id="r_{{ sub.id }}" class="deleteFolder" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
                       <li class="marginR20"><a href="/folder/{{ sub.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
+                    {% endif %}
                     {% endif %}
                  </ul>
                </div>
@@ -71,7 +73,7 @@ dl.eval dd:nth-child(even) {
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
-                    {% if not ment_proj_submitted %}
+                    {% if can_edit_delete %}
                     {% if is_admin or user == folderdocument.user %}
                       <li class="marginR10"><a id="r_{{ folderdocument.id }}" class="deleteDoc" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
                       <li class="marginR20"><a href="/{% if folderdocument.embed_code %}online_resource{% else %}folderdocument{% endif %}/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>

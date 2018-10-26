@@ -322,12 +322,12 @@ div.msg {
        {% include "_project_mentoring_text.html" %}  
      {% endif %}
 
-     {% if can_send_message and is_member %}
+     {% if can_send_message %}
        <div class="panel-white">
          <ul class="nav nav-tabs borderTLRradius nav-tabs-back">
            <li class="active"><a data-toggle="tab" href="#inbox">{% trans "received messages"|capfirst %}</a></li>
            <li><a data-toggle="tab" href="#outbox">{% trans "sent messages"|capfirst %}</a></li>
-           <li><a data-toggle="tab" href="#compose">{% trans "new message"|capfirst %}</a></li>
+           {% if is_open %}<li><a data-toggle="tab" href="#compose">{% trans "new message"|capfirst %}</a></li>{% endif %}
          </ul>
          <div class="tab-content padding510">
            <div id="inbox" class="tab-pane fade in active">
@@ -352,6 +352,7 @@ div.msg {
                <p><small>{% trans "no messages sent"|capfirst %}</small></p>
              {% endif %}
            </div>
+           {% if is_open %}
            <div id="compose" class="tab-pane fade">
              <form method="post" action="/project/{{ project.slug }}/send_one2one_message/" class="padding510">{% csrf_token %}
                {% for hidden in compose_message_form.hidden_fields %}{{ hidden }}{% endfor %}
@@ -364,6 +365,7 @@ div.msg {
                <div class="form-group"><input type="submit" class="btn btn-default" name="send" value="{% trans "send" %}"></div>
              </form>
            </div>
+           {% endif %}
          </div>
        </div>
      {% endif %}
@@ -384,6 +386,8 @@ div.msg {
            </form></dd>
          </dl></li></ul>
      {% endif %}
+     {% if can_open %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li></ul></li></ul>{% endif %}
+
      {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
          <ul class="list-inline marginLB020">
          {% if view_shared_folder %}
