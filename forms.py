@@ -627,10 +627,9 @@ class MessageComposeForm(ComposeForm):
     """
     A customized form for private messages.
     """
-    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
-    subject = forms.CharField(label=_(u"Subject"), max_length=120, widget=forms.TextInput(attrs={'class':'form-control'}),)
-    body = forms.CharField(label=_(u"Body"),
-        widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
+    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), label=_(u"Recipient"), required=True, widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    subject = forms.CharField(label=_(u"Subject"), required=True, max_length=120, widget=forms.TextInput(attrs={'class':'form-control'}),)
+    body = forms.CharField(label=_(u"Body"), required=True, widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
 
 class ProjectMessageComposeForm(MessageComposeForm):
     """
