@@ -1041,7 +1041,31 @@ class Project(Resource):
         else:
             com_level_1_is_admin = False
         return (com_is_admin or com_level_1_is_admin)
-      
+
+    def state_community (self):
+        com = self.get_community()
+        com_state = com.state
+        if com.get_level() == 2:
+            com_level_1 = com.get_community(proj_type_name='com')
+            com_level_1_state = com_level_1.state
+        else:
+            com_level_1_state = ''
+        return {'com_state':com_state, 'com_level_1_state':com_level_1_state}
+            
+    def is_closed_community_or_parent(self):
+        parent = self.get_parent()
+        parent_state = parent.state
+        if self.get_type_name() == 'com':
+            return False
+        community_state = self.state_community()
+        if parent_state == PROJECT_CLOSED:
+            return True
+        if community_state['com_state'] == PROJECT_CLOSED:
+            return True
+        if community_state['com_level_1_state'] == PROJECT_CLOSED:
+            return True
+        return False
+
     def define_permissions(self, role=None):
         """ grant to project proper permissions for role, on creation, based on project_type
             and possibly fix them on edit or on request """

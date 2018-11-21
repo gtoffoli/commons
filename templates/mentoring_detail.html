@@ -354,7 +354,7 @@ div.msg {
            </div>
            {% if is_open %}
            <div id="compose" class="tab-pane fade">
-             <form method="post" action="/project/{{ project.slug }}/send_one2one_message/" class="padding510">{% csrf_token %}
+             <form method="post" action="/project/{{ project.slug }}/send_one2one_message/" class="padding510 sendMessage">{% csrf_token %}
                {% for hidden in compose_message_form.hidden_fields %}{{ hidden }}{% endfor %}
                {% for field in compose_message_form.visible_fields %}
                  <div class="form-group">
@@ -507,11 +507,21 @@ div.msg {
 {% block extra_script %}
 {% if can_send_message and is_member %}
 <script type="text/javascript">
-  $(document).ready(function() {
-    $('ul.nav-tabs > li > a').on('click', function(){
-      $("body").css("cursor", "default");
+    $(document).ready(function() {
+        $('ul.nav-tabs > li > a').on('click', function(){
+            $("body").css("cursor", "default");
+        });
     });
-   });
+    $('form.sendMessage').on('submit', function() {
+        $("body").css("cursor", "default");
+        fields=$( this ).serializeArray();
+        for (index = 3; index < fields.length; ++index) {
+            if ($.trim(fields[index].value) == '') {
+                return false
+            }
+        }
+        return true
+    });
 </script>
 {% endif %}
 {% if project.info %}
