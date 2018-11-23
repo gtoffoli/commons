@@ -1444,12 +1444,12 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                 var_dict['mentor'] = mentor = project.get_mentor(state=1)
                 mentor_user = mentor and mentor.user
                 if user==mentor_user:
-                    inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
-                    outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
+                    inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('sent_at')
+                    outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('sent_at')
                     recipient= mentee_user.username
                 elif user==mentee_user:
-                    inbox = Message.objects.filter(recipient=user, sender=mentor_user, recipient_deleted_at__isnull=True,).order_by('-sent_at')
-                    outbox = Message.objects.filter(recipient=mentor_user, sender=user, sender_deleted_at__isnull=True,).order_by('-sent_at')
+                    inbox = Message.objects.filter(recipient=user, sender=mentor_user, recipient_deleted_at__isnull=True,).order_by('sent_at')
+                    outbox = Message.objects.filter(recipient=mentor_user, sender=user, sender_deleted_at__isnull=True,).order_by('sent_at')
                     recipient= mentor_user.username
                 inbox = [m for m in inbox if m.project==project]
                 outbox = [m for m in outbox if m.project==project]
