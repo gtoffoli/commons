@@ -7,11 +7,9 @@ from pybb import defaults
 from django.db.models import Q
 
 from pybb.models import Topic
-"""
-from actstream import action, registry
-registry.register(Topic)
-"""
+""" commented to avoid circularity in Django 2.1: django_messages -> urls.reverse -> pybb -> permissions -> track_action -> Message
 from commons.analytics import track_action
+"""
 
 class ForumPermissionHandler(DefaultPermissionHandler):
     '''
@@ -54,7 +52,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         # print 'may_view_topic: ', user.username, topic.name
         # action.send(user, verb='View', action_object=topic)
         if user.is_authenticated:
-            track_action(None, user, 'View', topic)
+            # track_action(None, user, 'View', topic)
+            pass
         forum = topic.forum
         project = forum.get_project()
         if project:
