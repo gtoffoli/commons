@@ -1,19 +1,15 @@
 
 from django.conf import settings
-# from django.conf.urls import patterns, include, url
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.views.generic import TemplateView
-
 from django.contrib import admin
-# admin.autodiscover()
 from django.contrib.flatpages import views as flatpages_views
 
-from django.conf.urls.static import static
 from filebrowser.sites import site
 import commons
 from commons import search_indexes
-from commons.forms import MessageComposeForm
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 from commons import bookmarklets
 if settings.HAS_SAML2:
@@ -32,7 +28,6 @@ else:
         url(r'^admin/', include(admin.site.urls)),
     ]
 
-# urlpatterns = patterns('',
 urlpatterns += [
     url(r'^robots.txt$', commons.views.robots, name='robots'),
     url(r'^error/$', commons.views.error, name='error'),
@@ -243,7 +238,6 @@ if settings.HAS_DMUC:
     ]
 
 
-# urlpatterns += i18n_patterns('',
 urlpatterns += i18n_patterns(
     url(r"^project/(?P<project_slug>[\w-]+)/$", commons.views.project_detail_by_slug, name="project_detail"),
     url(r"^repo/(?P<repo_slug>[\w-]+)/$", commons.views.repo_detail_by_slug, name="repo_detail"),
@@ -254,13 +248,10 @@ urlpatterns += i18n_patterns(
 )
 
 if settings.USE_HAYSTACK:
-    # urlpatterns += patterns('', url(r'^haystack/', include('haystack.urls')),
     from haystack.views import SearchView
-    # from haystack.forms import ModelSearchForm
     from commons.search_indexes import commonsModelSearchForm
     from haystack.query import SearchQuerySet
     sqs = SearchQuerySet()
-    # urlpatterns += patterns('haystack.views',
     urlpatterns += [
         url(r'^cercaveloce/', SearchView(
                 template='search/search.html',
