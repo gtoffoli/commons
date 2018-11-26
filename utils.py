@@ -225,8 +225,16 @@ def strings_from_html(string, fragment=False):
 see http://stackoverflow.com/questions/843392/python-get-http-headers-from-urllib2-urlopen-call
     Python: Get HTTP headers from urllib2.urlopen call?
 """
-from django.utils.translation import ugettext_lazy as _, string_concat
+# from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
+from django.conf import settings
+if settings.DJANGO_VERSION == 1:
+    from django.utils.translation import string_concat
+if settings.DJANGO_VERSION == 2:
+    from django.utils.text import format_lazy
+    def string_concat(*strings):
+        return format_lazy('{}' * len(strings), *strings)
 
 """ a Request using the HEAD method in place of the default one (GET or PUT) """
 class HeadRequest(urllib2.Request):

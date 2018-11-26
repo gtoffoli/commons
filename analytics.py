@@ -2,12 +2,8 @@
 
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
-# from builtins import str
 import future
 from future.builtins import str
-import six
-
-from django.conf import settings
 
 import math
 from collections import defaultdict
@@ -15,10 +11,8 @@ from datetime import timedelta
 
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseForbidden
-# from django.shortcuts import render_to_response
 from django.shortcuts import render
 from django.db.models import Q, Count, Case, When
-from django.template import RequestContext
 from django.db import connection
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
@@ -39,24 +33,7 @@ from commons.models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
 from commons.xapi_vocabularies import xapi_namespaces, xapi_verbs, xapi_activities, xapi_contexts
 from commons.xapi import put_statement
 
-# verbs = ['Accept', 'Apply', 'Upload', 'Send', 'Create', 'Edit', 'Delete', 'View', 'Play', 'Search', 'Submit', 'Approve', 'Reject','Enabled']
-
-notification_template = """%s
-
-Sent from: https://%s
-This is an automatic notification message: please do not reply to it. """
-from django.core.mail import send_mail
-def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):
-    if not settings.PRODUCTION:
-        return
-    site = Site.objects.get_current()
-    subject = '%s - %s' % (site.name, subject)
-    body = notification_template % (body, site.domain)
-    recipient_emails = [recipient.email for recipient in recipients]
-    send_mail(subject, body, from_email, recipient_emails)
-
 def user_unviewed_posts_count(self):
-    # return unviewed_posts(self)
     return post_views_by_user(self)
 User.unviewed_posts_count = user_unviewed_posts_count
 
@@ -89,7 +66,6 @@ def forum_analytics(request):
         topics_list = [[topic_posts_dict[topic.id], topic] for topic in topics_list]
         forum_topics_list.append([forum, num_posts, topics_list])
     var_dict['forum_topics_list'] = forum_topics_list
-    # return render_to_response('forum_analytics.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'forum_analytics.html', var_dict)
 
 def message_analytics(request):
@@ -124,7 +100,6 @@ def message_analytics(request):
         }
     }
     data['total'] = total
-    # return render_to_response('message_analytics.html', data, context_instance=RequestContext(request))
     return render(request, 'message_analytics.html', data)
 
 def topic_readmarks(topic, user=None, since=None):
@@ -259,74 +234,8 @@ def post_views_by_user(user, forum=None, topic=None, unviewed_only=True, count_o
             if forums_list:
                 category_entry = [category, forums_list]
                 categories_list.append(category_entry)
-    # print ('%d unread posts in %d topics' % (n_posts, n_topics))
     return categories_list
 
-def get_description(obj):
-    description = ''
-    if hasattr(obj, 'description'):
-        description = obj.description
-    if hasattr(obj, 'short'):
-        description = obj.short
-    return description
-
-def get_language(obj):
-    original_language = hasattr(obj, 'original_language') and obj.original_language or None;
-    current_language = get_current_language()
-    if original_language:
-        if current_language == original_language:
-            return original_language
-    return original_language or current_language
-
-"""
-def track_action(actor, verb, action_object, target=None, description=None, latency=0):
-"""
-def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
-    if request and not actor:
-        actor = request.user
-    if not (actor and verb and action_object):
-        return
-    try:
-        if latency:
-            min_time = timezone.now()-timedelta(days=latency)
-            actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
-            if actions.count():
-                return
-        actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
-    except:
-        pass
-    if settings.PRODUCTION or six.PY2:
-        return
-    action = action_object and action_object.__class__.__name__ or None
-    if verb == 'Bookmark' and action == 'OER':
-        action = 'Webpage' 
-    print (action_object, verb, action, verb in xapi_verbs, action in xapi_activities)
-    """
-    if action_object and verb in xapi_verbs and action in xapi_activities:
-        activity_type = xapi_activities[action_object.__class__.__name__]['type']
-    """
-    if action and verb in xapi_verbs and action in xapi_activities:
-        activity_type = xapi_activities[action]['type']
-        if hasattr(action_object, 'absolute_url'):
-            location = action_object.absolute_url()
-        elif hasattr(action_object, 'get_absolute_url'):
-            location = action_object.get_absolute_url()
-        else:
-            location = '/%s/%d/' % (action, action_object.id)
-        if request:
-            object_id = request.build_absolute_uri(location)
-        elif not location.count('http'):
-            object_id = '%s://%s%s' % (settings.PROTOCOL, settings.HOST, location)
-        object_name = hasattr(action_object, '__str__') and action_object.__str__() or ''
-        object_description = get_description(action_object)
-        object_language = get_language(action_object)
-        verb_value = xapi_verbs[verb]
-        verb_id = verb_value['id']
-        put_statement(actor, verb_id, object_id,
-                      verb_display=verb_value['display'], activity_type=activity_type,
-                      object_name=object_name, object_description=object_description, object_language=object_language)
-
-# def filter_actions(user=None, verb=None, object_content_type=None, project=None, max_age=1, max_actions=None):
 def filter_actions(user=None, verbs=[], object_content_type=None, project=None, max_days=1, from_time=None, to_time=None, max_actions=None, no_sort=False, expires=True):
     actions = Action.objects
     if user:
@@ -369,7 +278,6 @@ def activity_stream(request, user=None, max_actions=100, max_days=1):
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
-    # return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'activity_stream.html', var_dict)
 
 contenttype_weigth_dict = {
@@ -471,7 +379,6 @@ def count_users(request):
                     if membership.state==MEMBERSHIP_ACTIVE and membership.project.proj_type.name!='com':
                         var_dict['n_project_member'] += 1
                         break
-    # return render_to_response('count_users.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'count_users.html', var_dict)
 
 def oer_duplicates(request):
@@ -642,7 +549,6 @@ def active_users(request):
     var_dict['function'] = 'active_users'
     var_dict['onliners'] = onliners
     var_dict['others'] = others
-    # return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'active_users.html', var_dict)
 
 def active_comembers(request):
@@ -661,7 +567,6 @@ def active_comembers(request):
     var_dict['function'] = 'active_comembers'
     var_dict['onliners'] = onliners
     var_dict['others'] = others
-    # return render_to_response('active_users.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'active_users.html', var_dict)
 
 translate_map = getattr(settings, 'DATATRANS_TRANSLATE_MAP', None)
@@ -725,8 +630,6 @@ def content_languages(request):
             # print (class_name, source_name, n_source)
         content_language_dict[class_name] = source_dict
     var_dict['content_language_dict'] = content_language_dict
-    # return content_language_dict
-    # return render_to_response('content_languages.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'content_languages.html', var_dict)
 
 def resource_contributors(request):
@@ -747,7 +650,6 @@ def resource_contributors(request):
                            When(repo_creator__state=PUBLISHED, then=1)))
                        ).exclude(num_repos=0).order_by('-num_repos','last_name','first_name')
     var_dict['source_contributors'] = source_contributors
-    # return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'contributors.html', var_dict)
 
 def make_qs(resource):
@@ -823,7 +725,6 @@ def oer_analytics(request):
     data['subtitle'] = _("OERs")
     data['subtitle_pub'] = _("published OERs")
     data['legenda'] = _("OERs by month")
-    # return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
     return render(request, 'resource_analytics.html', data)
 
 def lp_analytics(request):
@@ -837,7 +738,6 @@ def lp_analytics(request):
     data['subtitle'] = _("LPs")
     data['subtitle_pub'] = _("published LPs")
     data['legenda'] = _("LP by month")
-    # return render_to_response('resource_analytics.html', data, context_instance=RequestContext(request))
     return render(request, 'resource_analytics.html', data)
     
     

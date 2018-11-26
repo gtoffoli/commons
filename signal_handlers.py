@@ -7,7 +7,8 @@ from zinnia.models.entry import Entry
 # from zinnia.models.author import Author
 from pybb.models import Topic, Post
 from commons.models import Project
-from commons.analytics import track_action
+# from commons.analytics import track_action
+from commons.tracking import track_action
 
 def project_post_save_handler(sender, **kwargs):
     project = kwargs['instance']

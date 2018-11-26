@@ -24,7 +24,8 @@ from weasyprint import HTML, CSS
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _, string_concat
+# from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
 from django.utils import timezone
 from django.dispatch import receiver
@@ -60,6 +61,13 @@ from commons.metadata import MetadataType, QualityFacet
 from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
 from six import iteritems
+
+if settings.DJANGO_VERSION == 1:
+    from django.utils.translation import string_concat
+if settings.DJANGO_VERSION == 2:
+    from django.utils.text import format_lazy
+    def string_concat(*strings):
+        return format_lazy('{}' * len(strings), *strings)
 
 def group_project(self):
     projects = Project.objects.filter(group=self)

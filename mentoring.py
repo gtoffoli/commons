@@ -14,7 +14,8 @@ from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOS
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm, one2oneMessageComposeForm, MatchMentorForm, SelectMentoringJourneyForm
 
-from .analytics import notify_event, track_action
+# from .analytics import notify_event, track_action
+from .tracking import notify_event, track_action
 
 
 def get_all_mentors():

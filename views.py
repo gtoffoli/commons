@@ -31,10 +31,10 @@ from django.contrib.auth.models import User, Group
 from allauth.account.models import EmailAddress
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
-# from django.shortcuts import render, render_to_response, get_object_or_404
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import capfirst
-from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
+# from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
+from django.utils.translation import pgettext, ugettext_lazy as _
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage
@@ -68,7 +68,8 @@ from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYP
 
 from .permissions import ForumPermissionHandler
 from .session import get_clipboard, set_clipboard
-from .analytics import notify_event, track_action
+# from .analytics import notify_event, track_action
+from .tracking import notify_event, track_action
 from .analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 
 from .utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
@@ -90,8 +91,12 @@ from zinnia.models import Entry
 from zinnia.models.author import Author
 if settings.DJANGO_VERSION == 1:
     from endless_pagination.decorators import page_template
+    from django.utils.translation import string_concat
 if settings.DJANGO_VERSION == 2:
     from el_pagination.decorators import page_template
+    from django.utils.text import format_lazy
+    def string_concat(*strings):
+        return format_lazy('{}' * len(strings), *strings)
 
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)
@@ -110,7 +115,6 @@ actstream.registry.register(Topic)
 actstream.registry.register(Post)
 
 def robots(request):
-    # response = render_to_response('robots.txt', {}, context_instance=RequestContext(request))
     response = render(request, 'robots.txt')
     response['Content-Type'] = 'text/plain; charset=utf-8'
     return response
@@ -226,7 +230,6 @@ def home(request):
         articles = Entry.objects.filter(status=2).order_by('-creation_date')[:MAX_ARTICLES]
         if articles and (qend - articles[0].creation_date).days < 365:
             wall_dict['articles'] = articles
-    # return render_to_response('homepage.html', wall_dict, context_instance=RequestContext(request))
     return render(request, 'homepage.html', wall_dict)
 
 from queryset_sequence import QuerySetSequence
@@ -282,7 +285,6 @@ def press_releases(request):
         if last_release:
             var_dict['docsel'] = last_release.document.id
             var_dict['url']= '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
-    # return render_to_response('press_releases.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'press_releases.html', var_dict)
 
 def user_profile(request, username, user=None):
@@ -318,9 +320,7 @@ def user_profile(request, username, user=None):
      
     if request.user.is_authenticated:
         if not profile or not request.user == profile.user:
-            # actstream.action.send(request.user, verb='View', action_object=profile)
             track_action(request, request.user, 'View', profile)
-    # return render_to_response('user_profile.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'user_profile.html', var_dict)
 
 def my_profile(request):
@@ -334,7 +334,6 @@ def user_strict_profile(request, username):
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
     profile = user.get_profile()
     var_dict = {'profile_user': user, 'profile': profile, 'roll_memberships': roll_memberships }
-    # return render_to_response('user_strict_profile.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'user_strict_profile.html', var_dict)
 
 def user_dashboard(request, username, user=None):
@@ -423,7 +422,6 @@ def user_dashboard(request, username, user=None):
     var_dict['max_actions'] = max_actions
     var_dict['my_last_actions'] = actions
     
-    # return render_to_response('user_dashboard.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'user_dashboard.html', var_dict)
 
 def my_home(request):
@@ -455,10 +453,8 @@ def profile_edit(request, username):
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/my_profile/')
                 else: 
-                    # return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
                     return render(request, 'profile_edit.html', data_dict)
             else:
-                # return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
                 return render(request, 'profile_edit.html', data_dict)
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/my_profile/')
@@ -467,7 +463,6 @@ def profile_edit(request, username):
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     data_dict['form'] = form
-    # return render_to_response('profile_edit.html', data_dict, context_instance=RequestContext(request))
     return render(request, 'profile_edit.html', data_dict)
 
 def profile_mentor_edit(request, username):
@@ -488,17 +483,14 @@ def profile_mentor_edit(request, username):
                     if request.POST.get('save', ''): 
                         return HttpResponseRedirect('/my_profile/')
                     else: 
-                        # return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
                         return render(request, 'profile_mentor_edit.html', data_dict)
                 else:
-                    # return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
                     return render(request, 'profile_mentor_edit.html', data_dict)
             elif request.POST.get('cancel', ''):
                 return HttpResponseRedirect('/my_profile/')
         else:
             form = UserProfileMentorForm(instance=profile)
             data_dict['form'] = form
-            # return render_to_response('profile_mentor_edit.html', data_dict, context_instance=RequestContext(request))
             return render(request, 'profile_mentor_edit.html', data_dict)
     else:
         return HttpResponseRedirect('/my_profile/')
@@ -530,7 +522,6 @@ def profile_avatar_upload(request, username):
     else:
         if user.can_edit(request):
             form = AvatarForm(instance=profile)
-            # return render_to_response('profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, }, context_instance=RequestContext(request))
             return render(request, 'profile_avatar_upload.html', {'form': form, 'action': action, 'user': user, })
         else:
             return HttpResponseRedirect('/my_profile/')
@@ -576,7 +567,6 @@ def my_preferences(request):
     user = request.user
     if not user.is_authenticated:
         return HttpResponseForbidden()
-    # return render_to_response('user_preferences.html', {'user': user, 'profile': user.get_profile(),}, context_instance=RequestContext(request))
     return render(request, 'user_preferences.html', {'user': user, 'profile': user.get_profile(),})
  
 def edit_preferences(request):
@@ -594,17 +584,14 @@ def edit_preferences(request):
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect(called_by)
                 else: 
-                    # return render_to_response('edit_preferences.html', {'form': form, 'user': user, 'next': called_by}, context_instance=RequestContext(request))
                     return render(request, 'edit_preferences.html', {'form': form, 'user': user, 'next': called_by})
             else:
                 print (form.errors)
-                # return render_to_response('edit_preferences.html', {'form': form, 'user': user, 'next': called_by}, context_instance=RequestContext(request))
                 return render(request, 'edit_preferences.html', {'form': form, 'user': user, 'next': called_by})
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect(called_by)
     else:
         form = UserPreferencesForm(instance=preferences)
-    # return render_to_response('edit_preferences.html', {'form': form, 'user': user,}, context_instance=RequestContext(request))
     return render(request, 'edit_preferences.html', {'form': form, 'user': user,})
 
 def new_posts(request, username):
@@ -613,7 +600,6 @@ def new_posts(request, username):
         return HttpResponseRedirect('/')
     var_dict = {}
     var_dict['unviewed_posts'] = post_views_by_user(user, count_only=False)
-    # return render_to_response('new_posts.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'new_posts.html', var_dict)
 
 def user_activity(request, username):
@@ -625,7 +611,6 @@ def user_activity(request, username):
     var_dict = {}
     var_dict['actor'] = user
     var_dict['actions'] = actions
-    # return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'activity_stream.html', var_dict)
 
 def mailing_list(request):
@@ -708,7 +693,6 @@ def cops_tree(request):
         com_tree.append([community,proj_tree])
 
     info = FlatPage.objects.get(url='/info/communities/').content
-    # return render_to_response('cops_tree.html', {'com_tree':com_tree, 'info': info}, context_instance=RequestContext(request))
     return render(request, 'cops_tree.html', {'com_tree':com_tree, 'info': info})
 
 
@@ -731,7 +715,6 @@ def projects(request):
             project = node.project
             if project and project.proj_type.public and project.state==PROJECT_OPEN:
                 filtered_nodes.append(node)
-    # return render_to_response('projects.html', {'nodes': filtered_nodes,}, context_instance=RequestContext(request))
     return render(request, 'projects.html', {'nodes': filtered_nodes,})
 
 @page_template('_project_index_page.html')
@@ -887,7 +870,6 @@ def projects_search(request, template='search_projects.html', extra_context=None
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
         track_action(request, user, 'Search', None, description='project')
-    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 @login_required
@@ -999,7 +981,6 @@ def folderdocument_edit(request, folderdocument_id):
             proj_type_name = project.proj_type.name
         else:
             proj_type_name = ''
-        # return render_to_response('folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
         return render(request, 'folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
 
 def online_resource_edit(request, folderdocument_id):
@@ -1028,7 +1009,6 @@ def online_resource_edit(request, folderdocument_id):
             return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderOnlineResourceForm(instance=folderdocument)
-    # return render_to_response('online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action}, context_instance=RequestContext(request))
     return render(request, 'online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
 
 def folderdocument_delete(request, folderdocument_id):
@@ -1509,14 +1489,11 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
     var_dict['shared_lps'] = [[shared_lp, shared_lp.can_delete(request)] for shared_lp in shared_lps]
     if proj_type.name == 'ment':
-        # return render_to_response('mentoring_detail.html', var_dict, context_instance=RequestContext(request))
         return render(request, 'mentoring_detail.html', var_dict)
     else:
         if user.is_authenticated:
             if project.state == PROJECT_OPEN and not user == project.creator:
-                # actstream.action.send(user, verb='View', action_object=project)
                 track_action(request, user, 'View', project)
-        # return render_to_response('project_detail.html', var_dict, context_instance=RequestContext(request))
         return render(request, 'project_detail.html', var_dict)
 
 def project_detail_by_slug(request, project_slug):
@@ -1568,7 +1545,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             data_dict['project'] = project
             data_dict['object'] = project
             data_dict['language_mismatch'] = project.original_language and not project.original_language==current_language
-            # return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
             return render(request, 'project_edit.html', data_dict)
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1585,7 +1561,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
             data_dict['form'] = form
             data_dict['parent'] = parent
             data_dict['object'] = None
-            # return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
             return render(request, 'project_edit.html', data_dict)
         else:
             return HttpResponseRedirect('/project/%s/' % parent.slug)
@@ -1722,11 +1697,9 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         repurpose_mentoring_form(form)
                     data_dict['form'] = form
                     """
-                    # return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
                     return render(request, 'project_edit.html', data_dict)
             else:
                 print (form.errors)
-                # return render_to_response('project_edit.html', data_dict, context_instance=RequestContext(request))
                 return render(request, 'project_edit.html', data_dict)
     else:
         raise
@@ -1810,12 +1783,10 @@ def project_logo_upload(request, project_slug):
                         print (form.errors)
                 else:
                     form = ProjectLogoForm(instance=project)
-                    # return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
                     return render(request, 'project_logo_upload.html', {'form': form, 'action': action, 'project': project, })
     else:
         if project.can_edit(request):
             form = ProjectLogoForm(instance=project)
-            # return render_to_response('project_logo_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
             return render(request, 'project_logo_upload.html', {'form': form, 'action': action, 'project': project, })
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1848,12 +1819,10 @@ def project_image_upload(request, project_slug):
                         print (form.errors)
                 else:
                     form = ProjectImageForm(instance=project)
-                    # return render_to_response('project_image_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
                     return render(request, 'project_image_upload.html', {'form': form, 'action': action, 'project': project, })
     else:
         if project.can_edit(request):
             form = ProjectImageForm(instance=project)
-            # return render_to_response('project_image_upload.html', {'form': form, 'action': action, 'project': project, }, context_instance=RequestContext(request))
             return render(request, 'project_image_upload.html', {'form': form, 'action': action, 'project': project, })
         else:
             return HttpResponseRedirect('/project/%s/' % project.slug)
@@ -1996,17 +1965,14 @@ def bulk_add_members(request, project_slug=None):
             var_dict['n_records'] = n_records
             var_dict['n_accounts'] = len(accounts)
             var_dict['accounts'] = accounts
-            # return render_to_response('bulk_add_members.html', var_dict, context_instance=RequestContext(request))
             return render(request, 'bulk_add_members.html', var_dict)
     var_dict['page_title'] = _('upload file with list of candidate members')
     var_dict['page_subtitle'] = string_concat(_('community or project: '), project.name)
     var_dict['form'] = DocumentUploadForm()
-    # return render_to_response('file_upload.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'file_upload.html', var_dict)
         
 def project_membership(request, project_id, user_id):
     membership = ProjectMember.objects.get(project_id=project_id, user_id=user_id)
-    # return render_to_response('project_membership.html', {'membership': membership,}, context_instance=RequestContext(request))
     return render(request, 'project_membership.html', {'membership': membership,})
 
 def project_toggle_supervisor_role(request, project_id):
@@ -2133,6 +2099,7 @@ def project_create_forum(request, project_id):
     if type_name == 'com' and request.GET.get('thematic', ''):
         position = 1
         name = string_concat(capfirst(_('thematic forum')), '-', str(Forum.objects.all().count()+1), ' (', _('please change this name'), ')')
+        name = str(name)
     else:
         # assert not project.forum
         if project.forum:
@@ -2142,7 +2109,6 @@ def project_create_forum(request, project_id):
     category = get_object_or_404(Category, position=position)
     forum = Forum(name=name, category_id=category.id)
     forum.save()
-    # actstream.action.send(user, verb='Create', action_object=forum, target=project)
     track_action(request, user, 'Create', forum, target=project)
     if type_name == 'com' and request.GET.get('thematic', ''):
         forum.moderators.add(user)
@@ -2171,13 +2137,11 @@ def forum_edit(request, forum_id=None):
                 return HttpResponseRedirect(forum.get_absolute_url())
             else:
                 print (form.errors)
-                # return render_to_response('forum_edit.html', {'form': form,}, context_instance=RequestContext(request))
                 return render(request, 'forum_edit.html', {'form': form,})
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect(forum.get_absolute_url())
     else:
         form = ForumForm(instance=forum)
-        # return render_to_response('forum_edit.html', {'forum': forum, 'form': form,}, context_instance=RequestContext(request))
         return render(request, 'forum_edit.html', {'forum': forum, 'form': form,})
 
 def forum_edit_by_id(request, forum_id):
@@ -2202,7 +2166,6 @@ if settings.HAS_DMUC:
         project.save()
         if project.get_type_name() == 'ment':
             project_sync_xmppaccounts(request, project_id, project=project, no_response=True)
-        # actstream.action.send(request.user, verb='Create', action_object=room, target=project)
         track_action(request, request.user, 'Create', room, target=project)
         if not no_response:
             return project_detail(request, project_id, project=project)    
@@ -2237,7 +2200,6 @@ def project_compose_message(request, project_id):
     if not project.can_access(request.user):
         raise PermissionDenied
     members = project.members(user_only=True)
-    # recipient_filter = [member.username for member in members]
     recipient_filter = [member.username for member in members if not member==request.user]
     track_action(request, request.user, 'Send', None, target=project)
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
@@ -2262,7 +2224,6 @@ def repo_list(request):
         oers = OER.objects.filter(source=repo, state=PUBLISHED)
         n = len(oers)
         repo_list.append([repo, n])
-    # return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list,}, context_instance=RequestContext(request))
     return render(request, 'repo_list.html', {'can_add': can_add, 'repo_list': repo_list,})
 
 def repos_by_user(request, username):
@@ -2277,7 +2238,6 @@ def repos_by_user(request, username):
         oers = OER.objects.filter(source=repo, state=PUBLISHED)
         n = len(oers)
         repo_list.append([repo, n])
-    # return render_to_response('repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
     return render(request, 'repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user})
 
 def repo_detail(request, repo_id, repo=None):
@@ -2317,9 +2277,7 @@ def repo_detail(request, repo_id, repo=None):
     var_dict['view_comments'] = is_published or is_un_published
     if user.is_authenticated:
         if not user == repo.creator:
-            # actstream.action.send(user, verb='View', action_object=repo)
             track_action(request, request.user, 'View', repo)
-    # return render_to_response('repo_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'repo_detail.html', var_dict)
 
 def repo_detail_by_slug(request, repo_slug):
@@ -2389,7 +2347,6 @@ def resource_contributors(request):
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
-    # return render_to_response('oer_list.html', {'oers': oers, 'user': user, 'submitter': user}, context_instance=RequestContext(request))
     return render(request, 'oer_list.html', {'oers': oers, 'user': user, 'submitter': user})
 
 def resources_by(request, username):
@@ -2398,7 +2355,6 @@ def resources_by(request, username):
     oer_evaluations = OerEvaluation.objects.filter(user=user).order_by('-modified')
     oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
     repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-    # return render_to_response('resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user}, context_instance=RequestContext(request))
     return render(request, 'resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user})
 
 def project_results(request, project_slug):
@@ -2415,7 +2371,6 @@ def project_results(request, project_slug):
         var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
     var_dict['oer_evaluations'] = project.get_oers_last_evaluated()
     # var_dict['oer_evaluations'] = project.get_oer_evaluations()
-    # return render_to_response('project_results.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'project_results.html', var_dict)
 
 def project_activity(request, project_slug):
@@ -2423,14 +2378,12 @@ def project_activity(request, project_slug):
     var_dict = {}
     var_dict['project'] = project
     var_dict['actions'] = filter_actions(project=project, max_days=7, max_actions=100)
-    # return render_to_response('activity_stream.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'activity_stream.html', var_dict)
 
 def repo_oers(request, repo_id, repo=None):
     if not repo:
         repo = get_object_or_404(Repo, pk=repo_id)
     oers = OER.objects.filter(source=repo, state=PUBLISHED)
-    # return render_to_response('repo_oers.html', {'repo': repo, 'oers': oers,}, context_instance=RequestContext(request))
     return render(request, 'repo_oers.html', {'repo': repo, 'oers': oers,})
 
 def repo_oers_by_slug(request, repo_slug):
@@ -2440,7 +2393,6 @@ def repo_oers_by_slug(request, repo_slug):
 def repo_new(request):
     user = request.user
     form = RepoForm(initial={'creator': user.id, 'editor': user.id})
-    # return render_to_response('repo_edit.html', {'form': form, 'repo': None,}, context_instance=RequestContext(request))
     return render(request, 'repo_edit.html', {'form': form, 'repo': None,})
 
 def repo_save(request, repo=None):
@@ -2475,11 +2427,9 @@ def repo_save(request, repo=None):
                     return HttpResponseRedirect('/repo/%s/edit/' % repo.slug)
             else:
                 print (form.errors)
-                # return render_to_response('repo_edit.html', {'repo': repo, 'form': form,}, context_instance=RequestContext(request))
                 return render(request, 'repo_edit.html', {'repo': repo, 'form': form,})
         elif request.POST.get('cancel', ''):
-            # return HttpResponseRedirect('/repo/%s/' % request.POST.get('slug', ''))
-            return HttpResponseRedirect('/repo/%s/' % repo.slug)
+             return HttpResponseRedirect('/repo/%s/' % repo.slug)
     else:
         return repo_new(request)
 
@@ -2498,7 +2448,6 @@ def repo_edit(request, repo_id):
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = repo and repo.original_language and not repo.original_language==current_language or False
-    # return render_to_response('repo_edit.html', data_dict, context_instance=RequestContext(request))
     return render(request, 'repo_edit.html', data_dict)
 
 def repo_edit_by_slug(request, repo_slug):
@@ -2564,7 +2513,6 @@ def browse_repos(request):
             n = Repo.objects.filter(**{field_name: entry}).count()
             entries.append([code, label, prefix, n])
         browse_list.append([field_name, field_label, entries])
-    # return render_to_response('browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,}, context_instance=RequestContext(request))
     return render(request, 'browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,})
 
 def browse(request):
@@ -2675,7 +2623,6 @@ def browse(request):
             if n:
                 entries.append([code, label, prefix, n])
         repos_browse_list.append([field_name, field_label, entries])
-    # return render_to_response('browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,}, context_instance=RequestContext(request))
     return render(request, 'browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,})
 
 @page_template('_people_index_page.html')
@@ -2804,9 +2751,7 @@ def people_search(request, template='search_people.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        # actstream.action.send(user, verb='Search', description='message')
         track_action(request, user, 'Search', None, description='user profile')
-    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 def browse_people(request):
@@ -2849,7 +2794,6 @@ def browse_people(request):
                     entries.append([code, label, '', n])
         if entries:
             people_browse_list.append([field_name, field_label, entries])
-    # return render_to_response('browse_people.html', {'people_browse_list': people_browse_list,}, context_instance=RequestContext(request))
     return render(request, 'browse_people.html', {'people_browse_list': people_browse_list,})
 
 def browse_mentors(request):
@@ -2857,7 +2801,6 @@ def browse_mentors(request):
     info_all_mentors = FlatPage.objects.get(url='/infotext/all-mentors/').content
     rolls = Project.objects.filter(proj_type__name='roll', state=PROJECT_OPEN).order_by('name')
     roll_info = FlatPage.objects.get(url='/infotext/mentors/').content
-    # return render_to_response('browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors, 'rolls': rolls, 'roll_info': roll_info}, context_instance=RequestContext(request))
     return render(request, 'browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors, 'rolls': rolls, 'roll_info': roll_info})
 
 def oer_list(request, field_name='', field_value=None):
@@ -2866,7 +2809,6 @@ def oer_list(request, field_name='', field_value=None):
         tag = get_object_or_404(Tag, slug=field_value)
         q = Q(tags=tag)
         oers = OER.objects.filter(q & Q(state=PUBLISHED))
-        # return render_to_response('oer_list.html', {'oers': oers, 'field_name': field_name, 'field_value': field_value,}, context_instance=RequestContext(request))
         return render(request, 'oer_list.html', {'oers': oers, 'field_name': field_name, 'field_value': field_value,})
 
 TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
@@ -2961,7 +2903,6 @@ def oer_view(request, oer_id, oer=None):
     else:
         var_dict['x_frame_protection'] = x_frame_protection(url)
     var_dict['embed_code'] = oer.embed_code
-    # return render_to_response('oer_view.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'oer_view.html', var_dict)
 
 def oer_view_by_slug(request, oer_slug):
@@ -3043,13 +2984,10 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
     if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
-            # actstream.action.send(user, verb='View', action_object=oer)
             track_action(request, user, 'View', oer, target=oer.project)
-    # return render_to_response('oer_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'oer_detail.html', var_dict)
 
 def oer_detail_by_slug(request, oer_slug):
-    # oer = OER.objects.get(slug=oer_slug)
     oer = get_object_or_404(OER, slug=oer_slug)
     return oer_detail(request, oer.id, oer)
 
@@ -3114,7 +3052,6 @@ def oer_edit(request, oer_id=None, project_id=None):
             else:
                 print (form.errors)
                 print (metadata_formset.errors)
-            # return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project}, context_instance=RequestContext(request))
             return render(request, 'oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project})
         elif request.POST.get('cancel', ''):
             if oer:
@@ -3138,7 +3075,6 @@ def oer_edit(request, oer_id=None, project_id=None):
        data_dict['current_project'] = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
-    # return render_to_response('oer_edit.html', data_dict, context_instance=RequestContext(request))
     return render(request, 'oer_edit.html', data_dict)
 
 def oer_edit_by_slug(request, oer_slug):
@@ -3173,12 +3109,10 @@ def oer_screenshot_upload(request, oer_slug):
                         print (form.errors)
                 else:
                     form = OerScreenshotForm(instance=oer)
-                    # return render_to_response('oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, }, context_instance=RequestContext(request))
                     return render(request, 'oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, })
     else:
         if oer.can_edit(request):
             form = OerScreenshotForm(instance=oer)
-            # return render_to_response('oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, }, context_instance=RequestContext(request))
             return render(request, 'oer_screenshot_upload.html', {'form': form, 'action': action, 'oer': oer, })
         else:
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -3246,7 +3180,6 @@ def oer_evaluation_detail(request, evaluation=None):
     for metadatum in evaluation.get_quality_metadata():
         quality_metadata.append([metadatum.quality_facet.name, metadatum.value, QUALITY_SCORE_DICT[metadatum.value]])
     var_dict['quality_metadata'] = quality_metadata
-    # return render_to_response('oer_evaluation_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'oer_evaluation_detail.html', var_dict)
 
 def oer_evaluation_by_id(request, evaluation_id):
@@ -3258,7 +3191,6 @@ def oer_evaluations(request, oer_slug):
     user = request.user
     var_dict={'oer': oer,}
     var_dict['evaluations']=oer.get_evaluations()
-    # return render_to_response('oer_evaluations.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'oer_evaluations.html', var_dict)
 
 def oer_evaluation_edit(request, evaluation_id=None, oer=None):
@@ -3317,7 +3249,6 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
             else:
                 print (form.errors)
-            # return render_to_response('oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action,}, context_instance=RequestContext(request))
             return render(request, 'oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action,})
         elif request.POST.get('cancel', ''):
             if evaluation:
@@ -3337,7 +3268,6 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     else: # oer
         form = OerEvaluationForm(initial={'oer': oer.id, 'user': user.id,})
         action = '/oer/%s/evaluate/' % oer.slug
-    # return render_to_response('oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action}, context_instance=RequestContext(request))
     return render(request, 'oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action})
 
 def oer_evaluate_by_slug(request, oer_slug):
@@ -3464,7 +3394,6 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         if return_url:
             return url, mimetype
         else:
-            # return render_to_response('document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile}, context_instance=RequestContext(request))
             # return render(request, 'document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
             return render(request, 'document_view.html', {'document': document, 'folder': folder, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
     else:
@@ -3613,11 +3542,9 @@ def lp_detail(request, lp_id, lp=None):
     if user.is_authenticated:
         if lp.state == PUBLISHED and not user == lp.creator:
             track_action(request, user, 'View', lp, target=lp.project)
-    # return render_to_response('lp_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'lp_detail.html', var_dict)
 
 def lp_detail_by_slug(request, lp_slug):
-    # lp = LearningPath.objects.get(slug=lp_slug)
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     return lp_detail(request, lp.id, lp)
 
@@ -3794,7 +3721,6 @@ def lp_play(request, lp_id, lp=None):
         if from_start:
             track_action(request, user, 'Play', lp, target=lp.project)
         track_action(request, user, 'Play', current_node, target=lp.project)
-    # return render_to_response('lp_play.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'lp_play.html', var_dict)
 
 def lp_play_by_slug(request, lp_slug):
@@ -3867,7 +3793,6 @@ def lp_edit(request, lp_id=None, project_id=None):
                 current_project = get_object_or_404(Project, id=projectId)
             else:
                 current_project = None
-            # return render_to_response('lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project}, context_instance=RequestContext(request))
             return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project})
         elif request.POST.get('cancel', ''):
             if lp:
@@ -3897,7 +3822,6 @@ def lp_edit(request, lp_id=None, project_id=None):
         data_dict['current_project'] = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = lp and lp.original_language and not lp.original_language==current_language or False
-    # return render_to_response('lp_edit.html', data_dict, context_instance=RequestContext(request))
     return render(request, 'lp_edit.html', data_dict)
 
 def lp_edit_by_slug(request, lp_slug):
@@ -4074,7 +3998,6 @@ def pathnode_detail(request, node_id, node=None):
     if request.is_ajax():
         return JsonResponse({"data": 'OK',"node": node_id })
     """
-    # return render_to_response('_pathnode_detail.html', var_dict, context_instance=RequestContext(request))
     return render(request, '_pathnode_detail.html', var_dict)
 
 def pathnode_detail_by_id(request, node_id):
@@ -4151,7 +4074,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     form = PathNodeForm(instance=node)
             else:
                 print (form.errors)
-            # return render_to_response('pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug}, context_instance=RequestContext(request))
             return render(request, 'pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug})
         elif request.POST.get('cancel', ''):
             if node:
@@ -4159,7 +4081,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
             else:
                 node_id = request.POST.get('id', '')
             if node_id:
-                # return HttpResponseRedirect('/pathnode/%d/' % node_id)
                 return HttpResponseRedirect('/lp/%s/' % path.slug)
             else:
                 if not path_id:
@@ -4176,7 +4097,6 @@ def pathnode_edit(request, node_id=None, path_id=None):
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     original_language = node and node.original_language or path.original_language
     data_dict['language_mismatch'] = original_language and not original_language==current_language or False
-    # return render_to_response('pathnode_edit.html', data_dict, context_instance=RequestContext(request))
     return render(request, 'pathnode_edit.html', data_dict)
 
 def pathnode_edit_by_id(request, node_id):
@@ -4387,7 +4307,6 @@ def repos_search(request, template='search_repos.html', extra_context=None):
     if request.method == 'POST' and user.is_authenticated:
         # actstream.action.send(user, verb='Search', description='repo')
         track_action(request, user, 'Search', None, description='repo')
-    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 def clean_term(term):
@@ -4587,9 +4506,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        # actstream.action.send(user, verb='Search', description='oer')
         track_action(request, user, 'Search', None, description='oer')
-    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 @page_template('_lp_index_page.html')
@@ -4691,9 +4608,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        # actstream.action.send(user, verb='Search', description='learningpath')
         track_action(request, user, 'Search', None, description='learningpath')
-    # return render_to_response(template, context, context_instance=RequestContext(request))
     return render(request, template, context)
 
 from dal import autocomplete
@@ -4717,7 +4632,6 @@ def testlive(request):
     form = UserSearchForm()
     var_dict['form'] = form
     """
-    # return render_to_response('testlive.html', var_dict, context_instance=RequestContext(request))
     return render(request, 'testlive.html', var_dict)
 
 def user_fullname_autocomplete(request):
@@ -4768,5 +4682,4 @@ def lp_autocomplete(request):
     return HttpResponse(body, content_type='application/json')
 
 def video(request):
-    # return render_to_response('video.html', context_instance=RequestContext(request))
     return render(request, 'video.html')

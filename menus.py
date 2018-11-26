@@ -1,5 +1,5 @@
 from menu import Menu, MenuItem
-from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
 
@@ -69,7 +69,6 @@ def projects_children(request):
         ))
     """
     children.append (MenuItem(
-         # string_concat(capfirst(_("projects")), ' - ', _("advanced search")),
          capfirst(_("projects")),
          url='/projects/search',
         ))
@@ -107,17 +106,14 @@ def search_children(request):
          url='/browse/',
         ))
     children.append (MenuItem(
-         # string_concat(capfirst(_("learning paths")), ' - ', _("advanced search")),
          capfirst(_("learning paths")),
          url='/lps/search/',
         ))
     children.append (MenuItem(
-         # string_concat(capfirst(_("open resources")), ' - ', _("advanced search")),
          capfirst(_("open resources")),
          url='/oers/search/',
         ))
     children.append (MenuItem(
-         # string_concat(capfirst(_("source repositories")), ' - ', _("advanced search")),
          capfirst(_("source repositories")),
          url='/repos/search/',
         ))

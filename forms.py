@@ -2,7 +2,8 @@
 import re
 from django.conf import settings
 from django.core.validators import RegexValidator
-from django.utils.translation import ugettext_lazy as _, string_concat
+# from django.utils.translation import ugettext_lazy as _, string_concat
+from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.contrib.auth.models import User, Group
@@ -34,6 +35,12 @@ from commons.models import ProjectMember
 from commons.models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from commons.models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
+if settings.DJANGO_VERSION == 1:
+    from django.utils.translation import string_concat
+if settings.DJANGO_VERSION == 2:
+    from django.utils.text import format_lazy
+    def string_concat(*strings):
+        return format_lazy('{}' * len(strings), *strings)
 
 class UserChangeForm(UserWithMPTTChangeForm):
     # groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())

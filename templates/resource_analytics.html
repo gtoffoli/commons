@@ -18,10 +18,10 @@ table-bordered
 {% block body_class %}resource_analytics{% endblock %}
 {% block body %}
 <div class="marginTB30">
-  <div class="panel-heading-c{% if resource = 'OER' %}2{% else %}1{% endif %}">
+  <div class="panel-heading-c{% if resource == 'OER' %}2{% else %}1{% endif %}">
     <h1 class="text-center padding105 margin0">{{ title|capfirst }}</h1>
   </div>
-  <div class="body-panel borderColor-c{% if resource = 'OER' %}2{% else %}1{% endif %} padding1020 bc-white">
+  <div class="body-panel borderColor-c{% if resource == 'OER' %}2{% else %}1{% endif %} padding1020 bc-white">
     <h5 class="text-center">{{subtitle|capfirst}}: {{ total }} [ {% trans "published" %}: {{ total_pub }} ] </h5>
 
 <div class="table-responsive">

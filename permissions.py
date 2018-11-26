@@ -4,17 +4,13 @@ Created on 03/set/2015
 '''
 from pybb.permissions import DefaultPermissionHandler
 from pybb import defaults
-from django.db.models import Q
 
-from pybb.models import Topic
 """ commented to avoid circularity in Django 2.1: django_messages -> urls.reverse -> pybb -> permissions -> track_action -> Message
 from commons.analytics import track_action
 """
+from .tracking import track_action
 
 class ForumPermissionHandler(DefaultPermissionHandler):
-    '''
-    classdocs
-    '''
 
     """
     def filter_forums(self, user, qs):
@@ -30,7 +26,6 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         project = forum.get_project()
         if not project:
             return True
-        # return user.is_authenticated() and (project.get_type_name() in ['com', 'oer', 'lp',] or self.is_member(user) or user.is_superuser)
         return user.is_authenticated and (project.get_type_name() in ['com', 'oer', 'lp', 'roll'] or project.is_member(user) or user.is_superuser)
 
     def may_create_topic(self, user, forum):
@@ -49,17 +44,21 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
-        # print 'may_view_topic: ', user.username, topic.name
-        # action.send(user, verb='View', action_object=topic)
+        """
         if user.is_authenticated:
-            # track_action(None, user, 'View', topic)
-            pass
+            track_action(None, user, 'View', topic)
+        """
         forum = topic.forum
         project = forum.get_project()
         if project:
-            return user.is_authenticated
+            # return user.is_authenticated
+            may_view = user.is_authenticated
         else:
-            return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
+            # return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
+            may_view = (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
+        if may_view:
+            track_action(None, user, 'View', topic)
+        return may_view
     
     def may_create_poll(self, user):
         """

@@ -172,13 +172,14 @@ INSTALLED_APPS = (
     # 'dmuc',
     'tagging',
     'zinnia',
+    'commons',
     'pybb',
     # commons project
     'viewerjs',
     'django_messages',
     'roles',
     'django_dag',
-    'commons',
+    # 'commons',
     # Placed after rest_api to allow template overriding
     # Must be last on Django < 1.7 as per documentation
     # https://django-activity-stream.readthedocs.org/en/latest/installation.html
