@@ -17,6 +17,11 @@ def processor(request):
     for language in settings.LANGUAGES:
         # path = path.replace('/%s' % language[0], '')
         path = path.replace('/%s/' % language[0], '/')
+    user = request.user
+    inbox_count = 0
+    if user.is_authenticated:
+        from django_messages.models import inbox_count_for
+        inbox_count = inbox_count_for(user)
     return {
         'site_name': settings.SITE_NAME,
         'users_count': online_users_count(),
@@ -31,4 +36,5 @@ def processor(request):
         'HAS_KNOCKPLOP': settings.HAS_KNOCKPLOP,
         'HAS_ZINNIA': settings.HAS_ZINNIA,
         'DJANGO_VERSION': settings.DJANGO_VERSION,
+        'INBOX_COUNT': inbox_count,
     }

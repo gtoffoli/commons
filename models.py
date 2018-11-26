@@ -46,12 +46,12 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 from django_dag.models import node_factory, edge_factory
 from roles.models import Role, ObjectPermission
 from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission, grant_permission
-from django_messages.models import inbox_count_for
+# from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
-from django_messages.models import Message
+# from django_messages.models import Message
 
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -170,7 +170,7 @@ if settings.HAS_DMUC:
         return XMPPAccount.objects.filter(user=self)
     User.has_xmpp_account = user_has_xmpp_account
     
-User.inbox_count = inbox_count_for
+# User.inbox_count = inbox_count_for
 
 def user_last_seen(self):
     return cache.get('seen_%s' % self.username)
@@ -1492,12 +1492,14 @@ class ProjectMember(models.Model):
    
 class ProjectMessage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('project'), related_name='message_project')
-    message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name=_('message'),  related_name='project_message')
+    # message = models.ForeignKey(Message, on_delete=models.CASCADE, verbose_name=_('message'),  related_name='project_message')
+    message = models.ForeignKey('django_messages.Message', on_delete=models.CASCADE, verbose_name=_('message'),  related_name='project_message')
 
     class Meta:
         verbose_name = _('project message')
         verbose_name_plural = _('project messages')
 
+"""
 @property
 def message_project(self):
     project_messages = ProjectMessage.objects.filter(message=self)
@@ -1505,6 +1507,7 @@ def message_project(self):
         return project_messages[0].project
     return None
 Message.project = message_project
+"""
 
 @python_2_unicode_compatible
 class RepoFeature(models.Model):

@@ -36,7 +36,7 @@
         <div class="col-sm-4 col-md-4 col-lg-4">
           <div class="panel-white">
             <ul class="list-inline list-unstyled margin0 padding105">
-              <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if user.inbox_count %}<sup class="format">{{ user.inbox_count}}</sup>{% endif %}</div></a></li>
+              <li><a href="/my_mail/" title='{% trans "my messages" %}'><div><i class="fa fa-envelope"></i> {% trans "messages"|capfirst %}{% if INBOX_COUNT %}<sup class="format">{{ INBOX_COUNT }}</sup>{% endif %}</div></a></li>
               <li><a href="/dashboard/{{ user.username }}/new_posts/" title='{% trans "new posts"|capfirst %}'><div><i class="fa fa-comment"></i> {% trans "forum"|capfirst %}{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</div></a></li>
               {% include "_menu_analytics.html" with data='Y' %}
             </ul>

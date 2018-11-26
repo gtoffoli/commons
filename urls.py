@@ -6,7 +6,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.views.generic import TemplateView
 
 from django.contrib import admin
-admin.autodiscover()
+# admin.autodiscover()
 from django.contrib.flatpages import views as flatpages_views
 
 from django.conf.urls.static import static
