@@ -49,14 +49,17 @@ def put_statement(user, verb_id, object_id, verb_display=None, activity_type=Non
     # construct the verb of the statement
     print ("constructing the Verb...")
     verb = Verb(
-        id='http://adlnet.gov/expapi/verbs/%s' % verb_id,
-        display=LanguageMap(verb_display),
+        id=verb_id,
+        # display=LanguageMap(verb_display),
+        display=LanguageMap(**verb_display),
     )
     print ("...done")
 
     activity_definition = ActivityDefinition(
-         name=LanguageMap({object_language: object_name}),
-         description=LanguageMap({object_language: object_description}),
+         # name=LanguageMap({object_language: object_name}),
+         # description=LanguageMap({object_language: object_description}),
+         name=LanguageMap(**{object_language: object_name}),
+         description=object_description and LanguageMap(**{object_language: object_description}) or None,
          type=activity_type,                                        
     )
 

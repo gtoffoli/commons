@@ -16,7 +16,7 @@ xapi_verbs = {
     'Bookmark': {'id': 'http://id.tincanapi.com/verb/bookmarked',
              'display': {'en-US': 'bookmarked', 'it-IT': 'ha creato un segnalibro per' }},
     'Create': {'id': 'http://activitystrea.ms/schema/1.0/create',
-             'display': {'en-US': 'approved', 'it-IT': 'ha approvato' }},
+             'display': {'en-US': 'created', 'it-IT': 'ha creato' }},
     'Delete': {'id': 'http://activitystrea.ms/schema/1.0/delete',
              'display': {'en-US': 'deleted', 'it-IT': 'ha cancellato' }},
     'Edit': {'id': 'http://curatr3.com/define/verb/edited',
