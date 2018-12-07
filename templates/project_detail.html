@@ -10,8 +10,11 @@
 
 {% block extra_style %}
 {% if widget_autocomplete_select2 %}
-    <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
-    <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
+{% comment %}
+   <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
+   <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
+{% endcomment %}
+{% include "_select2_css.html" %}
 {% endif %}
 <style>
   div.contentBody {
@@ -871,10 +874,15 @@
 
 {% block extra_script %}
 {% if widget_autocomplete_select2 %}
+{% comment %}
    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+{% endcomment %}
+
+{% include "_select2_js.html" %}
+   
 {% endif %}
 {% if can_delegate %}
    <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>

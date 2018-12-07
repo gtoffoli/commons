@@ -634,11 +634,15 @@ $(document).ready(function (){
 })
 </script>
 {% elif is_admin and n_lps_in_rolls %}
+{% comment %}
    <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
    <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
    <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
    <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
    <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
+{% endcomment %}
+{% include "_select2_css.html" %}
+{% include "_select2_js.html" %}
 {% endif %}
 {% endblock %}

@@ -134,16 +134,16 @@ iframe {
           <dt>{% trans "type of learning path"|capfirst %}</dt> 
           <dd>{{ lp.get_type }}
             {% if can_make_sequence %}
-             &nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_sequence/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to sequence type" %}" id="submit_{{ lp.id }}"><i class="fa fa-chain"></i></button></form>
+             &nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_sequence/" method="post" id="make_sequence_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to sequence type" %}" id="submit_make_sequence_{{ lp.id }}"><i class="fa fa-chain"></i></button></form>
             {% endif %}
             {% if can_make_collection %}
-            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_collection/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-h"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_collection/" method="post" id="make_collection_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_make_collection_{{ lp.id }}"><i class="fa fa-ellipsis-h"></i></button></form>
             {% endif %}
             {% if can_make_dag %}
-            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_{{ lp.id }}"><i class="fa fa-sitemap"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" id="make_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_make_dag_{{ lp.id }}"><i class="fa fa-sitemap"></i></button></form>
             {% endif %}
             {% if can_make_unconnected_dag %}
-            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" id="convert_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_{{ lp.id }}"><i class="fa fa-ellipsis-v"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" id="make_unconnected_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_unconnected_dag_{{ lp.id }}"><i class="fa fa-ellipsis-v"></i></button></form>
             {% endif %}
           </dd>
         </dl>
