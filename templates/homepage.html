@@ -196,8 +196,6 @@
       </div>
       <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9">
         <div class="list-h">
-          <!--div class="gutter-sizer"></div>
-          <div class="grid-sizer"></div-->
           {% if recent_proj %}
             {% trans "newest project" as translatetext %}
             {% include "_data_item_HP.html" with data=recent_proj data_ele="c4" data_label=translatetext data_parent_class="box-h" data_class="c-harvest-gold" data_type="project" data_attr="last"%}
@@ -235,8 +233,6 @@
 {% endif %}
 {% if articles %}
     <div class="container-fluid list-k">
-        <!--div class="gutter-sizer"></div>
-        <div class="grid-sizer"></div-->
         {% for article in articles %}
         <div class="box-k">
             <div class=" bc-demigray padding510 borderRadius4">

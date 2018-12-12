@@ -1588,32 +1588,6 @@ text-decoration: none;
     border:0
 }
 
-
-
-/* GRID MASONRY */
-.grid {
-	padding:30px 15px;
-  background:white;
-}
-.grid-item {
-  float: left;
-  width: 80px;
-  height: auto;
-}
-
-.grid-item--width2 { width: 160px; }
-.grid-item--height2 { height: 140px; }
-
-/* fluid 5 columns */
-/* 3 columns by default */
-.grid-sizer { width: 32%; border-top:1px solid transparent;}
-
-.grid-item { width: 32%; height: auto; margin-bottom: 1%;}
-/* 2 columns */
-.grid-item--width2 { width: 52%; }
-.gutter-sizer { width: 1.0%; }
-
-/* ================== */
 .bg_play {
 	padding:42px 62px;
 	text-align:center;
@@ -1981,21 +1955,18 @@ div.bootbox-confirm div.modal-footer {
 	max-width : 100%;
 	height : auto;
 }
-/*
-figure.image {
-    display: inline-block;
-    border: 1px solid gray;
-    margin: 0 2px 0 1px;
-    background: #f5f2f0;
-}
 
-figure.image img {
-    margin: 8px 8px 0 8px;
+/*------------------------------ DATE WIDGET -------------------*/
+.date {
+    width: 20%;
 }
-
-figure.image figcaption {
-    margin: 6px 8px 6px 8px;
-    text-align: center;
-    font-size: 12px;
+@media (min-width:541px) and (max-width:991px) {
+    .date {
+        width: 30%;
+    }
 }
-*/
+@media (max-width:540px) {
+    .date {
+        width: auto;
+    }
+}

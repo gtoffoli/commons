@@ -51,7 +51,7 @@ from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
-# from django_messages.models import Message
+from django_messages.models import Message
 
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -1499,15 +1499,14 @@ class ProjectMessage(models.Model):
         verbose_name = _('project message')
         verbose_name_plural = _('project messages')
 
-"""
 @property
 def message_project(self):
     project_messages = ProjectMessage.objects.filter(message=self)
     if len(project_messages) == 1:
         return project_messages[0].project
-    return None
+        return None
 Message.project = message_project
-"""
+
 
 @python_2_unicode_compatible
 class RepoFeature(models.Model):

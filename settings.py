@@ -145,7 +145,6 @@ INSTALLED_APPS = (
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
-    "datetimewidget",
     # "django_select2",
     'allauth',
     'allauth.account',
@@ -159,9 +158,6 @@ INSTALLED_APPS = (
     'dal_select2',
     'dal_queryset_sequence',
     'dal_select2_queryset_sequence',
-    # from pinax project
-    # "pinax_theme_bootstrap",
-    # "bootstrapform",
     "notification",
     'menu',
     'taggit',
@@ -192,8 +188,14 @@ INSTALLED_APPS = (
 )
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['datetimewidget']
+    """
+    181212 MMR DatePickerInput required Python 3.3
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
+    """
 else:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['endless_pagination']
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['datetimewidget']
 if HAS_XMPP:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
 if HAS_SAML2:
@@ -235,8 +237,6 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
-                # theme (from pinax project)
-                # "pinax_theme_bootstrap.context_processors.theme",
                 # "allauth.account.context_processors.account",
                 # "allauth.socialaccount.context_processors.socialaccount",
                 'django_messages.context_processors.inbox',
@@ -352,11 +352,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+"""
 if False:
     STATICFILES_DIRS = (
         os.path.join(BASE_DIR, "commons", "static"),
         os.path.join(BASE_DIR, "pinax", "static"),
     )
+"""
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 # --------- TEMPORARY_DIRECTORY ----------------

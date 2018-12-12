@@ -130,7 +130,11 @@ def project_mentoring_policy_edit(request, project_slug):
      if request.POST:
         form = ProjectMentoringPolicyForm(request.POST, instance=project)
         if form.is_valid():
-            project.allow_external_mentors = request.POST.get('allow_external_mentors','')
+            allow_external_mentors = request.POST.get('allow_external_mentors','')
+            if allow_external_mentors:
+                project.allow_external_mentors = True
+            else:
+                project.allow_external_mentors = False
             project.editor = user
             project.save()
      return HttpResponseRedirect('/project/%s/' % project.slug)

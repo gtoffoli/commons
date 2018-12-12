@@ -46,7 +46,7 @@ from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEn
 from .vocabularies import expand_to_descendants
 from .documents import DocumentType, Document
 # from sources.models import WebFormSource
-from .models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember, ProjectMessage
+from .models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
 from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from .models import RepoType, RepoFeature
 from .models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
@@ -85,7 +85,6 @@ from roles.models import Role
 # from taggit.models import Tag
 from filetransfers.api import serve_file
 from notification import models as notification
-# from pinax.notifications import models as notification
 from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
 from zinnia.models.author import Author
@@ -1424,7 +1423,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                 var_dict['mentor'] = mentor = project.get_mentor(state=1)
                 mentor_user = mentor and mentor.user
                 if user==mentor_user:
-                    inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True,).order_by('sent_at')
+                    inbox = Message.objects.filter(recipient=user, sender=mentee_user, recipient_deleted_at__isnull=True, ).order_by('sent_at')
                     outbox = Message.objects.filter(recipient=mentee_user, sender=user, sender_deleted_at__isnull=True,).order_by('sent_at')
                     recipient= mentee_user.username
                 elif user==mentee_user:

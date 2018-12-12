@@ -10,6 +10,10 @@ from django.contrib.auth.models import User, Group
 from mptt.forms import TreeNodeMultipleChoiceField
 from hierarchical_auth.admin import UserWithMPTTChangeForm
 from tinymce.widgets import TinyMCE
+"""
+181212 MMR DatePickerInput required Python 3.3
+from bootstrap_datepicker_plus import DatePickerInput
+"""
 from datetimewidget.widgets import DateWidget
 # from django_select2.forms import Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
 """
@@ -74,6 +78,10 @@ class UserProfileForm(forms.ModelForm):
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
+    """
+    181212 MMR DatePickerInput required Python 3.3
+    dob = forms.DateField(required=True, label=_('date of birth'), widget=DatePickerInput(format='%d/%m/%Y'), help_text=_('format: dd/mm/yyyy')) #input_formats=settings.DATE_INPUT_FORMATS,
+    """
     dob = forms.DateField(required=True, label=_('date of birth'), input_formats=settings.DATE_INPUT_FORMATS, widget=DateWidget(bootstrap_version=3, options=dateTimeOptions, attrs={'id': 'birth_date', 'class':'form-control',}), help_text=_('format: dd/mm/yyyy'))
     country = forms.ModelChoiceField(required=True, queryset=CountryEntry.objects.all().order_by('name'), label=_('country'), widget=forms.Select(attrs={'class':'form-control',}))
     city = forms.CharField(required=False, label=_('city'), widget=forms.TextInput(attrs={'class':'form-control',}))
@@ -222,7 +230,7 @@ class ProjectMentoringPolicyForm(forms.ModelForm):
         model = Project
         fields = ('allow_external_mentors',)
 
-    allow_external_mentors = forms.BooleanField(required=False, label=_('can choose mentor from other community'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}))
+    allow_external_mentors = forms.BooleanField(required=False, label=_('can choose mentor from other community'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',})) 
 
 N_MEMBERS_CHOICES = (
     (0, ''),
@@ -718,8 +726,9 @@ class MatchMentorForm(forms.Form):
 # see https://stackoverflow.com/questions/47355837/type-object-radioselect-has-no-attribute-renderer
 if settings.DJANGO_VERSION > 1:
     class HorizontalRadioRenderer(forms.RadioSelect):
-        def render(self):
-            return mark_safe('\n'.join([u'%s &nbsp; \n' %  w for w in self]))
+        input_type = 'radio'
+        template_name = 'django/forms/widgets/radio.html'
+        option_template_name = 'django/forms/widgets/radio_option.html'
 else:
     class HorizontalRadioRenderer(forms.RadioSelect.renderer):
         def render(self):
@@ -732,7 +741,7 @@ class AcceptMentorForm(forms.ModelForm):
 
     project = forms.IntegerField(widget=forms.HiddenInput())
     if settings.DJANGO_VERSION > 1:
-        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=HorizontalRadioRenderer(),)
+        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget = HorizontalRadioRenderer(attrs={'class':'list-inline'}) ) 
     else:
         accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
     description = forms.CharField(required=True, label=_('Reason'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, explain the motivations of your acceptation or refusal'))
