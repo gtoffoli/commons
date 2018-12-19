@@ -87,7 +87,11 @@ def track_action(request, actor, verb, action_object, target=None, description=N
         object_language = get_language(action_object)
         verb_value = xapi_verbs[verb]
         verb_id = verb_value['id']
-        put_statement(actor, verb_id, object_id,
-                      verb_display=verb_value['display'], activity_type=activity_type,
-                      object_name=object_name, object_description=object_description, object_language=object_language)
+        try:
+            put_statement(actor, verb_id, object_id,
+                        verb_display=verb_value['display'], activity_type=activity_type,
+                        object_name=object_name, object_description=object_description, object_language=object_language)
+        except:
+            print ("--- tracciamento su LRS non riuscito ---")
+            pass
     

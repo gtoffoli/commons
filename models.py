@@ -1599,7 +1599,8 @@ class Repo(Resource, Publishable):
         user = request.user
         if not user.is_authenticated:
             return False
-        return user.is_superuser or self.creator==user or user.can_add_repo(request)
+        # return user.is_superuser or self.creator==user or user.can_add_repo(request)
+        return user.is_superuser or self.creator==user
 
     def get_project(self):
         return Project.objects.get(pk=3)

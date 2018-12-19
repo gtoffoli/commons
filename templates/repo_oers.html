@@ -1,12 +1,41 @@
 {% extends "commons_base.html" %}
 
-{% load i18n %}
+{% load i18n staticfiles %}
 
 {% block head_title %}{% trans "OERs from repository"|capfirst %}&nbsp;{{ repo.name }}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}repo_oers{% endblock %}
 
 {% block body %}
+<article class="panel-white text-left marginTB30">
+  <div class="row panel-c3 panel-heading-c3 marginLR0 padding1020">
+    <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0">{% trans "OERs from repository"|capfirst %}: {{ repo.name }}</h2>
+    <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 text-right paddingL0">
+        <a href="/repo/{{ repo.slug }}/" title=""><i class="fa fa-list-alt font07em c-white"></i></a>
+    </p>
+  </div>
+  <div class="marginTB20">
+  {% if oers %}
+ 			<ul>
+		        {% for oer in oers %}
+		        <li><a href="/oer/{{ oer.slug }}/">{{ oer.title }}</a></li>
+		        {% endfor %}
+			</ul>
+			{% else %}
+				<p class="paddingL20">{% trans "no OERs are present having this repository as their source"|capfirst %}.</p>
+			{% endif %}
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+{% comment %}
     <section>
         <div class="container">
             <h2 class="text-center">{% trans "OERs from repository"|capfirst %}&nbsp;{{ repo.name }}
@@ -27,4 +56,5 @@
 
         </div>
     </section>
+{% endcomment %}
 {% endblock %}

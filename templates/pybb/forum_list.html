@@ -27,7 +27,8 @@
         <tbody>
         {% for forum in forum_list|pybb_forum_unread:user %}
 {% with project=forum.get_project %}
-{% if not project or not project.get_type_name == "ment" %}
+{% if project %}
+{% if not project.get_type_name == "ment" and not project.get_type_name == "sup" %}
 			{% if forum.topic_count %}
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} forum-unread{% endif %}">
@@ -53,6 +54,7 @@
                 </td>
             </tr>
 			{% endif %}
+{% endif %}
 {% endif %}
 {% endwith %}
         {% empty %}

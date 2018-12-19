@@ -435,13 +435,14 @@ def profile_edit(request, username):
         # return HttpResponseRedirect('/profile/%s/' % username)
         return HttpResponseRedirect('/my_profile/')
     info = FlatPage.objects.get(url='/info/newsletter/').content
-    data_dict = {'user': user, 'info': info,}
+    data_dict = {'user': user, 'info': info, 'go_caller': '/my_profile/'}
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
         # form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
         form = UserProfileExtendedForm(request.POST, instance=profile)
         data_dict['form'] = form
+
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 form.save()
@@ -468,7 +469,7 @@ def profile_mentor_edit(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
         return HttpResponseRedirect('/my_profile/')
-    data_dict = {'user': user,}
+    data_dict = {'user': user,'go_caller':'/my_profile'}
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if profile and profile.get_completeness():
@@ -572,7 +573,7 @@ def edit_preferences(request):
     user = request.user
     if not user.is_authenticated:
         return HttpResponseForbidden()
-    called_by = request.GET.get('next','')
+    called_by = '/my_home/'
     users_preferences = UserPreferences.objects.filter(user=user)
     preferences = users_preferences and users_preferences[0] or None
     if request.POST:
@@ -583,15 +584,15 @@ def edit_preferences(request):
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect(called_by)
                 else: 
-                    return render(request, 'edit_preferences.html', {'form': form, 'user': user, 'next': called_by})
+                    return render(request, 'edit_preferences.html', {'form': form, 'user': user,  'go_caller':called_by})
             else:
                 print (form.errors)
-                return render(request, 'edit_preferences.html', {'form': form, 'user': user, 'next': called_by})
+                return render(request, 'edit_preferences.html', {'form': form, 'user': user,  'go_caller':called_by})
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect(called_by)
     else:
         form = UserPreferencesForm(instance=preferences)
-    return render(request, 'edit_preferences.html', {'form': form, 'user': user,})
+    return render(request, 'edit_preferences.html', {'form': form, 'user': user,'go_caller':called_by})
 
 def new_posts(request, username):
     user = request.user
@@ -1500,10 +1501,6 @@ def project_detail_by_slug(request, project_slug):
     return project_detail(request, project.id, project)
 
 def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
-    """
-    project_id: edit existent project
-    parent_id: create sub-project
-    """
     data_dict = {}
     action = '/project/edit/'
     data_dict['action'] = action
@@ -1514,29 +1511,22 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
     project = project_id and get_object_or_404(Project, pk=project_id)
     parent = parent_id and get_object_or_404(Project, pk=parent_id)
     if project:
+        data_dict['go_caller'] = '/project/%s/' % project.slug
         if not project.can_access(user):
             raise PermissionDenied
     elif parent:
+        data_dict['go_caller'] = '/project/%s/' % parent.slug
         if not parent.can_access(user):
             raise PermissionDenied
+    else:
+        data_dict['go_caller'] = '/cops/'
     data_dict['proj_type_list']=["ment", "roll","sup"]
-    """
-    proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
-    if proj_type:
-       data_dict['proj_type_name'] = proj_type_name = proj_type.name
-       if proj_type_name == 'ment':
-           data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
-    """
     if project_id:
         if project.can_edit(request):
             if not project.name:
                 project.name = project.group.name
             data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
             form = ProjectForm(instance=project)
-            """
-            if proj_type_name == 'com' and project.get_children(proj_type_name='roll'):
-                form.fields['mentoring_available'].widget.attrs['disabled'] = 'disabled'
-            """
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
@@ -1552,8 +1542,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
         data_dict['proj_type_name'] = proj_type_name = proj_type.name
         if parent.can_edit(request) or (proj_type and proj_type_name == 'ment'):
             form = ProjectForm(initial={'proj_type': proj_type_id, 'creator': user.id, 'editor': user.id})
-            # proj_type = proj_type_id and get_object_or_404(ProjType, pk=proj_type_id)
-            # data_dict['proj_type_name'] = proj_type_name = proj_type.name
             if proj_type_name == 'ment':
                 data_dict['info_proj_mentoring'] = FlatPage.objects.get(url='/infotext/mentor-request/').content
                 repurpose_mentoring_form(form)
@@ -1609,12 +1597,10 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 data_dict['project'] = project
                 data_dict['object'] = project
                 data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
+                
                 project.state = project_state
                 project.editor = user
                 if parent:
-                    """
-                    group_name = slugify(name[:50])
-                    """
                     group_name = str(uuid.uuid4())
                     group = Group(name=group_name)
                     group.parent = parent.group
@@ -1634,8 +1620,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     group = project.group
                     project.create_folder()
                     track_action(request, request.user, 'Create', project)
-
-                    # role_member = Role.objects.get(name='member')
                     add_local_role(project, group, role_member)
                     membership = project.add_member(user)
                     project.accept_application(request, membership)
@@ -1684,18 +1668,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/project/%s/' % project.slug)
                 else: # continue
-                    """
-                    form = ProjectForm(request.POST, instance=project) # togliere ?
-                    # return render_to_response('project_edit.html', {'form': form, 'action': action, 'project': project,}, context_instance=RequestContext(request))
-                    # data_dict['proj_type_name'] = project.get_type_name()
-                    if project:
-                        data_dict['proj_type_name'] = proj_type_name = project.get_type_name()
-                    else:
-                        data_dict['proj_type_name'] = proj_type_name = proj_type.name
-                    if proj_type_name == 'ment':
-                        repurpose_mentoring_form(form)
-                    data_dict['form'] = form
-                    """
+                    data_dict['go_caller'] = '/project/%s/' % project.slug
                     return render(request, 'project_edit.html', data_dict)
             else:
                 print (form.errors)
@@ -2428,12 +2401,19 @@ def repo_save(request, repo=None):
                 print (form.errors)
                 return render(request, 'repo_edit.html', {'repo': repo, 'form': form,})
         elif request.POST.get('cancel', ''):
-             return HttpResponseRedirect('/repo/%s/' % repo.slug)
+             if repo:
+                return HttpResponseRedirect('/repo/%s/' % repo.slug)
+             else:
+                return repo_new(request)
     else:
         return repo_new(request)
 
 def repo_edit(request, repo_id):
     repo = get_object_or_404(Repo, id=repo_id)
+    if repo:
+        go_caller = '/repo/%s/' % repo.slug
+    else:
+        go_caller = '#'
     if not repo.can_edit(request):
         return HttpResponseRedirect('/repo/%s/' % repo.slug)
     user = request.user
@@ -2443,10 +2423,11 @@ def repo_edit(request, repo_id):
         form = RepoForm(instance=repo)
     else:
         form = RepoForm(initial={'creator': user.id, 'editor': user.id})
-    data_dict = {'form': form, 'repo': repo, 'object': repo,}
+    data_dict = {'form': form, 'repo': repo, 'object': repo}
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = repo and repo.original_language and not repo.original_language==current_language or False
+    data_dict['go_caller'] = go_caller
     return render(request, 'repo_edit.html', data_dict)
 
 def repo_edit_by_slug(request, repo_slug):
@@ -2999,9 +2980,9 @@ def oer_edit(request, oer_id=None, project_id=None):
         if not oer.can_access(user):
             raise PermissionDenied
         action = '/oer/%s/edit/' % oer.slug
-        # if not oer.can_edit(user):
         if not oer.can_edit(request):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
+
     if request.POST:
         oer_id = request.POST.get('id', '')
 
@@ -3023,7 +3004,6 @@ def oer_edit(request, oer_id=None, project_id=None):
                 set_original_language(oer)
                 oer.save()
                 form.save_m2m()
-                # oer = get_object_or_404(OER, id=oer.id)
                 n = len(metadata_formset)
                 for i in range(n):
                     if request.POST.get('metadata_set-%d-DELETE' % i, None):
@@ -3041,17 +3021,20 @@ def oer_edit(request, oer_id=None, project_id=None):
                     track_action(request, request.user, 'Edit', oer, target=oer.project)
                 else:
                     track_action(request, request.user, 'Create', oer, target=oer.project)
+                    
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
-                    """
-                else:
-                    return render_to_response('oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action,}, context_instance=RequestContext(request))
-                    """
             else:
                 print (form.errors)
                 print (metadata_formset.errors)
-            return render(request, 'oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project})
+            if oer_id or oer:
+                go_caller = '/oer/%s/' % oer.slug
+            elif project_id:
+                go_caller = '/project/%s/' % current_project.slug
+            else:
+                go_caller = '#'
+            return render(request, 'oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project, 'go_caller': go_caller})
         elif request.POST.get('cancel', ''):
             if oer:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -3063,17 +3046,22 @@ def oer_edit(request, oer_id=None, project_id=None):
         form = OerForm(instance=oer)
         metadata_formset = OerMetadataFormSet(instance=oer)
     else:
-        # form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id})
         form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id, 'oer_type': 2, 'source_type': 2, 'state': DRAFT,})
         metadata_formset = OerMetadataFormSet()
     data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer, 'action': action}
     current_language = get_current_language()
     if project_id:
-       data_dict['current_project'] = get_object_or_404(Project, id=project_id)
+       data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
     else:
-       data_dict['current_project'] = None
+       data_dict['current_project'] = current_project = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
+    if oer_id:
+        data_dict['go_caller'] = '/oer/%s/' % oer.slug
+    elif project_id:
+        data_dict['go_caller'] = '/project/%s/' % current_project.slug
+    else:
+        data_dict['go_caller'] = '#'
     return render(request, 'oer_edit.html', data_dict)
 
 def oer_edit_by_slug(request, oer_slug):
@@ -3196,6 +3184,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     user = request.user
     evaluation = None
     action = '/oer_evaluation/edit/'
+    go_caller = '/oer/%s/' % oer.slug
     if evaluation_id:
         evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
         oer = evaluation.oer
@@ -3267,7 +3256,7 @@ def oer_evaluation_edit(request, evaluation_id=None, oer=None):
     else: # oer
         form = OerEvaluationForm(initial={'oer': oer.id, 'user': user.id,})
         action = '/oer/%s/evaluate/' % oer.slug
-    return render(request, 'oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action})
+    return render(request, 'oer_evaluation_edit.html', {'form': form, 'oer': oer, 'evaluation': evaluation, 'action': action, 'go_caller': go_caller})
 
 def oer_evaluate_by_slug(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)
@@ -3765,16 +3754,17 @@ def lp_edit(request, lp_id=None, project_id=None):
         if lp_id:
             lp = get_object_or_404(LearningPath, id=lp_id)
             action = '/lp/%s/edit/' % lp.slug
-            # group_id = lp.group_id
         form = LpForm(request.POST, instance=lp)
         if lp and lp.get_nodes().count() > 1:
-            # form.fields['path_type'].widget = forms.HiddenInput()
+            lp_path_type = lp.path_type
             form.fields['path_type'].required = False
             form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
                 lp.editor = user
+                if not lp.path_type:
+                    lp.path_type = lp_path_type
                 set_original_language(lp)
                 lp.save()
                 form.save_m2m()
@@ -3792,7 +3782,15 @@ def lp_edit(request, lp_id=None, project_id=None):
                 current_project = get_object_or_404(Project, id=projectId)
             else:
                 current_project = None
-            return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project})
+            if lp_id or lp:
+                go_caller = '/lp/%s/' % lp.slug
+            elif project_id:
+                go_caller = '/project/%s/' % current_project.slug
+            elif project_id == 0:
+                data_dict ['go_caller'] = '/my_home/'
+            else:
+                go_caller = '#'
+            return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project, 'go_caller': go_caller})
         elif request.POST.get('cancel', ''):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -3815,12 +3813,22 @@ def lp_edit(request, lp_id=None, project_id=None):
         form.fields['path_type'].widget.attrs['disabled'] = 'disabled'
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
-    if project_id and project_id > 0:
-        data_dict['current_project'] = get_object_or_404(Project, id=project_id)
+    if project_id:
+        data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
+        data_dict ['go_caller'] = '/project/%s/' % current_project.slug
     else:
-        data_dict['current_project'] = None
+        data_dict['current_project'] = current_project = None
+        data_dict ['go_caller'] = '#'
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = lp and lp.original_language and not lp.original_language==current_language or False
+    if lp_id:
+        data_dict ['go_caller'] = '/lp/%s/' % lp.slug
+    elif project_id:
+        data_dict ['go_caller'] = '/project/%s/' % current_project.slug
+    elif project_id == 0:
+        data_dict ['go_caller'] = '/my_home/'
+    else:
+        data_dict ['go_caller'] = '#'
     return render(request, 'lp_edit.html', data_dict)
 
 def lp_edit_by_slug(request, lp_slug):
@@ -4008,9 +4016,11 @@ def pathnode_edit(request, node_id=None, path_id=None):
     action = '/pathnode/edit/'
     if path_id:
         path = get_object_or_404(LearningPath, id=path_id)
+        go_caller = '/lp/%s/' % path.slug
     if node_id:
         node = get_object_or_404(PathNode, id=node_id)
         path = node.path
+        go_caller = '/lp/%s/' % path.slug
         action = '/pathnode/%d/edit/' % node.id
         if not path.can_access(user):
             raise PermissionDenied
@@ -4024,8 +4034,10 @@ def pathnode_edit(request, node_id=None, path_id=None):
             path = node.path
             form = PathNodeForm(request.POST, request.FILES, instance=node)
             action = '/pathnode/%d/edit/' % node.id
+            go_caller = '/lp/%s/' % path.slug
         elif path_id:
             path = get_object_or_404(LearningPath, id=path_id)
+            go_caller = '/lp/%s/' % path.slug
             form = PathNodeForm(request.POST, request.FILES)
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
@@ -4035,26 +4047,15 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     uploaded_file = 0
                 node = form.save(commit=False)
                 node.editor = user
-                # old_document = ''
                 if (request.POST.get('remove_document')):
                     document = node.document
                     node.document_id = ''
-                    # document = Document.objects.get(pk=document.id)
-                    # document.delete()
                 if uploaded_file:
-                    # old_document = node.document
                     version = handle_uploaded_file(uploaded_file)
                     document = version.document
                     node.document = document
                 node.save()
                 form.save_m2m()
-                """
-                print ("=========TEST OLD DOCUMENT ===============")
-                print (old_document)
-                if old_document:
-                    document = Document.objects.get(pk=old_document.id)
-                    document.delete()
-                """
                 node = get_object_or_404(PathNode, id=node.id)
                 if not node.label:
                     node.label = node.oer.title
@@ -4067,13 +4068,12 @@ def pathnode_edit(request, node_id=None, path_id=None):
                 if path.path_type==LP_SEQUENCE and node.is_island():
                     path.append_node(node, request)
                 if request.POST.get('save', ''):
-                    # return HttpResponseRedirect('/pathnode/%d/' % node.id )
                     return HttpResponseRedirect('/lp/%s/' % path.slug )
                 else:
                     form = PathNodeForm(instance=node)
             else:
                 print (form.errors)
-            return render(request, 'pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug})
+            return render(request, 'pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, 'go_caller': go_caller})
         elif request.POST.get('cancel', ''):
             if node:
                 node_id = node.id
@@ -4092,6 +4092,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
         form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
     data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path.title, 'slug_lp': path.slug, }
     data_dict['path'] = path
+    data_dict['go_caller'] = go_caller
     current_language = get_current_language()
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     original_language = node and node.original_language or path.original_language

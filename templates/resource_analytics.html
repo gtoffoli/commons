@@ -16,7 +16,8 @@ table-bordered
 {% endblock extra_head %}
 
 {% block body_class %}resource_analytics{% endblock %}
-{% block body %}
+{% block body_base %}
+<div class="container-fluid">
 <div class="marginTB30">
   <div class="panel-heading-c{% if resource == 'OER' %}2{% else %}1{% endif %}">
     <h1 class="text-center padding105 margin0">{{ title|capfirst }}</h1>
@@ -27,7 +28,7 @@ table-bordered
 <div class="table-responsive">
 <table class="width-full"><tr><td>
 <div>{{legenda|capfirst}}</div>
-    {% include_container chartcontainer '500' '1000' %}
+    {% include_container chartcontainer '500' '1500' %}
     </td></tr></table>
   </div>
 <div class="table-responsive marginT30 marginB20 font12">
@@ -52,5 +53,5 @@ table-bordered
 </div>
   </div>
 </div>
-
+</div>
 {% endblock %}

@@ -1970,3 +1970,8 @@ div.bootbox-confirm div.modal-footer {
         width: auto;
     }
 }
+/*--------------------------------------------*/
+
+a.like-btn-default {
+    color: #333 !important;
+}
