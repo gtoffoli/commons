@@ -226,6 +226,7 @@ urlpatterns += [
 
 if settings.HAS_SAML2:
     urlpatterns += [
+        url(r"^saml2/acs/commons.home$", commons.views.home, name="commons.home"),
         path('saml2/', include(saml2_urls)),
         url(r'^test/', djangosaml2.views.echo_attributes, name="echo_attributes"),
     ]
