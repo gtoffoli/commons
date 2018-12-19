@@ -16,10 +16,13 @@ def processor(request):
     host = request.META.get('HTTP_HOST', '')
     is_primary_domain = False
     is_secondary_domain = False
+    is_test_domain = False
     if host == settings.PRIMARY_DOMAIN:
         is_primary_domain = True
     elif host == settings.SECONDARY_DOMAIN:
         is_secondary_domain = True
+    elif host == settings.TEST_DOMAIN:
+        is_test_domain = True
     for language in settings.LANGUAGES:
         # path = path.replace('/%s' % language[0], '')
         path = path.replace('/%s/' % language[0], '/')
@@ -37,6 +40,7 @@ def processor(request):
         'HOST': host,
         'is_primary_domain': is_primary_domain,
         'is_secondary_domain': is_secondary_domain,
+        'is_test_domain': is_test_domain,
         'DOMAIN': host,
         'HAS_SAML2': settings.HAS_SAML2,
         'HAS_XMPP': settings.HAS_XMPP,
