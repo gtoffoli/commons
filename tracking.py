@@ -64,7 +64,11 @@ def track_action(request, actor, verb, action_object, target=None, description=N
         actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
     except:
         pass
-    if settings.PRODUCTION or six.PY2:
+    # if settings.PRODUCTION or six.PY2:
+    try:
+        if not settings.LRS_ENDPOINT:
+            return
+    except:
         return
     action = action_object and action_object.__class__.__name__ or None
     if verb == 'Bookmark' and action == 'OER':

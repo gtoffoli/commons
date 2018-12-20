@@ -101,6 +101,8 @@ if DJANGO_VERSION > 1:
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
         'pybb.middleware.PybbMiddleware',
         'django.middleware.locale.LocaleMiddleware',
+        'django.middleware.security.SecurityMiddleware',
+        'commons.middleware.ActiveUserMiddleware',
     ]
 else:
     MIDDLEWARE_CLASSES = (
