@@ -62,14 +62,19 @@ def make_pdf_writer():
     return PdfFileWriter()
 
 def ipynb_to_html(data):
-        notebook = nbformat.reads(data, as_version=4)
-        html_exporter = HTMLExporter()
-        body, resources = html_exporter.from_notebook_node(notebook)
-        return body
+    try:
+        data = data.decode()
+    except:
+        pass
+    notebook = nbformat.reads(data, as_version=4)
+    html_exporter = HTMLExporter()
+    body, resources = html_exporter.from_notebook_node(notebook)
+    return body
 
 def ipynb_url_to_html(url):
-        data = urllib2.urlopen(url).read().decode()
-        return ipynb_to_html(data)
+    # data = urllib2.urlopen(url).read().decode()
+    data = urllib2.urlopen(url).read()
+    return ipynb_to_html(data)
 
 def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'):
     if mimetype=='application/x-ipynb+json':

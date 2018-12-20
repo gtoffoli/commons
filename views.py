@@ -2817,7 +2817,7 @@ TED_TALK_TEMPLATE = """
 <iframe src="https://embed-ssl.ted.com/talks/lang/%s/%s" id="iframe" allowfullscreen></iframe>
 """
 IPYNB_TEMPLATE = """
-<iframe src="https://%s/serve_ipynb_url/?url=%s" id="iframe" allowfullscreen>
+<iframe src="%s://%s/serve_ipynb_url/?url=%s" id="iframe" allowfullscreen>
 </iframe>
 """
 
@@ -2878,7 +2878,8 @@ def oer_view(request, oer_id, oer=None):
         var_dict['slideshare'] = slideshare
     elif ipynb:
         domain = request.META['HTTP_HOST']
-        ipynb = IPYNB_TEMPLATE % (domain, url)
+        # ipynb = IPYNB_TEMPLATE % (domain, url)
+        ipynb = IPYNB_TEMPLATE % (protocol, domain, url)
         var_dict['ipynb'] = ipynb
     else:
         var_dict['x_frame_protection'] = x_frame_protection(url)
@@ -3683,7 +3684,8 @@ def lp_play(request, lp_id, lp=None):
         elif slideshare:
             var_dict['slideshare'] = slideshare
         elif ipynb:
-            ipynb = IPYNB_TEMPLATE % (domain, url)
+            # ipynb = IPYNB_TEMPLATE % (domain, url)
+            ipynb = IPYNB_TEMPLATE % (protocol, domain, url)
             var_dict['ipynb'] = ipynb
         else:
             var_dict['x_frame_protection'] = x_frame_protection(url)
