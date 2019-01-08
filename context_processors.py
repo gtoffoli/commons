@@ -23,9 +23,12 @@ def processor(request):
         is_secondary_domain = True
     elif host == settings.TEST_DOMAIN:
         is_test_domain = True
-    for language in settings.LANGUAGES:
-        # path = path.replace('/%s' % language[0], '')
-        path = path.replace('/%s/' % language[0], '/')
+    for code, name in settings.LANGUAGES:
+        # path = path.replace('/%s/' % language[0], '/')
+        if path.startswith('/' + code + '/'):
+            path = path[len(code)+1:]
+            break
+    canonical = '%s://%s%s' % (protocol, settings.PRIMARY_DOMAIN, path)
     user = request.user
     inbox_count = 0
     if user.is_authenticated:
@@ -42,6 +45,7 @@ def processor(request):
         'is_secondary_domain': is_secondary_domain,
         'is_test_domain': is_test_domain,
         'DOMAIN': host,
+        'CANONICAL': canonical,
         'HAS_SAML2': settings.HAS_SAML2,
         'HAS_XMPP': settings.HAS_XMPP,
         'HAS_DMUC': settings.HAS_DMUC,

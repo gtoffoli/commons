@@ -12,6 +12,7 @@
     <meta charset="utf-8">
     <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
 
+	<link rel="canonical" href="{{ CANONICAL }}">
     {% block languages %}
     {% endblock %}
     
