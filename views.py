@@ -1816,7 +1816,8 @@ def apply_for_membership(request, username, project_slug):
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
             extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
-            if settings.PRODUCTION:
+            # if settings.PRODUCTION:
+            if not settings.PRODUCTION:
                 notification.send(receivers, 'membership_application', extra_content)
             track_action(request, user, 'Submit', membership, target=project)
             # return my_profile(request)
