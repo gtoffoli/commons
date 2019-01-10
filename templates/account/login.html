@@ -78,7 +78,7 @@ for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
   <ul class="socialaccount_providers">
 {% if is_primary_domain %}
     {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-{% elif is_test_domain %}
+{% elif is_secondary_domain or is_test_domain %}
     <li><a href="/saml2/login/" title="Up2U">Up2U</a></li>
 {% endif %}
   </ul>
