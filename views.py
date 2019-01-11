@@ -84,7 +84,7 @@ from roles.utils import add_local_role, remove_local_role, grant_permission, get
 from roles.models import Role
 # from taggit.models import Tag
 from filetransfers.api import serve_file
-from notification import models as notification
+# 20190111 MMR - from notification import models as notification
 from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
 from zinnia.models.author import Author
@@ -1815,10 +1815,13 @@ def apply_for_membership(request, username, project_slug):
         if membership:
             role_admin = Role.objects.get(name='admin')
             receivers = role_admin.get_users(content=project)
-            extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
-            # if settings.PRODUCTION:
-            if not settings.PRODUCTION:
-                notification.send(receivers, 'membership_application', extra_content)
+            # 20190111 MMR - extra_content = {'sender': 'postmaster@commonspaces.eu', 'subject': _('membership application'), 'body': string_concat(_('has applied for membership in'), _(' ')), 'user_name': user.get_display_name(), 'project_name': project.get_name(),}
+            subject = _('membership application')
+            body = '%s %s %s' % (user.get_display_name(),  _('has applied for membership in'), project.get_name())
+
+            if settings.PRODUCTION:
+                # 20190111 MMR - notification.send(receivers, 'membership_application', extra_content)
+                notify_event(receivers, subject, body)
             track_action(request, user, 'Submit', membership, target=project)
             # return my_profile(request)
     return HttpResponseRedirect('/project/%s/' % project.slug)    

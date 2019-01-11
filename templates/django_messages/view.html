@@ -1,7 +1,7 @@
 {% extends "django_messages/base.html" %}
 {% load i18n %}
 {% comment %}{% load url from future %}{% endcomment %}
-
+{% block head_title %}{% trans "View Message" %}{% endblock head_title %}
 {% block content %}
 <h1>{% trans "View Message" %}</h1>
 <dl class="message-headers">

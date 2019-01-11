@@ -1,6 +1,7 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
 {% comment %}{% load url from future %}{% endcomment %}
+{% block head_title %}{% trans "Deleted Messages" %}{% endblock head_title %}
 
 {% block content %} 
 <h1>{% trans "Deleted Messages" %}</h1>

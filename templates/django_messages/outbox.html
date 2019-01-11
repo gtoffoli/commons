@@ -1,7 +1,7 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
 {% comment %}{% load url from future %}{% endcomment %}
-
+{% block head_title %}{% trans "Sent Messages" %}{% endblock head_title %}
 {% block content %} 
 <h1>{% trans "Sent Messages" %}</h1>
 {% if message_list %} 
@@ -14,7 +14,7 @@
     <tr>
         <td style="padding: 2px 10px 0 0">{{ message.recipient }}</td>
         <td style="padding: 2px 10px 0 0">
-        <a href="{{ message.get_absolute_url }}">{{ message.subject }}</a>
+        <a href="/my_mail/view/{{ message.id }}/">{{ message.subject }}</a>
         </td>
         <td style="padding: 2px 10px 0 0">{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
         <td style="padding: 2px 10px 0 0"><a href="{% url 'messages_delete' message.id %}?next={% url 'messages_outbox' %}">{% trans "delete" %}</a></td>
