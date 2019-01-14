@@ -248,8 +248,9 @@ class HeadRequest(urllib2.Request):
 def get_request_headers(url):
     """ tries to open the resource at the given url;
         returns the HTTP headers as a dict or a dict including only the exception object """
-    request = HeadRequest(url)
+    # request = HeadRequest(url)
     try:
+        request = HeadRequest(url) # 190114 GT: moved this line inside try branch
         response = urllib2.urlopen(request)
         response_headers = response.info()
         return response_headers.dict
@@ -257,8 +258,9 @@ def get_request_headers(url):
         return { 'error': e}
 
 def get_request_content(url):
-    request = urllib2.Request(url)
+    # request = urllib2.Request(url)
     try:
+        request = urllib2.Request(url) # 190114 GT: moved this line inside try branch
         response = urllib2.urlopen(request)
         if response.getcode() in [200]:
             return response.read()
