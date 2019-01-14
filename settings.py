@@ -160,7 +160,7 @@ INSTALLED_APPS = (
     'dal_select2',
     'dal_queryset_sequence',
     'dal_select2_queryset_sequence',
-    "notification",
+    # "notification",
     'menu',
     'taggit',
     'taggit_labels',
@@ -514,6 +514,14 @@ GRAPH_MODELS = {
 }
 
 TAGGIT_CASE_INSENSITIVE = True
+
+# configure django_messages
+DJANGO_MESSAGES_NOTIFY = True # True is also the default value
+DJANGO_MESSAGES_NOTIFY_BY_USER = True # if True, personal preference is given by user through the get_email_notifications method
+try:
+    DEFAULT_HTTP_PROTOCOL = PROTOCOL # PROTOCOL can be set in private.py
+except:
+    pass
 
 PYBB_PERMISSION_HANDLER = 'commons.permissions.ForumPermissionHandler'
 PYBB_ATTACHMENT_ENABLE = True

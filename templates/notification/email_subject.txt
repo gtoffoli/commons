@@ -1,1 +1,1 @@
-{% load i18n %}CommonS Platform - {% blocktrans %}{{ subject }}{% endblocktrans %}
+{% load i18n %}CommonSpaces - {% blocktrans %}{{ subject }}{% endblocktrans %}
