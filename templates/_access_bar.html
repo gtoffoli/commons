@@ -55,7 +55,7 @@
            </span>
          </label>
          <button type="submit" name="Submit" class="btn btn-sm btn-primary primaryAction">{% trans "Log in" %}</button>
-         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+         {% if is_primary_domain %}<a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>{% endif %}
          <div class="social-login">
            {% if is_primary_domain %}
            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login'%}{% if not "accounts" in request.get_full_path %}&next={{request.get_full_path}}{% endif %}">
@@ -89,7 +89,7 @@
            <i class="fa fa-sign-in" aria-hidden="true"></i>
              {% trans "Log in" %}
          </button>
-         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+         {% if is_primary_domain %}<a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>{% endif %}
        </div>
        <div class="navbar-form pull-right mylogin-xs visible-sm">
        <!-- MOBILE LOGIN SOCIAL LOGIN BUTTON-->
@@ -97,14 +97,14 @@
            <i class="fa fa-sign-in" aria-hidden="true"></i>
            {% trans "Log in" %}
          </button>
-         <a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>
+         {% if is_primary_domain %}<a class="btn btn-sm btn-accent" href="/accounts/signup/">{% trans "sign up"|capfirst %}</a>{% endif %}
          <div class="social-login">
            {% if is_primary_domain %}
            <a id="sc_fblogin" href="{% provider_login_url 'facebook' process='login'%}{% if not "accounts" in request.get_full_path %}&next={{request.get_full_path}}{% endif %}">
              <img src="{% static "commons/img/fb_icon.png" %}" alt="{% trans "Login With" %} Facebook" title="{% trans "Login With" %} Facebook"></a>
            <a id="sc_inlogin" href="{% provider_login_url "linkedin_oauth2" %}{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
              <img src="{% static "commons/img/in_icon.png" %}" alt="{% trans "Login With" %} Linkedin" title="{% trans "Login With" %} Linkedin "></a>
-           {% elif is_test_domain %}
+           {% elif is_secondary_domain or is_test_domain %}
              <a id="sc_up2u" href="/saml2/login/{% if not "saml2" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}">
                <img src="{% static "commons/img/up2u_icon.png" %}" alt="{% trans "Login With" %} Up2U" title="{% trans "Login With" %} Up2U "></a>
            {% endif %}

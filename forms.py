@@ -267,7 +267,7 @@ class ProjectSearchForm (forms.Form):
     n_oers = forms.ChoiceField(required=False, choices=N_OERS_CHOICES, label=_('minimum number of OERs'), widget=forms.Select())
 
 class ProjectAddMemberForm (forms.Form):
-    user = forms.ModelChoiceField(required=False, queryset=User.objects.all(), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
+    user = forms.ModelChoiceField(required=True, queryset=User.objects.all(), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
     role_member = forms.CharField(required=False, widget=forms.HiddenInput())
 
 class DocumentForm(forms.Form): 
