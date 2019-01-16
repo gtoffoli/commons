@@ -7,5 +7,7 @@ you received a private message from {{ sender_name }} with the following content
 
 --
 {% blocktrans %}Sent from {{ site_url }}{% endblocktrans %}
+{% comment %}
 {% trans "Inbox" %}: {{ site_url }}{% url 'messages_inbox' %}
-{% trans "Reply" %}: {{ site_url }}{% url 'messages_reply' message.pk %}     
+{% trans "Reply" %}: {{ site_url }}{% url 'messages_reply' message.pk %}
+{% endcomment %}

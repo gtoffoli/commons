@@ -4019,6 +4019,7 @@ def pathnode_detail_by_id(request, node_id):
 def pathnode_edit(request, node_id=None, path_id=None):
     user = request.user
     node = None
+    path = None
     action = '/pathnode/edit/'
     if path_id:
         path = get_object_or_404(LearningPath, id=path_id)
@@ -4096,6 +4097,8 @@ def pathnode_edit(request, node_id=None, path_id=None):
         form = PathNodeForm(instance=node)
     else:
         form = PathNodeForm(initial={'path': path_id, 'creator': user.id, 'editor': user.id})
+    if not path:
+        return HttpResponseRedirect('/')
     data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path.title, 'slug_lp': path.slug, }
     data_dict['path'] = path
     data_dict['go_caller'] = go_caller
