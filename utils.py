@@ -253,7 +253,7 @@ def get_request_headers(url):
         request = HeadRequest(url) # 190114 GT: moved this line inside try branch
         response = urllib2.urlopen(request)
         response_headers = response.info()
-        return response_headers.dict
+        return response_headers
     except Exception as e:
         return { 'error': e}
 
