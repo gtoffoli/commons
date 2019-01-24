@@ -33,9 +33,9 @@ def oer_fix_oer_type():
         else:
             oer_type = 1
         if not oer.oer_type == oer_type:
-            print oer.oer_type, '->', oer_type
+            print (oer.oer_type, '->', oer_type)
             oer.oer_type = oer_type
-            oer.save()        
+            oer.save()
 
 def oer_init_remix():
     oers = OER.objects.all()
@@ -43,11 +43,11 @@ def oer_init_remix():
         if oer.source_type==3:
             oer.translated = True
             oer.save()
-            print 'translated'
+            print ('translated')
         elif oer.source_type in [4, 5]:
             oer.remixed = True
             oer.save()
-            print 'remixed'
+            print ('remixed')
 
 def print_oer_urls():
     oers = OER.objects.all()
@@ -58,7 +58,7 @@ def print_oer_urls():
         if not url: continue
         # s = '<a href="/project/%d/">%s</a> %s <br/>' % (p.slug, p.title, url)
         try:
-            print '%s - %s - %s' % (oer.title, url, p.name)
+            print ('%s - %s - %s' % (oer.title, url, p.name))
         except:
             pass
 
