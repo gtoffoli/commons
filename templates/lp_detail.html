@@ -248,9 +248,19 @@ iframe {
     {% if project %}
       {% include "_object_comments.html" with data_class="c1" data_obj=lp type_obj="lp" %}
     {% endif %}
-  </section> 
+  </section>
 </article>
+
 {% endblock %}
+
+{% block extra-body %}
+  <div id='loadingmessage' style='display:none'>
+    <div class="modal" style='display:block; padding-right:17px;'>
+      <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
+    </div>
+    <div class="modal-backdrop in"></div>
+  </div>
+{% endblock extra-body %}
 
 {% block extra_script %}
 <script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
@@ -333,6 +343,7 @@ iframe {
       if ($('li div a').hasClass('upNode')) {
         $('li div a.upNode').on('click', function(event){
           event.preventDefault();
+          $('#loadingmessage').css('display','block');
           var node_id = $(this).attr('id');
           node_id = node_id.substr(2);
           $.ajax({
@@ -347,6 +358,7 @@ iframe {
       if ($('li div a').hasClass('downNode')) {
         $('li div a.downNode').on('click', function(event){
           event.preventDefault();
+          $('#loadingmessage').css('display','block');
           var node_id = $(this).attr('id');
           node_id = node_id.substr(2);
           $.ajax({
