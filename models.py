@@ -2610,7 +2610,8 @@ class LearningPath(Resource, Publishable):
     def make_collection(self, request):
         """ convert from LP_SEQUENCE or LP_DAG to LP_COLLECTION, removing all edges """
         assert self.path_type in [LP_SEQUENCE, LP_DAG]
-        nodes = self.get_ordered_nodes()
+        # nodes = self.get_ordered_nodes()
+        nodes = self.get_nodes() 
         for node in nodes:
             edges = PathEdge.objects.filter(parent=node)
             for edge in edges:
