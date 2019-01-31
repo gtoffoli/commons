@@ -2979,7 +2979,7 @@ def oer_detail_by_slug(request, oer_slug):
 def oer_edit(request, oer_id=None, project_id=None):
     user = request.user
     oer = None
-    action = '/oer/edit/'
+    # 20190130 MMR action = '/oer/edit/'
     if oer_id:
         oer = get_object_or_404(OER, pk=oer_id)
         if not oer.can_access(user):
@@ -3026,7 +3026,6 @@ def oer_edit(request, oer_id=None, project_id=None):
                     track_action(request, request.user, 'Edit', oer, target=oer.project)
                 else:
                     track_action(request, request.user, 'Create', oer, target=oer.project)
-                    
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -3053,7 +3052,7 @@ def oer_edit(request, oer_id=None, project_id=None):
     else:
         form = OerForm(initial={'project': project_id, 'creator': user.id, 'editor': user.id, 'oer_type': 2, 'source_type': 2, 'state': DRAFT,})
         metadata_formset = OerMetadataFormSet()
-    data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer, 'action': action}
+    data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer}
     current_language = get_current_language()
     if project_id:
        data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
@@ -3062,6 +3061,7 @@ def oer_edit(request, oer_id=None, project_id=None):
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
     if oer_id:
+        data_dict['action'] = action
         data_dict['go_caller'] = '/oer/%s/' % oer.slug
     elif project_id:
         data_dict['go_caller'] = '/project/%s/' % current_project.slug
