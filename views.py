@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 import pyexcel
 
 from django.utils import timezone
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.validators import EmailValidator
 from django.template import RequestContext
@@ -127,6 +128,8 @@ def group_has_project(group):
     except:
         return None
 
+HOMEPAGE_TIMEOUT = 60 * 60 * 24 # 1 day
+
 def home(request):
     wall_dict = {}
     description='%s, %s, %s' % (_("learning in online communities of practice"),_("reusing resources to build learning paths"),_("browsing collections in our library of OERs"))
@@ -151,8 +154,8 @@ def home(request):
     for lead in lead_featured:
         if request.user.is_staff:
             if not lead.is_close:
-               group_lead_featured = Featured.objects.filter(group_name=lead.group_name).exclude(lead=True).order_by('sort_order')
-               groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if not featured.is_close])
+                group_lead_featured = Featured.objects.filter(group_name=lead.group_name).exclude(lead=True).order_by('sort_order')
+                groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if not featured.is_close])
         else:
             if lead.is_visible:
                 group_lead_featured = Featured.objects.filter(group_name=lead.group_name, status=PUBLISHED).exclude(lead=True).order_by('sort_order')
@@ -165,64 +168,72 @@ def home(request):
             wall_dict['recent_proj'] = recent_proj
             break
     principal_type_id = ContentType.objects.get_for_model(Project).id
-    popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
-    for popular_proj in popular_projects:
-        project = Project.objects.get(pk=popular_proj[0])
-        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj']:
-            wall_dict['popular_proj'] = project
-            break
-    active_projects = popular_principals(principal_type_id, active=True, max_days=30)
-    for active_proj in active_projects:
-        project = Project.objects.get(pk=active_proj[0])
-        # if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved:
-        if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
-            wall_dict['active_proj'] = project
-            break
+    popular_project_id = cache.get('popular_project_id')
+    if popular_project_id:
+        project = get_object_or_404(Project, id=popular_project_id)
+        print(project)
+        wall_dict['popular_proj'] = project
+    else:
+        popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
+        for popular_proj in popular_projects:
+            project = Project.objects.get(pk=popular_proj[0])
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj']:
+                wall_dict['popular_proj'] = project
+                cache.set('popular_project_id', project.id, HOMEPAGE_TIMEOUT)
+                break
+    active_project_id = cache.get('active_project_id')
+    if active_project_id:
+        project = get_object_or_404(Project, id=active_project_id)
+        print(project)
+        wall_dict['active_proj'] = project
+    else:
+        active_projects = popular_principals(principal_type_id, active=True, max_days=30)
+        for active_proj in active_projects:
+            project = Project.objects.get(pk=active_proj[0])
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
+                wall_dict['active_proj'] = project
+                cache.set('active_project_id', project.id, HOMEPAGE_TIMEOUT)
+                break
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
     for action in actions:
         lp = action.action_object
         if lp.state == PUBLISHED and lp.project:
             wall_dict['last_lp'] = lp
             break
-    """
-    actions = filter_actions(verbs=['Play'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=30)
-    for action in actions:
-        lp = action.action_object
-        # if lp.state == PUBLISHED and lp.project:
-        if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
-            wall_dict['popular_lp'] = lp
-            break
-    """
     principal_type_id = ContentType.objects.get_for_model(LearningPath).id
-    popular_lps = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
-    for lp_id, score in popular_lps:
-        lp = LearningPath.objects.get(pk=lp_id)
-        if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
-            wall_dict['popular_lp'] = lp
-            break        
+    popular_lp_id = cache.get('popular_lp_id')
+    if popular_lp_id:
+        lp = get_object_or_404(LearningPath, id=popular_lp_id)
+        print(lp)
+        wall_dict['popular_lp'] = lp
+    else:
+        popular_lps = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
+        for lp_id, score in popular_lps:
+            lp = LearningPath.objects.get(pk=lp_id)
+            if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
+                wall_dict['popular_lp'] = lp
+                cache.set('popular_lp_id', lp.id, HOMEPAGE_TIMEOUT)
+                break        
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
     for action in actions:
         oer = action.action_object
         if oer.state == PUBLISHED and oer.project:
             wall_dict['last_oer'] = oer
             break
-    """
-    actions = filter_actions(verbs=['View'], object_content_type=ContentType.objects.get_for_model(OER), max_days=30)
-    for action in actions:
-        oer = action.action_object
-        # if oer.state == PUBLISHED and oer.project:
-        if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
-            wall_dict['popular_oer'] = oer
-            break
-    """
     principal_type_id = ContentType.objects.get_for_model(OER).id
-    popular_oers = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
-    for oer_id, score in popular_oers:
-        oer = OER.objects.get(pk=oer_id)
-        if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
-            wall_dict['popular_oer'] = oer
-            break
+    popular_oer_id = cache.get('popular_oer_id')
+    if popular_oer_id:
+        oer = get_object_or_404(OER, id=popular_oer_id)
+        print(oer)
+        wall_dict['popular_oer'] = oer
+    else:
+        popular_oers = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
+        for oer_id, score in popular_oers:
+            oer = OER.objects.get(pk=oer_id)
+            if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
+                wall_dict['popular_oer'] = oer
+                cache.set('popular_oer_id', oer.id, HOMEPAGE_TIMEOUT)
+                break
     if settings.HAS_ZINNIA:
         #180924 MMR wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
         qend = timezone.now()
