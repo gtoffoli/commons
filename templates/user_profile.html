@@ -170,7 +170,7 @@
                <li class="list-back-c0" style="width:50%; vertical-align:top; padding-right:10px; padding-bottom:10px"><dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
                  <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
                  {% if profile.curriculum %}
-                   <dd><form method="post" id="delete_curriculum" action="/profile/{{ profile_user.username }}/delete_document/" style="display:inline">{% csrf_token %}
+                   <dd><form method="post" id="delete_curriculum" action="/profile/{{ profile_user.username }}/delete_document/" class="remove" style="display:inline">{% csrf_token %}
                      <button type="submit" id="delete" name="curriculum_id" style="border:none; background: white; display:inline" value="{{ profile.curriculum_id }}"><i class="fa fa-times-circle red"></i></button> {{ profile.curriculum }}</form> &nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a>
                      {% if profile.curriculum.viewable %}&nbsp;&nbsp;&nbsp;<a href="/document/{{ profile.curriculum_id }}/view/?profile={{ profile_user.username }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a>{% endif %}
                    </dd>
@@ -292,15 +292,35 @@
 </article>
 {% endblock %}
 
+{% block extra-body %}
+{% if can_edit and complete_profile %}
+  <div id='loadingmessage' style='display:none'>
+    <div class="modal" style='display:block; padding-right:17px;'>
+      <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
+    </div>
+    <div class="modal-backdrop in"></div>
+  </div>
+{% endif %}
+{% endblock extra-body %}
+
 {% block extra_script %}
 {% if can_edit and complete_profile %}
-   <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
 
-     <script type="text/javascript">
-       var exts = "pdf";
-       var appls = "application/pdf";
-       var fsize = 2;
-     </script>
-     {% include "_validate_file.html" %}
+
+    <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
+    <script type="text/javascript">
+        var exts = "{{exts_file_user_profile}}";
+        var appls = "application/pdf";
+        var fsize = {{size_file_user_profile}};
+        var fsizeplus = {{size_file_user_profile}};
+        var sub_exts = '{{sub_exts}}';
+        $(document).ready(function (){
+        {% trans "do you really want to delete" as translatemsg0 %}
+    {% trans "this Curriculum" as translatemsg1 %}
+      {% include "_data_confirm_js.html" with data_form='remove' data_msg=translatemsg0|add:' '|add:translatemsg1 %}
+    });
+    </script>
+    {% include "_validate_file.html" with addDoc='add_document' fieldFile='docfile' %}
 {% endif %}
 {% endblock %}

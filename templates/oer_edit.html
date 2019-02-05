@@ -48,13 +48,13 @@
         <div class="btn-group" id="{{ field.name }}" data-toggle="buttons">
         {% if current_language == 'en' %} 
         {% for checkbox in field %}
-          <label class="btn btn-default{% comment %}{% if checkbox.is_checked %} active{% endif %}{% endcomment %}">
+          <label class="btn btn-default">
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}
         {% else %}
         {% for checkbox in field|dictsort:"choice_label" %}
-          <label class="btn btn-default{% comment %}{% if checkbox.is_checked == True %} active{% endif %}{% endcomment %}">
+          <label class="btn btn-default">
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}

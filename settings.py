@@ -572,3 +572,13 @@ DATATRANS_TRANSLATE_MAP = {
     'learningpath': ('/lp/%s/', 'slug', 'title', 'commons.forms.LpForm',),
     'pathnode': ('/pathnode/%s/', 'pk', 'label', 'commons.forms.PathNodeForm',),
 }
+
+HOMEPAGE_TIMEOUT = 60 * 60 * 24 # 1 day
+
+#file attachment
+EXTS_FILE_ATTACHMENT = 'txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip'
+SIZE_FILE_ATTACHMENT = 10
+EXTS_FILE_USER_PROFILE = 'pdf'
+SIZE_FILE_USER_PROFILE = 2
+PLUS_SIZE = 2
+SUB_EXTS = 'zip'

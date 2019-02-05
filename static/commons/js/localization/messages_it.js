@@ -26,6 +26,7 @@ $.extend( $.validator.messages, {
 	extension: "Inserisci un file con un formato valido",
 	accept: "Inserisci un file con un formato valido",
 	filesize: "Inserisci un file di dimensione massima {0}MB",
+	filesizeplus: "Inserisci un file di dimensione massima {0}MB",
 	maxlength: $.validator.format( "Non inserire pi&ugrave; di {0} caratteri" ),
 	minlength: $.validator.format( "Inserisci almeno {0} caratteri" ),
 	rangelength: $.validator.format( "Inserisci un valore compreso tra {0} e {1} caratteri" ),

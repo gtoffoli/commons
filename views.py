@@ -128,9 +128,10 @@ def group_has_project(group):
     except:
         return None
 
-HOMEPAGE_TIMEOUT = 60 * 60 * 24 # 1 day
+# HOMEPAGE_TIMEOUT = 60 * 60 * 24 # 1 day
 
 def home(request):
+    homepage_timeout = settings.HOMEPAGE_TIMEOUT
     wall_dict = {}
     description='%s, %s, %s' % (_("learning in online communities of practice"),_("reusing resources to build learning paths"),_("browsing collections in our library of OERs"))
     wall_dict['meta'] =  {
@@ -179,7 +180,7 @@ def home(request):
             project = Project.objects.get(pk=popular_proj[0])
             if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj']:
                 wall_dict['popular_proj'] = project
-                cache.set('popular_project_id', project.id, HOMEPAGE_TIMEOUT)
+                cache.set('popular_project_id', project.id, homepage_timeout)
                 break
     active_project_id = cache.get('active_project_id')
     if active_project_id:
@@ -192,7 +193,7 @@ def home(request):
             project = Project.objects.get(pk=active_proj[0])
             if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
                 wall_dict['active_proj'] = project
-                cache.set('active_project_id', project.id, HOMEPAGE_TIMEOUT)
+                cache.set('active_project_id', project.id, homepage_timeout)
                 break
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(LearningPath), max_days=90)
     for action in actions:
@@ -212,7 +213,7 @@ def home(request):
             lp = LearningPath.objects.get(pk=lp_id)
             if lp.state == PUBLISHED and lp.project and not lp==wall_dict['last_lp']:
                 wall_dict['popular_lp'] = lp
-                cache.set('popular_lp_id', lp.id, HOMEPAGE_TIMEOUT)
+                cache.set('popular_lp_id', lp.id, homepage_timeout)
                 break        
     actions = filter_actions(verbs=['Approve'], object_content_type=ContentType.objects.get_for_model(OER), max_days=90)
     for action in actions:
@@ -232,7 +233,7 @@ def home(request):
             oer = OER.objects.get(pk=oer_id)
             if oer.state == PUBLISHED and oer.project and not oer==wall_dict['last_oer']:
                 wall_dict['popular_oer'] = oer
-                cache.set('popular_oer_id', oer.id, HOMEPAGE_TIMEOUT)
+                cache.set('popular_oer_id', oer.id, homepage_timeout)
                 break
     if settings.HAS_ZINNIA:
         #180924 MMR wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
@@ -318,6 +319,9 @@ def user_profile(request, username, user=None):
     var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'roll_memberships': roll_memberships, 'memberships': memberships, }
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
+        var_dict['exts_file_user_profile'] = settings.EXTS_FILE_USER_PROFILE
+        var_dict['size_file_user_profile'] = settings.SIZE_FILE_USER_PROFILE
+        var_dict['sub_exts'] = settings.EXTS_FILE_USER_PROFILE
     if profile:
         var_dict['complete_profile'] = profile.get_completeness()
     else:
@@ -1134,6 +1138,10 @@ def folder_detail(request, project_slug='', folder=None):
     var_dict['subfolder_form'] = FolderForm()
     var_dict['form'] = DocumentUploadForm()
     var_dict['form_res'] = FolderOnlineResourceForm()
+    var_dict['exts_file_attachment'] = settings.EXTS_FILE_ATTACHMENT
+    var_dict['size_file_attachment'] = settings.SIZE_FILE_ATTACHMENT
+    var_dict['plus_size'] = settings.PLUS_SIZE
+    var_dict['sub_exts'] = settings.SUB_EXTS
     return render(request, 'folder_detail.html', var_dict)
 
 # see view library_traverse in https://github.com/joelburton/library-mptt/blob/master/project/library/views.py
@@ -2973,11 +2981,16 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or (can_delete and not in_cut_oers)
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
+        var_dict['exts_file_attachment'] = settings.EXTS_FILE_ATTACHMENT
+        var_dict['size_file_attachment'] = settings.SIZE_FILE_ATTACHMENT
+        var_dict['plus_size'] = settings.PLUS_SIZE
+        var_dict['sub_exts'] = settings.SUB_EXTS
     var_dict['evaluations'] = oer.get_evaluations()
     var_dict['user_evaluation'] = user.id != None and oer.get_evaluations(user)
     var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
     var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
+
     if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
             track_action(request, user, 'View', oer, target=oer.project)
@@ -4032,6 +4045,10 @@ def pathnode_edit(request, node_id=None, path_id=None):
     node = None
     path = None
     action = '/pathnode/edit/'
+    exts_file_attachment = settings.EXTS_FILE_ATTACHMENT
+    size_file_attachment = settings.SIZE_FILE_ATTACHMENT
+    plus_size = settings.PLUS_SIZE
+    sub_exts = settings.SUB_EXTS
     if path_id:
         path = get_object_or_404(LearningPath, id=path_id)
         go_caller = '/lp/%s/' % path.slug
@@ -4091,7 +4108,7 @@ def pathnode_edit(request, node_id=None, path_id=None):
                     form = PathNodeForm(instance=node)
             else:
                 print (form.errors)
-            return render(request, 'pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, 'go_caller': go_caller})
+            return render(request, 'pathnode_edit.html', {'form': form, 'node': node, 'action': action, 'name_lp': path, 'slug_lp': path.slug, 'go_caller': go_caller, 'exts_file_attachment': exts_file_attachment, 'size_file_attachment': size_file_attachment, 'plus_size': plus_size, 'sub_exts': sub_exts })
         elif request.POST.get('cancel', ''):
             if node:
                 node_id = node.id
@@ -4111,6 +4128,10 @@ def pathnode_edit(request, node_id=None, path_id=None):
     if not path:
         return HttpResponseRedirect('/')
     data_dict = {'form': form, 'node': node, 'object': node, 'action': action, 'name_lp': path.title, 'slug_lp': path.slug, }
+    data_dict['exts_file_attachment'] = exts_file_attachment
+    data_dict['size_file_attachment'] = size_file_attachment
+    data_dict['plus_size'] = plus_size
+    data_dict['sub_exts'] = sub_exts
     data_dict['path'] = path
     data_dict['go_caller'] = go_caller
     current_language = get_current_language()

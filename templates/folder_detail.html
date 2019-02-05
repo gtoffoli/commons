@@ -132,10 +132,6 @@ dl.eval dd:nth-child(even) {
     <div class="col-md-6 col-lg-6 padding0">
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add online resource"|capfirst %}</dt>
-{% comment %}
-      <dd><form method="post" id="add_resource_online" action="/project/add_resource_online/">{% csrf_token %}
-        <input type="hidden" id="project" name="project" value="{{ project.id }}">
-{% endcomment %}
       <dd><form method="post" id="add_resource_online" action="/folder/add_resource_online/">{% csrf_token %}
         <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
         {% for field in form_res.visible_fields %}
@@ -155,16 +151,30 @@ dl.eval dd:nth-child(even) {
 </div>
 {% endblock %}
 
+{% block extra-body %}
+{% if can_add %}
+  <div id='loadingmessage' style='display:none'>
+    <div class="modal" style='display:block; padding-right:17px;'>
+      <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
+    </div>
+    <div class="modal-backdrop in"></div>
+  </div>
+{% endif %}
+{% endblock extra-body %}
+
+
 {% block extra_script %}
 {% if can_add %}
 <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
 
 <script type="text/javascript">
-       var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip";
-       var appls = ""; //"text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,audio/mp3,video/mp3,audio/mp4,video/mp4,application/rtf"; // application/x-ipynb+json
-       var fsize = 10;
+    var exts = '{{exts_file_attachment}}';
+    var appls = ""; //"text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,audio/mp3,video/mp3,audio/mp4,video/mp4,application/rtf"; // application/x-ipynb+json
+    var fsize = {{size_file_attachment}};
+    var fsizeplus = {{plus_size}}*{{size_file_attachment}};
+    var sub_exts = '{{sub_exts}}';
 </script>
-     {% include "_validate_file.html" %}
+{% include "_validate_file.html" with addDoc='add_document' fieldFile='docfile' %}
 {% endif %}
 {% if can_edit_delete %}
 <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
@@ -174,9 +184,7 @@ $(document).ready(function (){
 {% trans "this document" as translatemsg1 %}
 {% trans "this folder with its contents" as translatemsg2 %}
  if ($('li a').hasClass('deleteDoc')) {
-    console.log('esiste classe');
     $('li a.deleteDoc').on('click', function(event){
-      console.log('click');
       event.preventDefault();
       $("body").css("cursor", "default");
       var doc_id = $(this).attr('id');

@@ -28,13 +28,13 @@
         <div class="btn-group" id="{{ field.name }}" data-toggle="buttons">
         {% if current_language == 'en' %}
         {% for checkbox in field %}
-          <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
+          <label class="btn btn-default">
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}
         {% else %}
         {% for checkbox in field|dictsort:"choice_label" %}
-          <label class="btn btn-default{% if checkbox.is_checked %} active{% endif %}" >
+          <label class="btn btn-default">
            {{ checkbox.tag }} {{ checkbox.choice_label }}
           </label>
         {% endfor %}
@@ -75,20 +75,18 @@
     }
   }
   $(document).ready(function() {
-/*
-  	{% if lp %}
-    setDisabled( 'id_path_type' )
-    {% endif %}
-    
-    {% if not user.is_superuser %}
-      setDisabled( 'id_project' )
-    {% endif %}
-*/
 	{% if not request.user.is_staff %}
 		setDisabled('id_path_type')
 	{% endif %}
     setDisabled('id_project')
     setDisabled('id_state');
+   num_tags = $("[name='tags'").length;
+   for (i=0; i<num_tags; i++) {
+     if ($("[name='tags'")[i].checked) {
+       id_tag = $("[name='tags'")[i].id;
+       $('#'+id_tag).parent().addClass('btn btn-default active');
+     }
+   }
   })
 </script>
 

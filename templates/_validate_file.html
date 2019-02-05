@@ -1,32 +1,50 @@
 {% load i18n staticfiles %}
-     <script type="text/javascript" src="{% static "commons/js/jquery.validate.min.js" %}"></script>
-     <script type="text/javascript" src="{% static "commons/js/additional-methods.min.js" %}"></script>
-     <script type="text/javascript" src="{{ STATIC_URL }}commons/js/localization/messages_{{ LANGUAGE_CODE }}.js"></script>
-     <script type="text/javascript">
-        $(document).ready(function() {
-          $.validator.addMethod('filesize', function(value, element, param) {
-            try{
-              return this.optional(element) || (element.files[0].size <= (param*1048576))
-            }
-            catch(err) {
-              return true
-            }
-          });
-          $("#add_document").validate ({
-             rules:{	
-               'docfile':{
-                  extension: exts,
-                  accept: appls,
-                  filesize: fsize
-               },
-             },
-             submitHandler: function(form) {
-               if ($("#id_docfile").val() == '') {
-                 return false;
-               } else {
-               form.submit();
-               }
-             }
-          });
+<script type="text/javascript" src="{% static "commons/js/jquery.validate.min.js" %}"></script>
+<script type="text/javascript" src="{% static "commons/js/additional-methods.min.js" %}"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}commons/js/localization/messages_{{ LANGUAGE_CODE }}.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $.validator.addMethod('filesize', function(value, element, param) {
+                try{
+                    if ((this.optional(element) || value.match(new RegExp(".(" + sub_exts + ")$", "i")))) {
+                        return true
+                    }
+                    return this.optional(element) || (element.files[0].size <= (param*1048576))
+                }
+                catch(err) {
+                    console('errore');
+                    console(err);
+                    return true
+                }
         });
-     </script>
+        $.validator.addMethod('filesizeplus', function(value, element, param) {
+                try{
+                    if (this.optional(element) || value.match(new RegExp(".(" + sub_exts + ")$", "i"))) {
+                        return this.optional(element) || (element.files[0].size <= (param*1048576))
+                    }
+                    return true
+                }
+                catch(err) {
+                    return true
+                }
+        });
+        $("#{{addDoc}}").validate ({
+            onfocusout: false,
+            rules:{	
+                '{{fieldFile}}':{
+                    {% if fieldFile == 'docfile' %}required: true,{% endif %}
+                    extension: exts,
+                    accept: appls,
+                    filesize: fsize,
+                    filesizeplus: fsizeplus,
+                },
+            },
+            submitHandler: function(form) {
+                if ($('#id_{{fieldFile}}').val() != '') {
+                    $('#loadingmessage').css('display','block');
+                }
+                form.submit();
+            }
+        });
+    });
+</script>

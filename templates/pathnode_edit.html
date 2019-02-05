@@ -95,55 +95,37 @@
 </div>
 {% endblock %}
 
+{% block extra-body %}
+  <div id='loadingmessage' style='display:none'>
+    <div class="modal" style='display:block; padding-right:17px;'>
+      <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
+    </div>
+    <div class="modal-backdrop in"></div>
+  </div>
+{% endblock extra-body %}
+
 {% block extra_script %}
    <script type="text/javascript" src="{% static "commons/js/bootstrap-filestyle.min.js" %}"></script>
-
-{% comment %}
-   <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
-{% endcomment %}
 
 {% include "_select2_js.html" %}
 
 {% include "_tinymce_init.html" with data='extend' %}
 
-     <script type="text/javascript" src="{% static "commons/js/jquery.validate.min.js" %}"></script>
-     <script type="text/javascript" src="{% static "commons/js/additional-methods.min.js" %}"></script>
-     <script type="text/javascript" src="{{ STATIC_URL }}commons/js/localization/messages_{{ LANGUAGE_CODE }}.js"></script>
-     <script type="text/javascript">
-        var exts = "txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip";
-        var appls = "" // "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,audio/mp3,video/mp3,audio/mp4,video/mp4,application/rtf"; // application/x-ipynb+json
-        var fsize = 10;
-        $(document).ready(function() {
-          $.validator.addMethod('filesize', function(value, element, param) {
-            try{
-              return this.optional(element) || (element.files[0].size <= (param*1048576))
-            }
-            catch(err) {
-              return true
-            }
-          });
-          $("#edit_pathnode").validate ({
-             rules:{
-               'new_document':{
-                  extension: exts,
-                  accept: appls,
-                  filesize: fsize
-               },
-             },
-             submitHandler: function(form) {
-               form.submit();
-             }
-          });
-          $('#clearfile').click(function() {
-             $('#id_new_document').filestyle('clear');
-             if ($("#id_new_document").hasClass('error')) {
+<script type="text/javascript">
+    var exts = '{{exts_file_attachment}}';
+    var appls = "" // "text/plain,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/pdf,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.oasis.opendocument.text,application/vnd.oasis.opendocument.presentation,application/vnd.oasis.opendocument.spreadsheet,image/jpeg,image/png,image/x-png,image/gif,audio/mp3,video/mp3,audio/mp4,video/mp4,application/rtf"; // application/x-ipynb+json
+    var fsize = {{size_file_attachment}};
+    var fsizeplus = {{plus_size}}*{{size_file_attachment}};
+    var sub_exts = '{{sub_exts}}';
+    $(document).ready(function() {
+        $('#clearfile').click(function() {
+            $('#id_new_document').filestyle('clear');
+            if ($("#id_new_document").hasClass('error')) {
                 $("#id_new_document").removeClass('error');
                 $("#id_new_document-error").html('');
-             }
-          });
+            }
         });
-        </script>
+    });
+</script>
+{% include "_validate_file.html" with addDoc='edit_pathnode' fieldFile='new_document' %}
 {% endblock %}
