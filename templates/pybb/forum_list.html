@@ -14,22 +14,49 @@
                 <th class="forum-post-count">
                     {% trans "Posts" %}
                 </th>
-				{% if user.is_authenticated %}
+        {% if user.is_authenticated %}
                 <th class="forum-post-count">
                     {% trans "unviewed by me"|capfirst %}
                 </th>
-				{% endif %}
+        {% endif %}
                 <th class="forum-last-post">
                     {% trans "Last posts" %}
                 </th>
             </tr>
         </thead>
         <tbody>
-        {% for forum in forum_list|pybb_forum_unread:user %}
-{% with project=forum.get_project %}
-{% if project %}
-{% if not project.get_type_name == "ment" and not project.get_type_name == "sup" %}
-			{% if forum.topic_count %}
+    {% for forum in forum_list|pybb_forum_unread:user %}
+    {% with project=forum.get_project %}
+    {% if project %}
+        {% if not project.get_type_name == "ment" and not project.get_type_name == "sup" %}
+            {% if forum.topic_count %}
+            <tr class="forum-row">
+                <td class="forum-name {% if forum.unread %} forum-unread{% endif %}">
+                    <div class="state-indicator"></div>
+                    <a href="{{ forum.get_absolute_url }}">{{ forum.name }}</a> {% if forum.hidden %}[{% trans "Hidden" %}]{% endif %}
+                    <div class="forum-description">
+                        {{ forum.description|safe }}
+                    </div>
+                </td>
+                <td class="forum-topic-count align-center">
+                    {{ forum.topic_count }}
+                </td>
+                <td class="forum-post-count align-center">
+                    {{ forum.post_count }}
+                </td>
+                {% if user.is_authenticated %}
+                <td class="forum-post-count align-center">
+                    {{ forum|forum_unviewed_posts_count:user }}
+                </td>
+                {% endif %}
+                <td class="forum-last-post">
+                    {% include "pybb/forum_last_update_info.html" %}
+                </td>
+            </tr>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% if forum.topic_count %}
             <tr class="forum-row">
                 <td class="forum-name {% if forum.unread %} forum-unread{% endif %}">
                     <div class="state-indicator"></div>
@@ -44,25 +71,24 @@
                 <td class="forum-post-count" style="text-align: center;">
                     {{ forum.post_count }}
                 </td>
-				{% if user.is_authenticated %}
-                 <td class="forum-post-count" style="text-align: center;">
+                {% if user.is_authenticated %}
+                <td class="forum-post-count" style="text-align: center;">
                     {{ forum|forum_unviewed_posts_count:user }}
                 </td>
-				{% endif %}
+                {% endif %}
                 <td class="forum-last-post">
                     {% include "pybb/forum_last_update_info.html" %}
                 </td>
             </tr>
-			{% endif %}
-{% endif %}
-{% endif %}
-{% endwith %}
-        {% empty %}
-            {% if category %}
-                <h3>{% trans "No forums created" %}</h3>
-                <a href="{% url 'admin:pybb_forum_add' %}">{% trans "Add forum now" %}</a>
-            {%  endif %}
-        {% endfor %}
+        {% endif %}
+    {% endif %}
+    {% endwith %}
+    {% empty %}
+    {% if category %}
+        <h3>{% trans "No forums created" %}</h3>
+        <a href="{% url 'admin:pybb_forum_add' %}">{% trans "Add forum now" %}</a>
+    {% endif %}
+    {% endfor %}
         </tbody>
     </table>
 {% endif %}

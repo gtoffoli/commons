@@ -3009,21 +3009,24 @@ def oer_edit(request, oer_id=None, project_id=None):
         if not oer.can_access(user):
             raise PermissionDenied
         action = '/oer/%s/edit/' % oer.slug
+        current_project = get_object_or_404(Project, id=oer.project_id)
         if not oer.can_edit(request):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
-
+    if project_id:
+        current_project = get_object_or_404(Project, id=project_id)
+        action = '/project/%s/oer_new/' % project_id
     if request.POST:
         oer_id = request.POST.get('id', '')
-
         if oer_id:
             oer = get_object_or_404(OER, id=oer_id)
             action = '/oer/%s/edit/' % oer.slug
             project_id = oer.project_id
+            current_project = get_object_or_404(Project, id=project_id)
+        """
         if not project_id:
             projectId = request.POST.get('project', '')
-            current_project = get_object_or_404(Project, id=projectId)
-        else:
-            current_project = None
+            current_project = get_object_or_404(Project, id=project_id)
+        """
         form = OerForm(request.POST, instance=oer)
         metadata_formset = OerMetadataFormSet(request.POST, instance=oer)
         if request.POST.get('save', '') or request.POST.get('continue', ''):

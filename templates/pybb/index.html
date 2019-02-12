@@ -19,12 +19,12 @@
         <h3>{% trans "Forum categories are not created" %}</h3>
         <a href="{% url 'admin:pybb_category_add' %}">{% trans "Add a category now" %}</a>
     {% endif %}
-    {% if user.is_authenticated %}
-        <div id='topic_latest'>
+    {% if user.is_superuser %}  {% comment %} 20190211 MMR user.is_authenticated {% endcomment %}
+        <p id='topic_latest'>
             <a href='{% url 'pybb:topic_latest' %}'>
                 {% trans "Last updates in topics" %}
             </a>
-        </div>
+        </p>
 		{% comment %}
         <div id='mark-all-as-read'>
             <a href='{% url 'pybb:mark_all_as_read' %}'>
