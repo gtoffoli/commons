@@ -58,6 +58,10 @@
         <div class="iframe-container">
           <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
         </div>
+      {% elif 'zip' in mimetype %}
+        <div class="iframe-container">
+          <iframe src="{{ url }}" id="iframe" allowfullscreen></iframe>
+        </div>
       {% endif %}
     {% endwith %}{% endif %}
   </div>

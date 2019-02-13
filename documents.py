@@ -15,6 +15,7 @@ from django.core.files.storage import FileSystemStorage
 from django.db import models, transaction
 from django.utils.translation import ugettext_lazy as _
 from commons.compressed_files import CompressedFile, NotACompressedFile
+from commons.scorm import ContentPackage
 import commons.utils
 from django.conf import settings
 
@@ -394,6 +395,11 @@ class Document(models.Model):
         for mt in VIEWABLE_MIMETYPES:
             if mimetype.count(mt):
                 return True
+        if mimetype == 'application/x-zip-compressed':
+            f = self.open()
+            is_content_package = ContentPackage().has_imsmanifest(file=f)
+            f.close()
+            return is_content_package
         return False
 
     @property

@@ -72,6 +72,7 @@ from .session import get_clipboard, set_clipboard
 # from .analytics import notify_event, track_action
 from .tracking import notify_event, track_action
 from .analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
+from commons.scorm import ContentPackage
 
 from .utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
 from six import iteritems
@@ -3372,6 +3373,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
     ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
     profile = request.GET.get('profile', '')
+    mimetype = document.latest_version.mimetype
     if document.viewable:
         domain = request.META['HTTP_HOST']
         if node_doc:
@@ -3382,39 +3384,40 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
                 # oer_document = OerDocument.objects.get(document_id=document_id)
                 oer_document = get_object_or_404(OerDocument, document_id=document_id)
         elif ment_node_doc:
-            # node = PathNode.objects.get(document_id=document_id)
             node = get_object_or_404(PathNode, document_id=document_id)
             list = ment_node_doc.split('-')
-            # ment_proj = Project.objects.get(pk = int(list[1]))
             ment_proj = get_object_or_404(Project, pk=int(list[1]))
         elif proj:
-            # folder_document = FolderDocument.objects.get(document_id=document_id)
             folder_document = get_object_or_404(FolderDocument, document_id=document_id)
             if not folder_document.can_access(user):
                 raise PermissionDenied
-            # project = Project.objects.get(pk = proj)
             project = get_object_or_404(Project, pk=proj)
             folder = folder_document.folder
         elif profile:
-            #? profile_document = UserProfile.objects.get(curriculum_id=document_id)
-            # user = User.objects.get(username = profile)
             user = get_object_or_404(User, username=profile)
             profile = user.get_profile()
         else:
-            # oer_document = OerDocument.objects.get(document_id=document_id)
             oer_document = get_object_or_404(OerDocument, document_id=document_id)
-            # oer = OER.objects.get(pk = oer_document.oer_id)
             oer = get_object_or_404(OER, pk=oer_document.oer_id)
         if document.viewerjs_viewable:
             url = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (domain, document_id)
-            mimetype=document.latest_version.mimetype
+            # mimetype=document.latest_version.mimetype
+        elif mimetype=='application/x-zip-compressed':
+            f = document.latest_version.open()
+            cp = ContentPackage(file=f, slug='%05d-%s' % (document.id, slugify(document.label)))
+            cp_dict = cp.read()
+            f.close()
+            error = cp_dict.get('error', '')
+            if error:
+                print (error)
+            else:
+                url = cp_dict['url']
         else:
             url = protocol + '://%s/document/%s/serve/' % (domain, document_id)
-            mimetype = document.latest_version.mimetype
+            # mimetype = document.latest_version.mimetype
         if return_url:
             return url, mimetype
         else:
-            # return render(request, 'document_view.html', {'document': document, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
             return render(request, 'document_view.html', {'document': document, 'folder': folder, 'url': url, 'node': node, 'ment_proj': ment_proj, 'oer': oer, 'project': project, 'profile': profile})
     else:
         document_version = document.latest_version
@@ -3643,7 +3646,7 @@ def lp_play(request, lp_id, lp=None):
         elif mimetype.count('audio/'): # view only first non-PDF
             var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
             var_dict['media_view'] = True
-        else: # including ipynb
+        else: # including ipynb and zip (SCORM content package)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     if oer:
         documents = oer.get_sorted_documents()
@@ -3678,6 +3681,17 @@ def lp_play(request, lp_id, lp=None):
                 elif mimetype.count('ipynb'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     handle_view_template(mimetype, url)
+                elif mimetype=='application/x-zip-compressed':
+                    f = current_document.latest_version.open()
+                    cp = ContentPackage(file=f, slug='%05d-%s' % (current_document.id, slugify(current_document.label)))
+                    cp_dict = cp.read()
+                    f.close()
+                    error = cp_dict.get('error', '')
+                    if error:
+                        print (error)
+                    else:
+                        url = cp_dict['url']
+                        handle_view_template(mimetype, url, document=current_document)
             else:
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer

@@ -352,15 +352,17 @@ ROOT_URLCONF = 'commons.urls'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+if IS_LINUX:
+    SCORM_URL = '/scorm/'
+    SCORM_ROOT = os.path.join(BASE_DIR, 'scorm')
+else:
+    SCORM_URL = '/media/scorm/'
+    SCORM_ROOT = os.path.join(MEDIA_ROOT, 'scorm') 
+SCORM_EXPIRATION = 60 * 60 * 24
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-"""
-if False:
-    STATICFILES_DIRS = (
-        os.path.join(BASE_DIR, "commons", "static"),
-        os.path.join(BASE_DIR, "pinax", "static"),
-    )
-"""
+
 BOWER_COMPONENTS_ROOT = os.path.join(BASE_DIR, 'components')
 
 # --------- TEMPORARY_DIRECTORY ----------------
@@ -580,5 +582,5 @@ EXTS_FILE_ATTACHMENT = 'txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|m
 SIZE_FILE_ATTACHMENT = 10
 EXTS_FILE_USER_PROFILE = 'pdf'
 SIZE_FILE_USER_PROFILE = 2
-PLUS_SIZE = 2
+PLUS_SIZE = 4
 SUB_EXTS = 'zip'
