@@ -8,7 +8,7 @@ from pybb import defaults
 """ commented to avoid circularity in Django 2.1: django_messages -> urls.reverse -> pybb -> permissions -> track_action -> Message
 from commons.analytics import track_action
 """
-from .tracking import track_action
+# 20190212 MMR from .tracking import track_action
 
 class ForumPermissionHandler(DefaultPermissionHandler):
 
@@ -56,8 +56,11 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         else:
             # return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
             may_view = (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
+        """
+        20190212 MMR
         if may_view:
-            track_action(None, user, 'View', topic)
+            track_action(None, user, 'View', topic, target=forum)
+        """
         return may_view
     
     def may_create_poll(self, user):

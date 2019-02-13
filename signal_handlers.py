@@ -57,7 +57,7 @@ def post_post_save_handler(sender, **kwargs):
     topic = post.topic
     forum = topic.forum
     #180921 MMR verb = created and 'Create' or 'Edit'
-    track_action(None, user, 'Create', post, target=forum)
+    track_action(None, user, 'Create', post, target=topic)
 
 post_save.connect(project_post_save_handler, sender=Project)
 """
