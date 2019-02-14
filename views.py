@@ -3402,7 +3402,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         if document.viewerjs_viewable:
             url = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (domain, document_id)
             # mimetype=document.latest_version.mimetype
-        elif mimetype=='application/x-zip-compressed':
+        elif mimetype in ('application/zip', 'application/x-zip', 'application/x-zip-compressed'):
             f = document.latest_version.open()
             cp = ContentPackage(file=f, slug='%05d-%s' % (document.id, slugify(document.label)))
             cp_dict = cp.read()
@@ -3681,7 +3681,7 @@ def lp_play(request, lp_id, lp=None):
                 elif mimetype.count('ipynb'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     handle_view_template(mimetype, url)
-                elif mimetype=='application/x-zip-compressed':
+                elif mimetype in ('application/zip', 'application/x-zip', 'application/x-zip-compressed'):
                     f = current_document.latest_version.open()
                     cp = ContentPackage(file=f, slug='%05d-%s' % (current_document.id, slugify(current_document.label)))
                     cp_dict = cp.read()

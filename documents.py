@@ -395,7 +395,7 @@ class Document(models.Model):
         for mt in VIEWABLE_MIMETYPES:
             if mimetype.count(mt):
                 return True
-        if mimetype == 'application/x-zip-compressed':
+        if mimetype in ('application/zip', 'application/x-zip', 'application/x-zip-compressed'):
             f = self.open()
             is_content_package = ContentPackage().has_imsmanifest(file=f)
             f.close()
