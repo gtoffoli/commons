@@ -31,12 +31,16 @@ dl.eval dd:nth-child(even) {
 <article class="panel-white text-left marginTB30">
   {% if can_less_action %}
     <div class="row panel-c2 panel-heading-c2 marginLR0 padding1020">
-      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0 font_small">{% if can_remove %}<form class="view_inline remove" action="/oer/{{ oer.id }}/delete/" method="post" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle font07em c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
+      <h2 class="col-sm-8 col-md-9 col-lg-9 marginTB5 paddingL0 font_small">{% if can_remove %}<form class="view_inline remove" action="/oer/{{ oer.id }}/delete/" method="post" id="delete_{{ oer.id }}">{% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}"><button type="submit" class="btn-link" title="{% trans "delete" %}" id="submit_{{ oer.id }}"><i class="fa fa-times-circle c-white"></i></button></form> {% endif %}{{ oer.title }}</h2>
       <p class="col-sm-4 col-md-3 col-lg-3 marginB0 font26 font_button_small text-right paddingL0">
+        {% if oer.project %}
         {% if can_edit and not language_mismatch %}&nbsp; <a href="/oer/{{ oer.slug }}/edit/" title="{% trans "show edit view" %}"><i class="fa fa-edit font07em c-white"></i></a>{% endif %}
         {% if can_translate and object.original_language %}&nbsp; <a href="/datatrans/translate/oer/{{ object.pk }}/" title="{% trans "show translate view" %}"><i class="fa fa-language font07em c-white"></i></a>{% endif %}
+        {% endif %}
+        {% if oer.project and oer.description %}
         {% if can_edit %}&nbsp; <a href="/oer/{{ oer.slug }}/upload/screenshot/" title="{% trans "upload screenshot" %}"><i class="fa fa-picture-o font07em" aria-hidden="true"></i></a>{% endif %}
         {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font07em c-white"></i></a>{% endif %}
+        {% endif %}
         {% if can_delete and not in_cut_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?cut=true" title="{% trans "mark this OER as a candidate for cut & paste" %}"><i class="fa fa-cut font07em c-white"></i></a>{% endif %}
       </p>
     </div>
@@ -77,9 +81,18 @@ dl.eval dd:nth-child(even) {
             <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"></div>
             <p>{{ oer.description }}</p>
         </div>
-
       {% elif oer.description %}
         <p>{{ oer.description }}</p>
+      {% elif  oer.url %}
+        <div class="hidden-xs">
+           <div class="posRel">
+              <div class="bg_view floatL text-center">
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+           </div>
+        </div>
+        <div class="visible-xs">
+          <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
+        </div>
       {% endif %}
       {% if oer.material %}
         {% include "_data.html" with data=oer.material data_class=" font14" label_data="type of material" action="/oers/search/" type_data="material" %}
@@ -187,8 +200,7 @@ dl.eval dd:nth-child(even) {
            {% endwith %}
         </dl>
       {% endif %}
-      {% comment %}{% if oer.oer_type == 3 and can_edit %}{% endcomment %}
-      {% if can_edit %}
+      {% if oer.project and oer.description and can_edit %}
         <dl class="font14 marginB10">
            <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
            <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/oer/add_document/">{% csrf_token %}
@@ -206,41 +218,52 @@ dl.eval dd:nth-child(even) {
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% include "_info_creator_date.html" with data=oer %}
         {% include "_resource_original_lang.html" %}
-        {% include "_change_state.html" with data=oer type_object="oer" %}
-        {% if is_published or is_un_published %}
-          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
-            <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
-            {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" with color_class="c-pacific-blue" %}</dd>{% endwith %}
-            {% if evaluations %}
-              <dd class="paddingT6"><a href="/oer/{{oer.slug}}/evaluations/" class="btn btn-default" title="{% trans "view evaluations" %}">{% trans "view evaluations" %}</a></dd>
-            {% else %}
-              <dd class="paddingT6">{% trans "no evaluation"|capfirst %}</dd>  
-            {% endif %}
-          </dl>
-        {% endif %}
-        {% if can_evaluate %}
-           <div><a href="/oer/{{ oer.slug }}/evaluate/" class="btn btn-default" title={% if user_evaluation %}"{% trans "edit evaluation" %}"{% else %}"{% trans "add evaluation" %}"{% endif %}><i class="fa fa-star-o"></i> {% if user_evaluation %}{% trans "edit evaluation"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %}</a></div>
-        {% else %}
-          {% if is_published and not user == oer.user %}
-            {% if not user.is_authenticated %}
-              <p>{% trans "please"|capfirst %} <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans "log in" %}</a> {% trans "to add evaluation" %}.</p>
-            {% elif not completed_profile %}
-              <p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to add evaluation" %}.</p>
+        {% if oer.project %}
+          {% if oer.description %}
+            {% include "_change_state.html" with data=oer type_object="oer" %}
+          {% else %}
+            <div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>
+            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "Completa edit ...,"|capfirst %}</div>
+          {% endif %}
+          {% if is_published or is_un_published %}
+            <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
+              <dt class="demiBold">{% trans "evaluations"|capfirst %}</dt>
+             {% with stars=oer.get_stars %}<dd>{% include "_view_rating.html" with color_class="c-pacific-blue" %}</dd>{% endwith %}
+             {% if evaluations %}
+               <dd class="paddingT6"><a href="/oer/{{oer.slug}}/evaluations/" class="btn btn-default" title="{% trans "view evaluations" %}">{% trans "view evaluations" %}</a></dd>
+             {% else %}
+               <dd class="paddingT6">{% trans "no evaluation"|capfirst %}</dd>  
+             {% endif %}
+            </dl>
+          {% endif %}
+          {% if can_evaluate %}
+            <div><a href="/oer/{{ oer.slug }}/evaluate/" class="btn btn-default" title={% if user_evaluation %}"{% trans "edit evaluation" %}"{% else %}"{% trans "add evaluation" %}"{% endif %}><i class="fa fa-star-o"></i> {% if user_evaluation %}{% trans "edit evaluation"|capfirst %}{% else %}{% trans "add evaluation"|capfirst %}{% endif %}</a></div>
+          {% else %}
+            {% if is_published and not user == oer.user %}
+              {% if not user.is_authenticated %}
+                <p>{% trans "please"|capfirst %} <a href="{% url 'account_login' %}?next={{ request.path }}">{% trans "log in" %}</a> {% trans "to add evaluation" %}.</p>
+              {% elif not completed_profile %}
+                <p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to add evaluation" %}.</p>
+              {% endif %}
             {% endif %}
           {% endif %}
-        {% endif %}
-        {% if lps %}
-          <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted eval">
-            <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
+          {% if lps %}
+            <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted eval">
+              <dt class="demiBold">{% trans "LPs referring this OER"|capfirst %}</dt>
               {% for lp in lps %}
                 <dd>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}] </small>{% endif %}{{ lp.title }}<a href="/lp/{{ lp.slug }}/" class="paddingL10"><i class="fa fa-list-alt c-mulberry" aria-hidden="true"></i></a><a href="/lp/{{ lp.slug }}/play/?node=0" title="{% trans "show player view" %}" class="paddingL10"><i class="fa fa-youtube-play c-mulberry font16" aria-hidden="true"></i></a></dd>
               {% endfor %}
-          </dl>
+            </dl>
+          {% endif %}
+        {% else %}
+          <div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>
+          <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "To edit this OER, you must move it before to a project by using the tool"|capfirst %} <i class="fa fa-cut"></i></div>
         {% endif %}
       </div>
     </div>
-
+    {% if oer.project %}
 		{% include "_object_comments.html" with data_class="c2" data_obj=oer type_obj="oer" %}
+		{% endif %}
 
   </section>
 </article>

@@ -419,12 +419,14 @@ def user_dashboard(request, username, user=None):
     var_dict['mentoring_rels_selected_mentor'] = get_mentor_memberships(user, 0)
     var_dict['mentoring_rels_mentoring_request'] = get_mentoring_requests(user)
     var_dict['mentoring_rels_mentoring_requests_waiting'] = get_mentoring_requests_waiting(user)
-    var_dict['oers'] = OER.objects.filter(creator=user).order_by('state','-modified')
+    var_dict['oers'] = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['oers_admin'] = OER.objects.filter(project__in=adminOers, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
     var_dict['oer_evaluations'] = OerEvaluation.objects.filter(user=user).order_by('-modified')
     var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['lps_admin'] = LearningPath.objects.filter(project__in=adminlps, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
-    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    var_dict['my_lps'] = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    var_dict['my_oers'] = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+
     user_preferences = user.get_preferences()
     if user_preferences:
         max_days = user_preferences.stream_max_days
@@ -3022,7 +3024,10 @@ def oer_edit(request, oer_id=None, project_id=None):
             oer = get_object_or_404(OER, id=oer_id)
             action = '/oer/%s/edit/' % oer.slug
             project_id = oer.project_id
-            current_project = get_object_or_404(Project, id=project_id)
+            if project_id:
+                current_project = get_object_or_404(Project, id=project_id)
+            else:
+                current_project = None
         """
         if not project_id:
             projectId = request.POST.get('project', '')
@@ -3055,7 +3060,7 @@ def oer_edit(request, oer_id=None, project_id=None):
                 else:
                     track_action(request, request.user, 'Create', oer, target=oer.project)
                 action = '/oer/%s/edit/' % oer.slug
-                if request.POST.get('save', ''): 
+                if request.POST.get('save', ''):
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
             else:
                 print (form.errors)

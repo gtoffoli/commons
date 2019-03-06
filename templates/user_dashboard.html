@@ -371,27 +371,28 @@
           </div>
           <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6">
-              <div class="panel-white">
-                <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
-                {% if my_lps %}
-                  <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
-                    <ul class="list-unstyled my-list-unstyled padding510">
-                      {% for lp in my_lps %}
-                        <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
-                      {% endfor %}
-                    </ul>
-                  </div>
-                {% else %}
-                  <div class="padding510"><small>{% trans "no personal Learning Path created yet"|capfirst %}</small></div>
-                {% endif %}
-              </div>
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
-              <div class="paddingT20 text-center"><a class="bc-c1 borderRadius4 c-white padding510 demiBold" href="/lp_new/"><i class="fa fa-file"></i> {% trans "create personal Learning Path"|capfirst %}</a></div>
+              <div class="bc-c1 borderRadius4 c-white padding510 marginB10"><a class="c-white" href="/lp_new/"><i class="fa fa-file"></i> {% trans "create personal Learning Path"|capfirst %}</a></div>
+
             </div>
           </div>
           <div class="row">
             <div class="col-sm-6 col-md-6 col-lg-6">
+              <div class="panel-white">
+                <div class="panel-heading-c2 padding510 demiBold">{% trans "My bookmarks (OER stubs)"|capfirst %}</div>
+                {% if my_oers %}
+                  <div {% if my_oers|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                    <ul class="list-unstyled my-list-unstyled padding510">
+                    {% for oer in my_oers %}
+                      <li><small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> <a href="/oer/{{oer.slug }}/"><small>{{ oer.title }}</small></a></li>
+                    {% endfor %}
+                    </ul>
+                  </div>
+                {% else %}
+                  <div class="padding510"><small>{% trans "no bookmarks (OER stubs) classified yet"|capfirst %}</small></div>
+                {% endif %}
+              </div>
               <div class="panel-white">
                 <div class="panel-heading-c2 padding510 demiBold">{% trans "my OERs"|capfirst %}</div>
                 {% if oers %}
@@ -432,6 +433,20 @@
               {% endif %}
             </div>
             <div class="col-sm-6 col-md-6 col-lg-6">
+              <div class="panel-white">
+                <div class="panel-heading-c1 padding510 demiBold">{% trans "my personal Learning Paths"|capfirst %}</div>
+                {% if my_lps %}
+                  <div {% if my_lps|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                    <ul class="list-unstyled my-list-unstyled padding510">
+                      {% for lp in my_lps %}
+                        <li><small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> <a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% else %}
+                  <div class="padding510"><small>{% trans "no personal Learning Path created yet"|capfirst %}</small></div>
+                {% endif %}
+              </div>
               <div class="panel-white">
                 <div class="panel-heading-c1 padding510 demiBold">{% trans "my Learning Paths"|capfirst %}</div>
                 {% if lps %}
