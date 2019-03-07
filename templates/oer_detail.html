@@ -223,7 +223,7 @@ dl.eval dd:nth-child(even) {
             {% include "_change_state.html" with data=oer type_object="oer" %}
           {% else %}
             <div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>
-            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "Completa edit ...,"|capfirst %}</div>
+            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "to be able to publish this OER you must, fill some required fields"|capfirst %}.</div>
           {% endif %}
           {% if is_published or is_un_published %}
             <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">
