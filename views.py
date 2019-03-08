@@ -671,22 +671,6 @@ def send_message_to(request, username):
     print request.user, 'Send', None, recipient_user
     return message_compose(request, recipient=recipient_user.username)
 """
-"""
-def cops_tree(request):
-    # groups = Group.objects.all()
-    # groups = [group for group in groups if group_has_project(group)]
-    nodes = Group.objects.filter(level=0) 
-    if nodes:
-        root = nodes[0]
-        nodes = root.get_descendants()
-        filtered_nodes = []
-        for node in nodes:
-            project = node.project
-            if project and project.proj_type.public and project.state==PROJECT_OPEN:
-                filtered_nodes.append(node)
-    info = FlatPage.objects.get(url='/info/communities/').content
-    return render_to_response('cops_tree.html', {'nodes': filtered_nodes, 'info': info,}, context_instance=RequestContext(request))
-"""
 
 def cops_tree(request):
     communities = Project.objects.filter(proj_type__name = 'com', state = PROJECT_OPEN, group__level=1).order_by ('name')
@@ -920,7 +904,8 @@ def folder_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=DRAFT)
         folderdocument.save()
-        track_action(request, request.user, 'Create', folderdocument, target=project)
+        # track_action(request, request.user, 'Create', folderdocument, target=project)
+        track_action(request, request.user, 'Create', folderdocument, target=folder)
     return HttpResponseRedirect(folder.get_absolute_url())
 
 @login_required
@@ -940,8 +925,8 @@ def project_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
         folderdocument.save()
-        # track_action(request.user, 'Upload', folderdocument)
-        track_action(request, request.user, 'Create', folderdocument, target=project)
+        # track_action(request, request.user, 'Create', folderdocument, target=project)
+        track_action(request, request.user, 'Create', folderdocument, target=folder)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
 @login_required
@@ -978,19 +963,13 @@ def project_add_resource_online(request):
 def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
-    """
-    projects = Project.objects.filter(folders = folder)
-    project = projects and projects[0]
-    """
     project = folder.get_project()
-    
     if request.POST:
         form = FolderDocumentForm(request.POST, instance=folderdocument)
         if form.is_valid():
             if request.POST.get('save', ''): 
                 form.save()
             if project:
-                # return HttpResponseRedirect('/project/%s/folder/' % project.slug)
                 return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderDocumentForm(instance=folderdocument)
@@ -1005,10 +984,6 @@ def online_resource_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     project = folder.get_project()
-    """
-    projects = Project.objects.filter(folders = folder)
-    project = projects and projects[0]
-    """
     action = '/online_resource/%d/edit/' % folderdocument.id
     if project:
         proj_type_name = project.proj_type.name
@@ -1019,11 +994,6 @@ def online_resource_edit(request, folderdocument_id):
         if form.is_valid():
             if request.POST.get('save', ''):
                 form.save()
-            """
-            180914
-            if project:
-                return HttpResponseRedirect('/project/%s/folder/' % project.slug)
-            """
             return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderOnlineResourceForm(instance=folderdocument)
@@ -1033,40 +1003,8 @@ def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     document = folderdocument.document
-    # project = Project.objects.get(folders=folder)
     folder.remove_document(document, request)
-    # return HttpResponseRedirect('/project/%s/folder/' % project.slug)
     return HttpResponseRedirect(folder.get_absolute_url())
-
-"""
-def project_folder(request, project_slug):
-    user = request.user
-    # assert user.is_authenticated()
-    project = get_object_or_404(Project, slug=project_slug)
-    parent = project.get_parent()
-    is_parent_admin = parent and parent.is_admin(user)
-    is_community_admin = project.is_admin_community(user)
-    if not project.can_access(user):
-        raise PermissionDenied
-    if not user.is_authenticated:
-        return project_detail(request, project.id, project=project)
-    proj_type = project.proj_type
-    ment_proj_submitted = proj_type.name == 'ment' and project.state == PROJECT_SUBMITTED or ''
-    var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type.name, 'ment_proj_submitted': ment_proj_submitted}
-    n_selected_mentors = 0
-    selected_mentors = []
-    if ment_proj_submitted:
-        selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
-        n_selected_mentors = selected_mentors.count()
-    var_dict['can_share'] = can_share = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser
-    var_dict['is_admin'] = project.is_admin(user)
-    var_dict['folder'] = project.get_folder()
-    var_dict['folderdocuments'] = project.get_folderdocuments(user)
-    var_dict['form'] = DocumentUploadForm()
-    var_dict['form_res'] = FolderOnlineResourceForm()
-    # return render_to_response('project_folder.html', var_dict, context_instance=RequestContext(request))
-    return render(request, 'project_folder.html', var_dict)
-"""
 
 def folder_delete(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)
@@ -1111,12 +1049,6 @@ def folder_detail(request, project_slug='', folder=None):
         folder = project.get_folder()
     folderdocuments = folder.get_documents(user, project=project)
     subfolders = folder.get_children()
-    """
-    if not project.can_access(user):
-        raise PermissionDenied
-    if not user.is_authenticated:
-        return project_detail(request, project.id, project=project)
-    """
     parent = project.get_parent()
     is_parent_admin = parent and parent.is_admin(user)
     is_community_admin = project.is_admin_community(user)
@@ -1341,8 +1273,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['form_memtoring_model'] = ProjectMentoringModelForm(instance=project)
             var_dict['mentoring_model_value'] = MENTORING_MODEL_DICT.get(project.mentoring_model);
             if project.mentoring_model == MENTORING_MODEL_C:
-               var_dict['mentoring_model_C'] = True
-               var_dict['mentoring_model_C_value'] = MENTORING_MODEL_DICT.get(MENTORING_MODEL_C);
+                var_dict['mentoring_model_C'] = True
+                var_dict['mentoring_model_C_value'] = MENTORING_MODEL_DICT.get(MENTORING_MODEL_C);
             var_dict['can_add_roll'] = can_add_roll = is_open and is_admin and (not project.mentoring_model == NO_MENTORING) and not roll
             # var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and roll and roll.state==PROJECT_OPEN and ((len(roll.members()) > 1) or ((len(roll.members()) == 1) and not roll.is_member(user)))
             var_dict['can_request_mentor'] = can_request_mentor = is_open and is_member and project.mentoring_model in [MENTORING_MODEL_A,MENTORING_MODEL_B,MENTORING_MODEL_C]
@@ -1358,7 +1290,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                 elif parent_mentoring_model == MENTORING_MODEL_C:
                     var_dict['can_propose'] = 'C'
             else:
-               var_dict['can_propose'] = None
+                var_dict['can_propose'] = None
             var_dict['select_mentor_A'] = False
             var_dict['select_mentor_B'] = False
             var_dict['can_draft_back'] = can_draft_back = project.can_draft_back(user)
@@ -1648,30 +1580,6 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     if not proj_type_name == 'ment':
                         role_admin = Role.objects.get(name='admin')
                         add_local_role(project, user, role_admin)
-                        
-                    """
-                    180912 MMR
-                    if proj_type_name == 'oer':
-                        grant_permission(project, role_member, 'add-repository')
-                        grant_permission(project, role_member, 'add-oer')
-                    elif proj_type_name == 'lp':
-                    """
-                    """
-                    180913 GT: moved to project method define_permissions (see below)
-                    if proj_type_name == 'lp':
-                        grant_permission(project, role_member, 'add-oer')
-                        grant_permission(project, role_member, 'add-lp') 
-                    elif proj_type_name == 'sup':
-                        # 180912 MMR added grant_permission for proj_type SUPPORT
-                        grant_permission(project, role_member, 'add-repository')
-                        grant_permission(project, role_member, 'add-oer')
-                        grant_permission(project, role_member, 'add-lp')
-                    elif proj_type_name == 'ment':
-                        grant_permission(project, role_member, 'add-oer')
-                        grant_permission(project, role_member, 'add-lp')
-                    elif proj_type_name == 'roll':
-                        grant_permission(project, role_member, 'add-lp')
-                    """
                 else:
                     set_original_language(project) 
                     project.save()
@@ -2282,66 +2190,6 @@ def repo_detail_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_detail(request, repo.id, repo)
 
-"""
-def repo_contributors(request):
-    users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
-    user_list = []
-    for user in users:
-        n = Repo.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_repos = n
-            user_list.append(user)
-    return render_to_response('repo_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
-
-def oer_contributors(request):
-    users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
-    user_list = []
-    for user in users:
-        n = OER.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_oers = n
-            user_list.append(user)
-    return render_to_response('oer_contributors.html', { 'user_list': user_list, }, context_instance=RequestContext(request))
-
-# in ANALYTICS.PY
-def resource_contributors(request):
-    users = User.objects.annotate(num_lps=Count('path_creator')).exclude(num_lps=0).order_by('-num_lps')
-    var_dict = {}
-    lp_contributors = []
-    for user in users:
-        # n = LearningPath.objects.filter(creator=user, state=PUBLISHED).count()
-        n = LearningPath.objects.filter(creator=user).count()
-        if n:
-            user.num_lps = n
-            lp_contributors.append(user)
-    var_dict['lp_contributors'] = lp_contributors
-    users = User.objects.annotate(num_oers=Count('oer_creator')).exclude(num_oers=0).order_by('-num_oers')
-    oer_evaluation_contributors = []
-    for user in users:
-        n = OerEvaluation.objects.filter(user=user).count()
-        if n:
-            user.num_oer_evaluations = n
-            oer_evaluation_contributors.append(user)
-    var_dict['oer_evaluation_contributors'] = oer_evaluation_contributors
-    resource_contributors = []
-    for user in users:
-        n = OER.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_oers = n
-            resource_contributors.append(user)
-    var_dict['resource_contributors'] = resource_contributors
-    users = User.objects.annotate(num_repos=Count('repo_creator')).exclude(num_repos=0).order_by('-num_repos')
-    source_contributors = []
-    for user in users:
-        n = Repo.objects.filter(creator=user, state=PUBLISHED).count()
-        if n:
-            user.num_repos = n
-            source_contributors.append(user)
-    var_dict['source_contributors'] = source_contributors
-    # return render_to_response('contributors.html', { 'lp_contributors': lp_contributors, 'resource_contributors': resource_contributors, 'source_contributors': source_contributors, }, context_instance=RequestContext(request))
-    return render_to_response('contributors.html', var_dict, context_instance=RequestContext(request))
-"""
-
 def oers_by_user(request, username):
     user = get_object_or_404(User, username=username)
     oers = OER.objects.filter(creator=user, state=PUBLISHED)
@@ -2404,12 +2252,6 @@ def repo_save(request, repo=None):
                 # repo = form.save(commit=False)
                 repo = form.save()
                 user = request.user
-                """
-                try:
-                    repo.creator
-                except:
-                    repo.creator = user
-                """
                 if repo.creator_id == 1:
                     repo.creator = user
                 repo.editor = user
@@ -2427,9 +2269,9 @@ def repo_save(request, repo=None):
                 print (form.errors)
                 return render(request, 'repo_edit.html', {'repo': repo, 'form': form,})
         elif request.POST.get('cancel', ''):
-             if repo:
+            if repo:
                 return HttpResponseRedirect('/repo/%s/' % repo.slug)
-             else:
+            else:
                 return repo_new(request)
     else:
         return repo_new(request)
@@ -2463,9 +2305,9 @@ def repo_edit_by_slug(request, repo_slug):
 def repo_toggle_comments(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     if repo.comment_enabled:
-      repo.disable_comments()
+        repo.disable_comments()
     else:
-      repo.enable_comments()
+        repo.enable_comments()
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 
 def repo_submit(request, repo_id):
@@ -2904,7 +2746,6 @@ def oer_view(request, oer_id, oer=None):
         var_dict['slideshare'] = slideshare
     elif ipynb:
         domain = request.META['HTTP_HOST']
-        # ipynb = IPYNB_TEMPLATE % (domain, url)
         ipynb = IPYNB_TEMPLATE % (protocol, domain, url)
         var_dict['ipynb'] = ipynb
     else:
@@ -3088,9 +2929,9 @@ def oer_edit(request, oer_id=None, project_id=None):
     data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer}
     current_language = get_current_language()
     if project_id:
-       data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
+        data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
     else:
-       data_dict['current_project'] = current_project = None
+        data_dict['current_project'] = current_project = None
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
     if oer_id:
@@ -3191,9 +3032,9 @@ def oer_toggle_comments(request, oer_id):
     if not oer.can_access(request.user):
         raise PermissionDenied
     if oer.comment_enabled:
-      oer.disable_comments()
+        oer.disable_comments()
     else:
-      oer.enable_comments()
+        oer.enable_comments()
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
 def oer_evaluation_detail(request, evaluation=None):
@@ -3334,7 +3175,6 @@ def oer_add_document(request):
             except:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)
             version = handle_uploaded_file(uploaded_file)
-            # oer.documents.add(version.document)
             oer_document = OerDocument(oer=oer, document=version.document)
             oer_document.save()
             oer.save()
@@ -3383,10 +3223,8 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         domain = request.META['HTTP_HOST']
         if node_doc:
             if not node_oer:
-                # node = PathNode.objects.get(document_id=document_id)
                 node = get_object_or_404(PathNode, document_id=document_id)
             else:
-                # oer_document = OerDocument.objects.get(document_id=document_id)
                 oer_document = get_object_or_404(OerDocument, document_id=document_id)
         elif ment_node_doc:
             node = get_object_or_404(PathNode, document_id=document_id)
@@ -3406,7 +3244,6 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
             oer = get_object_or_404(OER, pk=oer_document.oer_id)
         if document.viewerjs_viewable:
             url = '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (domain, document_id)
-            # mimetype=document.latest_version.mimetype
         elif mimetype in ('application/zip', 'application/x-zip', 'application/x-zip-compressed'):
             f = document.latest_version.open()
             cp = ContentPackage(file=f, slug='%05d-%s' % (document.id, slugify(document.label)))
@@ -3419,7 +3256,6 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
                 url = cp_dict['url']
         else:
             url = protocol + '://%s/document/%s/serve/' % (domain, document_id)
-            # mimetype = document.latest_version.mimetype
         if return_url:
             return url, mimetype
         else:
@@ -3519,8 +3355,8 @@ def lp_detail(request, lp_id, lp=None):
             membership.is_editor = lp.can_edit(membership)
             proj_candidate_lp_editors.append([membership.user,lp.can_edit(membership)])
         if len(proj_candidate_lp_editors) > 0:
-           var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
-           var_dict['can_delegate'] = can_delegate
+            var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
+            var_dict['can_delegate'] = can_delegate
     var_dict['is_published'] = is_published = lp.state == PUBLISHED
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     if user.is_authenticated:
@@ -3760,7 +3596,8 @@ def lp_play(request, lp_id, lp=None):
     if user.is_authenticated:
         if from_start:
             track_action(request, user, 'Play', lp, target=lp.project)
-        track_action(request, user, 'Play', current_node, target=lp.project)
+        # track_action(request, user, 'Play', current_node, target=lp.project)
+        track_action(request, user, 'Play', current_node, target=lp)
     return render(request, 'lp_play.html', var_dict)
 
 def lp_play_by_slug(request, lp_slug):
@@ -3999,37 +3836,6 @@ def lp_make_tree_dag(request, lp_id):
     root = lp.make_tree_dag(request)
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
-"""
-def pathnode_detail(request, node_id, node=None):
-    if not node:
-        node = get_object_or_404(PathNode, pk=node_id)
-    if not node.path.can_access(request.user):
-        raise PermissionDenied
-    var_dict = { 'node': node, }
-    var_dict['object'] = node
-    var_dict['lp'] = node.path
-
-    nodes = get_object_or_404(LearningPath, pk=node.path_id)
-    nodes = nodes.get_ordered_nodes()
-
-    nodes = node.path.get_ordered_nodes()
-    i_node = 0
-    count = 0
-    while (count < len(nodes)):       
-        if int(nodes[count].id) == int(node_id):
-            i_node = count
-            break
-        count = count + 1
-    var_dict['nodes'] = nodes
-    var_dict['i_node'] = i_node
-    var_dict['can_edit'] = node.can_edit(request)
-    var_dict['can_translate'] = node.can_translate(request)
-    current_language = get_current_language()
-    var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
-    var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
-    return render_to_response('pathnode_detail.html', var_dict, context_instance=RequestContext(request))
-"""
-
 def pathnode_detail(request, node_id, node=None):
     if not node:
         node = get_object_or_404(PathNode, pk=node_id)
@@ -4190,7 +3996,8 @@ def pathnode_delete(request, node_id):
     lp = node.path
     if not lp.can_access(request.user):
         raise PermissionDenied
-    track_action(request, request.user, 'Delete', node, target=lp.project)
+    # track_action(request, request.user, 'Delete', node, target=lp.project)
+    track_action(request, request.user, 'Delete', node, target=lp)
     lp.remove_node(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
     if request.is_ajax():
