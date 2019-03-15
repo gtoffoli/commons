@@ -1002,8 +1002,8 @@ def online_resource_edit(request, folderdocument_id):
 def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
-    document = folderdocument.document
-    folder.remove_document(document, request)
+    #document = folderdocument.document
+    folder.remove_document(folderdocument, request)
     return HttpResponseRedirect(folder.get_absolute_url())
 
 def folder_delete(request, folder_id):
@@ -1049,6 +1049,11 @@ def folder_detail(request, project_slug='', folder=None):
         folder = project.get_folder()
     folderdocuments = folder.get_documents(user, project=project)
     subfolders = folder.get_children()
+    for sub in subfolders:
+        if sub.get_documents(user, project=project):
+            sub.empty = False
+        else:
+            sub.empty = True
     parent = project.get_parent()
     is_parent_admin = parent and parent.is_admin(user)
     is_community_admin = project.is_admin_community(user)
@@ -1421,6 +1426,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
             var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
+    var_dict['portlets_top'] = project.get_portlets_top()
+    var_dict['portlets_bottom'] = project.get_portlets_bottom()
     var_dict['repos'] = []
  
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:

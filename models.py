@@ -319,13 +319,16 @@ def set_original_language(sender, instance, **kwargs):
     if issubclass(sender, Resource):
         instance.original_language = get_current_language()
 """
-
+PORTLET = -3
+HIDDEN = -1
 DRAFT = 1
 SUBMITTED = 2
 PUBLISHED = 3
 UN_PUBLISHED = 4
 
 PUBLICATION_STATE_CHOICES = (
+    (PORTLET, _('Portlet')),
+    (HIDDEN, _('Grey')),
     (DRAFT, _('Draft')),
     (SUBMITTED, _('Submitted')),
     (PUBLISHED, _('Published')),
@@ -333,17 +336,22 @@ PUBLICATION_STATE_CHOICES = (
 PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
 PUBLICATION_COLOR_DICT = {
+  PORTLET: 'Blue',
+  HIDDEN: 'Grey',
   DRAFT: 'Orange',
   SUBMITTED: 'LimeGreen',
-  PUBLISHED: 'black',
+  PUBLISHED: 'Black',
   UN_PUBLISHED: 'Red',
 }
 PUBLICATION_LINK_DICT = {
+  PORTLET: 'Blue',
+  DRAFT: 'Grey',
   DRAFT: 'Orange',
   SUBMITTED: 'LimeGreen',
   PUBLISHED: '#428bca',
   UN_PUBLISHED: 'Red',
 }
+
 
 class Publishable(object):
     class Meta:
@@ -416,10 +424,10 @@ class Folder(MPTTModel):
     def __str__(self):
         return self.title
 
-    def remove_document(self, document, request):
-        folderdocument = FolderDocument.objects.get(folder=self, document=document)
-        if folderdocument.document_id:
-            document.delete()
+    def remove_document(self, folderdocument, request):
+        #folderdocument = FolderDocument.objects.get(folder=self, id=document_id)
+        if folderdocument.document:
+            folderdocument.document.delete()
         folderdocument.delete()
 
     def get_title(self):
@@ -442,14 +450,25 @@ class Folder(MPTTModel):
     def get_parent(self):
         return self.parent or self.get_project()
 
-    def get_documents(self, user, project=None):
+    # def get_documents(self, user, project=None):
+    def get_documents(self, user, project=None, state=None, sign=0): # 190311 GT: added state and sign
         if not project:
             project = self.get_project()
-        documents = []
-        if project.is_member(user) or project.is_admin_community(user) or user.is_superuser:
-            documents = FolderDocument.objects.filter(folder=self).order_by('order')
+        # documents = []
+        # if project.is_member(user) or project.is_admin_community(user) or user.is_superuser:
+        if state:
+            documents = FolderDocument.objects.filter(folder=self, state=state)
+            if sign > 0:
+                documents = documents.filter(order__gt=0)
+            elif sign < 0:
+                documents = documents.filter(order__lt=0)
+        elif user and (project.is_admin(user) or project.is_admin_community(user) or user.is_superuser):
+            documents = FolderDocument.objects.filter(folder=self)
+        elif user and project.is_member(user):
+            documents = FolderDocument.objects.filter(folder=self).exclude(state=PORTLET).exclude(state=HIDDEN)
         else:
-            documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED).order_by('order')
+            documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED)
+        documents = documents.order_by('order')
         return documents
 
     def get_absolute_url(self):
@@ -956,18 +975,15 @@ class Project(Resource):
         folders = self.folders.all()
         return folders.count()==1 and folders[0] or None
 
-    def get_folderdocuments(self, user):
+    def get_folderdocuments(self, user, state=None, sign=0): # 190311 GT: added state
         folder = self.get_folder()
-        """
-        folderdocuments = []
-        if folder:
-            if self.is_member(user) or user.is_superuser:
-                folderdocuments = FolderDocument.objects.filter(folder=folder).order_by('order')
-            else:
-                folderdocuments = FolderDocument.objects.filter(folder=folder, state=PUBLISHED).order_by('order')
-        return folderdocuments
-        """
-        return folder and folder.get_documents(user, project=self) or []
+        return folder and folder.get_documents(user, project=self, state=state, sign=sign) or [] # 190311 GT: added state
+
+    def get_portlets_top(self): # 190311 GT: added
+        return self.get_folderdocuments(None, state=PORTLET, sign=1)
+
+    def get_portlets_bottom(self): # 190311 GT: added
+        return self.get_folderdocuments(None, state=PORTLET, sign=-1)
 
     def get_name(self):
         return self.name or self.group.name

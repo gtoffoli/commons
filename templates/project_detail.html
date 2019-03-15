@@ -10,11 +10,11 @@
 
 {% block extra_style %}
 {% if widget_autocomplete_select2 %}
-{% comment %}
-   <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
-   <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
-{% endcomment %}
-{% include "_select2_css.html" %}
+{  % include "_select2_css.html" %}
+{% endif %}
+{% if portlets_top or portlets_bottom %}
+  <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
+  <link rel="stylesheet" href="{% static 'commons/css/prettyPhoto.css' %}">
 {% endif %}
 <style>
   div.contentBody {
@@ -82,6 +82,46 @@
     	font-size:18px;
     }
   }
+
+{% if portlets_top or portlets_bottom %}
+  .iframe-portlet {
+     width: 100%;
+     height: 0;
+     padding-bottom: 56.25%;
+     position: relative;
+  }
+  .iframe-portlet iframe {
+     width: 100%;
+     height: 100%;
+     position: absolute;
+     top: 0;
+     left: 0;
+     border: None;
+  }
+  .image-portlet img {
+     border-top-left-radius: 4px;
+     border-top-right-radius: 4px;
+  }
+  .titlebar {
+    position: relative;
+    /*min-height: 34px;*/
+    padding: 5px 10px;
+    background-color: #FABE66;
+    display: table;
+    width: 100%;
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    font-weight: 600;
+  }
+  .titlebar .item_cell {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  a.viewPortlet, a.viewPortlet:hover, a.viewPortlet:active, a.viewPortlet:focus {
+    color: #333;
+    font-size: 16px;
+  }
+{% endif %}
 </style>
 {% endblock %}
 
@@ -131,7 +171,6 @@
             <div class="col-sm-7 col-md-7 col-lg-8">
                 <article class="view-list">
                 {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
-                
                     <dl class="list-inline font14 clearfix">
                         <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
                         <dd class="field-content width-full" style="display:none">
@@ -498,6 +537,20 @@
                     {% if recent_actions %}
                         <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
                     {% endif %}
+{% comment %} PORTLETS TOP {% endcomment %}
+                    {% if portlets_top %}
+                    {% for portlet in portlets_top %}
+                        <div class="panel-white">
+                        {% if portlet.embed_code %}
+                            <div class="iframe-portlet"><iframe src="{{ portlet.embed_code }}"></iframe></div>
+                            <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                        {% elif portlet.document %}
+                            <div class="image-portlet"><img src="/document/{{portlet.document.id}}/serve/" class="img-responsive"></div>
+                            <div class="titlebar"><div class="item_cell">{{ portlet.document.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="/document/{{portlet.document.id}}/serve/" title="{{ portlet.document.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                        {% endif %}
+                        </div>
+                    {% endfor %}
+                    {% endif %}
 {% comment %} LIST LPS, OERS SHARED LPS, SHARED OERS, EVALUATED OERS {% endcomment %}
                     {% if proj_type_name == 'lp' or proj_type_name == 'sup' or proj_type_name == 'oer' %}
                         {% if lps %}
@@ -563,6 +616,20 @@
                                 {% endif %}
                             </div>
                         {% endif %}
+                    {% endif %}
+{% comment %} PORTLETS BOTTOM {% endcomment %}
+                    {% if portlets_bottom %}
+                    {% for portlet in portlets_bottom %}
+                        <div class="panel-white">
+                        {% if portlet.embed_code %}
+                            <div class="iframe-portlet"><iframe src="{{ portlet.embed_code }}"></iframe></div>
+                            <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%"><i class="fa fa-search-plus"></i></a></div></div>
+                        {% elif portlet.document %}
+                            <div class="image-portlet"><img src="/document/{{portlet.document.id}}/serve/" class="img-responsive"></div>
+                            <div class="titlebar"><div class="item_cell">{{ portlet.document.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="/document/{{portlet.document.id}}/serve/"><i class="fa fa-search-plus"></i></a></div></div>
+                        {% endif %}
+                        </div>
+                    {% endfor %}
                     {% endif %}
                 {% endif %}
             </div>
@@ -873,16 +940,13 @@
 {% endblock %}
 
 {% block extra_script %}
+{% if portlets_top or portlets_bottom %}
+    <script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
+    <script src="{% static 'commons/js/jquery.prettyPhoto.js' %}"></script>
+{% endif %}
 {% if widget_autocomplete_select2 %}
-{% comment %}
-   <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
-{% endcomment %}
-
-{% include "_select2_js.html" %}
-   
+    {% include "_select2_js.html" %}
 {% endif %}
 {% if can_delegate %}
    <script type="text/javascript" src="{% static "commons/js/bootbox.min.js" %}"></script>
@@ -937,6 +1001,25 @@
                     $("#id_mentoring_model_2").prop('disabled',true)
             }
         {% endif %}
+        
+        
+        {% if portlets_top or portlets_bottom %}
+            $('a.viewPortlet').on('click', function(){
+                $("body").css("cursor", "default");
+            });
+            $("a[rel^='lightBox']").prettyPhoto({
+                social_tools: false,
+                modal: true,
+                opacity: 0.50,
+            });
+                /*
+                $("a[rel^='iframeBox']").prettyPhoto({
+                    social_tools: false,
+                    modal: true,
+                    opacity: 0.50,
+                });*/
+      {% endif %}
+      
     });
 </script>
 {% endblock %}

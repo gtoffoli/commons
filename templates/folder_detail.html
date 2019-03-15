@@ -47,8 +47,8 @@ dl.eval dd:nth-child(even) {
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
                     {% if can_edit_delete %}
-                    {% if user == sub.user or is_admin %}
-                      <li class="marginR10"><a id="r_{{ sub.id }}" class="deleteFolder" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
+                    {% if user == sub.user or is_admin or user.is_superuser %}
+                      {% if sub.empty %}<li class="marginR10"><a id="r_{{ sub.id }}" class="deleteFolder" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>{% endif %}
                       <li class="marginR20"><a href="/folder/{{ sub.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}
                     {% endif %}
@@ -67,23 +67,26 @@ dl.eval dd:nth-child(even) {
                    <p id="v_{{ folderdocument.id }}" class="marginB0">{{ folderdocument.label|safe }}</p>
                    <p class="font12" class="marginB0"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
                  {% else %}
-                   <p id="v_{{ folderdocument.id }}"  class="marginB0">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
+                   <p id="v_{{ folderdocument.id }}" class="marginB0">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
                    <p class="font12" class="marginB0"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
                  {% endif %}
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
+                    <li class="marginR10">{{folderdocument.state}}</li>
                     {% if can_edit_delete %}
                     {% if is_admin or user == folderdocument.user or user.is_superuser %}
                       <li class="marginR10"><a id="r_{{ folderdocument.id }}" class="deleteDoc" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a></li>
                       <li class="marginR20"><a href="/{% if folderdocument.embed_code %}online_resource{% else %}folderdocument{% endif %}/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}{% endif %}
+                    {% if folderdocument.state > 0 %}
                     {% if folderdocument.embed_code %}
                        <li class="marginR10"><a href="/online_resource/{{ folderdocument.id }}/view" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
                     {% else %}
                     <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
                     {% if document.viewable %}
                       <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                    {% endif %}
                     {% endif %}
                     {% endif %}
                  </ul>
@@ -182,7 +185,8 @@ dl.eval dd:nth-child(even) {
 $(document).ready(function (){
 {% trans "do you really want to delete" as translatemsg0 %}
 {% trans "this document" as translatemsg1 %}
-{% trans "this folder with its contents" as translatemsg2 %}
+{% comment %}{% trans "this folder with its contents" as translatemsg2 %}{% endcomment %}
+{% trans "this folder" as translatemsg2 %}
  if ($('li a').hasClass('deleteDoc')) {
     $('li a.deleteDoc').on('click', function(event){
       event.preventDefault();
