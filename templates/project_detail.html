@@ -10,7 +10,7 @@
 
 {% block extra_style %}
 {% if widget_autocomplete_select2 %}
-{  % include "_select2_css.html" %}
+{% include "_select2_css.html" %}
 {% endif %}
 {% if portlets_top or portlets_bottom %}
   <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
@@ -476,9 +476,9 @@
                     {% endif %}
                     <div class="panel-white">
 {% comment %} LIST MEMBERS {% endcomment %}
-                        <div class="panel-heading-c0 padding510 demiBold">{% trans "members"|capfirst %}</div>
+                        <div class="panel-heading-c0 padding510 demiBold "><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "members"|capfirst %}</div>
                         {% with users=project.members %}{% if users|length > 0 %}
-                        <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %}>
+                        <div {% if users|length > 10 %} class="box-scroll box-medium" {% endif %} style="display:none">
                             <ul class="list-unstyled my-list-unstyled padding510">
                             {% for u in users %}
                                 <li>
@@ -503,14 +503,13 @@
 {% comment %} ACCEPT MEMBER, ADD MEMBER, ASSIGN ADMIN {% endcomment %}
                         {% if can_accept_member %}
                             {% with applications=project.get_applications %}{% if applications|length > 0 %}
-                            <div class="borderTdotted{% if applications|length > 20 %} box-scroll box-medium {% endif %}">
-                                 <div class="padding510"><div class="bold marginB5" >{% trans "applications"|capfirst %}</div>
-                                    <ul class="list-unstyled my-list-unstyled">
+                            <div class="borderTdotted">
+                                 <div class="padding510 bold marginB5"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "applications"|capfirst %}</div>
+                                 <div class="{% if applications|length > 10 %} box-scroll box-medium {% endif %}" style="display:none"><ul class="list-unstyled my-list-unstyled">
                                         {% for application in applications %}
                                         <li><img {% if application.user.get_profile.avatar %} src="/media/{{ application.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ application.user.username }}/" title="{% trans "view user profile" %}"><small>{{ application.user.get_display_name }}</small></a><small> &nbsp;<a href="/project/{{ project.slug }}/accept/{{ application.user.username }}/"  title="{% trans "accept application to this community or project" %}"><i class="fa fa-plus font07em" aria-hidden="true"></i></a></small></li>
                                         {% endfor %}
-                                    </ul>
-                                 </div>
+                                    </ul></div>
                             </div>
                             {% endif %}{% endwith %}
                             {% if proj_type_name == 'sup' or project.is_reserved_project %}
@@ -533,17 +532,17 @@
                             </div>
                         {% endif %}
                     </div>
-{% comment %} BUTTON RECENT ACTIVITIES {% endcomment %}
-                    {% if recent_actions %}
-                        <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
-                    {% endif %}
 {% comment %} PORTLETS TOP {% endcomment %}
                     {% if portlets_top %}
                     {% for portlet in portlets_top %}
                         <div class="panel-white">
                         {% if portlet.embed_code %}
                             <div class="iframe-portlet"><iframe src="{{ portlet.embed_code }}"></iframe></div>
-                            <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                            {% if 'youtube' in portlet.embed_code or 'vimeo' in portlet.embed_code %}
+                                <div class="titlebar"><div class="item_cell">QUI {{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                            {% else %}
+                                <div class="titlebar">QUA<div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                            {% endif %}
                         {% elif portlet.document %}
                             <div class="image-portlet"><img src="/document/{{portlet.document.id}}/serve/" class="img-responsive"></div>
                             <div class="titlebar"><div class="item_cell">{{ portlet.document.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="/document/{{portlet.document.id}}/serve/" title="{{ portlet.document.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
@@ -555,7 +554,8 @@
                     {% if proj_type_name == 'lp' or proj_type_name == 'sup' or proj_type_name == 'oer' %}
                         {% if lps %}
                             <div class="panel-white">
-                                <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>
+                                <div class="panel-heading-c1 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "last learning paths"|capfirst %}</div>
+                                <div style="display:none">
                                 <ul class="list-unstyled my-list-unstyled padding510">
                                 {% for lp in lps %}
                                     <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>
@@ -564,23 +564,25 @@
                                 {% if n_lps > lps|length %}
                                     <div class="panel-footer-c1 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_lps">{% trans "read more"|upper %}</a></div>
                                 {% endif %}
+                                </div>
                             </div>
                         {% endif %}
                         {% if shared_lps %}
                             <div class="panel-white">
-                                <div class="panel-heading-c1 padding510 demiBold">{% trans "shared LPs"|capfirst %}</div>
-                                <ul class="list-unstyled my-list-unstyled padding510">
+                                <div class="panel-heading-c1 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "shared LPs"|capfirst %}</div>
+                                <div style="display:none"><ul class="list-unstyled my-list-unstyled padding510">
                                 {% for shared_lp, deletable in shared_lps %}
                                     <li>{% if deletable %}<a class="deleteNode" href="/shared_lp_delete/{{ shared_lp.id }}/" title="{% trans "unshare this LP" %}"><small><i class="fa fa-times-circle red" aria-hidden="true"></i></small></a>{% endif %}
                                         <a href="/lp/{{ shared_lp.lp.slug }}/"><small>{{ shared_lp.lp.title }}</small></a>
                                     </li>
                                 {% endfor %}
-                                </ul>
+                                </ul></div>
                             </div>
                         {% endif %}
                         {% if oers %}
                             <div class="panel-white">
-                                <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs"|capfirst %}</div>
+                                <div class="panel-heading-c2 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "last OERs"|capfirst %}</div>
+                                <div style="display:none">
                                 <ul class="list-unstyled my-list-unstyled padding510">
                                 {% for oer in oers %}
                                     <li>{% if oer.state != 3 %}<small style="color: {{ oer.get_link_color }};">[{{ oer.get_state }}]</small> {% endif %}<a href="/oer/{{ oer.slug }}/"><small>{{ oer.title }}</small></a> </li>
@@ -589,24 +591,25 @@
                                 {% if n_oers > oers.count %}
                                     <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_oers">{% trans "read more"|upper %}</a></div>
                                 {% endif %}
+                                </div>
                             </div>
                         {% endif %}
                         {% if shared_oers %}
                             <div class="panel-white">
-                                <div class="panel-heading-c2 padding510 demiBold">{% trans "shared OERs"|capfirst %}</div>
-                                <ul class="list-unstyled my-list-unstyled padding510">
+                                <div class="panel-heading-c2 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "shared OERs"|capfirst %}</div>
+                                <div style="display:none"><ul class="list-unstyled my-list-unstyled padding510">
                                 {% for shared_oer, deletable in shared_oers %}
                                     <li>{% if deletable %}<a class="deleteNode"  href="/shared_oer_delete/{{ shared_oer.id }}/" title="{% trans "unshare this OER" %}"><small><i class="fa fa-times-circle red" aria-hidden="true"></i></small></a>{% endif %}
                                         <a href="/oer/{{ shared_oer.oer.slug }}/"><small>{{ shared_oer.oer.title }}</small></a>
                                     </li>
                                 {% endfor %}
-                                </ul>
+                                </ul></div>
                             </div>
                         {% endif %}
                         {% if oers_last_evaluated %}
                             <div class="panel-white">
-                                <div class="panel-heading-c2 padding510 demiBold">{% trans "last OERs evaluated"|capfirst %}</div>
-                                <ul class="list-unstyled my-list-unstyled padding510">
+                                <div class="panel-heading-c2 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "last OERs evaluated"|capfirst %}</div>
+                                <div style="display:none"><ul class="list-unstyled my-list-unstyled padding510">
                                 {% for oer_last_evaluated in oers_last_evaluated %}
                                     <li><small><a href="/oer/{{oer_last_evaluated.slug}}/evaluations/" title="{% trans "view evaluations" %}">{{ oer_last_evaluated.title }}</small></a></li>
                                 {% endfor %}
@@ -614,8 +617,13 @@
                                 {% if n_oers_evaluated > oers_last_evaluated|length %}
                                     <div class="panel-footer-c2 padding510 text-center demiBold"><a href="/project/{{ project.slug }}/project_results/#p_evaluations">{% trans "read more"|upper %}</a></div>
                                 {% endif %}
+                                </div>
                             </div>
                         {% endif %}
+                    {% endif %}
+{% comment %} BUTTON RECENT ACTIVITIES {% endcomment %}
+                    {% if recent_actions %}
+                        <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
                     {% endif %}
 {% comment %} PORTLETS BOTTOM {% endcomment %}
                     {% if portlets_bottom %}
@@ -1002,7 +1010,21 @@
             }
         {% endif %}
         
-        
+        $('div a.toggleIcon').on('click', function(event){
+            event.preventDefault();
+            $("body").css("cursor", "default");
+            var accordion = $(this).parent();
+            var accordionContent = accordion.next('div');
+            var accordionToggleIcon = $(this);
+            accordion.toggleClass("open");
+            accordionContent.slideToggle(250);
+            if (accordion.hasClass("open")) {
+                accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
+            } else {
+                accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
+            }
+        });
+
         {% if portlets_top or portlets_bottom %}
             $('a.viewPortlet').on('click', function(){
                 $("body").css("cursor", "default");
@@ -1012,12 +1034,6 @@
                 modal: true,
                 opacity: 0.50,
             });
-                /*
-                $("a[rel^='iframeBox']").prettyPhoto({
-                    social_tools: false,
-                    modal: true,
-                    opacity: 0.50,
-                });*/
       {% endif %}
       
     });

@@ -1050,10 +1050,18 @@ def folder_detail(request, project_slug='', folder=None):
     folderdocuments = folder.get_documents(user, project=project)
     subfolders = folder.get_children()
     for sub in subfolders:
-        if sub.get_documents(user, project=project):
-            sub.empty = False
+        if sub.get_children():
+            sub_subfolders = True
         else:
+            sub_subfolders = False
+        if sub.get_documents(user, project=project):
+            sub_documents = True
+        else:
+            sub_documents = False
+        if not sub_subfolders and not sub_documents:
             sub.empty = True
+        else:
+            sub_empty = False
     parent = project.get_parent()
     is_parent_admin = parent and parent.is_admin(user)
     is_community_admin = project.is_admin_community(user)
@@ -1067,7 +1075,7 @@ def folder_detail(request, project_slug='', folder=None):
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
     var_dict['can_share'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
-    var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]))
+    var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_community_admin)
     var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['is_parent_admin'] = is_parent_admin
