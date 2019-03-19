@@ -539,9 +539,9 @@
                         {% if portlet.embed_code %}
                             <div class="iframe-portlet"><iframe src="{{ portlet.embed_code }}"></iframe></div>
                             {% if 'youtube' in portlet.embed_code or 'vimeo' in portlet.embed_code %}
-                                <div class="titlebar"><div class="item_cell">QUI {{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                                <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
                             {% else %}
-                                <div class="titlebar">QUA<div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
+                                <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
                             {% endif %}
                         {% elif portlet.document %}
                             <div class="image-portlet"><img src="/document/{{portlet.document.id}}/serve/" class="img-responsive"></div>
