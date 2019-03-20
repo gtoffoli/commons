@@ -51,7 +51,7 @@ from .models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderD
 from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from .models import RepoType, RepoFeature
 from .models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
-from .models import DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
+from .models import PORTLET, DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
 from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
@@ -964,39 +964,71 @@ def folderdocument_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     project = folder.get_project()
+    user = request.user
+    is_community_admin = project.is_admin_community(user)
+    is_admin = project.is_admin(user)
+    hide_portlet = not is_community_admin and not is_admin and not user.is_superuser
+    if folderdocument.state == PORTLET:
+        portlet = 'on'
+    else:
+        portlet = None
     if request.POST:
-        form = FolderDocumentForm(request.POST, instance=folderdocument)
+        form = FolderDocumentForm(request.POST, instance=folderdocument, initial={'portlet': portlet })
         if form.is_valid():
-            if request.POST.get('save', ''): 
+            if request.POST.get('save', ''):
                 form.save()
+                if (request.POST.get('portlet')):
+                    if folderdocument.state != PORTLET:
+                        folderdocument.state = PORTLET
+                        folderdocument.save()
+                else:
+                    if folderdocument.state == PORTLET:
+                        folderdocument.state = DRAFT
+                        folderdocument.save()
             if project:
                 return HttpResponseRedirect(folder.get_absolute_url())
     else:
-        form = FolderDocumentForm(instance=folderdocument)
+        form = FolderDocumentForm(instance=folderdocument, initial={'portlet': portlet })
         action = '/folderdocument/%d/edit/' % folderdocument.id
         if project:
             proj_type_name = project.proj_type.name
         else:
             proj_type_name = ''
-        return render(request, 'folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
+        return render(request, 'folderdocument_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action, 'hide_portlet': hide_portlet})
 
 def online_resource_edit(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
     folder = folderdocument.folder
     project = folder.get_project()
     action = '/online_resource/%d/edit/' % folderdocument.id
+    user = request.user
+    is_community_admin = project.is_admin_community(user)
+    is_admin = project.is_admin(user)
+    hide_portlet = not is_community_admin and not is_admin and not user.is_superuser
+    if folderdocument.state == PORTLET:
+        portlet = 'on'
+    else:
+        portlet = None
     if project:
         proj_type_name = project.proj_type.name
     else:
         proj_type_name = ''
     if request.POST:
-        form = FolderOnlineResourceForm(request.POST, instance=folderdocument)
+        form = FolderOnlineResourceForm(request.POST, instance=folderdocument, initial={'portlet': portlet })
         if form.is_valid():
             if request.POST.get('save', ''):
                 form.save()
+                if (request.POST.get('portlet')):
+                    if folderdocument.state != PORTLET:
+                        folderdocument.state = PORTLET
+                        folderdocument.save()
+                else:
+                    if folderdocument.state == PORTLET:
+                        folderdocument.state = DRAFT
+                        folderdocument.save()
             return HttpResponseRedirect(folder.get_absolute_url())
     else:
-        form = FolderOnlineResourceForm(instance=folderdocument)
+        form = FolderOnlineResourceForm(instance=folderdocument, initial={'portlet': portlet })
     return render(request, 'online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
 
 def folderdocument_delete(request, folderdocument_id):

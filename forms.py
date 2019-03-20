@@ -287,17 +287,19 @@ class FolderForm(forms.ModelForm):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        fields = ('label','document')
+        fields = ('label','document','portlet')
         
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
 
 class FolderOnlineResourceForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        fields = ('label','embed_code')
+        fields = ('label','embed_code','portlet')
         
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the view of an online resource in an HTML page'))
+    portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
 
 class RepoForm(forms.ModelForm):
     class Meta:

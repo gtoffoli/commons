@@ -16,7 +16,7 @@
     <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
     <fieldset class="padding1020">
        {% for field in form.visible_fields %}
-            <div class="form-group">
+            <div class="form-group" {% if field.name == 'portlet' and hide_portlet %}style="display:none"{% endif %}>
               <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>
               <span class="txt-error">{{ field.errors }}</span>{{ field }}
               {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}

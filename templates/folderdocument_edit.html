@@ -14,12 +14,12 @@
   <form method="post" action="{{ field }}" id="folderdocument_edit_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
-        {% for field in form.visible_fields %}{% with i=forloop.counter %}
-          <div class="form-group">
+        {% for field in form.visible_fields %}
+          <div class="form-group" {% if field.name == 'portlet' and hide_portlet %}style="display:none"{% endif %}>
             <label for="{{ field.name }}">{{ field.label|capfirst}}</label>
             {{ field }}
           </div>
-        {% endwith %}{% endfor %}
+        {% endfor %}
       </fieldset>
       <div class="panel-footer-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
         <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save and exit"|capfirst %}</button>&nbsp;
