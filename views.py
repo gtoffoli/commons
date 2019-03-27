@@ -3698,6 +3698,8 @@ def lp_edit(request, lp_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
+                if not lp_id: # 190327 GT: if new LP, force DRAFT state
+                    lp.state = DRAFT
                 lp.editor = user
                 if not lp.path_type:
                     lp.path_type = lp_path_type
