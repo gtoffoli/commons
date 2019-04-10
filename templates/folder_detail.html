@@ -140,11 +140,13 @@ dl.eval dd:nth-child(even) {
       <dd><form method="post" id="add_resource_online" action="/folder/add_resource_online/">{% csrf_token %}
         <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
         {% for field in form_res.visible_fields %}
+        {% if field.name != 'portlet' %}
             <div class="form-group">
               <label for="{{ field.name }}" {% if field.field.required %}class="required demiBold"{% endif %}>{{ field.label|capfirst}}</label>
               <span class="txt-error">{{ field.errors }}</span>{{ field }}
               {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}
             </div>
+        {% endif %}
         {% endfor %}
         <div><button type="submit" id="save" name="save" class="btn btn-default" value='{% trans "save"|capfirst %}'>{% trans "save" %}</button>
       </form></dd>

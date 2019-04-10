@@ -1029,7 +1029,7 @@ def online_resource_edit(request, folderdocument_id):
             return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderOnlineResourceForm(instance=folderdocument, initial={'portlet': portlet })
-    return render(request, 'online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action})
+    return render(request, 'online_resource_edit.html', {'folderdocument': folderdocument, 'folder': folder, 'proj_type_name': proj_type_name, 'form': form, 'action': action, 'hide_portlet': hide_portlet})
 
 def folderdocument_delete(request, folderdocument_id):
     folderdocument = get_object_or_404(FolderDocument, id=folderdocument_id)
