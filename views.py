@@ -2154,7 +2154,8 @@ def project_compose_message(request, project_id):
         raise PermissionDenied
     members = project.members(user_only=True)
     recipient_filter = [member.username for member in members if not member==request.user]
-    track_action(request, request.user, 'Send', None, target=project)
+    # track_action(request, request.user, 'Send', None, target=project)
+    track_action(request, request.user, 'Send', project) # 190414 GT: added signal handler for individual messages
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):

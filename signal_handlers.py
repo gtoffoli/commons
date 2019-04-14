@@ -4,10 +4,9 @@ from django.conf import settings
 from django.db.models.signals import post_save, m2m_changed
 from actstream.models import Action
 from zinnia.models.entry import Entry
-# from zinnia.models.author import Author
 from pybb.models import Topic, Post
+from django_messages.models import Message # 180414 GT: added message_post_save_handler
 from commons.models import Project
-# from commons.analytics import track_action
 from commons.tracking import track_action
 
 def project_post_save_handler(sender, **kwargs):
@@ -59,6 +58,20 @@ def post_post_save_handler(sender, **kwargs):
     #180921 MMR verb = created and 'Create' or 'Edit'
     track_action(None, user, 'Create', post, target=topic)
 
+def message_post_save_handler(sender, **kwargs):
+    message = kwargs['instance']
+    created = kwargs['created']
+    project = message.project
+    print ('message_post_save_handler', message, created, project, message.sent_at, message.read_at, message.sender_deleted_at, message.recipient_deleted_at)
+    if created:
+        track_action(None, message.sender, 'Send', message, target=project)
+    elif message.recipient_deleted_at and (not message.sender_deleted_at or message.recipient_deleted_at > message.sender_deleted_at):
+        track_action(None, message.recipient, 'Delete', message, target=project)
+    elif message.sender_deleted_at and (not message.recipient_deleted_at or message.sender_deleted_at > message.recipient_deleted_at):
+        track_action(None, message.sender, 'Delete', message, target=project)
+    elif message.read_at and message.read_at > message.sent_at:
+        track_action(None, message.recipient, 'View', message, target=project)
+
 post_save.connect(project_post_save_handler, sender=Project)
 """
 post_save.connect(entry_post_save_handler, sender=Entry)
@@ -68,6 +81,7 @@ m2m_changed.connect(entry_m2m_changed_handler, sender=Entry.authors.through)
 """
 post_save.connect(topic_post_save_handler, sender=Topic)
 post_save.connect(post_post_save_handler, sender=Post)
+post_save.connect(message_post_save_handler, sender=Message)
 
 if settings.HAS_SAML2:
     from djangosaml2.signals import pre_user_save

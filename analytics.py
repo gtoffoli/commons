@@ -311,21 +311,16 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
         }
     actions = filter_actions(verbs=verbs, max_days=max_days, from_time=from_time, to_time=to_time)
     project_activity_dict = defaultdict(float)
-    # principal_type_id = ContentType.objects.get_for_model(Project).id
     for action in actions:
-        # verb_factor = verb_weigth_dict[action.verb]
         verb_factor = verb_weigth_dict.get(action.verb, 0)
         if action.action_object_content_type_id == principal_type_id:
             if exclude_creator and action.action_object.creator==action.actor:
                 continue
             project_id = action.action_object_object_id
             contenttype_factor = contenttype_weigth_dict['project']
-            # print action.verb, 'project'
         elif action.target_content_type_id == principal_type_id:
             project_id = action.target_object_id
-            # contenttype_factor = contenttype_weigth_dict[action.action_object_content_type.model]
             contenttype_factor = contenttype_weigth_dict.get(action.action_object_content_type.model, 0)
-            # print action.verb, action.action_object_content_type.model
         else:
             continue
         project_activity_dict[project_id] += math.sqrt(verb_factor * contenttype_factor)

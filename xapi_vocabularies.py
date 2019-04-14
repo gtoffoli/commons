@@ -1,5 +1,6 @@
 from pybb.models import Forum, Topic, Post
 from zinnia.models import Entry
+from django_messages.models import Message # 190414 GT: added custom activity type private-message
 from commons.models import UserProfile, Folder, FolderDocument, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
 
 xapi_namespaces = {
@@ -77,6 +78,9 @@ xapi_activities = {
         },
     Entry.__name__: {
         'type': 'http://activitystrea.ms/schema/1.0/article',
+        },
+    Message.__name__: {
+        'type': 'http://commonspaces.eu/activitytype/private-message',
         },
     'Webpage': {
         'type': 'http://activitystrea.ms/schema/1.0/page',
