@@ -530,7 +530,7 @@ class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
         # exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
-        exclude = ('slug', 'cloned_from', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
+        exclude = ('slug', 'cloned_from', 'group', 'state', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
@@ -546,7 +546,7 @@ class LpForm(forms.ModelForm):
     """
     group = LpGroupChoiceField(required=False, queryset=Group.objects.filter(lp_group__isnull=False).distinct(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
     """
-    state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
+    # 190516 MMR state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
