@@ -12,6 +12,8 @@ import commons
 from commons import search_indexes
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 from commons import bookmarklets
+from commons.api import router
+
 if settings.HAS_SAML2:
     import djangosaml2
     from djangosaml2.urls import urlpatterns as saml2_urls
@@ -33,6 +35,8 @@ urlpatterns += [
     url(r'^error/$', commons.views.error, name='error'),
     url(r'^dmuc$', TemplateView.as_view(template_name='dmuc/home.html')),
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
+    url(r'^api-auth/', include('rest_framework.urls')),
+    url(r'^api/', include(router.urls)),
     url(r'^datatrans/', include('datatrans.urls')),
     url(r'^accounts/', include('allauth.urls')),
     # url(r'^admin/filebrowser/', include(filebrowser.sites.urls)),

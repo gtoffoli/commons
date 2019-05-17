@@ -177,6 +177,8 @@ INSTALLED_APPS = (
     'django_messages',
     'roles',
     'django_dag',
+    'django_filters',
+    'rest_framework',
     # 'commons',
     # Placed after rest_api to allow template overriding
     # Must be last on Django < 1.7 as per documentation
@@ -275,6 +277,7 @@ PAGINATION_INVALID_PAGE_RAISES_404 = True
 # ---------- Search ------------------
 SEARCH_SHOW_OBJECT_TYPE = False
 # ---------- Django REST framework -----------
+"""
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size',
@@ -285,6 +288,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
     )
 }
+"""
 # ----------- Celery ----------
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
@@ -562,6 +566,15 @@ if SEARCH_BACKEND == 'whoosh':
             'PATH': os.path.join(PARENT_ROOT, 'whoosh_index'),
         },
     }
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+}
 
 # DATATRANS_CACHE_DURATION = 1
 DATATRANS_TRANSLATE_MAP = {
