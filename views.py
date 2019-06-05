@@ -2716,7 +2716,7 @@ VIDEO_VIEW_TEMPLATE = """
 <div class="marginT30 marginB10 text-center"><video src="%s" preload="auto" autoplay controls class="img-responsive" style="display:inline"></video></div>
 """
 AUDIO_VIEW_TEMPLATE = """
-<div class="marginT30 marginB10 text-center"><audio src="%s" preload="auto" autoplay controls class="img-responsive" style="display:inline"></audio><h5 class="marginB10">%s</h5></div>
+<div class="marginT30 marginB10 text-center"><audio src="%s" preload="auto" autoplay controls style="display:inline; width:%s;"></audio><h5 class="marginB10">%s</h5></div>
 """
 DOCUMENT_VIEW_TEMPLATE = """
 <iframe src="%s" id="iframe" allowfullscreen>
@@ -3533,7 +3533,8 @@ def lp_play(request, lp_id, lp=None):
             var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
             var_dict['media_view'] = True
         elif mimetype.count('audio/'): # view only first non-PDF
-            var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
+            # 190604 MMR var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
+            var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, '100%', document.label)
             var_dict['media_view'] = True
         else: # including ipynb and zip (SCORM content package)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
@@ -3542,7 +3543,7 @@ def lp_play(request, lp_id, lp=None):
         if documents:
             # ranges = current_node.get_ranges()
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
-            var_dict['image_view'] = False
+            # 190604 MMR var_dict['image_view'] = False
             if viewable_documents:
                 current_document = viewable_documents[0]
                 if mimetype == 'application/pdf':
