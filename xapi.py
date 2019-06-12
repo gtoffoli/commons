@@ -55,6 +55,7 @@ def get_object_id(request, object):
         object_id = request.build_absolute_uri(location)
     elif not location.count('http'):
         object_id = '%s://%s%s' % (settings.PROTOCOL, settings.HOST, location)
+    object_id = object_id.replace('cs.up2university.eu', 'www.commonspaces.eu')
     return object_id
 
 def get_context_parent(request, target):
