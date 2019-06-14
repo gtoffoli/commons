@@ -90,6 +90,10 @@
      padding-bottom: 56.25%;
      position: relative;
   }
+  .iframe-touch {
+     -webkit-overflow-scrolling: touch !important;
+     overflow: scroll !important;
+  }
   .iframe-portlet iframe {
      width: 100%;
      height: 100%;
@@ -537,7 +541,7 @@
                     {% for portlet in portlets_top %}
                         <div class="panel-white">
                         {% if portlet.embed_code %}
-                            <div class="iframe-portlet"><iframe src="{{ portlet.embed_code }}"></iframe></div>
+                            <div class="iframe-portlet "><iframe src="{{ portlet.embed_code }}"></iframe></div>
                             {% if 'youtube' in portlet.embed_code or 'vimeo' in portlet.embed_code %}
                                 <div class="titlebar"><div class="item_cell">{{ portlet.label|safe }}</div><div class="item_cell text-right"><a class="viewPortlet" rel="lightBox" href="{{ portlet.embed_code }}?iframe=true&width=100%&height=100%" title="{{ portlet.label|safe }}"><i class="fa fa-search-plus"></i></a></div></div>
                             {% else %}
@@ -961,6 +965,10 @@
 {% endif %}
 <script type="text/javascript">
     $(document).ready(function (){
+        device = (/iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
+        if (device) {
+            $("div.iframe-portlet").addClass("iframe-touch");
+        }
         {% if can_delegate %}
             {% trans "do you really want to grant the admin or supervisor role to this member" as translatemsg %}
             {% include "_data_confirm_js.html" with data_form='delegate' data_msg=translatemsg %}

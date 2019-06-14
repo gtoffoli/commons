@@ -3,6 +3,14 @@
 {% load i18n %}
 
 {% block head_title %}OER: {{ oer.title }}{% endblock %}
+{% block extra_style %}
+<style>
+  .iframe-touch {
+     -webkit-overflow-scrolling: touch !important;
+     overflow: scroll !important;
+  }
+</style>
+{% endblock %}
 
 {% block body_class %}oer_view{% endblock %}
 
@@ -52,3 +60,13 @@
 </div>
 {% endblock %}
 
+{% block extra_script %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        device = (/iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
+        if (device) {
+            $("div.iframe-container").addClass("iframe-touch");
+        }
+    });
+</script>
+{% endblock %}

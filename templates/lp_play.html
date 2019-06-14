@@ -2,6 +2,14 @@
 {% load i18n staticfiles %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+{% block extra_style %}
+<style>
+  .iframe-touch {
+     -webkit-overflow-scrolling: touch !important;
+     overflow: scroll !important;
+  }
+</style>
+{% endblock %}
 
 {% block body_class %}lp_viewer paddingT60{% endblock %}
 {% block body %}
@@ -79,7 +87,7 @@
     <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
   {% endif %}
 {% endif %}
-<div class="iframe-container" {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
+<div class="iframe-container " {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
 {% if oer %}
   {% if oer_is_published %}
     {% if document_view or media_view %}
@@ -128,9 +136,17 @@
 
 {% block extra_script %}
 {% if lp.path_type == 1000 %}{% include "_lp_dag.html" %}{% endif %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        device = (/iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
+        if (device) {
+            $("div.iframe-container").addClass("iframe-touch");
+        }
+    });
+</script>
 {% endblock %}
 
-{% endblock %}
+{% endblock body %}
 
 
 
