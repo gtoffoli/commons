@@ -208,6 +208,7 @@ urlpatterns += [
     url('lp-autocomplete/$', commons.views.lp_autocomplete, name='lp-autocomplete',),
     url('featured-autocomplete/$', FeaturedAutocompleteView.as_view(), name='featured-autocomplete'),
     url(r"^report_pageview/$", commons.bookmarklets.report_pageview, name="report_pageview"),
+    url(r"^text_analyzer/$", commons.bookmarklets.text_analyzer, name="text_analyzer"),
     url(r"^analytics/activity_stream/$", commons.analytics.activity_stream, name="activity_stream"),
     url(r"^analytics/user_activity/(?P<username>[\w\.-]+)/$", commons.views.user_activity, name="user_activity"),
     url(r"^analytics/project_activity/(?P<project_slug>[\w-]+)/$",commons.views.project_activity, name="project_activity"),

@@ -19,3 +19,16 @@ def process_request(self, request):
                        settings.USER_LASTSEEN_TIMEOUT)
 
 ActiveUserMiddleware.process_request = process_request
+
+# see https://docs.djangoproject.com/en/2.2/topics/http/middleware/ and https://www.techiediaries.com/django-cors/
+class CorsMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        # One-time configuration and initialization.
+
+    def __call__(self, request):
+        # Code to be executed for each request before the view (and later middleware) are called.
+        response = self.get_response(request)
+        # Code to be executed for each request/response after the view is called.
+        response["Access-Control-Allow-Origin"] = "*"
+        return response

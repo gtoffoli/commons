@@ -92,12 +92,12 @@ if DJANGO_VERSION > 1:
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
         'django.contrib.sessions.middleware.SessionMiddleware',
+        'commons.middleware.CorsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        # 'corsheaders.middleware.CorsMiddleware',
         'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
         'pybb.middleware.PybbMiddleware',
         'django.middleware.locale.LocaleMiddleware',
@@ -107,7 +107,6 @@ if DJANGO_VERSION > 1:
 else:
     MIDDLEWARE_CLASSES = (
         'django.contrib.sessions.middleware.SessionMiddleware',
-        # 'corsheaders.middleware.CorsMiddleware',
         'django.middleware.common.CommonMiddleware',
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
