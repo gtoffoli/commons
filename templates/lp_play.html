@@ -11,126 +11,137 @@
 </style>
 {% endblock %}
 
-{% block body_class %}lp_viewer paddingT60{% endblock %}
-{% block body %}
-{% block navbar_base %}
-{% endblock %}
-{% block body_base %}
-<div class="container-fluid margin0 padding0">
-<div class="row margin0">
-  <div class="col-sm-3 col-md-3 col-lg-3 paddingL0" id="list_nodes">
- 
-  	<div class="bc-white paddingT10 paddingR5 paddingB0 paddingL20" style="border-bottom: 1px dotted #CB4F98">
-    <div class="clearfix">
-    <h5 class="pull-left c-mulberry marginB5" style="width: 90%">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
-    <p class="pull-right marginB5 paddingT10 paddingLR5" style="width: 10%;">
+{% block body_class %}lp_viewer {% endblock %}
+
+
+{% block nav %}
+  <div class="navbar">
+    <div class="pull-left">
+    <h5 class="c-mulberry marginB0">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
+    </div>
+    <p class="pull-right paddingT10 paddingLR5">
       <a href="/lp/{{ lp.slug }}/"><i class="fa fa-list-alt font18 c-mulberry" aria-hidden="true"></i></a>
     </p>
-    </div>
-    <p class="font12">{{ lp.short|safe }}</p>
-    </div>
-    {% if nodes %}
-{% if lp.path_type == 3 %}
-    {% comment %}<div id="dag"></div>{% endcomment %}
-    {% comment %} SEE https://stackoverflow.com/questions/32044/how-can-i-render-a-tree-structure-recursive-using-a-django-template{% endcomment %}
-   	<dl class="panel panel-col panel-white">
-    <dd>
-	{% for pathnode in lp.get_roots %} 
-		{% with font=14 depth=1 %}
-	    	{% include "_lp_subtree.html" %}
-	    {% endwith %}
-	{% endfor%}
-	{% for pathnode in lp.get_islands %} 
-		{% with font=14 depth=1 %}
-	    	{% include "_lp_subtree.html" %}
-	    {% endwith %}
-	{% endfor%}
-    </dd>
-    </dl>
-{% else %}
-    	<dl class="panel panel-col panel-white">
-        <dd>
-        {% for pathnode in nodes %}
-          <ul class="nodes-unlisted {% if pathnode.oer %} node-oer {% elif pathnode.document %} node-doc {% else %} node-text {% endif %} font14">
-            <li>
-            {% if pathnode == current_node %}
-              <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
+  </div>
+{% endblock %}
+
+{% block body_base %}
+<div class="container-fluid margin0 padding0">
+    <div class="row margin0">
+        <div class="col-sm-3 col-md-3 col-lg-3 paddingL0" id="list_nodes">
+            <div class="bc-white paddingT20 paddingB10 paddingL20 paddingR10">
+                <dl class="list-inline font14 clearfix">
+                    <dt class="with_icon">{% trans "objectives"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
+                    <dd class="field-content" style="display:none"><p class="marginB0">{{ lp.short|safe }}</p></dd>
+                </dl>
+            </div>
+        {% if nodes %}
+            <div class="search-header" style=" margin-top: 10px; padding-left: 20px; text-align:left;">
+                {% trans "path nodes"|capfirst %} 
+                <button class="search-toggle" data-toggle="collapse" data-target=".search-collapse">
+                    <span class="fa fa-bars"></span>
+                </button>
+            </div>
+            <div class="collapse search-collapse search-responsive-collapse paddingLR0 bc-white">
+                <dl class="panel panel-col panel-white">
+                    <dt><p class="demiBold">{% trans "path nodes"|capfirst %}</p></dt>
+                    <dd>
+            {% if lp.path_type == 3 %}
+{% comment %}<div id="dag"></div>{% endcomment %}
+{% comment %} SEE https://stackoverflow.com/questions/32044/how-can-i-render-a-tree-structure-recursive-using-a-django-template{% endcomment %}
+                    {% for pathnode in lp.get_roots %} 
+                    {% with font=14 depth=1 %}
+                    {% include "_lp_subtree.html" %}
+                    {% endwith %}
+                    {% endfor%}
+                    {% for pathnode in lp.get_islands %} 
+                    {% with font=14 depth=1 %}
+                    {% include "_lp_subtree.html" %}
+                    {% endwith %}
+                    {% endfor %}
             {% else %}
-              {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+                    {% for pathnode in nodes %}
+                    <ul class="nodes-unlisted {% if pathnode.oer %} node-oer {% elif pathnode.document %} node-doc {% else %} node-text {% endif %} font14">
+                        <li>
+                        {% if pathnode == current_node %}
+                            <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
+                        {% else %}
+                            {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+                        {% endif %}
+                        </li>
+                    </ul>
+                    {% endfor %}
             {% endif %}
-            </li>
-          </ul>
-        {% endfor %}
-        </dd>
-      </dl>
+                    </dd>
+                </dl>
+            </div>
+        {% endif %}
+        </div>
+        <div class="col-sm-9 col-md-9 col-lg-9 bc-white" id="right">
+            <div class="clearfix marginTB0 marginLR-12 bc-white padding812">
+                <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
+                <div class="text-center pull-left" style="width:80%"><span class="paddingR10">{{ i_node|add:"1" }}/{{ nodes|length }}</span>
+                {% if current_node.oer %} <a href="/oer/{{ oer.slug }}/"><span class="c-pacific-blue">OER <i class="fa fa-list-alt c-pacific-blue" aria-hidden="true"></i></span></a>
+                {% elif current_node.document %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}
+                {% if can_edit and not language_mismatch %}
+                &nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
+                {% endif %}
+{% comment %}
+{% if current_node.oer %}
 {% endif %}
-	{% endif %}
-
-</div>
-
-<div class="col-sm-9 col-md-9 col-lg-9 bc-white" id="right">
-  <div class="clearfix marginTB0 marginLR-12 bc-white padding812">
-    <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-    <div class="text-center pull-left" style="width:80%"><span class="paddingR10">{{ i_node|add:"1" }}/{{ nodes|length }}</span>
-    {% if current_node.oer %} <a href="/oer/{{ oer.slug }}/"><span class="c-pacific-blue">OER <i class="fa fa-list-alt c-pacific-blue" aria-hidden="true"></i></span></a>
-{% elif current_node.document %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}
-		{% if can_edit and not language_mismatch %}
-		&nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
-		{% endif %}
-		{% if current_node.oer %}
-		{% endif %} 
-	</div>
-  <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
-</div>
-  {% if oer_is_published %}
-  {% if oer.url %}
-    <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
-  {% endif %}
-{% endif %}
-<div class="iframe-container " {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
-{% if oer %}
-  {% if oer_is_published %}
-    {% if document_view or media_view %}
-      {{ document_view|safe }}
-    {% elif no_viewable_document %}
-       <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>
-    {% elif youtube %}
-      {{ youtube|safe }}
-    {% elif ted_talk %}
-      {{ ted_talk|safe }}
-    {% elif slideshare %}
-      {{ slideshare|safe }}
-    {% elif ipynb %}
-      {{ ipynb|safe }}
-    {% elif embed_code %}
-      {{ embed_code|safe }}
-    {% elif x_frame_protection %}
-       <h5 class="marginTB30 text-center demiBold">{{ x_frame_protection }}</h5>
-    {% else %}
-     <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
-    {% endif %}
-  {% else %}
-    <h5 class="marginTB30 text-center demiBold">{% trans "currently this OER is not public"|capfirst %}</h5>
-  {% endif %}
-{% else %}
-  {% if document_view %}
-    {% if no_viewable_document %}
-       <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>
-    {% else %}
-       {{ document_view|safe }}
-    {% endif %}
-  {% elif text_view %}
-    {{ text_view|safe }}
-    <div style="clear:both"></div>
-  {% endif %}
-{% endif %}
-  </div>
-  <div class="clearfix clearfix marginTB0 marginLR-12 bc-white padding812">
-    <div class="pull-left">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-    <div class="pull-right">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
-  </div>
-</div>
-</div>
+{% endcomment %}
+                </div>
+                <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
+            </div>
+            {% if oer_is_published %}
+                {% if oer.url %}
+                <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
+                {% endif %}
+            {% endif %}
+            <div class="iframe-container " {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
+                {% if oer %}
+                    {% if oer_is_published %}
+                        {% if document_view or media_view %}
+                            {{ document_view|safe }}
+                        {% elif no_viewable_document %}
+                            <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>
+                        {% elif youtube %}
+                            {{ youtube|safe }}
+                        {% elif ted_talk %}
+                            {{ ted_talk|safe }}
+                        {% elif slideshare %}
+                            {{ slideshare|safe }}
+                        {% elif ipynb %}
+                            {{ ipynb|safe }}
+                        {% elif embed_code %}
+                            {{ embed_code|safe }}
+                        {% elif x_frame_protection %}
+                            <h5 class="marginTB30 text-center demiBold">{{ x_frame_protection }}</h5>
+                        {% else %}
+                            <iframe id="frame" src="{{ oer_url }}" allowfullscreen></iframe>
+                        {% endif %}
+                    {% else %}
+                        <h5 class="marginTB30 text-center demiBold">{% trans "currently this OER is not public"|capfirst %}</h5>
+                    {% endif %}
+                {% else %}
+                    {% if document_view %}
+                        {% if no_viewable_document %}
+                            <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>
+                        {% else %}
+                            {{ document_view|safe }}
+                        {% endif %}
+                    {% elif text_view %}
+                        {{ text_view|safe }}
+                        <div style="clear:both"></div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="clearfix clearfix marginTB0 marginLR-12 bc-white padding812">
+                <div class="pull-left">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
+                <div class="pull-right">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
@@ -142,11 +153,25 @@
         if (device) {
             $("div.iframe-container").addClass("iframe-touch");
         }
+        $('dt a.toggleIcon').on('click', function(event){
+            event.preventDefault();
+            $("body").css("cursor", "default");
+            var accordion = $(this).parent();
+            var accordionContent = accordion.next('.field-content');
+            var accordionToggleIcon = $(this);
+            accordion.toggleClass("open");
+            accordionContent.slideToggle(250);
+            if (accordion.hasClass("open")) {
+                accordionToggleIcon.children('i').attr("class","fa fa-minus-circle");
+            } else {
+                accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
+            }
+        });
     });
 </script>
 {% endblock %}
 
-{% endblock body %}
+
 
 
 

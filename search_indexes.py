@@ -58,7 +58,8 @@ class RepoIndex(indexes.SearchIndex, indexes.Indexable):
         return Repo
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+        # 20190711 MMR return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+        return self.get_model().objects.filter(state__in=[PUBLISHED,])
 
 class OERIndex(indexes.SearchIndex, indexes.Indexable):
 
@@ -71,8 +72,9 @@ class OERIndex(indexes.SearchIndex, indexes.Indexable):
         return OER
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
-
+        # 20190711 MMR return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+        return self.get_model().objects.filter(state__in=[PUBLISHED,])
+        
 class LearningPathIndex(indexes.SearchIndex, indexes.Indexable):
 
     text = indexes.EdgeNgramField(document=True, use_template=True)
@@ -84,7 +86,8 @@ class LearningPathIndex(indexes.SearchIndex, indexes.Indexable):
         return LearningPath
 
     def index_queryset(self, using=None):
-        return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+        # 20190711 MMR return self.get_model().objects.filter(state__in=[SUBMITTED, PUBLISHED,])
+        return self.get_model().objects.filter(state__in=[PUBLISHED,])
 
 from django.contrib.flatpages.models import FlatPage
 def flatpage_indexable_text(self):

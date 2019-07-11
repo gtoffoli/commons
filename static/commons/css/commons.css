@@ -411,8 +411,8 @@ margin-right:0;
 	padding-top:12px;
 }
 .paddingLR0 {
-	padding-left:0;
-	padding-right:0;
+	padding-left:0 !important;
+	padding-right:0 !important;
 }
 .paddingLR5 {
 	padding-left:5px;
@@ -1521,6 +1521,9 @@ a.btn-c2:focus {
   -webkit-overflow-scrolling: touch;
 }
 @media (min-width: 768px) {
+  .search-header {
+    display:none;
+  }
   .search-collapse {
     width: auto;
     border-top: 0;

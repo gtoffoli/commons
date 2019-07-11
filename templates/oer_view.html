@@ -31,6 +31,7 @@
       {% if can_evaluate %}&nbsp; <a href="/oer/{{ oer.slug }}/evaluate/" title="{% trans "evaluate" %}"><i class="fa fa-star-o font18 c-pacific-blue"></i></a>{% endif %}
       {% if add_bookmarked and not in_bookmarked_oers %}&nbsp; <a href="/oer/{{ oer.slug }}/?copy=true" title="{% trans "bookmark this OER for future reference" %}"><i class="fa fa-bookmark-o font18 c-pacific-blue"></i></a>{% endif %}
     </p>
+  </div>
 {% endblock %}
 
 {% block body_base %}
