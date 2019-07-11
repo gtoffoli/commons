@@ -173,7 +173,6 @@ def home(request):
     popular_project_id = cache.get('popular_project_id')
     if popular_project_id:
         project = get_object_or_404(Project, id=popular_project_id)
-        print(project)
         wall_dict['popular_proj'] = project
     else:
         popular_projects = popular_principals(principal_type_id, active=False, max_days=30)
@@ -186,7 +185,6 @@ def home(request):
     active_project_id = cache.get('active_project_id')
     if active_project_id:
         project = get_object_or_404(Project, id=active_project_id)
-        print(project)
         wall_dict['active_proj'] = project
     else:
         active_projects = popular_principals(principal_type_id, active=True, max_days=30)
@@ -206,7 +204,6 @@ def home(request):
     popular_lp_id = cache.get('popular_lp_id')
     if popular_lp_id:
         lp = get_object_or_404(LearningPath, id=popular_lp_id)
-        print(lp)
         wall_dict['popular_lp'] = lp
     else:
         popular_lps = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)
@@ -226,7 +223,6 @@ def home(request):
     popular_oer_id = cache.get('popular_oer_id')
     if popular_oer_id:
         oer = get_object_or_404(OER, id=popular_oer_id)
-        print(oer)
         wall_dict['popular_oer'] = oer
     else:
         popular_oers = popular_principals(principal_type_id, active=False, max_days=14, exclude_creator=True)

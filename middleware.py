@@ -12,7 +12,6 @@ else:
 
 def process_request(self, request):
     user = request.user
-    print (user.is_authenticated, user.username)
     if user.is_authenticated:
         now = timezone.now()
         cache.set('seen_%s' % (user.username), now, 
