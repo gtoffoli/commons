@@ -47,6 +47,7 @@ urlpatterns += [
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
     url(r'^comments/', include('django_comments.urls')),
     # url(r"^notification/", include("notification.urls")),
+    url(r"^user_welcome/$", commons.views.user_welcome, name="user_welcome"),
     url(r"^my_profile/$", commons.views.my_profile, name="account_settings"),
     url(r"^my_home/$", commons.views.my_home, name="user_home"),
     url(r"^my_preferences/$", commons.views.my_preferences, name="my_preferences"),

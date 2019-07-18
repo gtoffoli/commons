@@ -295,6 +295,20 @@ def press_releases(request):
             var_dict['url']= '/ViewerJS/#' + protocol + '://%s/document/%s/download/' % (request.META['HTTP_HOST'], last_release.document.id)
     return render(request, 'press_releases.html', var_dict)
 
+def user_welcome (request):
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponseRedirect('/')
+    else:
+        profile = user.get_profile()
+        if profile and not profile.get_completeness():
+            var_dict = {}
+            var_dict['username'] = user.username
+            var_dict['title'] = FlatPage.objects.get(url='/user_welcome/').title
+            var_dict['page'] = FlatPage.objects.get(url='/user_welcome/').content
+            return render(request, 'user_welcome.html', var_dict)
+        return HttpResponseRedirect('/')
+        
 def user_profile(request, username, user=None):
     # assert username or (user and user.is_authenticated()
     if not username and (not user or not user.is_authenticated):

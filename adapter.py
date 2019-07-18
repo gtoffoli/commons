@@ -9,7 +9,7 @@ class MyAccountAdapter(DefaultAccountAdapter):
         if profile and profile.get_completeness():
             path = "/"
         elif profile and not profile.get_completeness():
-            path = "/user_welcome"
+            path = "/user_welcome/"
         else:
             path = "/my_profile"
         return path
