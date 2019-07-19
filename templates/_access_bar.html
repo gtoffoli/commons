@@ -11,7 +11,7 @@
 
      {% if user.is_authenticated %}
        <ul class="nav navbar-nav pull-right my-navbar-user-auth">
-         <li><a {% if user.is_completed_profile %} href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}" {% else %} href="/user_welcome/" title="{% trans "complete profile"|capfirst %}" {% endif %}>
+         <li><a {% if user.is_completed_profile %} href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}" {% else %} href="/user_welcome/" title="{% trans "complete your profile"|capfirst %}" {% endif %}>
            {% if user.profile.avatar %}
              <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
            {% else %}

@@ -1701,8 +1701,8 @@ msgstr "meu espaço"
 
 #: .\templates\_access_bar.html:14 .\templates\_object_comments.html:77
 #: .\templates\flatpages\user_welcome.html:44 .\templates\oer_detail.html:207
-msgid "complete profile"
-msgstr "perfil completo"
+msgid "complete your profile"
+msgstr "complete o seu perfil"
 
 #: .\templates\_access_bar.html:22 .\templates\_account_bar.html:14
 #: .\templates\user_dashboard.html:39

@@ -74,7 +74,7 @@ title="{% trans "Direct link to this comment" %}">#</a>
          <div class="marginT5"><button type="submit" value="id_submit" id="id_submit" class="btn btn-default">{% trans "Add comment" %}</button></div>
        </form></dd>
      {% elif user.is_authenticated and not user_is_completed_profile %}
-       <dd><p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete profile" %}</a> {% trans "to leave a comment" %}.</p></dl>
+       <dd><p>{% trans "please"|capfirst %} <a href="/user_welcome/">{% trans "complete your profile" %}</a> {% trans "to leave a comment" %}.</p></dl>
      {% else %}
        <dd><p>{% trans "please"|capfirst %} <a href="{% url 'account_login'%}?next={{request.path}}">{% trans "log in" %}</a> {% trans "to leave a comment" %}.</p></dl>
      {% endif %}

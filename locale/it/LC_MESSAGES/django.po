@@ -1779,8 +1779,8 @@ msgstr "la mia homepage"
 #: .\templates\_access_bar.html:14 .\templates\_object_comments.html:77
 #: .\templates\flatpages\user_welcome.html:46
 #: .\templates\flatpages\user_welcome.html:59 .\templates\oer_detail.html:246
-msgid "complete profile"
-msgstr "completa il profilo"
+msgid "complete your profile"
+msgstr "completa il tuo profilo"
 
 #: .\templates\_access_bar.html:22 .\templates\user_dashboard.html:39
 msgid "my messages"

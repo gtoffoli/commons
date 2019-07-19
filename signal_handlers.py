@@ -62,7 +62,7 @@ def message_post_save_handler(sender, **kwargs):
     message = kwargs['instance']
     created = kwargs['created']
     project = message.project
-    print ('message_post_save_handler', message, created, project, message.sent_at, message.read_at, message.sender_deleted_at, message.recipient_deleted_at)
+    # print ('message_post_save_handler', message, created, project, message.sent_at, message.read_at, message.sender_deleted_at, message.recipient_deleted_at)
     if created:
         track_action(None, message.sender, 'Send', message, target=project)
     elif message.recipient_deleted_at and (not message.sender_deleted_at or message.recipient_deleted_at > message.sender_deleted_at):

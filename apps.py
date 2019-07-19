@@ -6,4 +6,4 @@ class CommonsConfig(AppConfig):
 
     def ready(self):
         import commons.signal_handlers
-        print ('imported signal_handlers')
+        # print ('imported signal_handlers')
