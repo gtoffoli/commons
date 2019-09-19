@@ -375,13 +375,14 @@ class OerForm(forms.ModelForm):
 
     class Meta:
         model = OER
-        fields = ['project', 'state', 'title', 'description', 'license', 'url', 'embed_code', 'source', 'reference', 'oers', 'translated', 'remixed', 'material', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'creator', 'editor',]
+        fields = ['project', 'state', 'title', 'description', 'text', 'license', 'url', 'embed_code', 'source', 'reference', 'oers', 'translated', 'remixed', 'material', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'creator', 'editor',]
 
     # slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
     url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'form-control'}), help_text=_('if the OER is available online, put here its URL (web address)'))
     embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
     description = forms.CharField(label=_('abstract or description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 3, 'cols': 80,}), help_text=_('one or two lines are enough here; this short description will be displayed in search results and will be used for full-text indexing'))
+    text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     license = forms.ModelChoiceField(required=True, queryset=LicenseNode.objects.all(), label=_('terms of use'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('type of licence; please, don\'t disregard it: see the help pages for an explanation of the available options; in case of doubt, select the most cautious option "read the fine print"'))
     material = forms.ModelChoiceField(required=False, queryset=MaterialEntry.objects.all(), label=_('type of material'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('the type of (educational) material refers to the function, not the physical aspect; the options have been taken from www.oercommons.org'))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
@@ -424,8 +425,10 @@ class OerScreenshotForm(forms.ModelForm):
 class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER
-        # fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'documents', 'oers', 'source', 'url', 'reference', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
-        fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
+        # fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
+        fields = ['slug', 'title', 'description', 'text', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
+
+    text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     # tags = TagField(required=False, widget=LabelWidget())
     tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 

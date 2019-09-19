@@ -56,11 +56,11 @@ dl.eval dd:nth-child(even) {
       </div>
       {% else %}
       <div class="marginB10 clearfix">
-      {% if oer.url and oer.description %}
+      {% if oer_url and oer.description %}
         <div class="hidden-xs">
            <div class="posRel">
               <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>{%endif%}
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
         </div>
@@ -68,11 +68,11 @@ dl.eval dd:nth-child(even) {
            {% if oer.small_image %}
            <div class="posRel">
               <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
            {% else %}
-           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
+           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></p>
            <p>{{ oer.description }}</p>
            {% endif %}
         </div>
@@ -83,15 +83,15 @@ dl.eval dd:nth-child(even) {
         </div>
       {% elif oer.description %}
         <p>{{ oer.description }}</p>
-      {% elif  oer.url %}
+      {% elif oer_url %}
         <div class="hidden-xs">
            <div class="posRel">
               <div class="bg_view floatL text-center">
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
            </div>
         </div>
         <div class="visible-xs">
-          <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer.url }}">{% trans "view resource" %}</a></p>
+          <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></p>
         </div>
       {% endif %}
       {% if oer.material %}

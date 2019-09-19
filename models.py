@@ -1640,7 +1640,8 @@ OER_TYPE_CHOICES = (
     # (0, '-'),
     (1, _('Metadata only')),
     (2, _('Metadata and online reference')),
-    (3, _('Metadata and document(s)')),)
+    (3, _('Metadata and document(s)')),
+    (4, _('Metadata and richtext')),) # 190919 GT added
 OER_TYPE_DICT = dict(OER_TYPE_CHOICES)
 
 SOURCE_TYPE_CHOICES = (
@@ -1658,6 +1659,7 @@ class OER(Resource, Publishable):
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
     url = models.CharField(max_length=200,  null=True, blank=True, help_text=_('specific URL to the OER, if applicable'), validators=[URLValidator()])
     description = models.TextField(blank=True, null=True, verbose_name=_('abstract or description'))
+    text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
     license = models.ForeignKey(LicenseNode, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('terms of use'))
     oer_type = models.IntegerField(choices=OER_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='OER type')
     source_type = models.IntegerField(choices=SOURCE_TYPE_CHOICES, default=2, validators=[MinValueValidator(1)], verbose_name='source type')
@@ -1876,7 +1878,9 @@ class OER(Resource, Publishable):
 
 def update_oer_type(sender, **kwargs):
     oer = kwargs['instance']
-    if oer.documents.all():
+    if oer.text and len(oer.text)>10:
+        oer_type = 4
+    elif oer.documents.all():
         oer_type = 3
     elif oer.url:
         oer_type = 2
@@ -3105,6 +3109,9 @@ class PathNode(node_factory('PathEdge')):
 
 PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes
+
+OER.get_text = PathNode.get_text
+OER.is_flatpage = PathNode.is_flatpage
 
 def cmp_pathnode_order(node_1, node_2, parent=None):
     """ compare the sort order of 2 children of a node:

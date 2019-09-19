@@ -101,7 +101,9 @@
             <div class="iframe-container " {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
                 {% if oer %}
                     {% if oer_is_published %}
-                        {% if document_view or media_view %}
+						{% if text_view %}
+						    {{ text_view|safe }}
+                        {% elif document_view or media_view %}
                             {{ document_view|safe }}
                         {% elif no_viewable_document %}
                             <h5 class="marginTB30 text-center demiBold">{{ no_viewable_document.label }} <a href="/document/{{ no_viewable_document.id }}/download/" class="download-file" title="{% trans "download" %}"><i class="fa fa-download"></i></a></h5>

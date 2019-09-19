@@ -39,7 +39,9 @@
 {% if can_republish %}
   <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer_url }}</a></p>
   <div class="iframe-container">
-  {% if oer_url %}
+  {% if text_view %}
+      {{ text_view|safe }}
+  {% elif oer_url %}
     {% if youtube %}
       {{ youtube|safe }}
     {% elif ted_talk %}

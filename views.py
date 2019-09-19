@@ -2759,7 +2759,7 @@ def oer_view(request, oer_id, oer=None):
         raise PermissionDenied
     language = request.LANGUAGE_CODE
     var_dict = { 'oer': oer, }
-    var_dict['oer_url'] = oer.url
+    # var_dict['oer_url'] = oer.url
     var_dict['is_published'] = oer.state == PUBLISHED
     var_dict['is_un_published'] = un_published = oer.state == UN_PUBLISHED
     if user.is_authenticated:
@@ -2782,7 +2782,10 @@ def oer_view(request, oer_id, oer=None):
     reference = oer.reference
     slideshare = reference and reference.count('slideshare.net') and reference.count('<iframe') and reference or ''
     ipynb = url and url.endswith('ipynb')
-    if youtube:
+    oer_text = oer.get_text()
+    if oer_text: # 190919 GT added
+        var_dict['text_view'] = TEXT_VIEW_TEMPLATE % oer_text # 190919 GT added
+    elif youtube:
         if youtube.count('embed'):
             pass
         elif youtube.count('youtu.be/'):
@@ -2892,6 +2895,9 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
     var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
+    var_dict['oer_url'] = oer.url # 190919  GT added
+    if oer.get_text(): # 190919  GT added
+        var_dict['oer_url'] = "/oer/{}/view/".format(oer.slug)
 
     if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
@@ -3550,7 +3556,10 @@ def lp_play(request, lp_id, lp=None):
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     if oer:
         documents = oer.get_sorted_documents()
-        if documents:
+        oer_text = oer.get_text() # 190919 GT added
+        if oer_text:
+            var_dict['text_view'] = TEXT_VIEW_TEMPLATE % oer_text # 190919 GT added
+        elif documents:
             # ranges = current_node.get_ranges()
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
             # 190604 MMR var_dict['image_view'] = False
