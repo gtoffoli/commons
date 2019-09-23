@@ -41,7 +41,13 @@
       <fieldset class="marginT20"><legend class="marginB10 paddingN3 font18 c-pacific-blue borderColor-c2 demiBold"> <a href="#" class="toggleIcon paddingR10 c-pacific-blue demiBold"><i class="fa fa-plus-square-o"></i></a> {% trans "source and derivation"|capfirst %}</legend>
       <div style="display:none">
     {% endif %}
-    {% if field.name == 'tags' %}
+    {% if field.name == 'text' %}
+      <div class="form-group" id="text">
+        <label for="{{ field.name }}"><a href="#" class="toggleIcon paddingR10 c-demiblack demiBold"><i class="fa fa-plus-square-o"></i></a> {{ field.label|capfirst}}</label>
+        <div style="display:none"><span class="txt-error">{{ field.errors }}</span>{{ field }}
+        {% if field.help_text %}<small id="{{ field.name }}helpBlock" class="help-block">{{ field.help_text }}</small>{% endif %}</div>
+      </div>
+    {% elif field.name == 'tags' %}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
         <span class="txt-error">{{ field.errors }}</span>
@@ -166,6 +172,21 @@
 			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
 		}
 	});
+	 
+   $('#text a.toggleIcon').on('click', function(event){
+		event.preventDefault();
+    $("body").css("cursor", "default");
+		var accordion = $(this).parent().parent();
+		var accordionContent = accordion.children('div');
+		var accordionToggleIcon = $(this);
+		accordion.toggleClass("open");
+		accordionContent.slideToggle(250);
+		if (accordion.hasClass("open")) {
+			accordionToggleIcon.children('i').attr("class","fa fa-minus-square-o");
+		} else {
+			accordionToggleIcon.children('i').attr("class","fa fa-plus-square-o");
+		}
+	 });
  })
 </script>
 

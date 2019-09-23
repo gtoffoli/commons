@@ -37,11 +37,12 @@
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
 {% if can_republish %}
+  {% if text_view %}
+  {{ text_view|safe }}
+  {% else %}
   <p class="view-url">URL: <a href="{{ oer.url }}" target="_blank">{{ oer_url }}</a></p>
   <div class="iframe-container">
-  {% if text_view %}
-      {{ text_view|safe }}
-  {% elif oer_url %}
+  {% if oer_url %}
     {% if youtube %}
       {{ youtube|safe }}
     {% elif ted_talk %}
@@ -59,6 +60,7 @@
     {% endif %}
   {% endif %}
   </div>
+  {% endif %}
 {% endif %}
 </div>
 {% endblock %}
