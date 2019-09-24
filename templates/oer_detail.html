@@ -166,7 +166,7 @@ dl.eval dd:nth-child(even) {
             {% elif oer.remixed %}{% trans "derived, through adaptation / remixing, from"|capfirst %}
             {% endif %}</dt>
             {% for item in oer.oers.all %}
-              <dd><a href="/oer/{{ item.slug }}">{{ item.title }}</a></dd>
+              <dd><a href="/oer/{{ item.slug }}/">{{ item.title }}</a></dd>
             {% endfor %}
           </dl>
       {% endif %}
