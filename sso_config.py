@@ -131,6 +131,7 @@ SAML_CONFIG = {
       'url': [('https://www.uniroma1.it', 'it'), ('http://en.uniroma1.it/', 'en')],
       },
   'valid_for': 24,  # how long is our metadata valid
+  'disable_ssl_certificate_validation': True,
 }
 
 SAML_DJANGO_USER_MAIN_ATTRIBUTE = 'email'
