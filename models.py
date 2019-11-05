@@ -2922,11 +2922,12 @@ class PathNode(node_factory('PathEdge')):
         protocol = request.is_secure() and 'https' or 'http'
         html_template = get_template('_textnode_serialize.html')
         domain = request.META['HTTP_HOST']
-        # text = self.text.replace("../../../media", "http://%s/media" % domain)
         text = self.get_text()
-        text = text.replace("/media/ugc_upload/", protocol + "://%s/media/ugc_upload/" % domain)
-        text = text.replace("../../../media", protocol + "://%s/media" % domain)
-        context = { 'request': request, 'node': self, 'text': text, 'domain': domain }
+        if text.count("../../../media"):
+            text = text.replace("../../../media", protocol + "://%s/media" % domain)
+        else:
+            text = text.replace("/media/ugc_upload/", protocol + "://%s/media/ugc_upload/" % domain)
+        context = { 'request': request, 'node': self, 'text': text, 'PROTOCOL': protocol, 'DOMAIN': domain }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer, landscape=self.is_flatpage())
 
