@@ -27,7 +27,7 @@ class UserViewSet(viewsets.ModelViewSet):
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'url', 'get_absolute_url', 'name', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified')
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
@@ -44,7 +44,7 @@ class OerSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = OER
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'text', 'state', 'created', 'modified')
 
 class OerViewSet(viewsets.ModelViewSet):
     """
@@ -58,7 +58,7 @@ class OerViewSet(viewsets.ModelViewSet):
 class LearningPathSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified')
 
 class LearningPathViewSet(viewsets.ModelViewSet):
     """
@@ -72,7 +72,7 @@ class LearningPathViewSet(viewsets.ModelViewSet):
 class PathNodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = PathNode
-        fields = ('id', 'url', 'get_absolute_url', 'label', 'created', 'modified')
+        fields = ('id', 'get_absolute_url', 'label', 'text', 'created', 'modified')
 
 class PathNodeViewSet(viewsets.ModelViewSet):
     """

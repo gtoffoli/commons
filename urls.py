@@ -13,6 +13,7 @@ from commons import search_indexes
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 from commons import bookmarklets
 from commons.api import router
+import commons.text_analysis
 
 if settings.HAS_SAML2:
     import djangosaml2
@@ -224,6 +225,7 @@ urlpatterns += [
     url(r"^analytics/active_users/$", commons.analytics.active_users, name="active_users"),
     url(r"^analytics/active_comembers/$", commons.analytics.active_comembers, name="active_comembers"),
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
+    url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     # url(r"^bosh_prebind/$", dmuc.views.bosh_prebind, name="bosh_prebind"),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

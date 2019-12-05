@@ -1,0 +1,131 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>vue-count-to</title>
+  <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
+</head>
+<style>
+  body{
+    margin: 0;
+  }
+</style>
+<body>
+  <script src='https://unpkg.com/vue@2.2.6'></script>
+  <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
+  <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
+   <div id="app" class='components-container'>
+
+    <template>
+{% verbatim %}
+      <split-pane v-on:resize="resize" split="horizontal" :default-percent='7'>
+
+       <template slot="paneL">
+         <div style="padding: 3px; color: white; background-color: steelblue;">
+            <label>{{ obj_type }}</label>: {{ obj_id }},
+			<label>Language</label>: {{ language }},
+			{{ n_tokens }} <label>tokens</label>,
+			{{ n_unique }} <label>unique tokens</label>,
+			<label>Vocabulary density:</label> {{ voc_density }},
+			{{ n_sentences }} <label>sentences</label>,
+			<label>Tokens per sentence:</label> {{ sent_length }}<br/>
+			<label>Title:</label> {{ title }},
+			<label>Most frequent words:</label>
+			  <span v-for="item in kw_frequencies">{{ item.key }} ({{ item.freq }}), </span>
+		  </div>
+        </template>
+ 
+    <template slot="paneR">
+      <split-pane v-on:resize="resize" :min-percent='20' :max-percent='100' split="vertical">
+
+        <template slot="paneL">
+          <h3 style="text-align: center;">SENTENCES</h3>
+		  <div v-for="sentence in sentences"><div v-text="sentence" style="margin-left: 5px; margin-right: 5px;"></div></div>
+        </template>
+
+         <template slot="paneR">
+          <split-pane split="horizontal">
+
+            <template slot="paneL">
+              <h3 style="text-align: center;">SUMMARY</h3>
+		  	  <div v-text="summary" style="margin: 5px;"></div>
+            </template>
+
+            <template slot="paneR">
+              <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
+
+                <template slot="paneL">
+                  <h3 style="text-align: center;">VERBS</h3>
+		  		  <div v-for="item in verb_frequencies"><div style="margin-left: 5px; margin-right: 5px;">{{ item.key }} ({{ item.freq }})</div></div>
+		  		</template>
+
+	            <template slot="paneR">
+	              <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
+	
+	                <template slot="paneL">
+	                  <h3 style="text-align: center;">NOUNS</h3>
+		  		  	  <div v-for="item in noun_frequencies"><div style="margin-left: 5px; margin-right: 5px;">{{ item.key }} ({{ item.freq }})</div></div>
+	                </template>
+	
+	                <template slot="paneR">
+	                  <h3 style="text-align: center;">ADJECTIVES</h3>
+		  		  	  <div v-for="item in adjective_frequencies"><div style="margin-left: 5px; margin-right: 5px;">{{ item.key }} ({{ item.freq }})</div></div>
+	                </template>
+	
+	              </split-pane>
+	            </template>
+
+              </split-pane>
+            </template>
+
+          </split-pane>
+
+        </template>
+
+      </split-pane>
+    </template>
+
+      </split-pane>
+{% endverbatim %}
+    </template>
+
+  </div>
+
+  <script>
+    // var Main = 
+    var app = new Vue({
+      name: 'test',
+      data: {
+          obj_type: '{{ obj_type|capfirst }}',
+      	  obj_id: {{ obj_id }},
+          language: '{{ language }}',
+          title: '{{ title }}',
+      	  n_tokens: {{ n_tokens }},
+      	  n_unique: {{ n_unique }},
+      	  voc_density: {{ voc_density }}.toFixed(3),
+      	  n_sentences: {{ n_sentences }},
+      	  sent_length: {{ sent_length }}.toFixed(3),
+          summary: `{{ summary|safe }}`,
+          sentences: {{ sentences|safe }},
+          kw_frequencies: {{ kw_frequencies|safe }},
+          verb_frequencies: {{ verb_frequencies|safe }},
+          noun_frequencies: {{ noun_frequencies|safe }},
+          adjective_frequencies: {{ adjective_frequencies|safe }},
+          text: `{{ text|safe }}`
+      },
+      el: '#app',
+      methods: {
+        resize() {
+          console.log('resize')
+        }
+      }
+    // };
+    });
+  </script>
+</body>
+
+</html>

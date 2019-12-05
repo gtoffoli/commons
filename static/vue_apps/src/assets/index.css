@@ -1,0 +1,72 @@
+html, body {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 12px;
+}
+div .vue-splitter-container {
+	height: 100vh;
+}
+div .splitter-pane {
+	overflow: auto;
+}
+div .splitter-pane-resizer {
+	margin: 0 !important;
+	border-color: hotpink !important;
+	background-color: hotpink !important;
+}
+div .splitter-pane-resizer.horizontal {
+	height: 4px !important;
+	margin-top: -2px !important;
+	border-top: 2px !important;
+	border-bottom: 2px !important;
+}
+div .splitter-pane-resizer.vertical {
+	width: 4px !important;
+	margin-left: -2px !important;
+	border-left: 2px !important;
+	border-right: 2px !important;
+}
+ul {
+	list-style-type:none;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 2px grey;
+  border-radius: 5px;
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: lightsteelblue; /* cornflowerblue; */
+  border-radius: 5px;
+}
+
+	.components-container {
+		position: relative;
+		height: 100vh;
+	}
+
+	/*.left-container {
+		background-color: #F38181;
+		height: 100%;
+	}
+
+	.right-container {
+		background-color: #FCE38A;
+		height: 200px;
+	}
+
+	.top-container {
+		background-color: #FCE38A;
+		width: 100%;
+		height: 100%;
+	}
+
+	.bottom-container {
+		width: 100%;
+		background-color: #95E1D3;
+		height: 100%;
+	}*/
