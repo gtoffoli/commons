@@ -15,7 +15,7 @@ div .splitter-pane-resizer {
 }
 div .splitter-pane-resizer.horizontal {
 	height: 4px !important;
-	margin-top: -2px !important;
+	margin-top: 2px !important; /* GT: was -2px */
 	border-top: 2px !important;
 	border-bottom: 2px !important;
 }

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-"""
 
+import string
 import json
 import requests
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
+from operator import itemgetter
 
 from readability import Document
 from bs4 import BeautifulSoup
@@ -12,6 +14,26 @@ from django.shortcuts import render, get_object_or_404
 from .models import Project, OER, LearningPath, PathNode
 from .utils import strings_from_html
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
+
+# from NLPBuddy
+ENTITIES_MAPPING = {
+    'PERSON': 'person',
+    'LOC': 'location',
+    'GPE': 'location',
+    'ORG': 'organization',
+}
+
+# from NLPBuddy
+POS_MAPPING = {
+    'NOUN': 'nouns',
+    'VERB': 'verbs',
+    'ADJ': 'adjectives',
+}
+
+EMPTY_POS = [
+    'SPACE', 'PUNCT', 'CCONJ', 'SCONJ', 'DET', 'PRON', 'ADP', 'AUX', 'PART',
+]
+
 
 def unique_dict(item_list):
     item_dict = defaultdict(int)
@@ -74,78 +96,83 @@ def get_obj_text(obj_type, obj_id):
         text = soup.get_text()
     return title, description, text
 
+def add_to_default_dict(default_dict, token):
+    token = token.lower()
+    default_dict[token] +=1
+
+def sorted_frequencies(d):
+    sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
+    return [{'key': key, 'freq': freq} for key, freq in sd.items()]
+
 def text_dashboard(request, obj_type, obj_id):
     if not obj_type in ['project', 'oer', 'lp', 'pathnode']:
         return HttpResponseForbidden()
     title, description, body = get_obj_text(obj_type, obj_id)
     if not body:
         return HttpResponseNotFound()
-    nlp_url = 'http://nlp.commonspaces.eu/api/analyze'
     data = json.dumps({'text': body})
+
+    nlp_url = 'http://nlp.commonspaces.eu/api/analyze'
     response = requests.post(nlp_url, data=data)
-    var_dict = json.loads(response.text)
-    token_list = var_dict['text_tokenized']
-    n_tokens = len(token_list)
-    token_dict = unique_dict(token_list)
-    n_unique = len(token_dict.keys())
-    voc_density = n_unique/n_tokens
-    n_sentences = len(var_dict['sentences'])
+    analyze_dict = json.loads(response.text)
+    analyzed_text = analyze_dict['text']
+    sentences = analyze_dict['sentences']
+    summary = analyze_dict['summary']
+    ncs = analyze_dict['noun_chunks']
+    noun_chunks = []
+    for nc in ncs:
+        nc = nc.replace('\n', ' ').replace('\xa0', ' ')
+        tokens = nc.split()
+        if len(tokens)>1:
+            noun_chunks.append(' '.join(tokens))
+    noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
+    var_dict = {'analyzed_text': analyzed_text, 'sentences': sentences, 'summary': summary, 'noun_chunks': noun_chunks}
+
+    nlp_url = 'http://nlp.commonspaces.eu/api/doc'
+    response = requests.post(nlp_url, data=data)
+    doc_dict = json.loads(response.text)
+    language = doc_dict['language']
+    text = doc_dict['text']
+    sentences = doc_dict['sents']
+    n_sentences = len(sentences)
+    tokens = doc_dict['tokens']
+    n_tokens = len(tokens)
     sent_length = n_tokens/n_sentences
-    part_of_speech = var_dict['part_of_speech']
-    verbs = part_of_speech['verbs']
-    nouns = part_of_speech['nouns']
-    adjectives = part_of_speech['adjectives']
-    keywords = var_dict['keywords'].split(', ')
-    kw_frequencies = []
-    for kw in keywords:
-        freq = token_dict.get(kw.lower(), 0)
-        if freq:
-            kw_frequencies.append({'key': kw, 'freq': freq})
-    verbs = list(set([verb.lower() for verb in verbs]))
-    verbs.sort()
-    verb_frequencies = []
-    for verb in verbs:
-        freq = token_dict.get(verb.lower(), 0)
-        if freq:
-            verb_frequencies.append({'key': verb.lower(), 'freq': freq})
-        """
-        else:
-            freq = token_dict.get(verb, 0)
-            if freq:
-                verb_frequencies.append({'key': verb, 'freq': freq})
-        """
-        verb_frequencies.sort(key=lambda x: x['freq'], reverse=True)
-    nouns = list(set([noun.lower() for noun in nouns]))
-    nouns.sort()
-    noun_frequencies = []
-    for noun in nouns:
-        freq = token_dict.get(noun.lower(), 0)
-        if freq:
-            noun_frequencies.append({'key': noun.lower(), 'freq': freq})
-        """
-        else:
-            freq = token_dict.get(noun, 0)
-            if freq:
-                noun_frequencies.append({'key': noun, 'freq': freq})
-        """
-        noun_frequencies.sort(key=lambda x: x['freq'], reverse=True)
-    adjectives = list(set([adjective.lower() for adjective in adjectives]))
-    adjectives.sort()
-    adjective_frequencies = []
-    for adjective in adjectives:
-        freq = token_dict.get(adjective.lower(), 0)
-        if freq:
-            adjective_frequencies.append({'key': adjective.lower(), 'freq': freq})
-        """
-        else:
-            freq = token_dict.get(adjective, 0)
-            if freq:
-                adjective_frequencies.append({'key': adjective, 'freq': freq})
-        """
-        adjective_frequencies.sort(key=lambda x: x['freq'], reverse=True)
-    var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density, 'n_sentences': n_sentences, 'sent_length': sent_length,
-                     'kw_frequencies': kw_frequencies, 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies})
-    var_dict['summary'] = var_dict['summary'] # [:1200]
+    ents = doc_dict['ents']
+    kw_frequencies = defaultdict(int)
+    verb_frequencies = defaultdict(int)
+    noun_frequencies = defaultdict(int)
+    adjective_frequencies = defaultdict(int)
+    for item in tokens:
+        token = text[item['start']:item['end']]
+        item['text'] = token
+        pos = item['pos']
+        if token.isnumeric() or pos in EMPTY_POS:
+            continue
+        add_to_default_dict(kw_frequencies, token)
+        if pos in ['NOUN', 'PROPN']:
+            add_to_default_dict(noun_frequencies, token)
+        elif pos == 'VERB':
+            add_to_default_dict(verb_frequencies, token)
+        elif pos == 'ADJ':
+            add_to_default_dict(adjective_frequencies, token)
+    n_unique = len(kw_frequencies)
+    voc_density = n_unique/n_tokens
+    kw_frequencies = sorted_frequencies(kw_frequencies)
+    verb_frequencies = sorted_frequencies(verb_frequencies)
+    noun_frequencies = sorted_frequencies(noun_frequencies)
+    adjective_frequencies = sorted_frequencies(adjective_frequencies)
+    entities_dict = defaultdict(list)
+    for ent in ents:
+        label = ent['label'].replace('_', ' ')
+        entity = text[ent['start']:ent['end']]
+        if not '_' in entity and not entity in entities_dict[label]:
+            entities_dict[label].append(entity)
+    entity_lists = [{'key': key, 'entities': entities} for key, entities in entities_dict.items()]
+    var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'analyzed_text': analyzed_text,
+                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density, 'n_sentences': n_sentences, 'sent_length': sent_length,
+                     'kw_frequencies': kw_frequencies[:16], 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies,
+                     'entity_lists': entity_lists})
     print('var_dict', var_dict)
     return render(request, 'vue/text_dashboard.html', var_dict)
 

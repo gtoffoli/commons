@@ -176,6 +176,11 @@ iframe {
                       {% endif %}
                     {% endif %}
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
+                      {% if user.is_authenticated %}
+                         {% if node.get_nodetype == "TXT" %}
+                      		<a class="analizeText" id="a_{{ node.id }}" href="/text_dashboard/pathnode/{{node.id}}/"><i class="fa fa-file-text-o font7em"></i></a>
+                        {% endif %}
+                      {% endif %}
                     </li></ul>
                   </div>
                 </li>
@@ -406,7 +411,74 @@ iframe {
          $("body").css("cursor", "default");
       });
     }
+    if ($('li a').hasClass('analizeText')) {
+        $('li a.analizeText').on('click', function(event){
+           // alert(event.target);
+           event.preventDefault();
+           $('<div/>',{
+             'id':'link-'+($(this).index()+1)})
+           .html($('<iframe/>', {
+             'src': $(this).attr('href'),
+             'style': 'width:100%; height:90%'}))
+           .appendTo('body')
+           .dialog({
+             'width': 800,
+             'height': 450,
+             modal: true,
+             responsive: true,
+             clickOut: true,
+             // title: $('<div/>', {'id':'link-'+($(this).index()+1)}).text,
+           });
+           // $(".selector" ).dialog( "option", "title", "{{ node.label }}");
+           $("body").css("cursor", "default");
+        });
+      }
   });
+/* https://stackoverflow.com/questions/48712560/dialog-with-maximize-minimize-resize-responsive-with-jquery-ui-js-and-extende
+// $(function() {
+  function addButtons(dlg) {
+    // Define Buttons
+    var $close = dlg.find(".ui-dialog-titlebar-close");
+    var $max = $("<button>", {
+      class: "ui-button ui-corner-all ui-widget ui-button-icon-only ui-window-maximize",
+      type: "button",
+      title: "Maximize"
+    }).insertBefore($close);
+    $max.data("isMax", false);
+    $("<span>", {
+      class: "ui-button-icon ui-icon ui-icon-plusthick"
+    }).appendTo($max);
+    $("<span>", {
+      class: "ui-button-icon-space"
+    }).html(" ").appendTo($max);
+    // Define Function
+    $max.click(function(e) {
+      if ($max.data("isMax") === false) {
+        console.log("Maximize Window");
+        $max.data("original-pos", dlg.position());
+        $max.data("original-size", {
+          width: dlg.width(),
+          height: dlg.height()
+        });
+        $max.data("isMax", true);
+        dlg.animate({
+          height: $(window).height() + "px",
+          width: $(window).width() - 20 + "px",
+          top: 0,
+          left: 0
+        }, 200);
+      } else {
+        console.log("Restore Window");
+        $max.data("isMax", false);
+        dlg.animate({
+          height: $max.data("original-size").height + "px",
+          width: $max.data("original-size").width + "px",
+          top: $max.data("original-pos").top + "px",
+          left: $max.data("original-pos").top + "px"
+        }, 200);
+      }
+//    });
+*/
 </script>
 
 {% if lp.path_type == 3 %}{% include "_lp_dag.html" %}{% endif %}
