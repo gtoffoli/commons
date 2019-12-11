@@ -30,7 +30,7 @@
     <div id="app" class='components-container'>
       <template>
         {% verbatim %}
-          <split-pane v-on:resize="resize" split="horizontal" :default-percent='6'>
+          <split-pane v-on:resize="resize" split="horizontal" :default-percent='9'>
             <template slot="paneL">
               <div style="padding: 5px;">
                 <label>{{ obj_type }}</label>:
@@ -95,7 +95,7 @@
                       <div v-text="summary" style="margin: 5px;"></div>
                     </template>
                     <template slot="paneR">
-                      <split-pane v-on:resize="resize" split="horizontal" :default-percent='50'>
+                      <split-pane v-on:resize="resize" split="horizontal" :default-percent='45'>
                         <template slot="paneL">
                           <h4 style="text-align: center;">NAMED ENTITIES</h4>
                           <div v-for="entity_dict in entity_lists">

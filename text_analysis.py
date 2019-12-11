@@ -96,9 +96,13 @@ def get_obj_text(obj_type, obj_id):
         text = soup.get_text()
     return title, description, text
 
-def add_to_default_dict(default_dict, token):
-    token = token.lower()
-    default_dict[token] +=1
+def add_to_default_dict(default_dict, token, case_dict=None):
+    if (len(token)>1 and token.isupper()) or token.islower():
+        default_dict[token] +=1
+    elif default_dict.get(token.lower(), ''):
+        default_dict[token.lower()] +=1
+    else:
+        default_dict[token] +=1
 
 def sorted_frequencies(d):
     sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
@@ -115,6 +119,7 @@ def text_dashboard(request, obj_type, obj_id):
     nlp_url = 'http://nlp.commonspaces.eu/api/analyze'
     response = requests.post(nlp_url, data=data)
     analyze_dict = json.loads(response.text)
+    language = analyze_dict['language']
     analyzed_text = analyze_dict['text']
     sentences = analyze_dict['sentences']
     summary = analyze_dict['summary']
@@ -126,12 +131,11 @@ def text_dashboard(request, obj_type, obj_id):
         if len(tokens)>1:
             noun_chunks.append(' '.join(tokens))
     noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
-    var_dict = {'analyzed_text': analyzed_text, 'sentences': sentences, 'summary': summary, 'noun_chunks': noun_chunks}
+    var_dict = {'language': language, 'analyzed_text': analyzed_text, 'sentences': sentences, 'summary': summary, 'noun_chunks': noun_chunks}
 
     nlp_url = 'http://nlp.commonspaces.eu/api/doc'
     response = requests.post(nlp_url, data=data)
     doc_dict = json.loads(response.text)
-    language = doc_dict['language']
     text = doc_dict['text']
     sentences = doc_dict['sents']
     n_sentences = len(sentences)

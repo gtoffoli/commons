@@ -413,13 +413,12 @@ iframe {
     }
     if ($('li a').hasClass('analizeText')) {
         $('li a.analizeText').on('click', function(event){
-           // alert(event.target);
            event.preventDefault();
            $('<div/>',{
              'id':'link-'+($(this).index()+1)})
            .html($('<iframe/>', {
              'src': $(this).attr('href'),
-             'style': 'width:100%; height:90%'}))
+             'style': 'width:100%; height:100%'}))
            .appendTo('body')
            .dialog({
              'width': 800,
@@ -427,6 +426,7 @@ iframe {
              modal: true,
              responsive: true,
              clickOut: true,
+             title: 'Text Analysis Dashboard for a Text Node'
              // title: $('<div/>', {'id':'link-'+($(this).index()+1)}).text,
            });
            // $(".selector" ).dialog( "option", "title", "{{ node.label }}");
