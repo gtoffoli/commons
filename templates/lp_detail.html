@@ -31,6 +31,17 @@ iframe {
 .ui-dialog {
 	z-index: 1050;
 }
+.ta-dialog {
+	max-height: none;
+}
+.ta-dialog-header {
+	background: LightGrey ;
+}
+.ta-dialog-title {
+	text-align: center;
+	font-weight: normal;
+}
+
 </style>
 {% endblock %}
 {% block body_class %}lp_detail{% endblock %}
@@ -426,6 +437,11 @@ iframe {
              modal: true,
              responsive: true,
              clickOut: true,
+             classes: {
+            	"ui-dialog": "ta-dialog",
+           	    "ui-dialog-titlebar": "ta-dialog-header",
+           	    "ui-dialog-title": "ta-dialog-title",
+           	 },
              title: 'Text Analysis Dashboard for a Text Node'
              // title: $('<div/>', {'id':'link-'+($(this).index()+1)}).text,
            });

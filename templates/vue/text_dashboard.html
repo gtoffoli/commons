@@ -40,7 +40,7 @@
                 {{ n_tokens }}
                 <label>tokens</label>,
                 {{ n_unique }}
-                <label>unique tokens</label>,
+                <label>unique word forms</label>,
                 <label>Vocabulary density:</label>
                 {{ voc_density }},
                 {{ n_sentences }}
@@ -158,9 +158,9 @@
           title: '{{ title }}',
           n_tokens: {{ n_tokens }},
           n_unique: {{ n_unique }},
-          voc_density: {{ voc_density }}.toFixed(3),
+          voc_density: ({{ voc_density }}).toFixed(3),
           n_sentences: {{ n_sentences }},
-          sent_length: {{ sent_length }}.toFixed(3),
+          sent_length: ({{ sent_length }}).toFixed(3),
           summary: `{{ summary|safe }}`,
           sentences: {{ sentences|safe }},
           kw_frequencies: {{ kw_frequencies|safe }},
