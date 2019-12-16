@@ -434,67 +434,20 @@ iframe {
            .dialog({
              'width': 800,
              'height': 450,
-             modal: true,
+             modal: false, // true,
              responsive: true,
-             clickOut: true,
+             clickOut: false, // true,
              classes: {
             	"ui-dialog": "ta-dialog",
            	    "ui-dialog-titlebar": "ta-dialog-header",
            	    "ui-dialog-title": "ta-dialog-title",
            	 },
              title: 'Text Analysis Dashboard for a Text Node'
-             // title: $('<div/>', {'id':'link-'+($(this).index()+1)}).text,
            });
-           // $(".selector" ).dialog( "option", "title", "{{ node.label }}");
            $("body").css("cursor", "default");
         });
       }
   });
-/* https://stackoverflow.com/questions/48712560/dialog-with-maximize-minimize-resize-responsive-with-jquery-ui-js-and-extende
-// $(function() {
-  function addButtons(dlg) {
-    // Define Buttons
-    var $close = dlg.find(".ui-dialog-titlebar-close");
-    var $max = $("<button>", {
-      class: "ui-button ui-corner-all ui-widget ui-button-icon-only ui-window-maximize",
-      type: "button",
-      title: "Maximize"
-    }).insertBefore($close);
-    $max.data("isMax", false);
-    $("<span>", {
-      class: "ui-button-icon ui-icon ui-icon-plusthick"
-    }).appendTo($max);
-    $("<span>", {
-      class: "ui-button-icon-space"
-    }).html(" ").appendTo($max);
-    // Define Function
-    $max.click(function(e) {
-      if ($max.data("isMax") === false) {
-        console.log("Maximize Window");
-        $max.data("original-pos", dlg.position());
-        $max.data("original-size", {
-          width: dlg.width(),
-          height: dlg.height()
-        });
-        $max.data("isMax", true);
-        dlg.animate({
-          height: $(window).height() + "px",
-          width: $(window).width() - 20 + "px",
-          top: 0,
-          left: 0
-        }, 200);
-      } else {
-        console.log("Restore Window");
-        $max.data("isMax", false);
-        dlg.animate({
-          height: $max.data("original-size").height + "px",
-          width: $max.data("original-size").width + "px",
-          top: $max.data("original-pos").top + "px",
-          left: $max.data("original-pos").top + "px"
-        }, 200);
-      }
-//    });
-*/
 </script>
 
 {% if lp.path_type == 3 %}{% include "_lp_dag.html" %}{% endif %}

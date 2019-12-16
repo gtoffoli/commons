@@ -31,22 +31,8 @@ POS_MAPPING = {
 }
 
 EMPTY_POS = [
-    'SPACE', 'PUNCT', 'CCONJ', 'SCONJ', 'DET', 'PRON', 'ADP', 'AUX', 'PART',
+    'SPACE', 'PUNCT', 'CCONJ', 'SCONJ', 'DET', 'PRON', 'ADP', 'AUX', 'PART', 'SYM',
 ]
-
-
-def unique_dict(item_list):
-    item_dict = defaultdict(int)
-    for item in item_list:
-        if not item.isnumeric() and not item in ['-']:
-            """
-            if item_dict.get(item.lower()):
-                item_dict[item.lower()] += 1
-            else:
-                item_dict[item] += 1
-            """
-            item_dict[item.lower()] += 1
-    return item_dict
 
 def get_oer_text(oer):
     text = ''
@@ -151,7 +137,7 @@ def text_dashboard(request, obj_type, obj_id):
         token = text[item['start']:item['end']]
         item['text'] = token
         pos = item['pos']
-        if token.isnumeric() or pos in EMPTY_POS:
+        if token.isnumeric() or pos in EMPTY_POS or item['stop']:
             continue
         add_to_default_dict(kw_frequencies, token)
         if pos in ['NOUN', 'PROPN']:
