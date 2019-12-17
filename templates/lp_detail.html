@@ -188,8 +188,9 @@ iframe {
                     {% endif %}
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
                       {% if user.is_authenticated %}
-                         {% if node.get_nodetype == "TXT" %}
-                      		<a class="analizeText" id="a_{{ node.id }}" href="/text_dashboard/pathnode/{{node.id}}/"><i class="fa fa-file-text-o font7em"></i></a>
+                        {% if node.get_obj_text %}
+{% comment %}         	  <a class="analizeText" id="a_{{ node.id }}" href="/text_dashboard/pathnode/{{node.id}}/"><i class="fa fa-file-text-o font7em"></i></a>{% endcomment %}
+                      	  <a class="analizeText" id="a_{{ node.id }}" href="/text_dashboard/pathnode/{{node.id}}/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
                         {% endif %}
                       {% endif %}
                     </li></ul>
@@ -442,7 +443,7 @@ iframe {
            	    "ui-dialog-titlebar": "ta-dialog-header",
            	    "ui-dialog-title": "ta-dialog-title",
            	 },
-             title: 'Text Analysis Dashboard for a Text Node'
+             title: 'Text Analysis Dashboard for a Learning Path Node'
            });
            $("body").css("cursor", "default");
         });

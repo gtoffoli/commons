@@ -5,8 +5,9 @@ import json
 import requests
 from collections import defaultdict, OrderedDict
 from operator import itemgetter
+import textract
 
-from readability import Document
+import readability
 from bs4 import BeautifulSoup
 from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
@@ -34,53 +35,124 @@ EMPTY_POS = [
     'SPACE', 'PUNCT', 'CCONJ', 'SCONJ', 'DET', 'PRON', 'ADP', 'AUX', 'PART', 'SYM',
 ]
 
-def get_oer_text(oer):
+def get_document_text(document, return_has_text=False):
+    has_text = False
+    text = ''
+    version = document.latest_version
+    mimetype = version.mimetype
+    encoding = 'utf8'
+    if mimetype.endswith('text'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='txt')     
+    elif mimetype.endswith('pdf'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='pdf')
+    elif mimetype.endswith('rtf'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='rtf')
+    elif mimetype.endswith('msword'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='doc')
+    elif mimetype.count('officedocument.wordprocessingml') and mimetype.count('document'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='docx')
+    elif mimetype.count('officedocument.presentationml'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='pptx')
+    elif mimetype.count('officedocument.spreadsheetml'):
+        has_text = True
+        if not return_has_text:
+            text = textract.process(version.file.path, encoding=encoding, extension='xlsx')
+    if return_has_text:
+        return has_text
+    else:
+        return text
+
+def get_oer_text(oer, return_has_text=False):
     text = ''
     if oer.url:
         try:
             response = requests.get(oer.url)
             if response.status_code == 200 and response.headers['content-type'].count('text'):
-                text = Document(response.text)
+                text = response.text
+                if not return_has_text:
+                    text = readability.Document(text).summary()
         except:
             text = ''
-    else:
+    elif oer.text:
         text = oer.text
+    else:
+        documents = oer.get_sorted_documents()
+        if documents:
+            text = get_document_text(documents[0], return_has_text=return_has_text)
     return text
 
-def get_obj_text(obj_type, obj_id):
+# def get_obj_text(obj_type, obj_id):
+def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
+    if obj:
+        if isinstance(obj, Project):
+            obj_type = 'project'
+        elif isinstance(obj, OER):
+            obj_type = 'oer'
+        elif isinstance(obj, LearningPath):
+            obj_type = 'lp'
+        elif isinstance(obj, PathNode):
+            obj_type = 'pathnode'
+    text = ''
     if obj_type == 'project':
-        obj = get_object_or_404(Project, id=obj_id)
-        json = ProjectSerializer(obj).data
-        title = json['name']
-        description = json['description']
-        text = json['info']
+        if not obj:
+            obj = get_object_or_404(Project, id=obj_id)
+        json_metadata = ProjectSerializer(obj).data
+        title = json_metadata['name']
+        description = json_metadata['description']
+        text = json_metadata['info']
     elif obj_type == 'oer':
-        obj = get_object_or_404(OER, id=obj_id)
-        text = get_oer_text(obj)
-        soup = BeautifulSoup(text)
-        text = soup.get_text()
-        json = OerSerializer(obj).data
-        title = json['title']
-        description = json['description']
+        if not obj:
+            obj = get_object_or_404(OER, id=obj_id)
+        text = get_oer_text(obj, return_has_text=return_has_text)
+        if not return_has_text:
+            soup = BeautifulSoup(text)
+            text = soup.get_text()
+            json_metadata = OerSerializer(obj).data
+            title = json_metadata['title']
+            description = json['description']
     elif obj_type == 'lp':
-        obj = get_object_or_404(LearningPath, id=obj_id)
-        json = LearningPathSerializer(obj).data
-        title = json['title']
-        description = json['short']
-        text = json['long']
+        if not obj:
+            obj = get_object_or_404(LearningPath, id=obj_id)
+        json_metadata = LearningPathSerializer(obj).data
+        title = json_metadata['title']
+        description = json_metadata['short']
+        text = json_metadata['long']
     elif obj_type == 'pathnode':
-        obj = get_object_or_404(PathNode, id=obj_id)
-        json = PathNodeSerializer(obj).data
-        title = json['label']
+        if not obj:
+            obj = get_object_or_404(PathNode, id=obj_id)
+        json_metadata = PathNodeSerializer(obj).data
+        title = json_metadata['label']
         description = ""
         oer = obj.oer
         if oer:
-            text = get_oer_text(oer)
+            text = get_oer_text(oer, return_has_text=return_has_text)
         else:
-            text = json['text']
-        soup = BeautifulSoup(text)
-        text = soup.get_text()
-    return title, description, text
+            document = obj.document
+            if document:
+                text = get_document_text(document, return_has_text=return_has_text)
+            else:
+                text = json_metadata['text']
+        if text and not return_has_text:
+            soup = BeautifulSoup(text)
+            text = soup.get_text()
+    if return_has_text:
+        return text
+    else:
+        return title, description, text
+
+PathNode.get_obj_text = get_obj_text
 
 def add_to_default_dict(default_dict, token, case_dict=None):
     if (len(token)>1 and token.isupper()) or token.islower():
@@ -97,7 +169,7 @@ def sorted_frequencies(d):
 def text_dashboard(request, obj_type, obj_id):
     if not obj_type in ['project', 'oer', 'lp', 'pathnode']:
         return HttpResponseForbidden()
-    title, description, body = get_obj_text(obj_type, obj_id)
+    title, description, body = get_obj_text(None, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
