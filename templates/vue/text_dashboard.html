@@ -46,7 +46,9 @@
                 {{ n_sentences }}
                 <label>sentences</label>,
                 <label>Tokens per sentence:</label>
-                {{ sent_length }}<br/>
+                {{ mean_sent_length }},
+                <label>Mean / Max. dependency depth:</label>
+                {{ mean_sentence_depth }} / {{ max_sentence_depth }}<br/>
                 <label>Title:</label>
                 {{ title }},
                 <label>Most frequent words:</label>
@@ -75,15 +77,13 @@
                         </template>
                         <template slot="paneR">
                           <h4 style="text-align: center;">NOUN CHUNKS</h4>
-                          <div v-for="entity_dict in entity_lists">
-                            <div style="margin-left: 5px; margin-right: 5px;">
-                              <span v-for="(nc, index) in noun_chunks">
-                                <span v-if="index !== 0">,
-                                </span>
-                                {{ nc }}</span>
-                            </div>
+                          <div style="margin-left: 5px; margin-right: 5px;">
+                            <span v-for="(nc, index) in noun_chunks">
+                              <span v-if="index !== 0">,
+                              </span>
+                              {{ nc }}</span>
                           </div>
-                         </template>
+                        </template>
                       </split-pane>
                     </template>
                   </split-pane>
@@ -160,7 +160,9 @@
           n_unique: {{ n_unique }},
           voc_density: ({{ voc_density }}).toFixed(3),
           n_sentences: {{ n_sentences }},
-          sent_length: ({{ sent_length }}).toFixed(3),
+          mean_sent_length: ({{ mean_sent_length }}).toFixed(3),
+          max_sentence_depth: {{ max_sentence_depth }},
+          mean_sentence_depth: ({{ mean_sentence_depth }}).toFixed(3),
           summary: `{{ summary|safe }}`,
           sentences: {{ sentences|safe }},
           kw_frequencies: {{ kw_frequencies|safe }},

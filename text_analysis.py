@@ -154,6 +154,44 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
 
 PathNode.get_obj_text = get_obj_text
 
+def index_sentences(sentences, tokens):
+    i = 0
+    for sentence in sentences:
+        assert sentence['start']==tokens[i]['start']
+        end = sentence['end']
+        sentence['start_token'] = i
+        while tokens[i]['end'] < end:
+            i += 1
+        sentence['end_token'] = i
+        i += 1
+
+def make_sentence_tree(sentence, tokens):
+    i_root = None
+    i = sentence['start_token']
+    while i <= sentence['end_token']:
+        token = tokens[i]
+        dep = token['dep']
+        if i_root is None and dep=='ROOT':
+            i_root = sentence['root'] = i
+        elif dep:
+            head = tokens[token['head']]
+            if not head.get('children', []):
+                head['children'] = []
+            head['children'].append(i)
+        i += 1
+    assert i_root is not None
+    sentence['root'] = i_root
+
+def token_depth(token, depth, tokens):
+    max_depth = depth
+    for i in token.get('children', []):
+        max_depth = max(max_depth, 1+token_depth(tokens[i], depth, tokens))
+    return max_depth
+
+def sentence_depth(sentence, tokens):
+    root = tokens[sentence['root']]
+    return token_depth(root, 0, tokens)
+
 def add_to_default_dict(default_dict, token, case_dict=None):
     if (len(token)>1 and token.isupper()) or token.islower():
         default_dict[token] +=1
@@ -199,7 +237,16 @@ def text_dashboard(request, obj_type, obj_id):
     n_sentences = len(sentences)
     tokens = doc_dict['tokens']
     n_tokens = len(tokens)
-    sent_length = n_tokens/n_sentences
+    mean_sent_length = n_tokens/n_sentences
+    index_sentences(sentences, tokens)
+    max_sentence_depth = 0
+    tot_sentence_depth = 0
+    for sentence in sentences:
+        make_sentence_tree(sentence, tokens)
+        depth = sentence_depth(sentence, tokens)
+        max_sentence_depth = max(max_sentence_depth, depth)
+        tot_sentence_depth += depth
+    mean_sentence_depth = n_sentences and (tot_sentence_depth / n_sentences) or 0
     ents = doc_dict['ents']
     kw_frequencies = defaultdict(int)
     verb_frequencies = defaultdict(int)
@@ -232,7 +279,8 @@ def text_dashboard(request, obj_type, obj_id):
             entities_dict[label].append(entity)
     entity_lists = [{'key': key, 'entities': entities} for key, entities in entities_dict.items()]
     var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'analyzed_text': analyzed_text,
-                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density, 'n_sentences': n_sentences, 'sent_length': sent_length,
+                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density,
+                     'n_sentences': n_sentences, 'mean_sent_length': mean_sent_length, 'max_sentence_depth': max_sentence_depth, 'mean_sentence_depth': mean_sentence_depth,
                      'kw_frequencies': kw_frequencies[:16], 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies,
                      'entity_lists': entity_lists})
     print('var_dict', var_dict)
