@@ -2,20 +2,33 @@
 {% load i18n staticfiles %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+
 {% block extra_style %}
+<link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
+
 <style>
   .iframe-touch {
      -webkit-overflow-scrolling: touch !important;
      overflow: scroll !important;
   }
+
+.ta-dialog {
+	max-height: none;
+}
+.ta-dialog-header {
+	background: LightGrey ;
+}
+.ta-dialog-title {
+	text-align: center;
+	font-weight: normal;
+}
 </style>
 {% endblock %}
 
 {% block body_class %}lp_viewer {% endblock %}
 
-
 {% block nav %}
-  <div class="navbar">
+  <div class="navbar" style="min-height: auto;">
     <div class="pull-left">
     <h5 class="c-mulberry marginB0">{% if not is_published %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small>{% endif %}{{ lp.title }}</h5>
     </div>
@@ -67,6 +80,11 @@
                             <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
                         {% else %}
                             {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
+                        {% endif %}
+                        {% if user.is_authenticated %}
+                          {% if pathnode.get_obj_text %}
+                            <a class="analizeText" id="a_{{ pathnode.id }}" href="/text_dashboard/pathnode/{{pathnode.id}}/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+                          {% endif %}
                         {% endif %}
                         </li>
                     </ul>
@@ -149,6 +167,9 @@
 
 {% block extra_script %}
 {% if lp.path_type == 1000 %}{% include "_lp_dag.html" %}{% endif %}
+<script src="{% static 'commons/js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'commons/js/jquery.dialogOptions.js' %}"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
         device = (/iphone|ipad/i.test(navigator.userAgent.toLowerCase()));
@@ -169,6 +190,31 @@
                 accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
             }
         });
+        if ($('li a').hasClass('analizeText')) {
+            $('li a.analizeText').on('click', function(event){
+               event.preventDefault();
+               $('<div/>',{
+                 'id':'link-'+($(this).index()+1)})
+               .html($('<iframe/>', {
+                 'src': $(this).attr('href'),
+                 'style': 'width:100%; height:100%'}))
+               .appendTo('body')
+               .dialog({
+                 'width': 800,
+                 'height': 450,
+                 modal: false,
+                 responsive: true,
+                 clickOut: false,
+                 classes: {
+                	"ui-dialog": "ta-dialog",
+               	    "ui-dialog-titlebar": "ta-dialog-header",
+               	    "ui-dialog-title": "ta-dialog-title",
+               	 },
+                 title: 'Text Analysis Dashboard for a Learning Path Node'
+               });
+               $("body").css("cursor", "default");
+            });
+          }
     });
 </script>
 {% endblock %}

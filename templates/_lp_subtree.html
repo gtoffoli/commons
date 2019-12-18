@@ -1,9 +1,16 @@
+{% load staticfiles %}
+
 <ul class="nodes-unlisted {% if pathnode.oer or child.oer %} node-oer {% elif pathnode.document or child.document %} node-doc {% else %} node-text {% endif %}">
 <li class="font{{ font }}">
     {% if pathnode == current_node %} 
       <div>{{ pathnode.label }}</div>
     {% else %}
       <a href="/lp/{{ lp.slug }}/play/?node={{ pathnode.get_index }}" title="path node">{{ pathnode.label }}</a>
+    {% endif %}
+    {% if user.is_authenticated %}
+      {% if pathnode.get_obj_text %}
+        <a class="analizeText" id="a_{{ pathnode.id }}" href="/text_dashboard/pathnode/{{pathnode.id}}/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+      {% endif %}
     {% endif %}
 </li>
 </ul>

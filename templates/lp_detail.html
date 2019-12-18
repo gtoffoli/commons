@@ -1,14 +1,13 @@
 {% extends "commons_base.html" %}
-
 {% load staticfiles i18n %}
 
 {% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
-  {% block extra_style %}
-  <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
-<style>
+{% block extra_style %}
+<link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">
 
+<style>
 iframe {
  width: 100%;
  /*height: 350px;*/
@@ -41,9 +40,9 @@ iframe {
 	text-align: center;
 	font-weight: normal;
 }
-
 </style>
 {% endblock %}
+
 {% block body_class %}lp_detail{% endblock %}
 {% block body %}
 {% include "_resource_lang_msg.html" %}
