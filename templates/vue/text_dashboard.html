@@ -41,14 +41,18 @@
                 <label>tokens</label>,
                 {{ n_unique }}
                 <label>unique word forms</label>,
-                <label>Vocabulary density:</label>
+                <label>Word-forms/tokens ratio:</label>
                 {{ voc_density }},
                 {{ n_sentences }}
                 <label>sentences</label>,
-                <label>Tokens per sentence:</label>
-                {{ mean_sent_length }},
-                <label>Mean / Max. dependency depth:</label>
-                {{ mean_sentence_depth }} / {{ max_sentence_depth }}<br/>
+                <label>Mean / Max. tokens per sentence:</label>
+                {{ mean_sentence_length }} / {{ max_sentence_length }},
+                <label>Mean / Max. largest dependency distance:</label>
+                {{ mean_dependency_distance }} / {{ max_dependency_distance }},
+                <label>Mean / Max. largest weighted dependency distance:</label>
+                {{ mean_weighted_distance }} / {{ max_weighted_distance }},
+                <label>Mean / Max. largest dependency depth:</label>
+                {{ mean_dependency_depth }} / {{ max_dependency_depth }}<br/>
                 <label>Title:</label>
                 {{ title }},
                 <label>Most frequent words:</label>
@@ -160,9 +164,14 @@
           n_unique: {{ n_unique }},
           voc_density: ({{ voc_density }}).toFixed(3),
           n_sentences: {{ n_sentences }},
-          mean_sent_length: ({{ mean_sent_length }}).toFixed(3),
-          max_sentence_depth: {{ max_sentence_depth }},
-          mean_sentence_depth: ({{ mean_sentence_depth }}).toFixed(3),
+          mean_sentence_length: ({{ mean_sentence_length }}).toFixed(3),
+          max_sentence_length: {{ max_sentence_length }},
+          mean_dependency_depth: ({{ mean_dependency_depth }}).toFixed(3),
+          max_dependency_depth: {{ max_dependency_depth }},
+          mean_dependency_distance: ({{ mean_dependency_distance }}).toFixed(3),
+          max_dependency_distance: {{ max_dependency_distance }},
+          mean_weighted_distance: ({{ mean_weighted_distance }}).toFixed(3),
+          max_weighted_distance: ({{ max_weighted_distance }}).toFixed(3),
           summary: `{{ summary|safe }}`,
           sentences: {{ sentences|safe }},
           kw_frequencies: {{ kw_frequencies|safe }},

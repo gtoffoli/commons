@@ -181,16 +181,27 @@ def make_sentence_tree(sentence, tokens):
         i += 1
     assert i_root is not None
     sentence['root'] = i_root
+    return i-sentence['start_token']
 
-def token_depth(token, depth, tokens):
+def token_dependency_depth(token, depth, tokens):
     max_depth = depth
     for i in token.get('children', []):
-        max_depth = max(max_depth, 1+token_depth(tokens[i], depth, tokens))
+        max_depth = max(max_depth, 1+token_dependency_depth(tokens[i], depth, tokens))
     return max_depth
 
-def sentence_depth(sentence, tokens):
+def sentence_dependency_depth(sentence, tokens):
     root = tokens[sentence['root']]
-    return token_depth(root, 0, tokens)
+    return token_dependency_depth(root, 0, tokens)
+
+def token_dependency_distance(token, max_distance, tokens):
+    i_token = token['id']
+    for i in token.get('children', []):
+        max_distance = max(max_distance, abs(i-i_token), token_dependency_distance(tokens[i], max_distance, tokens))
+    return max_distance
+
+def sentence_dependency_distance(sentence, tokens):
+    root = tokens[sentence['root']]
+    return token_dependency_distance(root, 0, tokens)       
 
 def add_to_default_dict(default_dict, token, case_dict=None):
     if (len(token)>1 and token.isupper()) or token.islower():
@@ -237,16 +248,30 @@ def text_dashboard(request, obj_type, obj_id):
     n_sentences = len(sentences)
     tokens = doc_dict['tokens']
     n_tokens = len(tokens)
-    mean_sent_length = n_tokens/n_sentences
+    mean_sentence_length = n_tokens/n_sentences
     index_sentences(sentences, tokens)
-    max_sentence_depth = 0
-    tot_sentence_depth = 0
+    max_sentence_length = 0
+    max_dependency_depth = 0
+    tot_dependency_depth = 0
+    max_dependency_distance = 0
+    tot_dependency_distance = 0
+    max_weighted_distance = 0
+    tot_weighted_distance = 0
     for sentence in sentences:
-        make_sentence_tree(sentence, tokens)
-        depth = sentence_depth(sentence, tokens)
-        max_sentence_depth = max(max_sentence_depth, depth)
-        tot_sentence_depth += depth
-    mean_sentence_depth = n_sentences and (tot_sentence_depth / n_sentences) or 0
+        sentence_length = make_sentence_tree(sentence, tokens)
+        max_sentence_length = max(max_sentence_length, sentence_length)
+        depth = sentence_dependency_depth(sentence, tokens)
+        max_dependency_depth = max(max_dependency_depth, depth)
+        tot_dependency_depth += depth
+        distance = sentence_dependency_distance(sentence, tokens)
+        max_dependency_distance = max(max_dependency_distance, distance)
+        tot_dependency_distance += distance
+        weighted_distance = distance / sentence_length
+        max_weighted_distance = max(max_weighted_distance, weighted_distance)
+        tot_weighted_distance += weighted_distance
+    mean_dependency_depth = n_sentences and (tot_dependency_depth / n_sentences) or 0
+    mean_dependency_distance = n_sentences and (tot_dependency_distance / n_sentences) or 0
+    mean_weighted_distance = n_sentences and (tot_weighted_distance / n_sentences) or 0
     ents = doc_dict['ents']
     kw_frequencies = defaultdict(int)
     verb_frequencies = defaultdict(int)
@@ -280,7 +305,10 @@ def text_dashboard(request, obj_type, obj_id):
     entity_lists = [{'key': key, 'entities': entities} for key, entities in entities_dict.items()]
     var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'analyzed_text': analyzed_text,
                      'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density,
-                     'n_sentences': n_sentences, 'mean_sent_length': mean_sent_length, 'max_sentence_depth': max_sentence_depth, 'mean_sentence_depth': mean_sentence_depth,
+                     'n_sentences': n_sentences, 'mean_sentence_length': mean_sentence_length, 'max_sentence_length': max_sentence_length,
+                     'max_dependency_depth': max_dependency_depth, 'mean_dependency_depth': mean_dependency_depth,
+                     'max_dependency_distance': max_dependency_distance, 'mean_dependency_distance': mean_dependency_distance,
+                     'max_weighted_distance': max_weighted_distance, 'mean_weighted_distance': mean_weighted_distance,
                      'kw_frequencies': kw_frequencies[:16], 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies,
                      'entity_lists': entity_lists})
     print('var_dict', var_dict)
