@@ -226,6 +226,7 @@ urlpatterns += [
     url(r"^analytics/active_comembers/$", commons.analytics.active_comembers, name="active_comembers"),
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
+    url(r'^brat$', commons.text_analysis.brat, name="brat"),    
     # url(r"^bosh_prebind/$", dmuc.views.bosh_prebind, name="bosh_prebind"),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -249,10 +250,14 @@ if settings.HAS_DMUC:
 
 urlpatterns += i18n_patterns(
     url(r"^project/(?P<project_slug>[\w-]+)/$", commons.views.project_detail_by_slug, name="project_detail"),
+    url(r"^project/(?P<project_slug>[\w-]+)/text/$", commons.text_analysis.project_text, name="project_text"),
     url(r"^repo/(?P<repo_slug>[\w-]+)/$", commons.views.repo_detail_by_slug, name="repo_detail"),
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", commons.views.oer_detail_by_slug, name="oer_detail"),
+    url(r"^oer/(?P<oer_slug>[\w\d-]+)/text/$", commons.text_analysis.oer_text, name="oer_text"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", commons.views.lp_detail_by_slug, name="lp_detail"),
+    url(r"^lp/(?P<lp_slug>[\w\d-]+)/text/$", commons.text_analysis.lp_text, name="lp_text"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/$", commons.views.pathnode_detail, name="pathnode_detail"),
+    url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
     url(r'^(?P<url>.*)$', flatpages_views.flatpage, name='django.contrib.flatpages.views.flatpage'),
 )
 

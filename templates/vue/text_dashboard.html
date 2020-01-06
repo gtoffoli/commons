@@ -8,7 +8,9 @@
     <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
     <link rel="stylesheet" href="{% static "nlp/css/style.css" %}">
     <link rel="stylesheet" href="{% static "nlp/css/animate.css" %}">
-    <link rel="stylesheethref=" {% static "bootstrap/css/bootstrap.css" %} "">
+<!--
+    <link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.css" %}">
+ -->
     <link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
     <script src="{% static "nlp/js/wow.min.js" %}"></script>
     <script>
@@ -17,100 +19,113 @@
     <script src="{% static "nlp/js/displacy.js" %}"></script>
     <script src="{% static "nlp/js/jquery.min.js" %}"></script>
     <script src="{% static "nlp/js/scripts.js" %}"></script>
-  </head>
+
+<link rel="stylesheet" type="text/css" href="/static/brat_client/style-vis.css"/>
+<link rel="shortcut icon" href="favicon.png"/>
+<!-- override a few style-vis.css settings for the embedded version to make things larger -->
+<style type="text/css">
+text { font-size: 10px; }
+	.span text { font-size: 9px; }
+	.arcs text { font-size: 9px; }
+</style>
+<script type="text/javascript" src="/static/brat_client/client/lib/head.load.min.js"></script>
+<script type="text/javascript">
+<!-- 
+var bratLocation = '/static/brat_client';
+head.js(
+    // External libraries
+    bratLocation + '/client/lib/jquery.min.js',
+    bratLocation + '/client/lib/jquery.svg.min.js',
+    bratLocation + '/client/lib/jquery.svgdom.min.js',
+
+    // brat helper modules
+    bratLocation + '/client/src/configuration.js',
+    bratLocation + '/client/src/util.js',
+    bratLocation + '/client/src/annotation_log.js',
+    bratLocation + '/client/lib/webfont.js',
+
+    // brat modules
+    bratLocation + '/client/src/dispatcher.js',
+    bratLocation + '/client/src/url_monitor.js',
+    bratLocation + '/client/src/visualizer.js'
+);
+-->
+var bratLocation = '{% static "brat_client" %}';
+var webFontURLs = [
+               	bratLocation + '/fonts/Astloch-Bold.ttf',
+                   bratLocation + '/fonts/PT_Sans-Caption-Web-Regular.ttf',
+                   bratLocation + '/fonts/Liberation_Sans-Regular.ttf'
+               ];
+</script>
+<script type="text/javascript" src="/static/brat_client/client/lib/jquery.min.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/lib/jquery.svg.min.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/lib/jquery.svgdom.min.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/configuration.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/util.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/annotation_log.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/lib/webfont.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/dispatcher.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/url_monitor.js"></script>
+<script type="text/javascript" src="/static/brat_client/client/src/visualizer.js"></script>
+
+  <script src="https://use.fontawesome.com/d391635073.js"></script>
   <style>
-    body {
-      margin: 0;
-    }
+    body { margin: 0; }
+    h4 { margin-top: 5px; margin-bottom: 2px; }
+	::-webkit-scrollbar { width: 8px; height: 8px; }
+	div span .ta-dialog-title {
+		font-size: 12px !important;
+		margin:0 !important;
+		padding:0 !important;
+	}
   </style>
-  <body>
+</head>
+
+  <body style="font-size: 11px;">
     <script src='https://unpkg.com/vue@2.2.6'></script>
     <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
     <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
     <div id="app" class='components-container'>
       <template>
         {% verbatim %}
-          <split-pane v-on:resize="resize" split="horizontal" :default-percent='9'>
+          <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
             <template slot="paneL">
-              <div style="padding: 5px;">
-                <label>{{ obj_type }}</label>:
-                {{ obj_id }},
-                <label>Language</label>:
-                {{ language }},
-                {{ n_tokens }}
-                <label>tokens</label>,
-                {{ n_unique }}
-                <label>unique word forms</label>,
-                <label>Word-forms/tokens ratio:</label>
-                {{ voc_density }},
-                {{ n_sentences }}
-                <label>sentences</label>,
-                <label>Mean / Max. tokens per sentence:</label>
-                {{ mean_sentence_length }} / {{ max_sentence_length }},
+              <div>
+                <h4 style="text-align: center;">BASIC PROPERTIES AND INDICATORS</h4>
+<!-- 
+                <label>{{ obj_type }}</label>: {{ obj_id }},
+                <label>Title:</label> {{ title }},
+ -->
+                <label>Language</label>: {{ language }},
+                <label>Sentences:</label> {{ n_sentences }},
+                <label>Tokens:</label> {{ n_tokens }},
+                <label>Mean / Max. tokens per sentence:</label> {{ mean_sentence_length.toFixed(3) }} / {{ max_sentence_length }},
+                <label>Unique word forms:</label> {{ n_unique }},
+                <label>Word-forms/tokens ratio:</label> {{ voc_density.toFixed(3) }},
+                <label>Lexical tokens ratio:</label> {{ lex_density.toFixed(3) }},
                 <label>Mean / Max. largest dependency distance:</label>
-                {{ mean_dependency_distance }} / {{ max_dependency_distance }},
+                {{ mean_dependency_distance.toFixed(3) }} / {{ max_dependency_distance }},
                 <label>Mean / Max. largest weighted dependency distance:</label>
-                {{ mean_weighted_distance }} / {{ max_weighted_distance }},
+                {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
                 <label>Mean / Max. largest dependency depth:</label>
-                {{ mean_dependency_depth }} / {{ max_dependency_depth }}<br/>
-                <label>Title:</label>
-                {{ title }},
-                <label>Most frequent words:</label>
+                {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
+                <h4 style="text-align: center;">MOST FREQUENT VERB FORMS</h4>
                 <span v-for="(item, index) in kw_frequencies">
-                  <span v-if="index !== 0">,
-                  </span>
-                  {{ item.key }}
-                  ({{ item.freq }})</span>
+                  <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
               </div>
             </template>
             <template slot="paneR">
-              <split-pane v-on:resize="resize" :min-percent='20' :max-percent='100' split="vertical">
-                <template slot="paneL">
-                  <split-pane v-on:resize="resize" split="horizontal" :default-percent='40'>
+                <split-pane v-on:resize="resize" :min-percent='20' :max-percent='100' split="horizontal" :default-percent='75'>
                     <template slot="paneL">
-                      <h4 style="text-align: center;">POS-TAGGED TEXT</h4>
-                      <div class="rb-content" v-html="analyzed_text" style="margin: 5px;"></div>
+                        <h4 style="text-align: center;"><span style="color:cornflowerBlue;">POS-TAGS</span>,
+                        <span style="color:purple;">DEPENDENCIES</span> AND <span style="color:tomato;">NAMED ENTITIES</span></h4>
+					    <div id="embedding-live-example"></div>
                     </template>
                     <template slot="paneR">
-                      <split-pane v-on:resize="resize" split="horizontal" :default-percent='60'>
+                      <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
                         <template slot="paneL">
-                          <h4 style="text-align: center;">ANALYZED SENTENCES</h4>
-                          <div v-for="sentence in sentences">
-                            <div v-text="sentence" style="margin-left: 5px; margin-right: 5px;"></div>
-                          </div>
-                        </template>
-                        <template slot="paneR">
-                          <h4 style="text-align: center;">NOUN CHUNKS</h4>
-                          <div style="margin-left: 5px; margin-right: 5px;">
-                            <span v-for="(nc, index) in noun_chunks">
-                              <span v-if="index !== 0">,
-                              </span>
-                              {{ nc }}</span>
-                          </div>
-                        </template>
-                      </split-pane>
-                    </template>
-                  </split-pane>
-                </template>
-                <template slot="paneR">
-                  <split-pane split="horizontal" :default-percent='35'>
-                    <template slot="paneL">
-                      <h4 style="text-align: center;">TEXT SUMMARY</h4>
-                      <div v-text="summary" style="margin: 5px;"></div>
-                    </template>
-                    <template slot="paneR">
-                      <split-pane v-on:resize="resize" split="horizontal" :default-percent='45'>
-                        <template slot="paneL">
-                          <h4 style="text-align: center;">NAMED ENTITIES</h4>
-                          <div v-for="entity_dict in entity_lists">
-                            <div style="margin-left: 5px; margin-right: 5px;">
-                              <label>{{ entity_dict.key }}</label>:
-                              <span v-for="(entity, index) in entity_dict.entities">
-                                <span v-if="index !== 0">,
-                                </span>
-                                {{ entity }}</span>
-                            </div>
-                          </div>
+                          <h4 style="text-align: center;">TEXT SUMMARY</h4>
+                          <div v-text="summary" style="margin: 5px;"></div>
                         </template>
                         <template slot="paneR">
                           <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
@@ -139,7 +154,6 @@
                                 </template>
                               </split-pane>
                             </template>
-                          </template>
                         </split-pane>
                       </template>
                     </split-pane>
@@ -152,36 +166,155 @@
       </template>
     </div>
     <script>
-      // var Main =
+    // from BRAT; see http://brat.nlplab.org/configuration.html and https://brat.nlplab.org/embed.html
+    var collData = {
+       	entity_types: [],
+    };
+    var docData = {
+    	text: '',
+    	entities : [],
+    	relations : [],
+    };
+
+	function process_postags(tokens, i) {
+		app.tokens.forEach(function (token) {
+			if (['SPACE', 'PUNCT', 'SYM', 'X'].indexOf(token['pos']) < 0)
+     			docData['entities'].push(['T'+i.toString(), token['pos'], [[token['start'], token['end']]]]);
+			i++;
+		});
+		return i;
+	}
+
+	function process_entities(entities, i) {
+		app.entities.forEach(function (entity) {
+     		docData['entities'].push(['T'+i.toString(), entity['label'], [[entity['start'], entity['end']]]]);
+     		i++;			
+		});
+		return i;
+	}
+
+	function process_dependencies(tokens) {
+		i = 1;
+		app.tokens.forEach(function (token) {
+			if (token['dep'] != 'ROOT')
+				if (['SPACE', 'PUNCT', 'SYM', 'X'].indexOf(token['pos']) < 0)
+					if (['SPACE', 'PUNCT', 'SYM', 'X'].indexOf(tokens[token['head']]['pos']) < 0)
+		     			docData['relations'].push(['R'+i.toString(), token['dep'], [['', 'T'+(1+token['head']).toString()], ['', 'T'+i.toString()]]]);
+ 			i++;
+		});
+	}
+
+    // head.ready(function() {
+    function do_brat() {
+    	docData['text'] = app.text;
+    	i = 1;
+    	i = process_postags(app.tokens, i);
+    	i = process_entities(app.entities, i);
+    	process_dependencies(app.tokens)
+        // Evaluate the code from the examples and show it to the user ...
+        // Fuck it! We'll do it live!
+        var collInput = $('#coll-input');
+        var docInput = $('#doc-input');
+        var liveDiv = $('#embedding-live-example');
+
+        // Time for some "real" brat coding, let's hook into the dispatcher
+        var liveDispatcher = Util.embed('embedding-live-example',
+                $.extend({'collection': null}, collData),
+                $.extend({}, docData), webFontURLs);
+
+        var renderError = function() {
+            // liveDiv.css({'border': '2px solid red'}); // setting this blows the layout
+            collInput.css({'border': '2px solid red'});
+            docInput.css({'border': '2px solid red'});
+        };
+
+        liveDispatcher.on('renderError: Fatal', renderError);
+
+        var collInputHandler = function() {
+            var collJSON;
+            try {
+                collJSON = JSON.parse(collInput.val());
+                collInput.css({'border': '2px inset'});
+            } catch (e) {
+                // Not properly formatted JSON...
+                collInput.css({'border': '2px solid red'});
+                return;
+            }
+
+            try {
+                liveDispatcher.post('collectionLoaded',
+                        [$.extend({'collection': null}, collJSON)]);
+                //liveDiv.css({'border': '2px inset'});  // setting this blows the layout
+                docInput.css({'border': '2px inset'});
+            } catch(e) {
+                console.error('collectionLoaded went down with:', e);
+                //liveDiv.css({'border': '2px solid red'});
+                collInput.css({'border': '2px solid red'});
+            }
+        };
+
+        var docInputHandler = function() {
+            var docJSON;
+            try {
+                docJSON = JSON.parse(docInput.val());
+                docInput.css({'border': '2px inset'});
+            } catch (e) {
+                docInput.css({'border': '2px solid red'});
+                return;
+            }
+
+            try {
+                liveDispatcher.post('requestRenderData', [$.extend({}, docJSON)]);
+                // liveDiv.css({'border': '2px inset'});  // setting this blows the layout
+                collInput.css({'border': '2px inset'});
+            } catch(e) {
+                console.error('requestRenderData went down with:', e);
+                // liveDiv.css({'border': '2px solid red'});
+                collInput.css({'border': '2px solid red'});
+            }
+        };
+
+        // Inject our current example as a start
+        var collJSON = JSON.stringify(collData, undefined, '    ');
+        docJSON = JSON.stringify(docData, undefined, '    ')
+        // pack those just a bit
+        var packJSON = function(s) {
+            // replace any space with ' ' in non-nested curly brackets
+            s = s.replace(/(\{[^\{\}\[\]]*\})/g, 
+                          function(a, b) { return b.replace(/\s+/g, ' '); });
+            // replace any space with ' ' in [] up to nesting depth 1
+            s = s.replace(/(\[(?:[^\[\]\{\}]|\[[^\[\]\{\}]*\])*\])/g, 
+                          function(a, b) { return b.replace(/\s+/g, ' '); });
+            return s
+        }
+        collInput.text(packJSON(collJSON));
+        docInput.text(packJSON(docJSON));
+
+        var listenTo = 'propertychange keyup input paste';
+        collInput.bind(listenTo, collInputHandler);
+        docInput.bind(listenTo, docInputHandler);
+    };
+
       var app = new Vue({
         name: 'test',
         data: {
-          obj_type: '{{ obj_type|capfirst }}',
-          obj_id: {{ obj_id }},
-          language: '{{ language }}',
-          title: '{{ title }}',
-          n_tokens: {{ n_tokens }},
-          n_unique: {{ n_unique }},
-          voc_density: ({{ voc_density }}).toFixed(3),
-          n_sentences: {{ n_sentences }},
-          mean_sentence_length: ({{ mean_sentence_length }}).toFixed(3),
-          max_sentence_length: {{ max_sentence_length }},
-          mean_dependency_depth: ({{ mean_dependency_depth }}).toFixed(3),
-          max_dependency_depth: {{ max_dependency_depth }},
-          mean_dependency_distance: ({{ mean_dependency_distance }}).toFixed(3),
-          max_dependency_distance: {{ max_dependency_distance }},
-          mean_weighted_distance: ({{ mean_weighted_distance }}).toFixed(3),
-          max_weighted_distance: ({{ max_weighted_distance }}).toFixed(3),
-          summary: `{{ summary|safe }}`,
-          sentences: {{ sentences|safe }},
-          kw_frequencies: {{ kw_frequencies|safe }},
-          verb_frequencies: {{ verb_frequencies|safe }},
-          noun_frequencies: {{ noun_frequencies|safe }},
-          adjective_frequencies: {{ adjective_frequencies|safe }},
-          entity_lists: {{ entity_lists|safe }},
-          analyzed_text: `{{ analyzed_text|safe }}`,
-          noun_chunks: {{ noun_chunks|safe }}
-        },
+          obj_type: null, obj_id: null,
+          language: null,title: null,
+          n_tokens: null, n_unique: null, voc_density: null, lex_density: null,
+          n_sentences: null, mean_sentence_length: null, max_sentence_length: null,
+          mean_dependency_depth: null, max_dependency_depth: null,
+          mean_dependency_distance: null, max_dependency_distance: null,
+          mean_weighted_distance: null, max_weighted_distance: null,
+          sentences: null,
+          tokens: null,
+          text: null,
+          summary: null,
+          verb_frequencies: null, noun_frequencies: null, adjective_frequencies: null, kw_frequencies: null,
+          noun_chunks: null,
+          entity_lists: null,
+          entities: null,
+          analyzed_text: null,
+		},
         el: '#app',
         methods: {
           resize() {
@@ -189,8 +322,32 @@
           }
         },
         mounted: function () {
-          console.log('vue mounted');
-          this.$nextTick(initTooltips(document.querySelectorAll('.tooltip')));
+          $this = this;
+		  $.ajax({
+	        type:'GET',
+	        url: `/text_dashboard/{{ obj_type }}/{{ obj_id }}/`,
+	        success: function(json_data){
+	        	console.log(Object.entries(json_data).length);
+	            // set all properties from json_data into data
+	            // Object.entries(json_data).forEach(entry => console.log(entry[0]));
+	            for (var key in json_data) {
+	            	if (key == 'collData')
+	            		collData = json_data[key];
+	            	// else if (key == 'docData')
+	    	        //	docData = json_data[key];
+	            	else
+	            		$this[key] = json_data[key];
+            	};
+	        },
+	        error: function(){
+	            console.log("Hello");
+	        }
+		  });
+
+        },
+        updated: function () {
+            this.$nextTick(initTooltips(document.querySelectorAll('.tooltip')));
+            do_brat();
         }
       });
     </script>

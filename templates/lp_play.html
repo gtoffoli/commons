@@ -83,7 +83,7 @@
                         {% endif %}
                         {% if user.is_authenticated %}
                           {% if pathnode.get_obj_text %}
-                            <a class="analizeText" id="a_{{ pathnode.id }}" href="/text_dashboard/pathnode/{{pathnode.id}}/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+                            <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
                           {% endif %}
                         {% endif %}
                         </li>
@@ -190,8 +190,8 @@
                 accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
             }
         });
-        if ($('li a').hasClass('analizeText')) {
-            $('li a.analizeText').on('click', function(event){
+        if ($('a').hasClass('analyzeText')) {
+            $('a.analyzeText').on('click', function(event){
                event.preventDefault();
                $('<div/>',{
                  'id':'link-'+($(this).index()+1)})
@@ -200,8 +200,9 @@
                  'style': 'width:100%; height:100%'}))
                .appendTo('body')
                .dialog({
-                 'width': 800,
-                 'height': 450,
+                 width: 1000,
+                 height: 800,
+                 position: { my: "right top", at: "right top", of: window },
                  modal: false,
                  responsive: true,
                  clickOut: false,

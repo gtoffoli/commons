@@ -24,7 +24,7 @@ ENTITIES_MAPPING = {
     'ORG': 'organization',
 }
 
-# from NLPBuddy
+# =====from NLPBuddy
 POS_MAPPING = {
     'NOUN': 'nouns',
     'VERB': 'verbs',
@@ -34,6 +34,188 @@ POS_MAPPING = {
 EMPTY_POS = [
     'SPACE', 'PUNCT', 'CCONJ', 'SCONJ', 'DET', 'PRON', 'ADP', 'AUX', 'PART', 'SYM',
 ]
+
+postag_color = 'cornflowerBlue'
+entity_color = 'tomato'
+dependency_color = 'purple'
+
+# ===== froom BRAT; see http://brat.nlplab.org/configuration.html and https://brat.nlplab.org/embed.html
+collData = {
+    'entity_types': [
+        { 'type': 'ADJ', 'labels': ['adjective', 'adj'], 'bgColor': postag_color, 'borderColor': 'darken' }, # big, old, green, incomprehensible, first
+        { 'type': 'ADP', 'labels': ['adposition', 'adp'], 'bgColor': postag_color, 'borderColor': 'darken' }, # in, to, during
+        { 'type': 'ADV', 'labels': ['adverb', 'adv'], 'bgColor': postag_color, 'borderColor': 'darken' }, # very, tomorrow, down, where, there
+        { 'type': 'AUX', 'labels': ['auxiliary', 'aux'], 'bgColor': postag_color, 'borderColor': 'darken' }, # is, has (done), will (do), should (do)
+        { 'type': 'CONJ', 'labels': ['conjunction', 'conj'], 'bgColor': postag_color, 'borderColor': 'darken' }, # and, or, but
+        { 'type': 'CCONJ', 'labels': ['coord.conj.', 'cconj'], 'bgColor': postag_color, 'borderColor': 'darken' }, # and, or, but
+        { 'type': 'DET', 'labels': ['determiner', 'det'], 'bgColor': postag_color, 'borderColor': 'darken' }, # a, an, the
+        { 'type': 'INTJ', 'labels': ['interjection', 'intj'], 'bgColor': postag_color, 'borderColor': 'darken' }, # psst, ouch, bravo, hello
+        { 'type': 'NOUN', 'labels': ['noun', 'noun'], 'bgColor': postag_color, 'borderColor': 'darken' }, # girl, cat, tree, air, beauty
+        { 'type': 'NUM', 'labels': ['numeral', 'num'], 'bgColor': postag_color, 'borderColor': 'darken' }, # 1, 2017, one, seventy-seven, IV, MMXIV
+        { 'type': 'PART', 'labels': ['particle', 'part'], 'bgColor': postag_color, 'borderColor': 'darken' }, # ’s, not,
+        { 'type': 'PRON', 'labels': ['pronoun', 'pron'], 'bgColor': postag_color, 'borderColor': 'darken' }, # I, you, he, she, myself, themselves, somebody
+        { 'type': 'PROPN', 'labels': ['proper noun', 'propn'], 'bgColor': postag_color, 'borderColor': 'darken' }, # Mary, John, London, NATO, HBO
+        { 'type': 'PUNCT', 'labels': ['punctuation', 'punct'], 'bgColor': postag_color, 'borderColor': 'darken' }, # ., (, ), ?
+        { 'type': 'SCONJ', 'labels': ['sub.conj.', 'sconj'], 'bgColor': postag_color, 'borderColor': 'darken' }, # if, while, that
+        { 'type': 'SYM', 'labels': ['symbol', 'sym'], 'bgColor': postag_color, 'borderColor': 'darken' }, # $, %, §, ©, +, −, ×, ÷, =, :), 😝
+        { 'type': 'VERB', 'labels': ['verb', 'verb'], 'bgColor': postag_color, 'borderColor': 'darken' }, # un, runs, running, eat, ate, eating
+        { 'type': 'X', 'labels': ['other', 'x'], 'bgColor': postag_color, 'borderColor': 'darken' }, # sfpksdpsxmsa
+        { 'type': 'SPACE', 'labels': ['space', 'sp'], 'bgColor': postag_color, 'borderColor': 'darken' }, #
+
+        { 'type': 'PERSON', 'labels': ['Person', 'Per'], 'bgColor': entity_color, 'borderColor': 'darken' }, # People, including fictional.
+        { 'type': 'NORP', 'labels': ['NORP', 'NORP'], 'bgColor': entity_color, 'borderColor': 'darken' },  # Nationalities or religious or political groups.
+        { 'type': 'FAC', 'labels': ['Facility', 'Fac'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Buildings, airports, highways, bridges, etc.
+        { 'type': 'ORG', 'labels': ['Organization', 'Org'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Companies, agencies, institutions, etc.
+        { 'type': 'GPE', 'labels': ['Geo-pol.Entity', 'GPE'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Countries, cities, states.
+        { 'type': 'LOC', 'labels': ['Non-GPE location', 'Loc'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Non-GPE locations, mountain ranges, bodies of water.
+        { 'type': 'PRODUCT', 'labels': ['Product', 'Prod'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Objects, vehicles, foods, etc. (Not services.)
+        { 'type': 'EVENT', 'labels': ['Event', 'Evnt'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Named hurricanes, battles, wars, sports events, etc.
+        { 'type': 'WORK_OF_ART', 'labels': ['Work-of-Art', 'WoA'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Titles of books, songs, etc.
+        { 'type': 'LAW', 'labels': ['Law', 'Law'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Named documents made into laws.
+        { 'type': 'LANGUAGE', 'labels': ['Language', 'Lang'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Any named language. 
+        { 'type': 'DATE', 'labels': ['Date', 'Date'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Absolute or relative dates or periods.
+        { 'type': 'TIME', 'labels': ['Time', 'Time'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Times smaller than a day.
+        { 'type': 'PERCENT', 'labels': ['Percent', 'Perc'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Percentage, including ”%“.
+        { 'type': 'MONEY', 'labels': ['Money', 'Money'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Monetary values, including unit.
+        { 'type': 'QUANTITY', 'labels': ['Quantity', 'Quant'], 'bgColor': entity_color, 'borderColor': 'darken' }, #  Measurements, as of weight or distance.
+        { 'type': 'ORDINAL', 'labels': ['Ordinal', 'Ord'], 'bgColor': entity_color, 'borderColor': 'darken' }, # “first”, “second”, etc.
+        { 'type': 'CARDINAL', 'labels': ['Cardinal', 'Card'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Numerals that do not fall under another type.
+        { 'type': 'MISC', 'labels': ['Miscellaneus', 'Mix'], 'bgColor': entity_color, 'borderColor': 'darken' }, # Numerals that do not fall under another type.
+    ],
+    'relation_types': [
+        { 'type': 'acl', 'labels': ['adjectival clause', 'acl'], 'color': dependency_color},
+        { 'type': 'advcl', 'labels': ['adverbial clause modifier', 'advcl'], 'color': dependency_color},
+        { 'type': 'advmod', 'labels': ['adverbial modifier', 'advmod'], 'color': dependency_color},
+        { 'type': 'amod', 'labels': ['adjectival modifier', 'amod'], 'color': dependency_color},
+        { 'type': 'appos', 'labels': ['appositional modifier', 'appos'], 'color': dependency_color},
+        { 'type': 'aux', 'labels': ['auxiliary', 'aux'], 'color': dependency_color},
+        { 'type': 'case', 'labels': ['case marking', 'case'], 'color': dependency_color},
+        { 'type': 'cc', 'labels': ['coordinating conjunction', 'cc'], 'color': dependency_color},
+        { 'type': 'ccomp', 'labels': ['clausal complement', 'ccomp'], 'color': dependency_color},
+        { 'type': 'clf', 'labels': ['classifier', 'clf'], 'color': dependency_color},
+        { 'type': 'compound', 'labels': ['compound', 'compound'], 'color': dependency_color},
+        { 'type': 'conj', 'labels': ['conjunct', 'conj'], 'color': dependency_color},
+        { 'type': 'cop', 'labels': ['copula', 'cop'], 'color': dependency_color},
+        { 'type': 'csubj', 'labels': ['clausal subject', 'csubj'], 'color': dependency_color},
+        { 'type': 'dep', 'labels': ['unspecified dependency', 'dep'], 'color': dependency_color},
+        { 'type': 'det', 'labels': ['determiner', 'det'], 'color': dependency_color},
+        { 'type': 'discourse', 'labels': ['discourse element', 'discourse'], 'color': dependency_color},
+        { 'type': 'dislocated', 'labels': ['dislocated elements', 'dislocated'], 'color': dependency_color},
+        { 'type': 'expl', 'labels': ['expletive', 'expl'], 'color': dependency_color},
+        { 'type': 'fixed', 'labels': ['fixed multiword expression', 'fixed'], 'color': dependency_color},
+        { 'type': 'flat', 'labels': ['flat multiword expression', 'flat'], 'color': dependency_color},
+        { 'type': 'goeswith', 'labels': ['goes with', 'goeswith'], 'color': dependency_color},
+        { 'type': 'iobj', 'labels': ['indirect object', 'iobj'], 'color': dependency_color},
+        { 'type': 'list', 'labels': ['list', 'list'], 'color': dependency_color},
+        { 'type': 'mark', 'labels': ['marker', 'mark'], 'color': dependency_color},
+        { 'type': 'nmod', 'labels': ['nominal modifier', 'nmod'], 'color': dependency_color},
+        { 'type': 'nsubj', 'labels': ['nominal subject', 'nsubj'], 'color': dependency_color},
+        { 'type': 'nummod', 'labels': ['numeric modifier', 'nummod'], 'color': dependency_color},
+        { 'type': 'obj', 'labels': ['object', 'obj'], 'color': dependency_color},
+        { 'type': 'obl', 'labels': ['oblique nominal', 'obl'], 'color': dependency_color},
+        { 'type': 'orphan', 'labels': ['orphan', 'orphan'], 'color': dependency_color},
+        { 'type': 'parataxis', 'labels': ['parataxis', 'parataxis'], 'color': dependency_color},
+        { 'type': 'punct', 'labels': ['punctuation', 'punct'], 'color': dependency_color},
+        { 'type': 'reparandum', 'labels': ['overridden disfluency', 'reparandum'], 'color': dependency_color},
+        { 'type': 'root', 'labels': ['root', 'root'], 'color': dependency_color},
+        { 'type': 'vocative', 'labels': ['vocative', 'vocative'], 'color': dependency_color},
+        { 'type': 'xcomp', 'labels': ['open clausal complement', 'xcomp'], 'color': dependency_color},
+
+        # ENGLISH
+        # acl    clausal modifier of noun (adjectival clause)
+        { 'type': 'acomp', 'labels': ['adjectival complement', 'acomp'], 'color': dependency_color},
+        # advcl    adverbial clause modifier
+        # advmod    adverbial modifier
+        { 'type': 'agent', 'labels': ['agent', 'agent'], 'color': dependency_color},
+        # amod    adjectival modifier
+        # appos    appositional modifier
+        { 'type': 'attr', 'labels': ['attribute', 'attr'], 'color': dependency_color},
+        # aux    auxiliary
+        { 'type': 'auxpass', 'labels': ['auxiliary (passive)', 'auxpass'], 'color': dependency_color},
+        # case    case marking
+        # cc    coordinating conjunction
+        # ccomp    clausal complement
+        # compound    compound
+        # conj    conjunct
+        # cop    copula
+        # csubj    clausal subject
+        { 'type': 'csubjpass', 'labels': ['clausal subject (passive)', 'csubjpass'], 'color': dependency_color},
+        { 'type': 'dative', 'labels': ['dative', 'dative'], 'color': dependency_color},
+        # dep    unclassified dependent
+        # det    determiner
+        # dobj    direct object
+        # expl    expletive
+        { 'type': 'intj', 'labels': ['interjection', 'intj'], 'color': dependency_color},
+        # mark    marker
+        { 'type': 'meta', 'labels': ['meta modifier', 'meta'], 'color': dependency_color},
+        { 'type': 'neg', 'labels': ['negation modifier', 'neg'], 'color': dependency_color},
+        { 'type': 'nn', 'labels': ['noun compound modifier', 'nn'], 'color': dependency_color},
+        { 'type': 'nounmod', 'labels': ['modifier of nominal', 'nounmod'], 'color': dependency_color},
+        { 'type': 'npmod', 'labels': ['noun phrase as adverbial modifier', 'npmod'], 'color': dependency_color},
+        # nsubj    nominal subject
+        { 'type': 'nsubjpass', 'labels': ['nominal subject (passive)', 'nsubjpass'], 'color': dependency_color},
+        # nummod    numeric modifier
+        { 'type': 'oprd', 'labels': ['object predicate', 'oprd'], 'color': dependency_color},
+        # obj    object
+        # obl    oblique nominal
+        # parataxis    parataxis
+        { 'type': 'pcomp', 'labels': ['complement of preposition', 'pcomp'], 'color': dependency_color},
+        { 'type': 'pobj', 'labels': ['object of preposition', 'pobj'], 'color': dependency_color},
+        { 'type': 'poss', 'labels': ['possession modifier', 'poss'], 'color': dependency_color},
+        { 'type': 'preconj', 'labels': ['pre-correlative conjunction', 'preconj'], 'color': dependency_color},
+        { 'type': 'prep', 'labels': ['prepositional modifier', 'prep'], 'color': dependency_color},
+        { 'type': 'prt', 'labels': ['particle', 'prt'], 'color': dependency_color},
+        # punct    punctuation
+        { 'type': 'quantmod', 'labels': ['modifier of quantifier', 'punctuation'], 'color': dependency_color},
+        { 'type': 'relcl', 'labels': ['relative clause modifier', 'relcl'], 'color': dependency_color},
+        # root    root
+        # xcomp    open clausal complement
+    ],
+}
+
+"""
+collData = {
+    'entity_types': [
+        #   The labels are used when displaying the annotation, in this case
+        #   for "Person" we also provide a short-hand "Per" for cases where
+        #   abbreviations are preferable
+        {
+            'type'   : 'Person',
+            'labels' : ['Person', 'Per'],
+            'bgColor': 'royalblue',
+            'borderColor': 'darken'
+        }
+    ],
+    'relation_types': [
+        #   A relation takes two arguments, both are named and can be constrained
+        #   as to which types they may apply to
+        # dashArray allows you to adjust the style of the relation arc
+        { 'type': 'Anaphora', 'labels': ['Anaphora', 'Ana'], 'dashArray': '3,3', 'color': 'purple',
+          'args': [
+                {'role': 'Anaphor', 'targets': ['Person'] },
+                {'role': 'Entity',  'targets': ['Person'] },]
+        } 
+    ],
+}
+"""
+
+docData = {
+    # This example (from https://brat.nlplab.org/embed.html) was kept here just for reference
+    'text'     : "Ed O'Kelley was the man who shot the man who shot Jesse James.",
+    # The entities entry holds all entity annotations
+    'entities' : [
+        #   Format: [${ID}, ${TYPE}, [[${START}, ${END}]]]
+        #   note that range of the offsets are [${START},${END})
+        ['T1', 'Person', [[0, 11]]],
+        ['T2', 'Person', [[20, 23]]],
+        ['T3', 'Person', [[37, 40]]],
+        ['T4', 'Person', [[50, 61]]]
+    ],
+    'relations': [ 
+        # Format: [${ID}, ${TYPE}, [[${ARGNAME}, ${TARGET}], [${ARGNAME}, ${TARGET}]]]
+        ['R1', 'Anaphora', [['Anaphor', 'T2'], ['Entity', 'T1']]]
+    ],
+};
 
 def get_document_text(document, return_has_text=False):
     has_text = False
@@ -93,7 +275,6 @@ def get_oer_text(oer, return_has_text=False):
             text = get_document_text(documents[0], return_has_text=return_has_text)
     return text
 
-# def get_obj_text(obj_type, obj_id):
 def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
     if obj:
         if isinstance(obj, Project):
@@ -168,8 +349,10 @@ def index_sentences(sentences, tokens):
 def make_sentence_tree(sentence, tokens):
     i_root = None
     i = sentence['start_token']
+    text = ''
     while i <= sentence['end_token']:
         token = tokens[i]
+        text += token['text']
         dep = token['dep']
         if i_root is None and dep=='ROOT':
             i_root = sentence['root'] = i
@@ -181,6 +364,7 @@ def make_sentence_tree(sentence, tokens):
         i += 1
     assert i_root is not None
     sentence['root'] = i_root
+    sentence['text'] = text
     return i-sentence['start_token']
 
 def token_dependency_depth(token, depth, tokens):
@@ -203,6 +387,23 @@ def sentence_dependency_distance(sentence, tokens):
     root = tokens[sentence['root']]
     return token_dependency_distance(root, 0, tokens)       
 
+def index_entities(ents, tokens, entity_dict):
+    i = 0
+    for ent in ents:
+        label = ent['label']
+        start = ent['start']
+        end = ent['end']
+        while tokens[i]['start'] < start:
+            i += 1
+        assert start==tokens[i]['start']
+        text = ''
+        while tokens[i]['end'] <= end:
+            text += tokens[i]['text']       
+            i += 1
+        ent['text'] = text
+        if not '_' in text and not text in entity_dict[label]:
+            entity_dict[label].append(text)
+
 def add_to_default_dict(default_dict, token, case_dict=None):
     if (len(token)>1 and token.isupper()) or token.islower():
         default_dict[token] +=1
@@ -215,10 +416,10 @@ def sorted_frequencies(d):
     sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
     return [{'key': key, 'freq': freq} for key, freq in sd.items()]
 
-def text_dashboard(request, obj_type, obj_id):
+def text_dashboard(request, obj_type, obj_id, obj=None):
     if not obj_type in ['project', 'oer', 'lp', 'pathnode']:
         return HttpResponseForbidden()
-    title, description, body = get_obj_text(None, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
+    title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
@@ -228,7 +429,7 @@ def text_dashboard(request, obj_type, obj_id):
     analyze_dict = json.loads(response.text)
     language = analyze_dict['language']
     analyzed_text = analyze_dict['text']
-    sentences = analyze_dict['sentences']
+#   sentences = analyze_dict['sentences']
     summary = analyze_dict['summary']
     ncs = analyze_dict['noun_chunks']
     noun_chunks = []
@@ -238,7 +439,7 @@ def text_dashboard(request, obj_type, obj_id):
         if len(tokens)>1:
             noun_chunks.append(' '.join(tokens))
     noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
-    var_dict = {'language': language, 'analyzed_text': analyzed_text, 'sentences': sentences, 'summary': summary, 'noun_chunks': noun_chunks}
+    var_dict = {'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary, 'noun_chunks': noun_chunks}
 
     nlp_url = 'http://nlp.commonspaces.eu/api/doc'
     response = requests.post(nlp_url, data=data)
@@ -248,6 +449,35 @@ def text_dashboard(request, obj_type, obj_id):
     n_sentences = len(sentences)
     tokens = doc_dict['tokens']
     n_tokens = len(tokens)
+    ents = doc_dict['ents']
+
+    kw_frequencies = defaultdict(int)
+    verb_frequencies = defaultdict(int)
+    noun_frequencies = defaultdict(int)
+    adjective_frequencies = defaultdict(int)
+    n_lexical = 0
+    for item in tokens:
+        token = text[item['start']:item['end']]
+        item['text'] = token 
+        pos = item['pos']
+        if token.isnumeric() or pos in EMPTY_POS or item['stop']:
+            continue
+        n_lexical += 1
+        add_to_default_dict(kw_frequencies, token)
+        if pos in ['NOUN', 'PROPN']:
+            add_to_default_dict(noun_frequencies, token)
+        elif pos == 'VERB':
+            add_to_default_dict(verb_frequencies, token)
+        elif pos == 'ADJ':
+            add_to_default_dict(adjective_frequencies, token)
+    n_unique = len(kw_frequencies)
+    voc_density = n_tokens and n_unique/n_tokens or 0
+    lex_density = n_tokens and n_lexical/n_tokens or 0
+    kw_frequencies = sorted_frequencies(kw_frequencies)
+    verb_frequencies = sorted_frequencies(verb_frequencies)
+    noun_frequencies = sorted_frequencies(noun_frequencies)
+    adjective_frequencies = sorted_frequencies(adjective_frequencies)
+
     mean_sentence_length = n_tokens/n_sentences
     index_sentences(sentences, tokens)
     max_sentence_length = 0
@@ -272,45 +502,47 @@ def text_dashboard(request, obj_type, obj_id):
     mean_dependency_depth = n_sentences and (tot_dependency_depth / n_sentences) or 0
     mean_dependency_distance = n_sentences and (tot_dependency_distance / n_sentences) or 0
     mean_weighted_distance = n_sentences and (tot_weighted_distance / n_sentences) or 0
-    ents = doc_dict['ents']
-    kw_frequencies = defaultdict(int)
-    verb_frequencies = defaultdict(int)
-    noun_frequencies = defaultdict(int)
-    adjective_frequencies = defaultdict(int)
-    for item in tokens:
-        token = text[item['start']:item['end']]
-        item['text'] = token
-        pos = item['pos']
-        if token.isnumeric() or pos in EMPTY_POS or item['stop']:
-            continue
-        add_to_default_dict(kw_frequencies, token)
-        if pos in ['NOUN', 'PROPN']:
-            add_to_default_dict(noun_frequencies, token)
-        elif pos == 'VERB':
-            add_to_default_dict(verb_frequencies, token)
-        elif pos == 'ADJ':
-            add_to_default_dict(adjective_frequencies, token)
-    n_unique = len(kw_frequencies)
-    voc_density = n_unique/n_tokens
-    kw_frequencies = sorted_frequencies(kw_frequencies)
-    verb_frequencies = sorted_frequencies(verb_frequencies)
-    noun_frequencies = sorted_frequencies(noun_frequencies)
-    adjective_frequencies = sorted_frequencies(adjective_frequencies)
-    entities_dict = defaultdict(list)
-    for ent in ents:
-        label = ent['label'].replace('_', ' ')
-        entity = text[ent['start']:ent['end']]
-        if not '_' in entity and not entity in entities_dict[label]:
-            entities_dict[label].append(entity)
-    entity_lists = [{'key': key, 'entities': entities} for key, entities in entities_dict.items()]
+
+    entitiy_dict = defaultdict(list)
+    index_entities(ents, tokens, entitiy_dict)
+    entity_lists = [{'key': key, 'entities': entities} for key, entities in entitiy_dict.items()]
+
     var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'analyzed_text': analyzed_text,
-                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density,
+                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density, 'lex_density': lex_density,
                      'n_sentences': n_sentences, 'mean_sentence_length': mean_sentence_length, 'max_sentence_length': max_sentence_length,
                      'max_dependency_depth': max_dependency_depth, 'mean_dependency_depth': mean_dependency_depth,
                      'max_dependency_distance': max_dependency_distance, 'mean_dependency_distance': mean_dependency_distance,
                      'max_weighted_distance': max_weighted_distance, 'mean_weighted_distance': mean_weighted_distance,
+                     'sentences': sentences, 'tokens': tokens,
                      'kw_frequencies': kw_frequencies[:16], 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies,
-                     'entity_lists': entity_lists})
-    print('var_dict', var_dict)
+                     'entity_lists': entity_lists, 'entities': ents,
+                     'collData': collData, 'docData': docData,
+                     })
+    # return render(request, 'vue/text_dashboard.html', var_dict)
+    if request.is_ajax():
+        return JsonResponse(var_dict)
+    else:
+        return var_dict
+
+def project_text(request, project_slug):
+    project = get_object_or_404(Project, slug=project_slug)
+    var_dict = {'obj_type': 'project', 'obj_id': project.id}
     return render(request, 'vue/text_dashboard.html', var_dict)
 
+def oer_text(request, oer_slug):
+    oer = get_object_or_404(OER, slug=oer_slug)
+    var_dict = {'obj_type': 'oer', 'obj_id': oer.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def lp_text(request, lp_slug):
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    var_dict = {'obj_type': 'lp', 'obj_id': lp.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def pathnode_text(request, node_id):
+    pathnode = get_object_or_404(PathNode, id=node_id)
+    var_dict = {'obj_type': 'pathnode', 'obj_id': node_id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def brat(request):
+    return render(request, 'vue/brat.html', {})

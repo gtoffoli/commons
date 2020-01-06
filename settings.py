@@ -188,6 +188,7 @@ INSTALLED_APPS = (
     'django_nvd3',
     'awesome_avatar',
     'snowpenguin.django.recaptcha2',
+    'brat_client',
 )
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']

@@ -9,7 +9,7 @@
     {% endif %}
     {% if user.is_authenticated %}
       {% if pathnode.get_obj_text %}
-        <a class="analizeText" id="a_{{ pathnode.id }}" href="/text_dashboard/pathnode/{{pathnode.id}}/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+        <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
       {% endif %}
     {% endif %}
 </li>
