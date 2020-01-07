@@ -83,7 +83,8 @@
                         {% endif %}
                         {% if user.is_authenticated %}
                           {% if pathnode.get_obj_text %}
-                            <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+{% comment %}               <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>{% endcomment %}
+                    	    <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>
                           {% endif %}
                         {% endif %}
                         </li>

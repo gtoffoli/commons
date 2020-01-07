@@ -91,7 +91,7 @@ var webFontURLs = [
           <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
             <template slot="paneL">
               <div>
-                <h4 style="text-align: center;">BASIC PROPERTIES AND INDICATORS</h4>
+                <h4 style="text-align: center;">BASIC TEXT PROPERTIES AND INDICATORS</h4>
 <!-- 
                 <label>{{ obj_type }}</label>: {{ obj_id }},
                 <label>Title:</label> {{ title }},
@@ -109,7 +109,7 @@ var webFontURLs = [
                 {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
                 <label>Mean / Max. largest dependency depth:</label>
                 {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
-                <h4 style="text-align: center;">MOST FREQUENT VERB FORMS</h4>
+                <h4 style="text-align: center;">MOST FREQUENT WORD FORMS</h4>
                 <span v-for="(item, index) in kw_frequencies">
                   <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
               </div>
