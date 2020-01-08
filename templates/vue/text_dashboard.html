@@ -24,7 +24,7 @@
 <link rel="shortcut icon" href="favicon.png"/>
 <!-- override a few style-vis.css settings for the embedded version to make things larger -->
 <style type="text/css">
-text { font-size: 10px; }
+	text { font-size: 10px; }
 	.span text { font-size: 9px; }
 	.arcs text { font-size: 9px; }
 </style>
@@ -71,8 +71,8 @@ var webFontURLs = [
   <script src="https://use.fontawesome.com/d391635073.js"></script>
   <style>
     body { margin: 0; }
-    h4 { margin-top: 5px; margin-bottom: 2px; }
-	::-webkit-scrollbar { width: 8px; height: 8px; }
+    h1, h2, h3, h4, h5 { margin: 0; padding-top: 5px; padding-bottom: 5px; }
+	::-webkit-scrollbar { width: 10px; height: 10px; }
 	div span .ta-dialog-title {
 		font-size: 12px !important;
 		margin:0 !important;
@@ -85,13 +85,16 @@ var webFontURLs = [
     <script src='https://unpkg.com/vue@2.2.6'></script>
     <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
     <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
+    {% verbatim %}
     <div id="app" class='components-container'>
       <template>
-        {% verbatim %}
           <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
             <template slot="paneL">
+			    <h3 style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
+			    	<span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
+			    </h3>
               <div>
-                <h4 style="text-align: center;">BASIC TEXT PROPERTIES AND INDICATORS</h4>
+                <h5 style="text-align: center;">BASIC TEXT PROPERTIES AND INDICATORS</h5>
 <!-- 
                 <label>{{ obj_type }}</label>: {{ obj_id }},
                 <label>Title:</label> {{ title }},
@@ -109,28 +112,28 @@ var webFontURLs = [
                 {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
                 <label>Mean / Max. largest dependency depth:</label>
                 {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
-                <h4 style="text-align: center;">MOST FREQUENT WORD FORMS</h4>
+                <h5 style="text-align: center;">MOST FREQUENT WORD FORMS</h5>
                 <span v-for="(item, index) in kw_frequencies">
                   <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
               </div>
             </template>
             <template slot="paneR">
-                <split-pane v-on:resize="resize" :min-percent='20' :max-percent='100' split="horizontal" :default-percent='75'>
+                <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='75'>
                     <template slot="paneL">
-                        <h4 style="text-align: center;"><span style="color:cornflowerBlue;">POS-TAGS</span>,
-                        <span style="color:purple;">DEPENDENCIES</span> AND <span style="color:tomato;">NAMED ENTITIES</span></h4>
+                        <h5 style="text-align: center;"><span style="color:cornflowerBlue;">POS-TAGS</span>,
+                        <span style="color:purple;">DEPENDENCIES</span> AND <span style="color:tomato;">NAMED ENTITIES</span></h5>
 					    <div id="embedding-live-example"></div>
                     </template>
                     <template slot="paneR">
                       <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
                         <template slot="paneL">
-                          <h4 style="text-align: center;">TEXT SUMMARY</h4>
+                          <h5 style="text-align: center;">TEXT SUMMARY</h5>
                           <div v-text="summary" style="margin: 5px;"></div>
                         </template>
                         <template slot="paneR">
                           <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
                             <template slot="paneL">
-                              <h4 style="text-align: center;">VERBS</h4>
+                              <h5 style="text-align: center;">VERBS</h5>
                               <div v-for="item in verb_frequencies">
                                 <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
                                   ({{ item.freq }})</div>
@@ -139,14 +142,14 @@ var webFontURLs = [
                             <template slot="paneR">
                               <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
                                 <template slot="paneL">
-                                  <h4 style="text-align: center;">NOUNS</h4>
+                                  <h5 style="text-align: center;">NOUNS</h5>
                                   <div v-for="item in noun_frequencies">
                                     <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
                                       ({{ item.freq }})</div>
                                   </div>
                                 </template>
                                 <template slot="paneR">
-                                  <h4 style="text-align: center;">ADJECTIVES</h4>
+                                  <h5 style="text-align: center;">ADJECTIVES</h5>
                                   <div v-for="item in adjective_frequencies">
                                     <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
                                       ({{ item.freq }})</div>
@@ -162,9 +165,9 @@ var webFontURLs = [
               </split-pane>
             </template>
           </split-pane>
-        {% endverbatim %}
       </template>
     </div>
+    {% endverbatim %}
     <script>
     // from BRAT; see http://brat.nlplab.org/configuration.html and https://brat.nlplab.org/embed.html
     var collData = {
@@ -223,7 +226,6 @@ var webFontURLs = [
                 $.extend({}, docData), webFontURLs);
 
         var renderError = function() {
-            // liveDiv.css({'border': '2px solid red'}); // setting this blows the layout
             collInput.css({'border': '2px solid red'});
             docInput.css({'border': '2px solid red'});
         };
@@ -244,11 +246,9 @@ var webFontURLs = [
             try {
                 liveDispatcher.post('collectionLoaded',
                         [$.extend({'collection': null}, collJSON)]);
-                //liveDiv.css({'border': '2px inset'});  // setting this blows the layout
                 docInput.css({'border': '2px inset'});
             } catch(e) {
                 console.error('collectionLoaded went down with:', e);
-                //liveDiv.css({'border': '2px solid red'});
                 collInput.css({'border': '2px solid red'});
             }
         };
@@ -265,11 +265,9 @@ var webFontURLs = [
 
             try {
                 liveDispatcher.post('requestRenderData', [$.extend({}, docJSON)]);
-                // liveDiv.css({'border': '2px inset'});  // setting this blows the layout
                 collInput.css({'border': '2px inset'});
             } catch(e) {
                 console.error('requestRenderData went down with:', e);
-                // liveDiv.css({'border': '2px solid red'});
                 collInput.css({'border': '2px solid red'});
             }
         };
@@ -329,12 +327,9 @@ var webFontURLs = [
 	        success: function(json_data){
 	        	console.log(Object.entries(json_data).length);
 	            // set all properties from json_data into data
-	            // Object.entries(json_data).forEach(entry => console.log(entry[0]));
 	            for (var key in json_data) {
 	            	if (key == 'collData')
 	            		collData = json_data[key];
-	            	// else if (key == 'docData')
-	    	        //	docData = json_data[key];
 	            	else
 	            		$this[key] = json_data[key];
             	};

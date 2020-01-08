@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-"""
 
 import string
+import re
 import json
 import requests
 from collections import defaultdict, OrderedDict
@@ -275,6 +276,25 @@ def get_oer_text(oer, return_has_text=False):
             text = get_document_text(documents[0], return_has_text=return_has_text)
     return text
 
+def extract_annotate_with_bs4(html):
+    soup = BeautifulSoup(html, 'lxml')
+    headings = soup.find_all(re.compile('h.+'))
+    for heading in headings:
+        name = heading.name
+        level = name.replace('h', '')
+        if level.isdigit():
+            text = heading.text
+            print('heading:', text)
+            if not text[-1] in string.punctuation:
+                heading.append('.')
+    lis = soup.find_all('li')
+    for li in lis:
+        text = li.text
+        if text:
+            if not text[-1] in string.punctuation:
+                li.append(';')
+    return soup.get_text()
+
 def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
     if obj:
         if isinstance(obj, Project):
@@ -298,8 +318,7 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             obj = get_object_or_404(OER, id=obj_id)
         text = get_oer_text(obj, return_has_text=return_has_text)
         if not return_has_text:
-            soup = BeautifulSoup(text)
-            text = soup.get_text()
+            text = extract_annotate_with_bs4(text)
             json_metadata = OerSerializer(obj).data
             title = json_metadata['title']
             description = json['description']
@@ -326,8 +345,7 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             else:
                 text = json_metadata['text']
         if text and not return_has_text:
-            soup = BeautifulSoup(text)
-            text = soup.get_text()
+            text = extract_annotate_with_bs4(text)
     if return_has_text:
         return text
     else:
@@ -397,9 +415,12 @@ def index_entities(ents, tokens, entity_dict):
             i += 1
         assert start==tokens[i]['start']
         text = ''
-        while tokens[i]['end'] <= end:
-            text += tokens[i]['text']       
-            i += 1
+        try: # don't know why in one case the condition below raised exception
+            while tokens[i]['end'] <= end:
+                text += tokens[i]['text']
+                i += 1
+        except:
+            pass   
         ent['text'] = text
         if not '_' in text and not text in entity_dict[label]:
             entity_dict[label].append(text)
