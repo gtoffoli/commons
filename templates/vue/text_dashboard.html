@@ -81,6 +81,9 @@ var webFontURLs = [
 	.a, .a1, .a2 { color: green; }
 	.b, .b1, .b2 { color: orange; }
 	.c, .c1, .c2 { color: red; }
+	h3.small, h4.small, h4.small span {
+	  font-variant: small-caps;
+	}
   </style>
 </head>
 
@@ -93,12 +96,12 @@ var webFontURLs = [
       <template>
           <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
             <template slot="paneL">
-			    <h3 style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
+			    <h3 class="small" style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
 			    	<span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
 			    	<span v-if="obj_type == 'flatpage'">{{ obj_id }} ({{ title }})</span>
 			    </h3>
               <div>
-                <h5 style="text-align: center;">BASIC TEXT PROPERTIES AND INDICATORS</h5>
+                <h4 class="small" style="text-align: center;">Basic text properties and indicators</h4>
 <!-- 
                 <label>{{ obj_type }}</label>: {{ obj_id }},
                 <label>Title:</label> {{ title }},
@@ -116,7 +119,7 @@ var webFontURLs = [
                 {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
                 <label>Mean / Max. largest dependency depth:</label>
                 {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
-                <h5 style="text-align: center;">MOST FREQUENT WORD FORMS</h5>
+                <h4 class="small" style="text-align: center;">Most frequent word forms</h4>
                 <span v-for="(item, index) in kw_frequencies">
                   <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
               </div>
@@ -124,20 +127,20 @@ var webFontURLs = [
             <template slot="paneR">
                 <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='75'>
                     <template slot="paneL">
-                        <h5 style="text-align: center;"><span style="color:cornflowerBlue;">POS-TAGS</span>,
-                        <span style="color:purple;">DEPENDENCIES</span> AND <span style="color:tomato;">NAMED ENTITIES</span></h5>
+                        <h4 class="small" style="text-align: center;"><span style="color:cornflowerBlue;">Part-Of-Speech (POS) Tags</span>,
+                        <span style="color:purple;">Syntactic Dependencies</span> and <span style="color:tomato;">Named Entities</span></h4>
 					    <div id="embedding-live-example"></div>
                     </template>
                     <template slot="paneR">
                       <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
                         <template slot="paneL">
-                          <h5 style="text-align: center;">TEXT SUMMARY</h5>
+                          <h4 class="small" style="text-align: center;">Text Summary</h4>
                           <div v-text="summary" style="margin: 5px;"></div>
                         </template>
                         <template slot="paneR">
                           <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
                             <template slot="paneL">
-                              <h5 style="text-align: center;">VERBS</h5>
+                              <h4 class="small" style="text-align: center;">Verb Lemmas</h4>
                               <div v-for="item in verb_frequencies">
                                 <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                   {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
@@ -146,14 +149,14 @@ var webFontURLs = [
                             <template slot="paneR">
                               <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
                                 <template slot="paneL">
-                                  <h5 style="text-align: center;">NOUNS</h5>
+                                  <h4 class="small" style="text-align: center;">Noun Lemmas</h4>
                                   <div v-for="item in noun_frequencies">
                                     <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                       {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                                   </div>
                                 </template>
                                 <template slot="paneR">
-                                  <h5 style="text-align: center;">ADJECTIVES</h5>
+                                  <h4 class="small" style="text-align: center;">Adjective Lemmas</h4>
                                   <div v-for="item in adjective_frequencies">
                                     <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                       {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
