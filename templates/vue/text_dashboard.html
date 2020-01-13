@@ -78,6 +78,9 @@ var webFontURLs = [
 		margin:0 !important;
 		padding:0 !important;
 	}
+	.a, .a1, .a2 { color: green; }
+	.b, .b1, .b2 { color: orange; }
+	.c, .c1, .c2 { color: red; }
   </style>
 </head>
 
@@ -135,8 +138,8 @@ var webFontURLs = [
                             <template slot="paneL">
                               <h5 style="text-align: center;">VERBS</h5>
                               <div v-for="item in verb_frequencies">
-                                <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
-                                  ({{ item.freq }})</div>
+                                <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                  {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                               </div>
                             </template>
                             <template slot="paneR">
@@ -144,15 +147,15 @@ var webFontURLs = [
                                 <template slot="paneL">
                                   <h5 style="text-align: center;">NOUNS</h5>
                                   <div v-for="item in noun_frequencies">
-                                    <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
-                                      ({{ item.freq }})</div>
+                                    <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                      {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                                   </div>
                                 </template>
                                 <template slot="paneR">
                                   <h5 style="text-align: center;">ADJECTIVES</h5>
                                   <div v-for="item in adjective_frequencies">
-                                    <div style="margin-left: 5px; margin-right: 5px;">{{ item.key }}
-                                      ({{ item.freq }})</div>
+                                    <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                      {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                                   </div>
                                 </template>
                               </split-pane>

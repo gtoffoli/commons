@@ -11,41 +11,12 @@ def community_children(request):
         ))
     children.append (MenuItem(
          capfirst(_("press releases")),
-         # url='/info/press_releases/',
          url='/press_releases/',
         ))
-    """
-    children.append (MenuItem(
-         capfirst(_("all communities")),
-         url='/cops/',
-        ))
-    children.append (MenuItem(
-         capfirst(_("rolls of mentors")),
-         url='/mentoring/',
-        ))
-    children.append (MenuItem(
-         capfirst(_("browse people")),
-         url='/browse_people/',
-        ))
-    children.append (MenuItem(
-         capfirst(_("search people")),
-         url='/people/search/',
-        ))
-    children.append (MenuItem(
-         capfirst(_("browse mentors")),
-         url='/browse_mentors/',
-        ))
-    """
     children.append (MenuItem(
          capfirst(_("blog")),
          url='/weblog/',
         ))
-    """
-    children.append (MenuItem(
-         capfirst(_("forums")),
-         url='/forum/',
-        ))
-    """
     children.append (MenuItem(
          capfirst(_("the platform")),
          url='/info/platform/',
@@ -62,12 +33,6 @@ def projects_children(request):
          capfirst(_("browse mentors")),
          url='/browse_mentors/',
     ))
-    """
-    children.append (MenuItem(
-         capfirst(_("rolls of mentors")),
-         url='/mentoring/',
-        ))
-    """
     children.append (MenuItem(
          capfirst(_("projects")),
          url='/projects/search',
@@ -90,12 +55,6 @@ def projects_children(request):
          capfirst(_("search people")),
          url='/people/search/',
         ))
-    """
-    children.append (MenuItem(
-         capfirst(_("mentoring support")),
-         url='/mentoring/',
-        ))
-    """
     return children
 
 def search_children(request):
@@ -170,15 +129,13 @@ def help_children(request):
          url='/info/translation/',
         ))
     children.append (MenuItem(
+         capfirst(_("content evaluation")),
+         url='/help/evaluation/',
+        ))
+    children.append (MenuItem(
          capfirst(_("editorial tools")),
          url='/help/editorial/',
         ))
-    """
-    children.append (MenuItem(
-         capfirst(_("the site administration interface")),
-         url='/help/backoffice/',
-        ))
-    """
     return children
 
 def admin_children(request):

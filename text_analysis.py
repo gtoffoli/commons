@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-"""
 
+from importlib import import_module
 import string
 import re
 import json
@@ -12,6 +13,7 @@ import readability
 from bs4 import BeautifulSoup
 from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.flatpages.models import FlatPage
 
 from .models import Project, OER, LearningPath, PathNode
 from .utils import strings_from_html
@@ -284,7 +286,6 @@ def extract_annotate_with_bs4(html):
         level = name.replace('h', '')
         if level.isdigit():
             text = heading.text
-            print('heading:', text)
             if not text[-1] in string.punctuation:
                 heading.append('.')
     lis = soup.find_all('li')
@@ -305,6 +306,8 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             obj_type = 'lp'
         elif isinstance(obj, PathNode):
             obj_type = 'pathnode'
+        elif isinstance(obj, FlatPage):
+            obj_type = 'flatpage'
     text = ''
     if obj_type == 'project':
         if not obj:
@@ -346,6 +349,12 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
                 text = json_metadata['text']
         if text and not return_has_text:
             text = extract_annotate_with_bs4(text)
+    elif obj_type == 'flatpage':
+        if not obj:
+            obj = get_object_or_404(FlatPage, id=obj_id)
+        title = obj.title
+        description = ""
+        text = obj.content
     if return_has_text:
         return text
     else:
@@ -437,6 +446,25 @@ def sorted_frequencies(d):
     sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
     return [{'key': key, 'freq': freq} for key, freq in sd.items()]
 
+token_level_dict = {}
+def map_token_pos_to_level(language_code):
+    module = import_module('commons.lang.{0}.basic_vocabulary_{0}'.format(language_code))
+    voc = getattr(module, 'voc_'+language_code)
+    for item in voc:
+        assert len(item) == 3
+        token_level_dict['_'.join(item[:2])] = item[2]
+
+def add_level_to_frequencies(frequencies, pos):
+    for frequency in frequencies:
+        key = '_'.join([frequency['key'].lower(), pos])
+        level = token_level_dict.get(key, None)
+        if level:
+            frequency['level'] = level        
+            frequency[level[0]] = True
+        elif frequency['key'].islower():
+            frequency['level'] = 'c2'        
+            frequency['c'] = True
+
 def text_dashboard(request, obj_type, obj_id, obj=None):
     if not obj_type in ['project', 'oer', 'lp', 'pathnode']:
         return HttpResponseForbidden()
@@ -449,6 +477,8 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     response = requests.post(nlp_url, data=data)
     analyze_dict = json.loads(response.text)
     language = analyze_dict['language']
+    language_code = language[:2].lower()
+    map_token_pos_to_level(language_code)
     analyzed_text = analyze_dict['text']
 #   sentences = analyze_dict['sentences']
     summary = analyze_dict['summary']
@@ -481,16 +511,17 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
         token = text[item['start']:item['end']]
         item['text'] = token 
         pos = item['pos']
+        lemma = item['lemma']
         if token.isnumeric() or pos in EMPTY_POS or item['stop']:
             continue
         n_lexical += 1
         add_to_default_dict(kw_frequencies, token)
         if pos in ['NOUN', 'PROPN']:
-            add_to_default_dict(noun_frequencies, token)
+            add_to_default_dict(noun_frequencies, lemma)
         elif pos == 'VERB':
-            add_to_default_dict(verb_frequencies, token)
+            add_to_default_dict(verb_frequencies, lemma)
         elif pos == 'ADJ':
-            add_to_default_dict(adjective_frequencies, token)
+            add_to_default_dict(adjective_frequencies, lemma)
     n_unique = len(kw_frequencies)
     voc_density = n_tokens and n_unique/n_tokens or 0
     lex_density = n_tokens and n_lexical/n_tokens or 0
@@ -498,6 +529,9 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     verb_frequencies = sorted_frequencies(verb_frequencies)
     noun_frequencies = sorted_frequencies(noun_frequencies)
     adjective_frequencies = sorted_frequencies(adjective_frequencies)
+    add_level_to_frequencies(verb_frequencies, 'verb')
+    add_level_to_frequencies(noun_frequencies, 'noun')
+    add_level_to_frequencies(adjective_frequencies, 'adjective')
 
     mean_sentence_length = n_tokens/n_sentences
     index_sentences(sentences, tokens)
