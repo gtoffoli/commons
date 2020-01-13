@@ -258,6 +258,7 @@ urlpatterns += i18n_patterns(
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/text/$", commons.text_analysis.lp_text, name="lp_text"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/$", commons.views.pathnode_detail, name="pathnode_detail"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
+    url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
     url(r'^(?P<url>.*)$', flatpages_views.flatpage, name='django.contrib.flatpages.views.flatpage'),
 )
 

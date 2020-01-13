@@ -95,6 +95,7 @@ var webFontURLs = [
             <template slot="paneL">
 			    <h3 style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
 			    	<span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
+			    	<span v-if="obj_type == 'flatpage'">{{ obj_id }} ({{ title }})</span>
 			    </h3>
               <div>
                 <h5 style="text-align: center;">BASIC TEXT PROPERTIES AND INDICATORS</h5>

@@ -354,7 +354,7 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             obj = get_object_or_404(FlatPage, id=obj_id)
         title = obj.title
         description = ""
-        text = obj.content
+        text = extract_annotate_with_bs4(obj.content)
     if return_has_text:
         return text
     else:
@@ -466,7 +466,7 @@ def add_level_to_frequencies(frequencies, pos):
             frequency['c'] = True
 
 def text_dashboard(request, obj_type, obj_id, obj=None):
-    if not obj_type in ['project', 'oer', 'lp', 'pathnode']:
+    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'flatpage']:
         return HttpResponseForbidden()
     title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
@@ -596,7 +596,12 @@ def lp_text(request, lp_slug):
 
 def pathnode_text(request, node_id):
     pathnode = get_object_or_404(PathNode, id=node_id)
-    var_dict = {'obj_type': 'pathnode', 'obj_id': node_id}
+    var_dict = {'obj_type': 'pathnode', 'obj_id': pathnode.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def flatpage_text(request, flatpage_id):
+    flatpage = get_object_or_404(FlatPage, id=flatpage_id)
+    var_dict = {'obj_type': 'flatpage', 'obj_id': flatpage.id}
     return render(request, 'vue/text_dashboard.html', var_dict)
 
 def brat(request):
