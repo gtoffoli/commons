@@ -20,8 +20,8 @@
     <script src="{% static "nlp/js/jquery.min.js" %}"></script>
     <script src="{% static "nlp/js/scripts.js" %}"></script>
 
-<link rel="stylesheet" type="text/css" href="/static/brat_client/style-vis.css"/>
-<link rel="shortcut icon" href="favicon.png"/>
+<link rel="stylesheet" type="text/css" href="/static/brat_client/style-vis.css">
+<link rel="shortcut icon" href="favicon.png">
 <!-- override a few style-vis.css settings for the embedded version to make things larger -->
 <style type="text/css">
 	text { font-size: 10px; }
@@ -68,8 +68,8 @@ var webFontURLs = [
 <script type="text/javascript" src="/static/brat_client/client/src/url_monitor.js"></script>
 <script type="text/javascript" src="/static/brat_client/client/src/visualizer.js"></script>
 
-  <script src="https://use.fontawesome.com/d391635073.js"></script>
-  <style>
+<script src="https://use.fontawesome.com/d391635073.js"></script>
+<style>
     body { margin: 0; }
     h1, h2, h3, h4, h5 { margin: 0; padding-top: 5px; padding-bottom: 5px; }
 	::-webkit-scrollbar { width: 10px; height: 10px; }
@@ -84,98 +84,98 @@ var webFontURLs = [
 	h3.small, h4.small, h4.small span {
 	  font-variant: small-caps;
 	}
-  </style>
+</style>
 </head>
 
-  <body style="font-size: 11px;">
-    <script src='https://unpkg.com/vue@2.2.6'></script>
-    <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
-    <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
-    {% verbatim %}
-    <div id="app" class='components-container'>
+<body style="font-size: 11px;">
+  <script src='https://unpkg.com/vue@2.2.6'></script>
+  <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
+  <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
+  {% verbatim %}
+  <div id="app" class='components-container'>
+    <template v-if="error===null">
       <template>
-          <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
-            <template slot="paneL">
-			    <h3 class="small" style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
-			    	<span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
-			    	<span v-if="obj_type == 'flatpage'">{{ obj_id }} ({{ title }})</span>
-			    </h3>
-              <div>
-                <h4 class="small" style="text-align: center;">Basic text properties and indicators</h4>
-<!-- 
-                <label>{{ obj_type }}</label>: {{ obj_id }},
-                <label>Title:</label> {{ title }},
- -->
-                <label>Language</label>: {{ language }},
-                <label>Sentences:</label> {{ n_sentences }},
-                <label>Tokens:</label> {{ n_tokens }},
-                <label>Mean / Max. tokens per sentence:</label> {{ mean_sentence_length.toFixed(3) }} / {{ max_sentence_length }},
-                <label>Unique word forms:</label> {{ n_unique }},
-                <label>Word-forms/tokens ratio:</label> {{ voc_density.toFixed(3) }},
-                <label>Lexical tokens ratio:</label> {{ lex_density.toFixed(3) }},
-                <label>Mean / Max. largest dependency distance:</label>
-                {{ mean_dependency_distance.toFixed(3) }} / {{ max_dependency_distance }},
-                <label>Mean / Max. largest weighted dependency distance:</label>
-                {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
-                <label>Mean / Max. largest dependency depth:</label>
-                {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
-                <h4 class="small" style="text-align: center;">Most frequent word forms</h4>
-                <span v-for="(item, index) in kw_frequencies">
-                  <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
-              </div>
-            </template>
-            <template slot="paneR">
-                <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='75'>
-                    <template slot="paneL">
-                        <h4 class="small" style="text-align: center;"><span style="color:cornflowerBlue;">Part-Of-Speech (POS) Tags</span>,
-                        <span style="color:purple;">Syntactic Dependencies</span> and <span style="color:tomato;">Named Entities</span></h4>
-					    <div id="embedding-live-example"></div>
-                    </template>
-                    <template slot="paneR">
-                      <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
-                        <template slot="paneL">
-                          <h4 class="small" style="text-align: center;">Text Summary</h4>
-                          <div v-text="summary" style="margin: 5px;"></div>
-                        </template>
-                        <template slot="paneR">
-                          <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
-                            <template slot="paneL">
-                              <h4 class="small" style="text-align: center;">Verb Lemmas</h4>
-                              <div v-for="item in verb_frequencies">
-                                <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
-                                  {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
-                              </div>
-                            </template>
-                            <template slot="paneR">
-                              <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
-                                <template slot="paneL">
-                                  <h4 class="small" style="text-align: center;">Noun Lemmas</h4>
-                                  <div v-for="item in noun_frequencies">
-                                    <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
-                                      {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
-                                  </div>
-                                </template>
-                                <template slot="paneR">
-                                  <h4 class="small" style="text-align: center;">Adjective Lemmas</h4>
-                                  <div v-for="item in adjective_frequencies">
-                                    <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
-                                      {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
-                                  </div>
-                                </template>
-                              </split-pane>
-                            </template>
+        <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
+          <template slot="paneL">
+		    <h3 class="small" style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
+		      <span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
+		      <span v-if="obj_type == 'flatpage'">{{ obj_id }} ({{ title }})</span>
+		    </h3>
+            <div>
+              <h4 class="small" style="text-align: center;">Basic text properties and indicators</h4>
+              <label>Language</label>: {{ language }},
+              <label>Sentences:</label> {{ n_sentences }},
+              <label>Tokens:</label> {{ n_tokens }},
+              <label>Mean / Max. tokens per sentence:</label> {{ mean_sentence_length.toFixed(3) }} / {{ max_sentence_length }},
+              <label>Unique word forms:</label> {{ n_unique }},
+              <label>Word-forms/tokens ratio:</label> {{ voc_density.toFixed(3) }},
+              <label>Lexical tokens ratio:</label> {{ lex_density.toFixed(3) }},
+              <label>Mean / Max. largest dependency distance:</label>
+              {{ mean_dependency_distance.toFixed(3) }} / {{ max_dependency_distance }},
+              <label>Mean / Max. largest weighted dependency distance:</label>
+              {{ mean_weighted_distance.toFixed(3) }} / {{ max_weighted_distance.toFixed(3) }},
+              <label>Mean / Max. largest dependency depth:</label>
+              {{ mean_dependency_depth.toFixed(3) }} / {{ max_dependency_depth }}<br/>
+              <h4 class="small" style="text-align: center;">Most frequent word forms</h4>
+              <span v-for="(item, index) in kw_frequencies">
+                <span v-if="index !== 0">,</span> {{ item.key }} ({{ item.freq }})</span>
+            </div>
+          </template>
+          <template slot="paneR">
+            <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='75'>
+		      <template slot="paneL">
+                <h4 class="small" style="text-align: center;"><span style="color:cornflowerBlue;">Part-Of-Speech (POS) Tags</span>,
+                <span style="color:purple;">Syntactic Dependencies</span> and <span style="color:tomato;">Named Entities</span></h4>
+		        <div id="embedding-live-example"></div>
+		      </template>
+		      <template slot="paneR">
+		        <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
+		          <template slot="paneL">
+                    <h4 class="small" style="text-align: center;">Text Summary</h4>
+                    <div v-text="summary" style="margin: 5px;"></div>
+		          </template>
+		          <template slot="paneR">
+		            <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
+                      <template slot="paneL">
+                        <h4 class="small" style="text-align: center;">Verb Lemmas</h4>
+                        <div v-for="item in verb_frequencies">
+                          <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                            {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                        </div>
+                      </template>
+                      <template slot="paneR">
+                        <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
+                          <template slot="paneL">
+                            <h4 class="small" style="text-align: center;">Noun Lemmas</h4>
+                            <div v-for="item in noun_frequencies">
+                              <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                            </div>
+                          </template>
+                          <template slot="paneR">
+                            <h4 class="small" style="text-align: center;">Adjective Lemmas</h4>
+                            <div v-for="item in adjective_frequencies">
+                              <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                            </div>
+                          </template>
                         </split-pane>
                       </template>
                     </split-pane>
-                  </split-pane>
-                </template>
-              </split-pane>
-            </template>
-          </split-pane>
+                  </template>
+                </split-pane>
+              </template>
+            </split-pane>
+          </template>
+        </split-pane>
       </template>
-    </div>
-    {% endverbatim %}
-    <script>
+    </template>
+    <template v-else>
+      <h3 style="color: red; text-align: center; margin: 10px;">{{ error }}</h3>
+    </template>
+  </div>
+  {% endverbatim %}
+  <script>
     // from BRAT; see http://brat.nlplab.org/configuration.html and https://brat.nlplab.org/embed.html
     var collData = {
        	entity_types: [],
@@ -319,6 +319,7 @@ var webFontURLs = [
           entity_lists: null,
           entities: null,
           analyzed_text: null,
+          error: null,
 		},
         el: '#app',
         methods: {
@@ -349,9 +350,10 @@ var webFontURLs = [
         },
         updated: function () {
             this.$nextTick(initTooltips(document.querySelectorAll('.tooltip')));
-            do_brat();
+            if (this.text)
+            	do_brat();
         }
       });
-    </script>
-  </body>
+  </script>
+</body>
 </html>

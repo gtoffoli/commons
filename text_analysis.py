@@ -14,10 +14,14 @@ from bs4 import BeautifulSoup
 from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.flatpages.models import FlatPage
+from django.conf import settings
 
 from .models import Project, OER, LearningPath, PathNode
 from .utils import strings_from_html
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
+
+# nlp_url = settings.NLP_URL
+nlp_url = 'http://nlp.commonspaces.eu'
 
 # from NLPBuddy
 ENTITIES_MAPPING = {
@@ -465,6 +469,14 @@ def add_level_to_frequencies(frequencies, pos):
             frequency['level'] = 'c2'        
             frequency['c'] = True
 
+def text_dashboard_return(request, var_dict):
+    if not var_dict:
+        var_dict = { 'error': 'Sorry, it looks like the language processing service is off.'}
+    if request.is_ajax():
+        return JsonResponse(var_dict)
+    else:
+        return var_dict
+
 def text_dashboard(request, obj_type, obj_id, obj=None):
     if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'flatpage']:
         return HttpResponseForbidden()
@@ -473,8 +485,13 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
 
-    nlp_url = 'http://nlp.commonspaces.eu/api/analyze'
-    response = requests.post(nlp_url, data=data)
+    endpoint = nlp_url + '/api/analyze'
+    try:
+        response = requests.post(endpoint, data=data)
+    except:
+        response = None
+    if not response or response.status_code!=200:
+        return text_dashboard_return(request, None)
     analyze_dict = json.loads(response.text)
     language = analyze_dict['language']
     language_code = language[:2].lower()
@@ -492,8 +509,13 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
     var_dict = {'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary, 'noun_chunks': noun_chunks}
 
-    nlp_url = 'http://nlp.commonspaces.eu/api/doc'
-    response = requests.post(nlp_url, data=data)
+    endpoint = nlp_url + '/api/doc'
+    try:
+        response = requests.post(endpoint, data=data)
+    except:
+        response = None
+    if not response or response.status_code!=200:
+        return text_dashboard_return(request, None)
     doc_dict = json.loads(response.text)
     text = doc_dict['text']
     sentences = doc_dict['sents']
@@ -573,11 +595,13 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
                      'entity_lists': entity_lists, 'entities': ents,
                      'collData': collData, 'docData': docData,
                      })
-    # return render(request, 'vue/text_dashboard.html', var_dict)
+    """
     if request.is_ajax():
         return JsonResponse(var_dict)
     else:
         return var_dict
+    """
+    return text_dashboard_return(request, var_dict)
 
 def project_text(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)

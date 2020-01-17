@@ -1,5 +1,6 @@
 User-agent: *
 Disallow: /datatrans
+Disallow: /text_dashboard
 Disallow: /admin
 Disallow: /accounts
 Disallow: /my_home

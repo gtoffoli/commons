@@ -226,9 +226,10 @@ urlpatterns += [
     url(r"^analytics/active_comembers/$", commons.analytics.active_comembers, name="active_comembers"),
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
-    url(r'^brat$', commons.text_analysis.brat, name="brat"),    
-    # url(r"^bosh_prebind/$", dmuc.views.bosh_prebind, name="bosh_prebind"),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    url(r'^brat$', commons.text_analysis.brat, name="brat"),
+     # url(r"^bosh_prebind/$", dmuc.views.bosh_prebind, name="bosh_prebind"),
+    path('wiki/', include('wiki.urls')),
+   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
     https://docs.djangoproject.com/en/1.8/howto/static-files/ """
