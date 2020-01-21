@@ -1,0 +1,1 @@
+javascript:location.href='http://localhost:8000/document_analyzer/?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);void 0

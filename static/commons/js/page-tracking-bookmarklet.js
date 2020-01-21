@@ -1,0 +1,1 @@
+javascript:location.href='https://cs.up2university.eu/report_pageview/?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);void 0

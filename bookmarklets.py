@@ -4,10 +4,13 @@ import json
 import urllib.parse
 from django.conf import settings
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+
 from .models import OER
 # from .analytics import track_action
 from .tracking import track_action
+from .text_analysis import get_web_resource_text, text_dashboard
 
 """ implements the CS bookmarklet for page view
 javascript:location.href='<site url>/report_pageview/?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);void 0
@@ -90,3 +93,11 @@ def text_analyzer(request):
         querystring = urllib.parse.urlencode(params)
         redirect_url = nlp_url + '/?' + querystring
         return HttpResponseRedirect(redirect_url)
+
+def web_resource_analyzer(request):
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponseForbidden()
+    url = request.GET.get('url', '')
+    var_dict = {'obj_type': 'resource', 'obj_id': url}
+    return render(request, 'vue/text_dashboard.html', var_dict)

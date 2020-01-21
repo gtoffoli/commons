@@ -5,10 +5,11 @@ import string
 import re
 import json
 import requests
+import tempfile
 from collections import defaultdict, OrderedDict
 from operator import itemgetter
-import textract
 
+import textract
 import readability
 from bs4 import BeautifulSoup
 from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
@@ -224,6 +225,41 @@ docData = {
     ],
 };
 
+def get_web_resource_text(url):
+    try:
+        response = requests.get(url)
+    except:
+        response = None
+    if not (response and response.status_code == 200):
+        return ''
+    text = ''
+    encoding = 'utf8'
+    content_type = response.headers['content-type']
+    if content_type.count('text/plain'):
+        text = response.text
+    elif content_type.count('text/html'):
+        text = response.text
+        text = readability.Document(text).summary()
+        text = extract_annotate_with_bs4(text)
+    else:
+        with tempfile.NamedTemporaryFile(dir='/tmp', mode='w+b') as f:
+            for chunk in response.iter_content(1024):
+                f.write(chunk)   
+        if content_type.count('pdf'):
+            text = textract.process(f.name, encoding=encoding, extension='pdf')
+        elif content_type.count('rtf'):
+            text = textract.process(f.name, encoding=encoding, extension='rtf')
+        elif content_type.count('msword'):
+            text = textract.process(f.name, encoding=encoding, extension='doc')
+        elif content_type.count('officedocument.wordprocessingml') and content_type.count('document'):
+            text = textract.process(f.name, encoding=encoding, extension='docx')
+        elif content_type.count('officedocument.presentationml'):
+            text = textract.process(f.name, encoding=encoding, extension='pptx')
+        elif content_type.count('officedocument.spreadsheetml'):
+            text = textract.process(f.name, encoding=encoding, extension='xlsx')
+        f.close()
+    return text
+
 def get_document_text(document, return_has_text=False):
     has_text = False
     text = ''
@@ -359,6 +395,10 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
         title = obj.title
         description = ""
         text = extract_annotate_with_bs4(obj.content)
+    elif obj_type == 'resource':
+        title = ''
+        description = ''
+        text = get_web_resource_text(obj_id)
     if return_has_text:
         return text
     else:
@@ -452,11 +492,14 @@ def sorted_frequencies(d):
 
 token_level_dict = {}
 def map_token_pos_to_level(language_code):
-    module = import_module('commons.lang.{0}.basic_vocabulary_{0}'.format(language_code))
-    voc = getattr(module, 'voc_'+language_code)
-    for item in voc:
-        assert len(item) == 3
-        token_level_dict['_'.join(item[:2])] = item[2]
+    try:
+        module = import_module('commons.lang.{0}.basic_vocabulary_{0}'.format(language_code))
+        voc = getattr(module, 'voc_'+language_code)
+        for item in voc:
+            assert len(item) == 3
+            token_level_dict['_'.join(item[:2])] = item[2]
+    except:
+        pass
 
 def add_level_to_frequencies(frequencies, pos):
     for frequency in frequencies:
@@ -475,10 +518,11 @@ def text_dashboard_return(request, var_dict):
     if request.is_ajax():
         return JsonResponse(var_dict)
     else:
-        return var_dict
+        return var_dict # only for manual test
 
-def text_dashboard(request, obj_type, obj_id, obj=None):
-    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'flatpage']:
+def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
+    """ here through ajax call from the template 'vue/text_dashboard.html' """
+    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'flatpage', 'resource',]:
         return HttpResponseForbidden()
     title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
@@ -491,7 +535,7 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     except:
         response = None
     if not response or response.status_code!=200:
-        return text_dashboard_return(request, None)
+        return text_dashboard_return(request, {})
     analyze_dict = json.loads(response.text)
     language = analyze_dict['language']
     language_code = language[:2].lower()
@@ -515,7 +559,7 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     except:
         response = None
     if not response or response.status_code!=200:
-        return text_dashboard_return(request, None)
+        return text_dashboard_return(request, {})
     doc_dict = json.loads(response.text)
     text = doc_dict['text']
     sentences = doc_dict['sents']
@@ -551,9 +595,10 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
     verb_frequencies = sorted_frequencies(verb_frequencies)
     noun_frequencies = sorted_frequencies(noun_frequencies)
     adjective_frequencies = sorted_frequencies(adjective_frequencies)
-    add_level_to_frequencies(verb_frequencies, 'verb')
-    add_level_to_frequencies(noun_frequencies, 'noun')
-    add_level_to_frequencies(adjective_frequencies, 'adjective')
+    if token_level_dict:
+        add_level_to_frequencies(verb_frequencies, 'verb')
+        add_level_to_frequencies(noun_frequencies, 'noun')
+        add_level_to_frequencies(adjective_frequencies, 'adjective')
 
     mean_sentence_length = n_tokens/n_sentences
     index_sentences(sentences, tokens)
@@ -595,12 +640,6 @@ def text_dashboard(request, obj_type, obj_id, obj=None):
                      'entity_lists': entity_lists, 'entities': ents,
                      'collData': collData, 'docData': docData,
                      })
-    """
-    if request.is_ajax():
-        return JsonResponse(var_dict)
-    else:
-        return var_dict
-    """
     return text_dashboard_return(request, var_dict)
 
 def project_text(request, project_slug):

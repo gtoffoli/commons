@@ -192,6 +192,7 @@ INSTALLED_APPS = (
     'django.contrib.humanize.apps.HumanizeConfig',
     'sekizai',
     'wiki',
+    'xapi_client',
 )
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
@@ -604,3 +605,6 @@ EXTS_FILE_USER_PROFILE = 'pdf'
 SIZE_FILE_USER_PROFILE = 2
 PLUS_SIZE = 4
 SUB_EXTS = 'zip'
+
+XAPI_VOCABULARIES_MODULE = 'commons.xapi_vocabularies'
+XAPI_DEFAULT_PLATFORM = 'CommonS Platform'

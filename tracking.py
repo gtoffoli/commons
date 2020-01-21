@@ -16,7 +16,8 @@ from actstream.models import Action
 from datatrans.utils import get_current_language
 
 from commons.xapi_vocabularies import xapi_verbs, xapi_activities
-from commons.xapi import put_statement
+# from commons.xapi import put_statement
+from xapi_client.track.xapi_statements import put_statement
 
 notification_template = """%s
 
