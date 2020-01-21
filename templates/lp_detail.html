@@ -22,10 +22,11 @@ iframe {
   margin-bottom: 10px;
   padding:10px;
 }
+{% comment %}
 .ui-widget-overlay {
 	background: #444444;
 	opacity: .7;
-	filter: Alpha(Opacity=70); /* support: IE8 */
+	filter: Alpha(Opacity=70);
 }
 .ui-dialog {
 	z-index: 1050;
@@ -39,6 +40,20 @@ iframe {
 .ta-dialog-title {
 	text-align: center;
 	font-weight: normal;
+}
+{% endcomment %}
+ol>li>div>ul {
+    display:inline-block;
+}
+a.analyzeTextNode:before {
+content: "TA";
+border: 1px solid #337ab7;
+border-radius: 3px;
+margin:0 5px 0 0;
+padding: 0 4px;
+color: #337ab7;
+font-size: 10px;
+font-weight: 600;
 }
 </style>
 {% endblock %}
@@ -188,8 +203,9 @@ iframe {
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
                       {% if user.is_authenticated %}
                         {% if node.get_obj_text %}
-{% comment %}         	  <a class="analyzeText" id="a_{{ node.id }}" href="/pathnode/{{node.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>{% endcomment %}
-                    	  <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{node.id}}/text/" target="_blank">TA</a>
+{% comment %}         	  <a class="analyzeText" id="a_{{ node.id }}" href="/pathnode/{{node.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+                    	  <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{node.id}}/text/" target="_blank">TA</a>{% endcomment %}
+                   	    <a class="analyzeTextNode" id="a_{{ node.id }}" href="#" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
                         {% endif %}
                       {% endif %}
                     </li></ul>
@@ -202,7 +218,7 @@ iframe {
             {% comment %}
             {% if lp.get_nodes %}
               <div id="showNode" class="boxNode" style="display:none">
-                <div class="text-right" ><a class="boxClose" href="#">{% trans "close" %}</a></div>
+                <div class="text-right"><a class="boxClose" href="#">{% trans "close" %}</a></div>
                 <iframe id="iframeNode" src=""></iframe>
               </div>
             {% endif %}
@@ -422,6 +438,7 @@ iframe {
          $("body").css("cursor", "default");
       });
     }
+{% comment %}    
     if ($('a').hasClass('analyzeText')) {
         $('a.analyzeText').on('click', function(event){
            event.preventDefault();
@@ -448,6 +465,19 @@ iframe {
            $("body").css("cursor", "default");
         });
       }
+{% endcomment %}
+    {% if user.is_authenticated %}
+        if ($('a').hasClass('analyzeTextNode')) {
+            $('li div a.analyzeTextNode').on('click', function(event){
+                event.preventDefault();
+                var node_id = $(this).attr('id');
+                node_id = node_id.substr(2);
+                url="/pathnode/"+node_id+"/text/";
+                window.open(url, '_blank');
+                $("body").css("cursor", "default");
+            });
+        }
+    {% endif %}
   });
 </script>
 
