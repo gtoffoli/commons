@@ -204,8 +204,9 @@ font-weight: 600;
                       {% if user.is_authenticated %}
                         {% if node.get_obj_text %}
 {% comment %}         	  <a class="analyzeText" id="a_{{ node.id }}" href="/pathnode/{{node.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
-                    	  <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{node.id}}/text/" target="_blank">TA</a>{% endcomment %}
-                   	    <a class="analyzeTextNode" id="a_{{ node.id }}" href="#" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
+                    	  <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{node.id}}/text/" target="_blank">TA</a>
+                   	      <a class="analyzeTextNode" id="a_{{ node.id }}" href="#" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>{% endcomment %}
+                   	      <a class="analyzeTextNode" href="/pathnode/{{node.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
                         {% endif %}
                       {% endif %}
                     </li></ul>
@@ -464,8 +465,7 @@ font-weight: 600;
            });
            $("body").css("cursor", "default");
         });
-      }
-{% endcomment %}
+    }
     {% if user.is_authenticated %}
         if ($('a').hasClass('analyzeTextNode')) {
             $('li div a.analyzeTextNode').on('click', function(event){
@@ -478,6 +478,7 @@ font-weight: 600;
             });
         }
     {% endif %}
+    {% endcomment %}
   });
 </script>
 

@@ -11,7 +11,7 @@
      -webkit-overflow-scrolling: touch !important;
      overflow: scroll !important;
   }
-
+{% comment %}
 .ta-dialog {
 	max-height: none;
 }
@@ -21,6 +21,17 @@
 .ta-dialog-title {
 	text-align: center;
 	font-weight: normal;
+}
+{% endcomment %}
+a.analyzeTextNode:before {
+content: "TA";
+border: 1px solid #337ab7;
+border-radius: 3px;
+margin:0 5px 0 0;
+padding: 0 4px;
+color: #337ab7;
+font-size: 10px;
+font-weight: 600;
 }
 </style>
 {% endblock %}
@@ -83,8 +94,9 @@
                         {% endif %}
                         {% if user.is_authenticated %}
                           {% if pathnode.get_obj_text %}
-{% comment %}               <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>{% endcomment %}
-                    	    <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>
+{% comment %}               <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+                    	    <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>{% endcomment %}
+                   	        <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
                           {% endif %}
                         {% endif %}
                         </li>
@@ -191,6 +203,7 @@
                 accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
             }
         });
+        {% comment %}    
         if ($('a').hasClass('analyzeText')) {
             $('a.analyzeText').on('click', function(event){
                event.preventDefault();
@@ -216,7 +229,8 @@
                });
                $("body").css("cursor", "default");
             });
-          }
+        }
+        {% endcomment %}
     });
 </script>
 {% endblock %}

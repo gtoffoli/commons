@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load i18n staticfiles %}
 
 <ul class="nodes-unlisted {% if pathnode.oer or child.oer %} node-oer {% elif pathnode.document or child.document %} node-doc {% else %} node-text {% endif %}">
 <li class="font{{ font }}">
@@ -9,8 +9,9 @@
     {% endif %}
     {% if user.is_authenticated %}
       {% if pathnode.get_obj_text %}
-{% comment %}<a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>{% endcomment %}
-        <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>
+{% comment %}<a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
+        <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>{% endcomment %}
+        <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
       {% endif %}
     {% endif %}
 </li>
