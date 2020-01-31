@@ -15,9 +15,11 @@ import actstream
 from actstream.models import Action
 from datatrans.utils import get_current_language
 
-from commons.xapi_vocabularies import xapi_verbs, xapi_activities
+# from commons.xapi_vocabularies import xapi_activities,  xapi_verbs
 # from commons.xapi import put_statement
+from xapi_client.utils import xapi_activities, xapi_verbs
 from xapi_client.track.xapi_statements import put_statement
+from xapi_client.utils import XAPI_ACTIVITY_ALIASES, XAPI_VERB_ALIASES
 
 notification_template = """%s
 
@@ -55,10 +57,11 @@ def track_action(request, actor, verb, action_object, target=None, description=N
     action = action_object and action_object.__class__.__name__ or None
     if verb == 'Bookmark' and action == 'OER':
         action = 'Webpage' 
-    print (action_object, verb, action, verb in xapi_verbs, action in xapi_activities)
-    if action and verb in xapi_verbs and action in xapi_activities:
+    # if action and verb in xapi_verbs and action in xapi_activities:
+    if action and XAPI_VERB_ALIASES.get(verb, verb) in xapi_verbs and XAPI_ACTIVITY_ALIASES.get(action, action) in xapi_activities:
         if action == 'Post' and target: # 190307 GT: Forum is a more useful context than Topic
             target = target.forum
+        put_statement(request, actor, verb, action_object, target)
         try:
             put_statement(request, actor, verb, action_object, target)
         except:

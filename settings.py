@@ -606,5 +606,39 @@ SIZE_FILE_USER_PROFILE = 2
 PLUS_SIZE = 4
 SUB_EXTS = 'zip'
 
-XAPI_VOCABULARIES_MODULE = 'commons.xapi_vocabularies'
+XAPI_VOCABULARIES_MODULE = None
 XAPI_DEFAULT_PLATFORM = 'CommonS Platform'
+XAPI_DEFAULT_RECIPES = ['Resources']
+XAPI_ACTIVITY_ALIASES = {
+    'UserProfile': 'user profile',
+    'Folder': 'folder',
+    'FolderDocument': 'document',
+    'Project': 'project',
+    'ProjectMember': 'membership',
+    'Forum': 'discussion forum',
+    'Topic': 'discussion topic',
+    'Post': 'forum post',
+    'Repo': 'resource repository',
+    'OER': 'oer',
+    'OerEvaluation': 'oer rating',
+    'LearningPath': 'learning path',
+    'PathNode': 'learning unit',
+    'Entry': 'article',
+    'Message': 'private message',
+    'Webpage': 'web page',
+}
+XAPI_VERB_ALIASES = {
+    'Accept': 'accepted',
+    'Approve': 'approved',
+    'Bookmark': 'bookmarked',
+    'Create': 'created',
+    'Delete': 'deleted',
+    'Edit': 'edited',
+    'Play': 'played',
+    'Reject': 'rejected',
+    'Search': 'searched',
+    'Send': 'sent',
+    'Submit': 'submitted',
+    'View': 'viewed',
+}
+

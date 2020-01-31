@@ -38,6 +38,7 @@ urlpatterns += [
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
+    url(r'^xapi/', include('xapi_client.urls')),
     url(r'^datatrans/', include('datatrans.urls')),
     url(r'^accounts/', include('allauth.urls')),
     # url(r'^admin/filebrowser/', include(filebrowser.sites.urls)),
