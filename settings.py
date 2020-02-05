@@ -608,7 +608,7 @@ SUB_EXTS = 'zip'
 
 XAPI_VOCABULARIES_MODULE = None
 XAPI_DEFAULT_PLATFORM = 'CommonS Platform'
-XAPI_DEFAULT_RECIPES = ['Resources']
+XAPI_DEFAULT_RECIPES = ['Events']
 XAPI_ACTIVITY_ALIASES = {
     'UserProfile': 'user profile',
     'Folder': 'folder',

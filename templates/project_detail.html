@@ -436,6 +436,15 @@
                             </ul>
                         </li>
                     {% endif %}
+                        <li class="list-back-c5 marginB5">
+                            <ul class="list-inline">
+                                <li><div class="c-white marginB5 demiBold">{% trans "eXperience" %}</div>
+                                    <ul class="list-inline list-last">
+                                        <li class="marginB5"><a href="/xapi/record/?ca_type=project&ca_name={{ project.name|urlencode }}&ca_id={{ PROTOCOL }}://{{DOMAIN}}{{ project.get_absolute_url }}&ca_rel=grouping" class="btn btn-default"><i class="fa fa-check" aria-hidden="true"></i> {% trans "record"|capfirst %}</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
                     </ul>
                 {% endif %}
             {% endif %}

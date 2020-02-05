@@ -1036,6 +1036,14 @@ ul.list-inline > li.list-back-c3 {
 	padding-left:10px;
 	border-radius: 4px;
 }
+ul.list-inline > li.list-back-c5 {
+	background:#67AE73;
+	margin-right:10px;
+	padding-top:10px;
+	padding-bottom: 5px; /*10px;*/
+	padding-left:10px;
+	border-radius: 4px;
+}
 
 /* POSITION FLOAT DISPLAY*/
 .view_inline {
