@@ -210,6 +210,7 @@ urlpatterns += [
     url('oer-autocomplete/$', commons.views.oer_autocomplete, name='oer-autocomplete',),
     url('lp-autocomplete/$', commons.views.lp_autocomplete, name='lp-autocomplete',),
     url('featured-autocomplete/$', FeaturedAutocompleteView.as_view(), name='featured-autocomplete'),
+    url(r"^report_meeting_in/(?P<project_id>[\d-]+)/$", commons.views.report_meeting_in, name="report_meeting_in"),
     url(r"^report_pageview/$", commons.bookmarklets.report_pageview, name="report_pageview"),
     url(r"^text_analyzer/$", commons.bookmarklets.text_analyzer, name="text_analyzer"),
     url(r"^web_resource_analyzer/$", commons.bookmarklets.web_resource_analyzer, name="web_resource_analyzer"),

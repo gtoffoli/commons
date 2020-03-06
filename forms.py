@@ -67,7 +67,7 @@ dateTimeOptions = {
 'startView': 4,
 'minView': 2,
 'startDate': '01-01-1930',
-'endDate': '31-12-1999',
+'endDate': '31-12-2002',
 }
 
 class UserProfileForm(forms.ModelForm):

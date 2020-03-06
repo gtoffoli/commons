@@ -805,6 +805,18 @@ class Subject(models.Model):
     def __str__(self):
         return self.option_label()
 
+class OnlineMeeting(object):
+    def __init__(self, project):
+        self.project = project
+    def get_name(self):
+        return self.project.slug
+    def get_url(self):
+        return '{}/{}'.format(settings.MEETING_SERVER, self.get_name())
+    def __str__(self):
+        return self.project.get_name()
+    def get_absolute_url(self):
+        return self.get_url()
+
 @python_2_unicode_compatible
 class ProjType(models.Model):
     """
@@ -1204,12 +1216,16 @@ class Project(Resource):
         else:
             return False
 
-    if settings.HAS_KNOCKPLOP:
+    if settings.HAS_MEETING:
         def get_room_name(self):
             return self.slug
     
         def get_room_url(self):
-            return settings.KNOCKPLOP_SERVER + '/' + self.get_room_name()
+            # return settings.KNOCKPLOP_SERVER + '/' + self.get_room_name()
+            return '{}/{}'.format(settings.MEETING_SERVER, self.get_room_name())
+
+        def get_room(self):
+            return OnlineMeeting(self)
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -1231,19 +1247,6 @@ class Project(Resource):
         candidate_mentors = candidate_mentors.exclude(user__in=users)
         return candidate_mentors
         
-    """
-    def add_member(self, user, editor=None, state=0):
-        if not editor:
-            editor = user
-        if ProjectMember.objects.filter(project=self, user=user):
-            return None
-        membership = ProjectMember(project=self, user=user, editor=editor, state=state)
-        membership.save()
-        if not user in self.members(user_only=True):
-            self.group.user_set.add(user)
-        return membership
-    """
-    
     def add_member(self, user, editor=None, state=0):
         if not editor:
             editor = user

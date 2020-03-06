@@ -377,7 +377,7 @@
                                     </li>
                                 {% endif %}
                                 {% if meeting %}
-                                    <li class="marginB5"><a href="javascript:window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
+                                    <li class="marginB5"><a href="javascript:location.href='/report_meeting_in/{{ project.id }}/'; window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
                                         {% trans "meeting"|capfirst %}</div></a></li>
                                 {% endif %}
                                 </ul>

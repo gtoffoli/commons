@@ -648,13 +648,18 @@ def resource_contributors(request):
     var_dict['source_contributors'] = source_contributors
     return render(request, 'contributors.html', var_dict)
 
-def make_qs(resource):
+# def make_qs(resource):
+def make_qs(resource, months=None): # last 24 months
     truncate_date = connection.ops.date_trunc_sql('month', 'created')
     qs = resource.objects.extra({'month':truncate_date})
     report_all = qs.values('month').annotate(num_resources=Count('pk')).order_by('month')
     qs = resource.objects.filter(state=PUBLISHED)
     qs = qs.extra({'month':truncate_date})
     report_pub = qs.values('month').annotate(num_resources=Count('pk')).order_by('month')
+    if months:
+        start = max(0, report_all.count()-months)
+        report_all = report_all[start:]
+        report_pub = report_pub[start:]
     return report_all, report_pub
 
 def make_data_chart (report):
@@ -711,29 +716,45 @@ def make_data_chart (report):
     return data
     
 def oer_analytics(request):
+    try:
+        months = request.GET.get('months', 24)
+        if months:
+            months = int(months)
+    except:
+        months = 24      
     user = request.user
     if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
-    report = make_qs(OER)
+    # report = make_qs(OER)
+    report = make_qs(OER, months=months)
     data = make_data_chart(report)
     data['resource'] = 'OER'
     data['title'] = _("OERs analytics")
     data['subtitle'] = _("OERs")
     data['subtitle_pub'] = _("published OERs")
     data['legenda'] = _("OERs by month")
+    data['months'] = months
     return render(request, 'resource_analytics.html', data)
 
 def lp_analytics(request):
+    try:
+        months = request.GET.get('months', 24)
+        if months:
+            months = int(months)
+    except:
+        months = 24      
     user = request.user
     if not user.is_authenticated or not user.is_manager():
         return HttpResponseForbidden()
-    report = make_qs(LearningPath)
+    # report = make_qs(LearningPath)
+    report = make_qs(LearningPath, months=months)
     data = make_data_chart(report)
     data['resource'] = 'LP'
     data['title'] = _("Learning paths analytics")
     data['subtitle'] = _("LPs")
     data['subtitle_pub'] = _("published LPs")
     data['legenda'] = _("LP by month")
+    data['months'] = months
     return render(request, 'resource_analytics.html', data)
     
     

@@ -69,7 +69,6 @@ from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYP
 
 from .permissions import ForumPermissionHandler
 from .session import get_clipboard, set_clipboard
-# from .analytics import notify_event, track_action
 from .tracking import notify_event, track_action
 from .analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 from commons.scorm import ContentPackage
@@ -1288,7 +1287,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         else:
             var_dict['can_send_message'] = False
         var_dict['view_forum'] = project.forum and (is_member or user.is_superuser) and is_open
-        var_dict['meeting'] = settings.HAS_KNOCKPLOP and is_member and is_open
+        var_dict['meeting'] = settings.HAS_MEETING and is_member and is_open
         if settings.HAS_DMUC:
             can_chat = project.can_chat(user) and is_open
             var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
@@ -2157,7 +2156,16 @@ if settings.HAS_DMUC:
                 pass
         if not no_response:
             return project_detail(request, project_id, project=project)
-    
+
+# report user accessing an online meeting (KnockPlop or MultipatyMeeting)
+def report_meeting_in(request, project_id):
+    user = request.user
+    if not user.is_authenticated:
+        return HttpResponseForbidden()
+    project = get_object_or_404(Project, id=project_id)
+    track_action(request, user, 'Access', project.get_room(), target=project)
+    return HttpResponse(status=204)
+
 def project_compose_message(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     if not project.can_access(request.user):

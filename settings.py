@@ -17,14 +17,14 @@ DJANGO_VERSION = django.VERSION[0]
 if DJANGO_VERSION > 1:
     HAS_XMPP = False
     HAS_DMUC = False
-    HAS_KNOCKPLOP = True
+    HAS_MEETING = True
     HAS_ZINNIA = True
     HAS_SAML2 = True
     from commons.sso_config import *
 else:
     HAS_XMPP = False
     HAS_DMUC = False
-    HAS_KNOCKPLOP = True # False
+    HAS_MEETING = True # False
     HAS_ZINNIA = True
     HAS_SAML2 = False
 
@@ -626,9 +626,11 @@ XAPI_ACTIVITY_ALIASES = {
     'Entry': 'article',
     'Message': 'private message',
     'Webpage': 'web page',
+    'OnlineMeeting': 'meeting',
 }
 XAPI_VERB_ALIASES = {
     'Accept': 'accepted',
+    'Access': 'accessed',
     'Approve': 'approved',
     'Bookmark': 'bookmarked',
     'Create': 'created',
