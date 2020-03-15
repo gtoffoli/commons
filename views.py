@@ -1504,6 +1504,12 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         if user.is_authenticated:
             if project.state == PROJECT_OPEN and not user == project.creator:
                 track_action(request, user, 'View', project)
+        try:
+            if project.is_earmaster() and can_accept_member:
+                from earmaster.views import project_update_context
+                project_update_context(var_dict, project)
+        except:
+            pass
         return render(request, 'project_detail.html', var_dict)
 
 def project_detail_by_slug(request, project_slug):

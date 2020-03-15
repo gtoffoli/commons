@@ -28,6 +28,8 @@ else:
     HAS_ZINNIA = True
     HAS_SAML2 = False
 
+HAS_EARMASTER = False
+
 from commons.private import *
 if IS_LINUX:
     DEBUG = False
@@ -210,7 +212,8 @@ if HAS_SAML2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['djangosaml2']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
-
+if HAS_EARMASTER:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['earmaster']
 BOWER_INSTALLED_APPS = (
     # 'd3#3.3.13',
     # 'nvd3#1.7.1',

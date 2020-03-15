@@ -245,13 +245,17 @@ if settings.HAS_SAML2:
         url(r'^test/', djangosaml2.views.echo_attributes, name="echo_attributes"),
     ]
 
+if settings.HAS_EARMASTER:
+    urlpatterns += [
+        path('earmaster/', include('earmaster.urls')),
+    ]
+
 if settings.HAS_DMUC:
     urlpatterns += [
         url(r"^project/(?P<project_id>[\d-]+)/create_room/$", 'commons.views.project_create_room', name="project_create_room"),
         url(r"^project/(?P<project_id>[\d-]+)/sync_xmpp/$", 'commons.views.project_sync_xmppaccounts', name="project_sync_xmppaccounts"),
         url(r"^bosh_prebind/$", 'dmuc.views.bosh_prebind', name="bosh_prebind"),
     ]
-
 
 urlpatterns += i18n_patterns(
     url(r"^project/(?P<project_slug>[\w-]+)/$", commons.views.project_detail_by_slug, name="project_detail"),
