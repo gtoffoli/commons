@@ -6,10 +6,9 @@ Created on 10/feb/2016
 from django.utils.translation import activate
 activate('en')
 
-import os
 from roles.utils import grant_permission
 from roles.models import Role
-from models import Project, OER
+from commons.models import Project, OER
 
 
 def project_fix_member_permissions():
