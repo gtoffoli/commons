@@ -3692,15 +3692,15 @@ def lp_download_by_slug(request, lp_slug):
     writer, mimetype = lp.make_document_stream(request)
     # stream = StringIO()
     stream = BytesIO()
+    """
+    # https://stackoverflow.com/questions/45978113/pypdf2-write-doesnt-work-on-some-pdf-files-python-3-5-1/52687771#52687771
     try:
         writer.write(stream)
     except:
         pass
+    """
+    writer.write(stream)
     response = HttpResponse(stream.getvalue(), mimetype)
-    """
-    if stream.len:
-        response['Content-Length'] = stream.len
-    """
     stream.seek(0, os.SEEK_END)
     l = stream.tell()
     if l:

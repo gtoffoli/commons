@@ -7,7 +7,8 @@ import future
 from future.builtins import str
 from django.utils.encoding import python_2_unicode_compatible
 import six
-from six import StringIO
+# from six import StringIO
+from six import BytesIO
 
 from django.conf import settings
 if settings.HAS_DMUC:
@@ -2706,7 +2707,7 @@ class LearningPath(Resource, Publishable):
         domain = request.META['HTTP_HOST']
         url = protocol + '://www.commonspaces.eu' + self.get_absolute_url()
         contributors = self.get_contributors()
-        context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors, 'domain': domain }
+        context = { 'request': request, 'lp': self, 'url': url, 'contributors': contributors, 'PROTOCOL': protocol, 'domain': domain }
         rendered_html = html_template.render(context)
         """
         css = 'body { font-family: Arial; };'
@@ -2738,7 +2739,8 @@ class LearningPath(Resource, Publishable):
                 if viewable_documents:
                     writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
                 elif oer.url or oer.embed_code:
-                    writer, content_type = node.make_document_stream(request, writer, export=True)
+                    # writer, content_type = node.make_document_stream(request, writer, mimetype=mimetype, export=True)
+                    writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.document:
                 writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.text:
@@ -2930,11 +2932,12 @@ class PathNode(node_factory('PathEdge')):
             text = text.replace("../../../media", protocol + "://%s/media" % domain)
         else:
             text = text.replace("/media/ugc_upload/", protocol + "://%s/media/ugc_upload/" % domain)
-        context = { 'request': request, 'node': self, 'text': text, 'PROTOCOL': protocol, 'DOMAIN': domain }
+        context = { 'request': request, 'node': self, 'text': text, 'PROTOCOL': protocol, 'domain': domain }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer, landscape=self.is_flatpage())
 
     def serialize_oernode(self, request, writer, mimetype, ranges=0):
+        protocol = request.is_secure() and 'https' or 'http'
         html_template = get_template('_online_serialize.html')
         domain = request.META['HTTP_HOST']
         youtube_url = self.oer.url and (self.oer.url.count('youtube.com') or self.oer.url.count('youtu.be')) and self.oer.url or ''
@@ -2955,7 +2958,7 @@ class PathNode(node_factory('PathEdge')):
             videos = youtube_search(videoID, part='snippet', max_results=1)
             if videos:
                 video_data=video_getdata(videos[0])
-        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'ranges': ranges, 'domain': domain }
+        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'ranges': ranges, 'PROTOCOL': protocol, 'domain': domain }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)
         return videoID
@@ -3017,9 +3020,9 @@ class PathNode(node_factory('PathEdge')):
                         videoID = self.serialize_oernode(request, writer, content_type, ranges=ranges)
                     if (ranges or not export) and not videoID:
                         pageranges = ranges and [r[1:] for r in ranges] or None
-                        # if content_type == 'application/pdf':
                         if content_type.count('application/pdf'):
-                            stream = StringIO(get_request_content(oer.url))
+                            # stream = StringIO(get_request_content(oer.url))
+                            stream = BytesIO(get_request_content(oer.url))
                             mimetype = 'application/pdf'
                             write_pdf_pages(stream, writer, ranges=pageranges)
                         # elif content_type == 'text/html':

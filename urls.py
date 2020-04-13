@@ -265,6 +265,7 @@ urlpatterns += i18n_patterns(
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/text/$", commons.text_analysis.oer_text, name="oer_text"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", commons.views.lp_detail_by_slug, name="lp_detail"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/text/$", commons.text_analysis.lp_text, name="lp_text"),
+    url(r"^lp/(?P<lp_slug>[\w\d-]+)/download/$", commons.views.lp_download_by_slug, name="lp_download"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/$", commons.views.pathnode_detail, name="pathnode_detail"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
     url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),

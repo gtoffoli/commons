@@ -195,6 +195,7 @@ INSTALLED_APPS = (
     'sekizai',
     'wiki',
     'xapi_client',
+    'rdflib_django',
 )
 if DJANGO_VERSION == 2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']

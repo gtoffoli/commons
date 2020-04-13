@@ -130,7 +130,8 @@ def get_pdf_page(i_stream, o_stream):
     """ return ...
     """ 
     from PyPDF2.pdf import PdfFileReader, PdfFileWriter
-    reader = PdfFileReader(i_stream)
+    # reader = PdfFileReader(i_stream)
+    reader = PdfFileReader(i_stream, strict=False)
     if page > reader.getNumPages():
         return None
     writer = PdfFileWriter()
@@ -142,7 +143,8 @@ def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified
         range is a list of 2 elements: [low, high]
     """ 
-    reader = PdfFileReader(i_stream)
+    # reader = PdfFileReader(i_stream)
+    reader = PdfFileReader(i_stream, strict=False)
     n_pages = reader.getNumPages()
     if ranges:
         for r in ranges:
