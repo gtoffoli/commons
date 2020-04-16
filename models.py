@@ -2944,6 +2944,7 @@ class PathNode(node_factory('PathEdge')):
         youtube_embed = self.oer.embed_code and self.oer.embed_code.count('youtube.com/embed/') and not self.oer.embed_code.count('youtube.com/embed/videoseries?') and self.oer.embed_code or ''
         videoID = ''
         video_data = {}
+        err_msg = ''
         if youtube_embed:
             index = youtube_embed.index('embed/')
             videoID = youtube_embed[index+6:index+17]
@@ -2955,10 +2956,14 @@ class PathNode(node_factory('PathEdge')):
                 index = youtube_url.index('watch?v=')
                 videoID = youtube_url[index+8:index+19]
         if videoID:
-            videos = youtube_search(videoID, part='snippet', max_results=1)
-            if videos:
-                video_data=video_getdata(videos[0])
-        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'ranges': ranges, 'PROTOCOL': protocol, 'domain': domain }
+            try:
+                videos = youtube_search(videoID, part='snippet', max_results=1)
+                if videos:
+                    video_data=video_getdata(videos[0])
+            except:
+                videoID = ''
+                err_msg = _('Youtube API are not currently available')
+        context = { 'request': request, 'node': self, 'mimetype': mimetype, 'videoID': videoID, 'video_data': video_data, 'ranges': ranges, 'PROTOCOL': protocol, 'domain': domain, 'err_msg': err_msg }
         rendered_html = html_template.render(context)
         html_to_writer(rendered_html, writer)
         return videoID
@@ -2999,7 +3004,6 @@ class PathNode(node_factory('PathEdge')):
                     elif document_version.mimetype.count('ipynb'):
                         document_to_writer(document, writer, mimetype='application/x-ipynb+json')
                     else:
-                        # html_template = get_template('_cannot_serialize.html')
                         template_name = document_version.mimetype.count('image') and '_image_serialize.html' or '_cannot_serialize.html'
                         html_template = get_template(template_name)
                         domain = request.META['HTTP_HOST']
@@ -3009,12 +3013,9 @@ class PathNode(node_factory('PathEdge')):
             elif oer.url:
                 try:
                     headers = get_request_headers(oer.url)
-                    # content_length = headers.get('content-length', 0)
                     content_type = headers.get('content-type', 'text/plain')
                 except:
-                    # content_length = 0
                     content_type = ''
-                # if content_length > 0 and content_type in ['application/pdf', 'text/html']:
                 if content_type.count('application/pdf') or content_type.count('text/html'):
                     if export:
                         videoID = self.serialize_oernode(request, writer, content_type, ranges=ranges)
@@ -3025,7 +3026,6 @@ class PathNode(node_factory('PathEdge')):
                             stream = BytesIO(get_request_content(oer.url))
                             mimetype = 'application/pdf'
                             write_pdf_pages(stream, writer, ranges=pageranges)
-                        # elif content_type == 'text/html':
                         elif content_type.count('text/html'):
                             url_to_writer(oer.url, writer, ranges=pageranges)
                 elif content_type.count('ipynb') or oer.url.endswith('ipynb'):
@@ -3037,7 +3037,6 @@ class PathNode(node_factory('PathEdge')):
                 i_stream = document_version.open()
                 write_pdf_pages(i_stream, writer)
             else:
-                # html_template = get_template('_cannot_serialize.html')
                 template_name = document_version.mimetype.count('image') and '_image_serialize.html' or '_cannot_serialize.html'
                 html_template = get_template(template_name)
                 domain = request.META['HTTP_HOST']
@@ -3079,8 +3078,8 @@ class PathNode(node_factory('PathEdge')):
         children = self.children.all()
         txt_children = []
         for child in children:
-           if child.get_nodetype() == 'TXT':
-              txt_children.append(child)
+            if child.get_nodetype() == 'TXT':
+                txt_children.append(child)
         # txt_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         txt_children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return txt_children

@@ -18,7 +18,8 @@
 <p class="text-note">
 <span class="border-padding-top">{% trans "NOTE" %} </span><br>
 {% trans "this node refers to an OER that you can access online through its URL"|capfirst %}.
-{% if mimetype %}<br>{% trans "the associated resource has content type"|capfirst %} <b>{{ mimetype }}</b>{% endif %}.
+{% if err_msg %}<br>{{ err_msg }}.
+{% elif mimetype %}<br>{% trans "the associated resource has content type"|capfirst %} <b>{{ mimetype }}</b>.{% endif %}
 {% if ranges %}
 <span><br>{% trans "an excerpt of the content follows"|capfirst %}</span>
 {% endif %}
