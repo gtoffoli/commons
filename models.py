@@ -1815,17 +1815,19 @@ class OER(Resource, Publishable):
             return { 'n': n }
 
     def can_evaluate(self, user):
-        if not user.is_authenticated:
-            return False
         if self.state not in [PUBLISHED]:
             return False
-        # return ProjectMember.objects.filter(user=user, state=1)
-        profile = user.get_profile()
-        return profile and profile.get_completeness() and not self.creator==user
+        if not user.is_authenticated:
+            return False
+        # profile = user.get_profile()
+        # return profile and profile.get_completeness() and not self.creator==user
+        if self.creator==user or not user.is_completed_profile():
+            return False
+        return OerEvaluation.objects.filter(oer=self, user=user).count() == 0
 
     def oer_delete(self, request):
         if self.state != DRAFT:
-           return True
+            return True
         for document in self.get_sorted_documents():
             self.remove_document(document, request)
         self.delete()
