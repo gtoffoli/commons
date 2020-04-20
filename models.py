@@ -33,6 +33,7 @@ from django.dispatch import receiver
 from django.db import models
 from django.db.models import Max
 from django.db.models.signals import pre_save, post_save
+from django.db import transaction
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
 from django.template.loader import get_template
@@ -1008,7 +1009,6 @@ class Project(Resource):
         return self.name
 
     def get_project_type(self):
-        # return self.proj_type.name
         return self.proj_type
         
     def get_type_name(self):
@@ -2122,6 +2122,9 @@ class LearningPath(Resource, Publishable):
     def __str__(self):
         return self.title
 
+    def select_for_update(self):
+        qs = LearningPath.objects.select_for_update().get(pk=self.id)
+
     def make_json(self):
         # return json.dumps({ 'cells': [node.make_json() for node in self.get_ordered_nodes()] + [edge.make_json() for edge in self.get_edges()]})
         nodes = self.get_ordered_nodes()
@@ -2152,15 +2155,6 @@ class LearningPath(Resource, Publishable):
             self.group = principal
 
     principal = property(get_principal, set_principal)
-
-    """
-    def get_project(self):
-        if isinstance(self.principal, Group):
-            # return self.principal.project()
-            return self.principal.project
-        else:
-            return None
-    """
 
     def get_state(self):
         return PUBLICATION_STATE_DICT[self.state]
@@ -2405,24 +2399,25 @@ class LearningPath(Resource, Publishable):
         return self.path_type==LP_SEQUENCE and self.can_edit(request) and self.get_nodes()
         
     def make_sequence(self, request):
-        assert self.is_pure_collection()
-        # nodes = self.get_nodes()
-        nodes = self.get_nodes(order_by='created') 
-        if nodes and self.path_type==LP_COLLECTION:
-            previous = None
-            for node in nodes:
-                if previous:
-                    edge = PathEdge(parent=previous, child=node, creator=request.user, editor=request.user)
-                    edge.save()
-                else:
-                    head = node
-                previous = node
-            self.path_type = LP_SEQUENCE
-            self.editor = request.user
-            self.save()
-            return head
-        else:
-            return None             
+        with transaction.atomic():
+            self.select_for_update()
+            assert self.is_pure_collection()
+            nodes = self.get_nodes(order_by='created') 
+            if nodes and self.path_type==LP_COLLECTION:
+                previous = None
+                for node in nodes:
+                    if previous:
+                        edge = PathEdge(parent=previous, child=node, creator=request.user, editor=request.user)
+                        edge.save()
+                    else:
+                        head = node
+                    previous = node
+                self.path_type = LP_SEQUENCE
+                self.editor = request.user
+                self.save()
+                return head
+            else:
+                return None             
 
     def sequence_tail(self, exclude=[]):
         tail = None
@@ -2447,19 +2442,21 @@ class LearningPath(Resource, Publishable):
         return None
 
     def append_node(self, node, request):
-        nodes = self.get_nodes().exclude(id=node.id)
-        if not nodes:
-            return
-        if nodes.count()==1:
-            tail = nodes[0]
-        else:
-            tail = self.sequence_tail(exclude=[node.id])
-        assert tail
-        edge = PathEdge(parent=tail, child=node, creator=request.user, editor=request.user)
-        edge.save()
-        self.editor = request.user
-        self.save()
-        return edge
+        with transaction.atomic():
+            self.select_for_update()
+            nodes = self.get_nodes().exclude(id=node.id)
+            if not nodes:
+                return
+            if nodes.count()==1:
+                tail = nodes[0]
+            else:
+                tail = self.sequence_tail(exclude=[node.id])
+            assert tail
+            edge = PathEdge(parent=tail, child=node, creator=request.user, editor=request.user)
+            edge.save()
+            self.editor = request.user
+            self.save()
+            return edge
 
     # def add_edge(self, parent, child, request):
     def add_edge(self, parent, child, request, order=0):
@@ -2473,7 +2470,6 @@ class LearningPath(Resource, Publishable):
         self.save()
         return edge
 
-    # def remove_node(self, node, request):
     def disconnect_node(self, node, request, delete=False):
         assert self.can_edit(request)
         assert node.path == self
@@ -2509,7 +2505,10 @@ class LearningPath(Resource, Publishable):
             node.delete()
 
     def remove_node(self, node, request):
-        self.disconnect_node(node, request, delete=True)
+        with transaction.atomic():
+            self.select_for_update()
+            qs = PathNode.objects.select_for_update().get(pk=node.id)
+            self.disconnect_node(node, request, delete=True)
 
     def insert_node_before(self, node, other_node, request):
         if other_node.is_root():
@@ -2522,12 +2521,13 @@ class LearningPath(Resource, Publishable):
             self.add_edge(parent, node, request)
 
     def move_node_before(self, node, other_node, request):
-        # assert self.is_node_sequence()
         assert node.path == self
         assert other_node.path == self
-        assert not other_node in node.children.all()
-        self.disconnect_node(node, request)
-        self.insert_node_before(node, other_node, request)
+        with transaction.atomic():
+            self.select_for_update()
+            assert not other_node in node.children.all()
+            self.disconnect_node(node, request)
+            self.insert_node_before(node, other_node, request)
 
     def insert_node_after(self, node, other_node, request):
         if other_node.is_leaf():
@@ -2540,12 +2540,13 @@ class LearningPath(Resource, Publishable):
             self.add_edge(node, child, request)
 
     def move_node_after(self, node, other_node, request):
-        # assert self.is_node_sequence()
         assert node.path == self
         assert other_node.path == self
-        assert not node in other_node.children.all()
-        self.disconnect_node(node, request)
-        self.insert_node_after(node, other_node, request)
+        with transaction.atomic():
+            self.select_for_update()
+            assert not node in other_node.children.all()
+            self.disconnect_node(node, request)
+            self.insert_node_after(node, other_node, request)
 
     def get_max_order(self, parent, children):
         assert parent.path == self
@@ -2559,64 +2560,66 @@ class LearningPath(Resource, Publishable):
     def link_node_after(self, node, other_node, request):
         assert node.path == self
         assert other_node.path == self
-        """
-        assert not node in other_node.children.all()
-        self.add_edge(other_node, node, request)
-        """
-        max_order = 0
-        children = other_node.children.all()
-        if children.count():
-            assert not node in children
-            max_order = self.get_max_order(other_node, children)
-        self.add_edge(other_node, node, request, order=max_order+10)
+        with transaction.atomic():
+            self.select_for_update()
+            max_order = 0
+            children = other_node.children.all()
+            if children.count():
+                assert not node in children
+                max_order = self.get_max_order(other_node, children)
+            self.add_edge(other_node, node, request, order=max_order+10)
 
     def node_up(self, node, request):
-        assert self.is_node_sequence()
-        assert not node.is_root()
-        parent_edge = PathEdge.objects.get(child=node)
-        parent = parent_edge.parent        
-        was_leaf = node.is_leaf()
-        if not was_leaf:
-            child_edge = PathEdge.objects.get(parent=node)
-        if parent.is_root():
-            parent_edge.parent = node
-            parent_edge.child = parent
-        else:
-            grandparent_edge = PathEdge.objects.get(child=parent)
-            grandparent_edge.child = node
-            parent_edge.parent = node
-            parent_edge.child = parent
-            grandparent_edge.save(disable_circular_check=True)
-        parent_edge.save(disable_circular_check=True)
-        if not was_leaf:
-            child_edge.parent = parent
-            child_edge.save(disable_circular_check=True)
-        self.editor = request.user
-        self.save()
+        with transaction.atomic():
+            self.select_for_update()
+            assert self.is_node_sequence()
+            assert not node.is_root()
+            parent_edge = PathEdge.objects.select_for_update().get(child=node)
+            parent = parent_edge.parent        
+            was_leaf = node.is_leaf()
+            if not was_leaf:
+                child_edge = PathEdge.objects.select_for_update().get(parent=node)
+            if parent.is_root():
+                parent_edge.parent = node
+                parent_edge.child = parent
+            else:
+                grandparent_edge = PathEdge.objects.select_for_update().get(child=parent)
+                grandparent_edge.child = node
+                parent_edge.parent = node
+                parent_edge.child = parent
+                grandparent_edge.save(disable_circular_check=True)
+            parent_edge.save(disable_circular_check=True)
+            if not was_leaf:
+                child_edge.parent = parent
+                child_edge.save(disable_circular_check=True)
+            self.editor = request.user
+            self.save()
 
     def node_down(self, node, request):
-        assert self.is_node_sequence()
-        assert not node.is_leaf()
-        child_edge = PathEdge.objects.get(parent=node)
-        child = child_edge.child        
-        was_root = node.is_root()
-        if not was_root:
-            parent_edge = PathEdge.objects.get(child=node)
-        if child.is_leaf():
-            child_edge.child = node
-            child_edge.parent = child
-        else:
-            grandbaby_edge = PathEdge.objects.get(parent=child)
-            grandbaby_edge.parent = node
-            child_edge.child = node
-            child_edge.parent = child
-            grandbaby_edge.save(disable_circular_check=True)
-        child_edge.save(disable_circular_check=True)
-        if not was_root:
-            parent_edge.child = child
-            parent_edge.save(disable_circular_check=True)
-        self.editor = request.user
-        self.save()
+        with transaction.atomic():
+            self.select_for_update()
+            assert self.is_node_sequence()
+            assert not node.is_leaf()
+            child_edge = PathEdge.objects.select_for_update().get(parent=node)
+            child = child_edge.child        
+            was_root = node.is_root()
+            if not was_root:
+                parent_edge = PathEdge.objects.select_for_update().get(child=node)
+            if child.is_leaf():
+                child_edge.child = node
+                child_edge.parent = child
+            else:
+                grandbaby_edge = PathEdge.objects.select_for_update().get(parent=child)
+                grandbaby_edge.parent = node
+                child_edge.child = node
+                child_edge.parent = child
+                grandbaby_edge.save(disable_circular_check=True)
+            child_edge.save(disable_circular_check=True)
+            if not was_root:
+                parent_edge.child = child
+                parent_edge.save(disable_circular_check=True)
+            self.editor = request.user
+            self.save()
 
     def move_edge_after(self, edge, other_edge):
         assert not edge == other_edge
@@ -2635,63 +2638,70 @@ class LearningPath(Resource, Publishable):
 
     def make_collection(self, request):
         """ convert from LP_SEQUENCE or LP_DAG to LP_COLLECTION, removing all edges """
-        assert self.path_type in [LP_SEQUENCE, LP_DAG]
-        # nodes = self.get_ordered_nodes()
-        nodes = self.get_nodes() 
-        for node in nodes:
-            edges = PathEdge.objects.filter(parent=node)
-            for edge in edges:
-                edge.delete()
-            node.save()
-        self.path_type = LP_COLLECTION
-        self.save()
+        with transaction.atomic():
+            assert self.path_type in [LP_SEQUENCE, LP_DAG]
+            self.select_for_update()
+            nodes = self.get_nodes() 
+            for node in nodes:
+                edges = PathEdge.objects.filter(parent=node)
+                for edge in edges:
+                    edge.delete()
+                node.save()
+            self.path_type = LP_COLLECTION
+            self.save()
 
     def make_linear_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, adding only explicit ordering to edges """
-        assert self.path_type==LP_SEQUENCE
-        nodes = self.get_ordered_nodes()
-        parent = root = nodes[0]
-        max_order = 0
-        for node in nodes[1:]:
-            max_order += 10
-            edge = PathEdge.objects.get(parent=parent, child=node)
-            edge.order = max_order
-            edge.save(disable_circular_check=True)
-            parent = node
-        self.path_type = LP_DAG
-        self.save()
-        return parent
+        with transaction.atomic():
+            assert self.path_type==LP_SEQUENCE
+            self.select_for_update()
+            nodes = self.get_ordered_nodes()
+            parent = root = nodes[0]
+            max_order = 0
+            for node in nodes[1:]:
+                max_order += 10
+                edge = PathEdge.objects.get(parent=parent, child=node)
+                edge.order = max_order
+                edge.save(disable_circular_check=True)
+                parent = node
+            self.path_type = LP_DAG
+            self.save()
+            return parent
 
     def make_unconnected_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, removing all edges """
-        assert self.path_type in [LP_COLLECTION, LP_SEQUENCE]
-        nodes = self.get_ordered_nodes()
-        if self.path_type == LP_SEQUENCE:
-            parent = nodes[0]
-            for node in nodes[1:]:
-                edge = PathEdge.objects.get(parent=parent, child=node)
-                edge.delete()
-                node.save()
-                parent = node
-        self.path_type = LP_DAG
-        self.save()
+        with transaction.atomic():
+            assert self.path_type in [LP_COLLECTION, LP_SEQUENCE]
+            self.select_for_update()
+            nodes = self.get_ordered_nodes()
+            if self.path_type == LP_SEQUENCE:
+                parent = nodes[0]
+                for node in nodes[1:]:
+                    edge = PathEdge.objects.get(parent=parent, child=node)
+                    edge.delete()
+                    node.save()
+                    parent = node
+            self.path_type = LP_DAG
+            self.save()
 
     def make_tree_dag(self, request):
         """ convert from LP_COLLECTION to LP_DAG, making all other nodes children of the root node
             and adding explicit ordering to edges """
-        assert self.path_type==LP_SEQUENCE
-        nodes = self.get_ordered_nodes()
-        edges = PathEdge.objects.filter(parent__path=self)
-        for edge in edges:
-            edge.delete()
-        self.path_type = LP_DAG
-        self.save()
-        root = nodes[0]
-        max_order = 0
-        for node in nodes[1:]:
-            max_order += 10
-            self.add_edge(root, node, request, order=max_order)
-        return root
+        with transaction.atomic():
+            assert self.path_type==LP_SEQUENCE
+            self.select_for_update()
+            nodes = self.get_ordered_nodes()
+            edges = PathEdge.objects.filter(parent__path=self)
+            for edge in edges:
+                edge.delete()
+            self.path_type = LP_DAG
+            self.save()
+            root = nodes[0]
+            max_order = 0
+            for node in nodes[1:]:
+                max_order += 10
+                self.add_edge(root, node, request, order=max_order)
+            return root
 
     def get_tree_as_list(self):
         assert self.path_type==LP_DAG
