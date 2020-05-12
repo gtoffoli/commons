@@ -352,6 +352,7 @@ LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
     (u'pt', u'Português'),
+    (u'ru', u'русский'),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)

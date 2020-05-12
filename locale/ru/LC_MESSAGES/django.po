@@ -1,0 +1,4859 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# silvia garofalo <garofalo.1767538@studenti.uniroma1.it>, 2020
+msgid ""
+msgstr ""
+"Project-Id-Version: CommonS Platform\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-04-15 11:19+0200\n"
+"PO-Revision-Date: 2020-05-08 09:49+0000\n"
+"Last-Translator: silvia garofalo <garofalo.1767538@studenti.uniroma1.it>\n"
+"Language-Team: Russian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: .\analytics.py:732
+msgid "OERs analytics"
+msgstr "Аналитика ОУР"
+
+#: .\analytics.py:733 .\models.py:1699 .\templates\_menu_analytics.html:12
+#: .\templates\autocomplete.html:14 .\templates\browse.html:42
+#: .\templates\project_results.html:87 .\templates\resources_by.html:37
+#: .\templates\search_oers.html:12
+msgid "OERs"
+msgstr "ОУР"
+
+#: .\analytics.py:734
+msgid "published OERs"
+msgstr "опубликованные ОУР"
+
+#: .\analytics.py:735
+msgid "OERs by month"
+msgstr "ОУР по месяцам"
+
+#: .\analytics.py:753
+msgid "Learning paths analytics"
+msgstr "аналитика путей обучения "
+
+#: .\analytics.py:754
+msgid "LPs"
+msgstr "ОП"
+
+#: .\analytics.py:755
+msgid "published LPs"
+msgstr "опубликованные ОП"
+
+#: .\analytics.py:756
+msgid "LP by month"
+msgstr "ОП по месяцам"
+
+#: .\documents.py:117 .\documents.py:177
+msgid "Document type"
+msgstr "тип документа"
+
+#: .\documents.py:118
+msgid "Documents types"
+msgstr "типы документов"
+
+#: .\documents.py:122 .\metadata.py:27 .\models.py:224
+msgid "Name"
+msgstr "Имя"
+
+#: .\documents.py:125
+msgid "Automatically queue newly created documents for OCR."
+msgstr ""
+
+#: .\documents.py:178
+msgid "Uninitialized document"
+msgstr "Неиницизованный документ"
+
+#: .\documents.py:178
+msgid "The name of the document"
+msgstr "Название документа"
+
+#: .\documents.py:178
+msgid "Label"
+msgstr "этикетка"
+
+#: .\documents.py:179
+msgid "Description"
+msgstr "Описание"
+
+#: .\documents.py:180
+msgid "Added"
+msgstr "добавленной"
+
+#: .\documents.py:181 .\templates\datatrans\obsolete_list.html:22
+msgid "Language"
+msgstr "Язык"
+
+#: .\documents.py:186 .\documents.py:429 .\models.py:1906
+msgid "Document"
+msgstr "Документа"
+
+#: .\documents.py:187
+msgid "Documents"
+msgstr "Документы"
+
+#: .\documents.py:430
+msgid "Timestamp"
+msgstr "отметка времени"
+
+#: .\documents.py:431
+msgid "Comment"
+msgstr "Комментарий"
+
+#: .\documents.py:436
+msgid "File"
+msgstr "Файл"
+
+#: .\documents.py:440
+msgid "Checksum"
+msgstr "контрольная сумма"
+
+#: .\documents.py:443 .\documents.py:444
+msgid "Document version"
+msgstr "версия документа"
+
+#: .\forms.py:80
+msgid "gender"
+msgstr "пол"
+
+#: .\forms.py:85 .\models.py:611
+msgid "date of birth"
+msgstr "Дата рождения"
+
+#: .\forms.py:85 .\models.py:611
+msgid "format: dd/mm/yyyy"
+msgstr "формат: д д /м м /г г"
+
+#: .\forms.py:86 .\forms.py:140 .\models.py:613
+#: .\templates\_people_card.html:36 .\templates\user_profile.html:66
+#: .\vocabularies.py:165
+msgid "country"
+msgstr "страна"
+
+#: .\forms.py:87 .\models.py:612 .\templates\user_profile.html:72
+msgid "city"
+msgstr "Города"
+
+#: .\forms.py:88 .\forms.py:145 .\models.py:614 .\vocabularies.py:123
+msgid "education level"
+msgstr "уровень образования"
+
+#: .\forms.py:89 .\forms.py:150 .\models.py:615 .\vocabularies.py:129
+msgid "study or work status"
+msgstr "статус учебы или работы"
+
+#: .\forms.py:90 .\models.py:619
+msgid "study or work position"
+msgstr "учебное или рабочее положение"
+
+#: .\forms.py:91 .\forms.py:154 .\models.py:616
+msgid "field of study"
+msgstr "учебный сектор"
+
+#: .\forms.py:92 .\forms.py:158
+msgid "sector of work"
+msgstr "сектор работы"
+
+#: .\forms.py:93
+msgid "interest areas"
+msgstr "секторы интересов"
+
+#: .\forms.py:94
+msgid "known languages"
+msgstr "известные языки"
+
+#: .\forms.py:95 .\models.py:622
+msgid "known languages not listed above"
+msgstr "известные языки, нет в списке"
+
+#: .\forms.py:96 .\models.py:623
+msgid "short presentation"
+msgstr "короткая презентация"
+
+#: .\forms.py:96
+msgid "very short presentation: 100-200 characters"
+msgstr "очень короткая презентация: 100-200 символов"
+
+#: .\forms.py:97 .\models.py:624
+msgid "longer presentation"
+msgstr "длинная презентация"
+
+#: .\forms.py:98 .\forms.py:313 .\models.py:625
+#: .\templates\user_profile.html:121
+msgid "web site"
+msgstr "веб-сайт"
+
+#: .\forms.py:99 .\forms.py:172
+msgid "social networks / services used"
+msgstr "социальные сети / используемые сети"
+
+#: .\forms.py:100 .\forms.py:117 .\models.py:629
+msgid "skype id"
+msgstr "скайп id"
+
+#: .\forms.py:100 .\forms.py:117 .\templates\user_profile.html:148
+#: .\templates\user_profile.html:217
+msgid ""
+"your Skype id will be shared only within active mentoring relationships"
+msgstr "Ваш идентификатор скайп будет совместно передан только в рамках активных отношений наставничества"
+
+#: .\forms.py:101 .\forms.py:118 .\models.py:630
+#: .\templates\user_profile.html:152 .\templates\user_profile.html:161
+#: .\templates\user_profile.html:223 .\templates\user_profile.html:229
+msgid "P2P communication preferences"
+msgstr "Предпочтения связи P2P"
+
+#: .\forms.py:101 .\forms.py:118 .\templates\user_profile.html:153
+#: .\templates\user_profile.html:162 .\templates\user_profile.html:224
+#: .\templates\user_profile.html:230
+msgid ""
+"any information useful in negotiating with a partner a convenient 1:1 "
+"communication solution"
+msgstr "любая полезная информация в переговорах с партнером удобное коммуникационное решение 1:1"
+
+#: .\forms.py:114 .\models.py:631 .\templates\user_profile.html:199
+#: .\templates\user_strict_profile.html:29
+msgid "mentor presentation"
+msgstr "презентация наставника"
+
+#: .\forms.py:114
+msgid ""
+"an extension to your presentation focused on your qualification as a "
+"potential mentor"
+msgstr "расширение вашей презентации сосредоточены на вашей квалификации в качестве потенциального наставника"
+
+#: .\forms.py:115 .\models.py:632 .\templates\user_profile.html:204
+#: .\templates\user_strict_profile.html:34
+msgid "available as mentor for other communities"
+msgstr "доступны как наставник для других сообществ"
+
+#: .\forms.py:115
+msgid ""
+"check if available/interested to act as mentor outside the community/ies "
+"where registered to the Roll of Mentors."
+msgstr "поставьте галочку в этом поле, если вы доступны / заинтересованы играть роль наставника вне сообщества, в котором вы зарегистрированы в реестре наставников"
+
+#: .\forms.py:116 .\models.py:633
+msgid "currently not available as mentor"
+msgstr "в настоящее время недоступен в качестве наставника"
+
+#: .\forms.py:116
+msgid ""
+"check if temporarily unavailable to accept (more) requests by mentees; "
+"remember to update this when the situation changes!"
+msgstr "установите этот флажок, если вы временно не хотите принимать (более) запросы от подопечных; не забудьте обновить это, когда ситуация меняется!"
+
+#: .\forms.py:137
+msgid "text in name and short presentation"
+msgstr "вставить имя и краткую презентацию"
+
+#: .\forms.py:138 .\forms.py:259 .\forms.py:334 .\forms.py:454 .\forms.py:577
+msgid "enter search term"
+msgstr "напишите термин, который вы хотите найти"
+
+#: .\forms.py:141
+msgid "choose country (no selection = all countries)"
+msgstr "выбрать страну (без выбора - все страны)"
+
+#: .\forms.py:146 .\forms.py:159
+msgid "choose education level (no selection = all levels)"
+msgstr "выбрать уровень образования (без выбора - все уровни)"
+
+#: .\forms.py:151
+msgid "choose status (no selection = all statuses)"
+msgstr "выбрать статус (без выбора=всех статусов)"
+
+#: .\forms.py:155
+msgid "choose field of study' (no selection = all fields)"
+msgstr "выбрать сферу обучения ( нет выбора - все сектори )"
+
+#: .\forms.py:162 .\forms.py:317 .\forms.py:336 .\forms.py:389 .\forms.py:456
+#: .\forms.py:543 .\forms.py:579
+msgid "subject areas"
+msgstr "тематические сферы"
+
+#: .\forms.py:163 .\forms.py:337 .\forms.py:457 .\forms.py:580
+msgid "choose subject areas (no selection = all areas)"
+msgstr "выбрать тематические сферы ( без выбора - все сферы )"
+
+#: .\forms.py:167 .\forms.py:340 .\forms.py:391 .\forms.py:463
+#: .\templates\_data_languages.html:4 .\templates\_people_card.html:25
+msgid "languages"
+msgstr "Языки"
+
+#: .\forms.py:168 .\forms.py:341 .\forms.py:464
+msgid "choose languages (no selection = all areas)"
+msgstr "выбрать языки ( нет выбора - все сектори )"
+
+#: .\forms.py:177
+msgid "person name"
+msgstr "имя "
+
+#: .\forms.py:178
+msgid "family name"
+msgstr "фамилия"
+
+#: .\forms.py:191 .\forms.py:310 .\forms.py:680 .\models.py:790
+#: .\models.py:826 .\models.py:912 .\models.py:1537 .\models.py:1557
+#: .\models.py:1578
+msgid "name"
+msgstr "Имя"
+
+#: .\forms.py:191
+msgid "max length is 78 characters, but less is better"
+msgstr "максимум 78 символов, но чем меньше, тем лучше"
+
+#: .\forms.py:195
+msgid "chat type"
+msgstr "тип чата"
+
+#: .\forms.py:197 .\forms.py:311 .\forms.py:681 .\models.py:411
+#: .\models.py:514 .\models.py:920 .\models.py:1582
+msgid "short description"
+msgstr "краткое описание"
+
+#: .\forms.py:198 .\forms.py:318 .\models.py:921
+msgid "longer description"
+msgstr "длинное описание"
+
+#: .\forms.py:199
+msgid "project state"
+msgstr "статус проекта"
+
+#: .\forms.py:207
+msgid "title of the mentoring project"
+msgstr "название проекта наставника"
+
+#: .\forms.py:208 .\templates\_project_mentoring_text.html:5
+#: .\templates\_project_mentoring_text.html:7
+msgid "description of the mentoring project"
+msgstr "описание проекта наставничества"
+
+#: .\forms.py:209 .\templates\_project_mentoring_text.html:12
+#: .\templates\project_detail.html:183 .\templates\project_detail.html:849
+#: .\templates\repo_detail.html:43
+msgid "additional information"
+msgstr "дополнительная информация"
+
+#: .\forms.py:226 .\models.py:925 .\templates\project_detail.html:706
+#: .\templates\project_detail.html:708
+msgid "mentoring setup model"
+msgstr "модель активации наставничества"
+
+#: .\forms.py:233
+msgid "can choose mentor from other community"
+msgstr "может выбрать наставника из другого сообщества"
+
+#: .\forms.py:258 .\forms.py:333
+msgid "text in name and short description"
+msgstr " вставить имя и краткое описание"
+
+#: .\forms.py:263 .\menus.py:171 .\templates\_homepage_main_cta.html:34
+#: .\templates\_homepage_main_cta.html:35
+#: .\templates\_homepage_main_cta.html:58
+#: .\templates\_homepage_main_cta.html:80 .\templates\project_detail.html:202
+#: .\templates\search_results.html:21 .\templates\user_profile.html:245
+msgid "communities"
+msgstr "сообщества"
+
+#: .\forms.py:265 .\views.py:813
+msgid "minimum number of members"
+msgstr "минимальное число членов"
+
+#: .\forms.py:266
+msgid "minimum number of learning paths"
+msgstr "минимальное количество путей обучения"
+
+#: .\forms.py:267 .\views.py:829
+msgid "minimum number of OERs"
+msgstr "минимальное количество ОУР"
+
+#: .\forms.py:270 .\models.py:515 .\models.py:1496
+#: .\templates\active_users.html:24 .\templates\active_users.html:41
+msgid "user"
+msgstr "Пользователя"
+
+#: .\forms.py:270
+msgid "search by name"
+msgstr "поиск по имени"
+
+#: .\forms.py:274 .\forms.py:292 .\forms.py:300 .\forms.py:608 .\models.py:512
+#: .\models.py:2787 .\models.py:2812
+msgid "label"
+msgstr "этикетка"
+
+#: .\forms.py:275
+msgid "language"
+msgstr "Язык"
+
+#: .\forms.py:277 .\forms.py:499
+msgid "select a file"
+msgstr "выбрать файл"
+
+#: .\forms.py:285 .\forms.py:381 .\forms.py:539 .\forms.py:783 .\forms.py:787
+#: .\models.py:1663 .\models.py:2099
+msgid "title"
+msgstr "Название"
+
+#: .\forms.py:285
+msgid "please use a short title"
+msgstr "пожалуйста, используйте короткое название"
+
+#: .\forms.py:301 .\forms.py:383 .\models.py:516 .\models.py:1675
+#: .\templates\oer_detail.html:110
+msgid "embed code"
+msgstr "встраиваемый код"
+
+#: .\forms.py:301
+msgid "code to embed the view of an online resource in an HTML page"
+msgstr "код для встраивания представления онлайн-ресурса на странице HTML"
+
+#: .\forms.py:314 .\forms.py:344 .\models.py:1562 .\models.py:1580
+msgid "repository type"
+msgstr "тип репозитория"
+
+#: .\forms.py:315 .\forms.py:347 .\models.py:1542
+msgid "repository features"
+msgstr "функции репозитории"
+
+#: .\forms.py:316
+msgid "languages of documents"
+msgstr "языки документов"
+
+#: .\forms.py:316 .\forms.py:317
+msgid "do not select any"
+msgstr "не выбирайте"
+
+#: .\forms.py:316
+msgid ""
+"if the repository includes a relevant number of contents in many languages"
+msgstr "если хранилище содержит большое количество содержимого на многих языках"
+
+#: .\forms.py:317
+msgid "if the repository is not focused on specific subjects"
+msgstr "если репозиторий не ориентирован на конкретные предметы"
+
+#: .\forms.py:318
+msgid "search suggestions"
+msgstr "предложения по поиску"
+
+#: .\forms.py:319 .\templates\_oer_card.html:40
+msgid "comments"
+msgstr "комментарии"
+
+#: .\forms.py:319
+msgid "evaluation"
+msgstr "оценка"
+
+#: .\forms.py:320 .\models.py:3206 .\templates\_change_state.html:4
+#: .\templates\_change_state.html:6 .\templates\_change_state.html:16
+#: .\templates\lp_detail.html:279 .\templates\oer_detail.html:225
+#: .\templates\oer_detail.html:259
+msgid "publication state"
+msgstr "состояние публикации"
+
+#: .\forms.py:382
+msgid "specific URL of the OER"
+msgstr "конкретный URL ОУР"
+
+#: .\forms.py:382
+msgid "if applicable"
+msgstr "если это применимо"
+
+#: .\forms.py:382
+msgid "if the OER is available online, put here its URL (web address)"
+msgstr "если ОУР доступен онлайн , положи сюда свой URL (веб-адрес)"
+
+#: .\forms.py:383 .\models.py:1675
+msgid "code to embed the OER view in an HTML page"
+msgstr "код для встраивания представления ОУР на странице HTML"
+
+#: .\forms.py:384 .\models.py:1665
+msgid "abstract or description"
+msgstr "аннотация или описание"
+
+#: .\forms.py:384
+msgid ""
+"one or two lines are enough here; this short description will be displayed "
+"in search results and will be used for full-text indexing"
+msgstr "одной или двух строк достаточно здесь; это краткое описание будет отображаться в результатах поиска и будет использоваться для полнотекстовой индексации"
+
+#: .\forms.py:385 .\forms.py:431 .\forms.py:619
+msgid "text content"
+msgstr "текстовое содержание"
+
+#: .\forms.py:385 .\forms.py:431 .\forms.py:619
+msgid "html"
+msgstr "Html"
+
+#: .\forms.py:386 .\forms.py:481 .\models.py:1667
+msgid "terms of use"
+msgstr "условия использования"
+
+#: .\forms.py:386
+msgid ""
+"type of licence; please, don't disregard it: see the help pages for an "
+"explanation of the available options; in case of doubt, select the most "
+"cautious option \"read the fine print\""
+msgstr "тип лицензии; пожалуйста, не игнорируйте его: смотрите страницы справки для объяснения имеющихся вариантов; в случае сомнений, выберите наиболее осторожный вариант \"read the fine print\""
+
+#: .\forms.py:387 .\forms.py:478 .\models.py:1676
+msgid "type of material"
+msgstr "тип материала"
+
+#: .\forms.py:387
+msgid ""
+"the type of (educational) material refers to the function, not the physical "
+"aspect; the options have been taken from www.oercommons.org"
+msgstr "тип (учебного) материала относится к функции, а не к физическому аспекту; варианты были взяты из www.oercommons.org"
+
+#: .\forms.py:388 .\forms.py:542
+msgid "target audience"
+msgstr "целевая аудитория"
+
+#: .\forms.py:390 .\forms.py:433 .\forms.py:460 .\forms.py:545 .\forms.py:565
+#: .\forms.py:583
+msgid "tags"
+msgstr "Теги"
+
+#: .\forms.py:390 .\forms.py:433 .\forms.py:545 .\forms.py:565
+msgid "click to add or remove a tag"
+msgstr "нажмите, чтобы добавить или удалить тег"
+
+#: .\forms.py:392 .\forms.py:487 .\vocabularies.py:92
+msgid "media formats"
+msgstr "форматы мультимедиа"
+
+#: .\forms.py:392
+msgid "the options have been taken from www.oercommons.org"
+msgstr "варианты были взяты из www.oercommons.org"
+
+#: .\forms.py:393 .\forms.py:491 .\vocabularies.py:98
+msgid "accessibility features"
+msgstr "функции доступности"
+
+#: .\forms.py:393
+msgid ""
+"features making easier the use of the OER also to impaired people; the "
+"options have been taken from www.oercommons.org; a help page is being "
+"prepared"
+msgstr ""
+
+#: .\forms.py:394
+msgid "derived from"
+msgstr "производные от"
+
+#: .\forms.py:394
+msgid ""
+"if derived from other OERs, please specify them by selecting one or more - "
+"enter a few chars of their names to get suggestions"
+msgstr ""
+
+#: .\forms.py:395 .\models.py:1671
+msgid "translated"
+msgstr "переведенный"
+
+#: .\forms.py:395
+msgid ""
+"specify whether the derivation of this OER has involved language translation"
+msgstr "указать, был ли вывод этого ОУР связан с языковым переводом"
+
+#: .\forms.py:396
+msgid "adapted/remixed"
+msgstr "адаптированный/ремикс"
+
+#: .\forms.py:396
+msgid ""
+"specify whether the derivation of this OER has involved adaptation/remixing "
+"of the original content(s)"
+msgstr "указать, связано ли деривация этого ОУР с адаптацией/ремиксом оригинального контента (ы)"
+
+#: .\forms.py:397 .\models.py:1673
+msgid "source repository"
+msgstr "репозиторий источника"
+
+#: .\forms.py:397
+msgid ""
+"specify in which catalogued repository, if any, you found this OER; e.g. "
+"Youtube, Slideshare, etc. - enter a few chars of its name to get suggestions"
+msgstr "указать, в каком каталогизированном хранилище, если оно есть, вы нашли это ОУР ; например Youtube, Slideshare и т. Д. - введите несколько символов своего имени, чтобы получить предложения"
+
+#: .\forms.py:398 .\models.py:1674
+msgid "other info to identify/access the OER in the source"
+msgstr "другая информация для идентификации/доступа к ОУР в источнике"
+
+#: .\forms.py:416
+msgid ""
+"the OER(s) from which this one has been translated or remixed cannot be "
+"missing"
+msgstr "ОУР(ы), из которого этот был переведен или ремикс не может быть упущена"
+
+#: .\forms.py:437 .\models.py:1652
+msgid "Catalogued source"
+msgstr "Каталогизированный источник"
+
+#: .\forms.py:438 .\models.py:1653
+msgid "Non-catalogued source"
+msgstr "Некаталогированный источник"
+
+#: .\forms.py:442
+msgid "Translated"
+msgstr "переведенный"
+
+#: .\forms.py:443
+msgid "Adapted/Remixed"
+msgstr "Адаптировано/ремиксы"
+
+#: .\forms.py:453
+msgid "text in title and description"
+msgstr " вставить название и описание"
+
+#: .\forms.py:472
+msgid "source type"
+msgstr "тип источника"
+
+#: .\forms.py:475
+msgid "derivation from other OERs"
+msgstr "деривации из других  ОУР"
+
+#: .\forms.py:484 .\forms.py:586 .\vocabularies.py:104
+msgid "levels"
+msgstr "уровни"
+
+#: .\forms.py:494 .\templates\oer_detail.html:158
+msgid "OER type"
+msgstr "Тип ОУР"
+
+#: .\forms.py:500 .\forms.py:618
+msgid "choose file"
+msgstr "выбрать файл"
+
+#: .\forms.py:519
+msgid "free-text review"
+msgstr "бесплатный текстовый обзор"
+
+#: .\forms.py:520
+msgid "overall quality assessment"
+msgstr "общая оценка качества"
+
+#: .\forms.py:521
+msgid "technical quality assessment"
+msgstr "оценка технического качества"
+
+#: .\forms.py:521
+msgid "e.g. audio or video quality, quality of presentation, etc."
+msgstr ""
+
+#: .\forms.py:522
+msgid "communicative quality assessment"
+msgstr "оценка качества общения"
+
+#: .\forms.py:522
+msgid "e.g. message immediacy and clarity"
+msgstr ""
+
+#: .\forms.py:523
+msgid "cognitive quality assessment"
+msgstr "когнитивная оценка качества"
+
+#: .\forms.py:523
+msgid "e.g. originality and creativity"
+msgstr ""
+
+#: .\forms.py:524
+msgid "scientific quality assessment"
+msgstr "оценка научного качества"
+
+#: .\forms.py:524
+msgid ""
+"e.g. scientific validity of content and methodologies, critical aspects, "
+"interdisciplinarity"
+msgstr ""
+
+#: .\forms.py:541 .\templates\lp_detail.html:159
+msgid "type of learning path"
+msgstr "тип пути обучения"
+
+#: .\forms.py:546 .\models.py:1514 .\models.py:2106 .\models.py:3189
+#: .\templates\folder_detail.html:5 .\templates\mentoring_detail.html:5
+#: .\templates\project_detail.html:7 .\templates\project_detail.html:297
+#: .\templates\project_detail.html:359 .\templates\project_detail.html:371
+#: .\templates\project_edit.html:20 .\templates\project_edit.html:61
+msgid "project"
+msgstr "Проекта"
+
+#: .\forms.py:546
+msgid "where the Learning Path has been created"
+msgstr "где был создан Путь обучения"
+
+#: .\forms.py:547 .\models.py:2100 .\templates\lp_detail.html:87
+#: .\templates\lp_detail.html:106 .\templates\lp_detail.html:129
+#: .\templates\lp_play.html:58
+msgid "objectives"
+msgstr "Цели"
+
+#: .\forms.py:548 .\models.py:827 .\models.py:1558 .\models.py:2105
+#: .\templates\lp_detail.html:153
+msgid "description"
+msgstr "Описание"
+
+#: .\forms.py:548
+msgid "sub-objectives, strategy, method, contents"
+msgstr ""
+
+#: .\forms.py:576
+msgid "text in title and objectives"
+msgstr " вставить название и цели"
+
+#: .\forms.py:589
+msgid "learning path type"
+msgstr "тип пути обучения"
+
+#: .\forms.py:609 .\models.py:1698 .\models.py:1905 .\models.py:1932
+#: .\models.py:2033 .\templates\mentoring_detail.html:410
+#: .\templates\oer_evaluation_detail.html:17
+#: .\templates\project_detail.html:430
+msgid "OER"
+msgstr "ОУР"
+
+#: .\forms.py:610 .\models.py:2816 .\templates\_pathnode_detail.html:25
+#: .\templates\pathnode_detail.html:89
+msgid "display range"
+msgstr "диапазон отображения"
+
+#: .\forms.py:611
+msgid "invalid range expression"
+msgstr "неверное выражение диапазона"
+
+#: .\forms.py:612
+msgid "simple example"
+msgstr "простой пример"
+
+#: .\forms.py:612
+msgid "complex example"
+msgstr "сложный пример"
+
+#: .\forms.py:613
+msgid ""
+"Possibly specify document number and page range(s) for document(s) attached "
+"to the OER"
+msgstr "Возможно указать номер документа и диапазон страниц для документов, прикрепленных к ОУР"
+
+#: .\forms.py:613
+msgid "see the help pages on LPs for details"
+msgstr "смотрите на странице справки для деталей об ОП"
+
+#: .\forms.py:617 .\models.py:511 .\models.py:2815
+#: .\templates\_pathnode_detail.html:31 .\templates\document_view.html:5
+#: .\templates\pathnode_detail.html:95 .\templates\pathnode_edit.html:65
+msgid "document"
+msgstr "Документа"
+
+#: .\forms.py:633
+msgid ""
+"the OER, the document attachment and the text content cannot be all missing"
+msgstr "ОУР, вложение документа и текстовое содержание не могут быть все пропущены"
+
+#: .\forms.py:636
+msgid "the node label is required"
+msgstr " вам нужно назначить этикетка узлу"
+
+#: .\forms.py:650 .\templates\django_messages\outbox.html:11
+#: .\templates\django_messages\view.html:15
+msgid "Recipient"
+msgstr "получатель"
+
+#: .\forms.py:651 .\forms.py:672 .\templates\django_messages\inbox.html:11
+#: .\templates\django_messages\outbox.html:11
+#: .\templates\django_messages\trash.html:12
+#: .\templates\django_messages\view.html:9
+msgid "Subject"
+msgstr "Тема"
+
+#: .\forms.py:652 .\forms.py:673
+msgid "Body"
+msgstr "тело"
+
+#: .\forms.py:664
+msgid "please, explicitly select the receiver(s)"
+msgstr "пожалуйста, явно выберите получателя (ей)"
+
+#: .\forms.py:680
+msgid ""
+"please, replace the automatically generated name with an appropriate one"
+msgstr "пожалуйста, замените автоматически сгенерированное имя на соответствующее"
+
+#: .\forms.py:681
+msgid "better specify the purpose of this forum"
+msgstr "лучше указать цель этого форума"
+
+#: .\forms.py:703 .\templates\browse_mentors.html:62
+#: .\templates\browse_mentors.html:63 .\templates\contributors.html:23
+#: .\templates\contributors.html:44 .\templates\contributors.html:65
+#: .\templates\contributors.html:86 .\templates\lp_detail.html:255
+#: .\templates\mentoring_detail.html:137 .\templates\mentoring_detail.html:143
+#: .\templates\project_detail.html:526 .\templates\project_detail.html:551
+#: .\templates\project_detail.html:888 .\templates\project_detail.html:889
+#: .\templates\project_detail.html:919 .\templates\project_detail.html:920
+#: .\templates\resources_by.html:12 .\templates\resources_by.html:16
+#: .\templates\user_dashboard.html:315 .\templates\user_profile.html:282
+#: .\templates\user_strict_profile.html:11
+#: .\templates\user_strict_profile.html:17
+msgid "view user profile"
+msgstr "просмотр профиля пользователя"
+
+#: .\forms.py:728
+msgid "none"
+msgstr "никто"
+
+#: .\forms.py:729 .\models.py:1516
+msgid "message"
+msgstr "Сообщение"
+
+#: .\forms.py:729
+msgid "please, enter a notice for the mentor, to motivate your choice"
+msgstr "пожалуйста, введите уведомление для наставника, чтобы мотивировать ваш выбор"
+
+#: .\forms.py:749 .\forms.py:751 .\templates\project_detail.html:759
+#: .\templates\user_profile.html:205 .\templates\user_profile.html:209
+#: .\templates\user_strict_profile.html:35
+#: .\templates\user_strict_profile.html:39
+msgid "yes"
+msgstr "Да"
+
+#: .\forms.py:749 .\forms.py:751 .\templates\project_detail.html:759
+#: .\templates\user_profile.html:205 .\templates\user_profile.html:209
+#: .\templates\user_strict_profile.html:35
+#: .\templates\user_strict_profile.html:39
+msgid "no"
+msgstr "Нет"
+
+#: .\forms.py:749 .\forms.py:751
+msgid "accept"
+msgstr "принимаю"
+
+#: .\forms.py:752
+msgid "Reason"
+msgstr "Причина"
+
+#: .\forms.py:752
+msgid "please, explain the motivations of your acceptation or refusal"
+msgstr "пожалуйста, объясните мотивы вашего выбора"
+
+#: .\forms.py:760 .\templates\mentoring_detail.html:178
+msgid "my mentoring journey"
+msgstr "мой путь наставничества"
+
+#: .\forms.py:772 .\forms.py:780 .\models.py:3198
+msgid "optional text"
+msgstr "необязательный текст"
+
+#: .\forms.py:772
+msgid "Use formatting with care: only bold, italic and links!"
+msgstr ""
+
+#: .\forms.py:784
+msgid "page content"
+msgstr "содержание страницы"
+
+#: .\forms.py:788
+msgid "article content"
+msgstr "содержание статьи"
+
+#: .\forms.py:789
+msgid "article lead"
+msgstr "ведущий статьи"
+
+#: .\menus.py:9
+msgid "the CommonS project"
+msgstr "проект CommonS"
+
+#: .\menus.py:13 .\templates\press_releases.html:5
+#: .\templates\press_releases.html:61
+msgid "press releases"
+msgstr "пресс-релизы"
+
+#: .\menus.py:17
+msgid "blog"
+msgstr "Блог"
+
+#: .\menus.py:21
+msgid "the platform"
+msgstr ""
+
+#: .\menus.py:29 .\templates\cops_tree.html:6 .\templates\cops_tree.html:24
+msgid "all communities"
+msgstr "все сообщества"
+
+#: .\menus.py:33
+msgid "browse mentors"
+msgstr "все наставники"
+
+#: .\menus.py:37 .\models.py:905 .\templates\project_detail.html:232
+#: .\templates\search_projects.html:12 .\templates\search_results.html:29
+#: .\templates\user_profile.html:265
+msgid "projects"
+msgstr "проекты"
+
+#: .\menus.py:47 .\menus.py:151 .\templates\_menu_analytics.html:14
+msgid "forums"
+msgstr "форумы"
+
+#: .\menus.py:51
+msgid "browse people"
+msgstr "просматривать людей"
+
+#: .\menus.py:55 .\templates\search_people.html:5
+#: .\templates\search_people.html:12
+msgid "search people"
+msgstr "искать людей"
+
+#: .\menus.py:63
+msgid "all resources"
+msgstr "все ресурсы"
+
+#: .\menus.py:68 .\menus.py:112 .\models.py:2118
+#: .\templates\_homepage_main_cta.html:40
+#: .\templates\_homepage_main_cta.html:41
+#: .\templates\_homepage_main_cta.html:65
+#: .\templates\_homepage_main_cta.html:85 .\templates\_menu_analytics.html:13
+#: .\templates\autocomplete.html:17 .\templates\project_results.html:85
+#: .\templates\resources_by.html:21 .\templates\search_lps.html:12
+#: .\templates\search_results.html:53
+msgid "learning paths"
+msgstr "пути обучения"
+
+#: .\menus.py:72 .\menus.py:108
+msgid "open resources"
+msgstr "открытые ресурсы"
+
+#: .\menus.py:76 .\templates\search_results.html:37
+msgid "source repositories"
+msgstr " репозитории источника"
+
+#: .\menus.py:84
+msgid "tutorials"
+msgstr "Учебники"
+
+#: .\menus.py:88
+msgid "registration and authentication"
+msgstr "регистрация и аутентификация"
+
+#: .\menus.py:92
+msgid "user profile and user roles"
+msgstr "профиль пользователя и роли пользователей"
+
+#: .\menus.py:96
+msgid "site navigation"
+msgstr "навигация по сайту"
+
+#: .\menus.py:100 .\templates\autocomplete.html:8
+msgid "communities and projects"
+msgstr " сообщества и проекты"
+
+#: .\menus.py:104
+msgid "searching the catalogued resources"
+msgstr "поиск каталогистого ресурса"
+
+#: .\menus.py:116
+msgid "mentoring"
+msgstr "Наставничества"
+
+#: .\menus.py:120 .\templates\_menu_analytics.html:5
+msgid "analytics"
+msgstr "Аналитики"
+
+#: .\menus.py:124
+msgid "internationalization"
+msgstr "Интернационализации"
+
+#: .\menus.py:128
+msgid "translation"
+msgstr "Перевод"
+
+#: .\menus.py:132
+msgid "content evaluation"
+msgstr "оценка контента"
+
+#: .\menus.py:136
+msgid "editorial tools"
+msgstr "редакционные инструменты"
+
+#: .\menus.py:147 .\templates\_menu_analytics.html:10
+msgid "activity stream"
+msgstr "поток активности"
+
+#: .\menus.py:155 .\templates\_menu_analytics.html:15
+#: .\templates\user_dashboard.html:39
+msgid "messages"
+msgstr "Сообщения"
+
+#: .\menus.py:165
+msgid "about"
+msgstr "О"
+
+#: .\menus.py:177
+msgid "library"
+msgstr "Библиотека"
+
+#: .\menus.py:183
+msgid "help"
+msgstr "Справка"
+
+#: .\metadata.py:27
+msgid "Do not use python reserved words, or spaces."
+msgstr ""
+
+#: .\metadata.py:29 .\models.py:409
+msgid "Title"
+msgstr "Название"
+
+#: .\metadata.py:31
+msgid "Default"
+msgstr "дефолт"
+
+#: .\metadata.py:32
+msgid "Enter a string to be evaluated."
+msgstr "Введите строку для оценки."
+
+#: .\metadata.py:36
+msgid "Lookup"
+msgstr "имя функции проверки"
+
+#: .\metadata.py:37
+msgid "Enter a string to be evaluated that returns an iterable."
+msgstr "Введите строку для оценки, которая возвращает итерируемый."
+
+#: .\metadata.py:38
+msgid "Validation function name"
+msgstr "Имя функции валидации"
+
+#: .\metadata.py:51
+msgid "Metadata type"
+msgstr "Тип метаданных"
+
+#: .\metadata.py:52
+msgid "Metadata types"
+msgstr "Типы метаданных"
+
+#: .\metadata.py:63 .\models.py:2060
+msgid "quality facet"
+msgstr "аспект качества"
+
+#: .\metadata.py:64
+msgid "quality facets"
+msgstr "аспекты качества"
+
+#: .\models.py:229
+msgid "Tag"
+msgstr "Тег"
+
+#: .\models.py:230 .\templates\zinnia\_entry_detail_base.html:118
+#: .\templates\zinnia\base.html:50
+msgid "Tags"
+msgstr "Теги"
+
+#: .\models.py:241
+msgid "deleted"
+msgstr "Удалены"
+
+#: .\models.py:245
+msgid "original language code"
+msgstr "код исходного языка"
+
+#: .\models.py:248
+msgid "comments enabled"
+msgstr "комментарии включены"
+
+#: .\models.py:249
+msgid "Allows comments if checked."
+msgstr ""
+
+#: .\models.py:286 .\models.py:2868 .\views.py:1277 .\views.py:1524
+#: .\views.py:2247 .\views.py:2368 .\views.py:2883 .\views.py:3013
+#: .\views.py:3456 .\views.py:3798 .\views.py:3947 .\views.py:4053
+msgid "unknown"
+msgstr "Неизвестный"
+
+#: .\models.py:331
+msgid "Portlet"
+msgstr ""
+
+#: .\models.py:332
+msgid "Grey"
+msgstr ""
+
+#: .\models.py:333
+msgid "Draft"
+msgstr "черновой вариант"
+
+#: .\models.py:334
+msgid "Submitted"
+msgstr "Представленo"
+
+#: .\models.py:335
+msgid "Published"
+msgstr "Опубликовано"
+
+#: .\models.py:336
+msgid "Un-published"
+msgstr "неопубликованный"
+
+#: .\models.py:413 .\models.py:3210
+msgid "User"
+msgstr "Пользователя"
+
+#: .\models.py:415 .\models.py:518 .\models.py:932 .\models.py:1591
+#: .\models.py:1692 .\models.py:1953 .\models.py:2111 .\models.py:2771
+#: .\models.py:2789 .\models.py:2818 .\models.py:3211
+msgid "created"
+msgstr "Создан"
+
+#: .\models.py:422 .\models.py:510
+msgid "folder"
+msgstr "Папкa"
+
+#: .\models.py:423 .\models.py:919
+msgid "folders"
+msgstr "Папки"
+
+#: .\models.py:527
+msgid "folder document"
+msgstr "документ в папке"
+
+#: .\models.py:528
+msgid "folder documents"
+msgstr "документы в папке"
+
+#: .\models.py:565
+msgid "not specified"
+msgstr "не указано"
+
+#: .\models.py:566
+msgid "male"
+msgstr "мужчина"
+
+#: .\models.py:567
+msgid "female"
+msgstr "женщина"
+
+#: .\models.py:574
+msgid "do not notify me of new private messages"
+msgstr "не уведомлять меня о новых личных сообщениях"
+
+#: .\models.py:575
+msgid "notify me only of individual messages"
+msgstr "уведомить меня только об отдельных сообщениях"
+
+#: .\models.py:576
+msgid "notify me of individual and group messages"
+msgstr "уведомить меня об отдельных и групповых сообщениях"
+
+#: .\models.py:601 .\models.py:628
+msgid "email notifications"
+msgstr "Уведомления по электронной почте"
+
+#: .\models.py:601
+msgid ""
+"Do you want that private messages from other members be notified to you by "
+"email? In any case, they will not know your email address."
+msgstr "Вы хотите, чтобы личные сообщения от других участников были уведомлены вам по электронной почте? В любом случае, они не будут знать ваш адрес электронной почты."
+
+#: .\models.py:602
+msgid "activity stream max days"
+msgstr "активность потока макс дней"
+
+#: .\models.py:602
+msgid "Max age of actions to list in my dashboard."
+msgstr "Максимальный возраст действий, чтобы перечислить в моей панели."
+
+#: .\models.py:603
+msgid "activity stream max actions "
+msgstr "максимальное количество действий в потоке активности"
+
+#: .\models.py:603
+msgid "Max number of actions to list in my dashboard."
+msgstr "Максимальное количество действий, чтобы перечислить в моей панели"
+
+#: .\models.py:604
+msgid "accept emails from administrators"
+msgstr "принимать электронная почта от администраторов"
+
+#: .\models.py:604
+msgid ""
+"Occasionally, the CommonSpaces administrators will do some mailing, without "
+"disclosing email addresses to anybody."
+msgstr ""
+
+#: .\models.py:617
+msgid "work sector"
+msgstr "рабочий сектор"
+
+#: .\models.py:618 .\templates\document_view.html:43
+#: .\templates\user_profile.html:137 .\templates\user_profile.html:171
+msgid "curriculum"
+msgstr "Резюме"
+
+#: .\models.py:621
+msgid "The UI will support only EN, IT and PT."
+msgstr ""
+
+#: .\models.py:622
+msgid "list one per line."
+msgstr "перечислить один язык в строке"
+
+#: .\models.py:626
+msgid "online networks / services used"
+msgstr "онлайн-сети / используемые услуги"
+
+#: .\models.py:632
+msgid "available to act as mentor also for members of other communities."
+msgstr "могут выступать в качестве наставника также для членов других общин."
+
+#: .\models.py:633
+msgid "temporarily unavailable to accept (more) requests by mentees."
+msgstr "временно недоступен для принятия (больше) запросов от подопечных"
+
+#: .\models.py:789
+msgid "code"
+msgstr "Код"
+
+#: .\models.py:793 .\vocabularies.py:109
+msgid "subject"
+msgstr "Тема"
+
+#: .\models.py:794 .\vocabularies.py:110
+msgid "subjects"
+msgstr "темы "
+
+#: .\models.py:828 .\models.py:1538 .\models.py:1559 .\models.py:3196
+msgid "sort order"
+msgstr "Порядок сортировки"
+
+#: .\models.py:829
+msgid "public"
+msgstr "общественности"
+
+#: .\models.py:832
+msgid "project / community type"
+msgstr "тип проектa /  сообщества"
+
+#: .\models.py:833
+msgid "project / community types"
+msgstr "типы проектов / сообществ"
+
+#: .\models.py:844
+msgid "no chatroom"
+msgstr "нет чата"
+
+#: .\models.py:845
+msgid "permanent chatroom"
+msgstr "постоянный чат"
+
+#: .\models.py:855
+msgid "draft proposal"
+msgstr "черновик предложения"
+
+#: .\models.py:856
+msgid "proposal submitted"
+msgstr "предложение направлено"
+
+#: .\models.py:857
+msgid "project open"
+msgstr "открытый проект"
+
+#: .\models.py:858
+msgid "project closed"
+msgstr "закрытый проект"
+
+#: .\models.py:859
+msgid "project deleted"
+msgstr "проект удален"
+
+#: .\models.py:882
+msgid "request submitted"
+msgstr "запрос отправлен"
+
+#: .\models.py:883
+msgid "request accepted"
+msgstr "запрос принят"
+
+#: .\models.py:884
+msgid "request rejected"
+msgstr "запрос отклонен"
+
+#: .\models.py:885
+msgid "membership suspended or expired"
+msgstr "членство приостановлено или истекло"
+
+#: .\models.py:893
+msgid "mentoring is not available"
+msgstr "наставничество не доступно"
+
+#: .\models.py:894
+msgid "A - The community administrator chooses the mentor"
+msgstr "A - Администратор сообщества выбирает наставника"
+
+#: .\models.py:895
+msgid "B - The mentee chooses the mentor"
+msgstr "Б - подопечный выбирает наставника"
+
+#: .\models.py:896
+msgid "B+A - The mentee or the administrator choose the mentor"
+msgstr "Б+А - Подопечный или администратор выбирают наставника"
+
+#: .\models.py:904
+msgid "project / community"
+msgstr "проект / сообщество"
+
+#: .\models.py:907
+msgid "associated user group"
+msgstr "связанная группа пользователей"
+
+#: .\models.py:914
+msgid "Project type"
+msgstr "Тип проекта"
+
+#: .\models.py:915
+msgid "project forum"
+msgstr "форум проекта"
+
+#: .\models.py:918
+msgid "chatroom"
+msgstr "Чат"
+
+#: .\models.py:922 .\models.py:2108
+msgid "logo"
+msgstr "Логотип"
+
+#: .\models.py:923 .\models.py:1589 .\models.py:2109
+msgid "featured image"
+msgstr "популярное изображение"
+
+#: .\models.py:924
+msgid "mentoring is available"
+msgstr "наставничество доступно"
+
+#: .\models.py:925
+msgid ""
+"once mentoring projects exist, you can only move from model A or B to A+B."
+msgstr "как только проекты наставничества существуют, можно перейти от модели A или B к A-B."
+
+#: .\models.py:926
+msgid "allow external mentors"
+msgstr "позволяют внешним наставникам"
+
+#: .\models.py:927
+msgid "prototypical Learning Path"
+msgstr "прототипный путь обучения"
+
+#: .\models.py:929
+msgid "reserved"
+msgstr "зарезервировано"
+
+#: .\models.py:933 .\models.py:1592 .\models.py:1693 .\models.py:2037
+#: .\models.py:2112 .\models.py:2790 .\models.py:2819 .\models.py:3212
+msgid "modified"
+msgstr "модифицированный"
+
+#: .\models.py:934 .\models.py:1593 .\models.py:1694 .\models.py:2113
+#: .\models.py:2791 .\models.py:2820
+msgid "creator"
+msgstr "Создатель"
+
+#: .\models.py:935 .\models.py:1594 .\models.py:1695 .\models.py:1952
+#: .\models.py:2114 .\models.py:2770 .\models.py:2792 .\models.py:2821
+msgid "last editor"
+msgstr "последний редактор"
+
+#: .\models.py:1066
+msgid "administrator"
+msgstr "Администратора"
+
+#: .\models.py:1068 .\templates\mentoring_detail.html:147
+msgid "mentor"
+msgstr "Наставник"
+
+#: .\models.py:1070
+msgid "supervisor"
+msgstr "Руководитель"
+
+#: .\models.py:1495
+msgid "community or project"
+msgstr "сообщество или проект"
+
+#: .\models.py:1495
+msgid "the project the user belongs or applies to"
+msgstr "проект, к проекту принадлежит пользователь или применяется к"
+
+#: .\models.py:1496
+msgid "the user belonging or applying to the project"
+msgstr "пользователь, принадлежащий или применяющийся к проекту"
+
+#: .\models.py:1498
+msgid "request created"
+msgstr "запрос создан"
+
+#: .\models.py:1499
+msgid "last acceptance"
+msgstr "последнее принятие"
+
+#: .\models.py:1500
+msgid "last refusal"
+msgstr "последний отказ"
+
+#: .\models.py:1501
+msgid "last state change"
+msgstr "последнее изменение состояния"
+
+#: .\models.py:1502
+msgid "last state modifier"
+msgstr "последний модификатор состояния"
+
+#: .\models.py:1503
+msgid "history of state changes"
+msgstr "история государственных изменений"
+
+#: .\models.py:1506 .\models.py:1507
+msgid "project member"
+msgstr "участник проекта"
+
+#: .\models.py:1519
+msgid "project message"
+msgstr "сообщение проекта"
+
+#: .\models.py:1520
+msgid "project messages"
+msgstr "сообщения проекта"
+
+#: .\models.py:1541
+msgid "repository feature"
+msgstr "функция репозитория"
+
+#: .\models.py:1563
+msgid "repository types"
+msgstr "типы репозиториев"
+
+#: .\models.py:1581
+msgid "URL of the repository site"
+msgstr "URL сайта репозитория"
+
+#: .\models.py:1586
+msgid "longer description / search suggestions"
+msgstr "длинное описание / поисковые предложения"
+
+#: .\models.py:1587 .\templates\repo_detail.html:49
+msgid "comments / evaluation"
+msgstr "комментарии / оценка"
+
+#: .\models.py:1588
+msgid "screenshot"
+msgstr "Скриншот"
+
+#: .\models.py:1597 .\templates\project_detail.html:419
+msgid "external repository"
+msgstr "внешнее репозиторий"
+
+#: .\models.py:1598 .\templates\autocomplete.html:11
+msgid "external repositories"
+msgstr "внешние репозитории"
+
+#: .\models.py:1645
+msgid "Metadata only"
+msgstr "только метаданные"
+
+#: .\models.py:1646
+msgid "Metadata and online reference"
+msgstr "Метаданные и онлайн ссылка"
+
+#: .\models.py:1647
+msgid "Metadata and document(s)"
+msgstr "Метаданные и документы (ы)"
+
+#: .\models.py:1648
+msgid "Metadata and richtext"
+msgstr "Метаданные и богатый текст"
+
+#: .\models.py:1654
+msgid "Derived-translated"
+msgstr "производное-переведено"
+
+#: .\models.py:1655
+msgid "Derived-adapted"
+msgstr "производное-адаптированное"
+
+#: .\models.py:1656
+msgid "Derived-remixed"
+msgstr "производное-ремикс"
+
+#: .\models.py:1657
+msgid "none (brand new OER)"
+msgstr ""
+
+#: .\models.py:1664
+msgid "specific URL to the OER, if applicable"
+msgstr ""
+
+#: .\models.py:1666 .\models.py:2817
+msgid "own text content"
+msgstr "собственный текстовый контент"
+
+#: .\models.py:1672
+msgid "adapted / remixed"
+msgstr "адаптированный/ремикс"
+
+#: .\models.py:1674
+msgid "reference"
+msgstr "Ссылки"
+
+#: .\models.py:1683
+msgid "where the OER has been cataloged or created"
+msgstr "где ОУР был каталогизирован или создан"
+
+#: .\models.py:1690 .\models.py:2788
+msgid "content"
+msgstr "содержание"
+
+#: .\models.py:1690
+msgid "formal description of a problem or other original content"
+msgstr "официальное описание проблемы или другого оригинального контента"
+
+#: .\models.py:1914
+msgid "attached document"
+msgstr "прилагаемый документ"
+
+#: .\models.py:1915 .\templates\_oer_card.html:24
+#: .\templates\oer_detail.html:180
+msgid "attached documents"
+msgstr "прилагаемые документы"
+
+#: .\models.py:1933
+msgid "Metadatum type"
+msgstr "Тип метаданных"
+
+#: .\models.py:1934
+msgid "Value"
+msgstr "ценность"
+
+#: .\models.py:1942
+msgid "additional metadatum"
+msgstr "дополнительный метадатум"
+
+#: .\models.py:1943 .\templates\oer_edit.html:103
+msgid "additional metadata"
+msgstr "дополнительные метаданные"
+
+#: .\models.py:1950
+msgid "referenced OER"
+msgstr "ОУР ссылки "
+
+#: .\models.py:1951 .\models.py:2769
+msgid "referencing project"
+msgstr "проект ссылки"
+
+#: .\models.py:1957
+msgid "shared OER"
+msgstr "общий ОУР"
+
+#: .\models.py:1958 .\templates\mentoring_detail.html:490
+#: .\templates\project_detail.html:643
+msgid "shared OERs"
+msgstr "общие ОУР"
+
+#: .\models.py:2013
+msgid "poor"
+msgstr "плохой"
+
+#: .\models.py:2014
+msgid "fair"
+msgstr "Справедливой"
+
+#: .\models.py:2015
+msgid "good"
+msgstr "Хорошо"
+
+#: .\models.py:2016
+msgid "very good"
+msgstr "Очень хорошо"
+
+#: .\models.py:2017
+msgid "excellent"
+msgstr "Отлично"
+
+#: .\models.py:2035
+msgid "free text review"
+msgstr "бесплатный текстовый обзор"
+
+#: .\models.py:2038 .\templates\oer_evaluation_detail.html:30
+msgid "evaluator"
+msgstr "Оценщика"
+
+#: .\models.py:2045 .\models.py:2059
+msgid "OER evaluation"
+msgstr "Оценка  ОУР"
+
+#: .\models.py:2046
+msgid "OER evaluations"
+msgstr "Оценки  ОУР"
+
+#: .\models.py:2061
+msgid "facet-related score"
+msgstr ""
+
+#: .\models.py:2069
+msgid "quality metadatum"
+msgstr "метаданные качества"
+
+#: .\models.py:2070 .\templates\oer_evaluation_detail.html:24
+msgid "quality metadata"
+msgstr "качественные метаданные"
+
+#: .\models.py:2088
+msgid "simple collection"
+msgstr "простая коллекция"
+
+#: .\models.py:2089
+msgid "sequence"
+msgstr "последовательность"
+
+#: .\models.py:2090
+msgid "directed graph"
+msgstr "ориентированный граф"
+
+#: .\models.py:2098
+msgid "original learning path"
+msgstr "оригинальный путь обучения"
+
+#: .\models.py:2107
+msgid "group"
+msgstr "группа"
+
+#: .\models.py:2117 .\templates\_lp_serialize.html:10
+#: .\templates\lp_detail.html:4 .\templates\lp_play.html:4
+msgid "learning path"
+msgstr "путь обучения"
+
+#: .\models.py:2330
+msgid "this LP was created by cloning a LP with title"
+msgstr ""
+
+#: .\models.py:2349
+msgid ""
+"this node derives from a document node; the name of the attached file was"
+msgstr "этот узел происходит от узла документа; имя прикрепленного файла было"
+
+#: .\models.py:2727
+msgid "Cover page"
+msgstr "титульная страница"
+
+#: .\models.py:2768
+msgid "referenced Learning Path"
+msgstr "путь обучения упоминается"
+
+#: .\models.py:2775
+msgid "shared Learning Path"
+msgstr "общий путь обучения"
+
+#: .\models.py:2776
+msgid "shared Learning Paths"
+msgstr "общие пути обучения"
+
+#: .\models.py:2795
+msgid "path edge"
+msgstr "край пути"
+
+#: .\models.py:2796
+msgid "path edges"
+msgstr "края пути"
+
+#: .\models.py:2813
+msgid "learning path or collection"
+msgstr "путь обучения или сбора"
+
+#: .\models.py:2814
+msgid "stands for"
+msgstr "обозначает"
+
+#: .\models.py:2824
+msgid "path node"
+msgstr "узла пути"
+
+#: .\models.py:2825 .\templates\lp_detail.html:179 .\templates\lp_play.html:64
+#: .\templates\lp_play.html:71
+msgid "path nodes"
+msgstr "узлы пути"
+
+#: .\models.py:3150
+msgid "Tagged OER"
+msgstr ""
+
+#: .\models.py:3151
+msgid "Tagged OERs"
+msgstr ""
+
+#: .\models.py:3164
+msgid "Tagged LP"
+msgstr ""
+
+#: .\models.py:3165
+msgid "Tagged LPss"
+msgstr ""
+
+#: .\models.py:3187
+msgid "any"
+msgstr "Любой"
+
+#: .\models.py:3188
+msgid "global"
+msgstr "глобальной"
+
+#: .\models.py:3191 .\models.py:3225
+msgid "featured item"
+msgstr "Избранный предмет"
+
+#: .\models.py:3192
+msgid "featured items"
+msgstr "Избранные предметы"
+
+#: .\models.py:3194
+msgid "is lead item"
+msgstr "это свинцовые элементы"
+
+#: .\models.py:3195
+msgid "group name"
+msgstr "название группы"
+
+#: .\models.py:3195
+msgid "Entries can be aggregated by group name."
+msgstr "элементы могут быть агрегированы по имени группы"
+
+#: .\models.py:3196
+msgid "Used to sort in ascending order, not to filter."
+msgstr ""
+
+#: .\models.py:3197
+msgid "priority"
+msgstr "Приоритет"
+
+#: .\models.py:3197
+msgid ""
+"Used to filter, not to sort, possibly combined with other attributes. A "
+"large number means high priority."
+msgstr ""
+
+#: .\models.py:3198
+msgid "In the case of a \"lead\" item, probably you will provide this text."
+msgstr ""
+
+#: .\models.py:3199
+msgid "scope"
+msgstr "сфера"
+
+#: .\models.py:3207
+msgid "start publication"
+msgstr "начать публикацию"
+
+#: .\models.py:3207
+msgid "Optional start date of publication."
+msgstr "необязательная дата начала публикации"
+
+#: .\models.py:3208
+msgid "end publication"
+msgstr "конец публикации"
+
+#: .\models.py:3208
+msgid "Optional end date of publication."
+msgstr "Дополнительная дата окончания публикации"
+
+#: .\search_indexes.py:118
+msgid "In"
+msgstr "В"
+
+#: .\templates\403.html:4 .\templates\403.html:10
+msgid ""
+"Sorry. You are not allowed to access the requested content or function."
+msgstr "Извините. Y вас нет прав доступа к запрошенному контенту или функции"
+
+#: .\templates\404.html:4 .\templates\404.html:10
+msgid "Sorry. We cannot find the page that you requested."
+msgstr "Извините. Мы не можем найти страницу, которую вы просили"
+
+#: .\templates\_access_bar.html:14 .\templates\user_dashboard.html:6
+#: .\templates\user_preferences.html:23 .\templates\user_profile.html:30
+msgid "my home"
+msgstr "мой дом"
+
+#: .\templates\_access_bar.html:14 .\templates\_object_comments.html:77
+#: .\templates\oer_detail.html:246 .\templates\user_welcome.html:43
+msgid "complete your profile"
+msgstr "завершить свой профиль"
+
+#: .\templates\_access_bar.html:22 .\templates\user_dashboard.html:39
+msgid "my messages"
+msgstr "мое сообщение"
+
+#: .\templates\_access_bar.html:23 .\templates\user_dashboard.html:40
+msgid "new posts"
+msgstr "новые посты"
+
+#: .\templates\_access_bar.html:26
+msgid "admin"
+msgstr "админ"
+
+#: .\templates\_access_bar.html:34 .\templates\datatrans\base.html:19
+msgid "Log out"
+msgstr "выйти"
+
+#: .\templates\_access_bar.html:43 .\templates\_login_model.html:18
+msgid "email address"
+msgstr "адрес электронной почты"
+
+#: .\templates\_access_bar.html:46 .\templates\_login_model.html:24
+msgid "password"
+msgstr "Пароль"
+
+#: .\templates\_access_bar.html:48 .\templates\_login_model.html:37
+#: .\templates\account\login.html:104
+msgid "Forgot Password?"
+msgstr "Забыл пароль?"
+
+#: .\templates\_access_bar.html:54 .\templates\_login_model.html:29
+msgid "Remember Me"
+msgstr "запомнить меня"
+
+#: .\templates\_access_bar.html:57 .\templates\_access_bar.html:90
+#: .\templates\_access_bar.html:98 .\templates\_login_model.html:10
+#: .\templates\_login_model.html:33
+msgid "Log in"
+msgstr "авторизоваться"
+
+#: .\templates\_access_bar.html:58 .\templates\_access_bar.html:92
+#: .\templates\_access_bar.html:100 .\templates\flatpages\why_register.html:46
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "sign up"
+msgstr "Зарегистрироваться"
+
+#: .\templates\_access_bar.html:62 .\templates\_access_bar.html:64
+#: .\templates\_access_bar.html:67 .\templates\_access_bar.html:104
+#: .\templates\_access_bar.html:106 .\templates\_access_bar.html:109
+#: .\templates\_login_model.html:61 .\templates\_login_model.html:63
+#: .\templates\_login_model.html:66 .\templates\flatpages\why_register.html:48
+#: .\templates\flatpages\why_register.html:49
+msgid "Login With"
+msgstr "войдите с"
+
+#: .\templates\_candidate_mentors.html:3
+msgid "select a mentor"
+msgstr "выбрать наставника"
+
+#: .\templates\_candidate_mentors.html:25
+#: .\templates\_candidate_mentors.html:35
+#: .\templates\_candidate_mentors.html:47
+msgid "send the request to the mentor"
+msgstr "отправить запрос наставнику"
+
+#: .\templates\_candidate_mentors.html:48
+msgid "delegate community administrator"
+msgstr "делегат администратора сообщества"
+
+#: .\templates\_candidate_mentors.html:53
+msgid "currently there aren't any mentors available"
+msgstr "в настоящее время нет никаких наставников доступны"
+
+#: .\templates\_cannot_serialize.html:10 .\templates\_lp_serialize.html:18
+#: .\templates\_online_serialize.html:14
+msgid "URL"
+msgstr "Url"
+
+#: .\templates\_cannot_serialize.html:14 .\templates\_online_serialize.html:19
+msgid "NOTE"
+msgstr "Примечание"
+
+#: .\templates\_cannot_serialize.html:15
+msgid "cannot convert to PDF a document of mimetype"
+msgstr "не может преобразовать в PDF документ миметипа"
+
+#: .\templates\_cannot_serialize.html:17 .\templates\_online_serialize.html:20
+msgid "this node refers to an OER that you can access online through its URL"
+msgstr ""
+
+#: .\templates\_change_state.html:8
+msgid "submit for publication"
+msgstr "представить для публикации"
+
+#: .\templates\_change_state.html:9
+msgid "withdraw"
+msgstr "Снять"
+
+#: .\templates\_change_state.html:10
+msgid "reject"
+msgstr "Отклонить"
+
+#: .\templates\_change_state.html:11
+msgid "publish"
+msgstr "публиковать"
+
+#: .\templates\_change_state.html:12
+msgid "unpublish"
+msgstr "Отменить публикацию"
+
+#: .\templates\_data_confirm_js.html:11 .\templates\_lp_dag.html:165
+#: .\templates\_lp_dag.html:235 .\templates\folder_detail.html:206
+#: .\templates\folder_detail.html:235 .\templates\lp_detail.html:358
+#: .\templates\oer_detail.html:338
+msgid "Yes"
+msgstr "Да"
+
+#: .\templates\_data_confirm_js.html:15 .\templates\_lp_dag.html:169
+#: .\templates\_lp_dag.html:239 .\templates\folder_detail.html:210
+#: .\templates\folder_detail.html:239 .\templates\lp_detail.html:362
+#: .\templates\oer_detail.html:342
+msgid "No"
+msgstr "Нет"
+
+#: .\templates\_edit_submit.html:3 .\templates\datatrans\translate.html:60
+#: .\templates\folder_detail.html:151
+#: .\templates\oer_screenshot_upload.html:34
+#: .\templates\profile_avatar_upload.html:30
+#: .\templates\project_detail.html:718 .\templates\project_detail.html:732
+#: .\templates\project_image_upload.html:34
+#: .\templates\project_logo_upload.html:34
+msgid "save"
+msgstr "спасти"
+
+#: .\templates\_edit_submit.html:4 .\templates\folder_edit.html:25
+#: .\templates\folderdocument_edit.html:25 .\templates\forum_edit.html:29
+#: .\templates\online_resource_edit.html:27
+msgid "save and exit"
+msgstr "сохранить и выйти"
+
+#: .\templates\_edit_submit.html:6 .\templates\_edit_submit.html:8
+#: .\templates\folder_edit.html:26 .\templates\folderdocument_edit.html:26
+#: .\templates\forum_edit.html:30 .\templates\oer_screenshot_upload.html:35
+#: .\templates\online_resource_edit.html:28
+#: .\templates\profile_avatar_upload.html:31
+#: .\templates\project_image_upload.html:35
+#: .\templates\project_logo_upload.html:35
+msgid "exit without saving"
+msgstr "выход без сохранения"
+
+#: .\templates\_footer.html:4 .\templates\commons_base.html:205
+msgid "the CommonS Consortium"
+msgstr ""
+
+#: .\templates\_footer.html:5 .\templates\commons_base.html:206
+msgid "built by"
+msgstr "созданный "
+
+#: .\templates\_footer.html:6 .\templates\commons_base.html:207
+msgid "with"
+msgstr "С"
+
+#: .\templates\_footer.html:6 .\templates\commons_base.html:207
+msgid "and"
+msgstr "И"
+
+#: .\templates\_footer.html:11 .\templates\commons_base.html:212
+msgid "privacy policy"
+msgstr "политика конфиденциальности"
+
+#: .\templates\_footer.html:16 .\templates\commons_base.html:217
+msgid "The CommonS Project is co-funded by Programme"
+msgstr ""
+
+#: .\templates\_homepage_main_cta.html:9
+#: .\templates\_homepage_main_cta.html:50
+#: .\templates\_homepage_main_cta.html:74
+msgid "explore library"
+msgstr "исследовать библиотеку"
+
+#: .\templates\_homepage_main_cta.html:15
+#: .\templates\_homepage_main_cta.html:57
+#: .\templates\_homepage_main_cta.html:79
+msgid "learn together"
+msgstr "учиться вместе"
+
+#: .\templates\_homepage_main_cta.html:21
+#: .\templates\_homepage_main_cta.html:64
+#: .\templates\_homepage_main_cta.html:84
+msgid "remix resources"
+msgstr "использовать ресурсы"
+
+#: .\templates\_homepage_main_cta.html:28
+#: .\templates\_homepage_main_cta.html:29
+#: .\templates\_homepage_main_cta.html:51
+#: .\templates\_homepage_main_cta.html:75 .\templates\browse.html:11
+msgid "educational library"
+msgstr "образовательная библиотека"
+
+#: .\templates\_info_creator_date.html:3 .\templates\_lp_serialize.html:10
+msgid "submitted by"
+msgstr "представлено"
+
+#: .\templates\_info_creator_date.html:4
+#: .\templates\_info_creator_date.html:11 .\templates\_lp_serialize.html:27
+#: .\templates\_pathnode_detail.html:44 .\templates\_pathnode_detail.html:45
+#: .\templates\folder_detail.html:45 .\templates\folder_detail.html:68
+#: .\templates\folder_detail.html:71 .\templates\oer_evaluations.html:61
+#: .\templates\project_detail.html:187 .\templates\project_detail.html:189
+#: .\templates\project_detail.html:192
+msgid "on"
+msgstr "На"
+
+#: .\templates\_info_creator_date.html:6
+msgid "in the project of mentoring"
+msgstr "в проекте наставничества"
+
+#: .\templates\_info_creator_date.html:8 .\templates\_lp_serialize.html:11
+#: .\templates\lp_edit.html:15 .\templates\oer_edit.html:23
+msgid "in the project"
+msgstr "в проекте"
+
+#: .\templates\_info_creator_date.html:11 .\templates\_pathnode_detail.html:45
+#: .\templates\project_detail.html:189 .\templates\project_detail.html:192
+msgid "last updated"
+msgstr "последнее обновление"
+
+#: .\templates\_info_creator_date.html:11 .\templates\_pathnode_detail.html:45
+#: .\templates\_selected_mentor.html:18
+#: .\templates\oer_evaluation_detail.html:5
+#: .\templates\oer_evaluation_detail.html:12
+#: .\templates\project_detail.html:192
+msgid "by"
+msgstr ""
+
+#: .\templates\_login_model.html:36
+msgid "Create an account"
+msgstr "завести аккаунт"
+
+#: .\templates\_lp_dag.html:162
+msgid "do you really want to remove this edge"
+msgstr "Вы действительно хотите, чтобы удалить этот край"
+
+#: .\templates\_lp_dag.html:232 .\templates\lp_detail.html:355
+msgid "do you really want to remove this node"
+msgstr "Вы действительно хотите, чтобы удалить этот узел"
+
+#: .\templates\_lp_serialize.html:12
+msgid "other contributors"
+msgstr "другие участники"
+
+#: .\templates\_lp_serialize.html:15
+msgid "last modified on"
+msgstr "последняя модификация"
+
+#: .\templates\_lp_serialize.html:25
+msgid "IMPORTANT NOTICE"
+msgstr "ВАЖНОЕ УВЕДОМЛЕНИЕ"
+
+#: .\templates\_lp_serialize.html:26
+msgid "this document has been produced by"
+msgstr "этот документ был подготовлен"
+
+#: .\templates\_lp_serialize.html:28
+msgid "for personal use"
+msgstr "для личного пользования"
+
+#: .\templates\_lp_serialize.html:28
+msgid "restrictions could apply to some of its contents"
+msgstr "ограничения могут применяться к некоторым из его содержимого"
+
+#: .\templates\_lp_subtree.html:15 .\templates\lp_detail.html:211
+#: .\templates\lp_play.html:102
+msgid "analyze text"
+msgstr "анализировать текст"
+
+#: .\templates\_mentors_refuse.html:5
+msgid "mentors that didn't accept"
+msgstr "наставников, которые не приняли"
+
+#: .\templates\_menu_analytics.html:7
+msgid "registered users"
+msgstr "зарегистрированных пользователей"
+
+#: .\templates\_menu_analytics.html:8 .\templates\contributors.html:5
+#: .\templates\contributors.html:12
+msgid "top contributors"
+msgstr "лучшие вкладчики"
+
+#: .\templates\_menu_analytics.html:9
+msgid "active users"
+msgstr "активные пользователи"
+
+#: .\templates\_menu_analytics.html:11
+msgid "xAPI query"
+msgstr ""
+
+#: .\templates\_object_comments.html:10 .\templates\_object_comments.html:12
+#: .\templates\zinnia\entry_detail_base.html:192
+msgid "Comments"
+msgstr "комментарии"
+
+#: .\templates\_object_comments.html:10
+msgid "disable"
+msgstr "Отключить"
+
+#: .\templates\_object_comments.html:10
+msgid "enable"
+msgstr "Включить"
+
+#: .\templates\_object_comments.html:33
+#: .\templates\zinnia\_entry_detail_base.html:29
+#: .\templates\zinnia\entry_detail_base.html:212
+msgctxt "on date"
+msgid "on"
+msgstr "На"
+
+#: .\templates\_object_comments.html:52 .\templates\_object_comments.html:58
+#: .\templates\zinnia\_entry_detail_base.html:159
+#: .\templates\zinnia\entry_detail_base.html:230
+#: .\templates\zinnia\entry_detail_base.html:236
+msgid "Comments are closed."
+msgstr "Комментарии закрыты"
+
+#: .\templates\_object_comments.html:56
+#: .\templates\zinnia\_entry_detail_base.html:153
+#: .\templates\zinnia\entry_detail_base.html:234
+msgid "No comments yet."
+msgstr "до сих пор нет комментария"
+
+#: .\templates\_object_comments.html:74
+msgid "Add comment"
+msgstr "добавить комментарий"
+
+#: .\templates\_object_comments.html:77 .\templates\_object_comments.html:79
+#: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
+msgid "please"
+msgstr "Пожалуйста"
+
+#: .\templates\_object_comments.html:77 .\templates\_object_comments.html:79
+msgid "to leave a comment"
+msgstr "чтобы оставить комментарий"
+
+#: .\templates\_object_comments.html:79 .\templates\oer_detail.html:244
+msgid "log in"
+msgstr "авторизоваться"
+
+#: .\templates\_oer_card.html:9
+msgid "rating"
+msgstr "Рейтинг"
+
+#: .\templates\_oer_evaluation_card.html:9
+msgid "resource evaluated by"
+msgstr "ресурс оценен"
+
+#: .\templates\_online_serialize.html:21
+msgid "the associated resource has content type"
+msgstr ""
+
+#: .\templates\_online_serialize.html:23
+msgid "an excerpt of the content follows"
+msgstr ""
+
+#: .\templates\_pathnode_detail.html:10
+#: .\templates\_project_mentoring_text.html:19 .\templates\lp_detail.html:69
+#: .\templates\oer_detail.html:37 .\templates\pathnode_detail.html:75
+#: .\templates\project_detail.html:299 .\templates\project_detail.html:860
+#: .\templates\pybb\_forum_edit_link.html:2 .\templates\repo_detail.html:17
+msgid "show edit view"
+msgstr "показать вид отсвагиваемого"
+
+#: .\templates\_pathnode_detail.html:11 .\templates\lp_detail.html:70
+#: .\templates\oer_detail.html:38 .\templates\pathnode_detail.html:76
+#: .\templates\project_detail.html:300 .\templates\project_detail.html:861
+#: .\templates\repo_detail.html:18
+msgid "show translate view"
+msgstr "показать вид перевода"
+
+#: .\templates\_pathnode_detail.html:12 .\templates\lp_detail.html:85
+#: .\templates\lp_detail.html:104 .\templates\oer_detail.html:254
+#: .\templates\pathnode_detail.html:30
+msgid "show player view"
+msgstr "показать вид игрока"
+
+#: .\templates\_pathnode_detail.html:32 .\templates\folder_detail.html:85
+#: .\templates\lp_play.html:143 .\templates\lp_play.html:165
+#: .\templates\mentoring_detail.html:238 .\templates\oer_detail.html:196
+#: .\templates\pathnode_detail.html:96 .\templates\user_profile.html:174
+msgid "download"
+msgstr "Скачать"
+
+#: .\templates\_pathnode_detail.html:33 .\templates\folder_detail.html:82
+#: .\templates\folder_detail.html:88 .\templates\mentoring_detail.html:239
+#: .\templates\oer_detail.html:197 .\templates\pathnode_detail.html:97
+#: .\templates\project_detail.html:744 .\templates\project_detail.html:825
+#: .\templates\user_profile.html:139 .\templates\user_profile.html:175
+msgid "view"
+msgstr ""
+
+#: .\templates\_pathnode_detail.html:39 .\templates\pathnode_detail.html:103
+msgid "text"
+msgstr "Текст"
+
+#: .\templates\_pathnode_detail.html:44 .\templates\pathnode_detail.html:108
+msgid "node added by"
+msgstr "узел добавлен"
+
+#: .\templates\_project_card.html:20
+msgid "number of members"
+msgstr "количество членов"
+
+#: .\templates\_project_card.html:24 .\templates\_project_card.html:27
+#: .\templates\browse_mentors.html:82 .\templates\folder_detail.html:5
+#: .\templates\mentoring_detail.html:5 .\templates\mentoring_detail.html:168
+#: .\templates\project_detail.html:7 .\templates\project_detail.html:165
+#: .\templates\project_detail.html:168 .\templates\project_detail.html:297
+#: .\templates\project_detail.html:316 .\templates\project_detail.html:359
+#: .\templates\project_detail.html:371 .\templates\project_edit.html:19
+#: .\templates\project_edit.html:60
+msgid "community"
+msgstr "Сообществo"
+
+#: .\templates\_project_card.html:26 .\templates\project_detail.html:167
+msgid "child project of"
+msgstr "подпроект "
+
+#: .\templates\_project_card.html:27 .\templates\project_detail.html:168
+msgid "parent"
+msgstr "родитель"
+
+#: .\templates\_project_card.html:45 .\templates\_project_card.html:58
+msgid "number of learning paths"
+msgstr "количество путей обучения"
+
+#: .\templates\_project_card.html:46 .\templates\_project_card.html:52
+#: .\templates\_project_card.html:59 .\templates\_project_card.html:64
+msgid "project results"
+msgstr "Результаты проекта"
+
+#: .\templates\_project_card.html:51 .\templates\_project_card.html:63
+msgid "number of OERs"
+msgstr "количество ОУР"
+
+#: .\templates\_project_mentoring_text.html:19
+#: .\templates\project_detail.html:299 .\templates\project_detail.html:860
+#: .\templates\user_preferences.html:33 .\templates\user_profile.html:169
+#: .\templates\user_profile.html:238
+msgid "modify"
+msgstr "модифицировать"
+
+#: .\templates\_resource_edit_lang_msg.html:6
+msgid "WARNING"
+msgstr "Предупреждение"
+
+#: .\templates\_resource_edit_lang_msg.html:6
+#: .\templates\_resource_edit_lang_msg.html:13
+msgid "You are using the currently active language"
+msgstr "Вы используете текущий активный язык"
+
+#: .\templates\_resource_edit_lang_msg.html:8
+#: .\templates\_resource_edit_lang_msg.html:15
+msgid "to edit a content whose 'original editing language' is"
+msgstr "редактировать содержимое, «оригинальный язык редактирования»"
+
+#: .\templates\_resource_edit_lang_msg.html:10
+msgid "this WILL CHANGE its 'original editing language'"
+msgstr "это изменит свой \"оригинальный язык редактирования\""
+
+#: .\templates\_resource_edit_lang_msg.html:12
+msgid "OK"
+msgstr "Хорошо"
+
+#: .\templates\_resource_edit_lang_msg.html:16
+msgid "also"
+msgstr "Также"
+
+#: .\templates\_resource_edit_lang_msg.html:16
+msgid "still"
+msgstr "Еще"
+
+#: .\templates\_resource_edit_lang_msg.html:18
+msgid "This will set its 'original editing language'"
+msgstr "Это установит его 'оригинальный язык редактирования'"
+
+#: .\templates\_resource_edit_lang_msg.html:21
+msgid ""
+"IMPORTANT NOTICE! The content that you are creating will take the currently "
+"active language"
+msgstr ""
+
+#: .\templates\_resource_edit_lang_msg.html:23
+msgid "as its 'original editing language'"
+msgstr "как его «оригинальный язык редактирования»"
+
+#: .\templates\_resource_edit_lang_msg.html:24
+msgid ""
+"Afterwards, you should edit it using always the same language, and you will "
+"be able to add translations to other languages"
+msgstr ""
+
+#: .\templates\_resource_lang_msg.html:6
+msgid ""
+"IMPORTANT NOTICE! The next time you will edit this content, it will take the"
+" current active language"
+msgstr ""
+
+#: .\templates\_resource_lang_msg.html:8
+msgid ""
+"as its 'original editing language'. Afterwards, you should edit it using "
+"always the same language, and you will be able to add translations to other "
+"languages."
+msgstr ""
+
+#: .\templates\_resource_lang_msg.html:12 .\templates\pathnode_detail.html:19
+msgid ""
+"Please note that, to be able to edit this content in its original language"
+msgstr "Пожалуйста, обратите внимание, что, чтобы иметь возможность редактировать этот контент на языке оригинала"
+
+#: .\templates\_resource_lang_msg.html:14 .\templates\pathnode_detail.html:21
+msgid ""
+"you should make this the active language using the control in the menu bar"
+msgstr "Вы должны сделать это активным языком, используя элемент управления в строке меню"
+
+#: .\templates\_resource_original_lang.html:4
+#: .\templates\project_detail.html:171
+msgid "original editing language"
+msgstr "оригинальный язык редактирования"
+
+#: .\templates\_search_form.html:8 .\templates\search_lps.html:36
+#: .\templates\search_lps.html:52 .\templates\search_oers.html:36
+#: .\templates\search_oers.html:49 .\templates\search_people.html:36
+#: .\templates\search_people.html:52 .\templates\search_projects.html:36
+#: .\templates\search_projects.html:52 .\templates\search_repos.html:36
+#: .\templates\search_repos.html:52
+msgid "search criteria"
+msgstr "критерий поиска"
+
+#: .\templates\_search_form.html:9 .\templates\_search_form.html:30
+msgid "Apply"
+msgstr "Применить"
+
+#: .\templates\_search_form.html:10 .\templates\_search_form.html:31
+msgid "Reset"
+msgstr "Сброс"
+
+#: .\templates\_search_form.html:17 .\views.py:833 .\views.py:4241
+#: .\views.py:4440 .\views.py:4539
+msgid "include non published items"
+msgstr "включают неопубликованные элементы"
+
+#: .\templates\_selected_mentor.html:4 .\templates\_selected_mentor.html:23
+msgid "selected mentor"
+msgstr "выбранный наставник"
+
+#: .\templates\_selected_mentor.html:18
+msgid "the request has been sent to the mentor on"
+msgstr "запрос был отправлен наставнику"
+
+#: .\templates\_selected_mentor.html:24
+msgid "the community administrator hasn't chosen a mentor yet"
+msgstr "администратор сообщества еще не выбрал наставника"
+
+#: .\templates\account\email_confirm.html:6
+#: .\templates\account\email_confirm.html:12
+msgid "Confirm E-mail Address"
+msgstr "Подтвердить адрес электронной почты"
+
+#: .\templates\account\email_confirm.html:21
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr "Пожалуйста, подтвердите, что <a href=\"mailto:%(email)s\">%(email)s</a> является адресом электронной почты для пользователя %(user_display)s."
+
+#: .\templates\account\email_confirm.html:25
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#: .\templates\account\email_confirm.html:32
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr ""
+
+#: .\templates\account\login.html:6 .\templates\account\login.html:61
+#: .\templates\account\login.html:103
+msgid "Sign In"
+msgstr "войти в систему"
+
+#: .\templates\account\login.html:70
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"                        of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
+"                        for a %(site_name)s account and sign in below:"
+msgstr ""
+
+#: .\templates\account\login.html:83
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"                        <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr "Если вы еще не создали учетную запись, пожалуйста,\n                        <a href=\"%(signup_url)s\">зарегистрируйтесь</a> первым."
+
+#: .\templates\account\login.html:87
+msgid ""
+"Please sign in with one\n"
+"                    of your existing third party accounts."
+msgstr ""
+
+#: .\templates\account\login.html:94
+#: .\templates\flatpages\why_register.html:47
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "or"
+msgstr "Или"
+
+#: .\templates\account\password_reset.html:6
+#: .\templates\account\password_reset.html:42
+#: .\templates\account\password_reset_done.html:6
+#: .\templates\account\password_reset_done.html:11
+msgid "Password Reset"
+msgstr "восстановление пароля"
+
+#: .\templates\account\password_reset.html:50
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you"
+" an e-mail allowing you to reset it."
+msgstr "Забытый пароль? Введите свой адрес электронной почты ниже, и мы отправим вам электронное письмо, позволяющее сбросить его."
+
+#: .\templates\account\password_reset.html:55
+msgid "Reset My Password"
+msgstr "сбросить пароль"
+
+#: .\templates\account\password_reset.html:57
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr "Пожалуйста, свяжитесь с нами, если у вас возникли проблемы с сбросом пароля."
+
+#: .\templates\account\password_reset_done.html:19
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr "Мы отправили вам электронное письмо. Пожалуйста, свяжитесь с нами, если вы не получите его в течение нескольких минут."
+
+#: .\templates\account\password_reset_from_key.html:4
+#: .\templates\account\password_reset_from_key.html:38
+#: .\templates\account\password_reset_from_key_done.html:4
+#: .\templates\account\password_reset_from_key_done.html:9
+msgid "Change Password"
+msgstr "сменить пароль"
+
+#: .\templates\account\password_reset_from_key.html:38
+msgid "Bad Token"
+msgstr ""
+
+#: .\templates\account\password_reset_from_key.html:45
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>."
+msgstr ""
+
+#: .\templates\account\password_reset_from_key.html:51
+msgid "change password"
+msgstr "сменить пароль"
+
+#: .\templates\account\password_reset_from_key.html:54
+#: .\templates\account\password_reset_from_key_done.html:13
+msgid "Your password is now changed."
+msgstr "Теперь ваш пароль изменен"
+
+#: .\templates\account\signup.html:5
+msgid "Signup"
+msgstr "Зарегистрироваться"
+
+#: .\templates\account\signup.html:43 .\templates\account\signup.html:55
+msgid "Sign Up"
+msgstr "зарегистрироваться"
+
+#: .\templates\account\signup.html:47
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr ""
+
+#: .\templates\account\verification_sent.html:5
+#: .\templates\account\verification_sent.html:10
+msgid "Verify Your E-mail Address"
+msgstr "подтвердите вашу электронную почту"
+
+#: .\templates\account\verification_sent.html:14
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr "Мы отправили вам электронное письмо для проверки. Перейдите по ссылке, предоставленной для завершения процесса регистрации. Пожалуйста, свяжитесь с нами, если вы не получите его в течение нескольких минут."
+
+#: .\templates\active_users.html:10 .\templates\active_users.html:16
+msgid "recently active users"
+msgstr "недавно активные пользователи"
+
+#: .\templates\active_users.html:17
+msgid "being members of projects shared with me"
+msgstr "быть членами проектов, совместно со мной"
+
+#: .\templates\active_users.html:21
+msgid "users online"
+msgstr "пользователи онлайн"
+
+#: .\templates\active_users.html:21
+msgid "active during last 5 minutes"
+msgstr "активен в последние 5 минут"
+
+#: .\templates\active_users.html:24
+msgid "last active"
+msgstr "последний активный"
+
+#: .\templates\active_users.html:30
+msgid "seconds ago"
+msgstr "секунд назад"
+
+#: .\templates\active_users.html:38
+msgid "users no more online"
+msgstr "пользователи больше не онлайн"
+
+#: .\templates\active_users.html:41
+msgid "last seen"
+msgstr "последний раз видели"
+
+#: .\templates\activity_stream.html:6 .\templates\activity_stream.html:19
+msgid "recent activity by"
+msgstr "недавняя активность "
+
+#: .\templates\activity_stream.html:6 .\templates\activity_stream.html:19
+msgid "recent activity in"
+msgstr "недавняя активность в"
+
+#: .\templates\activity_stream.html:6 .\templates\activity_stream.html:19
+#: .\templates\project_detail.html:671
+msgid "recent activity"
+msgstr "недавняя активность"
+
+#: .\templates\activity_stream.html:23
+msgid "time"
+msgstr "Время"
+
+#: .\templates\activity_stream.html:23
+msgid "actor"
+msgstr "Актер"
+
+#: .\templates\activity_stream.html:24
+msgid "verb"
+msgstr "Глагол"
+
+#: .\templates\activity_stream.html:24
+msgid "object type"
+msgstr "тип объекта"
+
+#: .\templates\activity_stream.html:24
+msgid "object"
+msgstr "Объект"
+
+#: .\templates\activity_stream.html:24
+msgid "context"
+msgstr "Контекст"
+
+#: .\templates\activity_stream.html:40
+msgid "no actions were found"
+msgstr "никаких действий не найдено"
+
+#: .\templates\autocomplete.html:5 .\templates\count_users.html:25
+#: .\templates\project_detail.html:519 .\templates\search_results.html:13
+msgid "members"
+msgstr "члены"
+
+#: .\templates\autocomplete.html:20
+msgid "help pages"
+msgstr "страницы справки"
+
+#: .\templates\autocomplete.html:27
+msgid "no item"
+msgstr "нет элемента"
+
+#: .\templates\browse.html:5 .\templates\browse.html:16
+#: .\templates\browse.html:42 .\templates\browse.html:68
+#: .\templates\browse_repos.html:5 .\templates\browse_repos.html:12
+msgid "distributions"
+msgstr "Распределения"
+
+#: .\templates\browse.html:16
+msgid "of the learning paths"
+msgstr "путей обучения"
+
+#: .\templates\browse.html:42
+msgid "of the open educational resources"
+msgstr "открытых образовательных ресурсов"
+
+#: .\templates\browse.html:68
+msgid "of the sources"
+msgstr "источников"
+
+#: .\templates\browse_mentors.html:5 .\templates\project_detail.html:913
+msgid "mentors"
+msgstr "наставники"
+
+#: .\templates\browse_mentors.html:51
+msgid "all mentors"
+msgstr "все наставники"
+
+#: .\templates\browse_mentors.html:52 .\templates\mentoring_support.html:5
+#: .\templates\mentoring_support.html:11 .\templates\user_profile.html:255
+msgid "rolls of mentors"
+msgstr "реестры наставников"
+
+#: .\templates\browse_mentors.html:70
+msgid "currently there aren't any mentors"
+msgstr "в настоящее время Нет наставников"
+
+#: .\templates\browse_mentors.html:87 .\templates\mentoring_support.html:21
+msgid "no mentoring activity started yet"
+msgstr "никакая наставническая деятельность не началась еще"
+
+#: .\templates\browse_people.html:5 .\templates\browse_people.html:12
+msgid "all people"
+msgstr "все люди"
+
+#: .\templates\browse_people.html:15
+msgid "distribution of users based on self-compiled user profiles"
+msgstr ""
+
+#: .\templates\browse_repos.html:5 .\templates\browse_repos.html:12
+msgid "of repositories"
+msgstr "репозиториев"
+
+#: .\templates\bulk_add_members.html:10 .\templates\bulk_add_members.html:13
+msgid "adding members in bulk to commmunity/project"
+msgstr ""
+
+#: .\templates\bulk_add_members.html:18
+msgid "records found in file"
+msgstr "записи найдены в файле"
+
+#: .\templates\bulk_add_members.html:19
+msgid "members added"
+msgstr "члены добавили"
+
+#: .\templates\bulk_add_members.html:23 .\templates\bulk_add_members.html:29
+msgid "receivers list"
+msgstr "список получателей"
+
+#: .\templates\bulk_add_members.html:23
+msgid "for mailing from a plain client"
+msgstr ""
+
+#: .\templates\bulk_add_members.html:29
+msgid "in CSV format for MailChimp"
+msgstr ""
+
+#: .\templates\bulk_add_members.html:37
+msgid "back to the community/project home"
+msgstr "вернуться на главную страницу сообщества / проекта "
+
+#: .\templates\comments\zinnia\entry\form.html:12
+msgid "Post your comment"
+msgstr "Опубликовать свой комментарий"
+
+#: .\templates\comments\zinnia\entry\form.html:27
+msgid "Comment as"
+msgstr "Комментарий как"
+
+#: .\templates\comments\zinnia\entry\form.html:32
+msgid "Post"
+msgstr "Пост"
+
+#: .\templates\commons_base.html:239 .\templates\livesearch.html:11
+msgid "Search ... (enter at least 3 characters)"
+msgstr "Поиск... (введите не менее 3 символов)"
+
+#: .\templates\content_languages.html:26 .\templates\content_languages.html:39
+msgid "contents languages and translations"
+msgstr "перевод языка и контента"
+
+#: .\templates\contributors.html:17
+msgid "creation of learning paths"
+msgstr "создание путей обучения"
+
+#: .\templates\contributors.html:27 .\templates\contributors.html:48
+#: .\templates\contributors.html:69 .\templates\contributors.html:90
+msgid "view resources"
+msgstr "просмотреть ресурсы"
+
+#: .\templates\contributors.html:38
+msgid "cataloguing of OERs"
+msgstr "каталогизация ОУР"
+
+#: .\templates\contributors.html:59
+msgid "evaluation of OERs"
+msgstr "оценка  ОУР"
+
+#: .\templates\contributors.html:80 .\templates\repo_contributors.html:5
+#: .\templates\repo_contributors.html:11
+msgid "cataloguing of OER sources"
+msgstr "каталогизация источников ОУР"
+
+#: .\templates\cops_tree.html:77
+msgid "no community"
+msgstr "нет сообщества"
+
+#: .\templates\cops_tree.html:77 .\templates\repo_contributors.html:23
+msgid "is present"
+msgstr "присутствует"
+
+#: .\templates\count_users.html:10 .\templates\count_users.html:13
+msgid "count of users and members"
+msgstr "количество пользователей и членов"
+
+#: .\templates\count_users.html:19
+msgid "user class"
+msgstr "класс пользователей"
+
+#: .\templates\count_users.html:19
+msgid "user count"
+msgstr "количество пользователей"
+
+#: .\templates\count_users.html:22
+msgid "all users"
+msgstr "все пользователи"
+
+#: .\templates\count_users.html:23
+msgid "regular profiles"
+msgstr "регулярные профили"
+
+#: .\templates\count_users.html:24
+msgid "profiles with avatars"
+msgstr "профили с аватарами"
+
+#: .\templates\count_users.html:26
+msgid "accepted members"
+msgstr "принятые члены"
+
+#: .\templates\count_users.html:27
+msgid "community members"
+msgstr "члены сообщества"
+
+#: .\templates\count_users.html:28
+msgid "project members"
+msgstr "Участники проекта"
+
+#: .\templates\datatrans\base.html:5
+msgid "Data Translation"
+msgstr "Перевод данных"
+
+#: .\templates\datatrans\base.html:16
+msgid "Datatrans - Model Translation"
+msgstr "Datatrans - перевод моделей"
+
+#: .\templates\datatrans\base.html:19
+msgid "Welcome,"
+msgstr "Приветствовать"
+
+#: .\templates\datatrans\base.html:19
+msgid "Site administration"
+msgstr "Администрация сайта"
+
+#: .\templates\datatrans\base.html:19
+msgid "Change password"
+msgstr " Изменить пароля"
+
+#: .\templates\datatrans\base.html:24
+msgid "Models"
+msgstr "Модели"
+
+#: .\templates\datatrans\model_detail.html:4
+#: .\templates\datatrans\model_detail.html:9
+#: .\templates\datatrans\model_detail.html:13
+#: .\templates\datatrans\model_detail.html:29
+#: .\templates\datatrans\object_list.html:3
+#: .\templates\datatrans\object_list.html:4
+#: .\templates\datatrans\object_list.html:18
+#: .\templates\datatrans\translate.html:28
+#: .\templates\datatrans\translate.html:29
+#: .\templates\datatrans\translate.html:30
+#: .\templates\datatrans\translate.html:31
+#: .\templates\datatrans\translate.html:32
+#: .\templates\datatrans\translate.html:33
+#: .\templates\datatrans\translate.html:34
+#: .\templates\datatrans\translate.html:35
+msgid "Translations for"
+msgstr "Переводы для"
+
+#: .\templates\datatrans\model_detail.html:32
+#, python-format
+msgid "Progress: %(percent)s%% (%(done)s/%(total)s)"
+msgstr "прогресс:%(percent)s%%(%(done)s%(total)s)"
+
+#: .\templates\datatrans\model_detail.html:39
+msgid "Jump to first to do"
+msgstr ""
+
+#: .\templates\datatrans\model_detail.html:43
+#, python-format
+msgid "Jump to %(field_verbose_name)s field"
+msgstr ""
+
+#: .\templates\datatrans\model_detail.html:48
+msgid "done"
+msgstr "сделанный"
+
+#: .\templates\datatrans\model_detail.html:50
+msgid "to do"
+msgstr "делать"
+
+#: .\templates\datatrans\model_detail.html:52
+msgid "to do (fuzzy)"
+msgstr "делать (нечеткий)"
+
+#: .\templates\datatrans\model_detail.html:82
+msgid "Link to this translation"
+msgstr "Ссылка на этот перевод"
+
+#: .\templates\datatrans\model_detail.html:105
+msgid "tick this checkbox if the translation is deliberately empty"
+msgstr ""
+
+#: .\templates\datatrans\model_detail.html:105
+msgid "empty"
+msgstr "Пустой"
+
+#: .\templates\datatrans\model_detail.html:107
+msgid "keep this original or fuzzy"
+msgstr ""
+
+#: .\templates\datatrans\model_detail.html:107
+msgid "ignore"
+msgstr "Игнорировать"
+
+#: .\templates\datatrans\model_detail.html:116
+msgid "Save"
+msgstr "Сохранить"
+
+#: .\templates\datatrans\model_list.html:4
+#: .\templates\datatrans\model_list.html:9
+msgid "Models to translate"
+msgstr "Модели для перевода"
+
+#: .\templates\datatrans\model_list.html:10
+#, python-format
+msgid "%(words)s words"
+msgstr "%(words)s слова"
+
+#: .\templates\datatrans\model_list.html:14
+msgid "Scan models"
+msgstr "модель сканирования"
+
+#: .\templates\datatrans\model_list.html:15
+#: .\templates\datatrans\obsolete_list.html:3
+#: .\templates\datatrans\obsolete_list.html:4
+#: .\templates\datatrans\obsolete_list.html:7
+msgid "Obsolete translations"
+msgstr "Устаревшие переводы"
+
+#: .\templates\datatrans\model_list.html:21
+msgid "words"
+msgstr "Слова"
+
+#: .\templates\datatrans\model_list.html:31
+msgid "Change"
+msgstr "Изменить"
+
+#: .\templates\datatrans\model_list.html:35
+msgid "Total"
+msgstr "общий"
+
+#: .\templates\datatrans\obsolete_list.html:10
+#, python-format
+msgid "There are %(obsolete_count)s obsolete messages."
+msgstr "Есть %(obsolete_count)s устаревшие сообщения."
+
+#: .\templates\datatrans\obsolete_list.html:11
+msgid ""
+"Please review them to see if you can reuse something,\n"
+"\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
+msgstr ""
+
+#: .\templates\datatrans\obsolete_list.html:17
+#: .\templates\datatrans\obsolete_list.html:35
+msgid "Remove all obsoletes"
+msgstr "Удалить все устаревшие переводы"
+
+#: .\templates\datatrans\obsolete_list.html:21
+msgid "Obsolete message"
+msgstr "Устаревшее сообщение"
+
+#: .\templates\datatrans\obsolete_list.html:40
+msgid "There are no obsolete messages! Yay!"
+msgstr "Нет устаревших сообщений! Ура!"
+
+#: .\templates\datatrans\translate.html:7
+msgid "Translations of"
+msgstr "Переводы"
+
+#: .\templates\datatrans\translate.html:11
+msgid ""
+"Please, note that the translation functionality is affected by the original "
+"editing language of this content"
+msgstr ""
+
+#: .\templates\datatrans\translate.html:11
+msgid "and by the languages known by the user as declared in the user profile"
+msgstr ""
+
+#: .\templates\datatrans\translate.html:12
+msgid "The current active language"
+msgstr "Текущий активный язык"
+
+#: .\templates\datatrans\translate.html:12
+msgid "affects only the UI messages of this view"
+msgstr ""
+
+#: .\templates\datatrans\translate.html:40
+msgid "back to the normal view of this content"
+msgstr "вернуться к нормальному представлению этого контента"
+
+#: .\templates\datatrans\translate.html:70
+msgid "The original language of this content is not known."
+msgstr "Оригинальный язык этого содержания неизвестен."
+
+#: .\templates\django_messages\base.html:12
+msgid "message folders"
+msgstr "папка сообщений"
+
+#: .\templates\django_messages\base.html:14
+#: .\templates\django_messages\inbox.html:5
+#: .\templates\django_messages\inbox.html:7
+msgid "Inbox"
+msgstr "почтовый ящик"
+
+#: .\templates\django_messages\base.html:15
+#: .\templates\django_messages\outbox.html:5
+#: .\templates\django_messages\outbox.html:7
+msgid "Sent Messages"
+msgstr "Отправленные сообщения"
+
+#: .\templates\django_messages\base.html:17
+msgid "Trash"
+msgstr ""
+
+#: .\templates\django_messages\base.html:19
+msgid "New Message"
+msgstr "Новое сообщение"
+
+#: .\templates\django_messages\compose.html:3
+#: .\templates\django_messages\compose.html:6
+msgid "Compose Message"
+msgstr "написать сообщение"
+
+#: .\templates\django_messages\compose.html:26
+msgid "Send"
+msgstr "Отправить"
+
+#: .\templates\django_messages\inbox.html:11
+#: .\templates\django_messages\trash.html:12
+#: .\templates\django_messages\view.html:11
+msgid "Sender"
+msgstr ""
+
+#: .\templates\django_messages\inbox.html:11
+msgid "Received"
+msgstr "получено"
+
+#: .\templates\django_messages\inbox.html:11
+#: .\templates\django_messages\outbox.html:11
+#: .\templates\django_messages\trash.html:12
+msgid "Action"
+msgstr "действие"
+
+#: .\templates\django_messages\inbox.html:23
+#: .\templates\django_messages\outbox.html:20
+#: .\templates\django_messages\trash.html:21
+#: .\templates\django_messages\view.html:14
+msgid "DATETIME_FORMAT"
+msgstr ""
+
+#: .\templates\django_messages\inbox.html:24
+#: .\templates\django_messages\outbox.html:21
+#: .\templates\folder_detail.html:51 .\templates\folder_detail.html:78
+#: .\templates\lp_detail.html:67 .\templates\lp_detail.html:192
+#: .\templates\oer_detail.html:34 .\templates\oer_detail.html:185
+msgid "delete"
+msgstr "Удалить"
+
+#: .\templates\django_messages\inbox.html:30
+#: .\templates\django_messages\outbox.html:27
+#: .\templates\django_messages\trash.html:28
+msgid "No messages."
+msgstr "нет сообщения"
+
+#: .\templates\django_messages\new_message.html:3
+#, python-format
+msgid ""
+"Hello %(recipient_name)s,\n"
+"you received a private message from %(sender_name)s with the following contents:"
+msgstr "Привет %(recipient_name)s,\nВы получили личное сообщение от %(sender_name)s со следующим содержанием:"
+
+#: .\templates\django_messages\new_message.html:10
+#, python-format
+msgid "Sent from %(site_url)s"
+msgstr "Отправлено с %(site_url)s"
+
+#: .\templates\django_messages\outbox.html:11
+msgid "Sent"
+msgstr "Отправлено"
+
+#: .\templates\django_messages\trash.html:5
+#: .\templates\django_messages\trash.html:8
+msgid "Deleted Messages"
+msgstr "Удаленные сообщения"
+
+#: .\templates\django_messages\trash.html:12
+#: .\templates\django_messages\view.html:13
+msgid "Date"
+msgstr "Дата"
+
+#: .\templates\django_messages\trash.html:22
+msgid "undelete"
+msgstr "Восстановить"
+
+#: .\templates\django_messages\trash.html:31
+msgid ""
+"Deleted Messages are removed from the trash at unregular intervals, don't "
+"rely on this feature for long-time storage."
+msgstr ""
+
+#: .\templates\django_messages\view.html:5
+#: .\templates\django_messages\view.html:7
+msgid "View Message"
+msgstr "Посмотреть сообщение"
+
+#: .\templates\django_messages\view.html:21
+msgid "Reply"
+msgstr "Ответь"
+
+#: .\templates\django_messages\view.html:23
+#: .\templates\pybb\post_template.html:59
+msgid "Delete"
+msgstr "Удалить"
+
+#: .\templates\document_view.html:5
+msgid "node"
+msgstr "узел"
+
+#: .\templates\document_view.html:40 .\templates\folder_detail.html:31
+#: .\templates\online_resource_view.html:22
+#: .\templates\project_results.html:76
+msgid "show project"
+msgstr "показать проект"
+
+#: .\templates\edit_preferences.html:6 .\templates\edit_preferences.html:11
+#: .\templates\user_preferences.html:5
+msgid "preferences of"
+msgstr "предпочтения"
+
+#: .\templates\file_upload.html:23 .\templates\folder_detail.html:117
+#: .\templates\oer_detail.html:210 .\templates\project_detail.html:561
+#: .\templates\project_edit.html:16 .\templates\project_edit.html:18
+#: .\templates\project_edit.html:57 .\templates\project_edit.html:59
+#: .\templates\user_profile.html:182 .\templates\user_profile.html:238
+msgid "add"
+msgstr "Добавить"
+
+#: .\templates\file_upload.html:23 .\templates\folder_detail.html:117
+#: .\templates\oer_detail.html:210 .\templates\user_profile.html:182
+msgid "upload"
+msgstr "Загрузить"
+
+#: .\templates\file_upload.html:24 .\templates\folder_detail.html:118
+#: .\templates\oer_detail.html:211 .\templates\user_profile.html:183
+msgid "cancel"
+msgstr "удалить"
+
+#: .\templates\filebrowser\index.html:86
+msgid "New Folder"
+msgstr "новая папка"
+
+#: .\templates\filebrowser\index.html:87
+msgid "Upload"
+msgstr "Загрузить"
+
+#: .\templates\filebrowser\index.html:98 .\templates\search_lps.html:18
+#: .\templates\search_projects.html:18 .\templates\search_repos.html:18
+#: .\templates\zinnia\skeleton.html:34
+msgid "Search"
+msgstr "Поиск"
+
+#: .\templates\folder_detail.html:5
+msgid "shared folder for"
+msgstr "общая папка для"
+
+#: .\templates\folder_detail.html:45 .\templates\project_detail.html:187
+msgid "created by"
+msgstr "созданный"
+
+#: .\templates\folder_detail.html:52 .\templates\folder_detail.html:79
+#: .\templates\oer_edit.html:22 .\templates\pathnode_edit.html:46
+#: .\templates\project_edit.html:9 .\templates\project_edit.html:51
+msgid "edit"
+msgstr "редактировать "
+
+#: .\templates\folder_detail.html:68
+msgid "added by"
+msgstr "добавлены"
+
+#: .\templates\folder_detail.html:71
+msgid "loaded by"
+msgstr "загружен"
+
+#: .\templates\folder_detail.html:102
+msgid "no shared documents are present"
+msgstr "нет общих документов"
+
+#: .\templates\folder_detail.html:112 .\templates\oer_detail.html:205
+msgid "add document"
+msgstr "добавить документ"
+
+#: .\templates\folder_detail.html:123
+msgid "add subfolder"
+msgstr "добавить папку"
+
+#: .\templates\folder_detail.html:133 .\templates\mentoring_detail.html:431
+#: .\templates\project_detail.html:449 .\templates\project_detail.html:746
+#: .\templates\project_detail.html:987
+msgid "create"
+msgstr "Создать"
+
+#: .\templates\folder_detail.html:139
+msgid "add online resource"
+msgstr "добавить онлайн ресурс"
+
+#: .\templates\folder_detail.html:190 .\templates\lp_detail.html:314
+#: .\templates\oer_detail.html:304 .\templates\oer_detail.html:325
+#: .\templates\user_profile.html:319
+msgid "do you really want to delete"
+msgstr "Вы действительно хотите удалить"
+
+#: .\templates\folder_detail.html:191 .\templates\oer_detail.html:326
+msgid "this document"
+msgstr "этот документ"
+
+#: .\templates\folder_detail.html:194
+msgid "this folder"
+msgstr "эта папка"
+
+#: .\templates\folder_edit.html:5 .\templates\folder_edit.html:12
+msgid "edit folder"
+msgstr "редактировать папку"
+
+#: .\templates\folderdocument_edit.html:5
+#: .\templates\folderdocument_edit.html:12
+msgid "edit document in folder"
+msgstr "редактировать документ в папке"
+
+#: .\templates\forum_analytics.html:5 .\templates\forum_analytics.html:11
+msgid "forum analytics"
+msgstr "аналитика форумов"
+
+#: .\templates\forum_analytics.html:15
+msgid "forums with topics by posts"
+msgstr "форумы с темами по сообщениям"
+
+#: .\templates\forum_analytics.html:30
+msgid "forum topics by posts"
+msgstr "темы форумов по количеству постов"
+
+#: .\templates\forum_edit.html:7 .\templates\forum_edit.html:13
+msgid "edit forum"
+msgstr "редактировать форум"
+
+#: .\templates\homepage.html:6 .\views.py:139
+msgid "Learn with others, Create, Reuse"
+msgstr "Учиться с другими, Создать, использовать снова"
+
+#: .\templates\homepage.html:147 .\views.py:136
+msgid "learning in online communities of practice"
+msgstr "учиться в онлайн сообществах практики"
+
+#: .\templates\homepage.html:148 .\views.py:136
+msgid "reusing resources to build learning paths"
+msgstr "повторное использование ресурсов для построения путей обучения"
+
+#: .\templates\homepage.html:149 .\views.py:136
+msgid "browsing collections in our library of OERs"
+msgstr "исследовать коллекции в нашей библиотеке ОУР"
+
+#: .\templates\homepage.html:150
+msgid "join the Community now"
+msgstr "присоединиться к Сообществу сейчас"
+
+#: .\templates\homepage.html:171
+msgid "visible from"
+msgstr "видно из"
+
+#: .\templates\homepage.html:200
+msgid "newest project"
+msgstr "самый последний проект"
+
+#: .\templates\homepage.html:204
+msgid "most active project"
+msgstr "самый активный проект"
+
+#: .\templates\homepage.html:208
+msgid "most popular project"
+msgstr "самый популярный проект"
+
+#: .\templates\homepage.html:212
+msgid "newest learning path"
+msgstr "новейший путь обучения"
+
+#: .\templates\homepage.html:216
+msgid "most popular learning path"
+msgstr "самый популярный путь обучения"
+
+#: .\templates\homepage.html:220
+msgid "newest OER"
+msgstr ""
+
+#: .\templates\homepage.html:224
+msgid "most popular OER"
+msgstr "самый популярный ОУР"
+
+#: .\templates\homepage.html:247
+msgid "learn more"
+msgstr "учить больше"
+
+#: .\templates\lp_detail.html:71
+msgid "bookmark this LP for future reference"
+msgstr "добавить в закладки этот LPS для будущего использования"
+
+#: .\templates\lp_detail.html:72
+msgid "mark this LP as a candidate for cut & paste"
+msgstr ""
+
+#: .\templates\lp_detail.html:162
+msgid "convert to sequence type"
+msgstr "конвертировать в тип последовательности"
+
+#: .\templates\lp_detail.html:165
+msgid "convert to simple collection"
+msgstr "конвертировать в простую коллекцию"
+
+#: .\templates\lp_detail.html:168 .\templates\lp_detail.html:171
+msgid "convert to graph type"
+msgstr "конвертировать в тип графика"
+
+#: .\templates\lp_detail.html:168
+msgid "in tree form"
+msgstr ""
+
+#: .\templates\lp_detail.html:168
+msgid "suggested only for few nodes"
+msgstr "предлагается только для нескольких узлов"
+
+#: .\templates\lp_detail.html:171
+msgid "with unconnected nodes"
+msgstr "с неподключенными узлами"
+
+#: .\templates\lp_detail.html:196 .\templates\lp_detail.html:198
+#: .\templates\oer_detail.html:188 .\templates\oer_detail.html:190
+msgid "move up"
+msgstr "двигаться вверх"
+
+#: .\templates\lp_detail.html:196 .\templates\lp_detail.html:197
+#: .\templates\oer_detail.html:188 .\templates\oer_detail.html:189
+msgid "move down"
+msgstr "двигаться вниз"
+
+#: .\templates\lp_detail.html:231 .\templates\pathnode_edit.html:7
+msgid "add node"
+msgstr "добавить узел"
+
+#: .\templates\lp_detail.html:233
+msgid "add node with OER"
+msgstr "добавить узла с ОУР"
+
+#: .\templates\lp_detail.html:241
+msgid "cloned from"
+msgstr "клонирован из"
+
+#: .\templates\lp_detail.html:248
+msgid "grant editor roles"
+msgstr "назначить роль редактора"
+
+#: .\templates\lp_detail.html:255
+msgid "editor"
+msgstr "Редактор"
+
+#: .\templates\lp_detail.html:259
+msgid "grant role"
+msgstr "предоставлять роль"
+
+#: .\templates\lp_detail.html:264
+msgid "remove role"
+msgstr "удалить роль"
+
+#: .\templates\lp_detail.html:276
+msgid ""
+"do not submit this LP for publication if you want that only your mentor see "
+"it"
+msgstr "не представить этот LP для публикации, если вы хотите, чтобы только ваш наставник увидеть его"
+
+#: .\templates\lp_detail.html:280
+msgid ""
+"To submit for publication this LP, you must move it before to a project by "
+"using the tool"
+msgstr "Чтобы представить для публикации этот LP, вы должны переместить его до проекта с помощью инструментане  "
+
+#: .\templates\lp_detail.html:315 .\templates\lp_detail.html:321
+msgid "this learning path"
+msgstr "этот путь обучения"
+
+#: .\templates\lp_detail.html:320
+msgid "do you really want to convert"
+msgstr "Вы действительно хотите конвертировать"
+
+#: .\templates\lp_detail.html:340
+msgid "do you really want to grant the editor role to this member"
+msgstr "Вы действительно хотите, чтобы предоставить роль редактора для этого члена"
+
+#: .\templates\lp_detail.html:342
+msgid "do you really want to remove this role"
+msgstr "Вы действительно хотите, чтобы удалить эту роль"
+
+#: .\templates\lp_edit.html:7 .\templates\lp_edit.html:14
+msgid "edit learning path"
+msgstr "редактировать путь обучения"
+
+#: .\templates\lp_edit.html:7 .\templates\lp_edit.html:14
+msgid "add learning path"
+msgstr "добавить путь обучения"
+
+#: .\templates\lp_play.html:116 .\templates\lp_play.html:176
+msgid "prev"
+msgstr ""
+
+#: .\templates\lp_play.html:128 .\templates\lp_play.html:177
+msgid "next"
+msgstr "Следующий"
+
+#: .\templates\lp_play.html:160
+msgid "currently this OER is not public"
+msgstr "в настоящее время этот ОУР не является публичным"
+
+#: .\templates\mentoring_detail.html:143
+msgid "mentee"
+msgstr "подопечный"
+
+#: .\templates\mentoring_detail.html:173
+msgid ""
+"a request must be submitted to the community administrator, which will try "
+"to allocate a mentor"
+msgstr "запрос должен быть отправлен администратору сообщества, который попытается выделить наставника"
+
+#: .\templates\mentoring_detail.html:234
+msgid "documents"
+msgstr "Документы"
+
+#: .\templates\mentoring_detail.html:265 .\templates\mentoring_detail.html:313
+msgid "confirm your choice"
+msgstr "подтвердить свой выбор"
+
+#: .\templates\mentoring_detail.html:288
+msgid "my previous refusals"
+msgstr "мои предыдущие отказы"
+
+#: .\templates\mentoring_detail.html:328
+msgid "received messages"
+msgstr "полученные сообщения"
+
+#: .\templates\mentoring_detail.html:329
+msgid "sent messages"
+msgstr "отправленные сообщения"
+
+#: .\templates\mentoring_detail.html:330
+msgid "new message"
+msgstr "новое сообщение"
+
+#: .\templates\mentoring_detail.html:341
+msgid "no messages received"
+msgstr "нет сообщения получено"
+
+#: .\templates\mentoring_detail.html:352
+msgid "no messages sent"
+msgstr "нет сообщения отправлено"
+
+#: .\templates\mentoring_detail.html:365
+msgid "send"
+msgstr "Отправить"
+
+#: .\templates\mentoring_detail.html:377
+msgid "submit request to admin"
+msgstr "отправить запрос админу"
+
+#: .\templates\mentoring_detail.html:377
+msgid "submit request"
+msgstr "отправить запрос"
+
+#: .\templates\mentoring_detail.html:385
+msgid "back to draft state"
+msgstr "возвращается в черновое состояние"
+
+#: .\templates\mentoring_detail.html:389 .\templates\project_detail.html:303
+#: .\templates\project_detail.html:864
+msgid "open"
+msgstr "Открыть"
+
+#: .\templates\mentoring_detail.html:391 .\templates\project_detail.html:304
+#: .\templates\project_detail.html:865
+msgid "close"
+msgstr "Закрыть"
+
+#: .\templates\mentoring_detail.html:394
+msgid "view the shared folder"
+msgstr "просмотреть общую папку"
+
+#: .\templates\mentoring_detail.html:400 .\templates\project_detail.html:405
+#: .\templates\project_detail.html:971
+msgid "meeting"
+msgstr "встреча"
+
+#: .\templates\mentoring_detail.html:412 .\templates\project_detail.html:421
+#: .\templates\project_detail.html:432
+msgid "classify"
+msgstr "Классифицировать"
+
+#: .\templates\mentoring_detail.html:419 .\templates\mentoring_detail.html:438
+#: .\templates\project_detail.html:437 .\templates\project_detail.html:454
+msgid "share"
+msgstr "поделиться"
+
+#: .\templates\mentoring_detail.html:429 .\templates\project_detail.html:447
+#: .\templates\project_detail.html:985
+msgid "LP"
+msgstr "ОП"
+
+#: .\templates\mentoring_detail.html:452 .\templates\project_detail.html:601
+#: .\templates\project_detail.html:1001
+msgid "last learning paths"
+msgstr "последние пути обучения"
+
+#: .\templates\mentoring_detail.html:459 .\templates\mentoring_detail.html:484
+#: .\templates\project_detail.html:609 .\templates\project_detail.html:636
+#: .\templates\project_detail.html:662 .\templates\project_detail.html:1008
+msgid "read more"
+msgstr "читать далее"
+
+#: .\templates\mentoring_detail.html:465 .\templates\project_detail.html:616
+msgid "shared LPs"
+msgstr "общие ОП"
+
+#: .\templates\mentoring_detail.html:468 .\templates\project_detail.html:619
+msgid "unshare this LP"
+msgstr ""
+
+#: .\templates\mentoring_detail.html:477 .\templates\project_detail.html:628
+msgid "last OERs"
+msgstr "последние  ОУР"
+
+#: .\templates\mentoring_detail.html:493 .\templates\project_detail.html:646
+msgid "unshare this OER"
+msgstr "прекратить делиться ОУР"
+
+#: .\templates\message_analytics.html:6 .\templates\message_analytics.html:17
+msgid "messages analytics"
+msgstr "статистика сообщений"
+
+#: .\templates\message_analytics.html:22
+msgid "messages by month"
+msgstr "сообщения по месяцам"
+
+#: .\templates\new_posts.html:6
+msgid "new posts in your forums"
+msgstr "новые сообщения в ваших форумах"
+
+#: .\templates\new_posts.html:9
+msgid "new posts in my forums"
+msgstr "новые сообщения в моих форумах"
+
+#: .\templates\new_posts.html:10
+msgid "posts added to topics after you last viewed them"
+msgstr "сообщения, добавленные к темам после последнего просмотра их"
+
+#: .\templates\new_posts.html:25
+msgid "no new posts are present"
+msgstr "нет новых постов присутствуют"
+
+#: .\templates\notification\email_body.txt:1
+#, python-format
+msgid "%(body)s"
+msgstr "%(body)s"
+
+#: .\templates\notification\email_subject.txt:1
+#, python-format
+msgid "%(subject)s"
+msgstr "%(subject)s"
+
+#: .\templates\notification\full.txt:1 .\templates\notification\short.txt:1
+#, python-format
+msgid "%(notice)s"
+msgstr "%(notice)s"
+
+#: .\templates\oer_detail.html:41 .\templates\oer_screenshot_upload.html:8
+msgid "upload screenshot"
+msgstr "загрузить скриншот"
+
+#: .\templates\oer_detail.html:42 .\templates\oer_view.html:32
+msgid "bookmark this OER for future reference"
+msgstr "добавить в закладки этот ОУР для будущего использования"
+
+#: .\templates\oer_detail.html:44
+msgid "mark this OER as a candidate for cut & paste"
+msgstr ""
+
+#: .\templates\oer_detail.html:63 .\templates\oer_detail.html:71
+#: .\templates\oer_detail.html:75 .\templates\oer_detail.html:90
+#: .\templates\oer_detail.html:94
+msgid "view resource"
+msgstr "посмотреть ресурс"
+
+#: .\templates\oer_detail.html:106
+msgid "reference info"
+msgstr "информация ссылки"
+
+#: .\templates\oer_detail.html:150
+msgid "other metadata"
+msgstr "другие метаданные"
+
+#: .\templates\oer_detail.html:164
+msgid "derived, through translation and adaptation / remixing, from"
+msgstr "полученные, через перевод и адаптацию / ремиксы, от"
+
+#: .\templates\oer_detail.html:165
+msgid "derived, through translation, from"
+msgstr "полученных, через перевод, от"
+
+#: .\templates\oer_detail.html:166
+msgid "derived, through adaptation / remixing, from"
+msgstr "полученные, через адаптацию / ремиксы, от"
+
+#: .\templates\oer_detail.html:226
+msgid "to be able to publish this OER you must, fill some required fields"
+msgstr ""
+
+#: .\templates\oer_detail.html:230 .\templates\oer_evaluations.html:36
+msgid "evaluations"
+msgstr "Оценки"
+
+#: .\templates\oer_detail.html:233 .\templates\project_detail.html:658
+#: .\templates\project_results.html:118
+msgid "view evaluations"
+msgstr "просмотреть оценки"
+
+#: .\templates\oer_detail.html:235
+msgid "no evaluation"
+msgstr "нет оценки"
+
+#: .\templates\oer_detail.html:240 .\templates\oer_evaluation_detail.html:13
+#: .\templates\oer_evaluation_edit.html:17
+msgid "edit evaluation"
+msgstr "редактировать оценку"
+
+#: .\templates\oer_detail.html:240 .\templates\oer_evaluation_edit.html:17
+msgid "add evaluation"
+msgstr "добавить оценку"
+
+#: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
+msgid "to add evaluation"
+msgstr "добавить оценку"
+
+#: .\templates\oer_detail.html:252
+msgid "LPs referring this OER"
+msgstr ""
+
+#: .\templates\oer_detail.html:260
+msgid ""
+"To edit this OER, you must move it before to a project by using the tool"
+msgstr "Чтобы редактировать этот ОУР, вам нужно переместить его в проект с инструментом"
+
+#: .\templates\oer_detail.html:305
+msgid "this OER"
+msgstr "это  ОУР"
+
+#: .\templates\oer_edit.html:7
+msgid "edit OER"
+msgstr "редактировать ОУР"
+
+#: .\templates\oer_edit.html:7 .\templates\oer_edit.html:22
+msgid "add OER"
+msgstr "добавить ОУР"
+
+#: .\templates\oer_edit.html:39 .\templates\profile_edit.html:31
+#: .\templates\user_profile.html:60
+msgid "general information"
+msgstr "общая информация"
+
+#: .\templates\oer_edit.html:39
+msgid "classification metadata"
+msgstr "классификационные метаданные"
+
+#: .\templates\oer_edit.html:41
+msgid "source and derivation"
+msgstr "источник и деривация"
+
+#: .\templates\oer_evaluation_detail.html:5
+msgid "evaluation of OER"
+msgstr "оценка  ОУР"
+
+#: .\templates\oer_evaluation_detail.html:11
+msgid "evaluation of"
+msgstr "оценка"
+
+#: .\templates\oer_evaluation_detail.html:18
+#: .\templates\oer_evaluations.html:45
+msgid "overall assessment"
+msgstr "Общая оценка"
+
+#: .\templates\oer_evaluation_detail.html:20
+msgid "OER review"
+msgstr "Обзор ОУР"
+
+#: .\templates\oer_evaluation_edit.html:6
+msgid "edit evaluation of OER"
+msgstr " редактировать оценки OER"
+
+#: .\templates\oer_evaluation_edit.html:6
+msgid "add evaluation of OER"
+msgstr "добавить оценку ОУР"
+
+#: .\templates\oer_evaluation_edit.html:14 .\templates\oer_evaluations.html:33
+msgid "show OER"
+msgstr "показать ОУР"
+
+#: .\templates\oer_evaluation_edit.html:28 .\templates\oer_evaluations.html:51
+msgid "detailed quality assessment"
+msgstr "детальная оценка"
+
+#: .\templates\oer_evaluations.html:5
+msgid "evaluations of OER"
+msgstr "оценки OER"
+
+#: .\templates\oer_evaluations.html:61
+msgid "evaluated by"
+msgstr "оценены"
+
+#: .\templates\oer_list.html:5 .\templates\oer_list.html:12
+msgid "resources"
+msgstr "Ресурсы"
+
+#: .\templates\oer_list.html:5 .\templates\oer_list.html:12
+msgid "catalogued by"
+msgstr "каталогизировано"
+
+#: .\templates\oer_list.html:21
+msgid "no OERs are present"
+msgstr "Нет ОУР"
+
+#: .\templates\oer_list.html:21
+msgid "submitted by this user"
+msgstr "представленный этим пользователем"
+
+#: .\templates\oer_screenshot_upload.html:16
+msgid "upload screenshot of OER"
+msgstr "загрузить скриншот ОУР"
+
+#: .\templates\oer_screenshot_upload.html:31
+msgid "remove screenshot"
+msgstr "удалить скриншот"
+
+#: .\templates\oer_view.html:31
+msgid "evaluate"
+msgstr "Оценить"
+
+#: .\templates\oers_by_project.html:12 .\templates\oers_by_project.html:23
+msgid "catalogued OERs"
+msgstr "каталогизированные ОУР"
+
+#: .\templates\oers_by_project.html:12
+msgid "by project"
+msgstr "по проекту"
+
+#: .\templates\oers_by_project.html:23
+msgid "no project"
+msgstr "нет проекта"
+
+#: .\templates\oers_by_project.html:23
+msgid "has"
+msgstr ""
+
+#: .\templates\online_resource_edit.html:5
+#: .\templates\online_resource_edit.html:12
+msgid "edit online resource in folder"
+msgstr "редактировать онлайн-ресурс в папке"
+
+#: .\templates\pathnode_detail.html:5
+msgid "node of path"
+msgstr "узел пути"
+
+#: .\templates\pathnode_detail.html:15
+msgid ""
+"IMPORTANT NOTICE! To be able to edit this node, you must first set the "
+"editing language of the learning path it belongs to"
+msgstr "ВАЖНОЕ УВЕДОМЛЕНИЕ! Чтобы иметь возможность редактировать этот узел, вы должны сначала установить язык редактирования пути обучения, к которому он принадлежит"
+
+#: .\templates\pathnode_detail.html:31
+msgid "show learning path"
+msgstr "показать путь обучения"
+
+#: .\templates\pathnode_edit.html:7
+msgid "edit learning path node"
+msgstr "редактировать узел пути обучения"
+
+#: .\templates\pathnode_edit.html:46
+msgid "add learning path node"
+msgstr "добавить узел пути обучения"
+
+#: .\templates\pathnode_edit.html:48
+msgid ""
+"In this form you can specify 3 types of resources: 1) an OER; 2) a document "
+"tailored to the needs of this learning path (LP); 3) a formatted text. When "
+"playing the LP, the platform will visualize only one of them: the OER, if "
+"present, otherwise the document or the formatted text as the last choice."
+msgstr "В этой форме можно указать 3 типа ресурсов: 1) OER; 2) документ, адаптированный к потребностям этого пути обучения (LP); 3) отформатированный текст. При воспроизведении LP, платформа будет визуализировать только один из них: OER, если присутствует, в противном случае документ или отформатированный текст, как последний выбор."
+
+#: .\templates\pathnode_edit.html:86
+msgid "remove selected file"
+msgstr "удалить выбранный файл"
+
+#: .\templates\profile_avatar_upload.html:7
+#: .\templates\profile_avatar_upload.html:14 .\templates\user_profile.html:21
+msgid "upload photo"
+msgstr "загрузить фото"
+
+#: .\templates\profile_avatar_upload.html:27
+msgid "remove photo"
+msgstr "удалить фото"
+
+#: .\templates\profile_edit.html:7 .\templates\profile_edit.html:24
+msgid "edit the profile of"
+msgstr "редактировать профиль"
+
+#: .\templates\profile_edit.html:31 .\templates\profile_mentor_edit.html:21
+#: .\templates\user_profile.html:145 .\templates\user_profile.html:214
+msgid "communication preferences"
+msgstr "коммуникационные предпочтения"
+
+#: .\templates\profile_mentor_edit.html:7
+#: .\templates\profile_mentor_edit.html:15
+msgid "edit mentoring related information for"
+msgstr "редактировать информацию о наставничество для"
+
+#: .\templates\profile_mentor_edit.html:21 .\templates\user_profile.html:195
+msgid "mentor information"
+msgstr "информация наставника"
+
+#: .\templates\project_detail.html:7 .\templates\project_detail.html:744
+#: .\templates\project_detail.html:746 .\templates\project_detail.html:825
+#: .\templates\project_edit.html:16 .\templates\project_edit.html:57
+msgid "roll of mentors"
+msgstr "реестр наставников"
+
+#: .\templates\project_detail.html:161 .\templates\project_detail.html:167
+msgid "reserved project"
+msgstr "зарезервированный проект"
+
+#: .\templates\project_detail.html:208 .\templates\project_detail.html:212
+#: .\templates\project_detail.html:216 .\templates\project_detail.html:220
+#: .\templates\project_detail.html:224 .\templates\user_profile.html:248
+msgid "view community"
+msgstr "посмотреть сообщество"
+
+#: .\templates\project_detail.html:232
+msgid "child projects"
+msgstr "подпроект"
+
+#: .\templates\project_detail.html:238 .\templates\project_detail.html:242
+#: .\templates\project_detail.html:246 .\templates\project_detail.html:250
+#: .\templates\project_detail.html:254 .\templates\project_detail.html:268
+#: .\templates\project_detail.html:272 .\templates\project_detail.html:276
+#: .\templates\project_detail.html:280 .\templates\project_detail.html:284
+#: .\templates\user_profile.html:268
+msgid "view project"
+msgstr "посмотреть проект"
+
+#: .\templates\project_detail.html:238 .\templates\project_detail.html:242
+#: .\templates\project_detail.html:246 .\templates\project_detail.html:250
+#: .\templates\project_detail.html:254 .\templates\project_detail.html:268
+#: .\templates\project_detail.html:272 .\templates\project_detail.html:276
+#: .\templates\project_detail.html:280 .\templates\project_detail.html:284
+msgid "view child project"
+msgstr "посмотреть подпроект"
+
+#: .\templates\project_detail.html:262
+msgid "support projects"
+msgstr "проекты поддержки"
+
+#: .\templates\project_detail.html:262
+msgid "child support projects"
+msgstr " подпроекты поддержки"
+
+#: .\templates\project_detail.html:300 .\templates\project_detail.html:861
+msgid "translate"
+msgstr "переводить"
+
+#: .\templates\project_detail.html:301 .\templates\project_detail.html:862
+#: .\templates\project_logo_upload.html:8
+msgid "upload logo"
+msgstr "загрузить логотип"
+
+#: .\templates\project_detail.html:302 .\templates\project_detail.html:863
+#: .\templates\project_image_upload.html:8
+msgid "upload image"
+msgstr "загрузить изображение"
+
+#: .\templates\project_detail.html:314
+msgid "new community"
+msgstr "новое сообщество"
+
+#: .\templates\project_detail.html:316
+msgid "create community"
+msgstr "создать сообщество"
+
+#: .\templates\project_detail.html:323
+msgid "new project"
+msgstr "новый проект"
+
+#: .\templates\project_detail.html:325 .\templates\project_detail.html:326
+#: .\templates\project_detail.html:337 .\templates\project_detail.html:339
+msgid "create project"
+msgstr "создать проект"
+
+#: .\templates\project_detail.html:325 .\templates\project_detail.html:326
+#: .\templates\project_detail.html:337 .\templates\project_detail.html:339
+msgid "create child project"
+msgstr "создать подпроект"
+
+#: .\templates\project_detail.html:334
+msgid "new child project"
+msgstr "новый подпроект"
+
+#: .\templates\project_detail.html:356 .\templates\project_detail.html:369
+msgid "new forum"
+msgstr "новый форум"
+
+#: .\templates\project_detail.html:361
+msgid "thematic"
+msgstr "тематический"
+
+#: .\templates\project_detail.html:388 .\templates\project_detail.html:954
+msgid "shared folder"
+msgstr "общая папка"
+
+#: .\templates\project_detail.html:394 .\templates\project_detail.html:965
+msgid "message to members"
+msgstr "сообщение для членов"
+
+#: .\templates\project_detail.html:400 .\templates\project_detail.html:959
+#: .\templates\user_dashboard.html:40
+msgid "forum"
+msgstr "Форум"
+
+#: .\templates\project_detail.html:434 .\templates\project_detail.html:451
+#: .\templates\project_detail.html:989
+msgid "paste"
+msgstr "Вставить"
+
+#: .\templates\project_detail.html:457
+msgid "clone"
+msgstr "Клон"
+
+#: .\templates\project_detail.html:466
+msgid "eXperience"
+msgstr "Опыт"
+
+#: .\templates\project_detail.html:468
+msgid "record"
+msgstr "рекорд"
+
+#: .\templates\project_detail.html:484 .\templates\project_detail.html:495
+#: .\templates\project_detail.html:508 .\templates\project_detail.html:902
+msgid "apply for membership"
+msgstr "подать заявку на членство"
+
+#: .\templates\project_detail.html:484 .\templates\project_detail.html:495
+#: .\templates\project_detail.html:508 .\templates\project_detail.html:902
+msgid "join"
+msgstr "Присоединиться к"
+
+#: .\templates\project_detail.html:487 .\templates\project_detail.html:908
+msgid "your application is waiting for acceptation by the "
+msgstr "ваше заявление ожидает принятия"
+
+#: .\templates\project_detail.html:498 .\templates\project_detail.html:511
+msgid "to join this community"
+msgstr "чтобы присоединиться к этому сообществу"
+
+#: .\templates\project_detail.html:498 .\templates\project_detail.html:511
+msgid "to join this project"
+msgstr "чтобы присоединиться к этому проекту"
+
+#: .\templates\project_detail.html:530 .\templates\project_detail.html:924
+msgid "call back supervisor role"
+msgstr "перезвонить роль руководителя"
+
+#: .\templates\project_detail.html:535 .\templates\project_detail.html:929
+msgid "grant supervisor role"
+msgstr "предоставлять роль руководителя"
+
+#: .\templates\project_detail.html:548 .\templates\project_detail.html:884
+#: .\templates\user_dashboard.html:107 .\templates\user_dashboard.html:129
+#: .\templates\user_dashboard.html:151
+msgid "applications"
+msgstr "Приложения"
+
+#: .\templates\project_detail.html:551
+msgid "accept application to this community or project"
+msgstr "принять заявку в это сообщество или проект"
+
+#: .\templates\project_detail.html:560
+msgid "add a member by your initiative"
+msgstr "добавить участника по вашей инициативе"
+
+#: .\templates\project_detail.html:570
+msgid "select new administrator"
+msgstr "выбрать нового администратора"
+
+#: .\templates\project_detail.html:570
+msgid "select new supervisor"
+msgstr "выбрать нового руководителя"
+
+#: .\templates\project_detail.html:571
+msgid "apply"
+msgstr "применять"
+
+#: .\templates\project_detail.html:655
+msgid "last OERs evaluated"
+msgstr "последние ОУР оценены"
+
+#: .\templates\project_detail.html:704
+msgid "mentoring policy"
+msgstr "политика наставничества"
+
+#: .\templates\project_detail.html:746
+msgid "create roll of mentors"
+msgstr "создать реестр наставников"
+
+#: .\templates\project_detail.html:758
+msgid "current mentoring setup model for this community"
+msgstr "модель активации наставничества для этого сообщества"
+
+#: .\templates\project_detail.html:759
+msgid "it is possible to choose a mentor from another community"
+msgstr "можно выбрать наставника из другого сообщества"
+
+#: .\templates\project_detail.html:767 .\templates\user_dashboard.html:291
+msgid "my mentoring projects as a mentee"
+msgstr "мои наставнические проекты в качестве подопечный"
+
+#: .\templates\project_detail.html:771 .\templates\project_detail.html:806
+msgid "mentoring project"
+msgstr "наставничество проекта"
+
+#: .\templates\project_detail.html:791 .\templates\project_edit.html:14
+#: .\templates\project_edit.html:55
+msgid "request a mentor"
+msgstr "просить наставника"
+
+#: .\templates\project_detail.html:802
+msgid "mentoring requests"
+msgstr "запросы наставничества"
+
+#: .\templates\project_detail.html:835
+msgid "mentoring is not available for members of this community."
+msgstr "наставничество не доступно для членов этого сообщества"
+
+#: .\templates\project_detail.html:874
+msgid "create forum"
+msgstr "создать форум"
+
+#: .\templates\project_detail.html:889
+msgid "accept application to this roll of mentors"
+msgstr "принять заявку на этот список наставников"
+
+#: .\templates\project_detail.html:904 .\templates\user_profile.html:238
+msgid "edit mentor profile"
+msgstr "изменить профиль наставника"
+
+#: .\templates\project_detail.html:904
+msgid "to apply you must fill the mentor presentation in your profile"
+msgstr "чтобы подать заявку, вы должны заполнить презентацию наставника в вашем профиле"
+
+#: .\templates\project_detail.html:1037
+msgid ""
+"do you really want to grant the admin or supervisor role to this member"
+msgstr "Вы действительно хотите предоставить роль админа или руководителя этому члену"
+
+#: .\templates\project_detail.html:1039
+msgid ""
+"do you really want to call back the admin or supervisor role from this "
+"member"
+msgstr "Вы действительно хотите, чтобы перезвонить админ или руководитель роль от этого члена"
+
+#: .\templates\project_edit.html:21 .\templates\project_edit.html:62
+msgid "child project"
+msgstr "подпроект"
+
+#: .\templates\project_image_upload.html:16
+msgid "upload image of project"
+msgstr "загрузить изображение проекта"
+
+#: .\templates\project_image_upload.html:31
+msgid "remove image"
+msgstr "удалить изображение"
+
+#: .\templates\project_logo_upload.html:16
+msgid "upload logo of project"
+msgstr "загрузить логотип проекта"
+
+#: .\templates\project_logo_upload.html:31
+msgid "remove logo"
+msgstr "удалить логотип"
+
+#: .\templates\project_results.html:6 .\templates\project_results.html:79
+msgid "results of project"
+msgstr "результаты проекта"
+
+#: .\templates\project_results.html:88 .\templates\resources_by.html:53
+msgid "OERs evaluated"
+msgstr "ОУР оценены"
+
+#: .\templates\project_results.html:99 .\templates\user_dashboard.html:461
+msgid "no Learning Path created yet"
+msgstr "нет пути обучения создан еще"
+
+#: .\templates\project_results.html:110 .\templates\user_dashboard.html:407
+msgid "no OER classified yet"
+msgstr "нет ОУР классифицированы еще"
+
+#: .\templates\project_results.html:124
+msgid "no OER evaluated yet"
+msgstr " не ОУР оценен"
+
+#: .\templates\projects.html:6
+msgid "all projects"
+msgstr "все проекты"
+
+#: .\templates\projects.html:10
+msgid "all open projects"
+msgstr "все открытые проекты"
+
+#: .\templates\projects.html:17
+msgid "project type"
+msgstr "тип проекта"
+
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "login"
+msgstr "авторизоваться"
+
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "to post a reply"
+msgstr "чтобы опубликовать ответ"
+
+#: .\templates\pybb\base.html:13
+msgid "Latest posts on forum"
+msgstr "Последние сообщения на форуме"
+
+#: .\templates\pybb\base.html:14
+msgid "Latest topics on forum"
+msgstr "Последние темы на форуме"
+
+#: .\templates\pybb\breadcrumb.html:6
+msgid "forums index"
+msgstr "индекс форумов"
+
+#: .\templates\pybb\breadcrumb.html:27 .\templates\pybb\breadcrumb.html:33
+msgid "go to project"
+msgstr "перейти к проекту"
+
+#: .\templates\pybb\forum_list.html:9
+msgid "Forum"
+msgstr "Форум"
+
+#: .\templates\pybb\forum_list.html:12
+msgid "Topics"
+msgstr "Темы"
+
+#: .\templates\pybb\forum_list.html:15 .\templates\pybb\topic.html:34
+#: .\templates\pybb\topic.html:54 .\templates\pybb\topic_list.html:11
+msgid "Posts"
+msgstr "Сообщения"
+
+#: .\templates\pybb\forum_list.html:19 .\templates\pybb\topic_list.html:15
+msgid "unviewed by me"
+msgstr "не просмотрено мной"
+
+#: .\templates\pybb\forum_list.html:23
+msgid "Last posts"
+msgstr "Последние сообщения"
+
+#: .\templates\pybb\forum_list.html:36 .\templates\pybb\forum_list.html:63
+msgid "Hidden"
+msgstr "скрытый"
+
+#: .\templates\pybb\forum_list.html:88
+msgid "No forums created"
+msgstr "Форумы не созданы"
+
+#: .\templates\pybb\forum_list.html:89
+msgid "Add forum now"
+msgstr "Добавить форум сейчас"
+
+#: .\templates\pybb\index.html:8
+msgid "List"
+msgstr "Список"
+
+#: .\templates\pybb\index.html:20
+msgid "Forum categories are not created"
+msgstr "ни одна категория форумов не была создана"
+
+#: .\templates\pybb\index.html:21
+msgid "Add a category now"
+msgstr "Добавить категорию сейчас"
+
+#: .\templates\pybb\index.html:27
+msgid "Last updates in topics"
+msgstr "Последние обновления в темах"
+
+#: .\templates\pybb\pagination.html:7
+msgid "previous page"
+msgstr "предыдущая страница"
+
+#: .\templates\pybb\pagination.html:21
+msgid "next page"
+msgstr "следующая страница"
+
+#: .\templates\pybb\post_template.html:40
+msgid "Rank"
+msgstr "Ранг"
+
+#: .\templates\pybb\post_template.html:58
+msgid "Delete post?"
+msgstr "Удалить сообщение?"
+
+#: .\templates\pybb\post_template.html:61
+msgid "Approve post"
+msgstr "Утвердить сообщение"
+
+#: .\templates\pybb\post_template.html:66
+msgid "Admin"
+msgstr "админ"
+
+#: .\templates\pybb\post_template.html:116
+msgid "reply"
+msgstr "ответь"
+
+#: .\templates\pybb\post_template.html:117
+msgid "quote all"
+msgstr "процитировать все"
+
+#: .\templates\pybb\post_template.html:118
+msgid "quote selected text"
+msgstr "процитировать выделенный текст"
+
+#: .\templates\pybb\topic_list.html:8
+msgid "Topic"
+msgstr "тема"
+
+#: .\templates\pybb\topic_list.html:19
+msgid "Views"
+msgstr "просмотров"
+
+#: .\templates\pybb\topic_list.html:22
+msgid "Last post"
+msgstr "Последний пост"
+
+#: .\templates\pybb\topic_list.html:32
+msgid "Go to first unread post"
+msgstr "Перейти к первому непрочитанному сообщению"
+
+#: .\templates\pybb\topic_list.html:33
+msgid "Sticky"
+msgstr "   ''''"
+
+#: .\templates\pybb\topic_list.html:34
+msgid "Closed"
+msgstr "Закрыт"
+
+#: .\templates\pybb\topic_list.html:38
+msgid "pages"
+msgstr "страницы"
+
+#: .\templates\repo_contributors.html:5 .\templates\repo_contributors.html:11
+msgid "top contributors to"
+msgstr "лучшие вкладчики"
+
+#: .\templates\repo_contributors.html:23
+msgid "no repository"
+msgstr "нет репозитория"
+
+#: .\templates\repo_detail.html:5
+msgid "repository"
+msgstr "Репозитория"
+
+#: .\templates\repo_edit.html:6 .\templates\repo_edit.html:14
+msgid "edit repository"
+msgstr "редактировать репозиторий"
+
+#: .\templates\repo_edit.html:6 .\templates\repo_edit.html:14
+msgid "add repository"
+msgstr "добавить репозиторий"
+
+#: .\templates\repo_list.html:5 .\templates\repo_list.html:14
+msgid "OER sources"
+msgstr "Источники ОУР"
+
+#: .\templates\repo_list.html:6 .\templates\repo_list.html:15
+msgid "catalogued by "
+msgstr "каталогизированы"
+
+#: .\templates\repo_list.html:6 .\templates\repo_list.html:15
+msgid "full catalog"
+msgstr "полный каталог"
+
+#: .\templates\repo_list.html:29
+msgid "no repository is present"
+msgstr "репозитория нет  "
+
+#: .\templates\repo_oers.html:5 .\templates\repo_oers.html:12
+#: .\templates\tag_oers.html:5 .\templates\tag_oers.html:12
+msgid "OERs from repository"
+msgstr "ОУР из репозитория"
+
+#: .\templates\repo_oers.html:25 .\templates\tag_oers.html:22
+msgid "no OERs are present having this repository as their source"
+msgstr "нет ОУР , имеющих этот репозиторий в качестве источника"
+
+#: .\templates\resource_analytics.html:23
+msgid "last"
+msgstr "Последний"
+
+#: .\templates\resource_analytics.html:23
+msgid "months"
+msgstr "месяцы"
+
+#: .\templates\resource_analytics.html:26
+#: .\templates\resource_analytics.html:47
+msgid "published"
+msgstr "Опубликовано"
+
+#: .\templates\resource_analytics.html:44
+msgid "all"
+msgstr "Все"
+
+#: .\templates\resources_by.html:6
+msgid "resources created, catalogued and evaluated by"
+msgstr "ресурсы, созданные, каталогизированные и оцененные"
+
+#: .\templates\resources_by.html:69 .\templates\search_repos.html:12
+msgid "repositories"
+msgstr "Репозитории"
+
+#: .\templates\search_lps.html:5
+msgid "search of learning paths"
+msgstr "поиск пути обучения"
+
+#: .\templates\search_lps.html:31 .\templates\search_oers.html:31
+#: .\templates\search_people.html:31 .\templates\search_projects.html:31
+#: .\templates\search_repos.html:31
+msgid "results"
+msgstr "Результаты"
+
+#: .\templates\search_lps.html:31 .\templates\search_oers.html:31
+#: .\templates\search_people.html:31 .\templates\search_projects.html:31
+#: .\templates\search_repos.html:31
+msgid "result"
+msgstr "Результат"
+
+#: .\templates\search_lps.html:33 .\templates\search_lps.html:49
+#: .\templates\search_oers.html:33 .\templates\search_people.html:33
+#: .\templates\search_people.html:49 .\templates\search_projects.html:33
+#: .\templates\search_projects.html:49 .\templates\search_repos.html:33
+#: .\templates\search_repos.html:49
+msgid "search text"
+msgstr "текст для поиска."
+
+#: .\templates\search_lps.html:47 .\templates\search_oers.html:47
+#: .\templates\search_people.html:47 .\templates\search_projects.html:47
+#: .\templates\search_repos.html:47
+msgid "no results were found"
+msgstr " результатов не найдено"
+
+#: .\templates\search_oers.html:5
+msgid "search of OERs"
+msgstr "поиск ОУР"
+
+#: .\templates\search_oers.html:12
+msgid "open educational resources"
+msgstr "открытые образовательные ресурсы"
+
+#: .\templates\search_oers.html:18 .\templates\search_people.html:18
+#: .\templates\search_repos.html:5
+msgid "search"
+msgstr "Поиск"
+
+#: .\templates\search_projects.html:5
+msgid "search of projects"
+msgstr "поиск проектов"
+
+#: .\templates\search_repos.html:5
+msgid "of source repositories"
+msgstr "репозиториев источника"
+
+#: .\templates\search_results.html:5 .\templates\search_results.html:7
+msgid "Search results for"
+msgstr "Результаты поиска для"
+
+#: .\templates\search_results.html:45
+msgid "reusable resources"
+msgstr "многоразовые ресурсы"
+
+#: .\templates\search_results.html:61
+msgid "no result"
+msgstr "нет результата"
+
+#: .\templates\user_dashboard.html:28 .\templates\user_preferences.html:22
+msgid "my profile"
+msgstr "мой профиль"
+
+#: .\templates\user_dashboard.html:29 .\templates\user_profile.html:31
+msgid "preferences"
+msgstr "Предпочтения"
+
+#: .\templates\user_dashboard.html:45
+msgid "manage"
+msgstr "управлять"
+
+#: .\templates\user_dashboard.html:46
+msgid "featured"
+msgstr "Избранные предметы"
+
+#: .\templates\user_dashboard.html:48
+msgid "flatpages"
+msgstr "плоские страницы"
+
+#: .\templates\user_dashboard.html:50
+msgid "Weblog"
+msgstr "Блог"
+
+#: .\templates\user_dashboard.html:57
+msgid "pending applications to communities"
+msgstr "членство в ожидании"
+
+#: .\templates\user_dashboard.html:70
+msgid "pending applications to projects"
+msgstr "членствa и проекты в ожидании"
+
+#: .\templates\user_dashboard.html:83
+msgid "pending applications to rolls of mentors"
+msgstr "ожидающих рассмотрения заявок на списки наставников"
+
+#: .\templates\user_dashboard.html:95
+msgid "admin of the following communities"
+msgstr "админ следующих сообществ"
+
+#: .\templates\user_dashboard.html:117
+msgid "supervisor of the following rolls of mentors"
+msgstr "руководитель следующих списков наставников"
+
+#: .\templates\user_dashboard.html:139
+msgid "supervisor of the following projects"
+msgstr "руководитель следующих проектов"
+
+#: .\templates\user_dashboard.html:161
+msgid "member of the following communities"
+msgstr "член следующих сообществ"
+
+#: .\templates\user_dashboard.html:183
+msgid "member of the following rolls of mentors"
+msgstr "член следующих списков наставников"
+
+#: .\templates\user_dashboard.html:202 .\templates\user_dashboard.html:228
+msgid "no projects"
+msgstr "нет проектов"
+
+#: .\templates\user_dashboard.html:209
+msgid "member of the following projects"
+msgstr "член следующих проектов"
+
+#: .\templates\user_dashboard.html:235
+msgid "mentoring requests in my communities"
+msgstr "наставничество запросы в моих сообществах"
+
+#: .\templates\user_dashboard.html:240 .\templates\user_dashboard.html:254
+#: .\templates\user_dashboard.html:268 .\templates\user_dashboard.html:283
+msgid "request of"
+msgstr "запрос"
+
+#: .\templates\user_dashboard.html:249
+msgid "mentoring requests in my communities waiting for mentor answer"
+msgstr "наставничество запросы в моих общинах ждет ответа наставника"
+
+#: .\templates\user_dashboard.html:263
+msgid "mentees requesting me as a mentor"
+msgstr "подопечные просят меня как наставника"
+
+#: .\templates\user_dashboard.html:276
+msgid "my mentoring projects as a mentor"
+msgstr "мои наставнические проекты в качестве наставника"
+
+#: .\templates\user_dashboard.html:309
+msgid "suggested mentors"
+msgstr "предлагаемые наставники"
+
+#: .\templates\user_dashboard.html:321
+msgid "no fit mentors were found in the communities of which you are member"
+msgstr "нет подходят наставники были найдены в общинах, из которых вы являетесь членом"
+
+#: .\templates\user_dashboard.html:327
+msgid "my activity of last period"
+msgstr "моя деятельность последнего периода"
+
+#: .\templates\user_dashboard.html:327
+msgid "days"
+msgstr "дни"
+
+#: .\templates\user_dashboard.html:369
+msgid "no actions of last period"
+msgstr "нет активности в последний период"
+
+#: .\templates\user_dashboard.html:376
+msgid "create personal Learning Path"
+msgstr "создать личный путь обучения"
+
+#: .\templates\user_dashboard.html:383
+msgid "My bookmarks (OER stubs)"
+msgstr "Мои закладки (черновики ОУР)"
+
+#: .\templates\user_dashboard.html:393
+msgid "no bookmarks (OER stubs) classified yet"
+msgstr "нет закладки ( черновик ОУР )"
+
+#: .\templates\user_dashboard.html:397
+msgid "my OERs"
+msgstr "мои ОУР"
+
+#: .\templates\user_dashboard.html:412
+msgid "unpublished OERs in supervised projects"
+msgstr "неопубликованные ОУР в контролируемых проектах"
+
+#: .\templates\user_dashboard.html:424
+msgid "my OER evaluations"
+msgstr "мои оценки ОУР"
+
+#: .\templates\user_dashboard.html:437
+msgid "my personal Learning Paths"
+msgstr "мои личные пути обучения"
+
+#: .\templates\user_dashboard.html:447
+msgid "no personal Learning Path created yet"
+msgstr "нет личного пути обучения создан еще"
+
+#: .\templates\user_dashboard.html:451
+msgid "my Learning Paths"
+msgstr "мои пути обучения"
+
+#: .\templates\user_dashboard.html:466
+msgid "unpublishd LPs in supervised projects"
+msgstr " неопубликованные LPs в контролируемых проектах"
+
+#: .\templates\user_dashboard.html:481 .\templates\user_profile.html:41
+msgid "please, complete your profile"
+msgstr "пожалуйста, заполните свой профиль"
+
+#: .\templates\user_preferences.html:29
+msgid "Notification by email"
+msgstr "Уведомление по электронной почте"
+
+#: .\templates\user_preferences.html:33
+msgid "edit preferences"
+msgstr " редактировать предпочтения"
+
+#: .\templates\user_profile.html:5 .\templates\user_strict_profile.html:5
+msgid "member"
+msgstr "Член"
+
+#: .\templates\user_profile.html:26 .\templates\user_strict_profile.html:19
+msgid "send a message to"
+msgstr "отправить сообщение"
+
+#: .\templates\user_profile.html:46
+msgid "private information"
+msgstr "частная информация"
+
+#: .\templates\user_profile.html:49
+msgid "username"
+msgstr "имя пользователя"
+
+#: .\templates\user_profile.html:53
+msgid "email"
+msgstr "электронная почта"
+
+#: .\templates\user_profile.html:96
+msgid "position"
+msgstr "Позиции"
+
+#: .\templates\user_profile.html:111
+msgid "other languages"
+msgstr "другие языки"
+
+#: .\templates\user_profile.html:147 .\templates\user_profile.html:216
+msgid "Skype id"
+msgstr "скайп id"
+
+#: .\templates\user_profile.html:169
+msgid "show edit profile"
+msgstr "чтобы обновить свой профиль"
+
+#: .\templates\user_profile.html:179
+msgid "only PDF; max size: 2MB"
+msgstr "только PDF; максимальный размер: 2 мб"
+
+#: .\templates\user_profile.html:208 .\templates\user_strict_profile.html:38
+msgid "currently available as mentor"
+msgstr "в настоящее время доступна в качестве наставника"
+
+#: .\templates\user_profile.html:258 .\templates\user_strict_profile.html:47
+msgid "view roll of mentors"
+msgstr "показывает реестр наставников"
+
+#: .\templates\user_profile.html:277
+msgid "similar members"
+msgstr "похожие члены"
+
+#: .\templates\user_profile.html:320
+msgid "this Curriculum"
+msgstr "это Резюме"
+
+#: .\templates\user_strict_profile.html:44
+msgid "rolls od mentors"
+msgstr "реестры наставников"
+
+#: .\templates\zinnia\_entry_detail_base.html:23
+msgid "Written by"
+msgstr "написано"
+
+#: .\templates\zinnia\_entry_detail_base.html:27
+#, python-format
+msgid "Show all %(author)s's entries"
+msgstr "Показать все записи %(author)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:31
+msgid "Written on"
+msgstr "Написано в"
+
+#: .\templates\zinnia\_entry_detail_base.html:41
+msgid "in"
+msgstr "В"
+
+#: .\templates\zinnia\_entry_detail_base.html:44
+#, python-format
+msgid "Show all entries in %(category)s"
+msgstr "Показать все записи в %(category)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:52
+msgid "Last update on"
+msgstr "Последнее обновление на"
+
+#: .\templates\zinnia\_entry_detail_base.html:104
+#, python-format
+msgid "%(percent)s%% of %(object)s still remains to read."
+msgstr "%(percent)s%% %(object)s еще предстоит прочитать."
+
+#: .\templates\zinnia\_entry_detail_base.html:106
+msgid "Continue reading"
+msgstr "Продолжить чтение"
+
+#: .\templates\zinnia\_entry_detail_base.html:122
+#, python-format
+msgid "Show all entries tagged by %(tag)s"
+msgstr "Показать все отмеченные записи  %(tag)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:125
+msgid "No tags"
+msgstr "Нет тегов"
+
+#: .\templates\zinnia\_entry_detail_base.html:131
+msgid "Short url"
+msgstr "Короткий URL"
+
+#: .\templates\zinnia\_entry_detail_base.html:133
+#, python-format
+msgid "Short URL to %(object)s"
+msgstr "Короткий URL %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:141
+msgid "Discussions"
+msgstr "Обсуждения"
+
+#: .\templates\zinnia\_entry_detail_base.html:148
+#, python-format
+msgid "Comments on %(object)s"
+msgstr "Комментарии на %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:149
+#, python-format
+msgid "%(comment_count)s comment"
+msgid_plural "%(comment_count)s comments"
+msgstr[0] "%(comment_count)s комментарий"
+msgstr[1] "%(comment_count)s комментарии"
+msgstr[2] "%(comment_count)s комментарии"
+msgstr[3] "%(comment_count)s комментарии"
+
+#: .\templates\zinnia\_entry_detail_base.html:155
+#, python-format
+msgid "Leave a comment on %(object)s"
+msgstr "Оставьте комментарий на %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:156
+msgid "Be first to comment!"
+msgstr "оставь первый комментарий"
+
+#: .\templates\zinnia\_entry_detail_base.html:167
+#, python-format
+msgid "Pingbacks on %(object)s"
+msgstr "pingbacks на %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:168
+#, python-format
+msgid "%(pingback_count)s pingback"
+msgid_plural "%(pingback_count)s pingbacks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: .\templates\zinnia\_entry_detail_base.html:176
+#, python-format
+msgid "Trackbacks on %(object)s"
+msgstr "Trackbacks на %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:177
+#, python-format
+msgid "%(trackback_count)s trackback"
+msgid_plural "%(trackback_count)s trackbacks"
+msgstr[0] "%(trackback_count)s трекбэк"
+msgstr[1] "%(trackback_count)s трекбэки"
+msgstr[2] "%(trackback_count)s трекбэки"
+msgstr[3] "%(trackback_count)s trackbacks"
+
+#: .\templates\zinnia\base.html:16
+msgid "RSS feed of latest entries"
+msgstr "RSS канал последних записей"
+
+#: .\templates\zinnia\base.html:17
+msgid "RSS feed of latest discussions"
+msgstr "RSS канал последних дискуссий"
+
+#: .\templates\zinnia\base.html:38
+msgid "Authors"
+msgstr "Авторы"
+
+#: .\templates\zinnia\base.html:55
+msgid "Recent entries"
+msgstr "Последние записи"
+
+#: .\templates\zinnia\base.html:59
+msgid "Recent comments"
+msgstr "Последние комментарии"
+
+#: .\templates\zinnia\base.html:77
+msgid "Archives"
+msgstr "архивы"
+
+#: .\templates\zinnia\entry_detail_base.html:23
+#, python-format
+msgid "RSS feed of discussions on %(object)s"
+msgstr "RSS канал дискуссии о%(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:25
+#, python-format
+msgid "RSS feed of comments on %(object)s"
+msgstr "RSS канал комментариев на %(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:27
+#, python-format
+msgid "RSS feed of pingbacks on %(object)s"
+msgstr "RSS канал pingbacks на %(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:29
+#, python-format
+msgid "RSS feed of trackbacks on %(object)s"
+msgstr "RSS канал  trackback на %(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:48
+msgid "Next entry"
+msgstr "Следующая запись"
+
+#: .\templates\zinnia\entry_detail_base.html:62
+msgid "Previous entry"
+msgstr "Предыдущая запись"
+
+#: .\templates\zinnia\entry_detail_base.html:76
+msgid "Related entries"
+msgstr "Похожие записи"
+
+#: .\templates\zinnia\entry_detail_base.html:90
+msgid "Similar entries"
+msgstr "аналогичные записи"
+
+#: .\templates\zinnia\entry_detail_base.html:218
+msgid "Direct link to this comment"
+msgstr "комментарии включены"
+
+#: .\templates\zinnia\entry_detail_base.html:255
+#: .\templates\zinnia\entry_detail_base.html:256
+msgid "Edit the entry"
+msgstr "редактировать запись"
+
+#: .\templates\zinnia\skeleton.html:19
+msgid "Useful links"
+msgstr "Полезные ссылки"
+
+#: .\templates\zinnia\skeleton.html:22 .\templates\zinnia\skeleton.html:23
+msgid "Weblog index"
+msgstr "Индекс блога"
+
+#: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
+msgid "Sitemap"
+msgstr "Карта сайта"
+
+#: .\utils.py:285
+msgid ""
+"embedding inside a page the view of this resource is forbidden: please, use "
+"the link above to access it directly"
+msgstr ""
+
+#: .\views.py:821
+msgid "minimum number of LPs"
+msgstr "минимальное количество ОП"
+
+#: .\views.py:1373
+msgid ""
+"this request is waiting since long time: if you want to retract it, please "
+"write a notice for the mentor and push the button below"
+msgstr "этот запрос ждет с давних времен: если вы хотите отозвать его, пожалуйста, напишите уведомление для наставника и нажмите кнопку ниже"
+
+#: .\views.py:1394
+msgid ""
+"if you aren't able to choose another mentor, please write a notice for both "
+"the mentee and the mentor and push the button below"
+msgstr "если вы не можете выбрать другого наставника, пожалуйста, напишите уведомление для ученика и наставника и нажмите кнопку ниже"
+
+#: .\views.py:1415
+msgid ""
+"this request is waiting since long time: please write a notice for both the "
+"mentee and the mentor and push the button below"
+msgstr "эта просьба ждет с давних времен: пожалуйста, напишите уведомление как для подопечного и наставника и нажмите кнопку ниже"
+
+#: .\views.py:1811
+msgid "membership application"
+msgstr "заявка на членство"
+
+#: .\views.py:1812
+msgid "has applied for membership in"
+msgstr "подал заявку на членство в"
+
+#: .\views.py:1937
+msgid "upload file with list of candidate members"
+msgstr "загрузить файл со списком кандидатов"
+
+#: .\views.py:1938
+msgid "community or project: "
+msgstr "сообщество или проект:"
+
+#: .\views.py:2069
+msgid "thematic forum"
+msgstr "тематический форум"
+
+#: .\views.py:2069
+msgid "please change this name"
+msgstr "пожалуйста, измените это имя"
+
+#: .\vocabularies.py:85
+msgid "material type"
+msgstr "тип материала"
+
+#: .\vocabularies.py:86
+msgid "material types"
+msgstr "типы материалов"
+
+#: .\vocabularies.py:91
+msgid "media format"
+msgstr "формат мультимедиа"
+
+#: .\vocabularies.py:97
+msgid "accessibility feature"
+msgstr "функция доступности"
+
+#: .\vocabularies.py:103
+msgid "level"
+msgstr "Уровень"
+
+#: .\vocabularies.py:115
+msgid "license"
+msgstr "лицензия"
+
+#: .\vocabularies.py:116
+msgid "licenses"
+msgstr "Лицензии"
+
+#: .\vocabularies.py:124
+msgid "education levels"
+msgstr "уровень образования"
+
+#: .\vocabularies.py:130
+msgid "study or work statuses"
+msgstr "статусы обучения или работы"
+
+#: .\vocabularies.py:135
+msgid "education field"
+msgstr "образовательный сектор"
+
+#: .\vocabularies.py:136
+msgid "education fields"
+msgstr "образовательные сектора"
+
+#: .\vocabularies.py:141
+msgid "professional field"
+msgstr "профессиональный сектор"
+
+#: .\vocabularies.py:142
+msgid "professional fields"
+msgstr "профессиональные секторы"
+
+#: .\vocabularies.py:147
+msgid "social network"
+msgstr "социальная сеть"
+
+#: .\vocabularies.py:148
+msgid "social networks"
+msgstr "социальные сети"
+
+#: .\vocabularies.py:156
+msgid "OER language"
+msgstr "язык ОУР"
+
+#: .\vocabularies.py:157
+msgid "OER languages"
+msgstr "Языки ОУР"
+
+#: .\vocabularies.py:166
+msgid "countries"
+msgstr "Страны"
