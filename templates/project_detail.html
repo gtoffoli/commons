@@ -176,7 +176,7 @@
                 <article class="view-list">
                 {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
                     <dl class="list-inline font14 clearfix">
-                        <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
+                        <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon1"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
                         <dd class="field-content width-full" style="display:none">
                             {% if project.info %}<blockquote class="font14">{{ project.info|safe }}</blockquote>{% endif %}
                             <ul class="list-unstyled paddingT10 font13">
@@ -544,7 +544,9 @@
                                 </form>
                             </div>
                         {% endif %}
-						{% include "earmaster/_earmaster_import_results.html" %}
+                        {% if project.is_earmaster and can_edit %}
+                            {% include "earmaster/_earmaster_import_results.html" %}
+                        {% endif %}
                     </div>
 {% comment %} PORTLETS TOP {% endcomment %}
                     {% if portlets_top %}
@@ -801,7 +803,7 @@
                 {% if project.description %}<p class="font16"><i>{{ project.description }}</i></p>{% endif %}
                 {% if project.info %}
                     <dl class="list-inline font14 clearfix">
-                        <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
+                        <dt class="with_icon">{% trans "additional information"|capfirst %} <a href="#" class="toggleIcon1"><i class="fa fa-plus-circle" aria-hidden="true"></i></a></dt>
                         <dd class="field-content width-full" style="display:none"><blockquote class="font14">{{ project.info|safe }}</blockquote></dd>
                     </dl>
                 {% endif %}
@@ -986,7 +988,7 @@
             {% include "_data_confirm_js.html" with data_form='undelegate' data_msg=translatemsg %}
         {% endif %}
 
-        $('dt a.toggleIcon').on('click', function(event){
+        $('dt a.toggleIcon1').on('click', function(event){
             event.preventDefault();
             $("body").css("cursor", "default");
             var accordion = $(this).parent();
