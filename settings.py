@@ -350,9 +350,10 @@ TIME_ZONE = 'Europe/Rome'
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
     (u'en', u'English'),
+    (u'hr', u'Hrvatska'),
     (u'it', u'Italiano'),
     (u'pt', u'Português'),
-    (u'ru', u'русский'),
+    (u'ru', u'Русский'),
 )
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
