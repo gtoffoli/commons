@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-15 11:19+0200\n"
-"PO-Revision-Date: 2020-07-26 15:59+0000\n"
-"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
+"PO-Revision-Date: 2020-08-13 19:15+0000\n"
+"Last-Translator: Margarita Despoja <mdespoja@gmail.com>\n"
 "Language-Team: Croatian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +28,7 @@ msgstr "Analitika OER-a"
 #: .\templates\project_results.html:87 .\templates\resources_by.html:37
 #: .\templates\search_oers.html:12
 msgid "OERs"
-msgstr "OER-ovi (otvoreni obrazovni resursi)"
+msgstr "OER-ova"
 
 #: .\analytics.py:734
 msgid "published OERs"
@@ -138,7 +138,7 @@ msgstr "format: dd/mm/gggg"
 #: .\templates\_people_card.html:36 .\templates\user_profile.html:66
 #: .\vocabularies.py:165
 msgid "country"
-msgstr "zemlja"
+msgstr "država"
 
 #: .\forms.py:87 .\models.py:612 .\templates\user_profile.html:72
 msgid "city"
@@ -263,11 +263,11 @@ msgstr "unesite pojam za pretraživanje"
 
 #: .\forms.py:141
 msgid "choose country (no selection = all countries)"
-msgstr "odabrati zemlju (bez odabira = sve zemlje)"
+msgstr "odabrati državu (bez odabira = sve države)"
 
 #: .\forms.py:146 .\forms.py:159
 msgid "choose education level (no selection = all levels)"
-msgstr "odabrati razinu obrazovanja (bez odabira = sve razine)"
+msgstr "odabrati stupanj obrazovanja (bez odabira = sve razine)"
 
 #: .\forms.py:151
 msgid "choose status (no selection = all statuses)"
@@ -280,11 +280,11 @@ msgstr "odaberite područje studija (bez odabira = sva polja)"
 #: .\forms.py:162 .\forms.py:317 .\forms.py:336 .\forms.py:389 .\forms.py:456
 #: .\forms.py:543 .\forms.py:579
 msgid "subject areas"
-msgstr "područje predmeta"
+msgstr "područje znanosti"
 
 #: .\forms.py:163 .\forms.py:337 .\forms.py:457 .\forms.py:580
 msgid "choose subject areas (no selection = all areas)"
-msgstr "odabrati područje predmeta (bez odabira = sva područja)"
+msgstr "odabrati područje znanosti  (bez odabira = sva područja)"
 
 #: .\forms.py:167 .\forms.py:340 .\forms.py:391 .\forms.py:463
 #: .\templates\_data_languages.html:4 .\templates\_people_card.html:25
@@ -364,19 +364,19 @@ msgstr "tekst u nazivu i kratkom opisu"
 #: .\templates\_homepage_main_cta.html:80 .\templates\project_detail.html:202
 #: .\templates\search_results.html:21 .\templates\user_profile.html:245
 msgid "communities"
-msgstr "Zajednice"
+msgstr "Zajednica"
 
 #: .\forms.py:265 .\views.py:813
 msgid "minimum number of members"
-msgstr "minimalni broj članova"
+msgstr "minimalan broj članova"
 
 #: .\forms.py:266
 msgid "minimum number of learning paths"
-msgstr "minimalni broj staza učenja"
+msgstr "minimalan broj staza učenja"
 
 #: .\forms.py:267 .\views.py:829
 msgid "minimum number of OERs"
-msgstr "minimalni broj OER-a"
+msgstr "minimalan broj OER-a"
 
 #: .\forms.py:270 .\models.py:515 .\models.py:1496
 #: .\templates\active_users.html:24 .\templates\active_users.html:41
@@ -628,7 +628,7 @@ msgstr "izvođenje iz drugih OER-a"
 
 #: .\forms.py:484 .\forms.py:586 .\vocabularies.py:104
 msgid "levels"
-msgstr "Razine"
+msgstr "stupanj"
 
 #: .\forms.py:494 .\templates\oer_detail.html:158
 msgid "OER type"
@@ -682,7 +682,7 @@ msgstr "primjerice znanstvena valjanost sadržaja i metodologije, ključnih aspe
 
 #: .\forms.py:541 .\templates\lp_detail.html:159
 msgid "type of learning path"
-msgstr "vrste staze učenja"
+msgstr "vrsta staze učenja"
 
 #: .\forms.py:546 .\models.py:1514 .\models.py:2106 .\models.py:3189
 #: .\templates\folder_detail.html:5 .\templates\mentoring_detail.html:5
@@ -717,14 +717,14 @@ msgstr "tekst u naslovu i ciljevima"
 
 #: .\forms.py:589
 msgid "learning path type"
-msgstr "vrste staza učenja"
+msgstr "vrsta staza učenja"
 
 #: .\forms.py:609 .\models.py:1698 .\models.py:1905 .\models.py:1932
 #: .\models.py:2033 .\templates\mentoring_detail.html:410
 #: .\templates\oer_evaluation_detail.html:17
 #: .\templates\project_detail.html:430
 msgid "OER"
-msgstr "Oer (otvoreni obrazovni resurs)"
+msgstr "OER (otvoreni obrazovni resurs)"
 
 #: .\forms.py:610 .\models.py:2816 .\templates\_pathnode_detail.html:25
 #: .\templates\pathnode_detail.html:89
@@ -771,7 +771,7 @@ msgstr "oznaka čvora je obavezna"
 #: .\forms.py:650 .\templates\django_messages\outbox.html:11
 #: .\templates\django_messages\view.html:15
 msgid "Recipient"
-msgstr "Primatelj"
+msgstr "Prima"
 
 #: .\forms.py:651 .\forms.py:672 .\templates\django_messages\inbox.html:11
 #: .\templates\django_messages\outbox.html:11
@@ -782,7 +782,7 @@ msgstr "Predmet"
 
 #: .\forms.py:652 .\forms.py:673
 msgid "Body"
-msgstr "Tijelo"
+msgstr "Tekst"
 
 #: .\forms.py:664
 msgid "please, explicitly select the receiver(s)"
@@ -1149,15 +1149,15 @@ msgstr "Ženski"
 
 #: .\models.py:574
 msgid "do not notify me of new private messages"
-msgstr "ne obavještavajte me o novim privatnim porukama"
+msgstr "ne obaviještavajte me o novim privatnim porukama"
 
 #: .\models.py:575
 msgid "notify me only of individual messages"
-msgstr "obavijesti me samo o porukama pojedinaca"
+msgstr "obavijestite me samo o porukama pojedinaca"
 
 #: .\models.py:576
 msgid "notify me of individual and group messages"
-msgstr "obavijesti me o porukama pojedinaca i grupnim porukama"
+msgstr "obavijestite me o porukama pojedinaca i grupnim porukama"
 
 #: .\models.py:601 .\models.py:628
 msgid "email notifications"
@@ -1167,7 +1167,7 @@ msgstr "obavijesti e-pošte"
 msgid ""
 "Do you want that private messages from other members be notified to you by "
 "email? In any case, they will not know your email address."
-msgstr "Želite li dobivati  putem e-pošte obavijesti o privatnim porukama drugih članova? U svakom slučaju, vaša adresa e-pošte im neće biti prikazana."
+msgstr "Želite li dobivati  putem e-pošte obavjesti o privatnim porukama drugih članova? U svakom slučaju, vaša adresa e-pošte im neće biti prikazana."
 
 #: .\models.py:602
 msgid "activity stream max days"
@@ -1175,7 +1175,7 @@ msgstr "maksimalan broj dana po toku aktivnosti "
 
 #: .\models.py:602
 msgid "Max age of actions to list in my dashboard."
-msgstr "Maksimalna starost angažmana prikazanih na mojoj kontrolnoj ploči"
+msgstr "Maksimalna starost angažmana prikazanih na mojoj nadzornoj ploči"
 
 #: .\models.py:603
 msgid "activity stream max actions "
@@ -1183,7 +1183,7 @@ msgstr "Maksimalni broj angažmana po toku aktivnosti"
 
 #: .\models.py:603
 msgid "Max number of actions to list in my dashboard."
-msgstr "Maksimalni broj angažmana prikazanih na mojoj kontrolnoj ploči"
+msgstr "Maksimalni broj angažmana prikazanih na mojoj nadzornoj ploči"
 
 #: .\models.py:604
 msgid "accept emails from administrators"
@@ -1791,7 +1791,7 @@ msgstr "Nažalost, ne možemo pronaći stranicu koju ste zatražili."
 #: .\templates\_access_bar.html:14 .\templates\user_dashboard.html:6
 #: .\templates\user_preferences.html:23 .\templates\user_profile.html:30
 msgid "my home"
-msgstr "moja naslovnica"
+msgstr "Moja početna stranica"
 
 #: .\templates\_access_bar.html:14 .\templates\_object_comments.html:77
 #: .\templates\oer_detail.html:246 .\templates\user_welcome.html:43
@@ -1800,7 +1800,7 @@ msgstr "dovršite svoj profil"
 
 #: .\templates\_access_bar.html:22 .\templates\user_dashboard.html:39
 msgid "my messages"
-msgstr "moje poruke"
+msgstr "Moje poruke"
 
 #: .\templates\_access_bar.html:23 .\templates\user_dashboard.html:40
 msgid "new posts"
@@ -1816,7 +1816,7 @@ msgstr "Odjava"
 
 #: .\templates\_access_bar.html:43 .\templates\_login_model.html:18
 msgid "email address"
-msgstr "adresa e-pošte"
+msgstr "Adresa e-pošte"
 
 #: .\templates\_access_bar.html:46 .\templates\_login_model.html:24
 msgid "password"
@@ -1935,7 +1935,7 @@ msgstr "Spremi"
 #: .\templates\folderdocument_edit.html:25 .\templates\forum_edit.html:29
 #: .\templates\online_resource_edit.html:27
 msgid "save and exit"
-msgstr "spremanje i izlazak"
+msgstr "Spremi i izađi"
 
 #: .\templates\_edit_submit.html:6 .\templates\_edit_submit.html:8
 #: .\templates\folder_edit.html:26 .\templates\folderdocument_edit.html:26
@@ -1945,7 +1945,7 @@ msgstr "spremanje i izlazak"
 #: .\templates\project_image_upload.html:35
 #: .\templates\project_logo_upload.html:35
 msgid "exit without saving"
-msgstr "izlaz bez spremanja"
+msgstr "Izađi bez spremanja"
 
 #: .\templates\_footer.html:4 .\templates\commons_base.html:205
 msgid "the CommonS Consortium"
@@ -1975,7 +1975,7 @@ msgstr "Projekt CommonS sufinancira se iz programa"
 #: .\templates\_homepage_main_cta.html:50
 #: .\templates\_homepage_main_cta.html:74
 msgid "explore library"
-msgstr "pretražite biblioteku"
+msgstr "istraži biblioteku"
 
 #: .\templates\_homepage_main_cta.html:15
 #: .\templates\_homepage_main_cta.html:57
@@ -2217,11 +2217,11 @@ msgstr "broj članova"
 #: .\templates\project_detail.html:371 .\templates\project_edit.html:19
 #: .\templates\project_edit.html:60
 msgid "community"
-msgstr "Zajednica"
+msgstr "zajednica"
 
 #: .\templates\_project_card.html:26 .\templates\project_detail.html:167
 msgid "child project of"
-msgstr "projekt proizašao iz"
+msgstr "podprojekt od"
 
 #: .\templates\_project_card.html:27 .\templates\project_detail.html:168
 msgid "parent"
@@ -2301,7 +2301,7 @@ msgstr "Nakon toga, trebali biste ga uvijek uređivati koristeći isti jezik, a 
 msgid ""
 "IMPORTANT NOTICE! The next time you will edit this content, it will take the"
 " current active language"
-msgstr "VAŽNA OBAVIJEST! Sljedeći put kad budete uređivali ovaj sadržaj, on će se voditi na trenutno aktivnim jezikom"
+msgstr "VAŽNA OBAVIJEST! Sljedeći put kad budete uređivali ovaj sadržaj, on će se voditi na trenutno aktivnom jeziku"
 
 #: .\templates\_resource_lang_msg.html:8
 msgid ""
@@ -2318,7 +2318,7 @@ msgstr "Imajte to na umu da biste mogli uređivati ovaj sadržaj na izvornom jez
 #: .\templates\_resource_lang_msg.html:14 .\templates\pathnode_detail.html:21
 msgid ""
 "you should make this the active language using the control in the menu bar"
-msgstr "trebali biste ovo učiniti aktivnim jezikom birajući u traci izbornika"
+msgstr "trebali biste ovo učiniti aktivnim jezikom birajući iz izbornika"
 
 #: .\templates\_resource_original_lang.html:4
 #: .\templates\project_detail.html:171
@@ -2336,11 +2336,11 @@ msgstr "kriteriji pretraživanja"
 
 #: .\templates\_search_form.html:9 .\templates\_search_form.html:30
 msgid "Apply"
-msgstr "Primijeniti"
+msgstr "Pokreni"
 
 #: .\templates\_search_form.html:10 .\templates\_search_form.html:31
 msgid "Reset"
-msgstr "Resetirati"
+msgstr "Ponovo pokreni"
 
 #: .\templates\_search_form.html:17 .\views.py:833 .\views.py:4241
 #: .\views.py:4440 .\views.py:4539
@@ -2380,7 +2380,7 @@ msgstr "Potvrdi"
 msgid ""
 "This e-mail confirmation link expired or is invalid. Please <a "
 "href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-msgstr "Ovj link za potvrdu e-pošte je isteklo ili nije valjan. Molimo <a href=\"%(email_url)s\">vas da izdate novi zahtjev za potvrdu e- pošte</a>."
+msgstr "Ova poveznica za potvrdu e-pošte je istekla ili nije valjana. Molimo <a href=\"%(email_url)s\">vas da izdate novi zahtjev za potvrdu e- pošte</a>."
 
 #: .\templates\account\login.html:6 .\templates\account\login.html:61
 #: .\templates\account\login.html:103
@@ -2458,7 +2458,7 @@ msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
 "reset</a>."
-msgstr "Link za ponovno postavljanje lozinke nije valjan, vjerojatno zato što je već korišten.  Molimo zatražite <a href=\"%(passwd_reset_url)s\">novo postavljanje lozinke</a>."
+msgstr "Poveznica za ponovno postavljanje lozinke nije valjana, vjerojatno zato što je već korištena.  Molimo zatražite <a href=\"%(passwd_reset_url)s\">novo postavljanje lozinke</a>."
 
 #: .\templates\account\password_reset_from_key.html:51
 msgid "change password"
@@ -2493,7 +2493,7 @@ msgid ""
 "We have sent an e-mail to you for verification. Follow the link provided to "
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr "Poslali smo vam e-mail za potvrdu. Slijedite navedeni link da biste dovršili postupak upisa. Obratite nam se ako ga ne primite u roku od nekoliko minuta."
+msgstr "Poslali smo vam e-mail za potvrdu. Slijedite navedenu poveznicu da biste dovršili postupak upisa. Obratite nam se ako ju ne primite u roku od nekoliko minuta."
 
 #: .\templates\active_users.html:10 .\templates\active_users.html:16
 msgid "recently active users"
@@ -2585,19 +2585,19 @@ msgstr "bez stavke"
 #: .\templates\browse.html:42 .\templates\browse.html:68
 #: .\templates\browse_repos.html:5 .\templates\browse_repos.html:12
 msgid "distributions"
-msgstr "Distribucije"
+msgstr "Podjela"
 
 #: .\templates\browse.html:16
 msgid "of the learning paths"
-msgstr "od staza učenja"
+msgstr "staza učenja"
 
 #: .\templates\browse.html:42
 msgid "of the open educational resources"
-msgstr "od otvorenih obrazovnih resursa"
+msgstr "otvorenih obrazovnih resursa"
 
 #: .\templates\browse.html:68
 msgid "of the sources"
-msgstr "iz izvora"
+msgstr "po izvoru"
 
 #: .\templates\browse_mentors.html:5 .\templates\project_detail.html:913
 msgid "mentors"
@@ -2626,7 +2626,7 @@ msgstr "sve osobe"
 
 #: .\templates\browse_people.html:15
 msgid "distribution of users based on self-compiled user profiles"
-msgstr "distribucija korisnika na temelju samostalno sastavljenih korisničkih profila"
+msgstr "podjela korisnika na temelju samostalno sastavljenih korisničkih profila"
 
 #: .\templates\browse_repos.html:5 .\templates\browse_repos.html:12
 msgid "of repositories"
@@ -2816,7 +2816,7 @@ msgstr "za učiniti (fuzzy)"
 
 #: .\templates\datatrans\model_detail.html:82
 msgid "Link to this translation"
-msgstr "Link za ovaj prijevod"
+msgstr "Poveznica za ovaj prijevod"
 
 #: .\templates\datatrans\model_detail.html:105
 msgid "tick this checkbox if the translation is deliberately empty"
@@ -2880,7 +2880,7 @@ msgstr "Postoje %(obsolete_count)s zastarjelih poruka."
 msgid ""
 "Please review them to see if you can reuse something,\n"
 "\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
-msgstr "Pregledajte ih da biste vidjeli možete li nešto ponovno upotrijebiti,\n\t\t\ti kada završite kliknite na gumb 'Ukloni sve zastarijelo' gumb za čišćenje KeyValue tablice."
+msgstr "Pregledajte ih da biste vidjeli možete li nešto ponovno upotrijebiti,\n\t\t\ti, kada završite, kliknite na gumb 'Ukloni sve zastarijelo' za čišćenje KeyValue tablice."
 
 #: .\templates\datatrans\obsolete_list.html:17
 #: .\templates\datatrans\obsolete_list.html:35
@@ -2911,7 +2911,7 @@ msgstr "i prema jezicima koje korisnik navodi da poznaje u korisničkom profilu"
 
 #: .\templates\datatrans\translate.html:12
 msgid "The current active language"
-msgstr "Trenutni aktivni jezik"
+msgstr "Trenutno aktivni jezik"
 
 #: .\templates\datatrans\translate.html:12
 msgid "affects only the UI messages of this view"
@@ -2956,13 +2956,13 @@ msgstr "Sastavljanje poruke"
 
 #: .\templates\django_messages\compose.html:26
 msgid "Send"
-msgstr "Poslati"
+msgstr "Pošalji"
 
 #: .\templates\django_messages\inbox.html:11
 #: .\templates\django_messages\trash.html:12
 #: .\templates\django_messages\view.html:11
 msgid "Sender"
-msgstr "Pošiljatelj"
+msgstr "šalje"
 
 #: .\templates\django_messages\inbox.html:11
 msgid "Received"
@@ -3023,13 +3023,13 @@ msgstr "Datum"
 
 #: .\templates\django_messages\trash.html:22
 msgid "undelete"
-msgstr "Povrat"
+msgstr "poništi brisanje"
 
 #: .\templates\django_messages\trash.html:31
 msgid ""
 "Deleted Messages are removed from the trash at unregular intervals, don't "
 "rely on this feature for long-time storage."
-msgstr "Izbrisane poruke uklanjaju se iz smeća u neregulernim intervalima, nemojte se oslanjati na tu značajku za dugotrajno spremanje."
+msgstr "Izbrisane poruke uklanjaju se iz smeća u neregularnim intervalima, nemojte se oslanjati na tu značajku za dugotrajno spremanje."
 
 #: .\templates\django_messages\view.html:5
 #: .\templates\django_messages\view.html:7
@@ -3066,17 +3066,17 @@ msgstr "postavke od"
 #: .\templates\project_edit.html:57 .\templates\project_edit.html:59
 #: .\templates\user_profile.html:182 .\templates\user_profile.html:238
 msgid "add"
-msgstr "Dodati"
+msgstr "Dodaj"
 
 #: .\templates\file_upload.html:23 .\templates\folder_detail.html:117
 #: .\templates\oer_detail.html:210 .\templates\user_profile.html:182
 msgid "upload"
-msgstr "Učitaj"
+msgstr "Učitati"
 
 #: .\templates\file_upload.html:24 .\templates\folder_detail.html:118
 #: .\templates\oer_detail.html:211 .\templates\user_profile.html:183
 msgid "cancel"
-msgstr "Otkazati"
+msgstr "Odustani"
 
 #: .\templates\filebrowser\index.html:86
 msgid "New Folder"
@@ -3233,7 +3233,7 @@ msgstr "saznaj više"
 
 #: .\templates\lp_detail.html:71
 msgid "bookmark this LP for future reference"
-msgstr "označite ovu stazu učenja za buduću referencu"
+msgstr "označite ovu stazu učenja za buduću referencu"
 
 #: .\templates\lp_detail.html:72
 msgid "mark this LP as a candidate for cut & paste"
@@ -3351,7 +3351,7 @@ msgstr "trenutačno ovaj OER nije javni"
 
 #: .\templates\mentoring_detail.html:143
 msgid "mentee"
-msgstr "osoba koja traži mentoriranje"
+msgstr "osoba koju se mentorira"
 
 #: .\templates\mentoring_detail.html:173
 msgid ""
@@ -3393,11 +3393,11 @@ msgstr "nema poslanih poruka"
 
 #: .\templates\mentoring_detail.html:365
 msgid "send"
-msgstr "Poslati"
+msgstr "Pošalji"
 
 #: .\templates\mentoring_detail.html:377
 msgid "submit request to admin"
-msgstr "pošalji zahtjev administratoru"
+msgstr "pošaljite zahtjev administratoru"
 
 #: .\templates\mentoring_detail.html:377
 msgid "submit request"
@@ -3410,12 +3410,12 @@ msgstr "natrag na stanje nacrta "
 #: .\templates\mentoring_detail.html:389 .\templates\project_detail.html:303
 #: .\templates\project_detail.html:864
 msgid "open"
-msgstr "Otvorite"
+msgstr "Otvori"
 
 #: .\templates\mentoring_detail.html:391 .\templates\project_detail.html:304
 #: .\templates\project_detail.html:865
 msgid "close"
-msgstr "Zatvorite"
+msgstr "Zatvori"
 
 #: .\templates\mentoring_detail.html:394
 msgid "view the shared folder"
@@ -3429,7 +3429,7 @@ msgstr "Sastanak"
 #: .\templates\mentoring_detail.html:412 .\templates\project_detail.html:421
 #: .\templates\project_detail.html:432
 msgid "classify"
-msgstr "Klasificirati"
+msgstr "Klasificiraj"
 
 #: .\templates\mentoring_detail.html:419 .\templates\mentoring_detail.html:438
 #: .\templates\project_detail.html:437 .\templates\project_detail.html:454
@@ -3439,7 +3439,7 @@ msgstr "Podijeliti"
 #: .\templates\mentoring_detail.html:429 .\templates\project_detail.html:447
 #: .\templates\project_detail.html:985
 msgid "LP"
-msgstr "staza učenja "
+msgstr "staza učenja"
 
 #: .\templates\mentoring_detail.html:452 .\templates\project_detail.html:601
 #: .\templates\project_detail.html:1001
@@ -3454,19 +3454,19 @@ msgstr "Pročitajte više"
 
 #: .\templates\mentoring_detail.html:465 .\templates\project_detail.html:616
 msgid "shared LPs"
-msgstr "dijeljene staze učenja "
+msgstr "podijeljene staze učenja"
 
 #: .\templates\mentoring_detail.html:468 .\templates\project_detail.html:619
 msgid "unshare this LP"
-msgstr "poništi dijeljenje ove staze učenja "
+msgstr "poništi podijelu ove staze učenja"
 
 #: .\templates\mentoring_detail.html:477 .\templates\project_detail.html:628
 msgid "last OERs"
-msgstr "zadnji OER-ovi"
+msgstr "posljednji OER-ovi"
 
 #: .\templates\mentoring_detail.html:493 .\templates\project_detail.html:646
 msgid "unshare this OER"
-msgstr "opozovi podijelu ovog OER-a"
+msgstr "poništi podijelu ovog OER-a"
 
 #: .\templates\message_analytics.html:6 .\templates\message_analytics.html:17
 msgid "messages analytics"
@@ -3486,7 +3486,7 @@ msgstr "novi postovi na mojim forumima"
 
 #: .\templates\new_posts.html:10
 msgid "posts added to topics after you last viewed them"
-msgstr "postove dodane temama nakon što ste ih zadnji put pregledali"
+msgstr "postovi dodani temama nakon što ste ih zadnji put pregledali"
 
 #: .\templates\new_posts.html:25
 msgid "no new posts are present"
@@ -3517,7 +3517,7 @@ msgstr "označite ovaj OER za buduće korištenje"
 
 #: .\templates\oer_detail.html:44
 msgid "mark this OER as a candidate for cut & paste"
-msgstr "označite ovaj OER kao kandidat za izreži i zalijepi opciju"
+msgstr "označite ovaj OER kao kandidat za opciju izreži i zalijepi"
 
 #: .\templates\oer_detail.html:63 .\templates\oer_detail.html:71
 #: .\templates\oer_detail.html:75 .\templates\oer_detail.html:90
@@ -3535,7 +3535,7 @@ msgstr "ostali metapodaci"
 
 #: .\templates\oer_detail.html:164
 msgid "derived, through translation and adaptation / remixing, from"
-msgstr "izvedeno, prijevodom i prilagodbom/ preslagivanjem, iz"
+msgstr "izvedeno, prijevodom i prilagodbom/remiksiranjem, iz"
 
 #: .\templates\oer_detail.html:165
 msgid "derived, through translation, from"
@@ -3543,7 +3543,7 @@ msgstr "izvedeni, prijevodom, iz"
 
 #: .\templates\oer_detail.html:166
 msgid "derived, through adaptation / remixing, from"
-msgstr "izvedeno, prilagodbom/ preslagivanjem, od"
+msgstr "izvedeno, prilagodbom/remiksiranjem, iz"
 
 #: .\templates\oer_detail.html:226
 msgid "to be able to publish this OER you must, fill some required fields"
@@ -3727,7 +3727,7 @@ msgid ""
 "tailored to the needs of this learning path (LP); 3) a formatted text. When "
 "playing the LP, the platform will visualize only one of them: the OER, if "
 "present, otherwise the document or the formatted text as the last choice."
-msgstr "U ovom obrascu možete navesti 3 vrste resursa: 1) OER; 2) dokument prilagođen potrebama te staze učenja(LP); 3) oblikovani tekst. Kada koristite LP, platforma će vizualizirati samo jedan od njih: OER, ako je prisutan. Ako ne, dokument ili oblikovani tekst kao posljednji izbor."
+msgstr "U ovom obrascu možete navesti 3 vrste resursa: 1) OER; 2) dokument prilagođen potrebama ove staze učenja ; 3) formatiran tekst. Kada koristite stazu učenja, platforma će vizualizirati samo jednu od njih: OER, ako je prisutan. Ako ne, dokument ili formatiran text kao posljednji izbor."
 
 #: .\templates\pathnode_edit.html:86
 msgid "remove selected file"
@@ -3778,7 +3778,7 @@ msgstr "prikaz zajednice"
 
 #: .\templates\project_detail.html:232
 msgid "child projects"
-msgstr "projekti koji proizlaze iz drugih"
+msgstr "podprojekti"
 
 #: .\templates\project_detail.html:238 .\templates\project_detail.html:242
 #: .\templates\project_detail.html:246 .\templates\project_detail.html:250
@@ -3795,7 +3795,7 @@ msgstr "prikaz projekta"
 #: .\templates\project_detail.html:272 .\templates\project_detail.html:276
 #: .\templates\project_detail.html:280 .\templates\project_detail.html:284
 msgid "view child project"
-msgstr "prikaz projekta koji proizlazi iz ovog"
+msgstr "prikaz podprojekta "
 
 #: .\templates\project_detail.html:262
 msgid "support projects"
@@ -3803,11 +3803,11 @@ msgstr "projekti potpore"
 
 #: .\templates\project_detail.html:262
 msgid "child support projects"
-msgstr "podređeni projekti za potporu koji je proizašao iz ovog"
+msgstr "podprojekti za potporu"
 
 #: .\templates\project_detail.html:300 .\templates\project_detail.html:861
 msgid "translate"
-msgstr "Prevesti"
+msgstr "Prevedi"
 
 #: .\templates\project_detail.html:301 .\templates\project_detail.html:862
 #: .\templates\project_logo_upload.html:8
@@ -3839,11 +3839,11 @@ msgstr "kreiranje projekta"
 #: .\templates\project_detail.html:325 .\templates\project_detail.html:326
 #: .\templates\project_detail.html:337 .\templates\project_detail.html:339
 msgid "create child project"
-msgstr "kreiranje projekta koji proizlazi iz ovog"
+msgstr "kreiranje podprojekta "
 
 #: .\templates\project_detail.html:334
 msgid "new child project"
-msgstr "novi projekt koji proizlazi iz ovog"
+msgstr "novi podprojekt "
 
 #: .\templates\project_detail.html:356 .\templates\project_detail.html:369
 msgid "new forum"
@@ -3881,7 +3881,7 @@ msgstr "Iskustvo"
 
 #: .\templates\project_detail.html:468
 msgid "record"
-msgstr "Zapis"
+msgstr "Zapiši"
 
 #: .\templates\project_detail.html:484 .\templates\project_detail.html:495
 #: .\templates\project_detail.html:508 .\templates\project_detail.html:902
@@ -3925,7 +3925,7 @@ msgstr "prihvatiti prijavu ovoj zajednici ili projektu"
 
 #: .\templates\project_detail.html:560
 msgid "add a member by your initiative"
-msgstr "dodati člana svojom inicijativom"
+msgstr "Dodaj člana svojom inicijativom"
 
 #: .\templates\project_detail.html:570
 msgid "select new administrator"
@@ -3937,11 +3937,11 @@ msgstr "odaberite novog nadgledatelja"
 
 #: .\templates\project_detail.html:571
 msgid "apply"
-msgstr "Primijeniti"
+msgstr "Pokreni"
 
 #: .\templates\project_detail.html:655
 msgid "last OERs evaluated"
-msgstr "zadnje ocijenjeni OER-ovi"
+msgstr "posljednji ocijenjeni OER-ovi"
 
 #: .\templates\project_detail.html:704
 msgid "mentoring policy"
@@ -4009,7 +4009,7 @@ msgstr "Želite li zaista opozvati ulogu administratora ili nadgledatelja ovom �
 
 #: .\templates\project_edit.html:21 .\templates\project_edit.html:62
 msgid "child project"
-msgstr "projekt koji proizlazi iz drugog"
+msgstr "podprojekt "
 
 #: .\templates\project_image_upload.html:16
 msgid "upload image of project"
@@ -4102,7 +4102,7 @@ msgstr "neviđeno od mene"
 
 #: .\templates\pybb\forum_list.html:23
 msgid "Last posts"
-msgstr "Zadnji postovi"
+msgstr "Posljednji postovi"
 
 #: .\templates\pybb\forum_list.html:36 .\templates\pybb\forum_list.html:63
 msgid "Hidden"
@@ -4274,7 +4274,7 @@ msgstr "pretraživanje staza učenja"
 #: .\templates\search_people.html:31 .\templates\search_projects.html:31
 #: .\templates\search_repos.html:31
 msgid "results"
-msgstr "Rezultati"
+msgstr "rezultata"
 
 #: .\templates\search_lps.html:31 .\templates\search_oers.html:31
 #: .\templates\search_people.html:31 .\templates\search_projects.html:31
@@ -4302,7 +4302,7 @@ msgstr "pretraživanje OER-a"
 
 #: .\templates\search_oers.html:12
 msgid "open educational resources"
-msgstr "otvorene obrazovne resurse"
+msgstr "otvoreni obrazovni resursi"
 
 #: .\templates\search_oers.html:18 .\templates\search_people.html:18
 #: .\templates\search_repos.html:5
@@ -4395,7 +4395,7 @@ msgstr "član sljedećih projekata"
 
 #: .\templates\user_dashboard.html:235
 msgid "mentoring requests in my communities"
-msgstr "mentorstvo zahtjeva u mojim zajednicama"
+msgstr "zahtjevi za mentorstvo u mojim zajednicama"
 
 #: .\templates\user_dashboard.html:240 .\templates\user_dashboard.html:254
 #: .\templates\user_dashboard.html:268 .\templates\user_dashboard.html:283
@@ -4428,7 +4428,7 @@ msgstr "moja aktivnost u posljednjem razdoblju"
 
 #: .\templates\user_dashboard.html:327
 msgid "days"
-msgstr "dani"
+msgstr "dana"
 
 #: .\templates\user_dashboard.html:369
 msgid "no actions of last period"
@@ -4492,7 +4492,7 @@ msgstr "Član"
 
 #: .\templates\user_profile.html:26 .\templates\user_strict_profile.html:19
 msgid "send a message to"
-msgstr "poslati poruku"
+msgstr "Pošalji poruku"
 
 #: .\templates\user_profile.html:46
 msgid "private information"
@@ -4504,7 +4504,7 @@ msgstr "Korisničko ime"
 
 #: .\templates\user_profile.html:53
 msgid "email"
-msgstr "E-pošta"
+msgstr "Adresa e-pošte"
 
 #: .\templates\user_profile.html:96
 msgid "position"
@@ -4566,7 +4566,7 @@ msgstr "u"
 #: .\templates\zinnia\_entry_detail_base.html:44
 #, python-format
 msgid "Show all entries in %(category)s"
-msgstr "Prikaži sve unose u %(category)s"
+msgstr "Prikaži sve stavke u %(category)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:52
 msgid "Last update on"
@@ -4584,7 +4584,7 @@ msgstr "Nastavi čitanje"
 #: .\templates\zinnia\_entry_detail_base.html:122
 #, python-format
 msgid "Show all entries tagged by %(tag)s"
-msgstr "Prikaži sve unose označene od strane %(tag)s"
+msgstr "Prikaži sve stavke označene od strane %(tag)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:125
 msgid "No tags"
@@ -4653,7 +4653,7 @@ msgstr[2] "%(trackback_count)s trackback-ova"
 
 #: .\templates\zinnia\base.html:16
 msgid "RSS feed of latest entries"
-msgstr "RSS obavjesti o posljednjim unosima"
+msgstr "RSS obavjesti o posljednjim stavkama"
 
 #: .\templates\zinnia\base.html:17
 msgid "RSS feed of latest discussions"
@@ -4665,7 +4665,7 @@ msgstr "Autori"
 
 #: .\templates\zinnia\base.html:55
 msgid "Recent entries"
-msgstr "Nedavni unosi"
+msgstr "Nedavne stavke"
 
 #: .\templates\zinnia\base.html:59
 msgid "Recent comments"
@@ -4697,11 +4697,11 @@ msgstr "RSS obavjesti o trackback-ovima na %(object)s"
 
 #: .\templates\zinnia\entry_detail_base.html:48
 msgid "Next entry"
-msgstr "Sljedeći unos"
+msgstr "Sljedeća stavka"
 
 #: .\templates\zinnia\entry_detail_base.html:62
 msgid "Previous entry"
-msgstr "Prethodni unos"
+msgstr "Prethodna stavka"
 
 #: .\templates\zinnia\entry_detail_base.html:76
 msgid "Related entries"
@@ -4709,20 +4709,20 @@ msgstr "Povezane stavke"
 
 #: .\templates\zinnia\entry_detail_base.html:90
 msgid "Similar entries"
-msgstr "Slični unosi"
+msgstr "Slične stavke"
 
 #: .\templates\zinnia\entry_detail_base.html:218
 msgid "Direct link to this comment"
-msgstr "Izravni link na ovaj komentar"
+msgstr "Izravna poveznica za ovaj komentar"
 
 #: .\templates\zinnia\entry_detail_base.html:255
 #: .\templates\zinnia\entry_detail_base.html:256
 msgid "Edit the entry"
-msgstr "Uređivanje unosa"
+msgstr "Uređivanje stavke"
 
 #: .\templates\zinnia\skeleton.html:19
 msgid "Useful links"
-msgstr "Korisni linkovi"
+msgstr "Korisne poveznice"
 
 #: .\templates\zinnia\skeleton.html:22 .\templates\zinnia\skeleton.html:23
 msgid "Weblog index"
@@ -4736,11 +4736,11 @@ msgstr "mapa stranice"
 msgid ""
 "embedding inside a page the view of this resource is forbidden: please, use "
 "the link above to access it directly"
-msgstr "ugrađivanje prikaza ovog resursa unutar stranice je zabranjeno: molimo vas, koristite link iznad za izravan pristup "
+msgstr "ugrađivanje prikaza ovog resursa unutar stranice je zabranjeno: molimo vas, koristite poveznicu iznad za izravan pristup "
 
 #: .\views.py:821
 msgid "minimum number of LPs"
-msgstr "minimalni broj staza učenja"
+msgstr "minimalan broj staza učenja"
 
 #: .\views.py:1373
 msgid ""
@@ -4814,7 +4814,7 @@ msgstr "dozvole"
 
 #: .\vocabularies.py:124
 msgid "education levels"
-msgstr "razine obrazovanja"
+msgstr "stupanj obrazovanja"
 
 #: .\vocabularies.py:130
 msgid "study or work statuses"
