@@ -13,7 +13,8 @@ from commons.models import Project, OER, LearningPath, PathNode
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'url', 'username', 'email')
+        # fields = ('id', 'url', 'username', 'email')
+        fields = ('id', 'url', 'username', 'email', 'first_name', 'last_name')
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -27,7 +28,8 @@ class UserViewSet(viewsets.ModelViewSet):
 class ProjectSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Project
-        fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified')
+        # fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified', 'proj_type')
 
 class ProjectViewSet(viewsets.ModelViewSet):
     """
@@ -36,7 +38,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
     queryset = Project.objects.all().order_by('-created')
     serializer_class = ProjectSerializer
     http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'state')
+    # filterset_fields = ('id', 'state')
+    filterset_fields = ('id', 'state', 'proj_type')
 
 class OerSerializer(serializers.HyperlinkedModelSerializer):
     # url = serializers.CharField(source='get_absolute_url', read_only=True)
@@ -53,7 +56,8 @@ class OerViewSet(viewsets.ModelViewSet):
     queryset = OER.objects.all().order_by('-created')
     serializer_class = OerSerializer
     http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'state')
+    # filterset_fields = ('id', 'state')
+    filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
 
 class LearningPathSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -67,7 +71,8 @@ class LearningPathViewSet(viewsets.ModelViewSet):
     queryset = LearningPath.objects.all().order_by('-created')
     serializer_class = LearningPathSerializer
     http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'state')
+    # filterset_fields = ('id', 'state')
+    filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
 
 class PathNodeSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -81,7 +86,8 @@ class PathNodeViewSet(viewsets.ModelViewSet):
     queryset = PathNode.objects.all().order_by('-created')
     serializer_class = PathNodeSerializer
     http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id',)
+    # filterset_fields = ('id',)
+    filterset_fields = ('id', 'path', 'creator', 'editor')
 
 router = routers.DefaultRouter()
 router.register(r'user', UserViewSet)
