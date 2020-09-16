@@ -10,7 +10,8 @@ from rest_framework.reverse import reverse, reverse_lazy
 from django.contrib.auth.models import User
 from commons.models import Project, OER, LearningPath, PathNode
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+# class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         # fields = ('id', 'url', 'username', 'email')
@@ -25,7 +26,8 @@ class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'head', 'options']
     filterset_fields = ('id', 'username', 'email')
 
-class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+# class ProjectSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         # fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified')
@@ -41,13 +43,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
     # filterset_fields = ('id', 'state')
     filterset_fields = ('id', 'state', 'proj_type')
 
-class OerSerializer(serializers.HyperlinkedModelSerializer):
+# class OerSerializer(serializers.HyperlinkedModelSerializer):
+class OerSerializer(serializers.ModelSerializer):
     # url = serializers.CharField(source='get_absolute_url', read_only=True)
     url_in_model = serializers.ReadOnlyField(source='url')
 
     class Meta:
         model = OER
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'text', 'state', 'created', 'modified')
+        # fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'text', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'text', 'state', 'created', 'modified', 'project', 'creator', 'editor')
 
 class OerViewSet(viewsets.ModelViewSet):
     """
@@ -59,10 +63,12 @@ class OerViewSet(viewsets.ModelViewSet):
     # filterset_fields = ('id', 'state')
     filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
 
-class LearningPathSerializer(serializers.HyperlinkedModelSerializer):
+# class LearningPathSerializer(serializers.HyperlinkedModelSerializer):
+class LearningPathSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified')
+        # fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified')
+        fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified', 'project', 'creator', 'editor')
 
 class LearningPathViewSet(viewsets.ModelViewSet):
     """
@@ -74,10 +80,12 @@ class LearningPathViewSet(viewsets.ModelViewSet):
     # filterset_fields = ('id', 'state')
     filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
 
-class PathNodeSerializer(serializers.HyperlinkedModelSerializer):
+# class PathNodeSerializer(serializers.HyperlinkedModelSerializer):
+class PathNodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = PathNode
-        fields = ('id', 'get_absolute_url', 'label', 'text', 'created', 'modified')
+        # fields = ('id', 'get_absolute_url', 'label', 'text', 'created', 'modified')
+        fields = ('id', 'get_absolute_url', 'label', 'text', 'created', 'modified', 'path', 'creator', 'editor')
 
 class PathNodeViewSet(viewsets.ModelViewSet):
     """
