@@ -19,30 +19,21 @@ if settings.HAS_SAML2:
     import djangosaml2
     from djangosaml2.urls import urlpatterns as saml2_urls
 
-if settings.DJANGO_VERSION > 1:
-    from django.urls import path
-    urlpatterns = [
-        path('admin/filebrowser/', site.urls),
-        path('admin/', admin.site.urls),
-    ]
-else:
-    urlpatterns = [
-        url(r'^admin/filebrowser/', include(site.urls)),
-        url(r'^admin/', include(admin.site.urls)),
-    ]
+from django.urls import path
+urlpatterns = [
+    path('admin/filebrowser/', site.urls),
+    path('admin/', admin.site.urls),
+]
 
 urlpatterns += [
     url(r'^robots.txt$', commons.views.robots, name='robots'),
     url(r'^error/$', commons.views.error, name='error'),
-    url(r'^dmuc$', TemplateView.as_view(template_name='dmuc/home.html')),
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),
     url(r'^xapi/', include('xapi_client.urls')),
     url(r'^datatrans/', include('datatrans.urls')),
     url(r'^accounts/', include('allauth.urls')),
-    # url(r'^admin/filebrowser/', include(filebrowser.sites.urls)),
-    # url(r'^admin/', include(admin.site.urls)),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^my_mail/', include('django_messages.urls')),
     url(r'^weblog/', include('zinnia.urls', namespace='zinnia')),
@@ -80,8 +71,6 @@ urlpatterns += [
     url(r"^project/(?P<project_slug>[\w-]+)/mailing_list/$", commons.views.project_mailing_list, name="project_mailing_list"),
     url(r"^project/(?P<project_id>[\d-]+)/create_forum/$", commons.views.project_create_forum, name="project_create_forum"),
     url(r"^forum_edit/(?P<forum_id>[\d-]+)/$", commons.views.forum_edit_by_id, name="forum_edit"),
-    # url(r"^project/(?P<project_id>[\d-]+)/create_room/$", 'commons.views.project_create_room', name="project_create_room"),
-    # url(r"^project/(?P<project_id>[\d-]+)/sync_xmpp/$", 'commons.views.project_sync_xmppaccounts', name="project_sync_xmppaccounts"),
     url(r"^project/(?P<project_id>[\d-]+)/paste_oer/(?P<oer_id>[\d-]+)/$", commons.views.project_paste_oer, name="project_paste_oer"),
     url(r"^project/(?P<project_id>[\d-]+)/paste_lp/(?P<lp_id>[\d-]+)/$", commons.views.project_paste_lp, name="project_paste_lp"),
     url(r"^project/(?P<project_id>[\d-]+)/add_shared_oer/(?P<oer_id>[\d-]+)/$", commons.views.project_add_shared_oer, name="project_add_shared_oer"),
@@ -231,7 +220,6 @@ urlpatterns += [
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>.+)$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
-     # url(r"^bosh_prebind/$", dmuc.views.bosh_prebind, name="bosh_prebind"),
     path('wiki/', include('wiki.urls')),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
@@ -248,13 +236,6 @@ if settings.HAS_SAML2:
 if settings.HAS_EARMASTER:
     urlpatterns += [
         path('earmaster/', include('earmaster.urls')),
-    ]
-
-if settings.HAS_DMUC:
-    urlpatterns += [
-        url(r"^project/(?P<project_id>[\d-]+)/create_room/$", 'commons.views.project_create_room', name="project_create_room"),
-        url(r"^project/(?P<project_id>[\d-]+)/sync_xmpp/$", 'commons.views.project_sync_xmppaccounts', name="project_sync_xmppaccounts"),
-        url(r"^bosh_prebind/$", 'dmuc.views.bosh_prebind', name="bosh_prebind"),
     ]
 
 urlpatterns += i18n_patterns(

@@ -1,7 +1,5 @@
 {% load staticfiles %}
 {% load i18n %}
-{% comment %}{% load dmuc %}{% endcomment %}
-{% comment %}{% load url from future %}{% endcomment %}
 {% load menu %}
 {% generate_menu %}
 
@@ -244,27 +242,6 @@
 
     {% block extra_body_base %}
       {% block extra_body %}{% endblock %}
-      {% if rooms_count %}
-{% comment %}
-        <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/css/converse.min.css">
-        <script src="https://cdn.conversejs.org/dist/converse.nojquery.min.js"></script>
-        <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/3.0.0/css/converse.min.css">
-        <script src="https://cdn.conversejs.org/3.0.0/dist/converse-no-jquery.min.js"></script>
-{% endcomment %}
-        <link rel="stylesheet" type="text/css" media="screen" href="https://cdn.conversejs.org/2.0.6/css/converse.min.css">
-        <script src="https://cdn.conversejs.org/2.0.6/dist/converse.nojquery.min.js"></script>
-        
-        <style>
-          form.add-chatroom { display: none; }
-          a.s { display: none; }
-          dl.rooms-list { padding-top: 10px !important; }
-          .rooms-list dt { display: none; }
-        </style>
-        
-        {% comment %}{% dmuc_conversejs_initialize %}
-        <div id="conversejs"></div>
-        {% endcomment %}
-      {% endif %}
     {% endblock %}
   </body>
 </html>

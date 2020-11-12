@@ -6,14 +6,9 @@ from __future__ import unicode_literals
 import future
 from future.builtins import str
 from django.utils.encoding import python_2_unicode_compatible
-import six
-# from six import StringIO
 from six import BytesIO
 
 from django.conf import settings
-if settings.HAS_DMUC:
-    from conversejs.models import XMPPAccount
-    from dmuc.models import Room, RoomMember
 
 import os
 import json
@@ -64,12 +59,9 @@ from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer
 from commons.utils import get_request_headers, get_request_content
 from six import iteritems
 
-if settings.DJANGO_VERSION == 1:
-    from django.utils.translation import string_concat
-if settings.DJANGO_VERSION == 2:
-    from django.utils.text import format_lazy
-    def string_concat(*strings):
-        return format_lazy('{}' * len(strings), *strings)
+from django.utils.text import format_lazy
+def string_concat(*strings):
+    return format_lazy('{}' * len(strings), *strings)
 
 def group_project(self):
     projects = Project.objects.filter(group=self)
@@ -166,13 +158,6 @@ def user_is_manager(self, level=1):
                 return True
     return False
 User.is_manager = user_is_manager
-
-if settings.HAS_DMUC:
-    def user_has_xmpp_account(self):
-        return XMPPAccount.objects.filter(user=self)
-    User.has_xmpp_account = user_has_xmpp_account
-    
-# User.inbox_count = inbox_count_for
 
 def user_last_seen(self):
     return cache.get('seen_%s' % self.username)
@@ -914,9 +899,6 @@ class Project(Resource):
     slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
     proj_type = models.ForeignKey(ProjType, on_delete=models.PROTECT, verbose_name=_('Project type'), related_name='projects')
     forum = models.ForeignKey(Forum, on_delete=models.SET_NULL, verbose_name=_('project forum'), blank=True, null=True, related_name='project_forum')
-    if settings.HAS_DMUC:
-        chat_type = models.IntegerField(choices=CHAT_TYPE_CHOICES, default=1, null=True, verbose_name='chat type')
-        chat_room = models.ForeignKey(Room, on_delete=models.CASCADE, verbose_name=_('chatroom'), blank=True, null=True, related_name='project')
     folders = models.ManyToManyField(Folder, related_name='project', verbose_name=_('folders'))
     description = models.TextField(blank=True, null=True, verbose_name=_('short description'))
     info = models.TextField(_('longer description'), blank=True, null=True)
@@ -1207,22 +1189,11 @@ class Project(Resource):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser)
 
-    def can_chat(self, user):
-        if settings.HAS_DMUC:
-            if not (user.is_authenticated and self.is_member(user)) :
-                return False
-            if not (self.chat_type in [1] and self.chat_room):
-                return False
-            return self.is_room_member(user)
-        else:
-            return False
-
     if settings.HAS_MEETING:
         def get_room_name(self):
             return self.slug
     
         def get_room_url(self):
-            # return settings.KNOCKPLOP_SERVER + '/' + self.get_room_name()
             return '{}/{}'.format(settings.MEETING_SERVER, self.get_room_name())
 
         def get_room(self):
@@ -1348,45 +1319,6 @@ class Project(Resource):
     def can_add_oer(self, user):
         # return has_permission(self, user, 'add-oer')
         return self.state==PROJECT_OPEN and self.is_member(user) and has_permission(self, user, 'add-oer')
-
-    def has_chat_room(self):
-        if settings.HAS_DMUC:
-            return self.chat_type in [1] and self.chat_room
-        else:
-            return False
-
-    def need_create_room(self):
-        if settings.HAS_DMUC:
-            return self.chat_type in [1] and not self.chat_room and self.state==PROJECT_OPEN and not self.proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
-        else:
-            return False
-
-    def is_room_member(self, user):
-        if settings.HAS_DMUC:
-            if not user.is_active:
-                return False
-            assert self.chat_room
-            xmpp_accounts = XMPPAccount.objects.filter(user=user)
-            if not xmpp_accounts:
-                return False
-            room_members = RoomMember.objects.filter(xmpp_account=xmpp_accounts[0], room=self.chat_room)
-            return room_members and True or False
-        else:
-            return False
-
-    def need_sync_xmppaccounts(self):
-        if settings.HAS_DMUC:
-            if not self.chat_type in [1]:
-                return False
-            if not self.chat_room:
-                return False
-            users = self.members(user_only=True)
-            for user in users:
-                if user.is_active and not self.is_room_member(user):
-                    return True
-            return False
-        else:
-            return False
 
     def get_oers(self, states=[PUBLISHED], order_by='-created'):
         qs = OER.objects.filter(project=self.id)
@@ -1836,12 +1768,10 @@ class OER(Resource, Publishable):
         return LearningPath.objects.filter(path_node__oer=self).distinct().order_by('title')
 
     def get_sorted_documents(self):
-        # return self.documents.all().order_by('date_added')
         oer_documents = OerDocument.objects.filter(oer=self).order_by('order', 'document__date_added')
         return [oer_document.document for oer_document in oer_documents]
 
     def remove_document(self, document, request):
-        # assert self.can_edit(request.user)
         assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         document.delete()
@@ -1850,7 +1780,6 @@ class OER(Resource, Publishable):
         self.save()
 
     def document_up(self, document, request):
-        # assert self.can_edit(request.user)
         assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         order = oer_document.order
@@ -1867,7 +1796,6 @@ class OER(Resource, Publishable):
         self.save()
 
     def document_down(self, document, request):
-        # assert self.can_edit(request.user)
         assert self.can_edit(request)
         oer_document = OerDocument.objects.get(oer=self, document=document)
         order = oer_document.order
@@ -2764,12 +2692,7 @@ class LearningPath(Resource, Publishable):
                     rendered_html = html_template.render(context)
                     html_to_writer(rendered_html, writer)    
             parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
-            # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)               
-            # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label().encode('utf-8'), pagenum, parent=parent_bookmark)
-            s = node.get_label()
-            if six.PY2:
-                s = s.encode('utf-8')
-            node_bookmark_dict[node.id] = writer.addBookmark(s, pagenum, parent=parent_bookmark)
+            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)
         return writer, mimetype
 
 @python_2_unicode_compatible

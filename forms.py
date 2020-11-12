@@ -29,8 +29,6 @@ from zinnia.models import Entry
 from pybb.models import Forum
 from dal import autocomplete
 
-if settings.HAS_DMUC:
-    from dmuc.models import Room
 from commons.models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
 from commons.models import Project, ProjType, Folder, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
 from commons.models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
@@ -39,12 +37,9 @@ from commons.models import ProjectMember
 from commons.models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from commons.models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
-if settings.DJANGO_VERSION == 1:
-    from django.utils.translation import string_concat
-if settings.DJANGO_VERSION == 2:
-    from django.utils.text import format_lazy
-    def string_concat(*strings):
-        return format_lazy('{}' * len(strings), *strings)
+from django.utils.text import format_lazy
+def string_concat(*strings):
+    return format_lazy('{}' * len(strings), *strings)
 
 class UserChangeForm(UserWithMPTTChangeForm):
     # groups = TreeNodeMultipleChoiceField(queryset=Group.objects.all(), widget=forms.widgets.SelectMultiple())
@@ -183,17 +178,11 @@ class UserProfileExtendedForm(UserProfileForm):
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        if settings.HAS_DMUC:
-            fields = ('proj_type', 'chat_type', 'chat_room', 'state', 'creator', 'editor', 'name', 'description', 'info', 'mentoring_available', 'reserved',)
-        else:
-            fields = ('proj_type', 'state', 'creator', 'editor', 'name', 'description', 'info','mentoring_available', 'reserved',)
+        fields = ('proj_type', 'state', 'creator', 'editor', 'name', 'description', 'info','mentoring_available', 'reserved',)
 
     name = forms.CharField(required=True, label=_('name'), widget=forms.TextInput(attrs={'class':'form-control',}), help_text=_('max length is 78 characters, but less is better'),)
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
     proj_type = forms.ModelChoiceField(required=False, queryset=ProjType.objects.all(), widget=forms.HiddenInput())
-    if settings.HAS_DMUC:
-        chat_type = forms.ChoiceField(required=False, choices=CHAT_TYPE_CHOICES, label=_('chat type'), widget=forms.HiddenInput())
-        chat_room = forms.ModelChoiceField(required=False, queryset=Room.objects.all(), widget=forms.HiddenInput())
     description = forms.CharField(required=True, label=_('short description'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, }))
     info = forms.CharField(required=False, label=_('longer description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 16,}))
     state = forms.ChoiceField(required=False, choices=PROJECT_STATE_CHOICES, label=_('project state'), widget=forms.HiddenInput())
@@ -729,15 +718,10 @@ class MatchMentorForm(forms.Form):
     message = forms.CharField(required=False, label=_('message'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, enter a notice for the mentor, to motivate your choice'))
 
 # see https://stackoverflow.com/questions/47355837/type-object-radioselect-has-no-attribute-renderer
-if settings.DJANGO_VERSION > 1:
-    class HorizontalRadioRenderer(forms.RadioSelect):
-        input_type = 'radio'
-        template_name = 'django/forms/widgets/radio.html'
-        option_template_name = 'django/forms/widgets/radio_option.html'
-else:
-    class HorizontalRadioRenderer(forms.RadioSelect.renderer):
-        def render(self):
-            return mark_safe('\n'.join([u'%s &nbsp; \n' %  w for w in self]))
+class HorizontalRadioRenderer(forms.RadioSelect):
+    input_type = 'radio'
+    template_name = 'django/forms/widgets/radio.html'
+    option_template_name = 'django/forms/widgets/radio_option.html'
 
 class AcceptMentorForm(forms.ModelForm):
     class Meta:
@@ -745,10 +729,7 @@ class AcceptMentorForm(forms.ModelForm):
         fields = ['project',]
 
     project = forms.IntegerField(widget=forms.HiddenInput())
-    if settings.DJANGO_VERSION > 1:
-        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget = HorizontalRadioRenderer(attrs={'class':'list-inline'}) ) 
-    else:
-        accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget=forms.RadioSelect(renderer=HorizontalRadioRenderer),)
+    accept = forms.TypedChoiceField(required=True, coerce=lambda x: bool(int(x)), choices=((1, _('yes')), (0, _('no'))), label=_('accept'), widget = HorizontalRadioRenderer(attrs={'class':'list-inline'}) ) 
     description = forms.CharField(required=True, label=_('Reason'), widget=forms.Textarea(attrs={'class':'form-control', 'rows':2}), help_text=_('please, explain the motivations of your acceptation or refusal'))
 
 class SelectMentoringJourneyForm(forms.ModelForm):

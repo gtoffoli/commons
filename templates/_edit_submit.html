@@ -2,8 +2,4 @@
 {% load i18n %}
   <button type="submit" name="continue" id="continue" value="continue" class="btn btn-default">{% trans "save"|capfirst %}</button>&nbsp;
   <button type="submit" name="save" id="save" value="save" class="btn btn-default">{% trans "save and exit"|capfirst %}</button>&nbsp;
-  {% if DJANGO_VERSION == 2 %}
-    <a href="{{go_caller}}" name="cancel" id="cancel" value="cancel" class="btn btn-default like-btn-default">{% trans "exit without saving"|capfirst %}</a>
-  {% else %}
-    <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "exit without saving"|capfirst %}</button>
-  {% endif %}
+  <a href="{{go_caller}}" name="cancel" id="cancel" value="cancel" class="btn btn-default like-btn-default">{% trans "exit without saving"|capfirst %}</a>

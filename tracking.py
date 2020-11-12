@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-"""
 
 # Python 2 - Python 3 compatibility
-import six
 
-from collections import defaultdict
 from datetime import timedelta
 
 from django.conf import settings
@@ -13,7 +11,6 @@ from django.contrib.sites.models import Site
 
 import actstream
 from actstream.models import Action
-from datatrans.utils import get_current_language
 
 # from commons.xapi_vocabularies import xapi_activities,  xapi_verbs
 # from commons.xapi import put_statement

@@ -47,10 +47,7 @@ def processor(request):
         'DOMAIN': host,
         'CANONICAL': canonical,
         'HAS_SAML2': settings.HAS_SAML2,
-        'HAS_XMPP': settings.HAS_XMPP,
-        'HAS_DMUC': settings.HAS_DMUC,
         'HAS_MEETING': settings.HAS_MEETING,
         'HAS_ZINNIA': settings.HAS_ZINNIA,
-        'DJANGO_VERSION': settings.DJANGO_VERSION,
         'INBOX_COUNT': inbox_count,
     }

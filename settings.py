@@ -14,19 +14,11 @@ else:
 import django
 DJANGO_VERSION = django.VERSION[0]
 
-if DJANGO_VERSION > 1:
-    HAS_XMPP = False
-    HAS_DMUC = False
-    HAS_MEETING = True
-    HAS_ZINNIA = True
-    HAS_SAML2 = True
+HAS_MEETING = True
+HAS_ZINNIA = True
+HAS_SAML2 = True
+if HAS_SAML2:
     from commons.sso_config import *
-else:
-    HAS_XMPP = False
-    HAS_DMUC = False
-    HAS_MEETING = True # False
-    HAS_ZINNIA = True
-    HAS_SAML2 = False
 
 HAS_EARMASTER = False
 
@@ -36,14 +28,6 @@ if IS_LINUX:
 else:
     DEBUG = True
     TEMPLATE_STRING_IF_INVALID = '%s'
-"""
-if IS_LINUX:
-    ALLOWED_HOSTS = ['*']
-else:
-    ALLOWED_HOSTS = []
-"""
-if CONVERSEJS_ENABLED:
-    ALLOWED_HOSTS.append(XMPP_SERVER)
 
 PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
@@ -90,39 +74,21 @@ USER_ONLINE_TIMEOUT = 300
 # their last seen is removed from the cache
 USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
-if DJANGO_VERSION > 1:
-    MIDDLEWARE = [
-        'django.middleware.security.SecurityMiddleware',
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'commons.middleware.CorsMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-        'pybb.middleware.PybbMiddleware',
-        'django.middleware.locale.LocaleMiddleware',
-        'django.middleware.security.SecurityMiddleware',
-        'commons.middleware.ActiveUserMiddleware',
-    ]
-else:
-    MIDDLEWARE_CLASSES = (
-        'django.contrib.sessions.middleware.SessionMiddleware',
-        'django.middleware.common.CommonMiddleware',
-        'django.middleware.csrf.CsrfViewMiddleware',
-        'django.contrib.auth.middleware.AuthenticationMiddleware',
-        'django.contrib.messages.middleware.MessageMiddleware',
-        'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-        'pybb.middleware.PybbMiddleware',
-        # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-        'django.middleware.locale.LocaleMiddleware',
-        'django.middleware.security.SecurityMiddleware',
-        # 'dmuc.middleware.UserXMPPMiddleware',
-        'commons.middleware.ActiveUserMiddleware',
-    )
-    if DEBUG and DEBUG_TOOLBAR:
-        MIDDLEWARE_CLASSES = ['debug_toolbar.middleware.DebugToolbarMiddleware'] + MIDDLEWARE_CLASSES
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'commons.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
+    'pybb.middleware.PybbMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'commons.middleware.ActiveUserMiddleware',
+]
 
 INSTALLED_APPS = (
     'haystack',
@@ -148,7 +114,6 @@ INSTALLED_APPS = (
     # extend auth model
     "hierarchical_auth",
     "django_extensions",
-    # "django_select2",
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -165,10 +130,7 @@ INSTALLED_APPS = (
     'menu',
     'taggit',
     'taggit_labels',
-    # 'taggit_live',
     'datatrans',
-    # 'conversejs',
-    # 'dmuc',
     'tagging',
     'zinnia',
     'commons',
@@ -180,12 +142,10 @@ INSTALLED_APPS = (
     'django_dag',
     'django_filters',
     'rest_framework',
-    # 'commons',
     # Placed after rest_api to allow template overriding
     # Must be last on Django < 1.7 as per documentation
     # https://django-activity-stream.readthedocs.org/en/latest/installation.html
     'actstream',
-    # 'endless_pagination',
     'djangobower',
     'django_nvd3',
     'awesome_avatar',
@@ -196,25 +156,21 @@ INSTALLED_APPS = (
     'wiki',
     'xapi_client',
     'rdflib_django',
+    'el_pagination',
+    'datetimewidget',
 )
-if DJANGO_VERSION == 2:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['el_pagination']
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['datetimewidget']
-    """
-    181212 MMR DatePickerInput required Python 3.3
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
-    """
-else:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['endless_pagination']
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['datetimewidget']
-if HAS_XMPP:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['conversejs']
+"""
+181212 MMR DatePickerInput required Python 3.3
+INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
+"""
+
 if HAS_SAML2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['djangosaml2']
-if DEBUG and DEBUG_TOOLBAR:
-    INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 if HAS_EARMASTER:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['earmaster']
+if DEBUG and DEBUG_TOOLBAR:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
+
 BOWER_INSTALLED_APPS = (
     # 'd3#3.3.13',
     # 'nvd3#1.7.1',
@@ -222,10 +178,9 @@ BOWER_INSTALLED_APPS = (
     'nvd3#1.8.1',
 )
 
-if DJANGO_VERSION > 1:
-    MIGRATION_MODULES = {
-        'roles': None,
-    }
+MIGRATION_MODULES = {
+    'roles': None,
+}
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -239,7 +194,6 @@ TEMPLATES = [
             'context_processors': [
                 # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
                 # list if you haven't customized them:
-                # 'django.core.context_processors.request',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
@@ -254,18 +208,12 @@ TEMPLATES = [
                 'django_messages.context_processors.inbox',
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
-                # 'dmuc.context_processors.rooms',
                 'commons.context_processors.processor',
                 'sekizai.context_processors.sekizai',
             ],
         },
     },
 ]
-
-if HAS_DMUC:
-    TEMPLATE = TEMPLATES[0]
-    TEMPLATE['OPTIONS']['context_processors'] += ['dmuc.context_processors.rooms']
-    TEMPLATES = [TEMPLATE]
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -432,21 +380,6 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-        'dmuc': {
-            'handlers': ['stream'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'filters': ['require_debug_false'],
-        },
-        'conversejs': {
-            'handlers': ['stream'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            'filters': ['require_debug_false'],
-        },
-        'sleekxmpp': {
-            'handlers': ['stream'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
-            'filters': ['require_debug_false'],
-        },
     }
 }
 
@@ -458,13 +391,6 @@ AUTHENTICATION_BACKENDS = (
 )
 if HAS_SAML2:
     AUTHENTICATION_BACKENDS = list(AUTHENTICATION_BACKENDS) + ['djangosaml2.backends.Saml2Backend']
-
-# TinyMCE settings (from roma APP of RomaPaese project)
-# TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/tinymce.min.js')
-# TINYMCE_JS_URL =os.path.join(STATIC_URL, 'tinymce/js/tinymce/tinymce.min.js')
-"""
-TINYMCE_COMPRESSOR = True
-"""
 
 TINYMCE_DEFAULT_CONFIG = {
     'schema': "html5",

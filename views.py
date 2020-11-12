@@ -1,9 +1,6 @@
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
-# from builtins import str
-import future
 from future.builtins import str
-# from six import StringIO
 from six import BytesIO
 
 from django.conf import settings
@@ -77,10 +74,6 @@ from .utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
 from six import iteritems
 
 from .mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
-if settings.HAS_DMUC:
-    from conversejs.models import XMPPAccount
-    from dmuc.models import Room, RoomMember
-    from dmuc.middleware import create_xmpp_account
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 # from taggit.models import Tag
@@ -89,22 +82,16 @@ from filetransfers.api import serve_file
 from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
 from zinnia.models.author import Author
-if settings.DJANGO_VERSION == 1:
-    from endless_pagination.decorators import page_template
-    from django.utils.translation import string_concat
-if settings.DJANGO_VERSION == 2:
-    from el_pagination.decorators import page_template
-    from django.utils.text import format_lazy
-    def string_concat(*strings):
-        return format_lazy('{}' * len(strings), *strings)
+from el_pagination.decorators import page_template
+from django.utils.text import format_lazy
+def string_concat(*strings):
+    return format_lazy('{}' * len(strings), *strings)
 
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)
 actstream.registry.register(ProjectMember)
 actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
-if settings.HAS_DMUC:
-    actstream.registry.register(Room)
 actstream.registry.register(Repo)
 actstream.registry.register(OER)
 actstream.registry.register(LearningPath)
@@ -1288,12 +1275,6 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             var_dict['can_send_message'] = False
         var_dict['view_forum'] = project.forum and (is_member or user.is_superuser) and is_open
         var_dict['meeting'] = settings.HAS_MEETING and is_member and is_open
-        if settings.HAS_DMUC:
-            can_chat = project.can_chat(user) and is_open
-            var_dict['view_chat'] = not proj_type.name == 'com' and project.has_chat_room and can_chat
-            var_dict['xmpp_server'] = settings.XMPP_SERVER
-            var_dict['room_label'] = project.slug
-            var_dict['project_no_chat'] = proj_type.name in settings.COMMONS_PROJECTS_NO_CHAT
         var_dict['project_no_apply'] = project_no_apply = proj_type.name in settings.COMMONS_PROJECTS_NO_APPLY
         var_dict['communities_no_children'] = project.get_nesting_level() >= settings.COMMONS_COMMUNITIES_MAX_DEPTH
         var_dict['project_no_children'] = project.get_nesting_level() >= settings.COMMONS_PROJECTS_MAX_DEPTH
@@ -2115,53 +2096,6 @@ def forum_edit(request, forum_id=None):
 def forum_edit_by_id(request, forum_id):
     forum = get_object_or_404(Forum, id=forum_id)
     return forum_edit(request, forum_id=forum.id)
-
-if settings.HAS_DMUC:
-    def project_create_room(request, project_id, project=None, no_response=False):
-        if not project:
-            project = get_object_or_404(Project ,id=project_id)
-        if not project.can_access(request.user):
-            raise PermissionDenied
-        # assert project.need_create_room()
-        if not project.need_create_room():
-            return project_detail(request, project_id, project=project)    
-        name = project.slug
-        title = project.get_name()
-        room = Room(name=name, title=title)
-        room.save()
-        project.chat_room = room
-        project.editor = request.user
-        project.save()
-        if project.get_type_name() == 'ment':
-            project_sync_xmppaccounts(request, project_id, project=project, no_response=True)
-        track_action(request, request.user, 'Create', room, target=project)
-        if not no_response:
-            return project_detail(request, project_id, project=project)    
-    
-    def project_sync_xmppaccounts(request, project_id, project=None, no_response=False):
-        if not project:
-            project = get_object_or_404(Project, id=project_id)
-        if not project.can_access(request.user):
-            raise PermissionDenied
-        # assert project.chat_type in [1]
-        if not project.chat_type in [1]:
-            return project_detail(request, project_id, project=project)    
-        room = project.chat_room
-        # assert room
-        if not room:
-            return project_detail(request, project_id, project=project)    
-        users = project.members(user_only=True)
-        for user in users:
-            try:
-                xmpp_account = XMPPAccount.objects.get(user=user)
-            except:
-                xmpp_account = create_xmpp_account(request, user)
-            if xmpp_account:
-                RoomMember.objects.get_or_create(xmpp_account=xmpp_account, room=room)
-            else:
-                pass
-        if not no_response:
-            return project_detail(request, project_id, project=project)
 
 # report user accessing an online meeting (KnockPlop or MultipatyMeeting)
 def report_meeting_in(request, project_id):

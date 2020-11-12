@@ -2,13 +2,9 @@ from django.utils import timezone
 from django.core.cache import cache
 from django.conf import settings
 
-if settings.DJANGO_VERSION > 1:
-    from  django.utils.deprecation import MiddlewareMixin
-    class ActiveUserMiddleware(MiddlewareMixin):
-        pass
-else:
-    class ActiveUserMiddleware:
-        pass
+from  django.utils.deprecation import MiddlewareMixin
+class ActiveUserMiddleware(MiddlewareMixin):
+    pass
 
 def process_request(self, request):
     user = request.user

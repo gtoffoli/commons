@@ -1,15 +1,6 @@
 # Python 2 - Python 3 compatibility
-from __future__ import unicode_literals
-# from builtins import str
-import future
-from future.builtins import str
-import six
-# from six import StringIO
 from six import BytesIO
-if six.PY3:
-    import urllib.request as urllib2
-else:
-    import urllib2
+import urllib.request as urllib2
 
 import os
 if os.name == "nt":
@@ -72,7 +63,6 @@ def ipynb_to_html(data):
     return body
 
 def ipynb_url_to_html(url):
-    # data = urllib2.urlopen(url).read().decode()
     data = urllib2.urlopen(url).read()
     return ipynb_to_html(data)
 
@@ -84,16 +74,13 @@ def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'
         notebook = nbformat.reads(data, as_version=4)
         pdf_exporter = PDFExporter()
         pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
-        # i_stream = StringIO(pdf_data)
         i_stream = BytesIO(pdf_data)
     else:
         return
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
-# def url_to_writer(url, writer, ranges=None):
 def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
     if mimetype=='text/html':
-        # i_stream = StringIO()
         i_stream = BytesIO()
         stylesheets = [CSS(string='@page { size: A4 landscape; }')]
         HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
@@ -102,16 +89,13 @@ def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
         notebook = nbformat.reads(response, as_version=4)
         pdf_exporter = PDFExporter()
         pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
-        # i_stream = StringIO(pdf_data)
         i_stream = BytesIO(pdf_data)
     else:
         return
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
-# def html_to_writer(html, writer, css=None, ranges=None):
 def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = landscape and [CSS(string='@page { size: A4 landscape; }')] or None
-    # i_stream = StringIO()
     i_stream = BytesIO()
     """
     stylesheet = CSS(string='body { font-family: Arial; } a { text-decoration: none; };')
@@ -122,15 +106,11 @@ def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = css and [CSS(string=css)] or None
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     """
-    # HTML(string=html).write_pdf(i_stream)
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     write_pdf_pages(i_stream, writer, ranges=ranges)
 
 def get_pdf_page(i_stream, o_stream):
-    """ return ...
-    """ 
     from PyPDF2.pdf import PdfFileReader, PdfFileWriter
-    # reader = PdfFileReader(i_stream)
     reader = PdfFileReader(i_stream, strict=False)
     if page > reader.getNumPages():
         return None
@@ -143,7 +123,6 @@ def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified
         range is a list of 2 elements: [low, high]
     """ 
-    # reader = PdfFileReader(i_stream)
     reader = PdfFileReader(i_stream, strict=False)
     n_pages = reader.getNumPages()
     if ranges:
@@ -236,12 +215,9 @@ see http://stackoverflow.com/questions/843392/python-get-http-headers-from-urlli
 from django.utils.translation import ugettext_lazy as _
 from django.utils.text import capfirst
 from django.conf import settings
-if settings.DJANGO_VERSION == 1:
-    from django.utils.translation import string_concat
-if settings.DJANGO_VERSION == 2:
-    from django.utils.text import format_lazy
-    def string_concat(*strings):
-        return format_lazy('{}' * len(strings), *strings)
+from django.utils.text import format_lazy
+def string_concat(*strings):
+    return format_lazy('{}' * len(strings), *strings)
 
 """ a Request using the HEAD method in place of the default one (GET or PUT) """
 class HeadRequest(urllib2.Request):
@@ -250,7 +226,6 @@ class HeadRequest(urllib2.Request):
 def get_request_headers(url):
     """ tries to open the resource at the given url;
         returns the HTTP headers as a dict or a dict including only the exception object """
-    # request = HeadRequest(url)
     try:
         request = HeadRequest(url) # 190114 GT: moved this line inside try branch
         response = urllib2.urlopen(request)
@@ -260,7 +235,6 @@ def get_request_headers(url):
         return { 'error': e}
 
 def get_request_content(url):
-    # request = urllib2.Request(url)
     try:
         request = urllib2.Request(url) # 190114 GT: moved this line inside try branch
         response = urllib2.urlopen(request)
@@ -274,11 +248,6 @@ def x_frame_protection(url):
     """ returns an empty string if the resource at the given url can be loaded inside an i-frame;
         otherways returns a localized error message """
     headers = get_request_headers(url)
-    """
-    e = headers.get('error', None)
-    if e:
-        return string_concat(capfirst(_('a problem was found in accessing this resource')), '. ', capfirst(_('the following error code was returned')), ': ', str(e))
-    """
     x_frame_options = headers.get('x-frame-options', '')
     # if x_frame_options and x_frame_options.upper() == 'SAMEORIGIN':
     if x_frame_options:

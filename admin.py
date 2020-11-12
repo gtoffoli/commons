@@ -81,10 +81,7 @@ class ProjTypeAdmin(admin.ModelAdmin):
 
 class ProjAdmin(admin.ModelAdmin):
     form = ProjectChangeForm
-    if settings.HAS_DMUC:
-        list_display = ('id', 'project_name', 'slug', 'description', 'proj_type', 'reserved', 'chat_type', 'chat_room', 'forum', 'project_state', 'created', 'modified',)
-    else:
-        list_display = ('id', 'project_name', 'slug', 'description', 'proj_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
+    list_display = ('id', 'project_name', 'slug', 'description', 'proj_type', 'reserved', 'forum', 'project_state', 'created', 'modified',)
     list_filter = ('proj_type', 'state',)
     search_fields = ['name', 'description',]
     exclude = ('small_image', 'big_image')
