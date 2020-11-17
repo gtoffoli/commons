@@ -14,7 +14,7 @@
     {% if user_list %}
 	<ul class="list-unstyled">
         {% for user in user_list %}
-        <li><a href="/profile/{{ user.username }}/">{{ user.first_name }} {{ user.last_name }}</a>
+        <li><a href="/profile/{{ user.username }}/">{{ user.get_display_name }}</a>
             ({% if user.num_repos > 0 %}<a href="/repos_by/{{ user.username }}/">{{ user.num_repos }}</a>{% else %}{{ user.num_repos }}{% endif %})
         </li>
         {% endfor %}

@@ -71,9 +71,12 @@ def group_project(self):
 Group.project = group_project
 
 def get_display_name(self):
-    display_name = self.username
-    if self.first_name and self.last_name:
-        display_name = '%s %s' % (self.first_name, self.last_name)
+    display_name = _('unknown')
+    if self.is_active:
+        if self.first_name and self.last_name:
+            display_name = '%s %s' % (self.first_name, self.last_name)
+    else:
+        display_name = _('anonymous')
     return display_name
 User.get_display_name = get_display_name
 
@@ -631,11 +634,7 @@ class UserProfile(models.Model):
         return self.user.username
 
     def get_display_name(self):
-        user = self.user
-        display_name = user.username
-        if user.first_name and user.last_name:
-            display_name = '%s %s' % (user.first_name, user.last_name)
-        return display_name
+        return self.user.get_display_name()
     def name(self):
         return self.get_display_name()
 

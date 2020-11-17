@@ -19,8 +19,7 @@ HAS_ZINNIA = True
 HAS_SAML2 = True
 if HAS_SAML2:
     from commons.sso_config import *
-
-HAS_EARMASTER = False
+HAS_EARMASTER = True
 
 from commons.private import *
 if IS_LINUX:
@@ -152,10 +151,10 @@ INSTALLED_APPS = (
     'snowpenguin.django.recaptcha2',
     'brat_client',
     'django.contrib.humanize.apps.HumanizeConfig',
-    'sekizai',
-    'wiki',
+    # 'sekizai',
+    # 'wiki',
     'xapi_client',
-    'rdflib_django',
+    #'rdflib_django',
     'el_pagination',
     'datetimewidget',
 )
@@ -209,7 +208,7 @@ TEMPLATES = [
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
                 'commons.context_processors.processor',
-                'sekizai.context_processors.sekizai',
+                # 'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -489,8 +488,10 @@ ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 0 # 0 means no comments enabled at all
 ZINNIA_AUTO_CLOSE_PINGBACKS_AFTER = 0 # 0 means disabling pingbacks completely
 ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely.
 
+"""
 WIKI_ACCOUNT_HANDLING = False # True
 WIKI_ANONYMOUS_WRITE = False # True
+"""
 
 COMMONS_COMMUNITIES_MAX_DEPTH = 2
 COMMONS_PROJECTS_MAX_DEPTH = 2

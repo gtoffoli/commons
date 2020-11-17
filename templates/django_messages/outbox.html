@@ -12,7 +12,7 @@
     <tbody>
 {% for message in message_list %} 
     <tr>
-        <td style="padding: 2px 10px 0 0">{{ message.recipient }}</td>
+        <td style="padding: 2px 10px 0 0">{{ message.recipient.get_display_name }}</td>
         <td style="padding: 2px 10px 0 0">
         <a href="/my_mail/view/{{ message.id }}/">{{ message.subject }}</a>
         </td>

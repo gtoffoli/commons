@@ -14,7 +14,6 @@ from commons.models import Project, OER, LearningPath, PathNode
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        # fields = ('id', 'url', 'username', 'email')
         fields = ('id', 'url', 'username', 'email', 'first_name', 'last_name')
 
 class UserViewSet(viewsets.ModelViewSet):

@@ -220,7 +220,7 @@ urlpatterns += [
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>.+)$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
-    path('wiki/', include('wiki.urls')),
+    # path('wiki/', include('wiki.urls')),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

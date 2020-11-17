@@ -31,7 +31,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import capfirst
-# from django.utils.translation import pgettext, ugettext_lazy as _, string_concat
 from django.utils.translation import pgettext, ugettext_lazy as _
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
@@ -43,7 +42,6 @@ from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, Ma
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
 from .vocabularies import expand_to_descendants
 from .documents import DocumentType, Document
-# from sources.models import WebFormSource
 from .models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
 from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from .models import RepoType, RepoFeature
@@ -296,7 +294,6 @@ def user_welcome (request):
         return HttpResponseRedirect('/')
         
 def user_profile(request, username, user=None):
-    # assert username or (user and user.is_authenticated()
     if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
     MAX_LIKES = 10
@@ -312,7 +309,7 @@ def user_profile(request, username, user=None):
     else:
         can_edit = False
     profile = user.get_profile()
-	
+
     var_dict = {'can_edit': can_edit, 'profile_user': user, 'profile': profile, 'com_memberships': com_memberships, 'roll_memberships': roll_memberships, 'memberships': memberships, }
     if can_edit:
         var_dict['form'] = DocumentUploadForm()
@@ -350,7 +347,6 @@ def user_strict_profile(request, username):
 def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
-    # MAX_REPOS = MAX_OERS = MAX_LP = MAX_OERS_EVALUATED = 5
     var_dict = {}
     var_dict['user'] = user = request.user
     var_dict['profile'] = profile = user.get_profile()
@@ -446,14 +442,12 @@ def my_home(request):
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
-        # return HttpResponseRedirect('/profile/%s/' % username)
         return HttpResponseRedirect('/my_profile/')
     info = FlatPage.objects.get(url='/info/newsletter/').content
     data_dict = {'user': user, 'info': info, 'go_caller': '/my_profile/'}
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
     if request.POST:
-        # form = UserProfileExtendedForm(request.POST, request.FILES, instance=profile)
         form = UserProfileExtendedForm(request.POST, instance=profile)
         data_dict['form'] = form
 
@@ -660,16 +654,8 @@ def mailing_list(request):
 
     return response
 
-"""
-def send_message_to(request, username):
-    recipient_user = get_object_or_404(User, username=username)
-    track_action(request.user, 'Send', None, target=recipient_user)
-    print request.user, 'Send', None, recipient_user
-    return message_compose(request, recipient=recipient_user.username)
-"""
-
 def cops_tree(request):
-    communities = Project.objects.filter(proj_type__name = 'com', state = PROJECT_OPEN, group__level=1).order_by ('name')
+    communities = Project.objects.filter(proj_type__name='com', state=PROJECT_OPEN, group__level=1).order_by ('name')
     com_tree = proj_tree = []
 
     for community in communities:
@@ -2112,13 +2098,11 @@ def project_compose_message(request, project_id):
         raise PermissionDenied
     members = project.members(user_only=True)
     recipient_filter = [member.username for member in members if not member==request.user]
-    # track_action(request, request.user, 'Send', None, target=project)
     track_action(request, request.user, 'Send', project) # 190414 GT: added signal handler for individual messages
     return message_compose(request, form_class=ProjectMessageComposeForm, recipient_filter=recipient_filter)
 
 def project_mailing_list(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
-    # assert project.is_admin(request.user), "forbidden"
     if not project.is_admin(request.user):
         return HttpResponseRedirect('/project/%s/' % project.slug)    
     state = int(request.GET.get('state', 1))
@@ -2410,7 +2394,6 @@ def browse(request):
         if entries:
             lps_browse_list.append([field_name, field_label, entries])
     form = OerSearchForm
-    # field_names = ['oer_type', 'source_type', 'levels', 'material', 'languages', 'subjects', 'tags', 'media', 'accessibility', 'license', ]
     field_names = ['subjects', 'tags', 'languages', 'levels', 'accessibility', 'oer_type', 'material', 'media', 'license']
     oers_browse_list = []
     base_fields = form.base_fields
@@ -2543,7 +2526,6 @@ def people_search(request, template='search_people.html', extra_context=None):
             post_dict['edu_level'] = edu_levels
             pro_statuses = request.POST.getlist('pro_status')
             if pro_statuses:
-                # qq.append(Q(pro_status__in=pro_statuses))
                 qq.append(Q(pro_status__in=expand_to_descendants(ProStatusNode, pro_statuses)))
                 for pro_status in pro_statuses: 
                     criteria.append(str(ProStatusNode.objects.get(pk=pro_status).name))
@@ -2562,7 +2544,6 @@ def people_search(request, template='search_people.html', extra_context=None):
             post_dict['pro_field'] = pro_fields
             subjects = request.POST.getlist('subjects')
             if subjects:
-                # qq.append(Q(subjects__in=subjects))
                 qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                 for subject in subjects: 
                     criteria.append(str(SubjectNode.objects.get(pk=subject).name))
@@ -3291,7 +3272,6 @@ def online_resource_view(request,folderdocument_id):
     folder = get_object_or_404(Folder, pk=folder_id)
     project = folder.get_project()
     view_folder = user.is_authenticated and (project.is_member(user) or user.is_superuser)
-    # return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'project': project,'view_folder': view_folder})
     return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'folder': folder, 'project': project,'view_folder': view_folder})
 
 """
@@ -3481,9 +3461,7 @@ def lp_play(request, lp_id, lp=None):
     var_dict['current_node'] = current_node
     oer = current_node.oer
     current_document = current_node.document
-    # current_text = current_node.text
     current_text = current_node.get_text()
-    # page_range = current_node.range
     ranges = current_node.get_ranges()
     def handle_view_template(mimetype, url, document=None):
         """
@@ -3508,14 +3486,12 @@ def lp_play(request, lp_id, lp=None):
         if oer_text:
             var_dict['text_view'] = TEXT_VIEW_TEMPLATE % oer_text # 190919 GT added
         elif documents:
-            # ranges = current_node.get_ranges()
             viewable_documents, mimetype = get_compatible_viewable_documents(documents, ranges)
             # 190604 MMR var_dict['image_view'] = False
             if viewable_documents:
                 current_document = viewable_documents[0]
                 if mimetype == 'application/pdf':
                     url = '/ViewerJS/#' + protocol + '://%s/pathnode/%d/download/' % (request.META['HTTP_HOST'], current_node.id)
-                    # var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                     handle_view_template(mimetype, url)
                 elif viewable_documents[0].viewerjs_viewable: # view only first non-PDF
                     url = '/ViewerJS/#' + protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
@@ -3527,13 +3503,9 @@ def lp_play(request, lp_id, lp=None):
                     handle_view_template(mimetype, url)
                 elif mimetype.count('video/'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    # var_dict['document_view'] = VIDEO_VIEW_TEMPLATE % url
-                    # var_dict['media_view'] = True
                     handle_view_template(mimetype, url)
                 elif mimetype.count('audio/'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    # var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, viewable_documents[0].label)
-                    # var_dict['media_view'] = True
                     handle_view_template(mimetype, url, document=current_document)
                 elif mimetype.count('ipynb'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
@@ -3567,7 +3539,6 @@ def lp_play(request, lp_id, lp=None):
             elif youtube.count('watch?v='):
                 youtube = protocol + '://www.youtube.com/embed/%s' % youtube[youtube.index('watch?v=')+8:]
             youtube += '?autoplay=1'
-            # ranges = current_node.get_ranges()
             if ranges:
                 range = ranges[0]
                 if len(range) > 1:
@@ -3586,7 +3557,6 @@ def lp_play(request, lp_id, lp=None):
         elif slideshare:
             var_dict['slideshare'] = slideshare
         elif ipynb:
-            # ipynb = IPYNB_TEMPLATE % (domain, url)
             ipynb = IPYNB_TEMPLATE % (protocol, domain, url)
             var_dict['ipynb'] = ipynb
         else:
@@ -3594,14 +3564,7 @@ def lp_play(request, lp_id, lp=None):
         var_dict['embed_code'] = oer.embed_code
     elif current_document:
         if current_document.viewable:
-            # url, mimetype = document_view(request, current_document.id, return_url=True, return_mimetype=True)
             url, mimetype = document_view(request, current_document.id, return_url=True, return_mimetype=True, node_doc=True)
-            """
-            if mimetype.count('image/'):
-                var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
-            else:
-                var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-            """
             handle_view_template(mimetype, url, document=current_document)
         else:
             var_dict['document_view'] = 'no_view'
@@ -3612,7 +3575,6 @@ def lp_play(request, lp_id, lp=None):
     if user.is_authenticated:
         if from_start:
             track_action(request, user, 'Play', lp, target=lp.project)
-        # track_action(request, user, 'Play', current_node, target=lp.project)
         track_action(request, user, 'Play', current_node, target=lp)
     return render(request, 'lp_play.html', var_dict)
 
@@ -3624,7 +3586,6 @@ def lp_play_by_slug(request, lp_slug):
 def lp_download_by_slug(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
     writer, mimetype = lp.make_document_stream(request)
-    # stream = StringIO()
     stream = BytesIO()
     """
     # https://stackoverflow.com/questions/45978113/pypdf2-write-doesnt-work-on-some-pdf-files-python-3-5-1/52687771#52687771
@@ -3667,11 +3628,6 @@ def lp_edit(request, lp_id=None, project_id=None):
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
                 lp = form.save(commit=False)
-                """
-                190516 MMR
-                if not lp_id: # 190327 GT: if new LP, force DRAFT state
-                    lp.state = DRAFT
-                """
                 lp.editor = user
                 if not lp.path_type:
                     lp.path_type = lp_path_type
@@ -3697,7 +3653,8 @@ def lp_edit(request, lp_id=None, project_id=None):
             elif project_id:
                 go_caller = '/project/%s/' % current_project.slug
             elif project_id == 0:
-                data_dict ['go_caller'] = '/my_home/'
+                # data_dict ['go_caller'] = '/my_home/'
+                go_caller = '/my_home/'
             else:
                 go_caller = '#'
             return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project, 'go_caller': go_caller})
@@ -3750,9 +3707,9 @@ def lp_toggle_comments(request, lp_id):
     if not lp.can_access(request.user):
         raise PermissionDenied
     if lp.comment_enabled:
-      lp.disable_comments()
+        lp.disable_comments()
     else:
-      lp.enable_comments()
+        lp.enable_comments()
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
     
 def lp_submit(request, lp_id):
@@ -3880,10 +3837,6 @@ def pathnode_detail(request, node_id, node=None):
     current_language = get_current_language()
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     var_dict['language_mismatch'] = node.original_language and not node.original_language==current_language
-    """
-    if request.is_ajax():
-        return JsonResponse({"data": 'OK',"node": node_id })
-    """
     return render(request, '_pathnode_detail.html', var_dict)
 
 def pathnode_detail_by_id(request, node_id):
@@ -3994,18 +3947,12 @@ def pathnode_edit_by_id(request, node_id):
 
 def pathnode_download_range(request, node_id):
     node = get_object_or_404(PathNode, pk=node_id)
-    # stream, mimetype = node.make_document_stream()
     writer, mimetype = node.make_document_stream(request)
-    # stream = StringIO()
     stream = BytesIO()
     writer.write(stream)
     if not stream:
         return
     response = HttpResponse(stream.getvalue(), mimetype)
-    """
-    if stream.len:
-        response['Content-Length'] = stream.len
-    """
     stream.seek(0, os.SEEK_END)
     l = stream.tell()
     if l:
@@ -4449,14 +4396,12 @@ def lps_search(request, template='search_lps.html', extra_context=None):
                 post_dict['path_type'] = path_types
                 levels = post.getlist('levels')
                 if levels:
-                    # qq.append(Q(levels__in=levels))
                     qq.append(Q(levels__in=expand_to_descendants(LevelNode, levels)))
                     for level in levels: 
                         criteria.append(str(LevelNode.objects.get(pk=level).name))
                 post_dict['levels'] = levels
                 subjects = post.getlist('subjects')
                 if subjects:
-                    # qq.append(Q(subjects__isnull=True) | Q(subjects__in=subjects))
                     qq.append(Q(subjects__in=expand_to_descendants(SubjectNode, subjects)))
                     for subject in subjects: 
                         criteria.append(str(SubjectNode.objects.get(pk=subject).name))
@@ -4505,15 +4450,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 from dal import autocomplete
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        """
-        # Don't forget to filter out results depending on the visitor !
-        if not self.request.is_authenticated():
-            return Country.objects.none()
-        """
         qs = User.objects.all()
         if self.q:
             qs = qs.filter(username__istartswith=self.q)
-        # return self.q
         return qs
 
 # from commons.forms import UserSearchForm

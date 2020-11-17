@@ -113,7 +113,6 @@ def topic_readmarks(topic, user=None, since=None):
 
 def topic_last_marked(topic, user=None):
     qs = topic_views(topic, user=user)
-    # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
     if qs.count():
         return qs[0].time_stamp
     else:
@@ -130,10 +129,8 @@ def topic_views(topic, user=None, since=None):
 def topic_last_viewed(topic, user=None):
     qs = topic_views(topic, user=user)
     if qs.count():
-        # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count(), qs[0].timestamp
         return qs[0].timestamp
     else:
-        # print 'topic: ', topic.id, 'user: ', user.username, 'views: ', qs.count()
         return None
 
 def unviewed_posts(user, count_only=True):
