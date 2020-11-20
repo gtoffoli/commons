@@ -2,7 +2,6 @@
 import re
 from django.conf import settings
 from django.core.validators import RegexValidator
-# from django.utils.translation import ugettext_lazy as _, string_concat
 from django.utils.translation import ugettext_lazy as _
 from django import forms
 from django.forms.models import inlineformset_factory
@@ -15,7 +14,6 @@ from tinymce.widgets import TinyMCE
 from bootstrap_datepicker_plus import DatePickerInput
 """
 from datetimewidget.widgets import DateWidget
-# from django_select2.forms import Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
 """
 from taggit.models import Tag
 from taggit.forms import TagField
@@ -115,7 +113,6 @@ class UserProfileMentorForm(forms.ModelForm):
 class UserPreferencesForm(forms.ModelForm):
     class Meta:
         model = UserPreferences
-        # fields = ['user', 'enable_emails_from_admins', 'enable_email_notifications', 'stream_max_days', 'stream_max_actions',]
         fields = ['user', 'enable_email_notifications', 'stream_max_days', 'stream_max_actions',]
         
     user = forms.IntegerField(widget=forms.HiddenInput())
@@ -256,7 +253,7 @@ class ProjectSearchForm (forms.Form):
     n_oers = forms.ChoiceField(required=False, choices=N_OERS_CHOICES, label=_('minimum number of OERs'), widget=forms.Select())
 
 class ProjectAddMemberForm (forms.Form):
-    user = forms.ModelChoiceField(required=True, queryset=User.objects.all(), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
+    user = forms.ModelChoiceField(required=True, queryset=User.objects.filter(is_active=True), label=_('user'), widget=autocomplete.ModelSelect2(url='user-fullname-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('search by name'))
     role_member = forms.CharField(required=False, widget=forms.HiddenInput())
 
 class DocumentForm(forms.Form): 
@@ -349,14 +346,6 @@ class OerMetadataForm(forms.ModelForm):
 OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('metadata_type', 'value',), can_delete=True, extra=3)
 # OerMetadataFormSet = inlineformset_factory(OER, OerMetadata, fields=('id', 'oer', 'metadata_type', 'value',), can_delete=True, extra=4)
 
-"""
-class TitleSearchFieldMixin(object):
-    # queryset = OER.objects.all()
-    search_fields = ['title__icontains',]
-class OersSelect2MultipleWidget(TitleSearchFieldMixin, Select2MultipleWidget):
-    pass
-"""
-
 class OerForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OerForm, self).__init__(*args,**kwargs)
@@ -366,7 +355,6 @@ class OerForm(forms.ModelForm):
         model = OER
         fields = ['project', 'state', 'title', 'description', 'text', 'license', 'url', 'embed_code', 'source', 'reference', 'oers', 'translated', 'remixed', 'material', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'creator', 'editor',]
 
-    # slug = forms.CharField(required=False, widget=forms.HiddenInput())
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
     url = forms.CharField(required=False, label=string_concat(_('specific URL of the OER'), ', ', _('if applicable')), widget=forms.TextInput(attrs={'class':'form-control'}), help_text=_('if the OER is available online, put here its URL (web address)'))
     embed_code = forms.CharField(required=False, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the OER view in an HTML page'))
@@ -385,8 +373,6 @@ class OerForm(forms.ModelForm):
     remixed = forms.BooleanField(required=False, label=_('adapted/remixed'), widget=forms.CheckboxInput(attrs={'style':'margin-left: 6px; width:16px; height:16px; vertical-align:text-bottom',}), help_text=_('specify whether the derivation of this OER has involved adaptation/remixing of the original content(s)'))
     source = forms.ModelChoiceField(required=False, queryset=Repo.objects.all(), label=_('source repository'), widget=autocomplete.ModelSelect2(url='repo-autocomplete', attrs={'style': 'width: 100%;'}), help_text=_('specify in which catalogued repository, if any, you found this OER; e.g. Youtube, Slideshare, etc. - enter a few chars of its name to get suggestions'))
     reference = forms.CharField(required=False, label=_('other info to identify/access the OER in the source'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
-    # project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
-    # state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     project = forms.ModelChoiceField(queryset=Project.objects.all(), widget=forms.HiddenInput())
     state = forms.ChoiceField(choices=PUBLICATION_STATE_CHOICES, widget=forms.HiddenInput())
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -414,7 +400,6 @@ class OerScreenshotForm(forms.ModelForm):
 class OerChangeForm(forms.ModelForm):
     class Meta:
         model = OER
-        # fields = ['slug', 'title', 'description', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
         fields = ['slug', 'title', 'description', 'text', 'oer_type', 'source_type', 'translated', 'remixed', 'source', 'url', 'reference', 'embed_code', 'content', 'material', 'license', 'levels', 'subjects', 'tags', 'languages', 'media', 'accessibility', 'project', 'state', 'comment_enabled', 'metadata',]
 
     text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
@@ -452,11 +437,6 @@ class OerSearchForm(forms.Form):
         label=_('languages'), required=False,
         help_text=_("choose languages (no selection = all areas)"),
         widget=forms.CheckboxSelectMultiple())
-    """
-    source_type = forms.MultipleChoiceField(choices=SOURCE_TYPE_CHOICES,
-        label=_('source type'), required=False,
-        widget=forms.CheckboxSelectMultiple())
-    """
     origin_type = forms.MultipleChoiceField(choices=ORIGIN_TYPE_CHOICES,
         label=_('source type'), required=False,
         widget=forms.CheckboxSelectMultiple())
@@ -489,20 +469,6 @@ class DocumentUploadForm(forms.Form):
         widget=forms.FileInput(attrs={'class': 'filestyle', 'data-buttonText':_("choose file"), 'data-icon':'false'}))
         #widget=forms.FileInput(attrs={'class': 'btn',}))
 
-"""
-OerQualityFormSet = inlineformset_factory(OerEvaluation, OerQualityMetadata, fields=('quality_facet', 'value',), can_delete=True, min_num=4, max_num=4)
-
-class OerEvaluationForm(forms.ModelForm):
-
-    class Meta:
-        model = OerEvaluation
-        exclude = ('quality_metadata',)
-
-    oer = forms.ModelChoiceField(queryset=OER.objects.all(), widget=forms.HiddenInput())
-    overall_score = forms.ChoiceField(required=True, choices=QUALITY_SCORE_CHOICES, label=_('overall quality assessment'), widget=forms.Select(attrs={'class':'form-control',}))
-    review = forms.CharField(required=False, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
-    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
-"""
 class OerEvaluationForm(forms.Form):
     oer = forms.ModelChoiceField(queryset=OER.objects.all(), widget=forms.HiddenInput())
     review = forms.CharField(required=True, label=_('free-text review'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 4, 'cols': 80,}))
@@ -521,7 +487,6 @@ class LpGroupChoiceField(forms.ModelChoiceField):
 class LpForm(forms.ModelForm):
     class Meta:
         model = LearningPath
-        # exclude = ('slug', 'group', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
         exclude = ('slug', 'cloned_from', 'group', 'state', 'deleted', 'small_image', 'big_image', 'original_language','comment_enabled')
 
     slug = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -530,15 +495,10 @@ class LpForm(forms.ModelForm):
     path_type = forms.ChoiceField(required=True, choices=LP_TYPE_CHOICES, label=_('type of learning path'), widget=forms.Select(attrs={'class':'form-control',}))
     levels = forms.ModelMultipleChoiceField(required=False, label=_('target audience'), queryset=LevelNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('subject areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 13,}))
-    # tags = TagField(required=False, label=_('tags'), widget=LabelWidget())
     tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all().order_by('name'), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
     project = forms.ModelChoiceField(required=False, queryset=Project.objects.all(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the Learning Path has been created'))
     short = forms.CharField(required=True, label=_('objectives'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}))
     long = forms.CharField(required=False, label=_('description'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}), help_text=_('sub-objectives, strategy, method, contents'))
-    """
-    group = LpGroupChoiceField(required=False, queryset=Group.objects.filter(lp_group__isnull=False).distinct(), label=_('project'), widget=forms.Select(attrs={'class':'form-control',}), help_text=_('where the OER has been cataloged or created'))
-    """
-    # 190516 MMR state = forms.ChoiceField(required=False, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
@@ -550,7 +510,6 @@ class LpChangeForm(forms.ModelForm):
         model = LearningPath
         fields = ['slug', 'title', 'path_type', 'levels', 'subjects', 'tags', 'project', 'group', 'state',]
 
-    # tags = TagField(required=False, widget=LabelWidget())
     tags = forms.ModelMultipleChoiceField(required=False, label=_('tags'), queryset=Tag.objects.all(), widget=forms.CheckboxSelectMultiple(attrs={'class':'form-control'}), help_text=_('click to add or remove a tag'))
 
 class LpSearchForm(forms.Form):
@@ -589,7 +548,6 @@ range_ko_re = '[^0-9\.\-\,\ ]+'
 class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
-        # exclude = ('children',)
         fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'text', 'creator', 'editor', )
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -636,7 +594,7 @@ class MessageComposeForm(ComposeForm):
     """
     A customized form for private messages.
     """
-    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), label=_(u"Recipient"), required=True, widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
+    recipient = MultipleUserChoiceField(queryset=User.objects.filter(groups__isnull=False, is_active=True).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name'), label=_(u"Recipient"), required=True, widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 8,}))
     subject = forms.CharField(label=_(u"Subject"), required=True, max_length=120, widget=forms.TextInput(attrs={'class':'form-control'}),)
     body = forms.CharField(label=_(u"Body"), required=True, widget=forms.Textarea(attrs={'rows': '8', 'cols':'75'}))
 
@@ -647,7 +605,7 @@ class ProjectMessageComposeForm(MessageComposeForm):
     def __init__(self, *args, **kwargs):
         recipient_filter = kwargs.pop('recipient_filter')
         super (ProjectMessageComposeForm, self ).__init__(*args, **kwargs) # populates the post
-        queryset = User.objects.filter(username__in=recipient_filter).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name')
+        queryset = User.objects.filter(username__in=recipient_filter, is_active=True).exclude(last_name='', first_name='').exclude(id=1).distinct().order_by('last_name', 'first_name')
         self.fields['recipient'].widget = forms.SelectMultiple(attrs={'class':'form-control', 'size': queryset.count(),})
         self.fields['recipient'].queryset = queryset
         self.fields['recipient'].help_text=_('please, explicitly select the receiver(s)')
@@ -682,9 +640,9 @@ class UserChoiceField(forms.ModelChoiceField):
         # title="{% trans "view user profile"
         link="/profile_strict/%s/" % obj.username
         if profile.avatar:
-           avatar = "/media/%s" % profile.avatar
+            avatar = "/media/%s" % profile.avatar
         else:
-           avatar = "/media/images/avatars/anonymous.png"
+            avatar = "/media/images/avatars/anonymous.png"
         attrs_link = {}
         attrs_image = {}
         attrs_name = {}
@@ -742,8 +700,7 @@ class SelectMentoringJourneyForm(forms.ModelForm):
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
 
 class UserSearchForm(forms.Form):
-    user = forms.ModelChoiceField(queryset=User.objects.all(), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))
-    # user = forms.ModelChoiceField(queryset=User.objects.all())
+    user = forms.ModelChoiceField(queryset=User.objects.filter(is_active=True), widget=autocomplete.ModelSelect2(url='user-autocomplete/'))
 
 class FeaturedChangeForm(autocomplete.FutureModelForm):
     class Meta:

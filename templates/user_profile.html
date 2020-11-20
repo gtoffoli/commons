@@ -2,7 +2,9 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+{% if profile %}
+	{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+{% endif  %}
 
 {% block body_class %}profile{% endblock %}
 
@@ -10,6 +12,7 @@
 
 <article class="panel text-left marginTB30 panel-c0">
 
+{% if profile %}
   <div class="navbar panel-heading-c0 padding10">
     {% if complete_profile %}
 	  <div class="pull-left">
@@ -289,6 +292,21 @@
     {% endif %}
     </div>
   </section>
+
+{% else %}
+
+<div class="navbar panel-heading-c0 padding10" style="vertical-alignment: middle;">
+  <h2 class="pull-left marginTB0" style="padding-left:6px; vertical-alignment: middle;">
+    {% trans "anonymized user"|capfirst %}
+  </h2>
+</div>
+<div class="padding10">
+  <section class="padding10">
+    <p>{% trans "the user profile you are looking for is no more available on this site"|capfirst %}.</p>
+  </section>
+</div>
+{% endif %}
+
 </article>
 {% endblock %}
 
@@ -324,3 +342,4 @@
     {% include "_validate_file.html" with addDoc='add_document' fieldFile='docfile' %}
 {% endif %}
 {% endblock %}
+

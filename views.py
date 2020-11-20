@@ -296,11 +296,14 @@ def user_welcome (request):
 def user_profile(request, username, user=None):
     if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
-    MAX_LIKES = 10
+    if username == 'anonymous':
+        return render(request, 'user_profile.html', {'profile': None})
     if not user:
         user = get_object_or_404(User, username=username)
-    # memberships = ProjectMember.objects.filter(user=user, state=1).order_by('project__proj_type__name')
-
+    if not user.is_active:
+        return HttpResponseRedirect('/profile/anonymous/')
+        
+    MAX_LIKES = 10
     com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
@@ -338,7 +341,12 @@ def my_profile(request):
     return user_profile(request, None, user=user)
 
 def user_strict_profile(request, username):
+    if username == 'anonymous':
+        return render(request, 'user_strict_profile.html', {'profile': None})
     user = get_object_or_404(User, username=username)
+    if not user.is_active:
+        return HttpResponseRedirect('/profile_strict/anonymous/')
+
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
     profile = user.get_profile()
     var_dict = {'profile_user': user, 'profile': profile, 'roll_memberships': roll_memberships }
@@ -632,16 +640,6 @@ def mailing_list(request):
     if member:
         member = member.lower() in ('true', 't',)
     users = filter_users(profiled=profiled, member=member)
-    """
-    n_receivers = len(users)
-    receivers = []
-    for user in users:
-        full_name = '%s %s' % (user.first_name, user.last_name)
-        address = '%s <%s>' % (full_name, user.email)
-        receivers.append(address)
-    text = '\n'.join([str(n_receivers), ', '.join(receivers)])
-    return HttpResponse(text, content_type="text/plain")
-    """
 
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
@@ -770,9 +768,6 @@ def projects_search(request, template='search_projects.html', extra_context=None
                     proj_groups = []
                     for comm_group in comm_groups:
                         proj_groups.extend(comm_group.get_descendants())
-                    """
-                    proj_groups = [item for sublist in [comm_group.get_descendants()] for item in sublist]
-                    """
                     qq.append(Q(group__in=proj_groups))
                     for community in comm_objects: 
                         criteria.append(community.name)
@@ -813,27 +808,6 @@ def projects_search(request, template='search_projects.html', extra_context=None
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PROJECT_OPEN)
-        """
-        if post:
-            n_oers = int(post.get('n_oers', 0))
-            n_members = int(post.get('n_members', 0))
-            if n_members:
-                min_members = int(N_MEMBERS_LIMITS[n_members-1])
-                qs = qs.annotate(num_members=Count('member_project'))
-            n_lps = int(post.get('n_lps', 0))
-            if n_lps:
-                min_lps = int(N_LPS_LIMITS[n_lps-1])
-                qs = qs.annotate(num_lps=Count('lp_project'))
-            if n_oers:
-                min_oers = int(N_OERS_LIMITS[n_oers-1])
-                qs = qs.annotate(num_oers=Count('oer_project'))
-            if min_members:
-                qs = qs.filter(num_members__gt=min_members-1)
-            if min_lps:
-                qs = qs.filter(num_lps__gt=min_lps-1)
-            if min_oers:
-                qs = qs.filter(num_oers__gt=min_oers-1)
-        """
         projects = qs.distinct().order_by('name')
         if n_members:
             projects = [p for p in projects if min_members <= p.get_memberships(state=1).count()]
@@ -3339,13 +3313,13 @@ def lp_detail(request, lp_id, lp=None):
         proj_members = lp.project.members(user_only=False)
         proj_admins = [lp.creator]
         for proj_admin in proj_members:
-             if proj_admin[1] and not proj_admin[0] == lp.creator:
-                 proj_admins.append(proj_admin[0])
-        memberships = ProjectMember.objects.filter(project=lp.project, state=1).exclude(user__in=proj_admins).order_by('user__last_name')
+            if proj_admin[1] and not proj_admin[0] == lp.creator:
+                proj_admins.append(proj_admin[0])
+        memberships = ProjectMember.objects.filter(project=lp.project, state=1, user__is_active=True).exclude(user__in=proj_admins).order_by('user__last_name')
         proj_candidate_lp_editors = []
         for membership in memberships:
             membership.is_editor = lp.can_edit(membership)
-            proj_candidate_lp_editors.append([membership.user,lp.can_edit(membership)])
+            proj_candidate_lp_editors.append([membership.user, lp.can_edit(membership)])
         if len(proj_candidate_lp_editors) > 0:
             var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
             var_dict['can_delegate'] = can_delegate
@@ -4178,11 +4152,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             oer_types = post_dict.get('oer_type', [])
             if oer_types:
                 qq.append(Q(oer_type__in=oer_types))
-            """
-            source_types = post_dict.get('source_type', [])
-            if source_types:
-                qq.append(Q(source_type__in=source_types))
-            """
             origin_types = post_dict.get('origin_types', [])
             n_origin_types = len(origin_types)
             if n_origin_types > 0:
@@ -4218,7 +4187,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
                 qq.append(Q(tags__in=tags))
             languages = post_dict.get('languages', [])
             if languages:
-                # qq.append(Q(languages__isnull=True) | Q(languages__in=languages))
                 qq.append(Q(languages__in=languages))
             media = post_dict.get('media', [])
             if media:
@@ -4450,7 +4418,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 from dal import autocomplete
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = User.objects.all()
+        qs = User.objects.all(is_active=True)
         if self.q:
             qs = qs.filter(username__istartswith=self.q)
         return qs
@@ -4470,7 +4438,7 @@ def user_fullname_autocomplete(request):
     create_option = []
     results = []
     if q and len(q) >= MIN_CHARS:
-        qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q)).order_by('last_name', 'first_name')
+        qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
         results = [{'id': user.id, 'text': user.get_display_name()[:80]} for user in qs if user.is_completed_profile()] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')

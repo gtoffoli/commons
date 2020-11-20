@@ -2,7 +2,6 @@
 
 # Python 2 - Python 3 compatibility
 from __future__ import unicode_literals
-# from builtins import str
 import future
 from future.builtins import str
 from django.utils.encoding import python_2_unicode_compatible
@@ -652,11 +651,7 @@ class UserProfile(models.Model):
 
     def get_likes(self):
         likes = []
-        for user in User.objects.all():
-            """
-            if user == self.user:
-                continue
-            """
+        for user in User.objects.filter(is_active=True):
             score, matches = self.get_similarity(user)
             if score > 0.5:
                 avatar = user.get_profile().avatar
@@ -1235,19 +1230,15 @@ class Project(Resource):
         membership.delete()
 
     def get_memberships(self, state=None, user=None):
-        """
-        if user and user.is_authenticated:
-            memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
-        """
         if user:
             if user.is_authenticated:
                 memberships = ProjectMember.objects.filter(project=self, user=user).order_by('-state')
             else:
                 return []
         elif state is not None:
-            memberships = ProjectMember.objects.filter(project=self, state=state)
+            memberships = ProjectMember.objects.filter(project=self, state=state, user__is_active=True)
         else:
-            memberships = ProjectMember.objects.filter(project=self)
+            memberships = ProjectMember.objects.filter(project=self, user__is_active=True)
         return memberships
 
     def get_applications(self):
@@ -1381,7 +1372,6 @@ class Project(Resource):
         mentoring_children = self.get_children(proj_type_name='ment', states=states)
         children = []
         for child in mentoring_children:
-            # if child.get_type_name()=='ment' and child.get_memberships(user=user):
             if child.get_memberships(user=user):
                 children.append(child)
         return children
@@ -1401,8 +1391,7 @@ class Project(Resource):
         for child in mentoring_children:
             membership=ProjectMember.objects.filter(user=user, project=child, state=membership_state)
             if membership:
-            # if child.get_memberships(state=membership_state, user=user):
-               if not child.is_admin(user=user):
+                if not child.is_admin(user=user):
                     children.append(child)
         return children
 
@@ -2107,7 +2096,7 @@ class LearningPath(Resource, Publishable):
                 user_ids.append(oer.creator.id)
                 user_ids.append(oer.editor.id)
         user_ids = [id for id in user_ids if not id == creator_id]
-        users = User.objects.filter(id__in=user_ids).distinct().order_by('last_name', 'first_name')
+        users = User.objects.filter(id__in=user_ids, is_active=True).distinct().order_by('last_name', 'first_name')
         return users
 
     def can_access(self, user):

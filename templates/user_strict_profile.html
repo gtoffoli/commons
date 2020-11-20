@@ -2,9 +2,13 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+{% if profile %}
+	{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+{% endif  %}
 
 {% block body_base %}
+
+{% if profile %}
 <body class="paddingT0">
   <div class="borderBottom borderColor-c0 paddingB5">
     <h5 class="marginTB0 c-fern demiBold">
@@ -50,6 +54,22 @@
   {% endif %}
   
   <div><a href="/profile/{{ profile_user.username }}" title="" target="_top"></a></div>
+
+{% else %}
+
+<div class="navbar panel-heading-c0 padding10" style="vertical-alignment: middle;">
+  <h2 class="pull-left marginTB0" style="padding-left:6px; vertical-alignment: middle;">
+    {% trans "anonymized user"|capfirst %}
+  </h2>
+</div>
+<div class="padding10">
+  <section class="padding10">
+    <p>{% trans "the user profile you are looking for is no more available on this site"|capfirst %}.</p>
+  </section>
+</div>
+
+{% endif %}
+
 </body>
 {% endblock %}
 

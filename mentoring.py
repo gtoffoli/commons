@@ -23,7 +23,8 @@ def get_all_mentors():
     all_memberships = ProjectMember.objects.filter(state=1, project__proj_type__name='roll', project__state=PROJECT_OPEN).order_by('user__last_name','user__first_name','user_id').distinct('user__last_name','user__first_name','user_id')
     mentors = []
     for m in all_memberships:
-        mentors.append(m.user)
+        if m.user.is_active:
+            mentors.append(m.user)
     return mentors
 
 def get_all_candidate_mentors(user, community):
@@ -36,7 +37,7 @@ def get_all_candidate_mentors(user, community):
         members = [membership.user for membership in memberships if not membership.user == user]
         community_mentors = UserProfile.objects.filter(user__in=members, mentor_unavailable = False)
         if community_mentors:
-            community_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in community_mentors]).order_by('last_name','first_name')
+            community_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in community_mentors], is_active=True).order_by('last_name','first_name')
         rolls = rolls.exclude(pk=roll.id)
     # if rolls:
     other_candidate_mentors = None
@@ -46,12 +47,12 @@ def get_all_candidate_mentors(user, community):
         for roll in rolls:
             memberships = roll.get_memberships(state=1).order_by('user__last_name','user__first_name')
             for membership in memberships:
-                if not membership.user == user:
+                if membership.user.is_active and not membership.user == user:
                     members.append(membership.user)
         if members:
             other_candidate_mentors = UserProfile.objects.filter(user__in=members, mentor_for_all = True, mentor_unavailable = False)
     if other_candidate_mentors:
-        communities_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in other_candidate_mentors]).order_by('last_name','first_name')
+        communities_candidate_mentors = User.objects.filter(id__in=[mentor.user_id for mentor in other_candidate_mentors], is_active=True).order_by('last_name','first_name')
     if community_candidate_mentors and communities_candidate_mentors:
         return (community_candidate_mentors | communities_candidate_mentors)
     elif community_candidate_mentors:

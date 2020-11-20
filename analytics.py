@@ -520,7 +520,8 @@ def get_user_projects(user):
 def get_comembers(user):
     projects = get_user_projects(user)
     user_ids = ProjectMember.objects.filter(project__in=projects, state=MEMBERSHIP_ACTIVE).exclude(user=user).values_list('user', flat=True).distinct()
-    return User.objects.filter(id__in=user_ids)
+    # return User.objects.filter(id__in=user_ids)
+    return User.objects.filter(id__in=user_ids, is_active=True)
 
 def get_active_comembers(user, max_users=20, max_days=30):
     comembers = get_comembers(user)
@@ -627,19 +628,19 @@ def content_languages(request):
 
 def resource_contributors(request):
     var_dict = {}
-    lp_contributors = User.objects.annotate(num_lps=Count(Case(
+    lp_contributors = User.objects.filter(is_active=True).annotate(num_lps=Count(Case(
                            When(path_creator__state=PUBLISHED, then=1)))
                        ).exclude(num_lps=0).order_by('-num_lps','last_name','first_name')
     var_dict['lp_contributors'] = lp_contributors
-    oer_evaluation_contributors = User.objects.annotate(num_oer_evaluations=Count(Case(
+    oer_evaluation_contributors = User.objects.filter(is_active=True).annotate(num_oer_evaluations=Count(Case(
                            When(oer_evaluator__oer__state=PUBLISHED, then=1)))
                        ).exclude(num_oer_evaluations=0).order_by('-num_oer_evaluations','last_name','first_name')
     var_dict['oer_evaluation_contributors'] = oer_evaluation_contributors
-    resource_contributors = User.objects.annotate(num_oers=Count(Case(
+    resource_contributors = User.objects.filter(is_active=True).annotate(num_oers=Count(Case(
                            When(oer_creator__state=PUBLISHED, then=1)))
                        ).exclude(num_oers=0).order_by('-num_oers','last_name','first_name')
     var_dict['resource_contributors'] = resource_contributors
-    source_contributors = User.objects.annotate(num_repos=Count(Case(
+    source_contributors = User.objects.filter(is_active=True).annotate(num_repos=Count(Case(
                            When(repo_creator__state=PUBLISHED, then=1)))
                        ).exclude(num_repos=0).order_by('-num_repos','last_name','first_name')
     var_dict['source_contributors'] = source_contributors
