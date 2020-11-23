@@ -1,4 +1,4 @@
-{% load i18n %}{% comment %}{% load url from future %}{% endcomment %}
+{% load i18n %}
 {% with recipient=message.recipient sender=message.sender  %}{% blocktrans with recipient_name=recipient.get_display_name sender_name=sender.get_display_name %}Hello {{ recipient_name }},
 you received a private message from {{ sender_name }} with the following contents:{% endblocktrans %}{% endwith %}
 
@@ -7,7 +7,3 @@ you received a private message from {{ sender_name }} with the following content
 
 --
 {% blocktrans %}Sent from {{ site_url }}{% endblocktrans %}
-{% comment %}
-{% trans "Inbox" %}: {{ site_url }}{% url 'messages_inbox' %}
-{% trans "Reply" %}: {{ site_url }}{% url 'messages_reply' message.pk %}
-{% endcomment %}

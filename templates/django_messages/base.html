@@ -1,32 +1,37 @@
 {% extends "commons_base.html" %}
 {% load i18n %}
-{% comment %}{% load url from future %}{% endcomment %} 
-{% block bodyclass %}about{% endblock %}
 
-{% block body %}
-<div class="container">
-
-  <div class="col-sm-3">
-	{% block sidebar %}
-	<h4 style="margin-top: 4.0em;">{% trans "message folders"|capfirst %}</h4>
-	<ul class="subnavilist list-unstyled">
-	    <li><a href="{% url 'messages_inbox' %} ">&raquo;&nbsp;{% trans "Inbox" %}</a></li>
-	    <li><a href="{% url 'messages_outbox' %} ">&raquo;&nbsp;{% trans "Sent Messages" %}</a></li>
-	    {% comment %}{% endcomment %}
-	    <li><a href="{% url 'messages_trash' %} ">&raquo;&nbsp;{% trans "Trash" %}</a></li>
-	</ul>
-	<p><a href="{% url 'messages_compose' %} ">{% trans "New Message" %}</a></p>
-	{% endblock %}
-  </div>
-
-  <div class="col-sm-6">
-	{% block content %} 
-	{% endblock %}
-  </div>
-
-  <div class="col-sm-3">
-  </div>
-
-</div>
+{% block extra_style %}
+<style>
+    .table-responsive {border:none}
+    .table tbody tr:hover {
+        background-color: #fafafa;
+}
+input[type=text] {width:100%;}
+textarea {width:100%}
+</style>
 {% endblock %}
 
+{% block bodyclass %}base_messages{% endblock %}
+
+{% block body %}
+<div class="row marginTB30" style="border:1px solid #ccc; border-radius:4px; background:#fafafa">
+    <div class="col-sm-3 col-md-2 col-lg-2">
+    {% block sidebar %}
+    {% comment %}
+    <h4>{% trans "message folders"|capfirst %}</h4>
+    {% endcomment %}
+    <p class="text-right paddingB5 demiBold paddingT10" style="border-bottom:1px solid #aaa"><a href="{% url 'messages_compose' %}"><i class="fa fa-pencil"></i> <small>{% trans "New Message" %}</small></a></p>
+    <ul class="list-unstyled paddingB10">
+        <li class="marginT20 demiBold"><a href="{% url 'messages_inbox' %} "><i class="fa fa-envelope-o" aria-hidden="true"></i> <small>{% trans "Inbox" %}</small></a></li>
+        <li class="marginT20 demiBold"><a href="{% url 'messages_outbox' %} "><i class="fa fa-paper-plane-o" aria-hidden="true"></i> <small>{% trans "Sent Messages" %}</small></a></li>
+        <li class="marginT20 demiBold"><a href="{% url 'messages_trash' %} "><i class="fa fa-trash" aria-hidden="true"></i> <small>{% trans "Trash" %}</small></a></li>
+    </ul>
+    {% endblock %}
+    </div>
+    <div class="col-sm-9 col-md-10 col-lg-10 paddingTB10" style="min-height:180px; background:#fff; border-radius:4px">
+    {% block content %}
+    {% endblock %}
+    </div>
+</div>
+{% endblock %}

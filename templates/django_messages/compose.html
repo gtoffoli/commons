@@ -3,28 +3,22 @@
 {% block head_title %}{% trans "Compose Message" %}{% endblock head_title %}
 
 {% block content %} 
-<h1>{% trans "Compose Message"%}</h1>
-    <section>
-<form action="" method="post" class="form-horizontal">
-{% csrf_token %}
-{% comment %}
-<table>
-{{ form.as_table }}
-</table>
-<input type="submit" value="{% trans "Send" %} &raquo;"/>
-{% endcomment %}
-    {% for field in form.hidden_fields %}{{ field }}{% endfor %}
-    {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="row" style="margin-top: 0; margin-bottom: 0;">
-	<div class="form-group col-lg-{% if i == 1 %}8{% else %}12{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.required %}<span style="color: red;">*</span>{% endif %}</label>
-		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
-		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
-	</div>
-	</div>
-    {% endwith %}{% endfor %}
-	<input type="submit" value="{% trans "Send" %} &raquo;"/>
-</form>
-    </section>
-
+<h3 class="text-center marginT5">{% trans "Compose Message"%}</h3>
+<div class="row">
+    <div class="col-md-1 col-lg-2"></div>
+    <div class="col-md-10 col-lg-8">
+        <form action="" method="post">
+        {% csrf_token %}
+        {% for field in form.hidden_fields %}{{ field }}{% endfor %}
+        {% for field in form.visible_fields %}
+        <div class="form-group">
+            <label for="{{ field.name }}" class="demiBold">{{field.label|capfirst}}</label>
+            {% if field.errors %} <div class="error">{{ field.errors }}</div>{% endif %}
+            <div>{{ field }}</div>
+        </div>
+        {% endfor %}
+        <div class="text-center marginB10"><input type="submit" class="btn btn-default" value="{% trans "Send" %}"></div>
+        </form>
+    </div>
+</div>
 {% endblock %}
