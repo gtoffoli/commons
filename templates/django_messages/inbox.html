@@ -1,26 +1,31 @@
 {% extends "django_messages/base.html" %} 
 {% load i18n %} 
-{% comment %}{% load url from future %}{% endcomment %}
 {% block head_title %}{% trans "Inbox" %}{% endblock head_title %}
 {% block content %}
-<h1>{% trans "Inbox" %}</h1>
+<h3 class="text-center marginT5">{% trans "Inbox" %}</h3>
 {% if message_list %} 
-<table class="messages">
+<table class="table table-responsive table-stripped">
     <thead>
-        <tr><th>{% trans "Sender" %}</th><th>{% trans "Subject" %}</th><th>{% trans "Received" %}</th><th>{% trans "Action" %}</th></tr>
+        <tr>
+            <th class="demiBold"><i class="fa fa-trash-o" aria-hidden="true"></i></th>
+            <th class="paddingLR0 c-white"><i class="fa fa-reply" aria-hidden="true"></i></th>
+            <th class="demiBold">{% trans "Subject" %}</th>
+            <th class="demiBold">{% trans "Sender" %}</th>
+            <th class="demiBold">{% trans "Date" %}</th>
+        </tr>
     </thead>
     <tbody>
 {% for message in message_list %} 
-    <tr>
-        <td style="padding: 2px 10px 0 0">{{ message.sender.get_display_name }}</td>
-        <td style="padding: 2px 10px 0 0">
+        <tr class="font13">
+        <td><a href="{% url 'messages_delete' message.id %}" title="{% trans "delete" %}"><i class="fa fa-times-circle" aria-hidden="true"></i></a></td>
+        <td class="paddingLR0 c-grey">{% if message.replied %}<i class="fa fa-reply" aria-hidden="true"></i>{% endif %}</td>
+        <td>
             {% if message.new %}<strong>{% endif %}
-            {% if message.replied %}<em>{% endif %}
             <a href="/my_mail/view/{{message.id}}/">{{ message.subject }}</a>
-            {% if message.replied %}</em>{% endif %}
-            {% if message.new %}</strong>{% endif %}</td>
-        <td style="padding: 2px 10px 0 0">{{ message.sent_at|date:_("DATETIME_FORMAT") }}</td>
-        <td style="padding: 2px 10px 0 0"><a href="{% url 'messages_delete' message.id %}">{% trans "delete" %}</a></td>
+            {% if message.new %}</strong>{% endif %}
+        </td>
+        <td>{{ message.sender.get_display_name }}</td>
+        <td>{{ message.sent_at|date:_("SHORT_DATETIME_FORMAT") }}</td>
     </tr>
 {% endfor %}
     </tbody>
