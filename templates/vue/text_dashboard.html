@@ -332,7 +332,7 @@ var webFontURLs = [
           $this = this;
 		  $.ajax({
 	        type:'GET',
-	        url: `/text_dashboard/{{ obj_type }}/{{ obj_id }}/`,
+	        url: `/text_dashboard/{{ obj_type }}/`+encodeURIComponent(`{{ obj_id }}/`),
 	        success: function(json_data){
 	        	console.log(Object.entries(json_data).length);
 	            // set all properties from json_data into data

@@ -8,7 +8,8 @@ activate('en')
 
 from roles.utils import grant_permission
 from roles.models import Role
-from commons.models import Project, OER
+from commons.models import Project, OER, LearningPath, PathNode
+from commons.models import LP_COLLECTION
 
 
 def project_fix_member_permissions():
@@ -61,4 +62,16 @@ def print_oer_urls():
         except:
             pass
 
-    
+"""
+from commons.scripts.fixes import lp_make_collection
+lp_make_collection('open-innovation-nella-creazione-e-nello-sviluppo-di-idee-turistiche-innovative')
+"""
+def lp_make_collection(id):
+    if id.isdigit():
+        lp = LearningPath.objects.get(pk=id)
+    else:
+        lp = LearningPath.objects.get(slug=id)
+    nn = PathNode.objects.filter(path=lp)
+    print(lp.title, lp.path_type, nn)
+    if not lp.path_type == LP_COLLECTION:
+        lp.make_collection(None)
