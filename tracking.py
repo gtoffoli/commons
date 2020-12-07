@@ -12,8 +12,6 @@ from django.contrib.sites.models import Site
 import actstream
 from actstream.models import Action
 
-# from commons.xapi_vocabularies import xapi_activities,  xapi_verbs
-# from commons.xapi import put_statement
 from xapi_client.utils import xapi_activities, xapi_verbs
 from xapi_client.track.xapi_statements import put_statement
 from xapi_client.utils import XAPI_ACTIVITY_ALIASES, XAPI_VERB_ALIASES
@@ -58,10 +56,13 @@ def track_action(request, actor, verb, action_object, target=None, description=N
     if action and XAPI_VERB_ALIASES.get(verb, verb) in xapi_verbs and XAPI_ACTIVITY_ALIASES.get(action, action) in xapi_activities:
         if action == 'Post' and target: # 190307 GT: Forum is a more useful context than Topic
             target = target.forum
-        # put_statement(request, actor, verb, action_object, target)
+        """
         try:
             put_statement(request, actor, verb, action_object, target)
         except:
             print ("--- tracciamento su LRS non riuscito ---")
             pass
-    
+        """
+        success = put_statement(request, actor, verb, action_object, target)
+        if not success:
+            print ("--- tracciamento su LRS non riuscito ---")

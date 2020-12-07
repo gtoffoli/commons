@@ -31,8 +31,6 @@ from django_messages.models import Message
 from commons.models import UserProfile, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
 from commons.models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
 from commons.xapi_vocabularies import xapi_namespaces, xapi_verbs, xapi_activities, xapi_contexts
-# from commons.xapi import put_statement
-from xapi_client.track.xapi_statements import put_statement
 
 def user_unviewed_posts_count(self):
     return post_views_by_user(self)
