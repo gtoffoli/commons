@@ -69,6 +69,10 @@ def group_project(self):
     return None
 Group.project = group_project
 
+def user_active(self):
+    return self.is_active
+User.user_active = user_active
+
 def get_display_name(self):
     display_name = _('unknown')
     if self.is_active:

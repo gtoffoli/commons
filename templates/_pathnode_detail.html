@@ -41,8 +41,8 @@
           </dl>
         {% endif %}
         </div>
-        <p class="paddingT10"><span class="demiBold">{% trans "node added by"|capfirst %}</span> <img {% if node.creator.get_profile.avatar %} src="/media/{{ node.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.creator.username }}/" target="_top">{{ node.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ node.created|date:"d/m/Y" }}</p>
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if node.editor.id != node.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if node.editor.get_profile.avatar %} src="/media/{{ node.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ node.editor.username }}/" target="_top">{{ node.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ node.modified|date:"d/m/Y" }}</p>
+        <p class="paddingT10"><span class="demiBold">{% trans "node added by"|capfirst %}</span> {% include "_name_user.html" with data=node.creator %} <span class="demiBold">{% trans "on" %}</span> {{ node.created|date:"d/m/Y" }}</p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if node.editor.id != node.creator.id %} <span class="demiBold">{% trans "by" %}</span> {% include "_name_user.html" with data=node.editor %}{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ node.modified|date:"d/m/Y" }}</p>
         {% include "_resource_original_lang.html" %}
     </section>
   </body>

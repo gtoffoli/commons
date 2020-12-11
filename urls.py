@@ -143,7 +143,6 @@ urlpatterns += [
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/evaluations/$", commons.views.oer_evaluations, name="oer_evaluations"),
     url(r"^oer_evaluation/edit/$", commons.views.oer_evaluation_edit, name='oer_evaluation_new_edit'),
     url(r"^oer_evaluation/(?P<evaluation_id>[\d-]+)/edit/$", commons.views.oer_evaluation_edit_by_id, name="oer_evaluation_edit"),
-    url(r"^oer_evaluation/(?P<evaluation_id>[\d-]+)/$", commons.views.oer_evaluation_by_id, name="oer_evaluation"),
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/view/$", commons.views.oer_view_by_slug, name="oer_view"),
     url(r"^oers_by/(?P<username>[\w\.-]+)/$", commons.views.oers_by_user, name="oers_by_user"),
     url(r"^oers/search/$", commons.views.oers_search, name="oers_search"),

@@ -2538,7 +2538,7 @@ def people_search(request, template='search_people.html', extra_context=None):
         else:
             form = PeopleSearchForm()
             request.session["post_dict"] = {}
-        qs = UserProfile.objects.all()
+        qs = UserProfile.objects.filter(user__is_active=True)
         for q in qq:
             qs = qs.filter(q)
         qs = qs.distinct()
@@ -2547,7 +2547,8 @@ def people_search(request, template='search_people.html', extra_context=None):
                 profiles.append(profile)
     else:
         form = PeopleSearchForm()
-        qs = UserProfile.objects.distinct()
+        qs = UserProfile.objects.filter(user__is_active=True)
+        qs = qs.distinct()
         for profile in qs:
             if profile.get_completeness():
                 profiles.append(profile)
@@ -2590,7 +2591,7 @@ def browse_people(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                n = UserProfile.objects.filter(Q(**{field_name: entry}),).count()
+                n = UserProfile.objects.filter(Q(**{field_name: entry}), user__is_active=True).count()
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2598,7 +2599,7 @@ def browse_people(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                n = UserProfile.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
+                n = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED).count()
                 if n:
                     entries.append([code, label, '', n])
         if entries:
@@ -2801,7 +2802,6 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['oer_url'] = oer.url # 190919  GT added
     if oer.get_text(): # 190919  GT added
         var_dict['oer_url'] = "/oer/{}/view/".format(oer.slug)
-
     if user.is_authenticated:
         if oer.state == PUBLISHED and not user == oer.creator:
             track_action(request, user, 'View', oer, target=oer.project)
@@ -3003,21 +3003,6 @@ def oer_toggle_comments(request, oer_id):
     else:
         oer.enable_comments()
     return HttpResponseRedirect('/oer/%s/' % oer.slug)
-
-def oer_evaluation_detail(request, evaluation=None):
-    var_dict = { 'evaluation': evaluation, }
-    var_dict['oer'] = evaluation.oer
-    var_dict['can_edit'] = evaluation.user==request.user
-    var_dict['overall_score'] = QUALITY_SCORE_DICT[evaluation.overall_score]
-    quality_metadata = []
-    for metadatum in evaluation.get_quality_metadata():
-        quality_metadata.append([metadatum.quality_facet.name, metadatum.value, QUALITY_SCORE_DICT[metadatum.value]])
-    var_dict['quality_metadata'] = quality_metadata
-    return render(request, 'oer_evaluation_detail.html', var_dict)
-
-def oer_evaluation_by_id(request, evaluation_id):
-    evaluation = get_object_or_404(OerEvaluation, pk=evaluation_id)
-    return oer_evaluation_detail(request, evaluation=evaluation)
 
 def oer_evaluations(request, oer_slug):
     oer = get_object_or_404(OER, slug=oer_slug)

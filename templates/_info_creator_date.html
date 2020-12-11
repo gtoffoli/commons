@@ -1,12 +1,25 @@
 {% load staticfiles i18n %}
 {% block info-creator-date %}
-        <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> <img {% if data.creator.get_profile.avatar %} src="/media/{{ data.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.creator.username }}">{{ data.creator.get_full_name }}</a><br>
-           <span class="demiBold">{% trans "on" %}</span> {{ data.created|date:"d/m/Y" }}<br>
-           {% if data.project.proj_type.name == 'ment' %}
-             <span class="demiBold">{% trans "in the project of mentoring" %}</span>
-           {% else %}
-             {% if data.project.slug %} <span class="demiBold">{% trans "in the project" %}</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ data.project.slug }}/">{{ data.project }}</a>{% endif %}
-           {% endif %}
+        <p><span class="demiBold">{% trans "submitted by"|capfirst %}</span> 
+            {% if data.creator.user_active %}
+                <img {% if data.creator.get_profile.avatar %} src="/media/{{ data.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.creator.username }}">{{ data.creator.get_display_name }}</a>
+            {% else %}
+                {{data.creator.get_display_name}}
+            {% endif %}
+            <br>
+            <span class="demiBold">{% trans "on" %}</span> {{ data.created|date:"d/m/Y" }}<br>
+            {% if data.project.proj_type.name == 'ment' %}
+                <span class="demiBold">{% trans "in the project of mentoring" %}</span>
+            {% else %}
+                {% if data.project.slug %} <span class="demiBold">{% trans "in the project" %}</span> <i class="fa fa-group c-grey"></i> <a href="/project/{{ data.project.slug }}/">{{ data.project }}</a>{% endif %}
+            {% endif %}
         </p>
-        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> {% if data.editor.id != data.creator.id %} <span class="demiBold">{% trans "by" %}</span> <img {% if data.editor.get_profile.avatar %} src="/media/{{ data.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.editor.username }}">{{ data.editor.get_full_name }}</a>{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ data.modified|date:"d/m/Y" }}</p>
+        <p><span class="demiBold">{% trans "last updated"|capfirst %}</span> 
+            {% if data.editor.id != data.creator.id %} <span class="demiBold">{% trans "by" %}</span> 
+                 {% if data.editor.user_active %}
+                    <img {% if data.editor.get_profile.avatar %} src="/media/{{ data.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.editor.username }}">{{ data.editor.get_display_name }}</a>
+                {% else %}
+                    {{data.editor.get_display_name}}
+                {% endif %}
+            {% endif %} <span class="demiBold">{% trans "on" %}</span> {{ data.modified|date:"d/m/Y" }}</p>
 {% endblock info-creator-date %}

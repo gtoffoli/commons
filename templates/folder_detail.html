@@ -42,7 +42,7 @@ dl.eval dd:nth-child(even) {
              <div class="row">
                <div class="col-sm-7 col-md-7 col-lg-7">
                    <p id="v_{{ sub.id }}" class="marginB0"><a href="{{ sub.get_absolute_url }}"><i class="fa fa-folder" aria-hidden="true"></i> {{ sub.get_title }}</a></p>
-                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "created by"|capfirst %}</span> <a href="/profile/{{ sub.user.username }}">{{ sub.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ sub.created|date:"d/m/Y" }}</p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "created by"|capfirst %}</span> {% if sub.user.user_active %}<a href="/profile/{{ sub.user.username }}">{{ sub.user.get_display_name }}</a>{% else %}{{ sub.user.get_display_name }}{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ sub.created|date:"d/m/Y" }}</p>
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
                  <ul class="list-inline">
@@ -65,10 +65,10 @@ dl.eval dd:nth-child(even) {
                <div class="col-sm-7 col-md-7 col-lg-7">
                  {% if folderdocument.embed_code %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">{{ folderdocument.label|safe }}</p>
-                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "added by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "added by"|capfirst %}</span> {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{ sub.user.get_display_name }}{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ folderdocument.created|date:"d/m/Y" }}</p>
                  {% else %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
-                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> <a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
+                   <p class="font12" class="marginB0"><span class="demiBold">{% trans "loaded by"|capfirst %}</span> {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{ folderdocument.user.get_display_name }}{% endif %} <span class="demiBold">{% trans "on" %}</span> {{ document.date_added|date:"d/m/Y" }}</p>
                  {% endif %}
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">

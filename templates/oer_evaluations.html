@@ -58,7 +58,7 @@ dl.eval dd:nth-child(even) {
   </div>
   <div class="row">
     <div class="col-md-12">
-      <p class="font13"><span class="demiBold">{% trans "evaluated by"|capfirst %}</span> <a href="/profile/{{ evaluation.user.username }}">{{ evaluation.user.get_display_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ evaluation.modified|date:"d/m/Y" }}</p>
+      <p class="font13"><span class="demiBold">{% trans "evaluated by"|capfirst %}</span> {% include "_name_user.html" with data=evaluation.user %} <span class="demiBold">{% trans "on" %}</span> {{ evaluation.modified|date:"d/m/Y" }}</p>
     </div>
   </div>
   </dd>

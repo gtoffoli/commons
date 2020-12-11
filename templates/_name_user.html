@@ -1,0 +1,6 @@
+{% load staticfiles i18n %}
+{% if data.user_active %}
+<img {% if data.get_profile.avatar %} src="/media/{{ data.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ data.username }}">{{ data.get_display_name }}</a> 
+{% else %}
+{{ data.get_display_name }}
+{% endif %}

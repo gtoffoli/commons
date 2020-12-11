@@ -20,15 +20,10 @@
             class="comment vcard {% cycle box1 box2 %}{% if comment.user %} authenticated-comment{% if comment.user.is_staff %} staff-comment{% endif %}{% if comment.user.is_superuser %} superuser-comment{% endif %}{% endif %}">
           {% block comment-info %}
             <p class="comment-info">
-              {% block comment-image %}
-                <img {% if comment.user.get_profile.avatar %} src="/media/{{ comment.user.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> 
-              {% endblock comment-image %}
               {% if comment.url %}
                 <a href="{{ comment.url }}" rel="external nofollow" class="fn url">{{ comment.name }}</a>
               {% elif comment.user %}
-                <a href="/profile/{{ comment.user.username }}/">{{ comment.user.get_display_name }}</a>
-              {% else %}
-                {{ comment.name }}
+                {% include "_name_user.html" with data=comment.user %}
               {% endif %}
               <small>{% trans "on" context "on date" %}
               <time class="comment-published" datetime="{{ comment.submit_date|date:"c" }}">

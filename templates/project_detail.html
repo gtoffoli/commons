@@ -180,12 +180,15 @@
                         <dd class="field-content width-full" style="display:none">
                             {% if project.info %}<blockquote class="font14">{{ project.info|safe }}</blockquote>{% endif %}
                             <ul class="list-unstyled paddingT10 font13">
-                                <li class="marginT5"><span class="demiBold">{% trans "created by"|capfirst %}</span> <img {% if project.creator.get_profile.avatar %} src="/media/{{ project.creator.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ project.creator.username }}">{{ project.creator.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ project.created|date:"d/m/Y" }}
+                                <li class="marginT5"><span class="demiBold">{% trans "created by"|capfirst %}</span> {% include "_name_user.html" with data=project.creator %} <span class="demiBold">{% trans "on" %}</span> {{ project.created|date:"d/m/Y" }}
                                 {% if project.editor.id == project.creator.id %}
                                     <span class="demiBold">{% trans "last updated" %} {% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}
                                 {% endif %}
                                 </li>
-                                {% if project.editor.id != project.creator.id %}<li class="marginT5"><span class="demiBold">{% trans "last updated"|capfirst %}</span> <span class="demiBold">{% trans "by" %}</span> <img {% if project.editor.get_profile.avatar %} src="/media/{{ project.editor.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {%endif%} class="avatar-small"> <a href="/profile/{{ project.editor.username }}">{{ project.editor.get_full_name }}</a> <span class="demiBold">{% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}</li>{% endif %}
+                                {% if project.editor.id != project.creator.id %}
+                                <li class="marginT5"><span class="demiBold">{% trans "last updated"|capfirst %}</span> <span class="demiBold">{% trans "by" %}</span> {% include "_name_user.html" with data=project.editor %} <span class="demiBold">{% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}
+                                </li>
+                                {% endif %}
                             </ul>
                         </dd>
                     </dl>
