@@ -1,36 +1,37 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
+# 
+# Translators:
+# Giovanni Toffoli <toffoli@linkroma.it>, 2020
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-15 15:06+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"PO-Revision-Date: 2020-12-15 22:37+0000\n"
+"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
+"Language-Team: Arabic (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: .\analytics.py:728
 msgid "OERs analytics"
-msgstr ""
+msgstr "تحليلات OER"
 
 #: .\analytics.py:729 .\models.py:1623 .\templates\_menu_analytics.html:12
 #: .\templates\autocomplete.html:14 .\templates\browse.html:42
 #: .\templates\project_results.html:87 .\templates\resources_by.html:37
 #: .\templates\search_oers.html:12
 msgid "OERs"
-msgstr ""
+msgstr "OER"
 
 #: .\analytics.py:730
 msgid "published OERs"
-msgstr ""
+msgstr "OER المنشورة"
 
 #: .\analytics.py:731
 msgid "OERs by month"
@@ -38,7 +39,7 @@ msgstr ""
 
 #: .\analytics.py:749
 msgid "Learning paths analytics"
-msgstr ""
+msgstr "التحليلات مسارات التعلم"
 
 #: .\analytics.py:750
 msgid "LPs"
@@ -201,7 +202,8 @@ msgstr ""
 
 #: .\forms.py:93 .\forms.py:110 .\templates\user_profile.html:151
 #: .\templates\user_profile.html:220
-msgid "your Skype id will be shared only within active mentoring relationships"
+msgid ""
+"your Skype id will be shared only within active mentoring relationships"
 msgstr ""
 
 #: .\forms.py:94 .\forms.py:111 .\models.py:622
@@ -321,16 +323,16 @@ msgstr ""
 
 #: .\forms.py:185
 msgid "project state"
-msgstr ""
+msgstr "حالة المشروع"
 
 #: .\forms.py:193
 msgid "title of the mentoring project"
-msgstr ""
+msgstr "اسم مشروع التوجيه"
 
 #: .\forms.py:194 .\templates\_project_mentoring_text.html:5
 #: .\templates\_project_mentoring_text.html:7
 msgid "description of the mentoring project"
-msgstr ""
+msgstr "وصف مشروع التوجيه"
 
 #: .\forms.py:195 .\templates\_project_mentoring_text.html:12
 #: .\templates\project_detail.html:183 .\templates\project_detail.html:854
@@ -357,7 +359,7 @@ msgstr ""
 #: .\templates\_homepage_main_cta.html:80 .\templates\project_detail.html:205
 #: .\templates\search_results.html:21 .\templates\user_profile.html:248
 msgid "communities"
-msgstr ""
+msgstr "مجتمعات"
 
 #: .\forms.py:251 .\views.py:781
 msgid "minimum number of members"
@@ -365,7 +367,7 @@ msgstr ""
 
 #: .\forms.py:252
 msgid "minimum number of learning paths"
-msgstr ""
+msgstr "الحد الأدنى لعدد مسارات التعلم"
 
 #: .\forms.py:253 .\views.py:797
 msgid "minimum number of OERs"
@@ -625,7 +627,7 @@ msgstr ""
 
 #: .\forms.py:463 .\templates\oer_detail.html:158
 msgid "OER type"
-msgstr ""
+msgstr "نوع OER"
 
 #: .\forms.py:469 .\forms.py:565
 msgid "choose file"
@@ -675,7 +677,7 @@ msgstr ""
 
 #: .\forms.py:495 .\templates\lp_detail.html:159
 msgid "type of learning path"
-msgstr ""
+msgstr "نوع مسار التعلم"
 
 #: .\forms.py:499 .\models.py:1438 .\models.py:2028 .\models.py:3115
 #: .\templates\folder_detail.html:5 .\templates\mentoring_detail.html:5
@@ -683,11 +685,11 @@ msgstr ""
 #: .\templates\project_detail.html:362 .\templates\project_detail.html:374
 #: .\templates\project_edit.html:20 .\templates\project_edit.html:61
 msgid "project"
-msgstr ""
+msgstr "مشروع"
 
 #: .\forms.py:499
 msgid "where the Learning Path has been created"
-msgstr ""
+msgstr "حيث تم إنشاء مسار التعلم"
 
 #: .\forms.py:500 .\models.py:2022 .\templates\lp_detail.html:87
 #: .\templates\lp_detail.html:106 .\templates\lp_detail.html:129
@@ -710,13 +712,13 @@ msgstr ""
 
 #: .\forms.py:537
 msgid "learning path type"
-msgstr ""
+msgstr "نوع مسار التعلم"
 
 #: .\forms.py:556 .\models.py:1622 .\models.py:1827 .\models.py:1854
 #: .\models.py:1955 .\templates\mentoring_detail.html:410
 #: .\templates\project_detail.html:433
 msgid "OER"
-msgstr ""
+msgstr "OER"
 
 #: .\forms.py:557 .\models.py:2743 .\templates\_pathnode_detail.html:25
 msgid "display range"
@@ -867,47 +869,47 @@ msgstr ""
 
 #: .\menus.py:9
 msgid "the CommonS project"
-msgstr ""
+msgstr "المشروع CommonS"
 
 #: .\menus.py:13 .\templates\press_releases.html:5
 #: .\templates\press_releases.html:61
 msgid "press releases"
-msgstr ""
+msgstr "تصريحات صحفيه"
 
 #: .\menus.py:17
 msgid "blog"
-msgstr ""
+msgstr "المدونة"
 
 #: .\menus.py:21
 msgid "the platform"
-msgstr ""
+msgstr "منصة CommonS"
 
 #: .\menus.py:29 .\templates\cops_tree.html:6 .\templates\cops_tree.html:24
 msgid "all communities"
-msgstr ""
+msgstr "كل المجتمعات"
 
 #: .\menus.py:33
 msgid "browse mentors"
-msgstr ""
+msgstr "تصفح الموجهين"
 
 #: .\menus.py:37 .\models.py:889 .\templates\project_detail.html:235
 #: .\templates\search_projects.html:12 .\templates\search_results.html:29
 #: .\templates\user_profile.html:268
 msgid "projects"
-msgstr ""
+msgstr "المشاريع"
 
 #: .\menus.py:47 .\menus.py:151 .\templates\_menu_analytics.html:14
 msgid "forums"
-msgstr ""
+msgstr "منتديات المناقشة"
 
 #: .\menus.py:51
 msgid "browse people"
-msgstr ""
+msgstr "تصفح الناس"
 
 #: .\menus.py:55 .\templates\search_people.html:5
 #: .\templates\search_people.html:12
 msgid "search people"
-msgstr ""
+msgstr "ابحث عن الناس"
 
 #: .\menus.py:63
 msgid "all resources"
@@ -922,11 +924,11 @@ msgstr ""
 #: .\templates\resources_by.html:21 .\templates\search_lps.html:12
 #: .\templates\search_results.html:53
 msgid "learning paths"
-msgstr ""
+msgstr "مسارات التعلم"
 
 #: .\menus.py:72 .\menus.py:108
 msgid "open resources"
-msgstr ""
+msgstr "الموارد المفتوحة"
 
 #: .\menus.py:76 .\templates\search_results.html:37
 msgid "source repositories"
@@ -950,7 +952,7 @@ msgstr ""
 
 #: .\menus.py:100 .\templates\autocomplete.html:8
 msgid "communities and projects"
-msgstr ""
+msgstr "المجتمعات والمشاريع"
 
 #: .\menus.py:104
 msgid "searching the catalogued resources"
@@ -958,7 +960,7 @@ msgstr ""
 
 #: .\menus.py:116
 msgid "mentoring"
-msgstr ""
+msgstr "التوجيه"
 
 #: .\menus.py:120 .\templates\_menu_analytics.html:5
 msgid "analytics"
@@ -991,7 +993,7 @@ msgstr ""
 
 #: .\menus.py:165
 msgid "about"
-msgstr ""
+msgstr "معلومات عنا"
 
 #: .\menus.py:177
 msgid "library"
@@ -1067,7 +1069,7 @@ msgstr ""
 
 #: .\models.py:233
 msgid "deleted"
-msgstr ""
+msgstr "محذوف"
 
 #: .\models.py:237
 msgid "original language code"
@@ -1242,11 +1244,11 @@ msgstr ""
 
 #: .\models.py:816
 msgid "project / community type"
-msgstr ""
+msgstr "نوع المجتمع أو المشروع"
 
 #: .\models.py:817
 msgid "project / community types"
-msgstr ""
+msgstr "أنواع المجتمع أو المشروع"
 
 #: .\models.py:828
 msgid "no chatroom"
@@ -1266,15 +1268,15 @@ msgstr ""
 
 #: .\models.py:841
 msgid "project open"
-msgstr ""
+msgstr "المشروع مفتوح"
 
 #: .\models.py:842
 msgid "project closed"
-msgstr ""
+msgstr "المشروع مغلق"
 
 #: .\models.py:843
 msgid "project deleted"
-msgstr ""
+msgstr "مشروع محذوف"
 
 #: .\models.py:866
 msgid "request submitted"
@@ -1310,7 +1312,7 @@ msgstr ""
 
 #: .\models.py:888
 msgid "project / community"
-msgstr ""
+msgstr "مشروع أو مجتمع"
 
 #: .\models.py:891
 msgid "associated user group"
@@ -1318,11 +1320,11 @@ msgstr ""
 
 #: .\models.py:898
 msgid "Project type"
-msgstr ""
+msgstr "نوع المشروع"
 
 #: .\models.py:899
 msgid "project forum"
-msgstr ""
+msgstr "منتدى المشروع"
 
 #: .\models.py:903 .\models.py:2030
 msgid "logo"
@@ -1339,7 +1341,7 @@ msgstr ""
 #: .\models.py:906
 msgid ""
 "once mentoring projects exist, you can only move from model A or B to A+B."
-msgstr ""
+msgstr "بمجرد وجود مشاريع التوجيه، يمكنك فقط الانتقال من النموذج A أو B إلى A + B."
 
 #: .\models.py:907
 msgid "allow external mentors"
@@ -1347,7 +1349,7 @@ msgstr ""
 
 #: .\models.py:908
 msgid "prototypical Learning Path"
-msgstr ""
+msgstr "مسار التعلم النموذجي"
 
 #: .\models.py:910
 msgid "reserved"
@@ -1382,15 +1384,15 @@ msgstr ""
 
 #: .\models.py:1419
 msgid "community or project"
-msgstr ""
+msgstr "مشروع أو مجتمع"
 
 #: .\models.py:1419
 msgid "the project the user belongs or applies to"
-msgstr ""
+msgstr "المشروع الذي ينتمي إليه المستخدم أو ينطبق إليه"
 
 #: .\models.py:1420
 msgid "the user belonging or applying to the project"
-msgstr ""
+msgstr "المستخدم الذي ينتمي إلى المشروع أو يتقدم إليه"
 
 #: .\models.py:1422
 msgid "request created"
@@ -1418,15 +1420,15 @@ msgstr ""
 
 #: .\models.py:1430 .\models.py:1431
 msgid "project member"
-msgstr ""
+msgstr "عضو المشروع"
 
 #: .\models.py:1443
 msgid "project message"
-msgstr ""
+msgstr "رسالة المشروع"
 
 #: .\models.py:1444
 msgid "project messages"
-msgstr ""
+msgstr "رسائل المشروع"
 
 #: .\models.py:1465
 msgid "repository feature"
@@ -1547,11 +1549,11 @@ msgstr ""
 
 #: .\models.py:1872
 msgid "referenced OER"
-msgstr ""
+msgstr "أشار OER إلى"
 
 #: .\models.py:1873 .\models.py:2696
 msgid "referencing project"
-msgstr ""
+msgstr "مشروع إمداد الإحالة"
 
 #: .\models.py:1879
 msgid "shared OER"
@@ -1624,7 +1626,7 @@ msgstr ""
 
 #: .\models.py:2020
 msgid "original learning path"
-msgstr ""
+msgstr "مسار التعلم الأصلي"
 
 #: .\models.py:2029
 msgid "group"
@@ -1633,7 +1635,7 @@ msgstr ""
 #: .\models.py:2039 .\templates\_lp_serialize.html:10
 #: .\templates\lp_detail.html:4 .\templates\lp_play.html:4
 msgid "learning path"
-msgstr ""
+msgstr "مسار التعلم"
 
 #: .\models.py:2246
 msgid "this LP was created by cloning a LP with title"
@@ -1650,27 +1652,27 @@ msgstr ""
 
 #: .\models.py:2695
 msgid "referenced Learning Path"
-msgstr ""
+msgstr "أشار مسار التعلم إلى"
 
 #: .\models.py:2702
 msgid "shared Learning Path"
-msgstr ""
+msgstr "مسار التعلم المشترك"
 
 #: .\models.py:2703
 msgid "shared Learning Paths"
-msgstr ""
+msgstr "مسارات التعلم المشتركة"
 
 #: .\models.py:2722
 msgid "path edge"
-msgstr ""
+msgstr "قوس المسار"
 
 #: .\models.py:2723
 msgid "path edges"
-msgstr ""
+msgstr "أقواس المسار"
 
 #: .\models.py:2740
 msgid "learning path or collection"
-msgstr ""
+msgstr "مسار التعلم أو مجموعة"
 
 #: .\models.py:2741
 msgid "stands for"
@@ -1678,12 +1680,12 @@ msgstr ""
 
 #: .\models.py:2751
 msgid "path node"
-msgstr ""
+msgstr "عقدة المسار"
 
 #: .\models.py:2752 .\templates\lp_detail.html:179 .\templates\lp_play.html:64
 #: .\templates\lp_play.html:71
 msgid "path nodes"
-msgstr ""
+msgstr "عقد المسار"
 
 #: .\models.py:2892
 msgid "Youtube API are not currently available"
@@ -1776,7 +1778,8 @@ msgid "In"
 msgstr ""
 
 #: .\templates\403.html:4 .\templates\403.html:10
-msgid "Sorry. You are not allowed to access the requested content or function."
+msgid ""
+"Sorry. You are not allowed to access the requested content or function."
 msgstr ""
 
 #: .\templates\404.html:4 .\templates\404.html:10
@@ -1964,7 +1967,7 @@ msgstr ""
 
 #: .\templates\_footer.html:16 .\templates\commons_base.html:213
 msgid "The CommonS Project is co-funded by Programme"
-msgstr ""
+msgstr "يتم تمويل مشروع CommonS بشكل مشترك من قبل برنامج"
 
 #: .\templates\_homepage_main_cta.html:9
 #: .\templates\_homepage_main_cta.html:50
@@ -2007,12 +2010,12 @@ msgstr ""
 
 #: .\templates\_info_creator_date.html:12
 msgid "in the project of mentoring"
-msgstr ""
+msgstr "في مشروع التوجيه"
 
 #: .\templates\_info_creator_date.html:14 .\templates\_lp_serialize.html:11
 #: .\templates\lp_edit.html:15 .\templates\oer_edit.html:23
 msgid "in the project"
-msgstr ""
+msgstr "في المشروع"
 
 #: .\templates\_info_creator_date.html:17 .\templates\_pathnode_detail.html:45
 #: .\templates\project_detail.html:189 .\templates\project_detail.html:193
@@ -2207,7 +2210,7 @@ msgstr ""
 
 #: .\templates\_project_card.html:26 .\templates\project_detail.html:167
 msgid "child project of"
-msgstr ""
+msgstr "مشروع فرعي من"
 
 #: .\templates\_project_card.html:27 .\templates\project_detail.html:168
 msgid "parent"
@@ -2215,12 +2218,12 @@ msgstr ""
 
 #: .\templates\_project_card.html:45 .\templates\_project_card.html:58
 msgid "number of learning paths"
-msgstr ""
+msgstr "عدد مسارات التعلم"
 
 #: .\templates\_project_card.html:46 .\templates\_project_card.html:52
 #: .\templates\_project_card.html:59 .\templates\_project_card.html:64
 msgid "project results"
-msgstr ""
+msgstr "نتائج المشروع"
 
 #: .\templates\_project_card.html:51 .\templates\_project_card.html:63
 msgid "number of OERs"
@@ -2285,8 +2288,8 @@ msgstr ""
 
 #: .\templates\_resource_lang_msg.html:6
 msgid ""
-"IMPORTANT NOTICE! The next time you will edit this content, it will take the "
-"current active language"
+"IMPORTANT NOTICE! The next time you will edit this content, it will take the"
+" current active language"
 msgstr ""
 
 #: .\templates\_resource_lang_msg.html:8
@@ -2373,8 +2376,8 @@ msgstr ""
 #: .\templates\account\email_confirm.html:32
 #, python-format
 msgid ""
-"This e-mail confirmation link expired or is invalid. Please <a href="
-"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
 msgstr ""
 
 #: .\templates\account\login.html:6 .\templates\account\login.html:61
@@ -2386,8 +2389,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Please sign in with one\n"
-"                        of your existing third party accounts. Or, <a href="
-"\"%(signup_url)s\">sign up</a>\n"
+"                        of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
 "                        for a %(site_name)s account and sign in below:"
 msgstr ""
 
@@ -2419,8 +2421,8 @@ msgstr ""
 
 #: .\templates\account\password_reset.html:50
 msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll send you "
-"an e-mail allowing you to reset it."
+"Forgotten your password? Enter your e-mail address below, and we'll send you"
+" an e-mail allowing you to reset it."
 msgstr ""
 
 #: .\templates\account\password_reset.html:55
@@ -2452,8 +2454,8 @@ msgstr ""
 #, python-format
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
-"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
-"a>."
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>."
 msgstr ""
 
 #: .\templates\account\password_reset_from_key.html:51
@@ -2497,7 +2499,7 @@ msgstr ""
 
 #: .\templates\active_users.html:17
 msgid "being members of projects shared with me"
-msgstr ""
+msgstr "كونهم أعضاء في المشاريع المشتركة معي"
 
 #: .\templates\active_users.html:21
 msgid "users online"
@@ -2581,11 +2583,11 @@ msgstr ""
 #: .\templates\browse.html:42 .\templates\browse.html:68
 #: .\templates\browse_repos.html:5 .\templates\browse_repos.html:12
 msgid "distributions"
-msgstr ""
+msgstr "ترتيب "
 
 #: .\templates\browse.html:16
 msgid "of the learning paths"
-msgstr ""
+msgstr "مسارات التعلم"
 
 #: .\templates\browse.html:42
 msgid "of the open educational resources"
@@ -2597,11 +2599,11 @@ msgstr ""
 
 #: .\templates\browse_mentors.html:5 .\templates\project_detail.html:918
 msgid "mentors"
-msgstr ""
+msgstr "الموجهين"
 
 #: .\templates\browse_mentors.html:51
 msgid "all mentors"
-msgstr ""
+msgstr "كل الموجهين"
 
 #: .\templates\browse_mentors.html:52 .\templates\mentoring_support.html:5
 #: .\templates\mentoring_support.html:11 .\templates\user_profile.html:258
@@ -2618,7 +2620,7 @@ msgstr ""
 
 #: .\templates\browse_people.html:5 .\templates\browse_people.html:12
 msgid "all people"
-msgstr ""
+msgstr "كل الناس"
 
 #: .\templates\browse_people.html:15
 msgid "distribution of users based on self-compiled user profiles"
@@ -2630,7 +2632,7 @@ msgstr ""
 
 #: .\templates\bulk_add_members.html:10 .\templates\bulk_add_members.html:13
 msgid "adding members in bulk to commmunity/project"
-msgstr ""
+msgstr "إضافة أعضاء بشكل مجمع إلى المجتمع / المشروع"
 
 #: .\templates\bulk_add_members.html:18
 msgid "records found in file"
@@ -2654,7 +2656,7 @@ msgstr ""
 
 #: .\templates\bulk_add_members.html:37
 msgid "back to the community/project home"
-msgstr ""
+msgstr "العودة إلى الصفحة الرئيسية للمجتمع / المشروع"
 
 #: .\templates\comments\zinnia\entry\form.html:12
 msgid "Post your comment"
@@ -2678,7 +2680,7 @@ msgstr ""
 
 #: .\templates\contributors.html:17
 msgid "creation of learning paths"
-msgstr ""
+msgstr "إنشاء مسارات التعلم"
 
 #: .\templates\contributors.html:27 .\templates\contributors.html:48
 #: .\templates\contributors.html:69 .\templates\contributors.html:90
@@ -2740,7 +2742,7 @@ msgstr ""
 
 #: .\templates\count_users.html:28
 msgid "project members"
-msgstr ""
+msgstr "أعضاء المشروع"
 
 #: .\templates\datatrans\base.html:5
 msgid "Data Translation"
@@ -2875,8 +2877,7 @@ msgstr ""
 #: .\templates\datatrans\obsolete_list.html:11
 msgid ""
 "Please review them to see if you can reuse something,\n"
-"\t\t\tand when done click the 'Remove all obsoletes' button to clean the "
-"KeyValue table."
+"\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
 msgstr ""
 
 #: .\templates\datatrans\obsolete_list.html:17
@@ -2972,7 +2973,7 @@ msgstr ""
 #: .\templates\lp_detail.html:67 .\templates\lp_detail.html:192
 #: .\templates\oer_detail.html:34 .\templates\oer_detail.html:185
 msgid "delete"
-msgstr ""
+msgstr "احذف"
 
 #: .\templates\django_messages\inbox.html:28
 #: .\templates\django_messages\outbox.html:22
@@ -2991,8 +2992,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Hello %(recipient_name)s,\n"
-"you received a private message from %(sender_name)s with the following "
-"contents:"
+"you received a private message from %(sender_name)s with the following contents:"
 msgstr ""
 
 #: .\templates\django_messages\new_message.html:9
@@ -3038,7 +3038,7 @@ msgstr ""
 #: .\templates\online_resource_view.html:22
 #: .\templates\project_results.html:76
 msgid "show project"
-msgstr ""
+msgstr "اعرض المشروع"
 
 #: .\templates\edit_preferences.html:6 .\templates\edit_preferences.html:11
 #: .\templates\user_preferences.html:5
@@ -3166,11 +3166,11 @@ msgstr ""
 
 #: .\templates\homepage.html:147 .\views.py:121
 msgid "learning in online communities of practice"
-msgstr ""
+msgstr "التعلم في مجتمعات الممارسة على الشَبَكةِ"
 
 #: .\templates\homepage.html:148 .\views.py:121
 msgid "reusing resources to build learning paths"
-msgstr ""
+msgstr "إعادة استخدام الموارد لبناء مسارات التعلم"
 
 #: .\templates\homepage.html:149 .\views.py:121
 msgid "browsing collections in our library of OERs"
@@ -3186,23 +3186,23 @@ msgstr ""
 
 #: .\templates\homepage.html:200
 msgid "newest project"
-msgstr ""
+msgstr "أحدث مشروع"
 
 #: .\templates\homepage.html:204
 msgid "most active project"
-msgstr ""
+msgstr "المشروع الأكثر نشاطا"
 
 #: .\templates\homepage.html:208
 msgid "most popular project"
-msgstr ""
+msgstr "المشروع الأكثر شعبية"
 
 #: .\templates\homepage.html:212
 msgid "newest learning path"
-msgstr ""
+msgstr "أحدث مسار تعلم"
 
 #: .\templates\homepage.html:216
 msgid "most popular learning path"
-msgstr ""
+msgstr "مسار التعلم الأكثر شعبية"
 
 #: .\templates\homepage.html:220
 msgid "newest OER"
@@ -3300,7 +3300,7 @@ msgstr ""
 
 #: .\templates\lp_detail.html:315 .\templates\lp_detail.html:321
 msgid "this learning path"
-msgstr ""
+msgstr "مسار التعلم هذا"
 
 #: .\templates\lp_detail.html:320
 msgid "do you really want to convert"
@@ -3316,11 +3316,11 @@ msgstr ""
 
 #: .\templates\lp_edit.html:7 .\templates\lp_edit.html:14
 msgid "edit learning path"
-msgstr ""
+msgstr "لتعديل مسار التعلم"
 
 #: .\templates\lp_edit.html:7 .\templates\lp_edit.html:14
 msgid "add learning path"
-msgstr ""
+msgstr "لإضافة مسار تعلم"
 
 #: .\templates\lp_play.html:116 .\templates\lp_play.html:176
 msgid "prev"
@@ -3429,7 +3429,7 @@ msgstr ""
 #: .\templates\mentoring_detail.html:452 .\templates\project_detail.html:606
 #: .\templates\project_detail.html:1006
 msgid "last learning paths"
-msgstr ""
+msgstr "أحدث مسارات التعلم"
 
 #: .\templates\mentoring_detail.html:459 .\templates\mentoring_detail.html:484
 #: .\templates\project_detail.html:614 .\templates\project_detail.html:641
@@ -3655,11 +3655,11 @@ msgstr ""
 
 #: .\templates\oers_by_project.html:12
 msgid "by project"
-msgstr ""
+msgstr "حسب المشروع"
 
 #: .\templates\oers_by_project.html:23
 msgid "no project"
-msgstr ""
+msgstr "لا يوجد مشروع"
 
 #: .\templates\oers_by_project.html:23
 msgid "has"
@@ -3721,11 +3721,11 @@ msgstr ""
 #: .\templates\project_detail.html:751 .\templates\project_detail.html:830
 #: .\templates\project_edit.html:16 .\templates\project_edit.html:57
 msgid "roll of mentors"
-msgstr ""
+msgstr "قائمة الموجهين"
 
 #: .\templates\project_detail.html:161 .\templates\project_detail.html:167
 msgid "reserved project"
-msgstr ""
+msgstr "مشروع محجوز"
 
 #: .\templates\project_detail.html:211 .\templates\project_detail.html:215
 #: .\templates\project_detail.html:219 .\templates\project_detail.html:223
@@ -3735,7 +3735,7 @@ msgstr ""
 
 #: .\templates\project_detail.html:235
 msgid "child projects"
-msgstr ""
+msgstr "المشاريع الفرعية"
 
 #: .\templates\project_detail.html:241 .\templates\project_detail.html:245
 #: .\templates\project_detail.html:249 .\templates\project_detail.html:253
@@ -3744,7 +3744,7 @@ msgstr ""
 #: .\templates\project_detail.html:283 .\templates\project_detail.html:287
 #: .\templates\user_profile.html:271
 msgid "view project"
-msgstr ""
+msgstr "اعرض المشروع"
 
 #: .\templates\project_detail.html:241 .\templates\project_detail.html:245
 #: .\templates\project_detail.html:249 .\templates\project_detail.html:253
@@ -3752,15 +3752,15 @@ msgstr ""
 #: .\templates\project_detail.html:275 .\templates\project_detail.html:279
 #: .\templates\project_detail.html:283 .\templates\project_detail.html:287
 msgid "view child project"
-msgstr ""
+msgstr "عرض المشروع الفرعي"
 
 #: .\templates\project_detail.html:265
 msgid "support projects"
-msgstr ""
+msgstr "مشاريع الدعم"
 
 #: .\templates\project_detail.html:265
 msgid "child support projects"
-msgstr ""
+msgstr "دعم المشاريع الفرعية"
 
 #: .\templates\project_detail.html:303 .\templates\project_detail.html:866
 msgid "translate"
@@ -3786,21 +3786,21 @@ msgstr ""
 
 #: .\templates\project_detail.html:326
 msgid "new project"
-msgstr ""
+msgstr "مشروع جديد"
 
 #: .\templates\project_detail.html:328 .\templates\project_detail.html:329
 #: .\templates\project_detail.html:340 .\templates\project_detail.html:342
 msgid "create project"
-msgstr ""
+msgstr "إنشاء مشروع"
 
 #: .\templates\project_detail.html:328 .\templates\project_detail.html:329
 #: .\templates\project_detail.html:340 .\templates\project_detail.html:342
 msgid "create child project"
-msgstr ""
+msgstr "إنشاء مشروع فرعي"
 
 #: .\templates\project_detail.html:337
 msgid "new child project"
-msgstr ""
+msgstr "مشروع فرعي جديد"
 
 #: .\templates\project_detail.html:359 .\templates\project_detail.html:372
 msgid "new forum"
@@ -3860,7 +3860,7 @@ msgstr ""
 
 #: .\templates\project_detail.html:501 .\templates\project_detail.html:514
 msgid "to join this project"
-msgstr ""
+msgstr "للانضمام إلى هذا المشروع"
 
 #: .\templates\project_detail.html:533 .\templates\project_detail.html:929
 msgid "call back supervisor role"
@@ -3874,7 +3874,7 @@ msgstr ""
 #: .\templates\user_dashboard.html:107 .\templates\user_dashboard.html:129
 #: .\templates\user_dashboard.html:151
 msgid "applications"
-msgstr ""
+msgstr "الطلبات"
 
 #: .\templates\project_detail.html:554
 msgid "accept application to this community or project"
@@ -3922,7 +3922,7 @@ msgstr ""
 
 #: .\templates\project_detail.html:776 .\templates\project_detail.html:811
 msgid "mentoring project"
-msgstr ""
+msgstr "مشروع التوجيه"
 
 #: .\templates\project_detail.html:796 .\templates\project_edit.html:14
 #: .\templates\project_edit.html:55
@@ -3954,17 +3954,19 @@ msgid "to apply you must fill the mentor presentation in your profile"
 msgstr ""
 
 #: .\templates\project_detail.html:1042
-msgid "do you really want to grant the admin or supervisor role to this member"
+msgid ""
+"do you really want to grant the admin or supervisor role to this member"
 msgstr ""
 
 #: .\templates\project_detail.html:1044
 msgid ""
-"do you really want to call back the admin or supervisor role from this member"
+"do you really want to call back the admin or supervisor role from this "
+"member"
 msgstr ""
 
 #: .\templates\project_edit.html:21 .\templates\project_edit.html:62
 msgid "child project"
-msgstr ""
+msgstr "مشروع فرعي"
 
 #: .\templates\project_image_upload.html:16
 msgid "upload image of project"
@@ -3984,7 +3986,7 @@ msgstr ""
 
 #: .\templates\project_results.html:6 .\templates\project_results.html:79
 msgid "results of project"
-msgstr ""
+msgstr "نتائج المشروع"
 
 #: .\templates\project_results.html:88 .\templates\resources_by.html:53
 msgid "OERs evaluated"
@@ -4004,15 +4006,15 @@ msgstr ""
 
 #: .\templates\projects.html:6
 msgid "all projects"
-msgstr ""
+msgstr "كل المشاريع"
 
 #: .\templates\projects.html:10
 msgid "all open projects"
-msgstr ""
+msgstr "جميع المشاريع المفتوحة"
 
 #: .\templates\projects.html:17
 msgid "project type"
-msgstr ""
+msgstr "نوع المشروع"
 
 #: .\templates\pybb\_need_to_login_message.html:4
 msgid "login"
@@ -4032,11 +4034,11 @@ msgstr ""
 
 #: .\templates\pybb\breadcrumb.html:6
 msgid "forums index"
-msgstr ""
+msgstr "فهرس المنتديات"
 
 #: .\templates\pybb\breadcrumb.html:27 .\templates\pybb\breadcrumb.html:33
 msgid "go to project"
-msgstr ""
+msgstr "انتقل إلى مشروع"
 
 #: .\templates\pybb\forum_list.html:9
 msgid "Forum"
@@ -4257,7 +4259,7 @@ msgstr ""
 
 #: .\templates\search_oers.html:12
 msgid "open educational resources"
-msgstr ""
+msgstr "الموارد التعليمية المفتوحة"
 
 #: .\templates\search_oers.html:18 .\templates\search_people.html:18
 #: .\templates\search_repos.html:5
@@ -4266,7 +4268,7 @@ msgstr ""
 
 #: .\templates\search_projects.html:5
 msgid "search of projects"
-msgstr ""
+msgstr "البحث عن المشاريع"
 
 #: .\templates\search_repos.html:5
 msgid "of source repositories"
@@ -4306,19 +4308,19 @@ msgstr ""
 
 #: .\templates\user_dashboard.html:50
 msgid "Weblog"
-msgstr ""
+msgstr "مدونة"
 
 #: .\templates\user_dashboard.html:57
 msgid "pending applications to communities"
-msgstr ""
+msgstr "الطلبات المعلقة للمجتمعات"
 
 #: .\templates\user_dashboard.html:70
 msgid "pending applications to projects"
-msgstr ""
+msgstr "الطلبات المعلقة للمشاريع"
 
 #: .\templates\user_dashboard.html:83
 msgid "pending applications to rolls of mentors"
-msgstr ""
+msgstr "الطلبات المعلقة لقوائم الموجهين"
 
 #: .\templates\user_dashboard.html:95
 msgid "admin of the following communities"
@@ -4330,7 +4332,7 @@ msgstr ""
 
 #: .\templates\user_dashboard.html:139
 msgid "supervisor of the following projects"
-msgstr ""
+msgstr "المشرف على المشاريع التالية"
 
 #: .\templates\user_dashboard.html:161
 msgid "member of the following communities"
@@ -4342,11 +4344,11 @@ msgstr ""
 
 #: .\templates\user_dashboard.html:202 .\templates\user_dashboard.html:228
 msgid "no projects"
-msgstr ""
+msgstr "لا توجد مشاريع"
 
 #: .\templates\user_dashboard.html:209
 msgid "member of the following projects"
-msgstr ""
+msgstr "عضو في المشاريع التالية"
 
 #: .\templates\user_dashboard.html:235
 msgid "mentoring requests in my communities"
@@ -4367,7 +4369,7 @@ msgstr ""
 
 #: .\templates\user_dashboard.html:276
 msgid "my mentoring projects as a mentor"
-msgstr ""
+msgstr "مشاريع التوجيه حيث أنا المرشد"
 
 #: .\templates\user_dashboard.html:309
 msgid "suggested mentors"
@@ -4577,6 +4579,10 @@ msgid "%(comment_count)s comment"
 msgid_plural "%(comment_count)s comments"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: .\templates\zinnia\_entry_detail_base.html:155
 #, python-format
@@ -4598,6 +4604,10 @@ msgid "%(pingback_count)s pingback"
 msgid_plural "%(pingback_count)s pingbacks"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: .\templates\zinnia\_entry_detail_base.html:176
 #, python-format
@@ -4610,6 +4620,10 @@ msgid "%(trackback_count)s trackback"
 msgid_plural "%(trackback_count)s trackbacks"
 msgstr[0] ""
 msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: .\templates\zinnia\base.html:16
 msgid "RSS feed of latest entries"
@@ -4686,7 +4700,7 @@ msgstr ""
 
 #: .\templates\zinnia\skeleton.html:22 .\templates\zinnia\skeleton.html:23
 msgid "Weblog index"
-msgstr ""
+msgstr "فهرس مدونة"
 
 #: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
 msgid "Sitemap"
@@ -4734,7 +4748,7 @@ msgstr ""
 
 #: .\views.py:1879
 msgid "community or project: "
-msgstr ""
+msgstr "مشروع أو مجتمع:"
 
 #: .\views.py:2010
 msgid "thematic forum"

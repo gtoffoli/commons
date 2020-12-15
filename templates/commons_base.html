@@ -1,5 +1,5 @@
 {% load staticfiles %}
-{% load i18n %}
+{% load i18n %}{% get_current_language_bidi as BIDI %}
 {% load menu %}
 {% generate_menu %}
 
@@ -105,7 +105,7 @@
      {% endblock %}
   </head>
 
-  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default">
+  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default{% if BIDI %};direction:auto;{% endif %}" {% if BIDI %}dir="auto"{% endif %}>
     <div class="{% block wrapper_class %}wrapper{% endblock %}">
       {% block topbar_base %}
         <header>

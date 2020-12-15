@@ -2,16 +2,16 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+{% block head_title %}{% trans "inactive account"|capfirst %}{% endblock %}
 
 {% block body %}
 
 <div class="marginTB30">
     <div class="panel-heading-c0">
-        <h1 class="padding1020 margin0">{% trans "Account Inactive" %}</h1>
+        <h1 class="padding1020 margin0">{% trans "inactive account"|capfirst %}</h1>
     </div>
     <div class="body-panel borderBLRradius borderColor-c0 padding1020">
-        <p>{% trans "This account is inactive." %}</p>
+        <p>{% trans "this account is inactive"|capfirst %}.</p>
     </div>
 </div>
 {% endblock %}

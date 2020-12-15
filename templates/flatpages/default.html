@@ -1,6 +1,6 @@
 {% extends "commons_base.html" %}
 
-{% load i18n staticfiles %}
+{% load i18n staticfiles %}{% get_current_language_bidi as BIDI %}
 
 {% block head_title %}{{ flatpage.title }}{% endblock %}
 
@@ -9,7 +9,7 @@
 {% block body_class %}flatpage{% endblock %}
 
 {% block body %}
-<article class="marginTB30">
+<article class="marginTB30"{% if BIDI %} style="direction:auto;" dir="auto"{% endif %}>
   <div class="panel-heading-base">
     <h1 class="text-center padding105 margin0">{{ flatpage.title }}
     {% if request.user.is_staff %}
