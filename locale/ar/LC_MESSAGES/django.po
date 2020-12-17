@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-15 15:06+0100\n"
-"PO-Revision-Date: 2020-12-15 22:37+0000\n"
+"PO-Revision-Date: 2020-12-16 23:04+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Arabic (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -565,7 +565,7 @@ msgstr ""
 
 #: .\forms.py:373
 msgid "adapted/remixed"
-msgstr ""
+msgstr "تكييفها / معاد مزجها"
 
 #: .\forms.py:373
 msgid ""
@@ -607,7 +607,7 @@ msgstr ""
 
 #: .\forms.py:417
 msgid "Adapted/Remixed"
-msgstr ""
+msgstr "تكييفها / معاد مزجها"
 
 #: .\forms.py:427
 msgid "text in title and description"
@@ -997,7 +997,7 @@ msgstr "معلومات عنا"
 
 #: .\menus.py:177
 msgid "library"
-msgstr ""
+msgstr "مكتبة"
 
 #: .\menus.py:183
 msgid "help"
@@ -1488,7 +1488,7 @@ msgstr ""
 
 #: .\models.py:1580
 msgid "Derived-remixed"
-msgstr ""
+msgstr "مشتق - معاد مزجها"
 
 #: .\models.py:1581
 msgid "none (brand new OER)"
@@ -1504,7 +1504,7 @@ msgstr ""
 
 #: .\models.py:1596
 msgid "adapted / remixed"
-msgstr ""
+msgstr "تكييفها / معاد مزجها"
 
 #: .\models.py:1598
 msgid "reference"
@@ -1973,26 +1973,26 @@ msgstr "يتم تمويل مشروع CommonS بشكل مشترك من قبل ب�
 #: .\templates\_homepage_main_cta.html:50
 #: .\templates\_homepage_main_cta.html:74
 msgid "explore library"
-msgstr ""
+msgstr "استكشف المكتبة"
 
 #: .\templates\_homepage_main_cta.html:15
 #: .\templates\_homepage_main_cta.html:57
 #: .\templates\_homepage_main_cta.html:79
 msgid "learn together"
-msgstr ""
+msgstr "نتعلم معا"
 
 #: .\templates\_homepage_main_cta.html:21
 #: .\templates\_homepage_main_cta.html:64
 #: .\templates\_homepage_main_cta.html:84
 msgid "remix resources"
-msgstr ""
+msgstr "إعادة المزج بين الموارد"
 
 #: .\templates\_homepage_main_cta.html:28
 #: .\templates\_homepage_main_cta.html:29
 #: .\templates\_homepage_main_cta.html:51
 #: .\templates\_homepage_main_cta.html:75 .\templates\browse.html:11
 msgid "educational library"
-msgstr ""
+msgstr "مكتبة تعليمية"
 
 #: .\templates\_info_creator_date.html:3 .\templates\_lp_serialize.html:10
 msgid "submitted by"
@@ -3162,7 +3162,7 @@ msgstr ""
 
 #: .\templates\homepage.html:6 .\views.py:124
 msgid "Learn with others, Create, Reuse"
-msgstr ""
+msgstr "تعلم مع الآخرين ، أنشئ ، أعد الاستخدام"
 
 #: .\templates\homepage.html:147 .\views.py:121
 msgid "learning in online communities of practice"
@@ -3174,11 +3174,11 @@ msgstr "إعادة استخدام الموارد لبناء مسارات الت�
 
 #: .\templates\homepage.html:149 .\views.py:121
 msgid "browsing collections in our library of OERs"
-msgstr ""
+msgstr "تصفح مجموعات OER في المكتبة"
 
 #: .\templates\homepage.html:150
 msgid "join the Community now"
-msgstr ""
+msgstr "انضم إلى مجتمعنا الآن"
 
 #: .\templates\homepage.html:171
 msgid "visible from"
@@ -3214,7 +3214,7 @@ msgstr ""
 
 #: .\templates\homepage.html:247
 msgid "learn more"
-msgstr ""
+msgstr "أعرف أكثر"
 
 #: .\templates\lp_detail.html:71
 msgid "bookmark this LP for future reference"
@@ -3520,7 +3520,7 @@ msgstr ""
 
 #: .\templates\oer_detail.html:164
 msgid "derived, through translation and adaptation / remixing, from"
-msgstr ""
+msgstr "مشتق ، من خلال الترجمة والتكييف أو إعادة المزج ، من"
 
 #: .\templates\oer_detail.html:165
 msgid "derived, through translation, from"
@@ -3528,7 +3528,7 @@ msgstr ""
 
 #: .\templates\oer_detail.html:166
 msgid "derived, through adaptation / remixing, from"
-msgstr ""
+msgstr "مشتق ، من خلال التكيف أو إعادة المزج ، من"
 
 #: .\templates\oer_detail.html:226
 msgid "to be able to publish this OER you must, fill some required fields"
@@ -3848,7 +3848,7 @@ msgstr ""
 #: .\templates\project_detail.html:487 .\templates\project_detail.html:498
 #: .\templates\project_detail.html:511 .\templates\project_detail.html:907
 msgid "join"
-msgstr ""
+msgstr "انضم"
 
 #: .\templates\project_detail.html:490 .\templates\project_detail.html:913
 msgid "your application is waiting for acceptation by the "
@@ -3856,11 +3856,11 @@ msgstr ""
 
 #: .\templates\project_detail.html:501 .\templates\project_detail.html:514
 msgid "to join this community"
-msgstr ""
+msgstr "انضم إلى هذا المجتمع"
 
 #: .\templates\project_detail.html:501 .\templates\project_detail.html:514
 msgid "to join this project"
-msgstr "للانضمام إلى هذا المشروع"
+msgstr "انضم إلى هذا المشروع"
 
 #: .\templates\project_detail.html:533 .\templates\project_detail.html:929
 msgid "call back supervisor role"
@@ -4225,7 +4225,7 @@ msgstr ""
 
 #: .\templates\search_lps.html:5
 msgid "search of learning paths"
-msgstr ""
+msgstr "البحث عن مسارات التعلم"
 
 #: .\templates\search_lps.html:31 .\templates\search_oers.html:31
 #: .\templates\search_people.html:31 .\templates\search_projects.html:31

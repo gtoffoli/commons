@@ -4,7 +4,7 @@
 {% generate_menu %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
+<html lang="{{ LANGUAGE_CODE }}" {% if BIDI %}dir="rtl"{% endif %} xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
   <head>
     {% include 'google_analytics.html' %}
     <meta charset="utf-8">
@@ -36,7 +36,11 @@
        <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
        {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> {% endcomment %}
-       <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
+       {% if PRODUCTION %}
+         <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
+       {% else %}
+         <link href="{% static "commons/css/commons_bidi.css" %}" rel="stylesheet">
+       {% endif %}
        <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
        <style>
        ul.ul-left {
@@ -105,7 +109,7 @@
      {% endblock %}
   </head>
 
-  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default{% if BIDI %};direction:auto;{% endif %}" {% if BIDI %}dir="auto"{% endif %}>
+  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default">
     <div class="{% block wrapper_class %}wrapper{% endblock %}">
       {% block topbar_base %}
         <header>
