@@ -17,7 +17,7 @@
 	<ul class="list-unstyled">
         {% for forum, num_posts, topics_list in forum_topics_list %}
         <li><span style="font-weight: bold;">{{ num_posts }} - {{ forum.name}}</span>
-		<ul class="list-unstyled" style="margin-left: 20px;">
+		<ul class="list-unstyled" style="margin-inline-start: 20px;">
 	        {% for n, topic in  topics_list %}
 	        <li>{{ n }} - {{ topic.name }}</li>
 	        {% endfor %}

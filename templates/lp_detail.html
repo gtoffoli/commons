@@ -18,8 +18,8 @@ iframe {
 	min-height:300px;
 	overflow:auto;
 	border:1px solid #ccc;
-	margin-top: 5px;
-  margin-bottom: 10px;
+	margin-block-start: 5px;
+  margin-block-end: 10px;
   padding:10px;
 }
 {% comment %}
@@ -289,7 +289,7 @@ font-weight: 600;
 {% block extra-body %}
  {% if can_edit %}
   <div id='loadingmessage' style='display:none'>
-    <div class="modal" style='display:block; padding-right:17px;'>
+    <div class="modal" style='display:block; padding-inline-end:17px;'>
       <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
     </div>
     <div class="modal-backdrop in"></div>

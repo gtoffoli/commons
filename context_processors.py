@@ -14,6 +14,8 @@ def processor(request):
     path = request.path
     protocol = request.is_secure() and 'https' or 'http'
     host = request.META.get('HTTP_HOST', '')
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    browser = user_agent.count('Firefox') and 'Firefox' or user_agent
     is_primary_domain = False
     is_secondary_domain = False
     is_test_domain = False
@@ -24,7 +26,6 @@ def processor(request):
     elif host == settings.TEST_DOMAIN:
         is_test_domain = True
     for code, name in settings.LANGUAGES:
-        # path = path.replace('/%s/' % language[0], '/')
         if path.startswith('/' + code + '/'):
             path = path[len(code)+1:]
             break
@@ -50,4 +51,5 @@ def processor(request):
         'HAS_MEETING': settings.HAS_MEETING,
         'HAS_ZINNIA': settings.HAS_ZINNIA,
         'INBOX_COUNT': inbox_count,
+        'BROWSER': browser,
     }

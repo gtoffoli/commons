@@ -1,4 +1,3 @@
-
 /* commons.css */
 
 html, body {
@@ -213,7 +212,7 @@ margin-inline-end:0;
 
 .carousel-fade .carousel-inner .active.left,
 .carousel-fade .carousel-inner .active.right {
-	left: 0;
+	inset-inline-start: 0;
 	opacity: 0;
 	z-index: 1;
 }
@@ -228,11 +227,11 @@ margin-inline-end:0;
 }
 
 .carousel-inner > .item-left {
-	text-align : left;
+	text-align : start;
 }
 
 .carousel-inner > .item-right {
-	text-align : right;
+	text-align : end;
 }
 
 .carousel-inner img {
@@ -242,7 +241,7 @@ margin-inline-end:0;
 .carousel-control {
 	position:absolute;
 	top: 40%;
-	left:0;
+	inset-inline-start:0;
 	bottom:40%;
 	width: 5%;
 }
@@ -269,14 +268,14 @@ margin-inline-end:0;
 	text-shadow:0 1px 2px rgba(0,0,0,0.6)
 }
 .carousel-caption-left {
-	left:auto;
-	right:2%;
+	inset-inline-start:auto;
+	inset-inline-end:2%;
 	bottom: 22%;
 	text-align: start;
 }
 .carousel-caption-right {
-	left:2%;
-	right:auto;
+	inset-inline-start:2%;
+	inset-inline-end:auto;
 	text-align: end;
 }
 .carousel-caption h1 {
@@ -324,8 +323,8 @@ margin-inline-end:0;
 
 .carousel-caption-left,
 .carousel-caption-right {
-	left:0;
-	right:0;
+	inset-inline-start:0;
+	inset-inline-end:0;
 	text-align : center;
 }
 
@@ -815,7 +814,7 @@ article.roundCorner:last-child {
 	border-bottom-right-radius:4px;
 }
 article.view-card img.img-responsive-in-article {
-    float:left;
+    float: inline-start;
     padding-block-start: 5px;
     padding-inline-end:10px;
     max-width:20%;
@@ -963,17 +962,17 @@ div.box_comments dd form {
 }
 .list-orange li {
 	padding-inline-end:10px;
-	border-right:1px solid #FABE66;
+	border-inline-end:1px solid #FABE66;
 }
 .list-green li {
 	padding-inline-end:10px;
-	border-right:1px solid #67AE73;
+	border-inline-end:1px solid #67AE73;
 }
 .list-orange li:last-child,
 .list-green li:last-child,
 .list-inline.list-last li:last-child {
 	padding-inline-end: 0;
-	border-right-width: 0;
+	border-inline-end-width: 0;
 }
 
 .my-list-unstyled {
@@ -1053,7 +1052,7 @@ ul.list-inline > li.list-back-c5 {
   position:relative;
 }
 .floatL {
- float:left;
+ float: inline-start;
 }
 /* AVATAR */
 .avatar-small {
@@ -1107,7 +1106,7 @@ ul.list-inline > li.list-back-c5 {
 /*.txt-over {
 	position:absolute;
 	top:-5px;
-	left:8px;
+	inset-inline-start:8px;
 	background:#dc0d17;
 	border-radius:2px;
 	padding: 2px;
@@ -1186,7 +1185,7 @@ ul.list-inline > li.list-back-c5 {
   background-color: white;
   border:1px solid #ccc;
   border-bottom-width:0;
-  border-left-width:0;
+  border-inline-start-width:0;
   border-top-right-radius:4px;
   padding:6px 12px;
   font-weight: normal;
@@ -1362,10 +1361,10 @@ height:250px;
 		 border-top-color: #333;
 }
 .tooltip.right .tooltip-arrow {
-	border-right-color: #333;
+	border-inline-end-color: #333;
 }
 .tooltip.left .tooltip-arrow {
-	border-left-color: #333;
+	border-inline-start-color: #333;
 }
 .tooltip.bottom .tooltip-arrow {
 	 border-bottom-color: #333;
@@ -1479,7 +1478,7 @@ a.btn-c2:focus {
 	background:white;
 	border: 1px solid white;
 	top: 48px !important;
-	left: 15px !important;
+	inset-inline-start: 15px !important;
 	font-size: 12px;
 	padding: 1px;
 	border-radius:3px;
@@ -1525,7 +1524,7 @@ a.btn-c2:focus {
 .search-collapse {
   padding-inline-end: 15px;
   padding-inline-start: 15px;
-  overflow-x: visible;
+  overflow-inline: visible;
   -webkit-overflow-scrolling: touch;
 }
 @media (min-width: 768px) {
@@ -1594,8 +1593,8 @@ text-decoration: none;
     width: 100%; 
     height: 100%; 
     position: absolute; 
-    left: 0; 
-    top: 0;
+    inline-start: 0; 
+    inline-end: 0;
     border:0
 }
 
@@ -1760,11 +1759,11 @@ section.view-node-details {
 	font-size:20px;
 }
 .section-node-header h3.h3-left {
-	float:left;
+	float: inline-start;
 	width:90%;
 }
 .section-node-header div {
-	float: right;
+	float: inline-end;
 	font-size: 26px;
 }
 .section-node-header a {
@@ -1784,8 +1783,8 @@ section.view-node-details {
 	width: auto;
 }
 #birth_date .input-group-addon {
-	float:left;
-	display:inline-block;
+	float: inline-start;
+	display: inline-block;
 	line-height: 1.42857143;
 	width: auto;
 }
@@ -1839,7 +1838,7 @@ input[type="file"] {
 .list-k > div {
     /*display: table;*/
     margin-block-end:10px;
-    float:left;
+    float: inline-start;
     padding: 5px 10px;
 }
 .list-n > div,

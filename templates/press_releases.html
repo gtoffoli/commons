@@ -14,7 +14,7 @@
 <ul>
 {% for press_release in press_releases %}
 	<form class="form-inline" style="margin: 0; padding: 0;" action="/document/download/" method="post" id="doc_{{ document.id }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">
+	<li style="padding-block-start: 0; padding-block-end: 0; line-height:1.0em;">
 	{% with document=press_release.document %}
 		<a href="/document/{{ document.id }}/view/?proj={{ project.id }}">{% if press_release.label %}{{ press_release.label }}{% else %}{{ document.label }}{% endif %}</a>
 		{% if document.viewable %} &nbsp;&nbsp;&nbsp;<a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye" style="font-size: 0.8em;"></i></a>{% endif %}
@@ -56,11 +56,11 @@ window.onload = function () {
 {% block body_base %}
 <div class="container-fluid margin0 padding0">
   <div class="row margin0">
-    <div class="col-sm-3 col-md-3 col-lg-2" style="padding-left:0">
+    <div class="col-sm-3 col-md-3 col-lg-2" style="padding-inline-start:0">
   	<div style="background: white; padding:10px 5px 0 20px; border-bottom: 1px dotted #E85619">
   		    <h5 class="demiBold" style="color: #E85619">{% trans "press releases"|capfirst %}</h5>
 </div>
-<dl class="panel panel-col panel-white" style="padding-right:0">
+<dl class="panel panel-col panel-white" style="padding-inline-end:0">
 {% for language_code, language_name, press_releases in language_pr_list %}
 
   <dt class="demiBold">{{ language_name }}</dt>

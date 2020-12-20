@@ -28,10 +28,10 @@
          	<legend class="paddingT20 font18 demiBold" style="border-bottom:1px dotted #008BD2">{% trans "detailed quality assessment"|capfirst %}</legend>
       <ul class="list-inline">
       {% endif %}
-      {% if 'facet' in field.name %}<li style="padding-right:20px; vertical-align:top">{%endif%}
+      {% if 'facet' in field.name %}<li style="padding-inline-end:20px; vertical-align:top">{%endif%}
       <div class="form-group">
         <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
-        {% if field.help_text %}<div style="margin-top:-5px; margin-bottom:5px"><small id="{{ field.name }}helpBlock">{{ field.help_text }}</small></div>{% endif %}
+        {% if field.help_text %}<div style="margin-block-start:-5px; margin-block-end:5px"><small id="{{ field.name }}helpBlock">{{ field.help_text }}</small></div>{% endif %}
         <span class="txt-error">{{ field.errors }}</span>{{ field }}
 
       </div>

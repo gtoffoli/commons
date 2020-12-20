@@ -11,7 +11,7 @@
   	max-width:90px;
   	height:auto;
   	display:inline-block;
-  	padding-right:10px;
+  	padding-inline-end:10px;
   	vertical-align:middle;
   }
 </style>
@@ -30,20 +30,20 @@
             {% for com in com_tree %}
                 <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% else %}borderBLRradius{% endif %}">
                     <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon paddingR10 c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}{% if com.0.small_image %}<img src="/media/{{ com.0.small_image }}" class="img_small">{% endif %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a></h4>
-                    <p {% if com.1|length > 0 %}style="margin-left: 24px"{% endif %}>{{ com.0.description }}</p>
+                    <p {% if com.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ com.0.description }}</p>
                     {% if com.1|length > 0 %}
                         <div class="children marginL24" style="display:none">
                             <ul class="list-unstyled paddingL20">
                             {% for projA in com.1 %}
                                 <li>
                                     <h5>{% if projA.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}<a href="/project/{{projA.0.slug}}/">{{ projA.0.name }}</a> <small>[{{ projA.0.proj_type }}]</small></h5>
-                                    <p class="font13" {% if projA.1|length > 0 %}style="margin-left: 24px"{% endif %}>{{ projA.0.description|truncatechars:140 }}</p>
+                                    <p class="font13" {% if projA.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ projA.0.description|truncatechars:140 }}</p>
                                     {% if projA.1|length > 0 %}
                                         {% if projA.0.get_type_name == 'com' %}
                                             {% for projB in projA.1 %}
                                             <div class="uno marginB20 paddingL24" style="display:none">
                                                 <h6 style="line-height: 1.5;">{% if projB|length > 1 and  projB.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}<a href="/project/{{ projB.0.slug }}/">{{ projB.0.name }}</a> <small>[{{ projB.0.proj_type }}]</small></h6>
-                                                <p class="font12" {% if projB.1|length > 0 %}style="margin-left: 24px"{% endif %}>{{ projB.0.description|truncatechars:140 }}</p>
+                                                <p class="font12" {% if projB.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ projB.0.description|truncatechars:140 }}</p>
                                                 {% if projB|length > 1 %}
                                                     {% if projB.1|length > 0 %}
                                                         {% for projC in projB %}

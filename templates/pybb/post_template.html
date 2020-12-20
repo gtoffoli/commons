@@ -93,14 +93,6 @@
                     {% endfor %}
                     {% endif %}
             {% endcomment %}
-{% comment %}
-            <div class="post-related" style="margin-top:10px; font-size:13px">
-                {% if user|pybb_may_create_post:post.topic %}
-                    <a style="margin-right:10px" href="{% url 'pybb:add_post' topic.id %}?quote_id={{ post.id }}" class="quote-link">{% trans "reply" %}</a>
-                    <a href="#" class="quote-selected-link">{% trans "quote selected" %}</a>
-                {% endif %}
-            </div>
-{% endcomment %}
                 <div class='attachments'>
                     {% for attachment in post.attachments.all %}
                         <a href="{{ attachment.file.url }}"><span class="glyphicon glyphicon-paperclip"></span> {{ attachment.file.name }} [{{ attachment.size_display }}]</a>
@@ -112,7 +104,7 @@
         <td {% if user|pybb_may_create_post:post.topic %} style="border-bottom:1px solid #e7e7e7" {% else%} style="border-top:0 solid #e7e7e7" {% endif %}>           
             <div class="post-related text-right">
                 {% if user|pybb_may_create_post:post.topic %}<span class="demiBold">{% trans "reply" %}:</span> &nbsp; &nbsp;
-                    <a style="margin-right:10px" href="{% url 'pybb:add_post' topic.id %}?quote_id={{ post.id }}" class="quote-link">{% trans "quote all" %}</a>
+                    <a style="margin-inline-end:10px" href="{% url 'pybb:add_post' topic.id %}?quote_id={{ post.id }}" class="quote-link">{% trans "quote all" %}</a>
                     <a href="#" class="quote-selected-link">{% trans "quote selected text" %}</a>
                 {% endif %}
             </div>

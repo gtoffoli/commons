@@ -21,10 +21,10 @@
       {% else %}
         <img src="/media/images/avatars/anonymous.png" class="avatar-large">
       {% endif %}
-      {% if can_edit %}<div style="margin-top:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
+      {% if can_edit %}<div style="margin-block-start:-34px"><a href="/profile/{{ profile_user.username }}/upload/" class="btn bt-default" style="background:rgba(103,174,115, 0.5); width:100%; padding:6px 4px; border-radius:0">{% trans "upload photo" %}</a></div>{% endif %}
       </div>
 	{% endif %}
-	<h2 class="pull-left marginTB0" style="margin-top:33px; padding-left:6px">{{  profile_user.get_display_name }} 
+	<h2 class="pull-left marginTB0" style="margin-block-start:33px; padding-inline-start:6px">{{  profile_user.get_display_name }} 
 		{% if complete_profile and not request.user == profile_user %}
 		&nbsp; <a href="/my_mail/compose/{{ profile_user.username }}/" title="{% trans "send a message to" %} {{ profile_user.get_display_name }}"><i class="fa fa-envelope" style="font-size: 0.7em; vertical-align="middle"></i></a>
 	{% endif %}</h2>
@@ -170,7 +170,7 @@
            {% if can_edit and complete_profile %} 
              <ul class="list-inline margin0">
                <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
-               <li class="list-back-c0" style="width:50%; vertical-align:top; padding-right:10px; padding-bottom:10px"><dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
+               <li class="list-back-c0" style="width:50%; vertical-align:top; padding-inline-end:10px; padding-block-end:10px"><dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
                  <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
                  {% if profile.curriculum %}
                    <dd><form method="post" id="delete_curriculum" action="/profile/{{ profile_user.username }}/delete_document/" class="remove" style="display:inline">{% csrf_token %}
@@ -296,7 +296,7 @@
 {% else %}
 
 <div class="navbar panel-heading-c0 padding10" style="vertical-alignment: middle;">
-  <h2 class="pull-left marginTB0" style="padding-left:6px; vertical-alignment: middle;">
+  <h2 class="pull-left marginTB0" style="padding-inline-start:6px; vertical-alignment: middle;">
     {% trans "anonymized user"|capfirst %}
   </h2>
 </div>
@@ -313,7 +313,7 @@
 {% block extra-body %}
 {% if can_edit and complete_profile %}
   <div id='loadingmessage' style='display:none'>
-    <div class="modal" style='display:block; padding-right:17px;'>
+    <div class="modal" style='display:block; padding-inline-end:17px;'>
       <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
     </div>
     <div class="modal-backdrop in"></div>

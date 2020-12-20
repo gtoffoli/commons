@@ -1,10 +1,11 @@
 {% load staticfiles %}
-{% load i18n %}{% get_current_language_bidi as BIDI %}
+{% load i18n %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% load commons_tags %}
 {% load menu %}
 {% generate_menu %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" {% if BIDI %}dir="rtl"{% endif %} xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
   <head>
     {% include 'google_analytics.html' %}
     <meta charset="utf-8">
@@ -33,47 +34,50 @@
      <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
 
      {% block style_base %}
-       <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
        {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> {% endcomment %}
-       {% if PRODUCTION %}
-         <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
-       {% else %}
+       {% with "Firefox"|split as browsers %}
+       {% if BROWSER in browsers %}
+         <link href="{% static "bootstrap/css/bootstrap_bidi.css" %}" rel="stylesheet">
          <link href="{% static "commons/css/commons_bidi.css" %}" rel="stylesheet">
+       {% else %}
+         <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+         <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
        {% endif %}
+       {% endwith %}
        <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
        <style>
        ul.ul-left {
-         margin-left:-15px;
+         margin-inline-start:-15px;
        }
        ul.ul-right {
-         margin-right:30px;
+         margin-inline-end:30px;
        }
        ul.ul-right li {
-         padding-left:15px;
+         padding-inline-start:15px;
        }
       
        div.navbar-search {
-         padding-top:8px; padding-bottom:10px;
+         padding-block-start:8px; padding-block-end:10px;
        }
        div.navbar-search label {
          position:absolute; left:24px; top:14px; font-size:12px;
        }
        div.navbar-search input.input-search  {
-         padding-left:25px; padding-right:10px; font-size:12px; height:30px;
+         padding-inline-start:25px; padding-inline-end:10px; font-size:12px; height:30px;
        }
        div.navbar-search select {
        	font-size: 12px;
        }
        @media (max-width: 991px) {
          ul.ul-right {
-           margin-right:5px;
+           margin-inline-end:5px;
          }
 
        }
        @media (min-width: 768px) and (max-width: 991px) {
          ul.ul-right li:first-child {
-           padding-left:0;
+           padding-inline-start:0;
          }
          div.navbar-search label {
            left:8px;
@@ -81,7 +85,7 @@
        }
        @media (max-width: 767px)
          div.navbar-search input.input-search  {
-           padding-left:25px; padding-right:5px; font-size:11px; height:30px;
+           padding-inline-start:25px; padding-inline-end:5px; font-size:11px; height:30px;
          }
          div.navbar-search select {
            font-size: 11px;
@@ -152,12 +156,15 @@
                             <label for="search-input"><i class="fa fa-search"></i></label>
                             <input class="form-control bc-demigray input-search" size="32" type="text" name="q" id="navigation_autocomplete">
                           </div></li>
+                          {% with "Firefox"|split as browsers %}
                           <li class="hidden-sm"><div class="navbar-search">
                             <form action="/i18n/setlang/" method="post">{% csrf_token %}
                               <input type="hidden" name="next" value="{{ path_no_language }}">
                               <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
                               {% for lang in LANGUAGES %}
+                                {% if lang.0 != "ar" or BROWSER in browsers and user.is_authenticated %}
                                 <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.1 }}</option>
+                                {% endif %}
                               {% endfor %}
                               </select>
                             </form>
@@ -167,11 +174,14 @@
                               <input type="hidden" name="next" value="{{ path_no_language }}">
                               <select name="language" class="form-control font13 bc-demigray" style="padding:5px; height: 30px; color: black;" onchange='this.form.submit()'>
                               {% for lang in LANGUAGES %}
+                                {% if lang.0 != "ar" or BROWSER in browsers and user.is_authenticated %}
                                 <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected="selected"{% endif %}>{{ lang.0|upper }}</option>
+                                {% endif %}
                               {% endfor %}
                               </select>
                             </form>
                           </div></li>
+                          {% endwith %}
                         </ul>
                       {% endblock nav %}
                     </div>

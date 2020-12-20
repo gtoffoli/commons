@@ -39,7 +39,7 @@ thead tr th, tr.section td {
             <h1 class="marginT30">{% trans "contents languages and translations"|capfirst %}</h1>
 
         {% for content, content_name in contents %}{% with source_dict=content_language_dict|lookup:content %}
-		<div style="{% if not forloop.first %}display: inline-block; {% endif %}vertical-align: top; margin-top: 1.0em; margin-right: 1.0em;"><label>{{ content_name|capfirst }}</label>
+		<div style="{% if not forloop.first %}display: inline-block; {% endif %}vertical-align: top; margin-block-start: 1.0em; margin-inline-end: 1.0em;"><label>{{ content_name|capfirst }}</label>
 		<table>
 			<thead>
 				<th style="font-size: small;" colspan="2"><div style="text-align: right;"><i>target language</i></div><div style="text-align: left;"><i>source language</i></div></th>
@@ -61,7 +61,7 @@ thead tr th, tr.section td {
 		</div>
         {% endwith %}{% endfor %}
 
-		<div style="margin-top: 0.8em;">
+		<div style="margin-block-start: 0.8em;">
 			<label>Legenda</label>
 			<div style="font-size: small;">
 				Row names and bold numbers refer to original (source) languages of contents.<br />

@@ -18,7 +18,7 @@
     {{ block.super }}
     <style>
         tr.fieldname, tr.fieldname td {
-            padding-bottom: -2px;
+            padding-block-end: -2px;
             border: none;
         }
     </style>
@@ -44,12 +44,12 @@
 	{% endfor %}
 </p>
 <p>
-	<div style="width: 12px; height: 12px; border: 1px solid #CCC; float: left; margin-right: 4px;"></div>
-	<div style="float: left; height: 12px; margin-right: 16px;">{% trans "done" %}</div>
-	<div style="width: 12px; height: 12px; border: 1px solid #CCC; background: #DEF; float: left; margin-right: 4px;"></div>
-	<div style="float: left; height: 12px; margin-right: 16px;">{% trans "to do" %}</div>
-	<div style="width: 12px; height: 12px; border: 1px solid #CCC; background: #FED; float: left; margin-right: 4px;"></div>
-	<div style="float: left; height: 12px; margin-right: 4px;">{% trans "to do (fuzzy)" %}</div>
+	<div style="width: 12px; height: 12px; border: 1px solid #CCC; float: left; margin-inline-end: 4px;"></div>
+	<div style="float: left; height: 12px; margin-inline-end: 16px;">{% trans "done" %}</div>
+	<div style="width: 12px; height: 12px; border: 1px solid #CCC; background: #DEF; float: left; margin-inline-end: 4px;"></div>
+	<div style="float: left; height: 12px; margin-inline-end: 16px;">{% trans "to do" %}</div>
+	<div style="width: 12px; height: 12px; border: 1px solid #CCC; background: #FED; float: left; margin-inline-end: 4px;"></div>
+	<div style="float: left; height: 12px; margin-inline-end: 4px;">{% trans "to do (fuzzy)" %}</div>
 	<div style="clear: both;"></div>
 </p>
 

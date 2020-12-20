@@ -72,7 +72,7 @@ var webFontURLs = [
 <script src="https://use.fontawesome.com/d391635073.js"></script>
 <style>
     body { margin: 0; }
-    h1, h2, h3, h4, h5 { margin: 0; padding-top: 5px; padding-bottom: 5px; }
+    h1, h2, h3, h4, h5 { margin: 0; padding-block-start: 5px; padding-block-end: 5px; }
 	::-webkit-scrollbar { width: 10px; height: 10px; }
 	div span .ta-dialog-title {
 		font-size: 12px !important;
@@ -140,7 +140,7 @@ var webFontURLs = [
                       <template slot="paneL">
                         <h4 class="small" style="text-align: center;">Verb Lemmas</h4>
                         <div v-for="item in verb_frequencies">
-                          <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                          <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                             {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                         </div>
                       </template>
@@ -149,14 +149,14 @@ var webFontURLs = [
                           <template slot="paneL">
                             <h4 class="small" style="text-align: center;">Noun Lemmas</h4>
                             <div v-for="item in noun_frequencies">
-                              <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                              <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                 {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                             </div>
                           </template>
                           <template slot="paneR">
                             <h4 class="small" style="text-align: center;">Adjective Lemmas</h4>
                             <div v-for="item in adjective_frequencies">
-                              <div style="margin-left: 5px; margin-right: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                              <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                 {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                             </div>
                           </template>

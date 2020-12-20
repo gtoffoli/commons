@@ -7,7 +7,7 @@
 <style>
 dl.eval {
 	background: white;
-	margin-bottom:5px;
+	padding-block-end:5px;
 }
 dl.eval dd {
 	padding:10px 20px 5px 20px;
@@ -161,7 +161,7 @@ dl.eval dd:nth-child(even) {
 {% block extra-body %}
 {% if can_add %}
   <div id='loadingmessage' style='display:none'>
-    <div class="modal" style='display:block; padding-right:17px;'>
+    <div class="modal" style='display:block; padding-inline-end:17px;'>
       <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
     </div>
     <div class="modal-backdrop in"></div>

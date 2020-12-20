@@ -10,12 +10,12 @@
     <section>
         <div class="container">
             <h2 class="text-center">{% trans "distributions"|capfirst %} {% trans "of repositories" %}</h2>
-			<ul style="list-style-type: none; padding-bottom: 10px;">
+			<ul style="list-style-type: none; padding-block-end: 10px;">
 		    {% for field_name, field_label, entries in browse_list %}
-		    	<li style="display: inline-block; vertical-align: top; margin-right: 16px;"><p class="lead"  style="margin-bottom: 0;">{{ field_label|capfirst }}</p><ul style="margin-left:-18px;">
+		    	<li style="display: inline-block; vertical-align: top; margin-inline-end: 16px;"><p class="lead"  style="margin-block-end: 0;">{{ field_label|capfirst }}</p><ul style="margin-inline-start:-18px;">
 		    	{% for code, label, prefix, n in entries %}
   	<form class="form-inline" style="margin: 0; padding: 0;" action="/repos/search/" method="post" id="search_{{ code }}">
-	<li style="padding-top: 0; padding-bottom: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
+	<li style="padding-block-start: 0; padding-block-end: 0; line-height:1.0em;">{% if prefix %}{{ prefix }} {% endif %}{{ label }}
 	{% csrf_token %}<input type="hidden" name="{{ field_name }}" value="{{ code }}">
    	&nbsp;(<input type="submit" class="btn-link" style="padding:0; margin:0;" value="{{ n }}">)
 	</li></form>

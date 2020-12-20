@@ -13,7 +13,7 @@
     {% recursetree nodes %}
     	{% with project=node.project %}
     		{% if project and project.state == 2 and project.proj_type.name != 'com' %}
-            	<div style="font-size: larger; margin-top: 1em;"><a href="/project/{{ project.slug }}/">{{ node.project.get_name }}</a></div>
+            	<div style="font-size: larger; margin-block-start: 1em;"><a href="/project/{{ project.slug }}/">{{ node.project.get_name }}</a></div>
                 <div><strong>{% trans "project type"|capfirst %}</strong>: {{ project.proj_type.description }}</div>
             	<div><i>{{ project.description|truncatechars:300 }}</i><div>
     		{% endif %}

@@ -16,11 +16,11 @@
              <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
            {% else %}
              <img src="/media/images/avatars/anonymous.png" class="avatar-small">
-           {% endif %}{% if not user.is_completed_profile %}<sup class="fa fa-exclamation-triangle" style="border-top-left-radius:10px; background:#222; margin-left:-10px; font-size:13px; color:yellow;" aria-hidden="true"></sup>{% endif %} <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
+           {% endif %}{% if not user.is_completed_profile %}<sup class="fa fa-exclamation-triangle" style="border-top-left-radius:10px; background:#222; margin-inline-start:-10px; font-size:13px; color:yellow;" aria-hidden="true"></sup>{% endif %} <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
          </a></li>
          {% if user.is_completed_profile %}
-         <li><a href="/my_mail/" title="{% trans "my messages" %}"><i class="fa fa-envelope" aria-hidden="true"></i>{% if INBOX_COUNT %}<sup class="format" style="margin-left:-3px;">{{ INBOX_COUNT }}</sup>{% endif %}</a></li>
-         <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><i class="fa fa-comment" aria-hidden="true"></i>{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format" style="margin-left:-3px;">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</a></li>
+         <li><a href="/my_mail/" title="{% trans "my messages" %}"><i class="fa fa-envelope" aria-hidden="true"></i>{% if INBOX_COUNT %}<sup class="format" style="margin-inline-start:-3px;">{{ INBOX_COUNT }}</sup>{% endif %}</a></li>
+         <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><i class="fa fa-comment" aria-hidden="true"></i>{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format" style="margin-inline-start:-3px;">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</a></li>
          {% include "_menu_analytics.html" with data='N' %}
          {% if request.user.is_staff and request.LANGUAGE_CODE == 'en' %}
            <li><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}" title="{% trans "admin"|capfirst %}"><span class="fa fa-cog" aria-hidden="true"></span></a></li>

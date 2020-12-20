@@ -16,18 +16,18 @@
 	{% if forum %}<input type="hidden" id="id" name="id" value="{{ forum.id }}" />{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     {% for field in form.visible_fields %}{% with i=forloop.counter %}
-    <div class="row"  style="margin-top: 0; margin-bottom: 0;">
+    <div class="row"  style="margin-block-start: 0; margin-block-end: 0;">
 	<div class="form-group col-lg-{% if i == 1 or i == 5 or i == 6 or i == 7 or i == 8 or i == 9 %}8{% else %}5{% endif %}">
-	    <label for="{{ field.name }}" style="margin-bottom: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
+	    <label for="{{ field.name }}" style="margin-block-end: 0;">{{ field.label|capfirst}} {% if field.field.required %}<span style="color: red;">*</span>{% endif %}</label>
 		<div><span style="color: red;">{{ field.errors }}</span>{{ field }}</div>
-		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-bottom: 0;">{{ field.help_text }}</span>{% endif %}
+		{% if field.help_text %}<span id="{{ field.name }}helpBlock" class="help-block" style="font-size: smaller; margin-block-end: 0;">{{ field.help_text }}</span>{% endif %}
 	</div>
 	</div>
     {% endwith %}{% endfor %}
 
    	</div></div>
-		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "save and exit"|capfirst %}{% if lp %}{% endif %}</button>&nbsp;
-		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-top: 0.5em; margin-left: 0;">{% trans "exit without saving"|capfirst %}</button>
+		<button type="submit" name="save" id="save" value="save" class="btn btn-default" style="margin-block-start: 0.5em; margin-inline-start: 0;">{% trans "save and exit"|capfirst %}{% if lp %}{% endif %}</button>&nbsp;
+		<button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default" style="margin-block-start: 0.5em; margin-inline-start: 0;">{% trans "exit without saving"|capfirst %}</button>
     </form>
     </section>
   </div>

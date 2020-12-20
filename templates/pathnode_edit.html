@@ -18,7 +18,7 @@
 {% block body_class %}pathnode_edit{% endblock %}
 {% block body %}
 {% comment %}
-<div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 0.5em;">
+<div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-block-start: 30px; margin-block-end: 0.5em;">
 {% if language_mismatch %}
    {% trans "WARNING" %}! {% trans "You are using the currently active language" %}
    (<span style="color: black;">{{ current_language_name }}</span>)
@@ -51,7 +51,7 @@
     <fieldset class="padding1020">
     {% if form.errors %}
       {% if form.non_field_errors %}
-      <div class="txt-error demiBold" style="margin-left:-20px">
+      <div class="txt-error demiBold" style="margin-inline-start:-20px">
         {{ form.non_field_errors }}
       </div>
       {% endif %}
@@ -97,7 +97,7 @@
 
 {% block extra-body %}
   <div id='loadingmessage' style='display:none'>
-    <div class="modal" style='display:block; padding-right:17px;'>
+    <div class="modal" style='display:block; padding-inline-end:17px;'>
       <div class="modal-dialog" style="width:300px"><div class="modal-content text-center"><img src='{% static 'commons/img/ajax-loader.gif' %}'></div></div>
     </div>
     <div class="modal-backdrop in"></div>

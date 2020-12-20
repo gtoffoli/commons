@@ -1,22 +1,22 @@
 {% comment %}{% load url from future %}{% endcomment %}{% load i18n %}
 <div style="overflow: auto; max-height:320px;"><div style="padding:6px">
 {% if UserProfile or Project or Repo or OER or LearningPath %}
-{% if UserProfile %}<dl style="margin-bottom:5px"><dt>{% trans "members"|capfirst %}</dt>
+{% if UserProfile %}<dl style="margin-block-end:5px"><dt>{% trans "members"|capfirst %}</dt>
 {% for profile in UserProfile %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/profile/{{ profile.1 }}/">{{ profile.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
-{% if Project %}<dl style="margin-bottom:5px"><dt>{% trans "communities and projects"|capfirst %}</dt>
+{% if Project %}<dl style="margin-block-end:5px"><dt>{% trans "communities and projects"|capfirst %}</dt>
 {% for project in Project %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/project/{{ project.1 }}/">{{ project.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
-{% if Repo %}<dl style="margin-bottom:5px"><dt>{% trans "external repositories"|capfirst %}</dt>
+{% if Repo %}<dl style="margin-block-end:5px"><dt>{% trans "external repositories"|capfirst %}</dt>
 {% for repo in Repo %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/repo/{{ repo.1 }}/">{{ repo.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
-{% if OER %}<dl style="margin-bottom:5px"><dt>{% trans "OERs"|capfirst %}</dt>
+{% if OER %}<dl style="margin-block-end:5px"><dt>{% trans "OERs"|capfirst %}</dt>
 {% for oer in OER  %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/oer/{{ oer.1 }}/">{{ oer.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
-{% if LearningPath %}<dl style="margin-bottom:5px"><dt>{% trans "learning paths"|capfirst %}</dt>
+{% if LearningPath %}<dl style="margin-block-end:5px"><dt>{% trans "learning paths"|capfirst %}</dt>
 {% for lp in LearningPath  %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="/lp/{{ lp.1 }}/">{{ lp.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
-{% if FlatPage %}<dl style="margin-bottom:5px"><dt>{% trans "help pages"|capfirst %}<dt>
+{% if FlatPage %}<dl style="margin-block-end:5px"><dt>{% trans "help pages"|capfirst %}<dt>
 {% for fp in FlatPage  %}<dd><i class="fa fa-caret-right" style="color:#888"></i> <a class="choice" href="{{ fp.1 }}">{{ fp.0 }}</a></dd>{% endfor %}
 </dl>{% endif %}
 {% comment %}

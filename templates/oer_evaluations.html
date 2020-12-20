@@ -8,7 +8,7 @@
 <style>
 dl.eval {
 	background: white;
-	margin-bottom:5px;
+	margin-block-end:5px;
 }
 dl.eval dd {
 	padding:20px 20px 10px 20px;
@@ -38,7 +38,7 @@ dl.eval dd:nth-child(even) {
   </div>
 <dl class="eval">
 {% for evaluation in evaluations %}
-  <dd class="padding1020" style="padding-top:20px">
+  <dd class="padding1020" style="padding-block-start:20px">
   <div class="row">
     <div class="col-sm-7 col-md-7 col-lg-7">
     	{%if evaluation.review|safe %}<p>{{ evaluation.review|safe }}</p>{% endif %}

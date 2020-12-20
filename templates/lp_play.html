@@ -60,7 +60,7 @@ font-weight: 600;
                 </dl>
             </div>
         {% if nodes %}
-            <div class="search-header" style=" margin-top: 10px; padding-left: 20px; text-align:left;">
+            <div class="search-header" style=" margin-block-start: 10px; padding-inline-start: 20px; text-align:left;">
                 {% trans "path nodes"|capfirst %} 
                 <button class="search-toggle" data-toggle="collapse" data-target=".search-collapse">
                     <span class="fa fa-bars"></span>
@@ -129,7 +129,7 @@ font-weight: 600;
                 <p class="view-url paddingT10" style="border-top: 1px solid #333">URL: <a href="{{ oer.url }}" target="_blank">{{ oer.url }}</a></p>
                 {% endif %}
             {% endif %}
-            <div class="iframe-container " {% if media_view or text_view %}style="padding-bottom:0; height:auto"{% endif %}>
+            <div class="iframe-container " {% if media_view or text_view %}style="padding-block-end:0; height:auto"{% endif %}>
                 {% if oer %}
                     {% if oer_is_published %}
 						{% if text_view %}

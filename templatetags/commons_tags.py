@@ -29,3 +29,7 @@ def lookup(d, key):
         return d[key]
     except KeyError:
         return ''
+
+@register.filter
+def split(value):
+    return value.split()

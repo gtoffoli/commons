@@ -10,7 +10,7 @@
 {% block body %}
 {% if queries.pois or queries.categories or queries.zones or queries.streets %}
     {% if queries.userprofiles %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "members"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "members"|capfirst %}</div>
 		<div>
         {% for userprofile in queries.userprofiles %}
         <div><a href="/profile/{{ userprofile.1 }}/">{{ userprofile.0 }}</a></div>
@@ -18,7 +18,7 @@
         </div>
     {% endif %}
     {% if queries.communities %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "communities"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "communities"|capfirst %}</div>
 		<div>
         {% for community in queries.communities %}
         <div><a href="/project/{{ community.1 }}/">{{ community.0 }}</a></div>
@@ -26,7 +26,7 @@
         </div>
     {% endif %}
     {% if queries.projects %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "projects"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "projects"|capfirst %}</div>
 		<div>
         {% for project in queries.projects %}
         <div><a href="/project/{{ project.1 }}/">{{ project.0 }}</a></div>
@@ -34,7 +34,7 @@
         </div>
     {% endif %}
     {% if queries.repos %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "source repositories"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "source repositories"|capfirst %}</div>
 		<div>
         {% for repo in queries.repos %}
         <div><a href="/repo/{{ repo.1 }}/">{{ repo.0 }}</a></div>
@@ -42,7 +42,7 @@
         </div>
     {% endif %}
     {% if queries.oers %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "reusable resources"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "reusable resources"|capfirst %}</div>
 		<div>
         {% for oer in queries.oers %}
         <div><a href="/oer/{{ oer.1 }}/">{{ oer.0 }}</a></div>
@@ -50,7 +50,7 @@
         </div>
     {% endif %}
     {% if queries.lps %}
-    	<div style="font-weight:bold; margin-top: 5px; margin-bottom: 2px;">{% trans "learning paths"|capfirst %}</div>
+    	<div style="font-weight:bold; margin-block-start: 5px; margin-block-end: 2px;">{% trans "learning paths"|capfirst %}</div>
 		<div>
         {% for lp in queries.lps %}
         <div><a href="/lp/{{ lp.1 }}/">{{ lp.0 }}</a></div>

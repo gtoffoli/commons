@@ -27,14 +27,14 @@
       margin:20px 0px 20px 15px;
     }
     .box-featured dl {
-      margin-bottom: 0;
+      margin-block-end: 0;
       padding: 10px 10px 0 10px;
       background: #ddd;
       border-radius: 4px;
       border:1px solid transparent;
     }
     .box-featured dl dd dl{
-      margin-bottom: 10px;
+      margin-block-end: 10px;
       padding: 10px 10px 0 10px;
       background: white;
       border-radius: 4px;
@@ -54,17 +54,17 @@
       background: white;
     }
     .box-featured dl dd:last-child {
-      margin-bottom: 10px;
+      margin-block-end: 10px;
     }
     .label-header {
-      margin-top:0;
+      margin-block-start:0;
       color:white;
       font-weight:600;
       font-variant:small-caps;
       text-align:center;
     }
     .no_item {
-    	margin-bottom: 10px;
+    	margin-block-end: 10px;
     }
     .bordercolor-lochmara {border-color: #2e6da4;}
     @media (min-width:640px) {
@@ -174,7 +174,7 @@
                       <div>{{ group_featured.text|safe }}</div>
                     {% endif %}
                     {% if group_featured.featured_object  %}
-                      <p class="demiBold" style="margin-top:10px">
+                      <p class="demiBold" style="margin-block-start:10px">
                         {% if group_featured.content_type.model == 'project' %}
                           <i class="fa fa-group neutral"></i> <a class="c-harvest-gold" href="/project/{{group_featured.featured_object.slug }}/">{{ group_featured.featured_object }}</a>
                         {% elif group_featured.content_type.model == 'oer' %}
@@ -240,7 +240,7 @@
                 <div class="bc-white padding10 borderRadius4">
                   <p class="font16 demiBold">{{ article.lead|safe }}</p>
                   {% if article.image %}
-                  <div class="clearfix"><img src="/media/{{ article.image }}" style="float:left; padding-top: 5px; padding-right:10px; max-width:30%; height: auto"> {{ article.html_content|safe|truncatechars_html:140 }}</div>
+                  <div class="clearfix"><img src="/media/{{ article.image }}" style="float:left; padding-block-start: 5px; padding-inline-end:10px; max-width:30%; height: auto"> {{ article.html_content|safe|truncatechars_html:140 }}</div>
                   {% else %}
                   <div>{{ article.html_content|safe|truncatechars_html:140 }}</div>
                   {% endif %}

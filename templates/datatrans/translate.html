@@ -7,7 +7,7 @@
 {% block head_title %}{% trans "Translations of" %} {{ model_title }} {{ object_title }}{% endblock %}
 
 {% block body %}
- <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-top: 30px; margin-bottom: 5px;">
+ <div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-block-start: 30px; margin-block-end: 5px;">
   {% trans "Please, note that the translation functionality is affected by the original editing language of this content" %} (<span style="color: black;">{{ object.get_language_name }}</span>) {% trans "and by the languages known by the user as declared in the user profile" %}.
   {% trans "The current active language" %} (<span style="color: black;">{{ current_language_name }}</span>) {% trans "affects only the UI messages of this view" %}.
  </div>
@@ -45,9 +45,9 @@ text-left marginTB30">
 <div style="clear:both">
 {% if original_language %}
 {% for field_forms in form_sets %}
-<div style="margin-top: 0.0em;">
+<div style="margin-block-start: 0.0em;">
 {% for form_language, field_form in field_forms %}
-<div style="margin-top: 0.5em;">
+<div style="margin-block-start: 0.5em;">
 <form action="{{ action_url }}" method='POST'">
 {% csrf_token %}
 <fieldset class="padding1020">
@@ -67,7 +67,7 @@ text-left marginTB30">
 {% if not forloop.last %}<hr style="border-color: black">{% endif %}
 {% endfor %}
 {% else %}
-<div style="color: red; margin-top: 1.0em;">{% trans "The original language of this content is not known." %}</div>
+<div style="color: red; margin-block-start: 1.0em;">{% trans "The original language of this content is not known." %}</div>
 {% endif %}
 </div>
 </div>
