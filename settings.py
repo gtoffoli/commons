@@ -295,15 +295,14 @@ USE_TZ = True
 TIME_ZONE = 'Europe/Rome'
 
 LANGUAGE_CODE = 'en'
-LANGUAGES = [
+LANGUAGES = (
     (u'en', u'English'),
     (u'hr', u'Hrvatski'),
     (u'it', u'Italiano'),
     (u'pt', u'Português'),
     (u'ru', u'Русский'),
-]
-if not IS_LINUX:
-    LANGUAGES = LANGUAGES+[(u'ar', u'Arabic')]
+    (u'ar', u'Arabic'),
+)
 LANGUAGES_DICT = dict(LANGUAGES)
 RTL_LANGUAGES = ['ar']
 
