@@ -1,0 +1,27 @@
+article.view-card img.img-responsive-in-article {
+    float: right;
+}
+  
+.floatL {
+ float: right;
+}
+
+.section-node-header h3.h3-left {
+	float: right;
+}
+.section-node-header div {
+	float: left;
+}
+
+#birth_date .input-group-addon {
+	float: right;
+}
+
+.list-n > div,
+.list-n > label,
+.list-m > div,
+.list-h > div,
+.list-k > div {
+    /*display: table;*/
+    float: right;
+}
