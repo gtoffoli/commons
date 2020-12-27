@@ -6,9 +6,23 @@
     <meta charset="utf-8">
     {% block languages %}
     {% endblock %}
-    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
     {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">{% endcomment %}
+    {% comment %}
+    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
     <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
+    {% endcomment %}
+    <link href="{% static "bootstrap/css/bootstrap_bidi.css" %}" rel="stylesheet">
+    <link href="{% static "commons/css/commons_bidi.css" %}" rel="stylesheet">
+    {% with "Firefox"|split as browsers %}
+    {% if BROWSER not in browsers %}
+      {% if LANGUAGE_BIDI %}
+        <link href="{% static "bootstrap/css/bootstrap_fix_rtl.css" %}" rel="stylesheet">
+        <link href="{% static "commons/css/commons_fix_rtl.css" %}" rel="stylesheet">
+      {% else %}
+        <link href="{% static "bootstrap/css/bootstrap_fix_ltr.css" %}" rel="stylesheet">
+        <link href="{% static "commons/css/commons_fix_ltr.css" %}" rel="stylesheet">
+      {% endif %}
+    {% endif %}
     <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
     <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
     <script src="https://use.fontawesome.com/d391635073.js"></script>
