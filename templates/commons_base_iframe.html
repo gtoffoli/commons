@@ -1,7 +1,9 @@
-{% load staticfiles i18n %}
-{% comment %}{% load url from future %}{% endcomment %}
+{% load staticfiles %}
+{% load i18n %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+{% load commons_tags %}
+
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
   <head>
     <meta charset="utf-8">
     {% block languages %}
@@ -23,6 +25,7 @@
         <link href="{% static "commons/css/commons_fix_ltr.css" %}" rel="stylesheet">
       {% endif %}
     {% endif %}
+    {% endwith %}
     <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
     <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
     <script src="https://use.fontawesome.com/d391635073.js"></script>
