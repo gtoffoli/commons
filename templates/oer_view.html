@@ -2,7 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block head_title %}OER: {{ oer.title }}{% endblock %}
+{% block head_title %}{% blocktrans with oer_title=oer.title %}{{ oer_title }} [OER]{% endblocktrans %}{% endblock %}
 {% block extra_style %}
 <style>
   .iframe-touch {

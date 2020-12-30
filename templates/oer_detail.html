@@ -1,7 +1,7 @@
 {% extends "commons_base.html" %}
 {% load staticfiles i18n %}
 
-{% block head_title %}OER: {{ oer.title }}{% endblock %}
+{% block head_title %}{% blocktrans with oer_title=oer.title%}{{ oer_title }} [OER]{% endblocktrans %}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
@@ -60,7 +60,7 @@ dl.eval dd:nth-child(even) {
         <div class="hidden-xs">
            <div class="posRel">
               <div class="{% if not oer.small_image %}bg_view {% endif %}floatL text-center">{% if oer.small_image%}<img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>{%endif%}
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% blocktrans %}view resource: {{ oer_url }}{% endblocktrans %}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
         </div>
@@ -68,11 +68,11 @@ dl.eval dd:nth-child(even) {
            {% if oer.small_image %}
            <div class="posRel">
               <div class="floatL text-center"><img src="/media/{{ oer.small_image }}" class="img-responsive marginT5 paddingR10"><br>
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% blocktrans %}view resource: {{ oer_url }}{% endblocktrans %}">{% trans "view resource" %}</a></div>
               <p>{{ oer.description }}</p>
            </div>
            {% else %}
-           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></p>
+           <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% blocktrans %}view resource: {{ oer_url }}{% endblocktrans %}">{% trans "view resource" %}</a></p>
            <p>{{ oer.description }}</p>
            {% endif %}
         </div>
@@ -87,11 +87,11 @@ dl.eval dd:nth-child(even) {
         <div class="hidden-xs">
            <div class="posRel">
               <div class="bg_view floatL text-center">
-                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></div>
+                <a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% blocktrans %}view resource: {{ oer_url }}{% endblocktrans %}">{% trans "view resource" %}</a></div>
            </div>
         </div>
         <div class="visible-xs">
-          <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% trans "view resource" %}: {{ oer_url }}">{% trans "view resource" %}</a></p>
+          <p class="bg_view"><a href="/oer/{{ oer.slug }}/view/" class="btn btn-c2" title="{% blocktrans %}view resource: {{ oer_url }}{% endblocktrans %}">{% trans "view resource" %}</a></p>
         </div>
       {% endif %}
       {% if oer.material %}
@@ -207,7 +207,7 @@ dl.eval dd:nth-child(even) {
                <input type="hidden" id="id" name="id" value="{{ oer.id }}">
                <div>{{ form.non_field_errors }}</div>
                <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
+               <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value="add" %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
                   {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
                </div>
                </form></dd>
@@ -223,7 +223,7 @@ dl.eval dd:nth-child(even) {
             {% include "_change_state.html" with data=oer type_object="oer" %}
           {% else %}
             <div class="marginB5"><span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ oer.get_title_color }};">{{ oer.get_state }}</span></div>
-            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "to be able to publish this OER you must, fill some required fields"|capfirst %}.</div>
+            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "to be able to publish this OER you must, fill some required fields."|capfirst %}</div>
           {% endif %}
           {% if is_published or is_un_published %}
             <dl class="font14 marginB20 marginT10 paddingT10 borderTdotted">

@@ -4,16 +4,20 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% if lp %}{% trans "edit learning path"|capfirst %}: {{ lp.title }}{% else %}{% trans "add learning path"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if lp %}{% blocktrans with lp_title=lp.title %}{{ lp_title }} [edit learning path]{% endblocktrans %}{% else %}{% trans "add learning path"|capfirst %}{% endif %}{% endblock %}
 
 {% block body_class %}lp_edit{% endblock %}
 {% block body %}
 {% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="panel-heading-c1 padding1020">
-    <h2 class="marginTB5">{% if lp %}<small class="c-white">{% trans "edit learning path"|capfirst %}:</small> {{ lp.title }} <small class="c-white">[{{ lp.get_state }}]</small>{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
-    <h4>{% if lp and lp.project or current_project %}<small class="c-white">{% trans "in the project" %}</small> {% if lp and lp.project %}{{lp.project}}{% elif current_project %}{{current_project.get_name}}{% endif %}{% endif %}</h4>
-
+    {% if lp %}
+        {% trans "edit learning path"|capfirst %}
+    {% endif %}
+    <h2 class="marginTB5">{% if lp %}{{ lp.title }} <small class="c-white">[{{ lp.get_state }}]</small>{% else %}{% trans "add learning path"|capfirst %}{% endif %}</h2>
+    {% if proj_name %}
+       <h4>{% blocktrans with class_name='c-white' %}<small class="{{class_name}}">in the project</small> {{proj_name}}{% endblocktrans %}</h4>
+    {% endif %}
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}

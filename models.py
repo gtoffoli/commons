@@ -2699,8 +2699,8 @@ class SharedLearningPath(models.Model):
 
     class Meta:
         unique_together = ('lp', 'project')
-        verbose_name = _('shared Learning Path')
-        verbose_name_plural = _('shared Learning Paths')
+        verbose_name = _('shared LP')
+        verbose_name_plural = _('shared LPs')
 
     def __str__(self):
         return '\u21D2 %s' % self.lp.title
@@ -3088,7 +3088,7 @@ class TaggedLP(models.Model):
         db_table = 'taggit_taggeditem'
         auto_created = True
         verbose_name = _('Tagged LP')
-        verbose_name_plural = _('Tagged LPss')
+        verbose_name_plural = _('Tagged LPs')
 
 """
 Con la versione generica NON PARTE NEANCHE !!!

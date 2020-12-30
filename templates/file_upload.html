@@ -7,11 +7,11 @@
 </style>
 {% endblock %}
 
-{% block head_title %}{{ page_title|capfirst }}{% endblock %}
+{% block head_title %}{% trans "upload file with list of candidate members"|capfirst %}{% endblock %}
 
 {% block body %}
-   <h1 class="text-center">{{ page_title|capfirst }}</h1>
-   {% if page_subtitle %}<h3 class="text-center">{{ page_subtitle }}</h3>{% endif %}
+   <h1 class="text-center">{% trans "upload file with list of candidate members"|capfirst %}</h1>
+   {% if project.name %}<h3 class="text-center">{% blocktrans with project_name=project.name %}community or project: {{ project_name }}{% endblocktrans %}</h3>{% endif %}
 
     <section>
         <div class="container">
@@ -20,7 +20,7 @@
         <input type="hidden" id="id" name="project" value="{{ project.id }}">
         <div>{{ form.non_field_errors }}</div>
         <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
-        <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value='{% trans "add"|capfirst %}'><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
+        <div class="marginB10"><button type="submit" id="add" name="add" class="btn btn-default" value="add"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload" %}</button>
            {% if form.docfile.errors %}&nbsp; <button type="submit" name="cancel" id="cancel" value="cancel" class="btn btn-default">{% trans "cancel"|capfirst %}</button>{% endif %}
         </div>
         </form>

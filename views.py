@@ -1875,8 +1875,10 @@ def bulk_add_members(request, project_slug=None):
             var_dict['n_accounts'] = len(accounts)
             var_dict['accounts'] = accounts
             return render(request, 'bulk_add_members.html', var_dict)
+    """
     var_dict['page_title'] = _('upload file with list of candidate members')
     var_dict['page_subtitle'] = string_concat(_('community or project: '), project.name)
+    """
     var_dict['form'] = DocumentUploadForm()
     return render(request, 'file_upload.html', var_dict)
         
@@ -2086,30 +2088,6 @@ def project_mailing_list(request, project_slug):
     emails = ['%s <%s>' % (member.get_display_name(), member.email) for member in members]
     return HttpResponse(', '.join(emails), content_type="text/plain")
 
-def repo_list(request):
-    user = request.user
-    can_add = user.is_authenticated and user.can_add_repo(request)
-    repo_list = []
-    for repo in Repo.objects.filter(state=PUBLISHED).order_by('name'):
-        oers = OER.objects.filter(source=repo, state=PUBLISHED)
-        n = len(oers)
-        repo_list.append([repo, n])
-    return render(request, 'repo_list.html', {'can_add': can_add, 'repo_list': repo_list,})
-
-def repos_by_user(request, username):
-    user = get_object_or_404(User, username=username)
-    can_add = user.is_authenticated and user.can_add_repo(request) and user==request.user
-    if user == request.user:
-        repos = Repo.objects.filter(creator=user).order_by('-created')
-    else:
-        repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
-    repo_list = []
-    for repo in repos:
-        oers = OER.objects.filter(source=repo, state=PUBLISHED)
-        n = len(oers)
-        repo_list.append([repo, n])
-    return render(request, 'repo_list.html', {'can_add': can_add, 'repo_list': repo_list, 'user': user, 'submitter': user})
-
 def repo_detail(request, repo_id, repo=None):
     protocol = request.is_secure() and 'https' or 'http'
     if not repo:
@@ -2296,36 +2274,6 @@ def repo_un_publish(request, repo_id):
     repo = Repo.objects.get(pk=repo_id)
     repo.un_publish(request)
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
-
-def browse_repos(request):
-    form = RepoSearchForm
-    field_names = ['features', 'languages', 'subjects', 'repo_type',]
-    browse_list = []
-    base_fields = form.base_fields
-    for field_name in field_names:
-        field = base_fields[field_name]
-        field_label = pgettext(RequestContext(request), field.label)
-        queryset = field.queryset
-        entries = []
-        for entry in queryset:    
-            try:
-                code = entry.code
-                label = entry.name
-            except:
-                try:
-                    label = entry.name
-                    code = entry.id
-                except:
-                    label = entry.description
-                    code = entry.name
-            try:
-                prefix = '-' * entry.level
-            except:
-                prefix = ''
-            n = Repo.objects.filter(**{field_name: entry}).count()
-            entries.append([code, label, prefix, n])
-        browse_list.append([field_name, field_label, entries])
-    return render(request, 'browse_repos.html', {'field_names': field_names, 'browse_list': browse_list,})
 
 def browse(request):
     form = LpSearchForm
@@ -2821,10 +2769,16 @@ def oer_edit(request, oer_id=None, project_id=None):
             raise PermissionDenied
         action = '/oer/%s/edit/' % oer.slug
         current_project = get_object_or_404(Project, id=oer.project_id)
+        proj_name = current_project.name
+        print ("===== OER ====")
+        print (proj_name)
         if not oer.can_edit(request):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if project_id:
         current_project = get_object_or_404(Project, id=project_id)
+        proj_name = current_project.name
+        print ("==== poject_id ======")
+        print (proj_name)
         action = '/project/%s/oer_new/' % project_id
     if request.POST:
         oer_id = request.POST.get('id', '')
@@ -2832,15 +2786,12 @@ def oer_edit(request, oer_id=None, project_id=None):
             oer = get_object_or_404(OER, id=oer_id)
             action = '/oer/%s/edit/' % oer.slug
             project_id = oer.project_id
+            proj_name = oer.project
             if project_id:
                 current_project = get_object_or_404(Project, id=project_id)
+                proj_name = current_project.name
             else:
                 current_project = None
-        """
-        if not project_id:
-            projectId = request.POST.get('project', '')
-            current_project = get_object_or_404(Project, id=project_id)
-        """
         form = OerForm(request.POST, instance=oer)
         metadata_formset = OerMetadataFormSet(request.POST, instance=oer)
         if request.POST.get('save', '') or request.POST.get('continue', ''):
@@ -2879,7 +2830,7 @@ def oer_edit(request, oer_id=None, project_id=None):
                 go_caller = '/project/%s/' % current_project.slug
             else:
                 go_caller = '#'
-            return render(request, 'oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'current_project':current_project, 'go_caller': go_caller})
+            return render(request, 'oer_edit.html', {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'action': action, 'proj_name':proj_name, 'go_caller': go_caller})
         elif request.POST.get('cancel', ''):
             if oer:
                 return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -2896,9 +2847,11 @@ def oer_edit(request, oer_id=None, project_id=None):
     data_dict = {'form': form, 'metadata_formset': metadata_formset, 'oer': oer, 'object': oer}
     current_language = get_current_language()
     if project_id:
-        data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
+        current_project = get_object_or_404(Project, id=project_id)
+        data_dict['proj_name'] = current_project.name
     else:
-        data_dict['current_project'] = current_project = None
+        current_project = None
+        data_dict['proj_name'] = proj_name
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = oer and oer.original_language and not oer.original_language==current_language or False
     if oer_id:
@@ -3565,9 +3518,11 @@ def lp_download_by_slug(request, lp_slug):
 def lp_edit(request, lp_id=None, project_id=None):
     user = request.user
     lp = None
+    proj_name = None
     action = '/lp/edit/'
     if lp_id:
         lp = get_object_or_404(LearningPath, pk=lp_id)
+        proj_name = lp.project
         if not lp.can_access(user):
             raise PermissionDenied
         action = '/lp/%s/edit/' % lp.slug
@@ -3605,8 +3560,7 @@ def lp_edit(request, lp_id=None, project_id=None):
                 print (form.errors)
             if projectId:
                 current_project = get_object_or_404(Project, id=projectId)
-            else:
-                current_project = None
+                proj_name = current_project.name
             if lp_id or lp:
                 go_caller = '/lp/%s/' % lp.slug
             elif project_id:
@@ -3616,7 +3570,7 @@ def lp_edit(request, lp_id=None, project_id=None):
                 go_caller = '/my_home/'
             else:
                 go_caller = '#'
-            return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'current_project': current_project, 'go_caller': go_caller})
+            return render(request, 'lp_edit.html', {'form': form, 'lp': lp, 'action': action, 'proj_name': proj_name, 'go_caller': go_caller})
         elif request.POST.get('cancel', ''):
             if lp:
                 return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -3640,10 +3594,11 @@ def lp_edit(request, lp_id=None, project_id=None):
     data_dict = {'form': form, 'lp': lp, 'object': lp, 'action': action}
     current_language = get_current_language()
     if project_id:
-        data_dict['current_project'] = current_project = get_object_or_404(Project, id=project_id)
+        current_project = get_object_or_404(Project, id=project_id)
+        data_dict['proj_name'] = current_project.name
         data_dict ['go_caller'] = '/project/%s/' % current_project.slug
     else:
-        data_dict['current_project'] = current_project = None
+        data_dict['proj_name'] = proj_name
         data_dict ['go_caller'] = '#'
     data_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
     data_dict['language_mismatch'] = lp and lp.original_language and not lp.original_language==current_language or False

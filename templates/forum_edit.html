@@ -4,13 +4,13 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% trans "edit forum"|capfirst %}: &nbsp;{{ forum.name }}{% endblock %}
+{% block head_title %}{% blocktrans with forum_name=forum.name %}Edit forum: {{ forum_name }}{% endblocktrans %}{% endblock %}
 
 {% block body %}
 <div class="container">
   <div class="col-sm-12">
     <section>
-       <h2 class="text-center">{% trans "edit forum"|capfirst %}: <i>{{ forum.name }}</i></h2>
+       <h2 class="text-center">{% blocktrans with forum_name=forum.name %}Edit forum: {{ forum_name }}{% endblocktrans %}</h2>
     <form method="post" action="{{ action }}" id="forum_edit_form" class="form-horizontal">
 	{% csrf_token %}
 	{% if forum %}<input type="hidden" id="id" name="id" value="{{ forum.id }}" />{% endif %}

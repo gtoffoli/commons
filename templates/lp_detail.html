@@ -1,7 +1,7 @@
 {% extends "commons_base.html" %}
 {% load staticfiles i18n %}
 
-{% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+{% block head_title %}{% blocktrans with lp_title=lp.title %}{{ lp_title }} [learning path]{% endblocktrans %}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 {% block extra_style %}
@@ -165,10 +165,10 @@ font-weight: 600;
             &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_collection/" method="post" id="make_collection_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to simple collection" %}" id="submit_make_collection_{{ lp.id }}"><i class="fa fa-ellipsis-h"></i></button></form>
             {% endif %}
             {% if can_make_dag %}
-            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" id="make_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "in tree form" %}: {% trans "suggested only for few nodes" %}!" id="submit_make_dag_{{ lp.id }}"><i class="fa fa-sitemap"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_tree_dag/" method="post" id="make_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type in tree form: suggested only for few node!" %}" id="submit_make_dag_{{ lp.id }}"><i class="fa fa-sitemap"></i></button></form>
             {% endif %}
             {% if can_make_unconnected_dag %}
-            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" id="make_unconnected_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type" %} {% trans "with unconnected nodes" %}" id="submit_unconnected_dag_{{ lp.id }}"><i class="fa fa-ellipsis-v"></i></button></form>
+            &nbsp;&nbsp; <form class="view_inline convert" action="/lp/{{ lp.id }}/make_unconnected_dag/" method="post" id="make_unconnected_dag_{{ lp.id }}">{% csrf_token %}<button type="submit" class="btn-link" title="{% trans "convert to graph type with unconnected nodes" %}" id="submit_unconnected_dag_{{ lp.id }}"><i class="fa fa-ellipsis-v"></i></button></form>
             {% endif %}
           </dd>
         </dl>
@@ -227,7 +227,7 @@ font-weight: 600;
             {% if can_edit and lp.original_language and not language_mismatch %}
               <dd class="marginT10"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
-                <dd class="marginT5"><a id="{{ oer.id }}" href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default add_node_oer">{% trans "add node with OER"|capfirst %}: <span class="demiBold">{{ oer.title|truncatewords:5 }}</span></a></dd>
+                <dd class="marginT5"><a id="{{ oer.id }}" href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default add_node_oer">{% blocktrans with class_name='demiBold' oer_title=oer.title|truncatewords:5 %}Add node with OER <span class="{{class_name}}">{{ oer_title }}</span>{% endblocktrans %}</a></dd>
               {% endfor %}{% endif %}
             {% endif %}
           </dl>

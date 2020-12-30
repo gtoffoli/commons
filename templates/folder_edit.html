@@ -2,14 +2,14 @@
 
 {% load staticfiles i18n%}
 
-{% block head_title %}{% trans "edit folder"|capfirst %}: &nbsp;{{ folder.get_title }}{% endblock %}
+{% block head_title %}{% blocktrans with folder_title=folder.get_title %}Edit folder: {{folder_title}}{% endblocktrans%}{% endblock %}
 
 {% block body_class %}folder_edit{% endblock %}
 
 {% block body %}
 <div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
   <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
-    <h2 class="marginTB5"><small {% if proj_type_name in 'roll,ment' %}class="c-white"{% endif %}>{% trans "edit folder"|capfirst %}:</small> {{ folder.get_title }}</h2>
+    <h2 class="marginTB5">{% trans "edit folder"|capfirst %}</h2>
   </div>
   <form method="post" action="{{ field }}" id="folder_edit_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}

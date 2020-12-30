@@ -2,7 +2,13 @@
 {% load staticfiles %}
 {% load i18n %}
 
-{% block head_title %}{% if node %}{% trans "node"|capfirst %}: {{ node.label }} [{% trans "document" %}]{% elif oer %}OER: {{ oer.title }} [{% trans "document" %}]{% endif %}{% endblock %}
+{% block head_title %}
+{% if node %}
+{% blocktrans with node_label=node.label %}Node: {{ node_label }} [document]{% endblocktrans %}
+{% elif oer %}
+% blocktrans with oer_title=oer.title %}OER: {{ oer_title }} [document]{% endblocktrans %}
+{% endif %}
+{% endblock %}
 
 {% block extra_style %}
 <style>
@@ -40,7 +46,7 @@
        <a href="/project/{{ project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font18 c-black" aria-hidden="true"></i></a>
     </p>
   {% elif profile %}
-     <h5 class="pull-left ">{% trans "curriculum"|capfirst %}: {{  profile.get_display_name }}</h5>
+     <h5 class="pull-left ">{% blocktrans with profile_name=profile.get_display_name %}Curriculum: {{ profile_name }}{% endblocktrans %}</h5>
      <p class="pull-right paddingT10 paddingLR5">
        <a href="{% if request.user.get_username == profile.get_username %}/my_profile/{% else %}/profile/{{ profile.get_username }}/{% endif %}"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>
@@ -48,7 +54,7 @@
 
   {% endif %}
   </div>
-{% endblock %}
+{% endblock  nav %}
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">

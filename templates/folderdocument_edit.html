@@ -1,15 +1,15 @@
 {% extends "commons_base.html" %}
 
 {% load staticfiles i18n%}
-
-{% block head_title %}{% trans "edit document in folder"|capfirst %}: &nbsp;{{ folder.get_title }}{% endblock %}
+{% block head_title %}{% blocktrans with folder_title=folder.get_title %}Edit document in folder: {{folder_title}}{% endblocktrans %}{% endblock %}
 
 {% block body_class %}folder_document_edit{% endblock %}
 
 {% block body %}
 <div class="panel panel-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} text-left marginTB30">
   <div class="panel-heading-c{% if proj_type_name in 'roll,ment' %}0{% else %}4{% endif %} padding1020">
-    <h2 class="marginTB5"><small {% if proj_type_name in 'roll,ment' %}class="c-white"{% endif %}>{% trans "edit document in folder"|capfirst %}:</small> {{ folder.get_title }}</h2>
+    <h2 class="marginTB5">{% trans "edit document"|capfirst %}</h2>
+    <p class="marginTB5"><i class="fa fa-folder-open" aria-hidden="true"></i> {{folder.get_title}}</p>
   </div>
   <form method="post" action="{{ field }}" id="folderdocument_edit_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}

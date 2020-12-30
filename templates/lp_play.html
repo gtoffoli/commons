@@ -1,7 +1,7 @@
 {% extends "commons_base.html" %}
 {% load i18n staticfiles %}
 
-{% block head_title %}{% trans "learning path"|capfirst %}: {{ lp.title }}{% endblock %}
+{% block head_title %}{% blocktrans with lp_title=lp.title %}{{lp_title}} [learning path]{% endblocktrans %}{% endblock %}
 
 {% block extra_style %}
 <link rel="stylesheet" href="{% static 'commons/css/jquery-ui.min.css' %}">

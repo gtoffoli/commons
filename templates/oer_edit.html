@@ -4,13 +4,9 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% if oer %}{% trans "edit OER"|capfirst %}: {{ oer.title }}{% else %}{% trans "add OER"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if oer %}{% blocktrans with oer_title=oer.title %}{{ oer_title }} [edit OER]{% endblocktrans %}{% else %}{% trans "add OER"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_style %}
-{% comment %}
-   <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
-   <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
-{% endcomment %}
 {% include "_select2_css.html" %}
 {% endblock %}
 
@@ -19,8 +15,13 @@
 {% include "_resource_edit_lang_msg.html" %}
 <div class="panel panel-c2 text-left marginTB30">
   <div class="panel-heading-c2 padding1020">
-    <h2 class="marginTB5">{% if oer %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ oer.title }} <small class="c-white">[{{ oer.get_state }}]</small>{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
-    <h4><small class="c-white">{% trans "in the project" %}</small> {% if oer %}{{oer.project}}{% elif current_project %}{{current_project.get_name}}{% endif %}</h4>
+    {% if oer %}
+        {% trans "edit OER"|capfirst %}
+    {% endif %}
+    <h2 class="marginTB5">{% if oer %}{{ oer.title }} <small class="c-white">[{{ oer.get_state }}]</small>{% else %}{% trans "add OER"|capfirst %}{% endif %}</h2>
+    {% if proj_name %}
+    <h4>{% blocktrans with class_name='c-white' %}<small class="{{class_name}}">in the project</small> {{proj_name}}{% endblocktrans %}</h4>
+    {% endif %}
   </div>
   <form method="post" action="{{ action }}" id="edit_form">
     {% csrf_token %}

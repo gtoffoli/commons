@@ -79,7 +79,10 @@ background: white;
                <li class="marginB20">
                  <h5 class="marginB5"><a href="/project/{{ roll.slug }}/">{{ roll.name }}</a></h5>
                  <p class="marginB5"><i>{{ roll.description }}</i></p>
-                 <p class="font13">{% trans "community"|capfirst %}: <a href="/project/{{ roll.get_parent.slug }}/">{{ roll.get_parent.name }}</a></p>
+                 <p class="font13">
+                    {% blocktrans with roll_parent_name=roll.get_parent.name roll_parent_slug=roll.get_parent.slug %}Community: <a href="/project/{{ roll_parent_slug }}/">{{ roll_parent_name }}</a>{% endblocktrans %}
+
+                </p>
                </li>
              {% endfor %}
              </ul>
