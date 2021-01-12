@@ -2,9 +2,7 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}
-	{% trans "results of project"|capfirst %}: {{ project.get_name }}
-{% endblock %}
+{% block head_title %}{{ project.get_name }} [{% trans "results of project"|capfirst %}]{% endblock %}
 {% block extra_style %}
 <style>
  div.contentBody {

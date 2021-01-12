@@ -43,11 +43,7 @@ dl.eval dd:nth-child(even) {
                <div class="col-sm-7 col-md-7 col-lg-7">
                    <p id="v_{{ sub.id }}" class="marginB0"><a href="{{ sub.get_absolute_url }}"><i class="fa fa-folder" aria-hidden="true"></i> {{ sub.get_title }}</a></p>
                    <p class="font12" class="marginB0">
-                    {% if sub.user.user_active %}
-                        {% blocktrans with path='/profile/' user_url=sub.user.username name_user=sub.user.get_display_name %}Created by <a href="{{path}}{{ user_url }}">{{name_user}}</a>{% endblocktrans %}
-                    {% else %}
-                        {% blocktrans with name_user=sub.user.get_display_name %}Created by {{ name_user }}{% endblocktrans %}
-                    {% endif %}
+                    <span class="demiBold">{% trans "created by"|capfirst %}</span> {% if sub.user.user_active %}<a href="/profile/{{ sub.user.username }}">{{sub.user.get_display_name}}</a>{% else %}{{ sub.user.get_display_name }{% endif %}
                     -- {{ sub.created|date:"d/m/Y" }}</p>
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
@@ -72,20 +68,14 @@ dl.eval dd:nth-child(even) {
                  {% if folderdocument.embed_code %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">{{ folderdocument.label|safe }}</p>
                    <p class="font12" class="marginB0">
-                    {% if folderdocument.user.user_active %}
-                        {% blocktrans with path='/profile/' user_url=folderdocument.user.username name_user=folderdocument.user.get_display_name %}Added by <a href="{{path}}{{ user_url}}">{{ name_user }}</a>{% endblocktrans %}
-                    {% else %}
-                        {% blocktrans with name_user=folderdocument.user.get_display_name %}Added by {{name_user}}{% endblocktrans %}
-                    {% endif %}
+                    <span class="demiBold">{% trans "added by"|capfirst %}</span>
+                    {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{ folderdocument.user.get_display_name }}{% endif %}
                     -- {{ folderdocument.created|date:"d/m/Y" }}</p>
                  {% else %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">{% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
                    <p class="font12" class="marginB0">
-                    {% if folderdocument.user.user_active %}
-                        {% blocktrans with path='/profile/' user_url=folderdocument.user.username name_user=folderdocument.user.get_display_name %}Loaded by <a href="{{path}}{{ user_url}}">{{ name_user }}</a>{% endblocktrans %}
-                    {% else %}
-                        {% blocktrans with name_user=folderdocument.user.get_display_name %}Loaded by {{name_user}}{% endblocktrans %}
-                    {% endif %}
+                    <span class="demiBold">{% trans "loaded by"|capfirst %}</span>
+                    {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{folderdocument.user.get_display_name}}{% endif %}
                     -- {{ document.date_added|date:"d/m/Y" }}</p>
                  {% endif %}
                </div>

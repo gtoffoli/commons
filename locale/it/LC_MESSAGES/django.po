@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-29 17:39+0100\n"
-"PO-Revision-Date: 2020-12-29 17:43+0100\n"
+"POT-Creation-Date: 2021-01-12 12:50+0100\n"
+"PO-Revision-Date: 2021-01-12 12:53+0100\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/"
 "commons-platform/language/it/)\n"
@@ -29,7 +29,7 @@ msgstr "Analitica degli OER"
 #: .\commons\analytics.py:729 .\commons\models.py:1623
 #: .\commons\templates\_menu_analytics.html:12
 #: .\commons\templates\autocomplete.html:14
-#: .\commons\templates\project_results.html:87
+#: .\commons\templates\project_results.html:85
 #: .\commons\templates\resources_by.html:37
 #: .\commons\templates\search_oers.html:12
 msgid "OERs"
@@ -394,7 +394,6 @@ msgstr "testo nel nome e nella descrizione breve"
 #: .\commons\templates\_homepage_main_cta.html:58
 #: .\commons\templates\_homepage_main_cta.html:80
 #: .\commons\templates\project_detail.html:205
-#: .\commons\templates\search_results.html:21
 #: .\commons\templates\user_profile.html:248
 msgid "communities"
 msgstr "comunità"
@@ -412,8 +411,8 @@ msgid "minimum number of OERs"
 msgstr "numero minimo di OER"
 
 #: .\commons\forms.py:256 .\commons\models.py:507 .\commons\models.py:1420
-#: .\commons\templates\active_users.html:24
-#: .\commons\templates\active_users.html:41
+#: .\commons\templates\active_users.html:21
+#: .\commons\templates\active_users.html:38
 msgid "user"
 msgstr "utente"
 
@@ -749,8 +748,7 @@ msgid "type of learning path"
 msgstr "tipo di LP"
 
 #: .\commons\forms.py:499 .\commons\models.py:1438 .\commons\models.py:2028
-#: .\commons\models.py:3115 .\commons\templates\mentoring_detail.html:5
-#: .\commons\templates\project_detail.html:7
+#: .\commons\models.py:3115 .\commons\templates\project_detail.html:7
 #: .\commons\templates\project_detail.html:300
 #: .\commons\templates\project_detail.html:362
 #: .\commons\templates\project_detail.html:374
@@ -824,7 +822,7 @@ msgstr "vedi le pagine di aiuto per dettagli sui LP"
 
 #: .\commons\forms.py:564 .\commons\models.py:503 .\commons\models.py:2742
 #: .\commons\templates\_pathnode_detail.html:31
-#: .\commons\templates\pathnode_edit.html:65
+#: .\commons\templates\pathnode_edit.html:44
 msgid "document"
 msgstr "documento"
 
@@ -987,7 +985,6 @@ msgstr "tutti i mentori"
 #: .\commons\menus.py:37 .\commons\models.py:889
 #: .\commons\templates\project_detail.html:235
 #: .\commons\templates\search_projects.html:12
-#: .\commons\templates\search_results.html:29
 #: .\commons\templates\user_profile.html:268
 msgid "projects"
 msgstr "progetti"
@@ -1017,10 +1014,9 @@ msgstr "tutte le risorse"
 #: .\commons\templates\_homepage_main_cta.html:85
 #: .\commons\templates\_menu_analytics.html:13
 #: .\commons\templates\autocomplete.html:17
-#: .\commons\templates\project_results.html:85
+#: .\commons\templates\project_results.html:83
 #: .\commons\templates\resources_by.html:21
 #: .\commons\templates\search_lps.html:12
-#: .\commons\templates\search_results.html:53
 msgid "learning paths"
 msgstr "percorsi di apprendimento"
 
@@ -1028,7 +1024,7 @@ msgstr "percorsi di apprendimento"
 msgid "open resources"
 msgstr "risorse aperte"
 
-#: .\commons\menus.py:76 .\commons\templates\search_results.html:37
+#: .\commons\menus.py:76
 msgid "source repositories"
 msgstr "fonti"
 
@@ -1147,9 +1143,9 @@ msgstr "aspetti della qualità"
 
 #: .\commons\models.py:77 .\commons\models.py:278 .\commons\models.py:2795
 #: .\commons\views.py:1224 .\commons\views.py:1465 .\commons\views.py:2117
-#: .\commons\views.py:2238 .\commons\views.py:2721 .\commons\views.py:2855
-#: .\commons\views.py:3282 .\commons\views.py:3603 .\commons\views.py:3752
-#: .\commons\views.py:3854
+#: .\commons\views.py:2233 .\commons\views.py:2708 .\commons\views.py:2842
+#: .\commons\views.py:3269 .\commons\views.py:3590 .\commons\views.py:3739
+#: .\commons\views.py:3841
 msgid "unknown"
 msgstr "sconosciuto/a"
 
@@ -1672,7 +1668,7 @@ msgstr "progetto che fa riferimento"
 msgid "shared OER"
 msgstr "OER condiviso"
 
-#: .\commons\models.py:1880 .\commons\templates\mentoring_detail.html:490
+#: .\commons\models.py:1880 .\commons\templates\mentoring_detail.html:480
 #: .\commons\templates\project_detail.html:648
 msgid "shared OERs"
 msgstr "OER condivisi"
@@ -1770,7 +1766,7 @@ msgstr "Percorso di apprendimento a cui si fa riferimento"
 msgid "shared LP"
 msgstr "LP condiviso"
 
-#: .\commons\models.py:2703 .\commons\templates\mentoring_detail.html:465
+#: .\commons\models.py:2703 .\commons\templates\mentoring_detail.html:455
 #: .\commons\templates\project_detail.html:621
 msgid "shared LPs"
 msgstr "LP condivisi"
@@ -2049,8 +2045,8 @@ msgstr "sospendi la pubblicazione"
 
 #: .\commons\templates\_data_confirm_js.html:11
 #: .\commons\templates\_lp_dag.html:165 .\commons\templates\_lp_dag.html:235
-#: .\commons\templates\folder_detail.html:224
-#: .\commons\templates\folder_detail.html:253
+#: .\commons\templates\folder_detail.html:214
+#: .\commons\templates\folder_detail.html:243
 #: .\commons\templates\lp_detail.html:358
 #: .\commons\templates\oer_detail.html:338
 msgid "Yes"
@@ -2058,8 +2054,8 @@ msgstr "Si"
 
 #: .\commons\templates\_data_confirm_js.html:15
 #: .\commons\templates\_lp_dag.html:169 .\commons\templates\_lp_dag.html:239
-#: .\commons\templates\folder_detail.html:228
-#: .\commons\templates\folder_detail.html:257
+#: .\commons\templates\folder_detail.html:218
+#: .\commons\templates\folder_detail.html:247
 #: .\commons\templates\lp_detail.html:362
 #: .\commons\templates\oer_detail.html:342
 msgid "No"
@@ -2067,13 +2063,13 @@ msgstr "No"
 
 #: .\commons\templates\_edit_submit.html:3
 #: .\commons\templates\datatrans\translate.html:60
-#: .\commons\templates\folder_detail.html:169
+#: .\commons\templates\folder_detail.html:159
 #: .\commons\templates\oer_screenshot_upload.html:33
-#: .\commons\templates\profile_avatar_upload.html:30
+#: .\commons\templates\profile_avatar_upload.html:29
 #: .\commons\templates\project_detail.html:723
 #: .\commons\templates\project_detail.html:737
-#: .\commons\templates\project_image_upload.html:34
-#: .\commons\templates\project_logo_upload.html:34
+#: .\commons\templates\project_image_upload.html:31
+#: .\commons\templates\project_logo_upload.html:31
 msgid "save"
 msgstr "salva"
 
@@ -2081,7 +2077,7 @@ msgstr "salva"
 #: .\commons\templates\folder_edit.html:25
 #: .\commons\templates\folderdocument_edit.html:25
 #: .\commons\templates\forum_edit.html:29
-#: .\commons\templates\online_resource_edit.html:27
+#: .\commons\templates\online_resource_edit.html:28
 msgid "save and exit"
 msgstr "salva ed esci"
 
@@ -2090,36 +2086,36 @@ msgstr "salva ed esci"
 #: .\commons\templates\folderdocument_edit.html:26
 #: .\commons\templates\forum_edit.html:30
 #: .\commons\templates\oer_screenshot_upload.html:34
-#: .\commons\templates\online_resource_edit.html:28
-#: .\commons\templates\profile_avatar_upload.html:31
-#: .\commons\templates\project_image_upload.html:35
-#: .\commons\templates\project_logo_upload.html:35
+#: .\commons\templates\online_resource_edit.html:29
+#: .\commons\templates\profile_avatar_upload.html:30
+#: .\commons\templates\project_image_upload.html:32
+#: .\commons\templates\project_logo_upload.html:32
 msgid "exit without saving"
 msgstr "esci senza salvare"
 
-#: .\commons\templates\_footer.html:4 .\commons\templates\commons_base.html:218
+#: .\commons\templates\_footer.html:4 .\commons\templates\commons_base.html:215
 msgid "the CommonS Consortium"
 msgstr "Consorzio CommonS"
 
-#: .\commons\templates\_footer.html:5 .\commons\templates\commons_base.html:219
+#: .\commons\templates\_footer.html:5 .\commons\templates\commons_base.html:216
 msgid "built by"
 msgstr "creato da"
 
-#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:220
+#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:217
 msgid "with"
 msgstr "con"
 
-#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:220
+#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:217
 msgid "and"
 msgstr "e"
 
 #: .\commons\templates\_footer.html:11
-#: .\commons\templates\commons_base.html:225
+#: .\commons\templates\commons_base.html:222
 msgid "privacy policy"
 msgstr "informativa sulla privacy"
 
 #: .\commons\templates\_footer.html:16
-#: .\commons\templates\commons_base.html:230
+#: .\commons\templates\commons_base.html:227
 msgid "The CommonS Project is co-funded by Programme"
 msgstr "Il Progetto CommonS è co-finanziato dal Programma"
 
@@ -2154,18 +2150,6 @@ msgstr "biblioteca di risorse educative"
 msgid "submitted by"
 msgstr "proposto da"
 
-#: .\commons\templates\_info_creator_date.html:10
-#: .\commons\templates\_info_creator_date.html:24
-#: .\commons\templates\_lp_serialize.html:27
-#: .\commons\templates\_pathnode_detail.html:44
-#: .\commons\templates\_pathnode_detail.html:45
-#: .\commons\templates\oer_evaluations.html:61
-#: .\commons\templates\project_detail.html:187
-#: .\commons\templates\project_detail.html:189
-#: .\commons\templates\project_detail.html:193
-msgid "on"
-msgstr "il"
-
 #: .\commons\templates\_info_creator_date.html:12
 msgid "in the project of mentoring"
 msgstr "nel progetto di mentoring"
@@ -2175,19 +2159,17 @@ msgstr "nel progetto di mentoring"
 msgid "in the project"
 msgstr "nel progetto"
 
-#: .\commons\templates\_info_creator_date.html:17
-#: .\commons\templates\_pathnode_detail.html:45
-#: .\commons\templates\project_detail.html:189
-#: .\commons\templates\project_detail.html:193
-msgid "last updated"
-msgstr "ultima modifica"
-
 #: .\commons\templates\_info_creator_date.html:18
 #: .\commons\templates\_pathnode_detail.html:45
-#: .\commons\templates\_selected_mentor.html:18
 #: .\commons\templates\project_detail.html:193
-msgid "by"
-msgstr "da"
+msgid "last updated by"
+msgstr "ultima modifica da"
+
+#: .\commons\templates\_info_creator_date.html:26
+#: .\commons\templates\_pathnode_detail.html:45
+#: .\commons\templates\project_detail.html:189
+msgid "last updated"
+msgstr "ultima modifica"
 
 #: .\commons\templates\_login_model.html:36
 msgid "Create an account"
@@ -2216,6 +2198,11 @@ msgstr "AVVERTIMENTO IMPORTANTE"
 #: .\commons\templates\_lp_serialize.html:26
 msgid "this document has been produced by"
 msgstr "questo documento è stato prodotto da"
+
+#: .\commons\templates\_lp_serialize.html:27
+#: .\commons\templates\project_detail.html:187
+msgid "on"
+msgstr "il"
 
 #: .\commons\templates\_lp_serialize.html:28
 msgid "for personal use"
@@ -2345,7 +2332,7 @@ msgid "show player view"
 msgstr "mostra la vista player"
 
 #: .\commons\templates\_pathnode_detail.html:32
-#: .\commons\templates\folder_detail.html:103
+#: .\commons\templates\folder_detail.html:93
 #: .\commons\templates\lp_play.html:143 .\commons\templates\lp_play.html:165
 #: .\commons\templates\mentoring_detail.html:238
 #: .\commons\templates\oer_detail.html:196
@@ -2354,8 +2341,8 @@ msgid "download"
 msgstr "scarica"
 
 #: .\commons\templates\_pathnode_detail.html:33
-#: .\commons\templates\folder_detail.html:100
-#: .\commons\templates\folder_detail.html:106
+#: .\commons\templates\folder_detail.html:90
+#: .\commons\templates\folder_detail.html:96
 #: .\commons\templates\mentoring_detail.html:239
 #: .\commons\templates\oer_detail.html:197
 #: .\commons\templates\project_detail.html:749
@@ -2379,7 +2366,6 @@ msgstr "numero di membri"
 
 #: .\commons\templates\_project_card.html:24
 #: .\commons\templates\_project_card.html:27
-#: .\commons\templates\mentoring_detail.html:5
 #: .\commons\templates\mentoring_detail.html:168
 #: .\commons\templates\project_detail.html:7
 #: .\commons\templates\project_detail.html:165
@@ -2544,7 +2530,7 @@ msgid "Reset"
 msgstr "Reset"
 
 #: .\commons\templates\_search_form.html:17 .\commons\views.py:801
-#: .\commons\views.py:4036 .\commons\views.py:4229 .\commons\views.py:4326
+#: .\commons\views.py:4023 .\commons\views.py:4216 .\commons\views.py:4313
 msgid "include non published items"
 msgstr "includi gli elementi non pubblicati"
 
@@ -2556,6 +2542,10 @@ msgstr "mentore scelto"
 #: .\commons\templates\_selected_mentor.html:18
 msgid "the request has been sent to the mentor on"
 msgstr "la richiesta è stata inviata al mentore il"
+
+#: .\commons\templates\_selected_mentor.html:18
+msgid "by"
+msgstr "da"
 
 #: .\commons\templates\_selected_mentor.html:24
 msgid "the community administrator hasn't chosen a mentor yet"
@@ -2731,84 +2721,84 @@ msgstr ""
 "essa per completare la procedura di registrazione. Per favore contattaci se "
 "non la ricevi entro pochi minuti."
 
-#: .\commons\templates\active_users.html:10
-#: .\commons\templates\active_users.html:16
+#: .\commons\templates\active_users.html:5
+#: .\commons\templates\active_users.html:13
 msgid "recently active users"
 msgstr "utenti attivi di recente"
 
-#: .\commons\templates\active_users.html:17
-msgid "being members of projects shared with me"
-msgstr "che sono membri di progetti condivisi"
+#: .\commons\templates\active_users.html:11
+msgid ""
+"Recently active users <small>being members of projects shared with me</small>"
+msgstr ""
+"Utenti attivi di recente <small>che sono membri di progetti condivisi</small>"
 
-#: .\commons\templates\active_users.html:21
+#: .\commons\templates\active_users.html:17
 msgid "users online"
 msgstr "utenti online"
 
-#: .\commons\templates\active_users.html:21
+#: .\commons\templates\active_users.html:18
 msgid "active during last 5 minutes"
 msgstr "attivi durante gli ultimi 5 minuti"
 
-#: .\commons\templates\active_users.html:24
+#: .\commons\templates\active_users.html:21
 msgid "last active"
 msgstr "attivo l'ultima volta"
 
-#: .\commons\templates\active_users.html:30
+#: .\commons\templates\active_users.html:27
 msgid "seconds ago"
 msgstr "secondi fà"
 
-#: .\commons\templates\active_users.html:38
+#: .\commons\templates\active_users.html:35
 msgid "users no more online"
 msgstr "utenti non più online"
 
-#: .\commons\templates\active_users.html:41
+#: .\commons\templates\active_users.html:38
 msgid "last seen"
 msgstr "attivo l'ultima volta"
 
-#: .\commons\templates\activity_stream.html:6
+#: .\commons\templates\activity_stream.html:7
+#: .\commons\templates\activity_stream.html:25
 #, python-format
-msgid "Recent activity by %(actor.get_display_name)s"
-msgstr "Attività recente di %(actor.get_display_name)s"
+msgid "Recent activity by %(the_actor)s"
+msgstr "Attività recente di %(the_actor)s"
 
 #: .\commons\templates\activity_stream.html:7
+#: .\commons\templates\activity_stream.html:25
 #, python-format
-msgid "Recent activity by %(project_name)s"
-msgstr "Attività recente di %(project_name)s"
+msgid "Recent activity by %(the_project)s"
+msgstr "Attività recente di %(the_project)s"
 
-#: .\commons\templates\activity_stream.html:11
-#: .\commons\templates\activity_stream.html:29
+#: .\commons\templates\activity_stream.html:7
+#: .\commons\templates\activity_stream.html:25
 #: .\commons\templates\project_detail.html:676
 msgid "recent activity"
 msgstr "attività recente"
 
-#: .\commons\templates\activity_stream.html:29
-msgid "recent activity in"
-msgstr "attività recente in"
-
-#: .\commons\templates\activity_stream.html:35
+#: .\commons\templates\activity_stream.html:30
 msgid "time"
 msgstr "data e ora"
 
-#: .\commons\templates\activity_stream.html:35
+#: .\commons\templates\activity_stream.html:30
 msgid "actor"
 msgstr "attore"
 
-#: .\commons\templates\activity_stream.html:36
+#: .\commons\templates\activity_stream.html:31
 msgid "verb"
 msgstr "verbo"
 
-#: .\commons\templates\activity_stream.html:36
+#: .\commons\templates\activity_stream.html:31
 msgid "object type"
 msgstr "tipo di oggetto"
 
-#: .\commons\templates\activity_stream.html:36
+#: .\commons\templates\activity_stream.html:31
 msgid "object"
 msgstr "oggetto"
 
-#: .\commons\templates\activity_stream.html:36
+#: .\commons\templates\activity_stream.html:31
 msgid "context"
 msgstr "contesto"
 
-#: .\commons\templates\activity_stream.html:52
+#: .\commons\templates\activity_stream.html:47
 msgid "no actions were found"
 msgstr "non risulta alcuna azione"
 
@@ -2887,9 +2877,8 @@ msgid "Please correct the errors below."
 msgstr ""
 
 #: .\commons\templates\autocomplete.html:5
-#: .\commons\templates\count_users.html:25
+#: .\commons\templates\count_users.html:20
 #: .\commons\templates\project_detail.html:522
-#: .\commons\templates\search_results.html:13
 msgid "members"
 msgstr "membri"
 
@@ -2927,8 +2916,6 @@ msgid "all mentors"
 msgstr "tutti i mentori"
 
 #: .\commons\templates\browse_mentors.html:52
-#: .\commons\templates\mentoring_support.html:5
-#: .\commons\templates\mentoring_support.html:11
 #: .\commons\templates\user_profile.html:258
 msgid "rolls of mentors"
 msgstr "albi dei mentori"
@@ -2946,7 +2933,6 @@ msgstr ""
 "Comunità: <a href=\"project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
 
 #: .\commons\templates\browse_mentors.html:90
-#: .\commons\templates\mentoring_support.html:21
 msgid "no mentoring activity started yet"
 msgstr "non è in corso alcuna attività di mentoring"
 
@@ -3001,8 +2987,8 @@ msgstr "Commenta come"
 msgid "Post"
 msgstr "Invia"
 
-#: .\commons\templates\commons_base.html:252
-#: .\commons\templates\livesearch.html:11
+#: .\commons\templates\commons_base.html:249
+#: .\commons\templates\livesearch.html:9
 msgid "Search ... (enter at least 3 characters)"
 msgstr "Cerca ... (inserisci almeno 3 caratteri)"
 
@@ -3027,8 +3013,8 @@ msgid "cataloguing of OERs"
 msgstr "catalogazione degli OER"
 
 #: .\commons\templates\contributors.html:59
-msgid "evaluation of OERs"
-msgstr "valutazione di OER"
+msgid "OERs evaluations"
+msgstr "valutazioni di OER"
 
 #: .\commons\templates\contributors.html:80
 msgid "cataloguing of OER sources"
@@ -3038,40 +3024,40 @@ msgstr "catalogazione delle fonti di OER"
 msgid "no community is present."
 msgstr "non è presente alcuna comunità."
 
-#: .\commons\templates\count_users.html:10
-#: .\commons\templates\count_users.html:13
+#: .\commons\templates\count_users.html:5
+#: .\commons\templates\count_users.html:8
 msgid "count of users and members"
 msgstr "conteggio degli utenti e dei membri"
 
-#: .\commons\templates\count_users.html:19
+#: .\commons\templates\count_users.html:14
 msgid "user class"
 msgstr "classe di utente"
 
-#: .\commons\templates\count_users.html:19
+#: .\commons\templates\count_users.html:14
 msgid "user count"
 msgstr "numero degli utenti"
 
-#: .\commons\templates\count_users.html:22
+#: .\commons\templates\count_users.html:17
 msgid "all users"
 msgstr "tutti gli utenti"
 
-#: .\commons\templates\count_users.html:23
+#: .\commons\templates\count_users.html:18
 msgid "regular profiles"
 msgstr "profili regolari"
 
-#: .\commons\templates\count_users.html:24
+#: .\commons\templates\count_users.html:19
 msgid "profiles with avatars"
 msgstr "profili con avatar"
 
-#: .\commons\templates\count_users.html:26
+#: .\commons\templates\count_users.html:21
 msgid "accepted members"
 msgstr "membri accettati"
 
-#: .\commons\templates\count_users.html:27
+#: .\commons\templates\count_users.html:22
 msgid "community members"
 msgstr "membri di comunità"
 
-#: .\commons\templates\count_users.html:28
+#: .\commons\templates\count_users.html:23
 msgid "project members"
 msgstr "membri di progetti"
 
@@ -3303,8 +3289,8 @@ msgstr "Data"
 
 #: .\commons\templates\django_messages\inbox.html:20
 #: .\commons\templates\django_messages\outbox.html:19
-#: .\commons\templates\folder_detail.html:57
-#: .\commons\templates\folder_detail.html:96
+#: .\commons\templates\folder_detail.html:53
+#: .\commons\templates\folder_detail.html:86
 #: .\commons\templates\lp_detail.html:67 .\commons\templates\lp_detail.html:192
 #: .\commons\templates\oer_detail.html:34
 #: .\commons\templates\oer_detail.html:185
@@ -3380,7 +3366,7 @@ msgstr "Nodo: %(node_label)s [documento]"
 #: .\commons\templates\document_view.html:46
 #: .\commons\templates\folder_detail.html:31
 #: .\commons\templates\online_resource_view.html:22
-#: .\commons\templates\project_results.html:76
+#: .\commons\templates\project_results.html:74
 msgid "show project"
 msgstr "mostra il progetto"
 
@@ -3390,14 +3376,9 @@ msgid "Curriculum: %(profile_name)s"
 msgstr "Curriculum: %(profile_name)s"
 
 #: .\commons\templates\edit_preferences.html:6
-#, python-format
-msgid " %(first_name)s %(last_name)s"
-msgstr " %(first_name)s %(last_name)s"
-
-#: .\commons\templates\edit_preferences.html:11
-#, python-format
-msgid "Preferences of %(first_name)s %(last_name)s"
-msgstr "Preferenze di %(first_name)s %(last_name)s"
+#: .\commons\templates\edit_preferences.html:12
+msgid "your preferences"
+msgstr "le tue preferenze"
 
 #: .\commons\templates\file_upload.html:10
 #: .\commons\templates\file_upload.html:13
@@ -3410,14 +3391,14 @@ msgid "community or project: %(project_name)s"
 msgstr "comunità o progetto: %(project_name)s"
 
 #: .\commons\templates\file_upload.html:23
-#: .\commons\templates\folder_detail.html:135
+#: .\commons\templates\folder_detail.html:125
 #: .\commons\templates\oer_detail.html:210
 #: .\commons\templates\user_profile.html:185
 msgid "upload"
 msgstr "carica"
 
 #: .\commons\templates\file_upload.html:24
-#: .\commons\templates\folder_detail.html:136
+#: .\commons\templates\folder_detail.html:126
 #: .\commons\templates\oer_detail.html:211
 #: .\commons\templates\user_profile.html:186
 msgid "cancel"
@@ -3449,70 +3430,53 @@ msgstr "Cartella condivisa nella comunità: %(com_name)s"
 msgid "Shared folder for project: %(proj_name)s"
 msgstr "Cartella condivisa nel progetto: %(proj_name)s"
 
-#: .\commons\templates\folder_detail.html:47
-#, python-format
-msgid "Created by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-msgstr "Creata da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+#: .\commons\templates\folder_detail.html:46
+#: .\commons\templates\project_detail.html:187
+msgid "created by"
+msgstr "creato da"
 
-#: .\commons\templates\folder_detail.html:49
-#, python-format
-msgid "Created by %(name_user)s"
-msgstr "Creata da %(name_user)s"
-
-#: .\commons\templates\folder_detail.html:58
-#: .\commons\templates\folder_detail.html:97
-#: .\commons\templates\pathnode_edit.html:46
+#: .\commons\templates\folder_detail.html:54
+#: .\commons\templates\folder_detail.html:87
+#: .\commons\templates\pathnode_edit.html:21
 #: .\commons\templates\project_edit.html:9
 #: .\commons\templates\project_edit.html:51
 msgid "edit"
 msgstr "modifica"
 
-#: .\commons\templates\folder_detail.html:76
-#, python-format
-msgid "Added by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-msgstr "Aggiunta da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+#: .\commons\templates\folder_detail.html:71
+msgid "added by"
+msgstr "aggiunto da"
 
-#: .\commons\templates\folder_detail.html:78
-#, python-format
-msgid "Added by %(name_user)s"
-msgstr "Aggiunta da %(name_user)s"
+#: .\commons\templates\folder_detail.html:77
+msgid "loaded by"
+msgstr "caricato da"
 
-#: .\commons\templates\folder_detail.html:85
-#, python-format
-msgid "Loaded by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-msgstr "Caricato da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-
-#: .\commons\templates\folder_detail.html:87
-#, python-format
-msgid "Loaded by %(name_user)s"
-msgstr "Caricato da %(name_user)s"
-
-#: .\commons\templates\folder_detail.html:120
+#: .\commons\templates\folder_detail.html:110
 msgid "no shared documents are present"
 msgstr "non sono presenti documenti condivisi"
 
-#: .\commons\templates\folder_detail.html:130
+#: .\commons\templates\folder_detail.html:120
 #: .\commons\templates\oer_detail.html:205
 msgid "add document"
 msgstr "aggiungi documento"
 
-#: .\commons\templates\folder_detail.html:141
+#: .\commons\templates\folder_detail.html:131
 msgid "add subfolder"
 msgstr "aggiungi una sottocartella"
 
-#: .\commons\templates\folder_detail.html:151
-#: .\commons\templates\mentoring_detail.html:431
+#: .\commons\templates\folder_detail.html:141
+#: .\commons\templates\mentoring_detail.html:426
 #: .\commons\templates\project_detail.html:452
 #: .\commons\templates\project_detail.html:751
 #: .\commons\templates\project_detail.html:992
 msgid "create"
 msgstr "crea"
 
-#: .\commons\templates\folder_detail.html:157
+#: .\commons\templates\folder_detail.html:147
 msgid "add online resource"
 msgstr "aggiungi risorsa online nella cartella"
 
-#: .\commons\templates\folder_detail.html:208
+#: .\commons\templates\folder_detail.html:198
 #: .\commons\templates\lp_detail.html:314
 #: .\commons\templates\oer_detail.html:304
 #: .\commons\templates\oer_detail.html:325
@@ -3520,12 +3484,12 @@ msgstr "aggiungi risorsa online nella cartella"
 msgid "do you really want to delete"
 msgstr "vuoi veramente eliminare"
 
-#: .\commons\templates\folder_detail.html:209
+#: .\commons\templates\folder_detail.html:199
 #: .\commons\templates\oer_detail.html:326
 msgid "this document"
 msgstr "questo documento"
 
-#: .\commons\templates\folder_detail.html:212
+#: .\commons\templates\folder_detail.html:202
 msgid "this folder"
 msgstr "questa cartella"
 
@@ -3553,8 +3517,9 @@ msgid "forum analytics"
 msgstr "statistiche sui forum"
 
 #: .\commons\templates\forum_analytics.html:12
-msgid "total number of posts:"
-msgstr "numero di post:"
+#, python-format
+msgid "Total number of posts: %(total)s"
+msgstr "Numero di post: %(total)s"
 
 #: .\commons\templates\forum_analytics.html:15
 msgid "forums with topics by posts"
@@ -3763,6 +3728,11 @@ msgstr "succ"
 msgid "currently this OER is not public"
 msgstr "attualmente questo OER non è pubblico"
 
+#: .\commons\templates\mentoring_detail.html:5
+#, python-format
+msgid "%(the_project)s [project]"
+msgstr ""
+
 #: .\commons\templates\mentoring_detail.html:143
 msgid "mentee"
 msgstr "mentee"
@@ -3770,10 +3740,10 @@ msgstr "mentee"
 #: .\commons\templates\mentoring_detail.html:173
 msgid ""
 "a request must be submitted to the community administrator, which will try "
-"to allocate a mentor"
+"to allocate a mentor."
 msgstr ""
 "una richiesta deve essere presentata all'amministratore della comunità, che "
-"cercherà di assegnare un mentore"
+"cercherà di assegnare un mentore."
 
 #: .\commons\templates\mentoring_detail.html:234
 msgid "documents"
@@ -3852,27 +3822,26 @@ msgstr "riunione"
 msgid "classify"
 msgstr "classifica"
 
-#: .\commons\templates\mentoring_detail.html:419
-#: .\commons\templates\mentoring_detail.html:438
+#: .\commons\templates\mentoring_detail.html:414
+#: .\commons\templates\mentoring_detail.html:428
 #: .\commons\templates\project_detail.html:440
 #: .\commons\templates\project_detail.html:457
 msgid "share"
 msgstr "condividi"
 
-#: .\commons\templates\mentoring_detail.html:429
+#: .\commons\templates\mentoring_detail.html:424
 #: .\commons\templates\project_detail.html:450
 #: .\commons\templates\project_detail.html:990
 msgid "LP"
 msgstr "LP"
 
-#: .\commons\templates\mentoring_detail.html:452
+#: .\commons\templates\mentoring_detail.html:442
 #: .\commons\templates\project_detail.html:606
-#: .\commons\templates\project_detail.html:1006
-msgid "last learning paths"
-msgstr "ultimi percorsi di apprendimento"
+msgid "last LPs"
+msgstr "Ultimi LP"
 
-#: .\commons\templates\mentoring_detail.html:459
-#: .\commons\templates\mentoring_detail.html:484
+#: .\commons\templates\mentoring_detail.html:449
+#: .\commons\templates\mentoring_detail.html:474
 #: .\commons\templates\project_detail.html:614
 #: .\commons\templates\project_detail.html:641
 #: .\commons\templates\project_detail.html:667
@@ -3880,17 +3849,17 @@ msgstr "ultimi percorsi di apprendimento"
 msgid "read more"
 msgstr "vedi ancora"
 
-#: .\commons\templates\mentoring_detail.html:468
+#: .\commons\templates\mentoring_detail.html:458
 #: .\commons\templates\project_detail.html:624
 msgid "unshare this LP"
 msgstr "cessa di condividere questo LP"
 
-#: .\commons\templates\mentoring_detail.html:477
+#: .\commons\templates\mentoring_detail.html:467
 #: .\commons\templates\project_detail.html:633
 msgid "last OERs"
 msgstr "ultimi OER"
 
-#: .\commons\templates\mentoring_detail.html:493
+#: .\commons\templates\mentoring_detail.html:483
 #: .\commons\templates\project_detail.html:651
 msgid "unshare this OER"
 msgstr "cessa di condividere questo OER"
@@ -3900,7 +3869,12 @@ msgstr "cessa di condividere questo OER"
 msgid "messages analytics"
 msgstr "statistiche sui messaggi"
 
-#: .\commons\templates\message_analytics.html:22
+#: .\commons\templates\message_analytics.html:18
+#, python-format
+msgid "Total number of messages: %(total)s"
+msgstr "Numero di messaggi: %(total)s"
+
+#: .\commons\templates\message_analytics.html:21
 msgid "messages by month"
 msgstr "messaggi per mese"
 
@@ -4003,7 +3977,7 @@ msgstr "valutazioni"
 
 #: .\commons\templates\oer_detail.html:233
 #: .\commons\templates\project_detail.html:663
-#: .\commons\templates\project_results.html:118
+#: .\commons\templates\project_results.html:116
 msgid "view evaluations"
 msgstr "vedi le valutazioni"
 
@@ -4055,7 +4029,7 @@ msgid "edit OER"
 msgstr "modifica OER"
 
 #: .\commons\templates\oer_edit.html:40
-#: .\commons\templates\profile_edit.html:31
+#: .\commons\templates\profile_edit.html:32
 #: .\commons\templates\user_profile.html:63
 msgid "general information"
 msgstr "informazione generale"
@@ -4069,12 +4043,14 @@ msgid "source and derivation"
 msgstr "fonte e derivazione"
 
 #: .\commons\templates\oer_evaluation_edit.html:6
-msgid "edit evaluation of OER"
-msgstr "modifica valutazione di OER"
+#, python-format
+msgid "Edit evaluation of OER: %(oer_title)s"
+msgstr "Modifica valutazione dell'OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluation_edit.html:6
-msgid "add evaluation of OER"
-msgstr "aggiungi una valutazione dell'OER"
+#, python-format
+msgid "Add evaluation of OER: %(oer_title)s"
+msgstr "aggiungi una valutazione dell'OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluation_edit.html:14
 #: .\commons\templates\oer_evaluations.html:33
@@ -4087,8 +4063,9 @@ msgid "detailed quality assessment"
 msgstr "valutazione di dettaglio"
 
 #: .\commons\templates\oer_evaluations.html:5
-msgid "evaluations of OER"
-msgstr "valutazioni di OER"
+#, python-format
+msgid "Evaluations of OER: %(oer_title)s"
+msgstr "Valutazioni dell'OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluations.html:45
 msgid "overall assessment"
@@ -4097,22 +4074,6 @@ msgstr "giudizio complessivo"
 #: .\commons\templates\oer_evaluations.html:61
 msgid "evaluated by"
 msgstr "valutata da"
-
-#: .\commons\templates\oer_list.html:5 .\commons\templates\oer_list.html:12
-msgid "resources"
-msgstr "risorse"
-
-#: .\commons\templates\oer_list.html:5 .\commons\templates\oer_list.html:12
-msgid "catalogued by"
-msgstr "catalogate da"
-
-#: .\commons\templates\oer_list.html:21
-msgid "no OERs are present"
-msgstr "non sono presenti OER"
-
-#: .\commons\templates\oer_list.html:21
-msgid "submitted by this user"
-msgstr "proposte da questo utente"
 
 #: .\commons\templates\oer_screenshot_upload.html:8
 #, python-format
@@ -4131,37 +4092,24 @@ msgstr "rimuovi l'immagine piccola"
 msgid "evaluate"
 msgstr "valutare"
 
-#: .\commons\templates\oers_by_project.html:12
-#: .\commons\templates\oers_by_project.html:23
-msgid "catalogued OERs"
-msgstr "OER catalogati"
-
-#: .\commons\templates\oers_by_project.html:12
-msgid "by project"
-msgstr "per progetto"
-
-#: .\commons\templates\oers_by_project.html:23
-msgid "no project"
-msgstr "nessun progetto"
-
-#: .\commons\templates\oers_by_project.html:23
-msgid "has"
-msgstr "ha"
-
 #: .\commons\templates\online_resource_edit.html:5
+#, python-format
+msgid "Edit online resource in folder %(folder_title)s"
+msgstr "Modifica risorsa online nella cartella: %(folder_title)s"
+
 #: .\commons\templates\online_resource_edit.html:12
-msgid "edit online resource in folder"
-msgstr "edita risorsa online nella cartella"
+msgid "edit online resource"
+msgstr "aggiungi risorsa online nella cartella"
 
 #: .\commons\templates\pathnode_edit.html:7
 msgid "edit learning path node"
-msgstr "modifica nodo del percorso"
+msgstr "modifica un nodo al percorso"
 
-#: .\commons\templates\pathnode_edit.html:46
+#: .\commons\templates\pathnode_edit.html:23
 msgid "add learning path node"
 msgstr "aggiungi un nodo al percorso"
 
-#: .\commons\templates\pathnode_edit.html:48
+#: .\commons\templates\pathnode_edit.html:27
 msgid ""
 "In this form you can specify 3 types of resources: 1) an OER; 2) a document "
 "tailored to the needs of this learning path (LP); 3) a formatted text. When "
@@ -4174,7 +4122,7 @@ msgstr ""
 "visualizzerà solo uno di essi: l'OER, se presente, altrimenti il documento o "
 "il testo formattato."
 
-#: .\commons\templates\pathnode_edit.html:86
+#: .\commons\templates\pathnode_edit.html:65
 msgid "remove selected file"
 msgstr "rimuovi il file selezionato"
 
@@ -4184,28 +4132,28 @@ msgstr "rimuovi il file selezionato"
 msgid "upload photo"
 msgstr "carica una foto"
 
-#: .\commons\templates\profile_avatar_upload.html:27
+#: .\commons\templates\profile_avatar_upload.html:26
 msgid "remove photo"
 msgstr "rimuovi la foto"
 
-#: .\commons\templates\profile_edit.html:7
-#: .\commons\templates\profile_edit.html:24
-msgid "edit the profile of"
-msgstr "modifica il profilo di"
+#: .\commons\templates\profile_edit.html:10
+#: .\commons\templates\profile_edit.html:26
+msgid "edit the profile"
+msgstr "modifica il profilo"
 
-#: .\commons\templates\profile_edit.html:31
-#: .\commons\templates\profile_mentor_edit.html:21
+#: .\commons\templates\profile_edit.html:32
+#: .\commons\templates\profile_mentor_edit.html:22
 #: .\commons\templates\user_profile.html:148
 #: .\commons\templates\user_profile.html:217
 msgid "communication preferences"
 msgstr "preferenze di comunicazione"
 
 #: .\commons\templates\profile_mentor_edit.html:7
-#: .\commons\templates\profile_mentor_edit.html:15
-msgid "edit mentoring related information for"
-msgstr "modifica l'informazione relativa al mentoring per"
+#: .\commons\templates\profile_mentor_edit.html:16
+msgid "edit mentoring related information"
+msgstr "modifica l'informazione relativa al mentoring"
 
-#: .\commons\templates\profile_mentor_edit.html:21
+#: .\commons\templates\profile_mentor_edit.html:22
 #: .\commons\templates\user_profile.html:198
 msgid "mentor information"
 msgstr "informazione sul mentore"
@@ -4223,10 +4171,6 @@ msgstr "albo dei mentori"
 #: .\commons\templates\project_detail.html:167
 msgid "reserved project"
 msgstr "progetto riservato"
-
-#: .\commons\templates\project_detail.html:187
-msgid "created by"
-msgstr "creato da"
 
 #: .\commons\templates\project_detail.html:211
 #: .\commons\templates\project_detail.html:215
@@ -4284,12 +4228,14 @@ msgstr "traduci"
 #: .\commons\templates\project_detail.html:304
 #: .\commons\templates\project_detail.html:867
 #: .\commons\templates\project_logo_upload.html:8
+#: .\commons\templates\project_logo_upload.html:15
 msgid "upload logo"
 msgstr "carica il logo"
 
 #: .\commons\templates\project_detail.html:305
 #: .\commons\templates\project_detail.html:868
 #: .\commons\templates\project_image_upload.html:8
+#: .\commons\templates\project_image_upload.html:15
 msgid "upload image"
 msgstr "carica l'immagine"
 
@@ -4504,6 +4450,10 @@ msgstr "modifica il profilo di mentore"
 msgid "to apply you must fill the mentor presentation in your profile"
 msgstr "per aderire all'albo devi compilare la tua presentazione come mentore"
 
+#: .\commons\templates\project_detail.html:1006
+msgid "last learning paths"
+msgstr "ultimi percorsi di apprendimento"
+
 #: .\commons\templates\project_detail.html:1042
 msgid "do you really want to grant the admin or supervisor role to this member"
 msgstr ""
@@ -4522,43 +4472,35 @@ msgstr ""
 msgid "child project"
 msgstr "sottoprogetto"
 
-#: .\commons\templates\project_image_upload.html:16
-msgid "upload image of project"
-msgstr "carica l'immagine del progetto"
-
-#: .\commons\templates\project_image_upload.html:31
+#: .\commons\templates\project_image_upload.html:28
 msgid "remove image"
 msgstr "elimina l'immagine"
 
-#: .\commons\templates\project_logo_upload.html:16
-msgid "upload logo of project"
-msgstr "carica il logo del progetto"
-
-#: .\commons\templates\project_logo_upload.html:31
+#: .\commons\templates\project_logo_upload.html:28
 msgid "remove logo"
 msgstr "elimina il logo"
 
-#: .\commons\templates\project_results.html:6
-#: .\commons\templates\project_results.html:79
+#: .\commons\templates\project_results.html:5
+#: .\commons\templates\project_results.html:77
 msgid "results of project"
 msgstr "risultati del progetto"
 
-#: .\commons\templates\project_results.html:88
+#: .\commons\templates\project_results.html:86
 #: .\commons\templates\resources_by.html:53
 msgid "OERs evaluated"
 msgstr "OER valutati"
 
-#: .\commons\templates\project_results.html:99
+#: .\commons\templates\project_results.html:97
 #: .\commons\templates\user_dashboard.html:461
 msgid "no Learning Path created yet"
 msgstr "nessun Percorso di Apprendimento"
 
-#: .\commons\templates\project_results.html:110
+#: .\commons\templates\project_results.html:108
 #: .\commons\templates\user_dashboard.html:407
 msgid "no OER classified yet"
 msgstr "ancora nessun OER classificato"
 
-#: .\commons\templates\project_results.html:124
+#: .\commons\templates\project_results.html:122
 msgid "no OER evaluated yet"
 msgstr "ancora nessun OER valutato"
 
@@ -4824,19 +4766,6 @@ msgstr "ricerca dei progetti"
 #: .\commons\templates\search_repos.html:5
 msgid "of source repositories"
 msgstr "delle fonti"
-
-#: .\commons\templates\search_results.html:5
-#: .\commons\templates\search_results.html:7
-msgid "Search results for"
-msgstr "Cerca risultati per"
-
-#: .\commons\templates\search_results.html:45
-msgid "reusable resources"
-msgstr "risorse riusabili"
-
-#: .\commons\templates\search_results.html:61
-msgid "no result"
-msgstr "nessun risultato"
 
 #: .\commons\templates\user_dashboard.html:28
 #: .\commons\templates\user_preferences.html:22
@@ -5391,6 +5320,98 @@ msgstr "lingue degli OER"
 msgid "countries"
 msgstr "nazioni"
 
+#, fuzzy
+#~| msgid "edit learning path node"
+#~ msgid "Edit learning path node: %(node_label)s"
+#~ msgstr "modifica nodo del percorso"
+
+#, fuzzy
+#~| msgid ""
+#~| "<small class=\"%(class_name)s\">in the project</small> %(proj_name)s"
+#~ msgid "<small class=\"%(class_name)s\">Edit:</small> %(node_label)s"
+#~ msgstr "<small class=\"%(class_name)s\">nel progetto</small> %(proj_name)s"
+
+#~ msgid "Preferences of %(first_name)s %(last_name)s"
+#~ msgstr "Preferenze di %(first_name)s %(last_name)s"
+
+#~ msgid "Created by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+#~ msgstr "Creata da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+
+#~ msgid "Created by %(name_user)s"
+#~ msgstr "Creata da %(name_user)s"
+
+#~ msgid "Added by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+#~ msgstr "Aggiunta da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+
+#~ msgid "Added by %(name_user)s"
+#~ msgstr "Aggiunta da %(name_user)s"
+
+#~ msgid "Loaded by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+#~ msgstr "Caricato da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
+
+#~ msgid "Loaded by %(name_user)s"
+#~ msgstr "Caricato da %(name_user)s"
+
+#~ msgid "catalogued OERs"
+#~ msgstr "OER catalogati"
+
+#~ msgid "by project"
+#~ msgstr "per progetto"
+
+#~ msgid "no project"
+#~ msgstr "nessun progetto"
+
+#~ msgid "has"
+#~ msgstr "ha"
+
+#~ msgid "edit online resource in folder"
+#~ msgstr "edita risorsa online nella cartella"
+
+#~ msgid "upload image of project"
+#~ msgstr "carica l'immagine del progetto"
+
+#~ msgid "upload logo of project"
+#~ msgstr "carica il logo del progetto"
+
+#~ msgid "Search results for"
+#~ msgstr "Cerca risultati per"
+
+#~ msgid "reusable resources"
+#~ msgstr "risorse riusabili"
+
+#~ msgid "no result"
+#~ msgstr "nessun risultato"
+
+#~ msgid " %(first_name)s %(last_name)s"
+#~ msgstr " %(first_name)s %(last_name)s"
+
+#~ msgid "resources"
+#~ msgstr "risorse"
+
+#~ msgid "catalogued by"
+#~ msgstr "catalogate da"
+
+#~ msgid "no OERs are present"
+#~ msgstr "non sono presenti OER"
+
+#~ msgid "submitted by this user"
+#~ msgstr "proposte da questo utente"
+
+#~ msgid "Recent activity by %(project_name)s"
+#~ msgstr "Attività recente di %(project_name)s"
+
+#~ msgid "evaluation of OERs"
+#~ msgstr "valutazione di OER"
+
+#~ msgid "evaluations of OER"
+#~ msgstr "valutazioni di OER"
+
+#~ msgid "Recent activity by %(actor.get_display_name)s"
+#~ msgstr "Attività recente di %(actor.get_display_name)s"
+
+#~ msgid "recent activity in"
+#~ msgstr "attività recente in"
+
 #~ msgid "%(lp_title)s[learning path]"
 #~ msgstr "%(lp_title)s [percorso di apprendimento]"
 
@@ -5405,12 +5426,6 @@ msgstr "nazioni"
 
 #~ msgid "add node with OER"
 #~ msgstr "aggiungi un nodo con OER"
-
-#~ msgid "loaded by"
-#~ msgstr "caricato da"
-
-#~ msgid "added by"
-#~ msgstr "aggiunto da"
 
 #~ msgid "LP: %(lp_title)s"
 #~ msgstr "LP: %(lp_title)s"

@@ -4,7 +4,7 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% trans "edit mentoring related information for"|capfirst %}: &nbsp; {{user.first_name }} {{user.last_name }}{% endblock %}
+{% block head_title %}{{ user.get_display_name }} [{% trans "edit mentoring related information" %}]{% endblock %}
 	
 {% block body_class %}edit_profile_mentor{% endblock %}
 
@@ -12,7 +12,8 @@
 {% block body %}
   <div class="panel panel-c0 text-left marginTB30">
     <div class="panel-heading-c0 padding1020">
-      <h2 class="marginTB5"><small class="c-white">{% trans "edit mentoring related information for"|capfirst %}:</small> {{user.first_name }} {{user.last_name }}</h2>
+      <h2 class="marginTB5">{{ user.get_display_name }}</h2>
+      <p>{% trans "edit mentoring related information"|capfirst %}</p>
     </div>
     <form method="post" id="edit_form">{% csrf_token %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}

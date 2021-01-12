@@ -7,7 +7,7 @@
 
 {% block body %}
    <h1 class="text-center">{% trans "new posts in my forums"|capfirst %} (*)</h1>
-   <div style="text-align: center; font-style: italic;">{% trans "posts added to topics after you last viewed them"|capfirst %} (**)</div>
+   <div class="text-center"><i>{% trans "posts added to topics after you last viewed them"|capfirst %} (**)</i></div>
    <section class="view-card">
    {% if unviewed_posts %}
    {% for category, forums in unviewed_posts %}
@@ -22,9 +22,9 @@
 	   {% endfor %}
    {% endfor %}
    {% else %}
-       	<p>{% trans "no new posts are present"|capfirst %}.</p>
+       	<p>{% trans "no new posts are present"|capfirst %}</p>
    {% endif %}
-   <div>(*) forums of your community and or projects + thematic forums</div>
-   <div>(**) topic views are being tracked since May 25 only</div>
+   <div>(*) {% trans "forums of your community and or projects + thematic forums %}</div>
+   <div>(**) {% trans "topic views are being tracked since May 25 only %}</div>
       </section>
 {% endblock %}

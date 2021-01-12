@@ -10,13 +10,12 @@
     {% load_chart charttype chartdata chartcontainer extra %}
 {% endblock extra_head %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}messages_analytics{% endblock %}
 
 {% block body %}
 
-            <h1 class="text-center">{% trans "messages analytics"|capfirst %}</h1>
-            
-			<div style="text-align: center; font-style: italic; font-size: larger;">Total number of messages: {{ total }}</div>
+    <h1 class="text-center">{% trans "messages analytics"|capfirst %}</h1>
+    <p class="text-center"style="font-size: larger;"><em>{% blocktrans %}Total number of messages: {{ total }}{% endblocktrans %}</em></p>
 
 	<section>
 	<h4>{% trans "messages by month"|capfirst %}</h4>

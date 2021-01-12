@@ -3,7 +3,7 @@
 {% load i18n staticfiles %}
 
 {% if profile %}
-	{% block head_title %}{% trans "member"|capfirst %}: {{ profile_user.get_display_name }}{% endblock %}
+	{% block head_title %}{{ profile_user.get_display_name }} [{% trans "member" %}] {% endblock %}
 {% endif  %}
 
 {% block body_class %}profile{% endblock %}

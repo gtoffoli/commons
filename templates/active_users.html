@@ -2,32 +2,29 @@
 
 {% load i18n %}
 
-{% block extra_head %}
-<style>
-</style>
-{% endblock %}
-
 {% block head_title %}{% trans "recently active users"|capfirst %}{% endblock %}
 
 {% block body %}
     <section>
         <div class="container">
             <h1 class="marginT30">
+            {% if function == 'active_comembers' %}{% blocktrans %}Recently active users <small>being members of projects shared with me</small>{% endblocktrans %}
+            {% else %}
             {% trans "recently active users"|capfirst %}
-            {% if function == 'active_comembers' %}<small>{% trans "being members of projects shared with me" %}</small>{% endif %}
+            {% endif %}
             </h1>
-
        	{% if onliners %}
-        <h3 class="marginT30">{% trans "users online"|capfirst %} <small>({% trans "active during last 5 minutes" %})</small></h3>
+        <h3 class="marginT30 marginB0">{% trans "users online"|capfirst %}</h3>
+        <p>({% trans "active during last 5 minutes" %})</p>
 		<table class="table table-responsive table-bordered table-striped">
 			<thead>
-				<tr><th>{% trans "user" %}</th><th style="text-align: center;">{% trans "last active" %}</th></tr>
+				<tr><th>{% trans "user" %}</th><th class="text-center">{% trans "last active" %}</th></tr>
 			</thead>
 			<tbody>
         	{% for item in onliners %}
 				<tr>
 					<td>{{ item.user.get_display_name }}</td>
-					<td style="text-align: center;">{{ item.time_delta }} {% trans "seconds ago" %}</td>
+					<td class="text-center">{{ item.time_delta }} {% trans "seconds ago" %}</td>
 				</tr>
         	{% endfor %}
 		    </tbody>
@@ -38,13 +35,13 @@
         <h3 class="marginT30">{% trans "users no more online"|capfirst %}</h3>
 		<table class="table table-responsive table-bordered table-striped">
 			<thead>
-				<tr><th>{% trans "user" %}</th><th style="text-align: center;">{% trans "last seen" %}</th></tr>
+				<tr><th>{% trans "user" %}</th><th class="text-center">{% trans "last seen" %}</th></tr>
 			</thead>
 			<tbody>
         	{% for item in others %}
 				<tr>
 					<td>{{ item.user.get_display_name }}</td>
-					<td style="text-align: center;">{{ item.last_seen }}</td>
+					<td class="text-center">{{ item.last_seen }}</td>
 				</tr>
         	{% endfor %}
 		    </tbody>

@@ -4,7 +4,7 @@
 
 {% load commons_tags %}
 
-{% block head_title %}{% if proj_is_com %}{% trans "community"|capfirst %}{% elif proj_type_name == 'roll' %}{% trans "roll of mentors"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{{ project.get_name }} [{% if proj_is_com %}{% trans "community"|capfirst %}{% elif proj_type_name == 'roll' %}{% trans "roll of mentors"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}]{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
@@ -182,11 +182,11 @@
                             <ul class="list-unstyled paddingT10 font13">
                                 <li class="marginT5"><span class="demiBold">{% trans "created by"|capfirst %}</span> {% include "_name_user.html" with data=project.creator %} <span class="demiBold">{% trans "on" %}</span> {{ project.created|date:"d/m/Y" }}
                                 {% if project.editor.id == project.creator.id %}
-                                    <span class="demiBold">{% trans "last updated" %} {% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}
+                                    <span class="demiBold">{% trans "last updated" %}</span> {{ project.modified|date:"d/m/Y" }}
                                 {% endif %}
                                 </li>
                                 {% if project.editor.id != project.creator.id %}
-                                <li class="marginT5"><span class="demiBold">{% trans "last updated"|capfirst %}</span> <span class="demiBold">{% trans "by" %}</span> {% include "_name_user.html" with data=project.editor %} <span class="demiBold">{% trans "on" %}</span> {{ project.modified|date:"d/m/Y" }}
+                                <li class="marginT5"><span class="demiBold">{% trans "last updated by"|capfirst %}</span> {% include "_name_user.html" with data=project.editor %} -- {{ project.modified|date:"d/m/Y" }}
                                 </li>
                                 {% endif %}
                             </ul>
@@ -573,7 +573,7 @@
                     {% if proj_type_name == 'lp' or proj_type_name == 'sup' or proj_type_name == 'oer' %}
                         {% if lps %}
                             <div class="panel-white">
-                                <div class="panel-heading-c1 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "last learning paths"|capfirst %}</div>
+                                <div class="panel-heading-c1 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "last LPs"|capfirst %}</div>
                                 <div style="display:none">
                                 <ul class="list-unstyled my-list-unstyled padding510">
                                 {% for lp in lps %}

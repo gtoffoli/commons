@@ -26,7 +26,6 @@
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">
-      {% comment %}{% if view_folder %}<p class="marginT20 text-center">{{ online_resource.label}}</p>{% endif %}{% endcomment %}
       <div class="iframe-container">
         {{ online_resource.embed_code|safe }}
       </div>

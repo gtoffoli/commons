@@ -4,19 +4,19 @@
 
 {% block head_title %}{% trans "forum analytics"|capfirst %}{% endblock %}
 
-{% block body_class %}home{% endblock %}
+{% block body_class %}forum_analitycs{% endblock %}
 
 {% block body %}
 
-            <h1 class="text-center">{% trans "forum analytics"|capfirst %}</h1>
-			<div style="text-align: center; font-style: italic; font-size: larger;">{% trans "total number of posts:"capfirst %} {{ total }}</div>
+    <h1 class="text-center">{% trans "forum analytics"|capfirst %}</h1>
+    <p class="text-center" style="font-size: larger;"><em>{% blocktrans %}Total number of posts: {{ total }}{% endblocktrans %}</em></p>
 <section>
 
 	<h4>{% trans "forums with topics by posts"|capfirst %}</h4>
 
 	<ul class="list-unstyled">
         {% for forum, num_posts, topics_list in forum_topics_list %}
-        <li><span style="font-weight: bold;">{{ num_posts }} - {{ forum.name}}</span>
+        <li><strong>{{ num_posts }} - {{ forum.name}}</strong>
 		<ul class="list-unstyled" style="margin-inline-start: 20px;">
 	        {% for n, topic in  topics_list %}
 	        <li>{{ n }} - {{ topic.name }}</li>

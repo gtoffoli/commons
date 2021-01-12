@@ -2132,11 +2132,6 @@ def repo_detail_by_slug(request, repo_slug):
     repo = get_object_or_404(Repo, slug=repo_slug)
     return repo_detail(request, repo.id, repo)
 
-def oers_by_user(request, username):
-    user = get_object_or_404(User, username=username)
-    oers = OER.objects.filter(creator=user, state=PUBLISHED)
-    return render(request, 'oer_list.html', {'oers': oers, 'user': user, 'submitter': user})
-
 def resources_by(request, username):
     user = get_object_or_404(User, username=username)
     lps = LearningPath.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
@@ -2560,14 +2555,6 @@ def browse_mentors(request):
     rolls = Project.objects.filter(proj_type__name='roll', state=PROJECT_OPEN).order_by('name')
     roll_info = FlatPage.objects.get(url='/infotext/mentors/').content
     return render(request, 'browse_mentors.html', {'mentors': mentors, 'info_all_mentors': info_all_mentors, 'rolls': rolls, 'roll_info': roll_info})
-
-def oer_list(request, field_name='', field_value=None):
-    oers = []
-    if field_name=='tags' and field_value:
-        tag = get_object_or_404(Tag, slug=field_value)
-        q = Q(tags=tag)
-        oers = OER.objects.filter(q & Q(state=PUBLISHED))
-        return render(request, 'oer_list.html', {'oers': oers, 'field_name': field_name, 'field_value': field_value,})
 
 TEXT_VIEW_TEMPLATE= """<div class="bc-white padding302020">%s</div>"""
 

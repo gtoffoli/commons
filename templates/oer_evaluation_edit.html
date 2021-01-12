@@ -3,7 +3,7 @@
 {% load staticfiles%}
 {% load i18n %}
 
-{% block head_title %}{% if evaluation %}{% trans "edit evaluation of OER"|capfirst %}{% else %}{% trans "add evaluation of OER"|capfirst %}{% endif %}: {{ oer.title }}{% endblock %}
+{% block head_title %}{% if evaluation %}{% blocktrans with oer_title=oer.title %}Edit evaluation of OER: {{oer_title}}{% endblocktrans %}{% else %}{% blocktrans with oer_title=oer.title %}Add evaluation of OER: {{oer_title}}{% endblocktrans %}{% endif %}{% endblock %}
 
 {% block body_class %}oer_evaluation_edit{% endblock %}
 {% block body %}

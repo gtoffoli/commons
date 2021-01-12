@@ -2,7 +2,7 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% if proj_type.name == 'com' %}{% trans "community"|capfirst %}{% else %}{% trans "project"|capfirst %}{% endif %}: {{ project.get_name }}{% endblock %}
+{% block head_title %}{% blocktrans with the_project=project.get_name %}{{ the_project }} [project]{%endblocktrans%}{% endblock %}
 
 {% block languages %}{% include "_hreflang.html" %}{% endblock %}
 
@@ -170,7 +170,7 @@ div.msg {
   </p>
 
   {% if view_project_text %}
-      <div class="msg">{% trans "a request must be submitted to the community administrator, which will try to allocate a mentor"|capfirst %}.</div>
+      <div class="msg">{% trans "a request must be submitted to the community administrator, which will try to allocate a mentor."|capfirst %}</div>
   {% endif %}
   
   {% if project.prototype %}
@@ -410,11 +410,6 @@ div.msg {
                       <li><div class="c-white marginB5 demiBold">{% trans "OER" %}</div>
                          <ul class="list-inline list-last">
                             <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o"></i> {% trans "classify"|capfirst %}</a></li>
-{% comment %}
-                            {% if cut_oers %}{% for oer in cut_oers %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-                            {% endfor %}{% endif %}
-{% endcomment %}
                             {% if shareable_oers %}{% for oer in shareable_oers %}
                               <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
@@ -429,11 +424,6 @@ div.msg {
                       <li><div class="c-white marginB5 demiBold">{% trans "LP" %}</div>
                          <ul class="list-inline list-last">
                             <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o"></i> {% trans "create"|capfirst %}</a></li>
-{% comment %}
-                            {% if cut_lps %}{% for lp in cut_lps %}
-                              <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-                            {% endfor %}{% endif %}
-{% endcomment %}
                             {% if shareable_lps %}{% for lp in shareable_lps %}
                               <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
                             {% endfor %}{% endif %}
@@ -449,7 +439,7 @@ div.msg {
 
          {% if lps %}
            <div class="panel-white">
-             <div class="panel-heading-c1 padding510 demiBold">{% trans "last learning paths"|capfirst %}</div>
+             <div class="panel-heading-c1 padding510 demiBold">{% trans "last LPs"|capfirst %}</div>
              <ul class="list-unstyled my-list-unstyled padding510">
              {% for lp in lps %}
                <li>{% if lp.state != 3 %}<small style="color: {{ lp.get_link_color }};">[{{ lp.get_state }}]</small> {% endif %}<a href="/lp/{{ lp.slug }}/"><small>{{ lp.title }}</small></a></li>

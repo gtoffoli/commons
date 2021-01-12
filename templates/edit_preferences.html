@@ -3,12 +3,13 @@
 {% load staticfiles%}
 {% load i18n %}
 
-{% block head_title %}{% blocktrans with first_name=user.first_name last_name=user.last_name %} {{ first_name }} {{ last_name }}{% endblocktrans %}{% endblock %}
+{% block head_title %}{{ user.get_display_name }} [{% trans "your preferences" %}]{% endblock %}
 
 {% block body %}
   <div class="panel panel-c0 text-left marginTB30">
     <div class="panel-heading-c0 padding1020">
-      <h2 class="marginTB5">{% blocktrans with first_name=user.first_name last_name=user.last_name %}Preferences of {{ first_name }} {{ last_name }}{% endblocktrans %}</h2>
+      <h2 class="marginTB5">{{ user.get_display_name }}</h2>
+      <p>{% trans "your preferences"|capfirst %}</p>
     </div>
     <form method="post" id="edit_form">{% csrf_token %}
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}

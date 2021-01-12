@@ -2,7 +2,7 @@
 
 {% load i18n staticfiles %}
 
-{% block head_title %}{% trans "preferences of"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+{% block head_title %}{{ user.get_display_name }} [{% trans "preferences of" %}]{% endblock %}
 
 {% block body_class %}my_preferences{% endblock %}
 

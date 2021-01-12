@@ -3,7 +3,7 @@
 {% load i18n staticfiles %}
 {% load commons_tags %}
 
-{% block head_title %}{% trans "my home"|capfirst %}: {{ user.get_display_name }}{% endblock %}
+{% block head_title %}{{ user.get_display_name }} [{% trans "my home" %}]{% endblock %}
 
 {% block extra_style %}
 {% endblock %}

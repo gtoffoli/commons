@@ -5,17 +5,14 @@
 
 
 {% block head_title %}
-{% if project %}{% trans "upload logo"|capfirst %}: {{ project.get_name }}{% endif %}{% endblock %}
+{% if project %}{{ project.get_name }} [{% trans "upload logo"|capfirst %}]{% endif %}{% endblock %}
 
 {% block body_class %}logo_project_upload{% endblock %}
 {% block body %}
   <div class="panel panel-c{% if not project.get_type_name == 'roll' %}4{% else %}0{% endif %} text-left marginTB30">
     <div class="panel-heading-c{% if not project.get_type_name == 'roll' %}4{% else %}0{% endif %} padding1020">
-      <h2 class="marginTB5">
-      {% if project %}
-        <small class="c-{% if not project.get_type_name == 'roll' %}black{% else %}white{% endif %}">{% trans "upload logo of project"|capfirst %}:</small> {{ project.get_name }}
-      {% endif %}
-      </h2>
+      <h2 class="marginTB5">{{ project.get_name }}</h2>
+      <p>{% trans "upload logo"|capfirst %}</p>  
     </div>
     <form method="post" action="{{ action }}" id="upload_form" enctype="multipart/form-data">{% csrf_token %}
       {% if project %}<input type="hidden" id="id" name="id" value="{{ project.id }}">{% endif %}

@@ -2,7 +2,7 @@
 
 {% load i18n %}
 
-{% block head_title %}{% trans "evaluations of OER"|capfirst %}: {{ oer.title }}{% endblock %}
+{% block head_title %}{% blocktrans with oer_title=oer.title %}Evaluations of OER: {{ oer_title }}{% endblocktrans %}{% endblock %}
 
 {% block extra_style %}
 <style>
@@ -58,7 +58,7 @@ dl.eval dd:nth-child(even) {
   </div>
   <div class="row">
     <div class="col-md-12">
-      <p class="font13"><span class="demiBold">{% trans "evaluated by"|capfirst %}</span> {% include "_name_user.html" with data=evaluation.user %} <span class="demiBold">{% trans "on" %}</span> {{ evaluation.modified|date:"d/m/Y" }}</p>
+      <p class="font13"><span class="demiBold">{% trans "evaluated by"|capfirst %}</span> {% include "_name_user.html" with data=evaluation.user %} -- {{ evaluation.modified|date:"d/m/Y" }}</p>
     </div>
   </div>
   </dd>

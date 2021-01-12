@@ -5,7 +5,7 @@
 {% generate_menu %}
 
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} xmlns:og="{{ PROTOCOL }}://ogp.me/ns#">
+<html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} xmlns:og="https://ogp.me/ns#">
   <head>
     {% include 'google_analytics.html' %}
     <meta charset="utf-8">
@@ -34,8 +34,6 @@
      <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
 
      {% block style_base %}
-       {% comment %}<link href="{% static "font-awesome/css/font-awesome.css" %}" rel="stylesheet">
-       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> {% endcomment %}
        {% comment %}
        <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
        <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
@@ -53,7 +51,7 @@
          {% endif %}
        {% endif %}
        {% endwith %}
-       <link href='{{ PROTOCOL }}://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
+       <link href='https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,800italic,400,600,700,800&subset=latin-ext' rel='stylesheet' type='text/css'>
        <style>
        ul.ul-left {
          margin-inline-start:-15px;
@@ -213,7 +211,7 @@
            <div class="row">
              <div class="col-sm-4 col-md-4">
                <div class="footer-box">&copy; 2015-{% now 'Y' %} {% trans "the CommonS Consortium"|capfirst %}<br>
-                 {% trans "built by"|capfirst %} <a href="{{ PROTOCOL }}://www.linkroma.it" target="_blank">LINK srl</a>
+                 {% trans "built by"|capfirst %} <a href="https://www.linkroma.it" target="_blank">LINK srl</a>
                  {% trans "with" %} <a href="https://www.python.org/" target="_blank">Python</a> {% trans "and" %} <a href="https://www.djangoproject.com/" target="_blank">Django</a>
                </div>
              </div>

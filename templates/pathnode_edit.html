@@ -4,46 +4,25 @@
 {% load i18n %}
 {# load tinymce_tags #}
 
-{% block head_title %}{% if node %}{% trans "edit learning path node"|capfirst %}: {{ node.label }}{% else %}{% trans "add node"|capfirst %}{% endif %}{% endblock %}
+{% block head_title %}{% if node %}{{ node.label }} [{% trans "edit learning path node" %}]{% else %}{% trans "add node"|capfirst %}{% endif %}{% endblock %}
 
 
 {% block extra_style %}
-{% comment %}
-   <link href="{% static "commons/css/select2.css" %}" rel="stylesheet">
-   <link href="{% static "autocomplete_light/select2.css" %}" rel="stylesheet">
-{% endcomment %}
 {% include "_select2_css.html" %}
 {% endblock %}
 
 {% block body_class %}pathnode_edit{% endblock %}
 {% block body %}
-{% comment %}
-<div style="background: white; border: solid 1px red; font-style: italic; color: red; padding: 6px; margin-block-start: 30px; margin-block-end: 0.5em;">
-{% if language_mismatch %}
-   {% trans "WARNING" %}! {% trans "You are using the currently active language" %}
-   (<span style="color: black;">{{ current_language_name }}</span>)
-   {% trans "to edit a content whose 'original editing language' is" %}
-   <span style="color: black;">{{ path.get_language_name }}</span>.
-{% else %}
-  {% if object %}
-   {% if object.original_language %}{% trans "OK" %}.{% else %}{% trans "WARNING" %}!{% endif %}
-   {% trans "You are using the currently active language" %}
-   (<span style="color: black;">{{ current_language_name }}</span>)
-   {% trans "to edit a content whose 'original editing language' is" %}
-   {% if object.original_language %}{% trans "also" %}{% else %}{% trans "still" %}{% endif %}
-   <span style="color: black;">{{ object.get_language_name }}</span>.
-  {% else %}
-   {% trans "IMPORTANT NOTICE! The node that you are creating will get its 'original editing language'" %},
-   <span style="color: black;">{{ current_language_name }}</span>,
-   {% trans "from the Learning Path it belongs to" %}.
-  {% endif %}
-{% endif %}
-</div>
-{% endcomment %}
 <div class="panel panel-c1 text-left marginTB30">
   <div class="navbar panel-c1 panel-heading-c1 padding1020">
     <h4 class="marginTB5">{{ name_lp }}</h4>
-    <h2 class="marginTB5">{% if node %}<small class="c-white">{% trans "edit"|capfirst %}:</small> {{ node.label }}{% else %}{% trans "add learning path node"|capfirst %}{% endif %}</h2>
+        {% if node %}
+        <h2 class="marginTB5">{{node.label}}</h2>
+        <p>{% trans "edit"|capfirst %} </p>
+        {% else %}
+        <h2 class="marginTB5">{% trans "add learning path node"|capfirst] %}/h2>
+        {% endif %}
+    </h2>
   </div>
   <p class="padding1020 demiBold font12">{% trans "In this form you can specify 3 types of resources: 1) an OER; 2) a document tailored to the needs of this learning path (LP); 3) a formatted text. When playing the LP, the platform will visualize only one of them: the OER, if present, otherwise the document or the formatted text as the last choice." %}</p>
   <form method="POST" action="{{ action }}" id="edit_pathnode" enctype="multipart/form-data">{% csrf_token %}
@@ -62,7 +41,7 @@
       	{% if field.name == 'remove_document' or field.name  == 'new_document' %}
         {% if field.name == 'remove_document' %}
           {% if node.document_id > 0 %}
-            <label for = "group_doc" style="display:block"%>{% trans "document"|capfirst %}</label>
+            <label for = "group_doc" style="display:block">{% trans "document"|capfirst %}</label>
               {{ field }} <label for="{{ field.name }}" style="font-weight: normal">{{ field.label|capfirst}}: {{node.document.label}}</label>
           {% else %}
             <div style="display:none">{{ field }}</div>
