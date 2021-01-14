@@ -461,7 +461,7 @@
                                 <div class="marginB10"><a class="btn btn-green" href="/project/{{ project.slug }}/apply/{{ user.username }}/" title="{% trans "apply for membership" %}">{% trans "join"|capfirst %}</a></div>
                             {% elif membership %}
                                 {% if membership.state == 0 %}
-                                    <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
+                                    <div class="panel-white panel-c0 padding510 font12">{% trans "your application is waiting for acceptance by the "|capfirst %} {{ project.admin_name }}</div>
                                 {% endif %}
                             {% elif proj_type_name == 'sup' %}
                                 <div class="panel-white">
@@ -861,7 +861,7 @@
                         {% endif %}
                     </div>
                 {% elif membership and membership.state == 0 %}
-                    <div class="panel-white panel-c0 padding510 marginB10 font12">{% trans "your application is waiting for acceptation by the "|capfirst %} {{ project.admin_name }}</div>
+                    <div class="panel-white panel-c0 padding510 marginB10 font12">{% trans "your application is waiting for acceptance by the "|capfirst %} {{ project.admin_name }}</div>
                 {% endif %}
 {% comment %}LIST MENTORS {% endcomment %}
                 <div class="panel panel-white" style="border:1px solid white">

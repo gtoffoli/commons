@@ -1,20 +1,19 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-#
+# 
 # Translators:
 # Andrea Spila <andrea.spila@gmail.com>, 2015
-# Giovanni Toffoli <toffoli@linkroma.it>, 2015-2020
+# Giovanni Toffoli <toffoli@linkroma.it>, 2015-2021
 # Stefano <stefano.lariccia@uniroma1.it>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-12 12:50+0100\n"
-"PO-Revision-Date: 2021-01-12 12:53+0100\n"
+"POT-Creation-Date: 2021-01-12 12:49+0100\n"
+"PO-Revision-Date: 2021-01-14 22:41+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
-"Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/"
-"commons-platform/language/it/)\n"
+"Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -214,9 +213,9 @@ msgstr "id Skype"
 #: .\commons\forms.py:93 .\commons\forms.py:110
 #: .\commons\templates\user_profile.html:151
 #: .\commons\templates\user_profile.html:220
-msgid "your Skype id will be shared only within active mentoring relationships"
-msgstr ""
-"il tuo id Skype sarà condiviso solo all'interno di relazioni di mentoring"
+msgid ""
+"your Skype id will be shared only within active mentoring relationships"
+msgstr "il tuo id Skype sarà condiviso solo all'interno di relazioni di mentoring"
 
 #: .\commons\forms.py:94 .\commons\forms.py:111 .\commons\models.py:622
 #: .\commons\templates\user_profile.html:155
@@ -234,9 +233,7 @@ msgstr "preferenze di comunicazione P2P"
 msgid ""
 "any information useful in negotiating with a partner a convenient 1:1 "
 "communication solution"
-msgstr ""
-"qualsiasi informazione utile nel negoziare con un partner una soluzione "
-"conveniente di comunicazione 1:1"
+msgstr "qualsiasi informazione utile nel negoziare con un partner una soluzione conveniente di comunicazione 1:1"
 
 #: .\commons\forms.py:107 .\commons\models.py:623
 #: .\commons\templates\user_profile.html:202
@@ -248,9 +245,7 @@ msgstr "presentazione come mentore"
 msgid ""
 "an extension to your presentation focused on your qualification as a "
 "potential mentor"
-msgstr ""
-"un'estensione della tua presentazione centrata sulla tua qualificazione come "
-"potenziale mentore"
+msgstr "un'estensione della tua presentazione centrata sulla tua qualificazione come potenziale mentore"
 
 #: .\commons\forms.py:108 .\commons\models.py:624
 #: .\commons\templates\user_profile.html:207
@@ -262,10 +257,7 @@ msgstr "disponibile come mentore per altre comunità"
 msgid ""
 "check if available/interested to act as mentor outside the community/ies "
 "where registered to the Roll of Mentors."
-msgstr ""
-"spunta questa casella se sei disponibile e interessato/a a svolgere il ruolo "
-"di mentore al di fuori della/e comunità in cui sei registrato all'Albo dei "
-"Mentori"
+msgstr "spunta questa casella se sei disponibile e interessato/a a svolgere il ruolo di mentore al di fuori della/e comunità in cui sei registrato all'Albo dei Mentori"
 
 #: .\commons\forms.py:109 .\commons\models.py:625
 msgid "currently not available as mentor"
@@ -275,10 +267,7 @@ msgstr "al momento non disponibile come mentore"
 msgid ""
 "check if temporarily unavailable to accept (more) requests by mentees; "
 "remember to update this when the situation changes!"
-msgstr ""
-"spunta questa casella se temporaneamente non sei disponibile ad accettare "
-"(altre) richieste da mentee; ricordati di aggiornare la scelta quando la "
-"situazione dovesse cambiare"
+msgstr "spunta questa casella se temporaneamente non sei disponibile ad accettare (altre) richieste da mentee; ricordati di aggiornare la scelta quando la situazione dovesse cambiare"
 
 #: .\commons\forms.py:129
 msgid "text in name and short presentation"
@@ -451,8 +440,7 @@ msgstr "embed code"
 
 #: .\commons\forms.py:287
 msgid "code to embed the view of an online resource in an HTML page"
-msgstr ""
-"codice per incorporare nella pagina HTML la vista di una risorsa online"
+msgstr "codice per incorporare nella pagina HTML la vista di una risorsa online"
 
 #: .\commons\forms.py:300 .\commons\forms.py:330 .\commons\models.py:1486
 #: .\commons\models.py:1504
@@ -512,8 +500,7 @@ msgstr "se esistente"
 
 #: .\commons\forms.py:359
 msgid "if the OER is available online, put here its URL (web address)"
-msgstr ""
-"se l'OER è accessibile online, inserisci qui il suo URL (indirizzo web)"
+msgstr "se l'OER è accessibile online, inserisci qui il suo URL (indirizzo web)"
 
 #: .\commons\forms.py:360 .\commons\models.py:1599
 msgid "code to embed the OER view in an HTML page"
@@ -527,9 +514,7 @@ msgstr "abstract o descrizione"
 msgid ""
 "one or two lines are enough here; this short description will be displayed "
 "in search results and will be used for full-text indexing"
-msgstr ""
-"non più di una o due linee; questa descrizione breve viene visualizzata nei "
-"risultati delle ricerche e viene usata per l'indicizzazione full-text"
+msgstr "non più di una o due linee; questa descrizione breve viene visualizzata nei risultati delle ricerche e viene usata per l'indicizzazione full-text"
 
 #: .\commons\forms.py:362 .\commons\forms.py:405 .\commons\forms.py:566
 msgid "text content"
@@ -548,10 +533,7 @@ msgid ""
 "type of licence; please, don't disregard it: see the help pages for an "
 "explanation of the available options; in case of doubt, select the most "
 "cautious option \"read the fine print\""
-msgstr ""
-"tipo di licenza; è importante: si vedano le pagine di aiuto per una "
-"spiegazione delle opzioni disponibili; in caso di dubbio, la scelta più "
-"prudente è \"read the fine print\""
+msgstr "tipo di licenza; è importante: si vedano le pagine di aiuto per una spiegazione delle opzioni disponibili; in caso di dubbio, la scelta più prudente è \"read the fine print\""
 
 #: .\commons\forms.py:364 .\commons\forms.py:447 .\commons\models.py:1600
 msgid "type of material"
@@ -561,9 +543,7 @@ msgstr "tipo di materiale"
 msgid ""
 "the type of (educational) material refers to the function, not the physical "
 "aspect; the options have been taken from www.oercommons.org"
-msgstr ""
-"il tipo di materiale si riferisce al suo potenziale formativo, non "
-"all'aspetto fisico; le opzioni sono state prese da www.oercommons.org"
+msgstr "il tipo di materiale si riferisce al suo potenziale formativo, non all'aspetto fisico; le opzioni sono state prese da www.oercommons.org"
 
 #: .\commons\forms.py:365 .\commons\forms.py:496
 msgid "target audience"
@@ -596,10 +576,7 @@ msgid ""
 "features making easier the use of the OER also to impaired people; the "
 "options have been taken from www.oercommons.org; a help page is being "
 "prepared"
-msgstr ""
-"caratteristiche dell'OER che ne facilitano l'utilizzo, in particolare a "
-"utenti con deficit senso-motori; le opzioni sono state prese da www."
-"oercommons.org; una pagina di aiuto è in preparazione"
+msgstr "caratteristiche dell'OER che ne facilitano l'utilizzo, in particolare a utenti con deficit senso-motori; le opzioni sono state prese da www.oercommons.org; una pagina di aiuto è in preparazione"
 
 #: .\commons\forms.py:371
 msgid "derived from"
@@ -609,9 +586,7 @@ msgstr "derivato da"
 msgid ""
 "if derived from other OERs, please specify them by selecting one or more - "
 "enter a few chars of their names to get suggestions"
-msgstr ""
-"se è derivato da altri OER, specificali selezionandone uno o più di uno - "
-"digita qualche carattere di ciascun nome per visualizzare i suggerimenti"
+msgstr "se è derivato da altri OER, specificali selezionandone uno o più di uno - digita qualche carattere di ciascun nome per visualizzare i suggerimenti"
 
 #: .\commons\forms.py:372 .\commons\models.py:1595
 msgid "translated"
@@ -630,9 +605,7 @@ msgstr "adattato/remixato"
 msgid ""
 "specify whether the derivation of this OER has involved adaptation/remixing "
 "of the original content(s)"
-msgstr ""
-"specifica se la derivazione di questo OER ha comportato l'adattamento o il "
-"remix dei contenuti originali"
+msgstr "specifica se la derivazione di questo OER ha comportato l'adattamento o il remix dei contenuti originali"
 
 #: .\commons\forms.py:374 .\commons\models.py:1597
 msgid "source repository"
@@ -642,22 +615,17 @@ msgstr "repository di origine"
 msgid ""
 "specify in which catalogued repository, if any, you found this OER; e.g. "
 "Youtube, Slideshare, etc. - enter a few chars of its name to get suggestions"
-msgstr ""
-"se hai trovato questo OER in un repository catalogato su CommonSpaces (come "
-"Youtube, Slideshare, ecc.), specificalo - digita qualche carattere del nome "
-"per visualizzare i suggerimenti"
+msgstr "se hai trovato questo OER in un repository catalogato su CommonSpaces (come Youtube, Slideshare, ecc.), specificalo - digita qualche carattere del nome per visualizzare i suggerimenti"
 
 #: .\commons\forms.py:375 .\commons\models.py:1598
 msgid "other info to identify/access the OER in the source"
-msgstr ""
-"altra informazione utile a identificare l'OER nella fonte o ad accedervi"
+msgstr "altra informazione utile a identificare l'OER nella fonte o ad accedervi"
 
 #: .\commons\forms.py:391
 msgid ""
 "the OER(s) from which this one has been translated or remixed cannot be "
 "missing"
-msgstr ""
-"devono essere specificati gli OER da cui questo è stato tradotto o remixato"
+msgstr "devono essere specificati gli OER da cui questo è stato tradotto o remixato"
 
 #: .\commons\forms.py:411 .\commons\models.py:1576
 msgid "Catalogued source"
@@ -739,9 +707,7 @@ msgstr "valutazione della qualità scientifica"
 msgid ""
 "e.g. scientific validity of content and methodologies, critical aspects, "
 "interdisciplinarity"
-msgstr ""
-"es: validità scientifica di contenuto e metodologie, orientamento critico, "
-"interdisciplinarietà"
+msgstr "es: validità scientifica di contenuto e metodologie, orientamento critico, interdisciplinarietà"
 
 #: .\commons\forms.py:495 .\commons\templates\lp_detail.html:159
 msgid "type of learning path"
@@ -762,7 +728,8 @@ msgid "where the Learning Path has been created"
 msgstr "dove il percorso di apprendimento è stato creato"
 
 #: .\commons\forms.py:500 .\commons\models.py:2022
-#: .\commons\templates\lp_detail.html:87 .\commons\templates\lp_detail.html:106
+#: .\commons\templates\lp_detail.html:87
+#: .\commons\templates\lp_detail.html:106
 #: .\commons\templates\lp_detail.html:129 .\commons\templates\lp_play.html:58
 msgid "objectives"
 msgstr "obbiettivi"
@@ -812,9 +779,7 @@ msgstr "esempio complesso"
 msgid ""
 "Possibly specify document number and page range(s) for document(s) attached "
 "to the OER"
-msgstr ""
-"Puoi specificare numero del documento e intervallo/i di pagina per i "
-"documenti allegati all'OER"
+msgstr "Puoi specificare numero del documento e intervallo/i di pagina per i documenti allegati all'OER"
 
 #: .\commons\forms.py:560
 msgid "see the help pages on LPs for details"
@@ -829,9 +794,7 @@ msgstr "documento"
 #: .\commons\forms.py:580
 msgid ""
 "the OER, the document attachment and the text content cannot be all missing"
-msgstr ""
-"se non è specificato un OER, è necessario caricare un documento o inserire "
-"un contenuto testuale"
+msgstr "se non è specificato un OER, è necessario caricare un documento o inserire un contenuto testuale"
 
 #: .\commons\forms.py:583
 msgid "the node label is required"
@@ -861,8 +824,7 @@ msgstr "selezionare esplicitamente i destinatari"
 #: .\commons\forms.py:627
 msgid ""
 "please, replace the automatically generated name with an appropriate one"
-msgstr ""
-"per favore, sostituisci il nome generato automaticamente con uno appropriato"
+msgstr "per favore, sostituisci il nome generato automaticamente con uno appropriato"
 
 #: .\commons\forms.py:628
 msgid "better specify the purpose of this forum"
@@ -1262,9 +1224,7 @@ msgstr "notificazioni per email"
 msgid ""
 "Do you want that private messages from other members be notified to you by "
 "email? In any case, they will not know your email address."
-msgstr ""
-"Desideri che i messaggi privati di altri membri ti vengano notificati per "
-"email? In ogni caso, non gli sarà comunicato il tuo indirizzo email."
+msgstr "Desideri che i messaggi privati di altri membri ti vengano notificati per email? In ogni caso, non gli sarà comunicato il tuo indirizzo email."
 
 #: .\commons\models.py:594
 msgid "activity stream max days"
@@ -1272,8 +1232,7 @@ msgstr "max anzianità in activity stream"
 
 #: .\commons\models.py:594
 msgid "Max age of actions to list in my dashboard."
-msgstr ""
-"Massima anzianità, in giorni, delle azioni da elencare nella mia homepage."
+msgstr "Massima anzianità, in giorni, delle azioni da elencare nella mia homepage."
 
 #: .\commons\models.py:595
 msgid "activity stream max actions "
@@ -1291,9 +1250,7 @@ msgstr "accetta email dagli amministratori"
 msgid ""
 "Occasionally, the CommonSpaces administrators will do some mailing, without "
 "disclosing email addresses to anybody."
-msgstr ""
-"Occasionalmente, gli amministratori di CommonSpaces effettueranno un "
-"mailing, senza divulgare ad alcuno gli indirizzi email."
+msgstr "Occasionalmente, gli amministratori di CommonSpaces effettueranno un mailing, senza divulgare ad alcuno gli indirizzi email."
 
 #: .\commons\models.py:609
 msgid "work sector"
@@ -1306,8 +1263,7 @@ msgstr "curriculum"
 
 #: .\commons\models.py:613
 msgid "The UI will support only EN, IT and PT."
-msgstr ""
-"L'interfaccia utente sarà tradotta solo in inglese, italiano e portoghese."
+msgstr "L'interfaccia utente sarà tradotta solo in inglese, italiano e portoghese."
 
 #: .\commons\models.py:614
 msgid "list one per line."
@@ -1323,8 +1279,7 @@ msgstr "disponibile come mentore anche per i membri di altre comunità"
 
 #: .\commons\models.py:625
 msgid "temporarily unavailable to accept (more) requests by mentees."
-msgstr ""
-"temporaneamente non disponibile ad accettare (altre) richieste da mentee"
+msgstr "temporaneamente non disponibile ad accettare (altre) richieste da mentee"
 
 #: .\commons\models.py:773
 msgid "code"
@@ -1446,9 +1401,7 @@ msgstr "il mentoring è disponibile"
 #: .\commons\models.py:906
 msgid ""
 "once mentoring projects exist, you can only move from model A or B to A+B."
-msgstr ""
-"se vi sono richieste di mentoring in corso, puoi solo passare dal modello A "
-"o B a A+B"
+msgstr "se vi sono richieste di mentoring in corso, puoi solo passare dal modello A o B a A+B"
 
 #: .\commons\models.py:907
 msgid "allow external mentors"
@@ -1856,14 +1809,11 @@ msgstr "priorità"
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
-msgstr ""
-"Usato per filtrare, eventualmente in combinazione con altri attributi, non "
-"per ordinare. Un numero grande rappresenta una priorità elevata."
+msgstr "Usato per filtrare, eventualmente in combinazione con altri attributi, non per ordinare. Un numero grande rappresenta una priorità elevata."
 
 #: .\commons\models.py:3124
 msgid "In the case of a \"lead\" item, probably you will provide this text."
-msgstr ""
-"nel caso di un \"item di testa\", è possibile visualizzare questo testo"
+msgstr "nel caso di un \"item di testa\", è possibile visualizzare questo testo"
 
 #: .\commons\models.py:3125
 msgid "scope"
@@ -1890,10 +1840,9 @@ msgid "In"
 msgstr "In"
 
 #: .\commons\templates\403.html:4 .\commons\templates\403.html:10
-msgid "Sorry. You are not allowed to access the requested content or function."
-msgstr ""
-"Spiacente. Non sei abilitato ad accedere al contenuto o alla funzione che "
-"hai richiesto."
+msgid ""
+"Sorry. You are not allowed to access the requested content or function."
+msgstr "Spiacente. Non sei abilitato ad accedere al contenuto o alla funzione che hai richiesto."
 
 #: .\commons\templates\404.html:4 .\commons\templates\404.html:10
 msgid "Sorry. We cannot find the page that you requested."
@@ -2019,9 +1968,7 @@ msgstr "non posso convertire in PDF un documento con mimetype"
 #: .\commons\templates\_cannot_serialize.html:17
 #: .\commons\templates\_online_serialize.html:20
 msgid "this node refers to an OER that you can access online through its URL"
-msgstr ""
-"questo nodo fa riferimento ad un OER a cui puoi accedere online usando il "
-"suo URL"
+msgstr "questo nodo fa riferimento ad un OER a cui puoi accedere online usando il suo URL"
 
 #: .\commons\templates\_change_state.html:8
 msgid "submit for publication"
@@ -2093,19 +2040,23 @@ msgstr "salva ed esci"
 msgid "exit without saving"
 msgstr "esci senza salvare"
 
-#: .\commons\templates\_footer.html:4 .\commons\templates\commons_base.html:215
+#: .\commons\templates\_footer.html:4
+#: .\commons\templates\commons_base.html:215
 msgid "the CommonS Consortium"
 msgstr "Consorzio CommonS"
 
-#: .\commons\templates\_footer.html:5 .\commons\templates\commons_base.html:216
+#: .\commons\templates\_footer.html:5
+#: .\commons\templates\commons_base.html:216
 msgid "built by"
 msgstr "creato da"
 
-#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:217
+#: .\commons\templates\_footer.html:6
+#: .\commons\templates\commons_base.html:217
 msgid "with"
 msgstr "con"
 
-#: .\commons\templates\_footer.html:6 .\commons\templates\commons_base.html:217
+#: .\commons\templates\_footer.html:6
+#: .\commons\templates\commons_base.html:217
 msgid "and"
 msgstr "e"
 
@@ -2309,7 +2260,8 @@ msgstr "segue un estratto dei contenuti"
 
 #: .\commons\templates\_pathnode_detail.html:10
 #: .\commons\templates\_project_mentoring_text.html:19
-#: .\commons\templates\lp_detail.html:69 .\commons\templates\oer_detail.html:37
+#: .\commons\templates\lp_detail.html:69
+#: .\commons\templates\oer_detail.html:37
 #: .\commons\templates\project_detail.html:302
 #: .\commons\templates\project_detail.html:865
 #: .\commons\templates\pybb\_forum_edit_link.html:2
@@ -2318,7 +2270,8 @@ msgid "show edit view"
 msgstr "mostra la vista di editing"
 
 #: .\commons\templates\_pathnode_detail.html:11
-#: .\commons\templates\lp_detail.html:70 .\commons\templates\oer_detail.html:38
+#: .\commons\templates\lp_detail.html:70
+#: .\commons\templates\oer_detail.html:38
 #: .\commons\templates\project_detail.html:303
 #: .\commons\templates\project_detail.html:866
 #: .\commons\templates\repo_detail.html:18
@@ -2326,7 +2279,8 @@ msgid "show translate view"
 msgstr "mostra la vista di traduzione"
 
 #: .\commons\templates\_pathnode_detail.html:12
-#: .\commons\templates\lp_detail.html:85 .\commons\templates\lp_detail.html:104
+#: .\commons\templates\lp_detail.html:85
+#: .\commons\templates\lp_detail.html:104
 #: .\commons\templates\oer_detail.html:254
 msgid "show player view"
 msgstr "mostra la vista player"
@@ -2453,9 +2407,7 @@ msgstr "Questo imposterà la sua 'lingua di editing originale'"
 msgid ""
 "IMPORTANT NOTICE! The content that you are creating will take the currently "
 "active language"
-msgstr ""
-"INFORMAZIONE IMPORTANTE! Il contenuto che stai per creare prenderà la lingua "
-"al momento attiva"
+msgstr "INFORMAZIONE IMPORTANTE! Il contenuto che stai per creare prenderà la lingua al momento attiva"
 
 #: .\commons\templates\_resource_edit_lang_msg.html:23
 msgid "as its 'original editing language'"
@@ -2465,40 +2417,30 @@ msgstr "come sua 'lingua di editing originale'"
 msgid ""
 "Afterwards, you should edit it using always the same language, and you will "
 "be able to add translations to other languages"
-msgstr ""
-"Successivamente, lo devi modificare usando sempre la stessa lingua, e potrai "
-"aggiungere traduzioni in altre lingue"
+msgstr "Successivamente, lo devi modificare usando sempre la stessa lingua, e potrai aggiungere traduzioni in altre lingue"
 
 #: .\commons\templates\_resource_lang_msg.html:6
 msgid ""
-"IMPORTANT NOTICE! The next time you will edit this content, it will take the "
-"current active language"
-msgstr ""
-"AVVERTIMENTO IMPORTANTE! La prima volta che farai l'editing di questo "
-"contenuto, esso prenderà la lingua al momento attiva"
+"IMPORTANT NOTICE! The next time you will edit this content, it will take the"
+" current active language"
+msgstr "AVVERTIMENTO IMPORTANTE! La prima volta che farai l'editing di questo contenuto, esso prenderà la lingua al momento attiva"
 
 #: .\commons\templates\_resource_lang_msg.html:8
 msgid ""
 "as its 'original editing language'. Afterwards, you should edit it using "
 "always the same language, and you will be able to add translations to other "
 "languages."
-msgstr ""
-"come sua 'lingua di editing originale'. Successivamente, dovresti usare "
-"sempre la stessa lingua per modificarlo; inoltre potrai aggiungere "
-"traduzioni in altre lingue."
+msgstr "come sua 'lingua di editing originale'. Successivamente, dovresti usare sempre la stessa lingua per modificarlo; inoltre potrai aggiungere traduzioni in altre lingue."
 
 #: .\commons\templates\_resource_lang_msg.html:12
 msgid ""
 "Please note that, to be able to edit this content in its original language"
-msgstr ""
-"Considera che, per poter modificare questo contenuto nella sua lingua "
-"originale"
+msgstr "Considera che, per poter modificare questo contenuto nella sua lingua originale"
 
 #: .\commons\templates\_resource_lang_msg.html:14
 msgid ""
 "you should make this the active language using the control in the menu bar"
-msgstr ""
-"devi attivare tale lingua usando l'apposito controllo nella barra del menu"
+msgstr "devi attivare tale lingua usando l'apposito controllo nella barra del menu"
 
 #: .\commons\templates\_resource_original_lang.html:4
 #: .\commons\templates\project_detail.html:171
@@ -2570,9 +2512,7 @@ msgstr "Conferm Indirizzo E-mail"
 msgid ""
 "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
 "address for user %(user_display)s."
-msgstr ""
-"Per favore conferma che <a href=\"mailto:%(email)s\">%(email)s</a> è un "
-"indirizzo e-mail per  l'utente %(user_display)s."
+msgstr "Per favore conferma che <a href=\"mailto:%(email)s\">%(email)s</a> è un indirizzo e-mail dell'utente %(user_display)s."
 
 #: .\commons\templates\account\email_confirm.html:25
 msgid "Confirm"
@@ -2581,11 +2521,9 @@ msgstr "Conferma"
 #: .\commons\templates\account\email_confirm.html:32
 #, python-format
 msgid ""
-"This e-mail confirmation link expired or is invalid. Please <a href="
-"\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-msgstr ""
-"Questo link di conferma dell'e-mail è scaduto o non valido. Ti chiediamo di "
-"<a href=\"%(email_url)s\">ripetere la richiesta di conferma via e-mail</a>."
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr "Questo link di conferma dell'e-mail è scaduto o non valido. Ti chiediamo di <a href=\"%(email_url)s\">ripetere la richiesta di conferma via e-mail</a>."
 
 #: .\commons\templates\account\login.html:6
 #: .\commons\templates\account\login.html:61
@@ -2597,23 +2535,16 @@ msgstr "Accedi"
 #, python-format
 msgid ""
 "Please sign in with one\n"
-"                        of your existing third party accounts. Or, <a href="
-"\"%(signup_url)s\">sign up</a>\n"
+"                        of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
 "                        for a %(site_name)s account and sign in below:"
-msgstr ""
-"Accedi con uno\n"
-"                        dei tuoi account di terze parti. Oppure, <a href="
-"\"%(signup_url)s\">registrati</a>\n"
-"                        a %(site_name)s e poi accedi qui sotto:"
+msgstr "Accedi con uno\n                        dei tuoi account di terze parti. Oppure, <a href=\"%(signup_url)s\">registrati</a>\n                        a %(site_name)s e poi accedi qui sotto:"
 
 #: .\commons\templates\account\login.html:83
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"
 "                        <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
-"Se non hai ancora creato un account,\n"
-"devi prima<a href=\"%(signup_url)s\">registrarti</a>."
+msgstr "Se non hai ancora creato un account,\ndevi prima<a href=\"%(signup_url)s\">registrarti</a>."
 
 #: .\commons\templates\account\login.html:87
 msgid ""
@@ -2636,11 +2567,9 @@ msgstr "Reimpostazione della Password"
 
 #: .\commons\templates\account\password_reset.html:50
 msgid ""
-"Forgotten your password? Enter your e-mail address below, and we'll send you "
-"an e-mail allowing you to reset it."
-msgstr ""
-"Hai dimenticato la password? Se inserisci il tuo indirizzo e-mail qui sotto, "
-"ti invieremo una mail con un link per reimpostarla."
+"Forgotten your password? Enter your e-mail address below, and we'll send you"
+" an e-mail allowing you to reset it."
+msgstr "Hai dimenticato la password? Se inserisci il tuo indirizzo e-mail qui sotto, ti invieremo una mail con un link per reimpostarla."
 
 #: .\commons\templates\account\password_reset.html:55
 msgid "Reset My Password"
@@ -2654,9 +2583,7 @@ msgstr "Se hai qualche problema a reimpostare la password, contattaci."
 msgid ""
 "We have sent you an e-mail. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
-"Ti abbiamo appena inviato una mail. Contattaci se non la ricevi entro "
-"qualche minuto."
+msgstr "Ti abbiamo appena inviato una mail. Contattaci se non la ricevi entro qualche minuto."
 
 #: .\commons\templates\account\password_reset_from_key.html:4
 #: .\commons\templates\account\password_reset_from_key.html:38
@@ -2673,12 +2600,9 @@ msgstr "Token non valido"
 #, python-format
 msgid ""
 "The password reset link was invalid, possibly because it has already been "
-"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password reset</"
-"a>."
-msgstr ""
-"Il link per reimpostare la password non era valido, forse perché già usato. "
-"Per favora effettua una <a href=\"%(passwd_reset_url)s\">nuova "
-"reimpostazione della password</a>."
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>."
+msgstr "Il link per reimpostare la password non era valido, forse perché già usato. Per favore effettua di nuovo <a href=\"%(passwd_reset_url)s\">la reimpostazione della password</a>."
 
 #: .\commons\templates\account\password_reset_from_key.html:51
 msgid "change password"
@@ -2702,9 +2626,7 @@ msgstr "Registrati"
 #, python-format
 msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
-msgstr ""
-"Possiedi già un account? Allora <a href=\"%(login_url)s\">accedi</a>, per "
-"favore."
+msgstr "Possiedi già un account? Allora <a href=\"%(login_url)s\">accedi</a>, per favore."
 
 #: .\commons\templates\account\verification_sent.html:5
 #: .\commons\templates\account\verification_sent.html:10
@@ -2716,10 +2638,7 @@ msgid ""
 "We have sent an e-mail to you for verification. Follow the link provided to "
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
-"Ti abbiamo inviato una e-mail per verifica. Segui il link che troverai in "
-"essa per completare la procedura di registrazione. Per favore contattaci se "
-"non la ricevi entro pochi minuti."
+msgstr "Ti abbiamo inviato una e-mail per verifica. Segui il link che troverai in essa per completare la procedura di registrazione. Per favore contattaci se non la ricevi entro pochi minuti."
 
 #: .\commons\templates\active_users.html:5
 #: .\commons\templates\active_users.html:13
@@ -2728,9 +2647,9 @@ msgstr "utenti attivi di recente"
 
 #: .\commons\templates\active_users.html:11
 msgid ""
-"Recently active users <small>being members of projects shared with me</small>"
-msgstr ""
-"Utenti attivi di recente <small>che sono membri di progetti condivisi</small>"
+"Recently active users <small>being members of projects shared with "
+"me</small>"
+msgstr "Utenti attivi di recente <small>che sono membri di progetti condivisi</small>"
 
 #: .\commons\templates\active_users.html:17
 msgid "users online"
@@ -2821,7 +2740,7 @@ msgstr "Aggiungi"
 #: .\commons\templates\admin\commons\repo\change_form.html:18
 #: .\commons\templates\admin\flatpages\flatpage\change_form.html:18
 msgid "Home"
-msgstr ""
+msgstr "Home"
 
 #: .\commons\templates\admin\commons\featured\change_form.html:99
 msgid "tools"
@@ -2874,7 +2793,7 @@ msgstr "vista utente"
 #: .\commons\templates\admin\commons\repo\change_form.html:51
 #: .\commons\templates\admin\flatpages\flatpage\change_form.html:50
 msgid "Please correct the errors below."
-msgstr ""
+msgstr "Per favore, correggi gli errori qui sotto."
 
 #: .\commons\templates\autocomplete.html:5
 #: .\commons\templates\count_users.html:20
@@ -2927,10 +2846,9 @@ msgstr "attualmente non vi sono mentori"
 #: .\commons\templates\browse_mentors.html:83
 #, python-format
 msgid ""
-"Community: <a href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</"
-"a>"
-msgstr ""
-"Comunità: <a href=\"project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
+"Community: <a "
+"href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
+msgstr "Comunità: <a href=\"project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
 
 #: .\commons\templates\browse_mentors.html:90
 msgid "no mentoring activity started yet"
@@ -3194,9 +3112,8 @@ msgstr "Vi sono %(obsolete_count)s traduzioni obsolete."
 #: .\commons\templates\datatrans\obsolete_list.html:11
 msgid ""
 "Please review them to see if you can reuse something,\n"
-"\t\t\tand when done click the 'Remove all obsoletes' button to clean the "
-"KeyValue table."
-msgstr ""
+"\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
+msgstr "Elenco"
 
 #: .\commons\templates\datatrans\obsolete_list.html:17
 #: .\commons\templates\datatrans\obsolete_list.html:35
@@ -3219,9 +3136,7 @@ msgstr "Traduzioni di"
 msgid ""
 "Please, note that the translation functionality is affected by the original "
 "editing language of this content"
-msgstr ""
-"Si deve considerare che la funzionalità di traduzione è influenzata dalla "
-"lingua di editing originale di questo contenuto"
+msgstr "Si deve considerare che la funzionalità di traduzione è influenzata dalla lingua di editing originale di questo contenuto"
 
 #: .\commons\templates\datatrans\translate.html:11
 msgid "and by the languages known by the user as declared in the user profile"
@@ -3291,7 +3206,8 @@ msgstr "Data"
 #: .\commons\templates\django_messages\outbox.html:19
 #: .\commons\templates\folder_detail.html:53
 #: .\commons\templates\folder_detail.html:86
-#: .\commons\templates\lp_detail.html:67 .\commons\templates\lp_detail.html:192
+#: .\commons\templates\lp_detail.html:67
+#: .\commons\templates\lp_detail.html:192
 #: .\commons\templates\oer_detail.html:34
 #: .\commons\templates\oer_detail.html:185
 msgid "delete"
@@ -3302,7 +3218,7 @@ msgstr "elimina"
 #: .\commons\templates\django_messages\trash.html:24
 #: .\commons\templates\django_messages\view.html:15
 msgid "SHORT_DATETIME_FORMAT"
-msgstr ""
+msgstr "SHORT_DATETIME_FORMAT"
 
 #: .\commons\templates\django_messages\inbox.html:34
 #: .\commons\templates\django_messages\outbox.html:28
@@ -3314,12 +3230,8 @@ msgstr "Nessun messaggio."
 #, python-format
 msgid ""
 "Hello %(recipient_name)s,\n"
-"you received a private message from %(sender_name)s with the following "
-"contents:"
-msgstr ""
-"%(recipient_name)s,\n"
-"hai ricevuto un messaggio privato da %(sender_name)s con il seguente "
-"contenuto:"
+"you received a private message from %(sender_name)s with the following contents:"
+msgstr "%(recipient_name)s,\nhai ricevuto un messaggio privato da %(sender_name)s con il seguente contenuto:"
 
 #: .\commons\templates\django_messages\new_message.html:9
 #, python-format
@@ -3340,9 +3252,7 @@ msgstr "sposta a"
 msgid ""
 "Deleted Messages are removed from the trash at unregular intervals, don't "
 "rely on this feature for long-time storage."
-msgstr ""
-"I Messaggi Eliminati sono rimossi dal cestino a intervalli regolari. Non "
-"considerare il cestino un deposito a lungo termine."
+msgstr "I Messaggi Eliminati sono rimossi dal cestino a intervalli regolari. Non considerare il cestino un deposito a lungo termine."
 
 #: .\commons\templates\django_messages\view.html:3
 #: .\commons\templates\django_messages\view.html:5
@@ -3529,7 +3439,8 @@ msgstr "forum per numero di post"
 msgid "forum topics by posts"
 msgstr "argomenti dei forum per numero di post"
 
-#: .\commons\templates\forum_edit.html:7 .\commons\templates\forum_edit.html:13
+#: .\commons\templates\forum_edit.html:7
+#: .\commons\templates\forum_edit.html:13
 #, python-format
 msgid "Edit forum: %(forum_name)s"
 msgstr "Modifica forum: %(forum_name)s"
@@ -3613,8 +3524,7 @@ msgstr "converti al tipo collezione semplice"
 
 #: .\commons\templates\lp_detail.html:168
 msgid "convert to graph type in tree form: suggested only for few node!"
-msgstr ""
-"converti al tipo grafo in forma di albero: consigliato solo per pochi nodi!"
+msgstr "converti al tipo grafo in forma di albero: consigliato solo per pochi nodi!"
 
 #: .\commons\templates\lp_detail.html:171
 msgid "convert to graph type with unconnected nodes"
@@ -3642,8 +3552,7 @@ msgstr "aggiungi un nodo"
 #: .\commons\templates\lp_detail.html:233
 #, python-format
 msgid "Add node with OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
-msgstr ""
-"Aggiungi nodo con OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
+msgstr "Aggiungi nodo con OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
 
 #: .\commons\templates\lp_detail.html:241
 msgid "cloned from"
@@ -3669,17 +3578,13 @@ msgstr "rimuovi il ruolo"
 msgid ""
 "do not submit this LP for publication if you want that only your mentor see "
 "it"
-msgstr ""
-"non sottoporre questo LP per la pubblicazione se desideri che lo possa "
-"vedere solo il tuo mentore"
+msgstr "non sottoporre questo LP per la pubblicazione se desideri che lo possa vedere solo il tuo mentore"
 
 #: .\commons\templates\lp_detail.html:280
 msgid ""
 "To submit for publication this LP, you must move it before to a project by "
 "using the tool"
-msgstr ""
-"Per poter pubbblicare questo LP, devi prima spostarlo all'interno di un "
-"progetto usando lo strumento"
+msgstr "Per poter pubbblicare questo LP, devi prima spostarlo all'interno di un progetto usando lo strumento"
 
 #: .\commons\templates\lp_detail.html:315
 #: .\commons\templates\lp_detail.html:321
@@ -3731,7 +3636,7 @@ msgstr "attualmente questo OER non è pubblico"
 #: .\commons\templates\mentoring_detail.html:5
 #, python-format
 msgid "%(the_project)s [project]"
-msgstr ""
+msgstr "%(the_project)s [progetto]"
 
 #: .\commons\templates\mentoring_detail.html:143
 msgid "mentee"
@@ -3741,9 +3646,7 @@ msgstr "mentee"
 msgid ""
 "a request must be submitted to the community administrator, which will try "
 "to allocate a mentor."
-msgstr ""
-"una richiesta deve essere presentata all'amministratore della comunità, che "
-"cercherà di assegnare un mentore."
+msgstr "una richiesta deve essere presentata all'amministratore della comunità, che cercherà di assegnare un mentore."
 
 #: .\commons\templates\mentoring_detail.html:234
 msgid "documents"
@@ -3966,9 +3869,7 @@ msgstr "derivato/a, mediante adattamento / remixaggio, da"
 
 #: .\commons\templates\oer_detail.html:226
 msgid "to be able to publish this OER you must, fill some required fields."
-msgstr ""
-"per poter pubblicare questo OER, devi prima compilare alcuni campi "
-"obbligatori."
+msgstr "per poter pubblicare questo OER, devi prima compilare alcuni campi obbligatori."
 
 #: .\commons\templates\oer_detail.html:230
 #: .\commons\templates\oer_evaluations.html:36
@@ -4007,9 +3908,7 @@ msgstr "LP che fanno riferimento a questo OER"
 #: .\commons\templates\oer_detail.html:260
 msgid ""
 "To edit this OER, you must move it before to a project by using the tool"
-msgstr ""
-"Per poter editare questo OER, devi prima spostarlo all'interno di un "
-"progetto usando lo strumento"
+msgstr "Per poter editare questo OER, devi prima spostarlo all'interno di un progetto usando lo strumento"
 
 #: .\commons\templates\oer_detail.html:305
 msgid "this OER"
@@ -4050,7 +3949,7 @@ msgstr "Modifica valutazione dell'OER: %(oer_title)s"
 #: .\commons\templates\oer_evaluation_edit.html:6
 #, python-format
 msgid "Add evaluation of OER: %(oer_title)s"
-msgstr "aggiungi una valutazione dell'OER: %(oer_title)s"
+msgstr "Aggiungi una valutazione dell'OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluation_edit.html:14
 #: .\commons\templates\oer_evaluations.html:33
@@ -4115,12 +4014,7 @@ msgid ""
 "tailored to the needs of this learning path (LP); 3) a formatted text. When "
 "playing the LP, the platform will visualize only one of them: the OER, if "
 "present, otherwise the document or the formatted text as the last choice."
-msgstr ""
-"In questo modulo puoi specificare 3 tipi di risorse: 1) un OER; 2) un "
-"documento (file) creato in base alle esigenze del percorso di apprendimento "
-"(LP): 3) un testo formattato. Durante la fruizione del LP, la piattaforma "
-"visualizzerà solo uno di essi: l'OER, se presente, altrimenti il documento o "
-"il testo formattato."
+msgstr "In questo modulo puoi specificare 3 tipi di risorse: 1) un OER; 2) un documento (file) creato in base alle esigenze del percorso di apprendimento (LP): 3) un testo formattato. Durante la fruizione del LP, la piattaforma visualizzerà solo uno di essi: l'OER, se presente, altrimenti il documento o il testo formattato."
 
 #: .\commons\templates\pathnode_edit.html:65
 msgid "remove selected file"
@@ -4455,17 +4349,15 @@ msgid "last learning paths"
 msgstr "ultimi percorsi di apprendimento"
 
 #: .\commons\templates\project_detail.html:1042
-msgid "do you really want to grant the admin or supervisor role to this member"
-msgstr ""
-"vuoi realmente assegnare il ruolo di amministratore o supervisore a questo "
-"membro"
+msgid ""
+"do you really want to grant the admin or supervisor role to this member"
+msgstr "vuoi realmente assegnare il ruolo di amministratore o supervisore a questo membro"
 
 #: .\commons\templates\project_detail.html:1044
 msgid ""
-"do you really want to call back the admin or supervisor role from this member"
-msgstr ""
-"vuoi realmente togliere il ruolo di amministratore o supervisore a questo "
-"membro"
+"do you really want to call back the admin or supervisor role from this "
+"member"
+msgstr "vuoi realmente togliere il ruolo di amministratore o supervisore a questo membro"
 
 #: .\commons\templates\project_edit.html:21
 #: .\commons\templates\project_edit.html:62
@@ -4847,9 +4739,7 @@ msgstr "richiesta di"
 
 #: .\commons\templates\user_dashboard.html:249
 msgid "mentoring requests in my communities waiting for mentor answer"
-msgstr ""
-"richieste di mentoring nelle mie comunità in attesa della risposta del "
-"mentore"
+msgstr "richieste di mentoring nelle mie comunità in attesa della risposta del mentore"
 
 #: .\commons\templates\user_dashboard.html:263
 msgid "mentees requesting me as a mentor"
@@ -5200,9 +5090,7 @@ msgstr "Mappa del blog"
 msgid ""
 "embedding inside a page the view of this resource is forbidden: please, use "
 "the link above to access it directly"
-msgstr ""
-"è proibito l'inserimento all'interno di una pagina della vista di questa "
-"risorsa: usa il link soprastante per accedere ad essa direttamente"
+msgstr "è proibito l'inserimento all'interno di una pagina della vista di questa risorsa: usa il link soprastante per accedere ad essa direttamente"
 
 #: .\commons\views.py:789
 msgid "minimum number of LPs"
@@ -5212,25 +5100,19 @@ msgstr "numero minimo di LP"
 msgid ""
 "this request is waiting since long time: if you want to retract it, please "
 "write a notice for the mentor and push the button below"
-msgstr ""
-"questa richiesta è in attesa da molto tempo: se vuoi ritirarla, per favore "
-"scrivi un messaggio per il mentore e premi il bottone qui sotto"
+msgstr "questa richiesta è in attesa da molto tempo: se vuoi ritirarla, per favore scrivi un messaggio per il mentore e premi il bottone qui sotto"
 
 #: .\commons\views.py:1335
 msgid ""
 "if you aren't able to choose another mentor, please write a notice for both "
 "the mentee and the mentor and push the button below"
-msgstr ""
-"se non sei in grado di scegliere un altro mentore, per favore scrivi un "
-"messaggio per il mentee e per il mentore a premi il bottone qui sotto"
+msgstr "se non sei in grado di scegliere un altro mentore, per favore scrivi un messaggio per il mentee e per il mentore a premi il bottone qui sotto"
 
 #: .\commons\views.py:1356
 msgid ""
 "this request is waiting since long time: please write a notice for both the "
 "mentee and the mentor and push the button below"
-msgstr ""
-"questa richiesta è in attesa da molto tempo:  per favore scrivi un messaggio "
-"per il mentee e per il mentore a premi il bottone qui sotto "
+msgstr "questa richiesta è in attesa da molto tempo:  per favore scrivi un messaggio per il mentee e per il mentore a premi il bottone qui sotto "
 
 #: .\commons\views.py:1752
 msgid "membership application"
@@ -5319,160 +5201,3 @@ msgstr "lingue degli OER"
 #: .\commons\vocabularies.py:169
 msgid "countries"
 msgstr "nazioni"
-
-#, fuzzy
-#~| msgid "edit learning path node"
-#~ msgid "Edit learning path node: %(node_label)s"
-#~ msgstr "modifica nodo del percorso"
-
-#, fuzzy
-#~| msgid ""
-#~| "<small class=\"%(class_name)s\">in the project</small> %(proj_name)s"
-#~ msgid "<small class=\"%(class_name)s\">Edit:</small> %(node_label)s"
-#~ msgstr "<small class=\"%(class_name)s\">nel progetto</small> %(proj_name)s"
-
-#~ msgid "Preferences of %(first_name)s %(last_name)s"
-#~ msgstr "Preferenze di %(first_name)s %(last_name)s"
-
-#~ msgid "Created by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-#~ msgstr "Creata da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-
-#~ msgid "Created by %(name_user)s"
-#~ msgstr "Creata da %(name_user)s"
-
-#~ msgid "Added by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-#~ msgstr "Aggiunta da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-
-#~ msgid "Added by %(name_user)s"
-#~ msgstr "Aggiunta da %(name_user)s"
-
-#~ msgid "Loaded by <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-#~ msgstr "Caricato da <a href=\"%(path)s%(user_url)s\">%(name_user)s</a>"
-
-#~ msgid "Loaded by %(name_user)s"
-#~ msgstr "Caricato da %(name_user)s"
-
-#~ msgid "catalogued OERs"
-#~ msgstr "OER catalogati"
-
-#~ msgid "by project"
-#~ msgstr "per progetto"
-
-#~ msgid "no project"
-#~ msgstr "nessun progetto"
-
-#~ msgid "has"
-#~ msgstr "ha"
-
-#~ msgid "edit online resource in folder"
-#~ msgstr "edita risorsa online nella cartella"
-
-#~ msgid "upload image of project"
-#~ msgstr "carica l'immagine del progetto"
-
-#~ msgid "upload logo of project"
-#~ msgstr "carica il logo del progetto"
-
-#~ msgid "Search results for"
-#~ msgstr "Cerca risultati per"
-
-#~ msgid "reusable resources"
-#~ msgstr "risorse riusabili"
-
-#~ msgid "no result"
-#~ msgstr "nessun risultato"
-
-#~ msgid " %(first_name)s %(last_name)s"
-#~ msgstr " %(first_name)s %(last_name)s"
-
-#~ msgid "resources"
-#~ msgstr "risorse"
-
-#~ msgid "catalogued by"
-#~ msgstr "catalogate da"
-
-#~ msgid "no OERs are present"
-#~ msgstr "non sono presenti OER"
-
-#~ msgid "submitted by this user"
-#~ msgstr "proposte da questo utente"
-
-#~ msgid "Recent activity by %(project_name)s"
-#~ msgstr "Attività recente di %(project_name)s"
-
-#~ msgid "evaluation of OERs"
-#~ msgstr "valutazione di OER"
-
-#~ msgid "evaluations of OER"
-#~ msgstr "valutazioni di OER"
-
-#~ msgid "Recent activity by %(actor.get_display_name)s"
-#~ msgstr "Attività recente di %(actor.get_display_name)s"
-
-#~ msgid "recent activity in"
-#~ msgstr "attività recente in"
-
-#~ msgid "%(lp_title)s[learning path]"
-#~ msgstr "%(lp_title)s [percorso di apprendimento]"
-
-#~ msgid "convert to graph type"
-#~ msgstr "converti al tipo grafo"
-
-#~ msgid "in tree form"
-#~ msgstr "in forma di albero"
-
-#~ msgid "suggested only for few nodes"
-#~ msgstr "consigliato solo per pochi nodi"
-
-#~ msgid "add node with OER"
-#~ msgstr "aggiungi un nodo con OER"
-
-#~ msgid "LP: %(lp_title)s"
-#~ msgstr "LP: %(lp_title)s"
-
-#~ msgid "shared folder for"
-#~ msgstr "cartella condivisa per"
-
-#~ msgid "edit forum"
-#~ msgstr "modifica forum"
-
-#~ msgid "no community"
-#~ msgstr "nessuna comunità"
-
-#~ msgid "is present"
-#~ msgstr "è presente"
-
-#~ msgid "node"
-#~ msgstr "nodo"
-
-#, fuzzy
-#~| msgid "of repositories"
-#~ msgid "distributions of repositories"
-#~ msgstr "dei repository"
-
-#~ msgid "top contributors to"
-#~ msgstr "principali contributori a"
-
-#~ msgid "no repository"
-#~ msgstr "nessun repository"
-
-#~ msgid "OER sources"
-#~ msgstr "fonti di OER"
-
-#~ msgid "catalogued by "
-#~ msgstr "catalogato da"
-
-#~ msgid "full catalog"
-#~ msgstr "catalogo completo"
-
-#~ msgid "shared Learning Path"
-#~ msgstr "Percorso di apprendimento condiviso"
-
-#~ msgid "shared Learning Paths"
-#~ msgstr "Percorsi di apprendimento condivisi"
-
-#~ msgid "of the learning paths"
-#~ msgstr "dei percorsi di apprendimento"
-
-#~ msgid "of the sources"
-#~ msgstr "delle fonti"
