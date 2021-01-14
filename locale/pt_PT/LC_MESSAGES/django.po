@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-14 22:39+0000\n"
+"PO-Revision-Date: 2021-01-14 23:30+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Portuguese (Portugal) (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt_PT/)\n"
 "MIME-Version: 1.0\n"
@@ -1015,7 +1015,7 @@ msgstr "pesquisar no catálogo de recursos"
 
 #: .\commons\menus.py:116
 msgid "mentoring"
-msgstr "mentorado"
+msgstr "mentoria"
 
 #: .\commons\menus.py:120 .\commons\templates\_menu_analytics.html:5
 msgid "analytics"
@@ -2851,7 +2851,7 @@ msgstr "Comunidade: <a href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_nam
 
 #: .\commons\templates\browse_mentors.html:90
 msgid "no mentoring activity started yet"
-msgstr "nenhuma atividade de mentorado iniciada"
+msgstr "nenhuma atividade de mentoria iniciada"
 
 #: .\commons\templates\browse_people.html:5
 #: .\commons\templates\browse_people.html:12
@@ -3018,7 +3018,7 @@ msgstr "Modelos"
 #: .\commons\templates\datatrans\translate.html:34
 #: .\commons\templates\datatrans\translate.html:35
 msgid "Translations for"
-msgstr "Conversão para"
+msgstr "Traduções para"
 
 #: .\commons\templates\datatrans\model_detail.html:32
 #, python-format
@@ -3048,7 +3048,7 @@ msgstr "para fazer (difuso)"
 
 #: .\commons\templates\datatrans\model_detail.html:82
 msgid "Link to this translation"
-msgstr "Link para esta conversão"
+msgstr "Link para esta tradução"
 
 #: .\commons\templates\datatrans\model_detail.html:105
 msgid "tick this checkbox if the translation is deliberately empty"
@@ -3147,7 +3147,7 @@ msgstr "O idioma atualmente ativo"
 
 #: .\commons\templates\datatrans\translate.html:12
 msgid "affects only the UI messages of this view"
-msgstr "afeta apenas as mensagens do utilizar em exibição"
+msgstr "afeta apenas as mensagens da interface de usuário desta visualização"
 
 #: .\commons\templates\datatrans\translate.html:40
 msgid "back to the normal view of this content"
@@ -4044,7 +4044,7 @@ msgstr "preferências de comunicação"
 #: .\commons\templates\profile_mentor_edit.html:7
 #: .\commons\templates\profile_mentor_edit.html:16
 msgid "edit mentoring related information"
-msgstr "editar informação relacionada com tutoria"
+msgstr "editar informação relacionada com mentoria"
 
 #: .\commons\templates\profile_mentor_edit.html:22
 #: .\commons\templates\user_profile.html:198
@@ -4310,7 +4310,7 @@ msgstr "os meus projetos de mentoria como mentorado"
 #: .\commons\templates\project_detail.html:776
 #: .\commons\templates\project_detail.html:811
 msgid "mentoring project"
-msgstr "projeto de mentorado"
+msgstr "projeto de mentoria"
 
 #: .\commons\templates\project_detail.html:796
 #: .\commons\templates\project_edit.html:14
@@ -4320,7 +4320,7 @@ msgstr "solicitar um mentor"
 
 #: .\commons\templates\project_detail.html:807
 msgid "mentoring requests"
-msgstr "pedidos de mentorado"
+msgstr "pedidos de mentoria"
 
 #: .\commons\templates\project_detail.html:840
 msgid "mentoring is not available for members of this community."
