@@ -4,19 +4,18 @@
 # 
 # Translators:
 # Giovanni Toffoli <toffoli@linkroma.it>, 2017,2021
-# Inês Araújo <ines.araujo@ipleiria.pt>, 2015-2016
 msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-14 23:30+0000\n"
+"PO-Revision-Date: 2021-01-16 14:02+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
-"Language-Team: Portuguese (Portugal) (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt_PT/)\n"
+"Language-Team: Portuguese (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pt_PT\n"
+"Language: pt\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
