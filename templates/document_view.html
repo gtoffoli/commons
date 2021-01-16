@@ -6,7 +6,7 @@
 {% if node %}
 {% blocktrans with node_label=node.label %}Node: {{ node_label }} [document]{% endblocktrans %}
 {% elif oer %}
-% blocktrans with oer_title=oer.title %}OER: {{ oer_title }} [document]{% endblocktrans %}
+{% blocktrans with oer_title=oer.title %}OER: {{ oer_title }} [document]{% endblocktrans %}
 {% endif %}
 {% endblock %}
 
