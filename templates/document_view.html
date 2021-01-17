@@ -50,11 +50,9 @@
      <p class="pull-right paddingT10 paddingLR5">
        <a href="{% if request.user.get_username == profile.get_username %}/my_profile/{% else %}/profile/{{ profile.get_username }}/{% endif %}"><i class="fa fa-list-alt font18" aria-hidden="true"></i></a>
     </p>
-    </p>
-
   {% endif %}
   </div>
-{% endblock  nav %}
+{% endblock nav %}
 
 {% block body_base %}
   <div class="container-fluid margin0 padding0">
