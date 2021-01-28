@@ -31,7 +31,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import capfirst
-from django.utils.translation import pgettext, ugettext_lazy as _
+from django.utils.translation import pgettext, gettext_lazy as _
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage

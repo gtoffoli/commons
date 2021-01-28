@@ -18,7 +18,7 @@ from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import User
 from django.contrib.sites.models import Site
-from django.utils.translation import pgettext, ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language

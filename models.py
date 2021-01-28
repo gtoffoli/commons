@@ -19,8 +19,7 @@ from weasyprint import HTML, CSS
 from django.core.cache import cache
 from django.core.validators import MinValueValidator
 from django.utils.functional import cached_property
-# from django.utils.translation import ugettext_lazy as _, string_concat
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.utils.text import capfirst
 from django.utils import timezone
 from django.dispatch import receiver

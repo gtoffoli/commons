@@ -11,7 +11,7 @@ import uuid
 
 from django.core.files.storage import FileSystemStorage
 from django.db import models, transaction
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from commons.compressed_files import CompressedFile, NotACompressedFile
 from commons.scorm import ContentPackage
 import commons.utils

@@ -108,7 +108,7 @@ class FlatPageIndex(indexes.SearchIndex, indexes.Indexable):
     def index_queryset(self, using=None):
         return self.get_model().objects.filter(url__icontains='help')
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from haystack.forms import ModelSearchForm, model_choices
 class commonsModelSearchForm(ModelSearchForm):

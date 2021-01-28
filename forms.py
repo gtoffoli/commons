@@ -2,7 +2,7 @@
 import re
 from django.conf import settings
 from django.core.validators import RegexValidator
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.forms.models import inlineformset_factory
 from django.contrib.auth.models import User, Group
