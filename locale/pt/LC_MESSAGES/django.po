@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-16 14:02+0000\n"
+"PO-Revision-Date: 2021-01-28 15:39+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Portuguese (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/pt/)\n"
 "MIME-Version: 1.0\n"
@@ -940,7 +940,7 @@ msgstr "lista de comunidades"
 
 #: .\commons\menus.py:33
 msgid "browse mentors"
-msgstr "navegar pelos mentores"
+msgstr "todos os mentores"
 
 #: .\commons\menus.py:37 .\commons\models.py:889
 #: .\commons\templates\project_detail.html:235
@@ -956,7 +956,7 @@ msgstr "forúns"
 
 #: .\commons\menus.py:51
 msgid "browse people"
-msgstr "visualizar pessoas"
+msgstr "todas as pessoas"
 
 #: .\commons\menus.py:55 .\commons\templates\search_people.html:5
 #: .\commons\templates\search_people.html:12
@@ -3158,7 +3158,7 @@ msgstr "A língua original deste conteúdo não está identificada."
 
 #: .\commons\templates\django_messages\base.html:25
 msgid "New Message"
-msgstr "Mensagem nova"
+msgstr "Nova mensagem"
 
 #: .\commons\templates\django_messages\base.html:27
 #: .\commons\templates\django_messages\inbox.html:3
@@ -4129,11 +4129,11 @@ msgstr "carregar logótipo"
 #: .\commons\templates\project_image_upload.html:8
 #: .\commons\templates\project_image_upload.html:15
 msgid "upload image"
-msgstr "upload de imagem"
+msgstr "carregar imagem"
 
 #: .\commons\templates\project_detail.html:317
 msgid "new community"
-msgstr "comunidade nova"
+msgstr "nova comunidade"
 
 #: .\commons\templates\project_detail.html:319
 msgid "create community"
@@ -4168,7 +4168,7 @@ msgstr "novo forúm"
 
 #: .\commons\templates\project_detail.html:364
 msgid "thematic"
-msgstr "temática"
+msgstr "temático"
 
 #: .\commons\templates\project_detail.html:391
 #: .\commons\templates\project_detail.html:959

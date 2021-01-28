@@ -3,13 +3,13 @@
 # This file is distributed under the same license as the PACKAGE package.
 # 
 # Translators:
-# Giovanni Toffoli <toffoli@linkroma.it>, 2020
+# Giovanni Toffoli <toffoli@linkroma.it>, 2020-2021
 msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-12 16:26+0000\n"
+"PO-Revision-Date: 2021-01-27 23:00+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Arabic (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -46,11 +46,11 @@ msgstr "تحليلات مسارات التعلم"
 
 #: .\commons\analytics.py:750
 msgid "LPs"
-msgstr ""
+msgstr "مسارات التعلم"
 
 #: .\commons\analytics.py:751
 msgid "published LPs"
-msgstr ""
+msgstr "مسارات التعلم المنشورة"
 
 #: .\commons\analytics.py:752
 msgid "LP by month"
@@ -58,15 +58,15 @@ msgstr "مسارات التعلم حسب الشهر"
 
 #: .\commons\documents.py:115 .\commons\documents.py:175
 msgid "Document type"
-msgstr ""
+msgstr "نوع الوثيقة"
 
 #: .\commons\documents.py:116
 msgid "Documents types"
-msgstr ""
+msgstr "أنواع الوثيقة"
 
 #: .\commons\documents.py:120 .\commons\metadata.py:27 .\commons\models.py:216
 msgid "Name"
-msgstr ""
+msgstr "اسم"
 
 #: .\commons\documents.py:123
 msgid "Automatically queue newly created documents for OCR."
@@ -74,146 +74,146 @@ msgstr ""
 
 #: .\commons\documents.py:176
 msgid "Uninitialized document"
-msgstr ""
+msgstr "وثيقة غير مهيأة"
 
 #: .\commons\documents.py:176
 msgid "The name of the document"
-msgstr ""
+msgstr "اسم الوثيقة"
 
 #: .\commons\documents.py:176
 msgid "Label"
-msgstr ""
+msgstr "تسمية"
 
 #: .\commons\documents.py:177
 msgid "Description"
-msgstr ""
+msgstr " الوصف"
 
 #: .\commons\documents.py:178
 msgid "Added"
-msgstr ""
+msgstr "أضيفت"
 
 #: .\commons\documents.py:179
 #: .\commons\templates\datatrans\obsolete_list.html:22
 msgid "Language"
-msgstr ""
+msgstr "اللغة"
 
 #: .\commons\documents.py:184 .\commons\documents.py:427
 #: .\commons\models.py:1828
 msgid "Document"
-msgstr ""
+msgstr "وثيقة"
 
 #: .\commons\documents.py:185
 msgid "Documents"
-msgstr ""
+msgstr "الوثائق"
 
 #: .\commons\documents.py:428
 msgid "Timestamp"
-msgstr ""
+msgstr "الطابع الزمني"
 
 #: .\commons\documents.py:429
 msgid "Comment"
-msgstr ""
+msgstr "تعليق"
 
 #: .\commons\documents.py:434
 msgid "File"
-msgstr ""
+msgstr "ملف"
 
 #: .\commons\documents.py:438
 msgid "Checksum"
-msgstr ""
+msgstr "المجموع الاختباري"
 
 #: .\commons\documents.py:441 .\commons\documents.py:442
 msgid "Document version"
-msgstr ""
+msgstr "نسخة الوثيقة"
 
 #: .\commons\forms.py:73
 msgid "gender"
-msgstr ""
+msgstr "جنس"
 
 #: .\commons\forms.py:78 .\commons\models.py:603
 msgid "date of birth"
-msgstr ""
+msgstr "تاريخ الميلاد"
 
 #: .\commons\forms.py:78 .\commons\models.py:603
 msgid "format: dd/mm/yyyy"
-msgstr ""
+msgstr "التنسيق: dd / mm / yyyy"
 
 #: .\commons\forms.py:79 .\commons\forms.py:132 .\commons\models.py:605
 #: .\commons\templates\_people_card.html:36
 #: .\commons\templates\user_profile.html:69 .\commons\vocabularies.py:168
 msgid "country"
-msgstr ""
+msgstr "بلد"
 
 #: .\commons\forms.py:80 .\commons\models.py:604
 #: .\commons\templates\user_profile.html:75
 msgid "city"
-msgstr ""
+msgstr "مدينة"
 
 #: .\commons\forms.py:81 .\commons\forms.py:137 .\commons\models.py:606
 #: .\commons\vocabularies.py:124
 msgid "education level"
-msgstr ""
+msgstr "مستوى التعليم"
 
 #: .\commons\forms.py:82 .\commons\forms.py:142 .\commons\models.py:607
 #: .\commons\vocabularies.py:130
 msgid "study or work status"
-msgstr ""
+msgstr "حالات الدراسة أو العمل"
 
 #: .\commons\forms.py:83 .\commons\models.py:611
 msgid "study or work position"
-msgstr ""
+msgstr "مكان الدراسة أو العمل"
 
 #: .\commons\forms.py:84 .\commons\forms.py:146 .\commons\models.py:608
 msgid "field of study"
-msgstr ""
+msgstr "مجال الدراسة"
 
 #: .\commons\forms.py:85 .\commons\forms.py:150
 msgid "sector of work"
-msgstr ""
+msgstr "قطاع العمل"
 
 #: .\commons\forms.py:86
 msgid "interest areas"
-msgstr ""
+msgstr "مجالات الاهتمام"
 
 #: .\commons\forms.py:87
 msgid "known languages"
-msgstr ""
+msgstr "اللغات المعروفة"
 
 #: .\commons\forms.py:88 .\commons\models.py:614
 msgid "known languages not listed above"
-msgstr ""
+msgstr "لغات معروفة غير مذكورة أعلاه"
 
 #: .\commons\forms.py:89 .\commons\models.py:615
 msgid "short presentation"
-msgstr ""
+msgstr "مقدمة ذاتية قصيرة"
 
 #: .\commons\forms.py:89
 msgid "very short presentation: 100-200 characters"
-msgstr ""
+msgstr "مقدمة ذاتية موجزة جدا: 100-200 حرف"
 
 #: .\commons\forms.py:90 .\commons\models.py:616
 msgid "longer presentation"
-msgstr ""
+msgstr "مقدمة ذاتية أطول"
 
 #: .\commons\forms.py:91 .\commons\forms.py:299 .\commons\models.py:617
 #: .\commons\templates\user_profile.html:124
 msgid "web site"
-msgstr ""
+msgstr "موقع الكتروني"
 
 #: .\commons\forms.py:92 .\commons\forms.py:164
 msgid "social networks / services used"
-msgstr ""
+msgstr "شبكات / الخدمات الاجتماعية المستخدمة"
 
 #: .\commons\forms.py:93 .\commons\forms.py:110 .\commons\models.py:621
 msgid "skype id"
-msgstr ""
+msgstr "معرف Skype"
 
 #: .\commons\forms.py:93 .\commons\forms.py:110
 #: .\commons\templates\user_profile.html:151
 #: .\commons\templates\user_profile.html:220
 msgid ""
 "your Skype id will be shared only within active mentoring relationships"
-msgstr ""
+msgstr "ستتم مشاركة معرف Skype الخاص بك فقط ضمن علاقات التوجيه النشطة"
 
 #: .\commons\forms.py:94 .\commons\forms.py:111 .\commons\models.py:622
 #: .\commons\templates\user_profile.html:155
@@ -221,7 +221,7 @@ msgstr ""
 #: .\commons\templates\user_profile.html:226
 #: .\commons\templates\user_profile.html:232
 msgid "P2P communication preferences"
-msgstr ""
+msgstr "تفضيلات الاتصال بين الند للند"
 
 #: .\commons\forms.py:94 .\commons\forms.py:111
 #: .\commons\templates\user_profile.html:156
@@ -231,19 +231,19 @@ msgstr ""
 msgid ""
 "any information useful in negotiating with a partner a convenient 1:1 "
 "communication solution"
-msgstr ""
+msgstr "أي معلومات مفيدة للتفاوض على حل اتصال 1:1 مريحة"
 
 #: .\commons\forms.py:107 .\commons\models.py:623
 #: .\commons\templates\user_profile.html:202
 #: .\commons\templates\user_strict_profile.html:33
 msgid "mentor presentation"
-msgstr ""
+msgstr "قدم نفسك كمرشد"
 
 #: .\commons\forms.py:107
 msgid ""
 "an extension to your presentation focused on your qualification as a "
 "potential mentor"
-msgstr ""
+msgstr "امتدادًا لعرضك التقديمي الذي يركز على مؤهلاتك كموجه محتمل"
 
 #: .\commons\forms.py:108 .\commons\models.py:624
 #: .\commons\templates\user_profile.html:207
@@ -255,17 +255,17 @@ msgstr "متاح كموجه للمجتمعات الأخرى"
 msgid ""
 "check if available/interested to act as mentor outside the community/ies "
 "where registered to the Roll of Mentors."
-msgstr ""
+msgstr "هل أنت متاح / مهتم للعمل كموجه ، خارج المجتمع / المجتمعات حيث تم تسجيلك في قائمة الموجهين؟"
 
 #: .\commons\forms.py:109 .\commons\models.py:625
 msgid "currently not available as mentor"
-msgstr ""
+msgstr "حاليا غير متوفرة كما معلمه"
 
 #: .\commons\forms.py:109
 msgid ""
 "check if temporarily unavailable to accept (more) requests by mentees; "
 "remember to update this when the situation changes!"
-msgstr ""
+msgstr "ضع علامة على هذا المربع إذا كنت غير متاح مؤقتًا لقبول (المزيد) الطلبات من قبل المتدربين ؛ تذكر أن تقوم بتحديث هذا عندما يتغير الوضع!"
 
 #: .\commons\forms.py:129
 msgid "text in name and short presentation"
@@ -274,7 +274,7 @@ msgstr ""
 #: .\commons\forms.py:130 .\commons\forms.py:245 .\commons\forms.py:320
 #: .\commons\forms.py:428 .\commons\forms.py:525
 msgid "enter search term"
-msgstr ""
+msgstr "أدخل مصطلح البحث"
 
 #: .\commons\forms.py:133
 msgid "choose country (no selection = all countries)"
@@ -282,7 +282,7 @@ msgstr ""
 
 #: .\commons\forms.py:138 .\commons\forms.py:151
 msgid "choose education level (no selection = all levels)"
-msgstr ""
+msgstr "اختر مستوى التعليم (لا يوجد اختيار = جميع المستويات)"
 
 #: .\commons\forms.py:143
 msgid "choose status (no selection = all statuses)"
@@ -290,28 +290,28 @@ msgstr ""
 
 #: .\commons\forms.py:147
 msgid "choose field of study' (no selection = all fields)"
-msgstr ""
+msgstr "اختر مجال الدراسة (لا يوجد اختيار = جميع المجالات)"
 
 #: .\commons\forms.py:154 .\commons\forms.py:303 .\commons\forms.py:322
 #: .\commons\forms.py:366 .\commons\forms.py:430 .\commons\forms.py:497
 #: .\commons\forms.py:527
 msgid "subject areas"
-msgstr ""
+msgstr "مجالات الموضوع"
 
 #: .\commons\forms.py:155 .\commons\forms.py:323 .\commons\forms.py:431
 #: .\commons\forms.py:528
 msgid "choose subject areas (no selection = all areas)"
-msgstr ""
+msgstr "اختر مجالات الموضوع (لا يوجد اختيار = جميع المجالات)"
 
 #: .\commons\forms.py:159 .\commons\forms.py:326 .\commons\forms.py:368
 #: .\commons\forms.py:437 .\commons\templates\_data_languages.html:4
 #: .\commons\templates\_people_card.html:25
 msgid "languages"
-msgstr ""
+msgstr "اللغات"
 
 #: .\commons\forms.py:160 .\commons\forms.py:327 .\commons\forms.py:438
 msgid "choose languages (no selection = all areas)"
-msgstr ""
+msgstr "اختيار اللغات (لا يوجد اختيار = جميع اللغات)"
 
 #: .\commons\forms.py:169
 msgid "person name"
@@ -365,7 +365,7 @@ msgstr ""
 #: .\commons\templates\project_detail.html:711
 #: .\commons\templates\project_detail.html:713
 msgid "mentoring setup model"
-msgstr ""
+msgstr "توجيه معايير إعداد المشروع"
 
 #: .\commons\forms.py:219
 msgid "can choose mentor from other community"
@@ -387,7 +387,7 @@ msgstr "مجتمعات"
 
 #: .\commons\forms.py:251 .\commons\views.py:781
 msgid "minimum number of members"
-msgstr ""
+msgstr "الحد الأدنى لعدد الأعضاء"
 
 #: .\commons\forms.py:252
 msgid "minimum number of learning paths"
@@ -405,7 +405,7 @@ msgstr ""
 
 #: .\commons\forms.py:256
 msgid "search by name"
-msgstr ""
+msgstr "البحث عن طريق الإسم"
 
 #: .\commons\forms.py:260 .\commons\forms.py:278 .\commons\forms.py:286
 #: .\commons\forms.py:555 .\commons\models.py:504 .\commons\models.py:2714
@@ -415,7 +415,7 @@ msgstr ""
 
 #: .\commons\forms.py:261
 msgid "language"
-msgstr ""
+msgstr "اللغة"
 
 #: .\commons\forms.py:263 .\commons\forms.py:468
 msgid "select a file"
@@ -443,15 +443,15 @@ msgstr "الشفرة لتضمين عرض مورد عبر الإنترنت داخ
 #: .\commons\forms.py:300 .\commons\forms.py:330 .\commons\models.py:1486
 #: .\commons\models.py:1504
 msgid "repository type"
-msgstr ""
+msgstr "نوع مستودع المصدر"
 
 #: .\commons\forms.py:301 .\commons\forms.py:333 .\commons\models.py:1466
 msgid "repository features"
-msgstr ""
+msgstr "ميزات المستودع"
 
 #: .\commons\forms.py:302
 msgid "languages of documents"
-msgstr ""
+msgstr "لغات الوثائق"
 
 #: .\commons\forms.py:302 .\commons\forms.py:303
 msgid "do not select any"
@@ -460,19 +460,19 @@ msgstr ""
 #: .\commons\forms.py:302
 msgid ""
 "if the repository includes a relevant number of contents in many languages"
-msgstr ""
+msgstr "إذا كان المستودع يتضمن عددًا ذا صلة من المحتويات بالعديد من اللغات"
 
 #: .\commons\forms.py:303
 msgid "if the repository is not focused on specific subjects"
-msgstr ""
+msgstr "إذا كان المستودع لا يركز على مواضيع محددة"
 
 #: .\commons\forms.py:304
 msgid "search suggestions"
-msgstr ""
+msgstr "اقتراحات للبحث"
 
 #: .\commons\forms.py:305 .\commons\templates\_oer_card.html:40
 msgid "comments"
-msgstr ""
+msgstr "التعليقات"
 
 #: .\commons\forms.py:305
 msgid "evaluation"
@@ -486,7 +486,7 @@ msgstr "تقييم"
 #: .\commons\templates\oer_detail.html:225
 #: .\commons\templates\oer_detail.html:259
 msgid "publication state"
-msgstr ""
+msgstr "حالة النشر"
 
 #: .\commons\forms.py:359
 msgid "specific URL of the OER"
@@ -512,7 +512,7 @@ msgstr ""
 msgid ""
 "one or two lines are enough here; this short description will be displayed "
 "in search results and will be used for full-text indexing"
-msgstr ""
+msgstr "يكفي هنا سطر أو سطرين ؛ سيتم عرض هذا الوصف القصير في نتائج البحث وسوف تستخدم لفهرسة النص الكامل"
 
 #: .\commons\forms.py:362 .\commons\forms.py:405 .\commons\forms.py:566
 msgid "text content"
@@ -541,7 +541,7 @@ msgstr ""
 msgid ""
 "the type of (educational) material refers to the function, not the physical "
 "aspect; the options have been taken from www.oercommons.org"
-msgstr ""
+msgstr "يشير نوع المادة التعليمية إلى وظيفتها ، وليس إلى الجانب المادي"
 
 #: .\commons\forms.py:365 .\commons\forms.py:496
 msgid "target audience"
@@ -607,7 +607,7 @@ msgstr ""
 
 #: .\commons\forms.py:374 .\commons\models.py:1597
 msgid "source repository"
-msgstr "مستودع المواد المصدر"
+msgstr "مستودع المصدر"
 
 #: .\commons\forms.py:374
 msgid ""
@@ -655,7 +655,7 @@ msgstr ""
 
 #: .\commons\forms.py:453 .\commons\forms.py:534 .\commons\vocabularies.py:105
 msgid "levels"
-msgstr ""
+msgstr "مستويات"
 
 #: .\commons\forms.py:463 .\commons\templates\oer_detail.html:158
 msgid "OER type"
@@ -777,7 +777,7 @@ msgstr ""
 msgid ""
 "Possibly specify document number and page range(s) for document(s) attached "
 "to the OER"
-msgstr ""
+msgstr "ربما تحديد رقم الوثيقة ونطاق (صفحات) الوثيقة (الوثائق) المرفقة بـ OER"
 
 #: .\commons\forms.py:560
 msgid "see the help pages on LPs for details"
@@ -787,12 +787,12 @@ msgstr "للحصول على التفاصيل ، راجع صفحات التعلي
 #: .\commons\templates\_pathnode_detail.html:31
 #: .\commons\templates\pathnode_edit.html:44
 msgid "document"
-msgstr ""
+msgstr "وثيقة"
 
 #: .\commons\forms.py:580
 msgid ""
 "the OER, the document attachment and the text content cannot be all missing"
-msgstr ""
+msgstr "OER ومرفق الوثيقة والمحتوى النصي لا يمكن أن تكون كلها مفقودة"
 
 #: .\commons\forms.py:583
 msgid "the node label is required"
@@ -862,7 +862,7 @@ msgstr "رسالة"
 
 #: .\commons\forms.py:676
 msgid "please, enter a notice for the mentor, to motivate your choice"
-msgstr ""
+msgstr "من فضلك ، أدخل إشعارًا للموجه لشرح اختيارك"
 
 #: .\commons\forms.py:690 .\commons\templates\project_detail.html:764
 #: .\commons\templates\user_profile.html:208
@@ -894,7 +894,7 @@ msgstr ""
 
 #: .\commons\forms.py:699 .\commons\templates\mentoring_detail.html:178
 msgid "my mentoring journey"
-msgstr ""
+msgstr "رحلتي كمتدرب"
 
 #: .\commons\forms.py:710 .\commons\forms.py:718 .\commons\models.py:3124
 msgid "optional text"
@@ -940,7 +940,7 @@ msgstr "كل المجتمعات"
 
 #: .\commons\menus.py:33
 msgid "browse mentors"
-msgstr "تصفح الموجهين"
+msgstr "جميع الموجهين"
 
 #: .\commons\menus.py:37 .\commons\models.py:889
 #: .\commons\templates\project_detail.html:235
@@ -956,7 +956,7 @@ msgstr "منتديات المناقشة"
 
 #: .\commons\menus.py:51
 msgid "browse people"
-msgstr "تصفح الناس"
+msgstr "جميع المستخدمين"
 
 #: .\commons\menus.py:55 .\commons\templates\search_people.html:5
 #: .\commons\templates\search_people.html:12
@@ -986,7 +986,7 @@ msgstr "الموارد المفتوحة"
 
 #: .\commons\menus.py:76
 msgid "source repositories"
-msgstr "مستودعات المواد المصدر"
+msgstr "مستودعات المصدر"
 
 #: .\commons\menus.py:84
 msgid "tutorials"
@@ -1129,15 +1129,15 @@ msgstr "محذوف"
 
 #: .\commons\models.py:237
 msgid "original language code"
-msgstr ""
+msgstr "كود اللغة الأصلية"
 
 #: .\commons\models.py:240
 msgid "comments enabled"
-msgstr ""
+msgstr "التعليقات ممكنة"
 
 #: .\commons\models.py:241
 msgid "Allows comments if checked."
-msgstr ""
+msgstr "يسمح بالتعليقات إذا تم تحديدها"
 
 #: .\commons\models.py:323
 msgid "Portlet"
@@ -1184,11 +1184,11 @@ msgstr ""
 
 #: .\commons\models.py:519
 msgid "folder document"
-msgstr ""
+msgstr "وثيقة في المجلد"
 
 #: .\commons\models.py:520
 msgid "folder documents"
-msgstr ""
+msgstr "الوثائق في المجلد"
 
 #: .\commons\models.py:557
 msgid "not specified"
@@ -1252,7 +1252,7 @@ msgstr ""
 
 #: .\commons\models.py:609
 msgid "work sector"
-msgstr ""
+msgstr "قطاع العمل"
 
 #: .\commons\models.py:610 .\commons\templates\user_profile.html:140
 #: .\commons\templates\user_profile.html:174
@@ -1350,23 +1350,23 @@ msgstr ""
 
 #: .\commons\models.py:869
 msgid "membership suspended or expired"
-msgstr ""
+msgstr "العضوية معلقة أو منتهية الصلاحية"
 
 #: .\commons\models.py:877
 msgid "mentoring is not available"
-msgstr ""
+msgstr "التوجيه غير مدعوم"
 
 #: .\commons\models.py:878
 msgid "A - The community administrator chooses the mentor"
-msgstr ""
+msgstr "أ - يختار مسؤول المجتمع المرشد"
 
 #: .\commons\models.py:879
 msgid "B - The mentee chooses the mentor"
-msgstr ""
+msgstr "ب - يختار المتدرب المرشد"
 
 #: .\commons\models.py:880
 msgid "B+A - The mentee or the administrator choose the mentor"
-msgstr ""
+msgstr "ب+أ - يختار المتدرب أو مسؤول المجتمع المرشد"
 
 #: .\commons\models.py:888
 msgid "project / community"
@@ -1394,7 +1394,7 @@ msgstr ""
 
 #: .\commons\models.py:905
 msgid "mentoring is available"
-msgstr ""
+msgstr "التوجيه متاح"
 
 #: .\commons\models.py:906
 msgid ""
@@ -1403,7 +1403,7 @@ msgstr "بمجرد وجود مشاريع التوجيه، يمكنك فقط ال
 
 #: .\commons\models.py:907
 msgid "allow external mentors"
-msgstr ""
+msgstr "السماح للمرشدين الخارجيين"
 
 #: .\commons\models.py:908
 msgid "prototypical Learning Path"
@@ -1436,7 +1436,7 @@ msgstr ""
 
 #: .\commons\models.py:1048 .\commons\templates\mentoring_detail.html:147
 msgid "mentor"
-msgstr ""
+msgstr "مرشد"
 
 #: .\commons\models.py:1050
 msgid "supervisor"
@@ -1468,15 +1468,15 @@ msgstr ""
 
 #: .\commons\models.py:1425
 msgid "last state change"
-msgstr ""
+msgstr "آخر تغيير في الحالة"
 
 #: .\commons\models.py:1426
 msgid "last state modifier"
-msgstr ""
+msgstr "محرر الحالة الأخيرة"
 
 #: .\commons\models.py:1427
 msgid "history of state changes"
-msgstr ""
+msgstr "مؤلف آخر تغيير"
 
 #: .\commons\models.py:1430 .\commons\models.py:1431
 msgid "project member"
@@ -1492,19 +1492,19 @@ msgstr "رسائل المشروع"
 
 #: .\commons\models.py:1465
 msgid "repository feature"
-msgstr ""
+msgstr "ميزة المستودع"
 
 #: .\commons\models.py:1487
 msgid "repository types"
-msgstr ""
+msgstr "أنواع مستودع المصدر"
 
 #: .\commons\models.py:1505
 msgid "URL of the repository site"
-msgstr ""
+msgstr "عنوان URL لمستودع المصدر"
 
 #: .\commons\models.py:1510
 msgid "longer description / search suggestions"
-msgstr ""
+msgstr "يعد الوصف / اقتراحات البحث"
 
 #: .\commons\models.py:1511 .\commons\templates\repo_detail.html:49
 msgid "comments / evaluation"
@@ -1516,11 +1516,11 @@ msgstr ""
 
 #: .\commons\models.py:1521 .\commons\templates\project_detail.html:422
 msgid "external repository"
-msgstr ""
+msgstr "مستودع خارجي"
 
 #: .\commons\models.py:1522 .\commons\templates\autocomplete.html:11
 msgid "external repositories"
-msgstr ""
+msgstr "المستودعات الخارجية"
 
 #: .\commons\models.py:1569
 msgid "Metadata only"
@@ -1532,7 +1532,7 @@ msgstr "البيانات الوصفية بالإضافة إلى ارتباط ل�
 
 #: .\commons\models.py:1571
 msgid "Metadata and document(s)"
-msgstr ""
+msgstr "البيانات الوصفية والوثيقة (الوثائق)"
 
 #: .\commons\models.py:1572
 msgid "Metadata and richtext"
@@ -1584,12 +1584,12 @@ msgstr ""
 
 #: .\commons\models.py:1836
 msgid "attached document"
-msgstr ""
+msgstr "الوثيقة المرفقة"
 
 #: .\commons\models.py:1837 .\commons\templates\_oer_card.html:24
 #: .\commons\templates\oer_detail.html:180
 msgid "attached documents"
-msgstr ""
+msgstr "الوثائق المرفقة"
 
 #: .\commons\models.py:1855
 msgid "Metadatum type"
@@ -1682,7 +1682,7 @@ msgstr ""
 
 #: .\commons\models.py:2012
 msgid "directed graph"
-msgstr ""
+msgstr "مخطط موجه"
 
 #: .\commons\models.py:2020
 msgid "original learning path"
@@ -1703,7 +1703,7 @@ msgstr ""
 #: .\commons\models.py:2265
 msgid ""
 "this node derives from a document node; the name of the attached file was"
-msgstr ""
+msgstr "هذه العقدة مشتقة من عقدة وثيقة ؛ كان اسم الملف المرفق"
 
 #: .\commons\models.py:2659
 msgid "Cover page"
@@ -1715,12 +1715,12 @@ msgstr "أشار مسار التعلم إلى"
 
 #: .\commons\models.py:2702
 msgid "shared LP"
-msgstr ""
+msgstr "مسار التعلم المشترك"
 
 #: .\commons\models.py:2703 .\commons\templates\mentoring_detail.html:455
 #: .\commons\templates\project_detail.html:621
 msgid "shared LPs"
-msgstr ""
+msgstr "مسارات التعلم المشتركة"
 
 #: .\commons\models.py:2722
 msgid "path edge"
@@ -1761,11 +1761,11 @@ msgstr ""
 
 #: .\commons\models.py:3090
 msgid "Tagged LP"
-msgstr ""
+msgstr "مسار تعلم ذو علامات تمييز"
 
 #: .\commons\models.py:3091
 msgid "Tagged LPs"
-msgstr ""
+msgstr "مسارات تعلم ذات علامات تمييز"
 
 #: .\commons\models.py:3113
 msgid "any"
@@ -1898,7 +1898,7 @@ msgstr ""
 #: .\commons\templates\_access_bar.html:54
 #: .\commons\templates\_login_model.html:29
 msgid "Remember Me"
-msgstr ""
+msgstr "تذكرنى"
 
 #: .\commons\templates\_access_bar.html:57
 #: .\commons\templates\_access_bar.html:90
@@ -1932,13 +1932,13 @@ msgstr ""
 
 #: .\commons\templates\_candidate_mentors.html:3
 msgid "select a mentor"
-msgstr ""
+msgstr "اختر مرشدًا"
 
 #: .\commons\templates\_candidate_mentors.html:25
 #: .\commons\templates\_candidate_mentors.html:35
 #: .\commons\templates\_candidate_mentors.html:47
 msgid "send the request to the mentor"
-msgstr ""
+msgstr "إرسال الطلب إلى المرشد"
 
 #: .\commons\templates\_candidate_mentors.html:48
 msgid "delegate community administrator"
@@ -1946,7 +1946,7 @@ msgstr "تفويض دور مسؤول المجتمع"
 
 #: .\commons\templates\_candidate_mentors.html:53
 msgid "currently there aren't any mentors available"
-msgstr ""
+msgstr "حاليا لا يوجد أي موجهين متاحين"
 
 #: .\commons\templates\_cannot_serialize.html:10
 #: .\commons\templates\_lp_serialize.html:18
@@ -1961,12 +1961,12 @@ msgstr ""
 
 #: .\commons\templates\_cannot_serialize.html:15
 msgid "cannot convert to PDF a document of mimetype"
-msgstr ""
+msgstr "لا يمكن تحويل إلى PDF وثيقة من mimetype"
 
 #: .\commons\templates\_cannot_serialize.html:17
 #: .\commons\templates\_online_serialize.html:20
 msgid "this node refers to an OER that you can access online through its URL"
-msgstr ""
+msgstr "تشير هذه العقدة إلى OER التي يمكنك الوصول إليها عبر الإنترنت من خلال عنوان URL الخاص بها"
 
 #: .\commons\templates\_change_state.html:8
 msgid "submit for publication"
@@ -2146,7 +2146,7 @@ msgstr ""
 
 #: .\commons\templates\_lp_serialize.html:26
 msgid "this document has been produced by"
-msgstr ""
+msgstr "هذه الوثيقة من إعداد"
 
 #: .\commons\templates\_lp_serialize.html:27
 #: .\commons\templates\project_detail.html:187
@@ -2168,7 +2168,7 @@ msgstr ""
 
 #: .\commons\templates\_mentors_refuse.html:5
 msgid "mentors that didn't accept"
-msgstr ""
+msgstr "الموجهين الذين لم يقبلوا الطلب"
 
 #: .\commons\templates\_menu_analytics.html:7
 msgid "registered users"
@@ -2192,7 +2192,7 @@ msgstr ""
 #: .\commons\templates\_object_comments.html:12
 #: .\commons\templates\zinnia\entry_detail_base.html:192
 msgid "Comments"
-msgstr ""
+msgstr "التعليقات"
 
 #: .\commons\templates\_object_comments.html:10
 msgid "disable"
@@ -2215,17 +2215,17 @@ msgstr ""
 #: .\commons\templates\zinnia\entry_detail_base.html:230
 #: .\commons\templates\zinnia\entry_detail_base.html:236
 msgid "Comments are closed."
-msgstr ""
+msgstr "التعليقات مغلقة"
 
 #: .\commons\templates\_object_comments.html:51
 #: .\commons\templates\zinnia\_entry_detail_base.html:153
 #: .\commons\templates\zinnia\entry_detail_base.html:234
 msgid "No comments yet."
-msgstr ""
+msgstr "لا تعليقات حتى الآن"
 
 #: .\commons\templates\_object_comments.html:69
 msgid "Add comment"
-msgstr ""
+msgstr "اضف تعليق"
 
 #: .\commons\templates\_object_comments.html:72
 #: .\commons\templates\_object_comments.html:74
@@ -2237,7 +2237,7 @@ msgstr ""
 #: .\commons\templates\_object_comments.html:72
 #: .\commons\templates\_object_comments.html:74
 msgid "to leave a comment"
-msgstr ""
+msgstr "لتتمكن من ترك تعليق"
 
 #: .\commons\templates\_object_comments.html:74
 #: .\commons\templates\oer_detail.html:244
@@ -2310,11 +2310,11 @@ msgstr ""
 
 #: .\commons\templates\_pathnode_detail.html:44
 msgid "node added by"
-msgstr ""
+msgstr "العقدة المضافة بواسطة"
 
 #: .\commons\templates\_project_card.html:20
 msgid "number of members"
-msgstr ""
+msgstr "عدد من أعضاء"
 
 #: .\commons\templates\_project_card.html:24
 #: .\commons\templates\_project_card.html:27
@@ -2374,16 +2374,16 @@ msgstr ""
 #: .\commons\templates\_resource_edit_lang_msg.html:6
 #: .\commons\templates\_resource_edit_lang_msg.html:13
 msgid "You are using the currently active language"
-msgstr ""
+msgstr "أنت تستخدم اللغة النشطة حاليًا"
 
 #: .\commons\templates\_resource_edit_lang_msg.html:8
 #: .\commons\templates\_resource_edit_lang_msg.html:15
 msgid "to edit a content whose 'original editing language' is"
-msgstr ""
+msgstr "لتعديل محتوى تم إنشاؤه في الأصل باللغة"
 
 #: .\commons\templates\_resource_edit_lang_msg.html:10
 msgid "this WILL CHANGE its 'original editing language'"
-msgstr ""
+msgstr "سيؤدي هذا إلى تعديل \"لغة التحرير الأصلية\""
 
 #: .\commons\templates\_resource_edit_lang_msg.html:12
 msgid "OK"
@@ -2399,17 +2399,17 @@ msgstr ""
 
 #: .\commons\templates\_resource_edit_lang_msg.html:18
 msgid "This will set its 'original editing language'"
-msgstr ""
+msgstr "سيؤدي هذا إلى تعيين \"لغة التحرير الأصلية\""
 
 #: .\commons\templates\_resource_edit_lang_msg.html:21
 msgid ""
 "IMPORTANT NOTICE! The content that you are creating will take the currently "
 "active language"
-msgstr ""
+msgstr " إشعار مهم! سيتخذ المحتوى الذي تقوم بإنشائه اللغة النشطة حاليًا كلغته"
 
 #: .\commons\templates\_resource_edit_lang_msg.html:23
 msgid "as its 'original editing language'"
-msgstr ""
+msgstr "باعتبارها \"لغة التحرير الأصلية\""
 
 #: .\commons\templates\_resource_edit_lang_msg.html:24
 msgid ""
@@ -2421,7 +2421,7 @@ msgstr "بعد ذلك، يجب عليك دائما تحريره باستخدام
 msgid ""
 "IMPORTANT NOTICE! The next time you will edit this content, it will take the"
 " current active language"
-msgstr ""
+msgstr "إشعار مهم! في المرة القادمة التي ستقوم فيها بتحرير هذا المحتوى، سوف يتخذ اللغة النشطة حاليًا كلغة خاصة به"
 
 #: .\commons\templates\_resource_lang_msg.html:8
 msgid ""
@@ -2433,17 +2433,17 @@ msgstr "كلغة التحرير الأصلية. بعد ذلك، يجب عليك 
 #: .\commons\templates\_resource_lang_msg.html:12
 msgid ""
 "Please note that, to be able to edit this content in its original language"
-msgstr ""
+msgstr "يرجى ملاحظة أنه ، لتتمكن من تحرير هذا المحتوى بلغته الأصلية"
 
 #: .\commons\templates\_resource_lang_msg.html:14
 msgid ""
 "you should make this the active language using the control in the menu bar"
-msgstr ""
+msgstr "يجب أن تجعل هذه اللغة النشطة باستخدام عنصر التحكم في شريط القائمة"
 
 #: .\commons\templates\_resource_original_lang.html:4
 #: .\commons\templates\project_detail.html:171
 msgid "original editing language"
-msgstr ""
+msgstr "لغة التحرير الأصلية"
 
 #: .\commons\templates\_search_form.html:8
 #: .\commons\templates\search_lps.html:36
@@ -2457,7 +2457,7 @@ msgstr ""
 #: .\commons\templates\search_repos.html:36
 #: .\commons\templates\search_repos.html:52
 msgid "search criteria"
-msgstr ""
+msgstr "معايير البحث"
 
 #: .\commons\templates\_search_form.html:9
 #: .\commons\templates\_search_form.html:30
@@ -2477,11 +2477,11 @@ msgstr ""
 #: .\commons\templates\_selected_mentor.html:4
 #: .\commons\templates\_selected_mentor.html:23
 msgid "selected mentor"
-msgstr ""
+msgstr "معلمه المختارة"
 
 #: .\commons\templates\_selected_mentor.html:18
 msgid "the request has been sent to the mentor on"
-msgstr ""
+msgstr "تم إرسال الطلب إلى المعلمه على"
 
 #: .\commons\templates\_selected_mentor.html:18
 msgid "by"
@@ -2489,7 +2489,7 @@ msgstr ""
 
 #: .\commons\templates\_selected_mentor.html:24
 msgid "the community administrator hasn't chosen a mentor yet"
-msgstr ""
+msgstr "لم يختار مسؤول المجتمع مرشدًا حتى الآن"
 
 #: .\commons\templates\account\account_inactive.html:5
 #: .\commons\templates\account\account_inactive.html:11
@@ -2647,7 +2647,7 @@ msgstr ""
 msgid ""
 "Recently active users <small>being members of projects shared with "
 "me</small>"
-msgstr ""
+msgstr "أعضاء نشطوا مؤخرًا <small>في مشاريعي</small>"
 
 #: .\commons\templates\active_users.html:17
 msgid "users online"
@@ -2683,7 +2683,7 @@ msgstr ""
 #: .\commons\templates\activity_stream.html:25
 #, python-format
 msgid "Recent activity by %(the_project)s"
-msgstr ""
+msgstr "النشاط الأخير داخل %(the_project)s"
 
 #: .\commons\templates\activity_stream.html:7
 #: .\commons\templates\activity_stream.html:25
@@ -2801,7 +2801,7 @@ msgstr ""
 #: .\commons\templates\count_users.html:20
 #: .\commons\templates\project_detail.html:522
 msgid "members"
-msgstr ""
+msgstr "أعضاء"
 
 #: .\commons\templates\autocomplete.html:20
 msgid "help pages"
@@ -2817,15 +2817,15 @@ msgstr "ترتيب "
 
 #: .\commons\templates\browse.html:16
 msgid "distributions of the learning paths"
-msgstr ""
+msgstr "توزيعات مسارات التعلم"
 
 #: .\commons\templates\browse.html:42
 msgid "distributions of the open educational resources (OERs)"
-msgstr ""
+msgstr "توزيعات المصادر التعليمية المفتوحة (OER)"
 
 #: .\commons\templates\browse.html:68
 msgid "distributions of the repositories"
-msgstr ""
+msgstr "توزيعات مستودعات المصدر"
 
 #: .\commons\templates\browse_mentors.html:5
 #: .\commons\templates\project_detail.html:918
@@ -2839,22 +2839,22 @@ msgstr "كل الموجهين"
 #: .\commons\templates\browse_mentors.html:52
 #: .\commons\templates\user_profile.html:258
 msgid "rolls of mentors"
-msgstr ""
+msgstr "قوائم الموجهين"
 
 #: .\commons\templates\browse_mentors.html:70
 msgid "currently there aren't any mentors"
-msgstr ""
+msgstr "حاليا لا يوجد أي موجهين"
 
 #: .\commons\templates\browse_mentors.html:83
 #, python-format
 msgid ""
 "Community: <a "
 "href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
-msgstr ""
+msgstr "المشروع: <a href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
 
 #: .\commons\templates\browse_mentors.html:90
 msgid "no mentoring activity started yet"
-msgstr ""
+msgstr "لا بدأ النشاط التوجيه بعد"
 
 #: .\commons\templates\browse_people.html:5
 #: .\commons\templates\browse_people.html:12
@@ -2876,7 +2876,7 @@ msgstr ""
 
 #: .\commons\templates\bulk_add_members.html:19
 msgid "members added"
-msgstr ""
+msgstr "أضاف الأعضاء"
 
 #: .\commons\templates\bulk_add_members.html:23
 #: .\commons\templates\bulk_add_members.html:29
@@ -2897,11 +2897,11 @@ msgstr "العودة إلى الصفحة الرئيسية للمجتمع / ال�
 
 #: .\commons\templates\comments\zinnia\entry\form.html:12
 msgid "Post your comment"
-msgstr ""
+msgstr "أضف تعليقك"
 
 #: .\commons\templates\comments\zinnia\entry\form.html:27
 msgid "Comment as"
-msgstr ""
+msgstr "التعليق باسم"
 
 #: .\commons\templates\comments\zinnia\entry\form.html:32
 msgid "Post"
@@ -2910,7 +2910,7 @@ msgstr ""
 #: .\commons\templates\commons_base.html:249
 #: .\commons\templates\livesearch.html:9
 msgid "Search ... (enter at least 3 characters)"
-msgstr ""
+msgstr "البحث... (أدخل على الأقل 3 أحرف)"
 
 #: .\commons\templates\content_languages.html:26
 #: .\commons\templates\content_languages.html:39
@@ -2942,12 +2942,12 @@ msgstr "فهرسة مصادر OER"
 
 #: .\commons\templates\cops_tree.html:77
 msgid "no community is present."
-msgstr ""
+msgstr "لا يوجد مجتمع موجود"
 
 #: .\commons\templates\count_users.html:5
 #: .\commons\templates\count_users.html:8
 msgid "count of users and members"
-msgstr ""
+msgstr "عدد المستخدمين والأعضاء"
 
 #: .\commons\templates\count_users.html:14
 msgid "user class"
@@ -2971,7 +2971,7 @@ msgstr "ملفات تعريف المستخدم مع الصور الرمزية"
 
 #: .\commons\templates\count_users.html:21
 msgid "accepted members"
-msgstr ""
+msgstr "الأعضاء المقبولين"
 
 #: .\commons\templates\count_users.html:22
 msgid "community members"
@@ -3146,7 +3146,7 @@ msgstr "و باللغات التي يعرفها المستخدم ، كما هو 
 
 #: .\commons\templates\datatrans\translate.html:12
 msgid "The current active language"
-msgstr ""
+msgstr "اللغة النشطة حاليًا"
 
 #: .\commons\templates\datatrans\translate.html:12
 msgid "affects only the UI messages of this view"
@@ -3158,7 +3158,7 @@ msgstr ""
 
 #: .\commons\templates\datatrans\translate.html:70
 msgid "The original language of this content is not known."
-msgstr ""
+msgstr "اللغة الأصلية لهذا المحتوى غير معروفة."
 
 #: .\commons\templates\django_messages\base.html:25
 msgid "New Message"
@@ -3273,7 +3273,7 @@ msgstr ""
 #: .\commons\templates\document_view.html:7
 #, python-format
 msgid "Node: %(node_label)s [document]"
-msgstr ""
+msgstr "عقدة: %(node_label)s [وثيقة]"
 
 #: .\commons\templates\document_view.html:46
 #: .\commons\templates\folder_detail.html:31
@@ -3295,12 +3295,12 @@ msgstr ""
 #: .\commons\templates\file_upload.html:10
 #: .\commons\templates\file_upload.html:13
 msgid "upload file with list of candidate members"
-msgstr ""
+msgstr "تحميل الملف مع قائمة الأعضاء المرشحين"
 
 #: .\commons\templates\file_upload.html:14
 #, python-format
 msgid "community or project: %(project_name)s"
-msgstr ""
+msgstr "مشروع أو مجتمع: %(project_name)s"
 
 #: .\commons\templates\file_upload.html:23
 #: .\commons\templates\folder_detail.html:125
@@ -3330,17 +3330,17 @@ msgstr ""
 #: .\commons\templates\search_repos.html:18
 #: .\commons\templates\zinnia\skeleton.html:34
 msgid "Search"
-msgstr ""
+msgstr "بحث"
 
 #: .\commons\templates\folder_detail.html:5
 #, python-format
 msgid "Shared folder for community: %(com_name)s"
-msgstr ""
+msgstr "مجلد مشترك داخل المجتمع: %(com_name)s"
 
 #: .\commons\templates\folder_detail.html:5
 #, python-format
 msgid "Shared folder for project: %(proj_name)s"
-msgstr ""
+msgstr "مجلد مشترك للمشروع:: %(proj_name)s"
 
 #: .\commons\templates\folder_detail.html:46
 #: .\commons\templates\project_detail.html:187
@@ -3357,7 +3357,7 @@ msgstr ""
 
 #: .\commons\templates\folder_detail.html:71
 msgid "added by"
-msgstr ""
+msgstr "أضيفت بواسطة"
 
 #: .\commons\templates\folder_detail.html:77
 msgid "loaded by"
@@ -3365,12 +3365,12 @@ msgstr ""
 
 #: .\commons\templates\folder_detail.html:110
 msgid "no shared documents are present"
-msgstr ""
+msgstr "لا توجد وثائق مشتركة"
 
 #: .\commons\templates\folder_detail.html:120
 #: .\commons\templates\oer_detail.html:205
 msgid "add document"
-msgstr ""
+msgstr "إضافة وثيقة"
 
 #: .\commons\templates\folder_detail.html:131
 msgid "add subfolder"
@@ -3399,7 +3399,7 @@ msgstr ""
 #: .\commons\templates\folder_detail.html:199
 #: .\commons\templates\oer_detail.html:326
 msgid "this document"
-msgstr ""
+msgstr "هذه الوثيقة"
 
 #: .\commons\templates\folder_detail.html:202
 msgid "this folder"
@@ -3417,11 +3417,11 @@ msgstr ""
 #: .\commons\templates\folderdocument_edit.html:4
 #, python-format
 msgid "Edit document in folder: %(folder_title)s"
-msgstr ""
+msgstr "تحرير وثيقة في المجلد: %(folder_title)s"
 
 #: .\commons\templates\folderdocument_edit.html:11
 msgid "edit document"
-msgstr ""
+msgstr "تحرير وثيقة"
 
 #: .\commons\templates\forum_analytics.html:5
 #: .\commons\templates\forum_analytics.html:11
@@ -3506,11 +3506,11 @@ msgstr "أعرف أكثر"
 #: .\commons\templates\lp_detail.html:4 .\commons\templates\lp_play.html:4
 #, python-format
 msgid "%(lp_title)s [learning path]"
-msgstr ""
+msgstr "%(lp_title)s [مسار تعلم]"
 
 #: .\commons\templates\lp_detail.html:71
 msgid "bookmark this LP for future reference"
-msgstr ""
+msgstr "للرجوع إليها في المستقبل، يحيط علماً بهذا مسار تعلم"
 
 #: .\commons\templates\lp_detail.html:72
 msgid "mark this LP as a candidate for cut & paste"
@@ -3526,11 +3526,11 @@ msgstr ""
 
 #: .\commons\templates\lp_detail.html:168
 msgid "convert to graph type in tree form: suggested only for few node!"
-msgstr ""
+msgstr "التحويل إلى نوع مخطط بياني يشبه الشجرة: غير مناسب للعديد من العقد!"
 
 #: .\commons\templates\lp_detail.html:171
 msgid "convert to graph type with unconnected nodes"
-msgstr ""
+msgstr "التحويل إلى نوع مخطط بياني مع العقد غير متصلة"
 
 #: .\commons\templates\lp_detail.html:196
 #: .\commons\templates\lp_detail.html:198
@@ -3549,12 +3549,12 @@ msgstr ""
 #: .\commons\templates\lp_detail.html:231
 #: .\commons\templates\pathnode_edit.html:7
 msgid "add node"
-msgstr ""
+msgstr "إضافة عقدة"
 
 #: .\commons\templates\lp_detail.html:233
 #, python-format
 msgid "Add node with OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
-msgstr ""
+msgstr "إضافة عقدة مع OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
 
 #: .\commons\templates\lp_detail.html:241
 msgid "cloned from"
@@ -3580,13 +3580,13 @@ msgstr ""
 msgid ""
 "do not submit this LP for publication if you want that only your mentor see "
 "it"
-msgstr ""
+msgstr "لا ترسل مسار التعلم هذا للنشر إذا كنت تريد أن يراه موجهك فقط"
 
 #: .\commons\templates\lp_detail.html:280
 msgid ""
 "To submit for publication this LP, you must move it before to a project by "
 "using the tool"
-msgstr ""
+msgstr "لإرسال مسار التعلم هذا للنشر ، يجب عليك نقله مسبقًا إلى مشروع عن طريق القص واللصق"
 
 #: .\commons\templates\lp_detail.html:315
 #: .\commons\templates\lp_detail.html:321
@@ -3599,7 +3599,7 @@ msgstr ""
 
 #: .\commons\templates\lp_detail.html:340
 msgid "do you really want to grant the editor role to this member"
-msgstr ""
+msgstr "هل تريد حقا أن تمنح دور المحرر لهذا العضو"
 
 #: .\commons\templates\lp_detail.html:342
 msgid "do you really want to remove this role"
@@ -3608,7 +3608,7 @@ msgstr ""
 #: .\commons\templates\lp_edit.html:7
 #, python-format
 msgid "%(lp_title)s [edit learning path]"
-msgstr ""
+msgstr "%(lp_title)s [تحرير مسار التعلم]"
 
 #: .\commons\templates\lp_edit.html:7 .\commons\templates\lp_edit.html:17
 msgid "add learning path"
@@ -3621,7 +3621,7 @@ msgstr "لتعديل مسار التعلم"
 #: .\commons\templates\lp_edit.html:19 .\commons\templates\oer_edit.html:23
 #, python-format
 msgid "<small class=\"%(class_name)s\">in the project</small> %(proj_name)s"
-msgstr ""
+msgstr "<small class=\"%(class_name)s\">في المشروع</small> %(proj_name)s"
 
 #: .\commons\templates\lp_play.html:116 .\commons\templates\lp_play.html:176
 msgid "prev"
@@ -3638,21 +3638,21 @@ msgstr ""
 #: .\commons\templates\mentoring_detail.html:5
 #, python-format
 msgid "%(the_project)s [project]"
-msgstr ""
+msgstr "%(the_project)s [مشروع]"
 
 #: .\commons\templates\mentoring_detail.html:143
 msgid "mentee"
-msgstr ""
+msgstr "متدرب"
 
 #: .\commons\templates\mentoring_detail.html:173
 msgid ""
 "a request must be submitted to the community administrator, which will try "
 "to allocate a mentor."
-msgstr ""
+msgstr "يجب تقديم طلب إلى مسؤول المجتمع الذي سيحاول تعيين مرشد."
 
 #: .\commons\templates\mentoring_detail.html:234
 msgid "documents"
-msgstr ""
+msgstr "الوثائق"
 
 #: .\commons\templates\mentoring_detail.html:265
 #: .\commons\templates\mentoring_detail.html:313
@@ -3697,7 +3697,7 @@ msgstr ""
 
 #: .\commons\templates\mentoring_detail.html:385
 msgid "back to draft state"
-msgstr ""
+msgstr "العودة إلى حالة المسودة"
 
 #: .\commons\templates\mentoring_detail.html:389
 #: .\commons\templates\project_detail.html:306
@@ -3738,12 +3738,12 @@ msgstr ""
 #: .\commons\templates\project_detail.html:450
 #: .\commons\templates\project_detail.html:990
 msgid "LP"
-msgstr ""
+msgstr "مسار تعلم"
 
 #: .\commons\templates\mentoring_detail.html:442
 #: .\commons\templates\project_detail.html:606
 msgid "last LPs"
-msgstr ""
+msgstr "أحدث مسارات التعلم"
 
 #: .\commons\templates\mentoring_detail.html:449
 #: .\commons\templates\mentoring_detail.html:474
@@ -3826,7 +3826,7 @@ msgstr ""
 
 #: .\commons\templates\oer_detail.html:42 .\commons\templates\oer_view.html:32
 msgid "bookmark this OER for future reference"
-msgstr ""
+msgstr "للرجوع إليها في المستقبل، يحيط علماً بهذا OER"
 
 #: .\commons\templates\oer_detail.html:44
 msgid "mark this OER as a candidate for cut & paste"
@@ -3910,7 +3910,7 @@ msgstr ""
 #: .\commons\templates\oer_detail.html:260
 msgid ""
 "To edit this OER, you must move it before to a project by using the tool"
-msgstr ""
+msgstr "لتحرير هذا OER ، يجب عليك قبل نقله إلى مشروع عن طريق القص واللصق"
 
 #: .\commons\templates\oer_detail.html:305
 msgid "this OER"
@@ -4004,11 +4004,11 @@ msgstr ""
 
 #: .\commons\templates\pathnode_edit.html:7
 msgid "edit learning path node"
-msgstr ""
+msgstr "تحرير عقدة مسار التعلم"
 
 #: .\commons\templates\pathnode_edit.html:23
 msgid "add learning path node"
-msgstr ""
+msgstr "إضافة عقدة مسار التعلم"
 
 #: .\commons\templates\pathnode_edit.html:27
 msgid ""
@@ -4016,7 +4016,7 @@ msgid ""
 "tailored to the needs of this learning path (LP); 3) a formatted text. When "
 "playing the LP, the platform will visualize only one of them: the OER, if "
 "present, otherwise the document or the formatted text as the last choice."
-msgstr ""
+msgstr "في هذا الاستمارة يمكنك تحديد 3 أنواع من الموارد: 1) OER ؛ 2) وثيقة مصممة خصيصا لاحتياجات مسار التعلم هذا ؛ 3) النص الغني. عند تشغيل مسار التعلم ، فإن النظام الأساسي ستعرض واحدًا منهم فقط: OER ، إذا كان موجودًا ، وإلا فإن الوثيقة أو النص الغني كخيار أخير."
 
 #: .\commons\templates\pathnode_edit.html:65
 msgid "remove selected file"
@@ -4047,12 +4047,12 @@ msgstr ""
 #: .\commons\templates\profile_mentor_edit.html:7
 #: .\commons\templates\profile_mentor_edit.html:16
 msgid "edit mentoring related information"
-msgstr ""
+msgstr "تحرير المعلومات المتعلقة بالتوجيه"
 
 #: .\commons\templates\profile_mentor_edit.html:22
 #: .\commons\templates\user_profile.html:198
 msgid "mentor information"
-msgstr ""
+msgstr "معلومات عن المرشد"
 
 #: .\commons\templates\project_detail.html:7
 #: .\commons\templates\project_detail.html:749
@@ -4061,7 +4061,7 @@ msgstr ""
 #: .\commons\templates\project_edit.html:16
 #: .\commons\templates\project_edit.html:57
 msgid "roll of mentors"
-msgstr "قائمة الموجهين"
+msgstr "قائمة من المرشدين"
 
 #: .\commons\templates\project_detail.html:161
 #: .\commons\templates\project_detail.html:167
@@ -4213,7 +4213,7 @@ msgstr ""
 #: .\commons\templates\project_detail.html:511
 #: .\commons\templates\project_detail.html:907
 msgid "apply for membership"
-msgstr ""
+msgstr "تقدم بطلب عضوية"
 
 #: .\commons\templates\project_detail.html:487
 #: .\commons\templates\project_detail.html:498
@@ -4261,7 +4261,7 @@ msgstr "قبول التطبيق لهذا المجتمع أو المشروع"
 
 #: .\commons\templates\project_detail.html:563
 msgid "add a member by your initiative"
-msgstr ""
+msgstr "أضف عضوا بمبادرتك"
 
 #: .\commons\templates\project_detail.html:564
 #: .\commons\templates\project_edit.html:16
@@ -4291,11 +4291,11 @@ msgstr ""
 
 #: .\commons\templates\project_detail.html:709
 msgid "mentoring policy"
-msgstr ""
+msgstr "سياسة التوجيه"
 
 #: .\commons\templates\project_detail.html:751
 msgid "create roll of mentors"
-msgstr ""
+msgstr "إنشاء قائمة من المرشدين"
 
 #: .\commons\templates\project_detail.html:763
 msgid "current mentoring setup model for this community"
@@ -4308,7 +4308,7 @@ msgstr "من الممكن اختيار مرشد من مجتمع آخر"
 #: .\commons\templates\project_detail.html:772
 #: .\commons\templates\user_dashboard.html:291
 msgid "my mentoring projects as a mentee"
-msgstr ""
+msgstr "مشاريع التوجيه حيث أنا متدرب"
 
 #: .\commons\templates\project_detail.html:776
 #: .\commons\templates\project_detail.html:811
@@ -4319,11 +4319,11 @@ msgstr "مشروع التوجيه"
 #: .\commons\templates\project_edit.html:14
 #: .\commons\templates\project_edit.html:55
 msgid "request a mentor"
-msgstr ""
+msgstr "طلب مرشد"
 
 #: .\commons\templates\project_detail.html:807
 msgid "mentoring requests"
-msgstr ""
+msgstr "طلبات التوجيه"
 
 #: .\commons\templates\project_detail.html:840
 msgid "mentoring is not available for members of this community."
@@ -4335,12 +4335,12 @@ msgstr ""
 
 #: .\commons\templates\project_detail.html:894
 msgid "accept application to this roll of mentors"
-msgstr ""
+msgstr "قبول الطلب لهذه القائمة من المرشدين"
 
 #: .\commons\templates\project_detail.html:909
 #: .\commons\templates\user_profile.html:241
 msgid "edit mentor profile"
-msgstr "قدم نفسك كمرشد"
+msgstr "تحرير نفسك كمرشد"
 
 #: .\commons\templates\project_detail.html:909
 msgid "to apply you must fill the mentor presentation in your profile"
@@ -4353,13 +4353,13 @@ msgstr "أحدث مسارات التعلم"
 #: .\commons\templates\project_detail.html:1042
 msgid ""
 "do you really want to grant the admin or supervisor role to this member"
-msgstr ""
+msgstr "هل تريد حقًا منح دور المسؤول أو المشرف لهذا العضو"
 
 #: .\commons\templates\project_detail.html:1044
 msgid ""
 "do you really want to call back the admin or supervisor role from this "
 "member"
-msgstr ""
+msgstr "هل تريد حقًا إلغاء دور المسؤول أو المشرف لهذا العضو؟"
 
 #: .\commons\templates\project_edit.html:21
 #: .\commons\templates\project_edit.html:62
@@ -4387,7 +4387,7 @@ msgstr ""
 #: .\commons\templates\project_results.html:97
 #: .\commons\templates\user_dashboard.html:461
 msgid "no Learning Path created yet"
-msgstr ""
+msgstr "لم يتم إنشاء مسار تعلم حتى الآن"
 
 #: .\commons\templates\project_results.html:108
 #: .\commons\templates\user_dashboard.html:407
@@ -4554,24 +4554,24 @@ msgstr ""
 
 #: .\commons\templates\repo_detail.html:5
 msgid "repository"
-msgstr ""
+msgstr "مستودع المصدر"
 
 #: .\commons\templates\repo_edit.html:6 .\commons\templates\repo_edit.html:14
 msgid "edit repository"
-msgstr ""
+msgstr "تحرير المستودع"
 
 #: .\commons\templates\repo_edit.html:6 .\commons\templates\repo_edit.html:14
 msgid "add repository"
-msgstr ""
+msgstr "أضف مستودعًا"
 
 #: .\commons\templates\repo_oers.html:5 .\commons\templates\repo_oers.html:12
 #: .\commons\templates\tag_oers.html:5 .\commons\templates\tag_oers.html:12
 msgid "OERs from repository"
-msgstr ""
+msgstr "OERs من مستودع"
 
 #: .\commons\templates\repo_oers.html:25 .\commons\templates\tag_oers.html:22
 msgid "no OERs are present having this repository as their source"
-msgstr ""
+msgstr "لا يوجد OERs موجودة من هذا المستودع"
 
 #: .\commons\templates\resource_analytics.html:23
 msgid "last"
@@ -4597,7 +4597,7 @@ msgstr "الموارد التي تم إنشاؤها والمصنفة وتقيي�
 #: .\commons\templates\resources_by.html:69
 #: .\commons\templates\search_repos.html:12
 msgid "repositories"
-msgstr ""
+msgstr "مستودعات المصدر"
 
 #: .\commons\templates\search_lps.html:5
 msgid "search of learning paths"
@@ -4629,7 +4629,7 @@ msgstr ""
 #: .\commons\templates\search_repos.html:33
 #: .\commons\templates\search_repos.html:49
 msgid "search text"
-msgstr ""
+msgstr "نص للبحث"
 
 #: .\commons\templates\search_lps.html:47
 #: .\commons\templates\search_oers.html:47
@@ -4641,7 +4641,7 @@ msgstr ""
 
 #: .\commons\templates\search_oers.html:5
 msgid "search of OERs"
-msgstr ""
+msgstr "البحث عن OERs"
 
 #: .\commons\templates\search_oers.html:12
 msgid "open educational resources"
@@ -4651,7 +4651,7 @@ msgstr "الموارد التعليمية المفتوحة"
 #: .\commons\templates\search_people.html:18
 #: .\commons\templates\search_repos.html:5
 msgid "search"
-msgstr ""
+msgstr "بحث"
 
 #: .\commons\templates\search_projects.html:5
 msgid "search of projects"
@@ -4659,7 +4659,7 @@ msgstr "البحث عن المشاريع"
 
 #: .\commons\templates\search_repos.html:5
 msgid "of source repositories"
-msgstr ""
+msgstr "عن مستودعات المصدر"
 
 #: .\commons\templates\user_dashboard.html:28
 #: .\commons\templates\user_preferences.html:22
@@ -4705,7 +4705,7 @@ msgstr "المسؤول عن المجتمعات التالية"
 
 #: .\commons\templates\user_dashboard.html:117
 msgid "supervisor of the following rolls of mentors"
-msgstr ""
+msgstr "المشرف على قوائم المرشدين التالية"
 
 #: .\commons\templates\user_dashboard.html:139
 msgid "supervisor of the following projects"
@@ -4717,7 +4717,7 @@ msgstr "عضو في المجتمعات التالية"
 
 #: .\commons\templates\user_dashboard.html:183
 msgid "member of the following rolls of mentors"
-msgstr ""
+msgstr "عضو في قوائم المرشدين التالية"
 
 #: .\commons\templates\user_dashboard.html:202
 #: .\commons\templates\user_dashboard.html:228
@@ -4730,7 +4730,7 @@ msgstr "عضو في المشاريع التالية"
 
 #: .\commons\templates\user_dashboard.html:235
 msgid "mentoring requests in my communities"
-msgstr ""
+msgstr "طلبات التوجيه في مجتمعاتي"
 
 #: .\commons\templates\user_dashboard.html:240
 #: .\commons\templates\user_dashboard.html:254
@@ -4741,11 +4741,11 @@ msgstr ""
 
 #: .\commons\templates\user_dashboard.html:249
 msgid "mentoring requests in my communities waiting for mentor answer"
-msgstr ""
+msgstr "طلبات التوجيه في مجتمعاتي في انتظار إجابة المرشد"
 
 #: .\commons\templates\user_dashboard.html:263
 msgid "mentees requesting me as a mentor"
-msgstr ""
+msgstr "المتدربون الذين طلبوا مني أن أكون مرشدهم"
 
 #: .\commons\templates\user_dashboard.html:276
 msgid "my mentoring projects as a mentor"
@@ -4753,11 +4753,11 @@ msgstr "مشاريع التوجيه حيث أنا المرشد"
 
 #: .\commons\templates\user_dashboard.html:309
 msgid "suggested mentors"
-msgstr ""
+msgstr "الموجهين اقترح"
 
 #: .\commons\templates\user_dashboard.html:321
 msgid "no fit mentors were found in the communities of which you are member"
-msgstr ""
+msgstr "لم يتم العثور على مرشدين مناسبين في المجتمعات التي أنت عضو فيها"
 
 #: .\commons\templates\user_dashboard.html:327
 msgid "my activity of last period"
@@ -4773,7 +4773,7 @@ msgstr ""
 
 #: .\commons\templates\user_dashboard.html:376
 msgid "create personal Learning Path"
-msgstr ""
+msgstr "إنشاء مسار تعلم شخصي"
 
 #: .\commons\templates\user_dashboard.html:383
 msgid "My bookmarks (OER stubs)"
@@ -4789,7 +4789,7 @@ msgstr ""
 
 #: .\commons\templates\user_dashboard.html:412
 msgid "unpublished OERs in supervised projects"
-msgstr ""
+msgstr "OERs غير المنشورة في المشاريع الخاضعة للإشراف"
 
 #: .\commons\templates\user_dashboard.html:424
 msgid "my OER evaluations"
@@ -4797,19 +4797,19 @@ msgstr "تقييماتي OER"
 
 #: .\commons\templates\user_dashboard.html:437
 msgid "my personal Learning Paths"
-msgstr ""
+msgstr "مسارات التعلم في مساحتي الخاصة"
 
 #: .\commons\templates\user_dashboard.html:447
 msgid "no personal Learning Path created yet"
-msgstr ""
+msgstr "لم يتم إنشاء مسار تعلم شخصي حتى الآن"
 
 #: .\commons\templates\user_dashboard.html:451
 msgid "my Learning Paths"
-msgstr ""
+msgstr "مسارات التعلم الخاصة بي"
 
 #: .\commons\templates\user_dashboard.html:466
 msgid "unpublishd LPs in supervised projects"
-msgstr ""
+msgstr "مسارات التعلم غير المنشورة في المشاريع الخاضعة للإشراف"
 
 #: .\commons\templates\user_dashboard.html:481
 #: .\commons\templates\user_profile.html:44
@@ -4831,7 +4831,7 @@ msgstr ""
 #: .\commons\templates\user_profile.html:6
 #: .\commons\templates\user_strict_profile.html:6
 msgid "member"
-msgstr ""
+msgstr "عضو"
 
 #: .\commons\templates\user_profile.html:29
 #: .\commons\templates\user_strict_profile.html:23
@@ -4856,7 +4856,7 @@ msgstr ""
 
 #: .\commons\templates\user_profile.html:114
 msgid "other languages"
-msgstr ""
+msgstr "لغات اخرى"
 
 #: .\commons\templates\user_profile.html:150
 #: .\commons\templates\user_profile.html:219
@@ -4874,16 +4874,16 @@ msgstr ""
 #: .\commons\templates\user_profile.html:211
 #: .\commons\templates\user_strict_profile.html:42
 msgid "currently available as mentor"
-msgstr ""
+msgstr "متاح حاليًا كموجه"
 
 #: .\commons\templates\user_profile.html:261
 #: .\commons\templates\user_strict_profile.html:51
 msgid "view roll of mentors"
-msgstr ""
+msgstr "عرض قائمة المرشدين"
 
 #: .\commons\templates\user_profile.html:280
 msgid "similar members"
-msgstr ""
+msgstr "أعضاء متشابهين"
 
 #: .\commons\templates\user_profile.html:300
 #: .\commons\templates\user_strict_profile.html:62
@@ -4901,7 +4901,7 @@ msgstr ""
 
 #: .\commons\templates\user_strict_profile.html:48
 msgid "rolls od mentors"
-msgstr ""
+msgstr "قوائم  من المرشدين"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:23
 msgid "Written by"
@@ -4963,27 +4963,27 @@ msgstr ""
 #: .\commons\templates\zinnia\_entry_detail_base.html:148
 #, python-format
 msgid "Comments on %(object)s"
-msgstr ""
+msgstr "تعليقات على %(object)s"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:149
 #, python-format
 msgid "%(comment_count)s comment"
 msgid_plural "%(comment_count)s comments"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
+msgstr[0] "%(comment_count)s تعليق"
+msgstr[1] "%(comment_count)s تعليق"
+msgstr[2] "%(comment_count)s تعليقات"
+msgstr[3] "%(comment_count)s تعليقات"
+msgstr[4] "%(comment_count)s تعليقات"
+msgstr[5] "%(comment_count)s تعليقات"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:155
 #, python-format
 msgid "Leave a comment on %(object)s"
-msgstr ""
+msgstr "اترك تعليقا على %(object)s"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:156
 msgid "Be first to comment!"
-msgstr ""
+msgstr "كن أول من يعلق!"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:167
 #, python-format
@@ -5035,7 +5035,7 @@ msgstr ""
 
 #: .\commons\templates\zinnia\base.html:59
 msgid "Recent comments"
-msgstr ""
+msgstr "احدث التعليقات"
 
 #: .\commons\templates\zinnia\base.html:77
 msgid "Archives"
@@ -5049,7 +5049,7 @@ msgstr ""
 #: .\commons\templates\zinnia\entry_detail_base.html:25
 #, python-format
 msgid "RSS feed of comments on %(object)s"
-msgstr ""
+msgstr "تغذية RSS من التعليقات على %(object)s"
 
 #: .\commons\templates\zinnia\entry_detail_base.html:27
 #, python-format
@@ -5079,7 +5079,7 @@ msgstr ""
 
 #: .\commons\templates\zinnia\entry_detail_base.html:218
 msgid "Direct link to this comment"
-msgstr ""
+msgstr "رابط مباشر لهذا التعليق"
 
 #: .\commons\templates\zinnia\entry_detail_base.html:255
 #: .\commons\templates\zinnia\entry_detail_base.html:256
@@ -5114,27 +5114,27 @@ msgstr ""
 msgid ""
 "this request is waiting since long time: if you want to retract it, please "
 "write a notice for the mentor and push the button below"
-msgstr ""
+msgstr "هذا الطلب ينتظر منذ فترة طويلة: إذا أردت التراجع عنه ، يرجى كتابة إشعار للموجه والضغط على الزر أدناه"
 
 #: .\commons\views.py:1335
 msgid ""
 "if you aren't able to choose another mentor, please write a notice for both "
 "the mentee and the mentor and push the button below"
-msgstr ""
+msgstr "إذا لم تكن قادرًا على اختيار موجه آخر ، فيرجى كتابة إشعار لكل من المتدرب والموجه والضغط على الزر أدناه"
 
 #: .\commons\views.py:1356
 msgid ""
 "this request is waiting since long time: please write a notice for both the "
 "mentee and the mentor and push the button below"
-msgstr ""
+msgstr "هذا الطلب ينتظر منذ وقت طويل: يرجى كتابة إشعار لكل من المتدرب والموجه والضغط على الزر أدناه"
 
 #: .\commons\views.py:1752
 msgid "membership application"
-msgstr ""
+msgstr "طلب العضوية"
 
 #: .\commons\views.py:1753
 msgid "has applied for membership in"
-msgstr ""
+msgstr "قد تقدمت بطلب لعضوية في"
 
 #: .\commons\views.py:2012
 msgid "thematic forum"
@@ -5162,7 +5162,7 @@ msgstr ""
 
 #: .\commons\vocabularies.py:104
 msgid "level"
-msgstr ""
+msgstr "مستوى"
 
 #: .\commons\vocabularies.py:116
 msgid "license"
@@ -5174,19 +5174,19 @@ msgstr ""
 
 #: .\commons\vocabularies.py:125
 msgid "education levels"
-msgstr ""
+msgstr "مستويات التعليم"
 
 #: .\commons\vocabularies.py:131
 msgid "study or work statuses"
-msgstr ""
+msgstr "أمكنة الدراسة أو العمل"
 
 #: .\commons\vocabularies.py:136
 msgid "education field"
-msgstr ""
+msgstr "مجال التعليم"
 
 #: .\commons\vocabularies.py:137
 msgid "education fields"
-msgstr ""
+msgstr "مجالات التعليم"
 
 #: .\commons\vocabularies.py:142
 msgid "professional field"
@@ -5198,19 +5198,19 @@ msgstr ""
 
 #: .\commons\vocabularies.py:148
 msgid "social network"
-msgstr ""
+msgstr "شبكة اجتماعية"
 
 #: .\commons\vocabularies.py:149
 msgid "social networks"
-msgstr ""
+msgstr "الشبكات الاجتماعية"
 
 #: .\commons\vocabularies.py:156
 msgid "OER language"
-msgstr ""
+msgstr "لغة OER"
 
 #: .\commons\vocabularies.py:157
 msgid "OER languages"
-msgstr ""
+msgstr "لغات OER"
 
 #: .\commons\vocabularies.py:169
 msgid "countries"
