@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-27 23:00+0000\n"
+"PO-Revision-Date: 2021-01-29 15:49+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Arabic (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -359,7 +359,7 @@ msgstr "وصف مشروع التوجيه"
 #: .\commons\templates\project_detail.html:854
 #: .\commons\templates\repo_detail.html:43
 msgid "additional information"
-msgstr ""
+msgstr "معلومة اضافية"
 
 #: .\commons\forms.py:212 .\commons\models.py:906
 #: .\commons\templates\project_detail.html:711
@@ -826,7 +826,7 @@ msgstr ""
 
 #: .\commons\forms.py:628
 msgid "better specify the purpose of this forum"
-msgstr ""
+msgstr "مزيد من شرح الغرض من هذا منتدى للنقاش"
 
 #: .\commons\forms.py:650 .\commons\templates\browse_mentors.html:62
 #: .\commons\templates\browse_mentors.html:63
@@ -1038,7 +1038,7 @@ msgstr "أدوات لهيئة التحرير"
 
 #: .\commons\menus.py:147 .\commons\templates\_menu_analytics.html:10
 msgid "activity stream"
-msgstr ""
+msgstr "تيار النشاط"
 
 #: .\commons\menus.py:155 .\commons\templates\_menu_analytics.html:15
 #: .\commons\templates\user_dashboard.html:39
@@ -1226,7 +1226,7 @@ msgstr "هل تريد أن يتم إعلامك بالرسائل الخاصة م�
 
 #: .\commons\models.py:594
 msgid "activity stream max days"
-msgstr ""
+msgstr "تيار النشاط: الحد الأقصى لعدد الأيام"
 
 #: .\commons\models.py:594
 msgid "Max age of actions to list in my dashboard."
@@ -1234,7 +1234,7 @@ msgstr ""
 
 #: .\commons\models.py:595
 msgid "activity stream max actions "
-msgstr ""
+msgstr "تيار النشاط: الحد الأقصى لعدد الإجراءات"
 
 #: .\commons\models.py:595
 msgid "Max number of actions to list in my dashboard."
@@ -1914,7 +1914,7 @@ msgstr ""
 #: .\commons\templates\flatpages\why_register.html:46
 #: .\commons\templates\pybb\_need_to_login_message.html:4
 msgid "sign up"
-msgstr ""
+msgstr "سجّل"
 
 #: .\commons\templates\_access_bar.html:62
 #: .\commons\templates\_access_bar.html:64
@@ -2527,7 +2527,7 @@ msgstr ""
 #: .\commons\templates\account\login.html:61
 #: .\commons\templates\account\login.html:103
 msgid "Sign In"
-msgstr ""
+msgstr "دخول"
 
 #: .\commons\templates\account\login.html:70
 #, python-format
@@ -2535,20 +2535,20 @@ msgid ""
 "Please sign in with one\n"
 "                        of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
 "                        for a %(site_name)s account and sign in below:"
-msgstr ""
+msgstr "يرجى المصادقة على أحد\n                        حسابات الطرف الثالث الموجودة لديك. أو<a href=\"%(signup_url)s\">قم بالتسجيل للحصول</a>\n                        على حساب %(site_name)s وقم بتسجيل الدخول أدناه:"
 
 #: .\commons\templates\account\login.html:83
 #, python-format
 msgid ""
 "If you have not created an account yet, then please\n"
 "                        <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
+msgstr "إذا لم تقم بإنشاء حساب بعد ، فيرجى\n                        <a href=\"%(signup_url)s\">التسجيل</a> أولاً."
 
 #: .\commons\templates\account\login.html:87
 msgid ""
 "Please sign in with one\n"
 "                    of your existing third party accounts."
-msgstr ""
+msgstr "يرجى المصادقة مع أحد\n                    حسابات طرف ثالث الموجودة لديك."
 
 #: .\commons\templates\account\login.html:94
 #: .\commons\templates\flatpages\why_register.html:47
@@ -2613,18 +2613,18 @@ msgstr ""
 
 #: .\commons\templates\account\signup.html:5
 msgid "Signup"
-msgstr ""
+msgstr "سجّل"
 
 #: .\commons\templates\account\signup.html:43
 #: .\commons\templates\account\signup.html:55
 msgid "Sign Up"
-msgstr ""
+msgstr "سجّل"
 
 #: .\commons\templates\account\signup.html:47
 #, python-format
 msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
-msgstr ""
+msgstr "لديك حساب بالفعل؟ ثم الرجاء <a href=\"%(login_url)s\">تسجيل الدخول</a>."
 
 #: .\commons\templates\account\verification_sent.html:5
 #: .\commons\templates\account\verification_sent.html:10
@@ -2636,7 +2636,7 @@ msgid ""
 "We have sent an e-mail to you for verification. Follow the link provided to "
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "لقد أرسلنا إليك بريدًا إلكترونيًا للتحقق. اتبع الرابط الموجود به لإنهاء عملية التسجيل. يرجى الاتصال بنا إذا لم تستلمها خلال بضع دقائق."
 
 #: .\commons\templates\active_users.html:5
 #: .\commons\templates\active_users.html:13
@@ -2677,19 +2677,19 @@ msgstr ""
 #: .\commons\templates\activity_stream.html:25
 #, python-format
 msgid "Recent activity by %(the_actor)s"
-msgstr ""
+msgstr "النشاط الأخير بواسطة %(the_actor)s"
 
 #: .\commons\templates\activity_stream.html:7
 #: .\commons\templates\activity_stream.html:25
 #, python-format
 msgid "Recent activity by %(the_project)s"
-msgstr "النشاط الأخير داخل %(the_project)s"
+msgstr "النشاط الأخير في %(the_project)s"
 
 #: .\commons\templates\activity_stream.html:7
 #: .\commons\templates\activity_stream.html:25
 #: .\commons\templates\project_detail.html:676
 msgid "recent activity"
-msgstr ""
+msgstr "النشاط الأخير"
 
 #: .\commons\templates\activity_stream.html:30
 msgid "time"
@@ -3426,7 +3426,7 @@ msgstr "تحرير وثيقة"
 #: .\commons\templates\forum_analytics.html:5
 #: .\commons\templates\forum_analytics.html:11
 msgid "forum analytics"
-msgstr ""
+msgstr "تحليلات المنتدى"
 
 #: .\commons\templates\forum_analytics.html:12
 #, python-format
@@ -3435,17 +3435,17 @@ msgstr ""
 
 #: .\commons\templates\forum_analytics.html:15
 msgid "forums with topics by posts"
-msgstr ""
+msgstr "المنتدى حسب عدد المشاركات"
 
 #: .\commons\templates\forum_analytics.html:30
 msgid "forum topics by posts"
-msgstr ""
+msgstr "مواضيع المنتدى حسب عدد المشاركات"
 
 #: .\commons\templates\forum_edit.html:7
 #: .\commons\templates\forum_edit.html:13
 #, python-format
 msgid "Edit forum: %(forum_name)s"
-msgstr ""
+msgstr "تحرير منتدى المناقشة: %(forum_name)s"
 
 #: .\commons\templates\homepage.html:6 .\commons\views.py:124
 msgid "Learn with others, Create, Reuse"
@@ -3785,11 +3785,11 @@ msgstr "الرسائل حسب الشهر"
 
 #: .\commons\templates\new_posts.html:6
 msgid "new posts in your forums"
-msgstr ""
+msgstr "مشاركات جديدة في المنتديات الخاصة بك"
 
 #: .\commons\templates\new_posts.html:9
 msgid "new posts in my forums"
-msgstr ""
+msgstr "مشاركات جديدة في منتدياتي"
 
 #: .\commons\templates\new_posts.html:10
 msgid "posts added to topics after you last viewed them"
@@ -3933,7 +3933,7 @@ msgstr ""
 #: .\commons\templates\profile_edit.html:32
 #: .\commons\templates\user_profile.html:63
 msgid "general information"
-msgstr ""
+msgstr "معلومات عامة"
 
 #: .\commons\templates\oer_edit.html:40
 msgid "classification metadata"
@@ -4168,7 +4168,7 @@ msgstr "مشروع فرعي جديد"
 #: .\commons\templates\project_detail.html:359
 #: .\commons\templates\project_detail.html:372
 msgid "new forum"
-msgstr ""
+msgstr "منتدى مناقشة جديد"
 
 #: .\commons\templates\project_detail.html:364
 msgid "thematic"
@@ -4188,7 +4188,7 @@ msgstr "رسالة إلى الأعضاء"
 #: .\commons\templates\project_detail.html:964
 #: .\commons\templates\user_dashboard.html:40
 msgid "forum"
-msgstr ""
+msgstr "منتدى المناقشة"
 
 #: .\commons\templates\project_detail.html:437
 #: .\commons\templates\project_detail.html:454
@@ -4331,7 +4331,7 @@ msgstr "التوجيه غير متاح لأعضاء هذا المجتمع."
 
 #: .\commons\templates\project_detail.html:879
 msgid "create forum"
-msgstr ""
+msgstr "إنشاء منتدى للنقاش"
 
 #: .\commons\templates\project_detail.html:894
 msgid "accept application to this roll of mentors"
@@ -4420,11 +4420,11 @@ msgstr ""
 
 #: .\commons\templates\pybb\base.html:13
 msgid "Latest posts on forum"
-msgstr ""
+msgstr "أحدث المشاركات في المنتدى"
 
 #: .\commons\templates\pybb\base.html:14
 msgid "Latest topics on forum"
-msgstr ""
+msgstr "أحدث المواضيع في المنتدى"
 
 #: .\commons\templates\pybb\breadcrumb.html:6
 msgid "forums index"
@@ -4437,7 +4437,7 @@ msgstr "انتقل إلى مشروع"
 
 #: .\commons\templates\pybb\forum_list.html:9
 msgid "Forum"
-msgstr ""
+msgstr "منتدى المناقشة"
 
 #: .\commons\templates\pybb\forum_list.html:12
 msgid "Topics"
@@ -4466,11 +4466,11 @@ msgstr ""
 
 #: .\commons\templates\pybb\forum_list.html:88
 msgid "No forums created"
-msgstr ""
+msgstr "لم يتم إنشاء منتديات مناقشة"
 
 #: .\commons\templates\pybb\forum_list.html:89
 msgid "Add forum now"
-msgstr ""
+msgstr "أضف منتدى المناقشة الآن"
 
 #: .\commons\templates\pybb\index.html:8
 msgid "List"
@@ -4478,7 +4478,7 @@ msgstr ""
 
 #: .\commons\templates\pybb\index.html:20
 msgid "Forum categories are not created"
-msgstr ""
+msgstr "لا توجد فئات المنتدى"
 
 #: .\commons\templates\pybb\index.html:21
 msgid "Add a category now"
@@ -4761,7 +4761,7 @@ msgstr "لم يتم العثور على مرشدين مناسبين في الم�
 
 #: .\commons\templates\user_dashboard.html:327
 msgid "my activity of last period"
-msgstr ""
+msgstr "احدث الانشطة الخاصة بي"
 
 #: .\commons\templates\user_dashboard.html:327
 msgid "days"
@@ -4840,7 +4840,7 @@ msgstr "إرسال رسالة إلى"
 
 #: .\commons\templates\user_profile.html:49
 msgid "private information"
-msgstr ""
+msgstr "معلومات خاصة"
 
 #: .\commons\templates\user_profile.html:52
 msgid "username"
@@ -5138,7 +5138,7 @@ msgstr "قد تقدمت بطلب لعضوية في"
 
 #: .\commons\views.py:2012
 msgid "thematic forum"
-msgstr ""
+msgstr "منتدى موضوعي"
 
 #: .\commons\views.py:2012
 msgid "please change this name"
