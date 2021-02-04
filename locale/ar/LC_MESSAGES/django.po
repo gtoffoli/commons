@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 12:49+0100\n"
-"PO-Revision-Date: 2021-01-29 15:49+0000\n"
+"PO-Revision-Date: 2021-02-04 22:51+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Arabic (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -269,7 +269,7 @@ msgstr "ضع علامة على هذا المربع إذا كنت غير متاح
 
 #: .\commons\forms.py:129
 msgid "text in name and short presentation"
-msgstr ""
+msgstr "النص بما في ذلك الاسم والعرض التقديمي القصير"
 
 #: .\commons\forms.py:130 .\commons\forms.py:245 .\commons\forms.py:320
 #: .\commons\forms.py:428 .\commons\forms.py:525
@@ -278,7 +278,7 @@ msgstr "أدخل مصطلح البحث"
 
 #: .\commons\forms.py:133
 msgid "choose country (no selection = all countries)"
-msgstr ""
+msgstr "اختر البلد (لا يوجد اختيار = كل البلدان)"
 
 #: .\commons\forms.py:138 .\commons\forms.py:151
 msgid "choose education level (no selection = all levels)"
@@ -286,7 +286,7 @@ msgstr "اختر مستوى التعليم (لا يوجد اختيار = جمي�
 
 #: .\commons\forms.py:143
 msgid "choose status (no selection = all statuses)"
-msgstr ""
+msgstr "اختر الحالة (لا يوجد اختيار = جميع الحالات)"
 
 #: .\commons\forms.py:147
 msgid "choose field of study' (no selection = all fields)"
@@ -315,31 +315,31 @@ msgstr "اختيار اللغات (لا يوجد اختيار = جميع الل�
 
 #: .\commons\forms.py:169
 msgid "person name"
-msgstr ""
+msgstr "الاسم الاول"
 
 #: .\commons\forms.py:170
 msgid "family name"
-msgstr ""
+msgstr "اسم العائلة"
 
 #: .\commons\forms.py:180 .\commons\forms.py:296 .\commons\forms.py:627
 #: .\commons\models.py:774 .\commons\models.py:810 .\commons\models.py:896
 #: .\commons\models.py:1461 .\commons\models.py:1481 .\commons\models.py:1502
 msgid "name"
-msgstr ""
+msgstr "اسم"
 
 #: .\commons\forms.py:180
 msgid "max length is 78 characters, but less is better"
-msgstr ""
+msgstr "الحد الأقصى للطول هو 78 حرفًا ، ولكن يفضل عدد أقل"
 
 #: .\commons\forms.py:183 .\commons\forms.py:297 .\commons\forms.py:628
 #: .\commons\models.py:403 .\commons\models.py:506 .\commons\models.py:901
 #: .\commons\models.py:1506
 msgid "short description"
-msgstr ""
+msgstr "وصف القصير"
 
 #: .\commons\forms.py:184 .\commons\forms.py:304 .\commons\models.py:902
 msgid "longer description"
-msgstr ""
+msgstr "وصف أطول"
 
 #: .\commons\forms.py:185
 msgid "project state"
@@ -373,7 +373,7 @@ msgstr "يمكن اختيار الموجهين من مجتمع آخر"
 
 #: .\commons\forms.py:244 .\commons\forms.py:319
 msgid "text in name and short description"
-msgstr ""
+msgstr "النص بما في ذلك الاسم والوصف القصير"
 
 #: .\commons\forms.py:249 .\commons\menus.py:171
 #: .\commons\templates\_homepage_main_cta.html:34
@@ -395,13 +395,13 @@ msgstr "الحد الأدنى لعدد مسارات التعلم"
 
 #: .\commons\forms.py:253 .\commons\views.py:797
 msgid "minimum number of OERs"
-msgstr ""
+msgstr "الحد الأدنى لعدد OERs"
 
 #: .\commons\forms.py:256 .\commons\models.py:507 .\commons\models.py:1420
 #: .\commons\templates\active_users.html:21
 #: .\commons\templates\active_users.html:38
 msgid "user"
-msgstr ""
+msgstr "مستخدم"
 
 #: .\commons\forms.py:256
 msgid "search by name"
@@ -411,7 +411,7 @@ msgstr "البحث عن طريق الإسم"
 #: .\commons\forms.py:555 .\commons\models.py:504 .\commons\models.py:2714
 #: .\commons\models.py:2739
 msgid "label"
-msgstr ""
+msgstr "تسمية"
 
 #: .\commons\forms.py:261
 msgid "language"
@@ -425,11 +425,11 @@ msgstr ""
 #: .\commons\forms.py:721 .\commons\forms.py:725 .\commons\models.py:1587
 #: .\commons\models.py:2021
 msgid "title"
-msgstr ""
+msgstr "عنوان"
 
 #: .\commons\forms.py:271
 msgid "please use a short title"
-msgstr ""
+msgstr "الرجاء استخدام عنوان قصير"
 
 #: .\commons\forms.py:287 .\commons\forms.py:360 .\commons\models.py:508
 #: .\commons\models.py:1599 .\commons\templates\oer_detail.html:110
@@ -455,7 +455,7 @@ msgstr "لغات الوثائق"
 
 #: .\commons\forms.py:302 .\commons\forms.py:303
 msgid "do not select any"
-msgstr ""
+msgstr "لا تحدد أي"
 
 #: .\commons\forms.py:302
 msgid ""
@@ -490,11 +490,11 @@ msgstr "حالة النشر"
 
 #: .\commons\forms.py:359
 msgid "specific URL of the OER"
-msgstr ""
+msgstr "عنوان URL الخاص بـ OER"
 
 #: .\commons\forms.py:359
 msgid "if applicable"
-msgstr ""
+msgstr "إذا كان هذا ينطبق"
 
 #: .\commons\forms.py:359
 msgid "if the OER is available online, put here its URL (web address)"
@@ -502,11 +502,11 @@ msgstr "إذا كان OER متاحًا عبر الإنترنت ، فضع هنا 
 
 #: .\commons\forms.py:360 .\commons\models.py:1599
 msgid "code to embed the OER view in an HTML page"
-msgstr ""
+msgstr "Code for embedding OER view in an HTML page"
 
 #: .\commons\forms.py:361 .\commons\models.py:1589
 msgid "abstract or description"
-msgstr ""
+msgstr "الملخص أو الوصف"
 
 #: .\commons\forms.py:361
 msgid ""
@@ -516,7 +516,7 @@ msgstr "يكفي هنا سطر أو سطرين ؛ سيتم عرض هذا الو�
 
 #: .\commons\forms.py:362 .\commons\forms.py:405 .\commons\forms.py:566
 msgid "text content"
-msgstr ""
+msgstr "محتوى النص"
 
 #: .\commons\forms.py:362 .\commons\forms.py:405 .\commons\forms.py:566
 msgid "html"
@@ -531,11 +531,11 @@ msgid ""
 "type of licence; please, don't disregard it: see the help pages for an "
 "explanation of the available options; in case of doubt, select the most "
 "cautious option \"read the fine print\""
-msgstr ""
+msgstr "نوع الترخيص من فضلك ، لا تتجاهل ذلك: راجع صفحات المساعدة للحصول على شرح للخيارات المتاحة ؛ في حالة الشك، حدد الخيار الأكثر حذرا: \"قراءة غرامة المطبوعة\""
 
 #: .\commons\forms.py:364 .\commons\forms.py:447 .\commons\models.py:1600
 msgid "type of material"
-msgstr ""
+msgstr "نوع المادة"
 
 #: .\commons\forms.py:364
 msgid ""
@@ -550,12 +550,12 @@ msgstr ""
 #: .\commons\forms.py:367 .\commons\forms.py:407 .\commons\forms.py:434
 #: .\commons\forms.py:498 .\commons\forms.py:513 .\commons\forms.py:531
 msgid "tags"
-msgstr ""
+msgstr "وسوم"
 
 #: .\commons\forms.py:367 .\commons\forms.py:407 .\commons\forms.py:498
 #: .\commons\forms.py:513
 msgid "click to add or remove a tag"
-msgstr ""
+msgstr "انقر لإضافة أو إزالة وسم"
 
 #: .\commons\forms.py:369 .\commons\forms.py:456 .\commons\vocabularies.py:93
 msgid "media formats"
@@ -563,7 +563,7 @@ msgstr ""
 
 #: .\commons\forms.py:369
 msgid "the options have been taken from www.oercommons.org"
-msgstr ""
+msgstr "تم أخذ الخيارات من www.oercommons.org"
 
 #: .\commons\forms.py:370 .\commons\forms.py:460 .\commons\vocabularies.py:99
 msgid "accessibility features"
@@ -578,13 +578,13 @@ msgstr "الميزات التي تجعل استخدام \"OER\" أسهل للأ�
 
 #: .\commons\forms.py:371
 msgid "derived from"
-msgstr ""
+msgstr "مستمدة من"
 
 #: .\commons\forms.py:371
 msgid ""
 "if derived from other OERs, please specify them by selecting one or more - "
 "enter a few chars of their names to get suggestions"
-msgstr ""
+msgstr "إذا اشتقاق من OERs أخرى، يرجى تحديدها - لكل، أدخل عدد قليل من الأحرف من اسمها للحصول على اقتراحات"
 
 #: .\commons\forms.py:372 .\commons\models.py:1595
 msgid "translated"
@@ -603,7 +603,7 @@ msgstr "تكييفها / معاد مزجها"
 msgid ""
 "specify whether the derivation of this OER has involved adaptation/remixing "
 "of the original content(s)"
-msgstr ""
+msgstr "بيان ما إذا كان اشتقاق هذا OER ينطوي على إعادة صياغة المحتوى الأصلي (ق)"
 
 #: .\commons\forms.py:374 .\commons\models.py:1597
 msgid "source repository"
@@ -643,7 +643,7 @@ msgstr "تكييفها / معاد مزجها"
 
 #: .\commons\forms.py:427
 msgid "text in title and description"
-msgstr ""
+msgstr "النص بما في ذلك العنوان والوصف"
 
 #: .\commons\forms.py:441
 msgid "source type"
@@ -651,7 +651,7 @@ msgstr "نوع المصدر"
 
 #: .\commons\forms.py:444
 msgid "derivation from other OERs"
-msgstr ""
+msgstr "اشتقاق من OERs أخرى"
 
 #: .\commons\forms.py:453 .\commons\forms.py:534 .\commons\vocabularies.py:105
 msgid "levels"
@@ -663,7 +663,7 @@ msgstr "نوع OER"
 
 #: .\commons\forms.py:469 .\commons\forms.py:565
 msgid "choose file"
-msgstr ""
+msgstr "اختر ملف"
 
 #: .\commons\forms.py:474
 msgid "free-text review"
@@ -695,7 +695,7 @@ msgstr ""
 
 #: .\commons\forms.py:478
 msgid "e.g. originality and creativity"
-msgstr ""
+msgstr "مثلا الأصالة والإبداع"
 
 #: .\commons\forms.py:479
 msgid "scientific quality assessment"
@@ -705,7 +705,7 @@ msgstr ""
 msgid ""
 "e.g. scientific validity of content and methodologies, critical aspects, "
 "interdisciplinarity"
-msgstr ""
+msgstr "على سبيل المثال، الصلاحية العلمية للمحتوى والمنهجيات، والموقف النقدي، والتخصصات المتعددة"
 
 #: .\commons\forms.py:495 .\commons\templates\lp_detail.html:159
 msgid "type of learning path"
@@ -735,15 +735,15 @@ msgstr ""
 #: .\commons\forms.py:501 .\commons\models.py:811 .\commons\models.py:1482
 #: .\commons\models.py:2027 .\commons\templates\lp_detail.html:153
 msgid "description"
-msgstr ""
+msgstr " الوصف"
 
 #: .\commons\forms.py:501
 msgid "sub-objectives, strategy, method, contents"
-msgstr ""
+msgstr "الأهداف الفرعية ، الاستراتيجية ، الطريقة ، المحتويات"
 
 #: .\commons\forms.py:524
 msgid "text in title and objectives"
-msgstr ""
+msgstr "النص بما في ذلك العنوان والأهداف"
 
 #: .\commons\forms.py:537
 msgid "learning path type"
@@ -822,7 +822,7 @@ msgstr ""
 #: .\commons\forms.py:627
 msgid ""
 "please, replace the automatically generated name with an appropriate one"
-msgstr ""
+msgstr "من فضلك ، استبدل الاسم الذي تم إنشاؤه تلقائيًا باسم مناسب"
 
 #: .\commons\forms.py:628
 msgid "better specify the purpose of this forum"
@@ -854,7 +854,7 @@ msgstr "عرض ملف تعريف المستخدم"
 
 #: .\commons\forms.py:675
 msgid "none"
-msgstr ""
+msgstr "لا أحد"
 
 #: .\commons\forms.py:676 .\commons\models.py:1440
 msgid "message"
@@ -870,7 +870,7 @@ msgstr "من فضلك ، أدخل إشعارًا للموجه لشرح اختي�
 #: .\commons\templates\user_strict_profile.html:39
 #: .\commons\templates\user_strict_profile.html:43
 msgid "yes"
-msgstr ""
+msgstr "نعم"
 
 #: .\commons\forms.py:690 .\commons\templates\project_detail.html:764
 #: .\commons\templates\user_profile.html:208
@@ -878,19 +878,19 @@ msgstr ""
 #: .\commons\templates\user_strict_profile.html:39
 #: .\commons\templates\user_strict_profile.html:43
 msgid "no"
-msgstr ""
+msgstr "لا"
 
 #: .\commons\forms.py:690
 msgid "accept"
-msgstr ""
+msgstr "قبول"
 
 #: .\commons\forms.py:691
 msgid "Reason"
-msgstr ""
+msgstr "سبب"
 
 #: .\commons\forms.py:691
 msgid "please, explain the motivations of your acceptation or refusal"
-msgstr ""
+msgstr "من فضلك اشرح دوافع قبولك أو رفضك"
 
 #: .\commons\forms.py:699 .\commons\templates\mentoring_detail.html:178
 msgid "my mentoring journey"
@@ -898,19 +898,19 @@ msgstr "رحلتي كمتدرب"
 
 #: .\commons\forms.py:710 .\commons\forms.py:718 .\commons\models.py:3124
 msgid "optional text"
-msgstr ""
+msgstr "نص اختياري"
 
 #: .\commons\forms.py:710
 msgid "Use formatting with care: only bold, italic and links!"
-msgstr ""
+msgstr "استخدم تنسيق النص بعناية: فقط غامق ومائل وروابط!"
 
 #: .\commons\forms.py:722
 msgid "page content"
-msgstr ""
+msgstr "محتوى الصفحة"
 
 #: .\commons\forms.py:726
 msgid "article content"
-msgstr ""
+msgstr "محتوى المقالة"
 
 #: .\commons\forms.py:727
 msgid "article lead"
@@ -1063,7 +1063,7 @@ msgstr ""
 
 #: .\commons\metadata.py:29 .\commons\models.py:401
 msgid "Title"
-msgstr ""
+msgstr "عنوان"
 
 #: .\commons\metadata.py:31
 msgid "Default"
@@ -1071,7 +1071,7 @@ msgstr ""
 
 #: .\commons\metadata.py:32
 msgid "Enter a string to be evaluated."
-msgstr ""
+msgstr "إدخال سلسلة ليتم تقييمها."
 
 #: .\commons\metadata.py:36
 msgid "Lookup"
@@ -1079,19 +1079,19 @@ msgstr ""
 
 #: .\commons\metadata.py:37
 msgid "Enter a string to be evaluated that returns an iterable."
-msgstr ""
+msgstr "إدخال سلسلة ليتم تقييمها التي ترجع قابل للإرجاع (iterator)."
 
 #: .\commons\metadata.py:38
 msgid "Validation function name"
-msgstr ""
+msgstr "اسم وظيفة التحقق من الصحة"
 
 #: .\commons\metadata.py:51
 msgid "Metadata type"
-msgstr ""
+msgstr "نوع البيانات الوصفية"
 
 #: .\commons\metadata.py:52
 msgid "Metadata types"
-msgstr ""
+msgstr "أنواع البيانات الوصفية"
 
 #: .\commons\metadata.py:63 .\commons\models.py:1982
 msgid "quality facet"
@@ -1115,13 +1115,13 @@ msgstr ""
 
 #: .\commons\models.py:221
 msgid "Tag"
-msgstr ""
+msgstr "وسم"
 
 #: .\commons\models.py:222
 #: .\commons\templates\zinnia\_entry_detail_base.html:118
 #: .\commons\templates\zinnia\base.html:50
 msgid "Tags"
-msgstr ""
+msgstr "وسوم"
 
 #: .\commons\models.py:233
 msgid "deleted"
@@ -1165,22 +1165,22 @@ msgstr ""
 
 #: .\commons\models.py:405 .\commons\models.py:3136
 msgid "User"
-msgstr ""
+msgstr "مستخدم"
 
 #: .\commons\models.py:407 .\commons\models.py:510 .\commons\models.py:913
 #: .\commons\models.py:1515 .\commons\models.py:1616 .\commons\models.py:1875
 #: .\commons\models.py:2033 .\commons\models.py:2698 .\commons\models.py:2716
 #: .\commons\models.py:2745 .\commons\models.py:3137
 msgid "created"
-msgstr ""
+msgstr "تاريخ الإنشاء"
 
 #: .\commons\models.py:414 .\commons\models.py:502
 msgid "folder"
-msgstr ""
+msgstr "مجلد"
 
 #: .\commons\models.py:415 .\commons\models.py:900
 msgid "folders"
-msgstr ""
+msgstr "مجلّدات"
 
 #: .\commons\models.py:519
 msgid "folder document"
@@ -1242,13 +1242,13 @@ msgstr ""
 
 #: .\commons\models.py:596
 msgid "accept emails from administrators"
-msgstr ""
+msgstr "قبول رسائل البريد الإلكتروني من المسؤولين"
 
 #: .\commons\models.py:596
 msgid ""
 "Occasionally, the CommonSpaces administrators will do some mailing, without "
 "disclosing email addresses to anybody."
-msgstr ""
+msgstr "في بعض الأحيان ، المسؤولين CommonSpaces القيام ببعض البريدية ، دون الكشف عن عناوين البريد الإلكتروني إلى أي شخص."
 
 #: .\commons\models.py:609
 msgid "work sector"
@@ -1277,7 +1277,7 @@ msgstr "متاح للعمل كمرشد أيضًا لأعضاء المجتمعا�
 
 #: .\commons\models.py:625
 msgid "temporarily unavailable to accept (more) requests by mentees."
-msgstr ""
+msgstr "غير متاح مؤقتًا لقبول (المزيد) الطلبات من قبل المتدربين."
 
 #: .\commons\models.py:773
 msgid "code"
@@ -1338,15 +1338,15 @@ msgstr "مشروع محذوف"
 
 #: .\commons\models.py:866
 msgid "request submitted"
-msgstr ""
+msgstr "الطلب المقدم"
 
 #: .\commons\models.py:867
 msgid "request accepted"
-msgstr ""
+msgstr "الطلب قبول"
 
 #: .\commons\models.py:868
 msgid "request rejected"
-msgstr ""
+msgstr "الطلب رفض"
 
 #: .\commons\models.py:869
 msgid "membership suspended or expired"
@@ -1374,7 +1374,7 @@ msgstr "مشروع أو مجتمع"
 
 #: .\commons\models.py:891
 msgid "associated user group"
-msgstr ""
+msgstr "مجموعة المستخدمين المرتبطة"
 
 #: .\commons\models.py:898
 msgid "Project type"
@@ -1386,11 +1386,11 @@ msgstr "منتدى المشروع"
 
 #: .\commons\models.py:903 .\commons\models.py:2030
 msgid "logo"
-msgstr ""
+msgstr "الشعار"
 
 #: .\commons\models.py:904 .\commons\models.py:1513 .\commons\models.py:2031
 msgid "featured image"
-msgstr ""
+msgstr "صورة كبيرة"
 
 #: .\commons\models.py:905
 msgid "mentoring is available"
@@ -1422,17 +1422,17 @@ msgstr ""
 #: .\commons\models.py:915 .\commons\models.py:1517 .\commons\models.py:1618
 #: .\commons\models.py:2035 .\commons\models.py:2718 .\commons\models.py:2747
 msgid "creator"
-msgstr ""
+msgstr "منشئ بواسطة"
 
 #: .\commons\models.py:916 .\commons\models.py:1518 .\commons\models.py:1619
 #: .\commons\models.py:1874 .\commons\models.py:2036 .\commons\models.py:2697
 #: .\commons\models.py:2719 .\commons\models.py:2748
 msgid "last editor"
-msgstr ""
+msgstr "آخر محرر"
 
 #: .\commons\models.py:1046
 msgid "administrator"
-msgstr ""
+msgstr "مسؤول"
 
 #: .\commons\models.py:1048 .\commons\templates\mentoring_detail.html:147
 msgid "mentor"
@@ -1440,7 +1440,7 @@ msgstr "مرشد"
 
 #: .\commons\models.py:1050
 msgid "supervisor"
-msgstr ""
+msgstr "مشرف"
 
 #: .\commons\models.py:1419
 msgid "community or project"
@@ -1456,15 +1456,15 @@ msgstr "المستخدم الذي ينتمي إلى المشروع أو يتقد
 
 #: .\commons\models.py:1422
 msgid "request created"
-msgstr ""
+msgstr "تم إنشاء الطلب"
 
 #: .\commons\models.py:1423
 msgid "last acceptance"
-msgstr ""
+msgstr "آخر قبول"
 
 #: .\commons\models.py:1424
 msgid "last refusal"
-msgstr ""
+msgstr "الرفض الأخير"
 
 #: .\commons\models.py:1425
 msgid "last state change"
@@ -1512,7 +1512,7 @@ msgstr "التعليقات / التقييم"
 
 #: .\commons\models.py:1512
 msgid "screenshot"
-msgstr ""
+msgstr "الصورة الصغيرة"
 
 #: .\commons\models.py:1521 .\commons\templates\project_detail.html:422
 msgid "external repository"
@@ -1540,11 +1540,11 @@ msgstr ""
 
 #: .\commons\models.py:1578
 msgid "Derived-translated"
-msgstr "المستمدة / ترجمة"
+msgstr "مشتق -  ترجمة"
 
 #: .\commons\models.py:1579
 msgid "Derived-adapted"
-msgstr ""
+msgstr "مشتق - تكييفه"
 
 #: .\commons\models.py:1580
 msgid "Derived-remixed"
@@ -1556,11 +1556,11 @@ msgstr ""
 
 #: .\commons\models.py:1588
 msgid "specific URL to the OER, if applicable"
-msgstr ""
+msgstr "عنوان URL الخاص بـ OER، إن وجد"
 
 #: .\commons\models.py:1590 .\commons\models.py:2744
 msgid "own text content"
-msgstr ""
+msgstr "محتوى النص الخاص"
 
 #: .\commons\models.py:1596
 msgid "adapted / remixed"
@@ -1568,7 +1568,7 @@ msgstr "تكييفها / معاد مزجها"
 
 #: .\commons\models.py:1598
 msgid "reference"
-msgstr ""
+msgstr "إشارة"
 
 #: .\commons\models.py:1607
 msgid "where the OER has been cataloged or created"
@@ -1576,11 +1576,11 @@ msgstr "حيث OER لقد تم تصنيفها أو إنشاؤها"
 
 #: .\commons\models.py:1614 .\commons\models.py:2715
 msgid "content"
-msgstr ""
+msgstr "المحتوى"
 
 #: .\commons\models.py:1614
 msgid "formal description of a problem or other original content"
-msgstr ""
+msgstr "وصف رسمي لمشكلة أو محتوى أصلي آخر"
 
 #: .\commons\models.py:1836
 msgid "attached document"
@@ -1593,7 +1593,7 @@ msgstr "الوثائق المرفقة"
 
 #: .\commons\models.py:1855
 msgid "Metadatum type"
-msgstr ""
+msgstr "نوع عنصر البيانات الوصفية"
 
 #: .\commons\models.py:1856
 msgid "Value"
@@ -1601,11 +1601,11 @@ msgstr ""
 
 #: .\commons\models.py:1864
 msgid "additional metadatum"
-msgstr ""
+msgstr "عنصر بيانات وصفية إضافي"
 
 #: .\commons\models.py:1865 .\commons\templates\oer_edit.html:104
 msgid "additional metadata"
-msgstr ""
+msgstr "بيانات وصفية إضافية"
 
 #: .\commons\models.py:1872
 msgid "referenced OER"
@@ -1650,7 +1650,7 @@ msgstr ""
 
 #: .\commons\models.py:1960
 msgid "evaluator"
-msgstr ""
+msgstr "المقيم"
 
 #: .\commons\models.py:1967 .\commons\models.py:1981
 msgid "OER evaluation"
@@ -1666,7 +1666,7 @@ msgstr ""
 
 #: .\commons\models.py:1991
 msgid "quality metadatum"
-msgstr ""
+msgstr "عنصر البيانات الوصفية المتعلقة بالجودة"
 
 #: .\commons\models.py:1992
 msgid "quality metadata"
@@ -1678,7 +1678,7 @@ msgstr ""
 
 #: .\commons\models.py:2011
 msgid "sequence"
-msgstr ""
+msgstr "تسلسل"
 
 #: .\commons\models.py:2012
 msgid "directed graph"
@@ -1690,7 +1690,7 @@ msgstr "مسار التعلم الأصلي"
 
 #: .\commons\models.py:2029
 msgid "group"
-msgstr ""
+msgstr "مجموعة المستخدمين"
 
 #: .\commons\models.py:2039 .\commons\templates\_lp_serialize.html:10
 msgid "learning path"
@@ -1698,7 +1698,7 @@ msgstr "مسار التعلم"
 
 #: .\commons\models.py:2246
 msgid "this LP was created by cloning a LP with title"
-msgstr ""
+msgstr "تم إنشاء مسار التعلم هذا باعتباره استنساخًا للمسار المسمى"
 
 #: .\commons\models.py:2265
 msgid ""
@@ -1707,7 +1707,7 @@ msgstr "هذه العقدة مشتقة من عقدة وثيقة ؛ كان اسم
 
 #: .\commons\models.py:2659
 msgid "Cover page"
-msgstr ""
+msgstr "صفحة الغلاف"
 
 #: .\commons\models.py:2695
 msgid "referenced Learning Path"
@@ -1749,31 +1749,31 @@ msgstr "عقد المسار"
 
 #: .\commons\models.py:2892
 msgid "Youtube API are not currently available"
-msgstr ""
+msgstr "Youtube API غير متوفرة حاليًا"
 
 #: .\commons\models.py:3076
 msgid "Tagged OER"
-msgstr ""
+msgstr "OER الموسوم"
 
 #: .\commons\models.py:3077
 msgid "Tagged OERs"
-msgstr ""
+msgstr "OERs الموسومة"
 
 #: .\commons\models.py:3090
 msgid "Tagged LP"
-msgstr "مسار تعلم ذو علامات تمييز"
+msgstr "مسار التعلم الموسوم"
 
 #: .\commons\models.py:3091
 msgid "Tagged LPs"
-msgstr "مسارات تعلم ذات علامات تمييز"
+msgstr "مسارات التعلم الموسومة"
 
 #: .\commons\models.py:3113
 msgid "any"
-msgstr ""
+msgstr "أي"
 
 #: .\commons\models.py:3114
 msgid "global"
-msgstr ""
+msgstr "النطاق العالمي"
 
 #: .\commons\models.py:3117 .\commons\models.py:3151
 msgid "featured item"
@@ -1789,11 +1789,11 @@ msgstr ""
 
 #: .\commons\models.py:3121
 msgid "group name"
-msgstr ""
+msgstr "أسم المجموعة"
 
 #: .\commons\models.py:3121
 msgid "Entries can be aggregated by group name."
-msgstr ""
+msgstr "يمكن تجميع الإدخالات حسب اسم المجموعة."
 
 #: .\commons\models.py:3122
 msgid "Used to sort in ascending order, not to filter."
@@ -1801,13 +1801,13 @@ msgstr ""
 
 #: .\commons\models.py:3123
 msgid "priority"
-msgstr ""
+msgstr "أولوية"
 
 #: .\commons\models.py:3123
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
-msgstr ""
+msgstr "تُستخدم للتصفية ، ربما مع سمات أخرى ، وليس للترتيب. العدد الكبير يعني أولوية عالية."
 
 #: .\commons\models.py:3124
 msgid "In the case of a \"lead\" item, probably you will provide this text."
@@ -1819,19 +1819,19 @@ msgstr ""
 
 #: .\commons\models.py:3133
 msgid "start publication"
-msgstr ""
+msgstr "تاريخ بدء النشر"
 
 #: .\commons\models.py:3133
 msgid "Optional start date of publication."
-msgstr ""
+msgstr "تاريخ النشر، اختياري"
 
 #: .\commons\models.py:3134
 msgid "end publication"
-msgstr ""
+msgstr "تاريخ انتهاء النشر"
 
 #: .\commons\models.py:3134
 msgid "Optional end date of publication."
-msgstr ""
+msgstr "تاريخ انتهاء النشر ، اختياري"
 
 #: .\commons\search_indexes.py:118
 msgid "In"
@@ -1840,11 +1840,11 @@ msgstr ""
 #: .\commons\templates\403.html:4 .\commons\templates\403.html:10
 msgid ""
 "Sorry. You are not allowed to access the requested content or function."
-msgstr ""
+msgstr "آسف. غير مسموح لك بالوصول إلى المحتوى أو الوظيفة التي طلبتها."
 
 #: .\commons\templates\404.html:4 .\commons\templates\404.html:10
 msgid "Sorry. We cannot find the page that you requested."
-msgstr ""
+msgstr "آسف. لا يمكننا العثور على الصفحة التي طلبتها."
 
 #: .\commons\templates\_access_bar.html:14
 #: .\commons\templates\user_dashboard.html:6
@@ -1868,32 +1868,32 @@ msgstr "رسائلي"
 #: .\commons\templates\_access_bar.html:23
 #: .\commons\templates\user_dashboard.html:40
 msgid "new posts"
-msgstr ""
+msgstr "مشاركات المنتدى الجديدة"
 
 #: .\commons\templates\_access_bar.html:26
 msgid "admin"
-msgstr ""
+msgstr "مسؤول"
 
 #: .\commons\templates\_access_bar.html:34
 #: .\commons\templates\datatrans\base.html:19
 msgid "Log out"
-msgstr ""
+msgstr "تسجيل خروج"
 
 #: .\commons\templates\_access_bar.html:43
 #: .\commons\templates\_login_model.html:18
 msgid "email address"
-msgstr ""
+msgstr "عنوان البريد الإلكتروني"
 
 #: .\commons\templates\_access_bar.html:46
 #: .\commons\templates\_login_model.html:24
 msgid "password"
-msgstr ""
+msgstr "كلمة السر"
 
 #: .\commons\templates\_access_bar.html:48
 #: .\commons\templates\_login_model.html:37
 #: .\commons\templates\account\login.html:104
 msgid "Forgot Password?"
-msgstr ""
+msgstr "هل نسيت كلمة المرور؟"
 
 #: .\commons\templates\_access_bar.html:54
 #: .\commons\templates\_login_model.html:29
@@ -1906,7 +1906,7 @@ msgstr "تذكرنى"
 #: .\commons\templates\_login_model.html:10
 #: .\commons\templates\_login_model.html:33
 msgid "Log in"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: .\commons\templates\_access_bar.html:58
 #: .\commons\templates\_access_bar.html:92
@@ -1928,7 +1928,7 @@ msgstr "سجّل"
 #: .\commons\templates\flatpages\why_register.html:48
 #: .\commons\templates\flatpages\why_register.html:49
 msgid "Login With"
-msgstr ""
+msgstr "تسجيل الدخول عبر"
 
 #: .\commons\templates\_candidate_mentors.html:3
 msgid "select a mentor"
@@ -1952,12 +1952,12 @@ msgstr "حاليا لا يوجد أي موجهين متاحين"
 #: .\commons\templates\_lp_serialize.html:18
 #: .\commons\templates\_online_serialize.html:14
 msgid "URL"
-msgstr ""
+msgstr "عنوان URL"
 
 #: .\commons\templates\_cannot_serialize.html:14
 #: .\commons\templates\_online_serialize.html:19
 msgid "NOTE"
-msgstr ""
+msgstr "ملحوظة"
 
 #: .\commons\templates\_cannot_serialize.html:15
 msgid "cannot convert to PDF a document of mimetype"
@@ -1970,7 +1970,7 @@ msgstr "تشير هذه العقدة إلى OER التي يمكنك الوصول
 
 #: .\commons\templates\_change_state.html:8
 msgid "submit for publication"
-msgstr ""
+msgstr "تقديم للنشر"
 
 #: .\commons\templates\_change_state.html:9
 msgid "withdraw"
@@ -2016,7 +2016,7 @@ msgstr ""
 #: .\commons\templates\project_image_upload.html:31
 #: .\commons\templates\project_logo_upload.html:31
 msgid "save"
-msgstr ""
+msgstr "حفظ"
 
 #: .\commons\templates\_edit_submit.html:4
 #: .\commons\templates\folder_edit.html:25
@@ -2024,7 +2024,7 @@ msgstr ""
 #: .\commons\templates\forum_edit.html:29
 #: .\commons\templates\online_resource_edit.html:28
 msgid "save and exit"
-msgstr ""
+msgstr "حفظ وخروج"
 
 #: .\commons\templates\_edit_submit.html:5
 #: .\commons\templates\folder_edit.html:26
@@ -2036,12 +2036,12 @@ msgstr ""
 #: .\commons\templates\project_image_upload.html:32
 #: .\commons\templates\project_logo_upload.html:32
 msgid "exit without saving"
-msgstr ""
+msgstr "الخروج من دون حفظ"
 
 #: .\commons\templates\_footer.html:4
 #: .\commons\templates\commons_base.html:215
 msgid "the CommonS Consortium"
-msgstr ""
+msgstr "اتحاد الـ CommonS"
 
 #: .\commons\templates\_footer.html:5
 #: .\commons\templates\commons_base.html:216
@@ -2112,21 +2112,21 @@ msgstr "في المشروع"
 #: .\commons\templates\_pathnode_detail.html:45
 #: .\commons\templates\project_detail.html:193
 msgid "last updated by"
-msgstr ""
+msgstr "آخر تحديث بواسطة"
 
 #: .\commons\templates\_info_creator_date.html:26
 #: .\commons\templates\_pathnode_detail.html:45
 #: .\commons\templates\project_detail.html:189
 msgid "last updated"
-msgstr ""
+msgstr "آخر تحديث في"
 
 #: .\commons\templates\_login_model.html:36
 msgid "Create an account"
-msgstr ""
+msgstr "انشئ حساب"
 
 #: .\commons\templates\_lp_dag.html:162
 msgid "do you really want to remove this edge"
-msgstr ""
+msgstr "هل تريد حقًا إزالة هذه القوس"
 
 #: .\commons\templates\_lp_dag.html:232 .\commons\templates\lp_detail.html:355
 msgid "do you really want to remove this node"
@@ -2138,7 +2138,7 @@ msgstr ""
 
 #: .\commons\templates\_lp_serialize.html:15
 msgid "last modified on"
-msgstr ""
+msgstr "آخر تعديل في"
 
 #: .\commons\templates\_lp_serialize.html:25
 msgid "IMPORTANT NOTICE"
@@ -2159,7 +2159,7 @@ msgstr ""
 
 #: .\commons\templates\_lp_serialize.html:28
 msgid "restrictions could apply to some of its contents"
-msgstr ""
+msgstr "يمكن أن يتم فرض قيود على نشر بعض محتوياته"
 
 #: .\commons\templates\_lp_subtree.html:15
 #: .\commons\templates\lp_detail.html:211 .\commons\templates\lp_play.html:102
@@ -2172,7 +2172,7 @@ msgstr "الموجهين الذين لم يقبلوا الطلب"
 
 #: .\commons\templates\_menu_analytics.html:7
 msgid "registered users"
-msgstr ""
+msgstr "المستخدمون المسجلون"
 
 #: .\commons\templates\_menu_analytics.html:8
 #: .\commons\templates\contributors.html:5
@@ -2182,11 +2182,11 @@ msgstr ""
 
 #: .\commons\templates\_menu_analytics.html:9
 msgid "active users"
-msgstr ""
+msgstr "المستخدمين النشطين"
 
 #: .\commons\templates\_menu_analytics.html:11
 msgid "xAPI query"
-msgstr ""
+msgstr "استعلام xAPI"
 
 #: .\commons\templates\_object_comments.html:10
 #: .\commons\templates\_object_comments.html:12
@@ -2196,18 +2196,18 @@ msgstr "التعليقات"
 
 #: .\commons\templates\_object_comments.html:10
 msgid "disable"
-msgstr ""
+msgstr "تعطيل"
 
 #: .\commons\templates\_object_comments.html:10
 msgid "enable"
-msgstr ""
+msgstr "تمكين"
 
 #: .\commons\templates\_object_comments.html:28
 #: .\commons\templates\zinnia\_entry_detail_base.html:29
 #: .\commons\templates\zinnia\entry_detail_base.html:212
 msgctxt "on date"
 msgid "on"
-msgstr ""
+msgstr "في"
 
 #: .\commons\templates\_object_comments.html:47
 #: .\commons\templates\_object_comments.html:53
@@ -2232,7 +2232,7 @@ msgstr "اضف تعليق"
 #: .\commons\templates\oer_detail.html:244
 #: .\commons\templates\oer_detail.html:246
 msgid "please"
-msgstr ""
+msgstr "من فضلك"
 
 #: .\commons\templates\_object_comments.html:72
 #: .\commons\templates\_object_comments.html:74
@@ -2242,7 +2242,7 @@ msgstr "لتتمكن من ترك تعليق"
 #: .\commons\templates\_object_comments.html:74
 #: .\commons\templates\oer_detail.html:244
 msgid "log in"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: .\commons\templates\_oer_card.html:9
 msgid "rating"
@@ -2250,7 +2250,7 @@ msgstr ""
 
 #: .\commons\templates\_online_serialize.html:22
 msgid "the associated resource has content type"
-msgstr ""
+msgstr "المورد المقترن به نوع محتوى"
 
 #: .\commons\templates\_online_serialize.html:24
 msgid "an excerpt of the content follows"
@@ -2265,7 +2265,7 @@ msgstr ""
 #: .\commons\templates\pybb\_forum_edit_link.html:2
 #: .\commons\templates\repo_detail.html:17
 msgid "show edit view"
-msgstr ""
+msgstr "إظهار العرض تحرير"
 
 #: .\commons\templates\_pathnode_detail.html:11
 #: .\commons\templates\lp_detail.html:70
@@ -2462,7 +2462,7 @@ msgstr "معايير البحث"
 #: .\commons\templates\_search_form.html:9
 #: .\commons\templates\_search_form.html:30
 msgid "Apply"
-msgstr ""
+msgstr "تقدم بطلب"
 
 #: .\commons\templates\_search_form.html:10
 #: .\commons\templates\_search_form.html:31
@@ -2503,25 +2503,25 @@ msgstr ""
 #: .\commons\templates\account\email_confirm.html:6
 #: .\commons\templates\account\email_confirm.html:12
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "أكد عنوانك الإلكتروني"
 
 #: .\commons\templates\account\email_confirm.html:21
 #, python-format
 msgid ""
 "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
 "address for user %(user_display)s."
-msgstr ""
+msgstr "يرجى تأكيد أن <a href=\"mailto:%(email)s\">%(email)s</a> هو عنوان بريد إلكتروني للمستخدم %(user_display)s."
 
 #: .\commons\templates\account\email_confirm.html:25
 msgid "Confirm"
-msgstr ""
+msgstr "أكد"
 
 #: .\commons\templates\account\email_confirm.html:32
 #, python-format
 msgid ""
 "This e-mail confirmation link expired or is invalid. Please <a "
 "href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
-msgstr ""
+msgstr "انتهت صلاحية رابط تأكيد البريد الإلكتروني هذا أو أنه غير صالح. يرجى <a href=\"%(email_url)s\">إصدار طلب تأكيد بريد إلكتروني جديد</a>."
 
 #: .\commons\templates\account\login.html:6
 #: .\commons\templates\account\login.html:61
@@ -2561,21 +2561,21 @@ msgstr ""
 #: .\commons\templates\account\password_reset_done.html:6
 #: .\commons\templates\account\password_reset_done.html:11
 msgid "Password Reset"
-msgstr ""
+msgstr "إعادة تعيين كلمة المرور"
 
 #: .\commons\templates\account\password_reset.html:50
 msgid ""
 "Forgotten your password? Enter your e-mail address below, and we'll send you"
 " an e-mail allowing you to reset it."
-msgstr ""
+msgstr "هل نسيت كلمة المرور؟ أدخل عنوان بريدك الإلكتروني أدناه ، وسنرسل لك بريدًا إلكترونيًا يتيح لك إعادة تعيينه."
 
 #: .\commons\templates\account\password_reset.html:55
 msgid "Reset My Password"
-msgstr ""
+msgstr "إعادة تعيين كلمة سري"
 
 #: .\commons\templates\account\password_reset.html:57
 msgid "Please contact us if you have any trouble resetting your password."
-msgstr ""
+msgstr "يرجى الاتصال بنا إذا واجهتك أي مشكلة في إعادة تعيين كلمة المرور الخاصة بك."
 
 #: .\commons\templates\account\password_reset_done.html:19
 msgid ""
@@ -2588,7 +2588,7 @@ msgstr ""
 #: .\commons\templates\account\password_reset_from_key_done.html:4
 #: .\commons\templates\account\password_reset_from_key_done.html:9
 msgid "Change Password"
-msgstr ""
+msgstr "تغيير كلمة السر"
 
 #: .\commons\templates\account\password_reset_from_key.html:38
 msgid "Bad Token"
@@ -2600,16 +2600,16 @@ msgid ""
 "The password reset link was invalid, possibly because it has already been "
 "used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
 "reset</a>."
-msgstr ""
+msgstr "رابط إعادة تعيين كلمة المرور غير صالح ، ربما لأنه قد تم استخدامه بالفعل.  يرجى طلب <a href=\"%(passwd_reset_url)s\">إعادة تعيين كلمة المرور الجديدة</a>."
 
 #: .\commons\templates\account\password_reset_from_key.html:51
 msgid "change password"
-msgstr ""
+msgstr "تغيير كلمة السر"
 
 #: .\commons\templates\account\password_reset_from_key.html:54
 #: .\commons\templates\account\password_reset_from_key_done.html:13
 msgid "Your password is now changed."
-msgstr ""
+msgstr "تم تغيير كلمة مرورك الآن."
 
 #: .\commons\templates\account\signup.html:5
 msgid "Signup"
@@ -2629,7 +2629,7 @@ msgstr "لديك حساب بالفعل؟ ثم الرجاء <a href=\"%(login_url
 #: .\commons\templates\account\verification_sent.html:5
 #: .\commons\templates\account\verification_sent.html:10
 msgid "Verify Your E-mail Address"
-msgstr ""
+msgstr "تحقق من عنوان بريدك الإلكتروني"
 
 #: .\commons\templates\account\verification_sent.html:14
 msgid ""
@@ -2641,7 +2641,7 @@ msgstr "لقد أرسلنا إليك بريدًا إلكترونيًا للتح�
 #: .\commons\templates\active_users.html:5
 #: .\commons\templates\active_users.html:13
 msgid "recently active users"
-msgstr ""
+msgstr "المستخدمون النشطون مؤخرًا"
 
 #: .\commons\templates\active_users.html:11
 msgid ""
@@ -2655,15 +2655,15 @@ msgstr "المستخدمين على الانترنت"
 
 #: .\commons\templates\active_users.html:18
 msgid "active during last 5 minutes"
-msgstr ""
+msgstr "النشطين خلال آخر 5 دقائق"
 
 #: .\commons\templates\active_users.html:21
 msgid "last active"
-msgstr ""
+msgstr "نشط آخر مرة في"
 
 #: .\commons\templates\active_users.html:27
 msgid "seconds ago"
-msgstr ""
+msgstr "منذ ثوانى"
 
 #: .\commons\templates\active_users.html:35
 msgid "users no more online"
@@ -2671,7 +2671,7 @@ msgstr "المستخدمين الذين لم يعودوا متصلين بالإ�
 
 #: .\commons\templates\active_users.html:38
 msgid "last seen"
-msgstr ""
+msgstr "نشط آخر مرة في"
 
 #: .\commons\templates\activity_stream.html:7
 #: .\commons\templates\activity_stream.html:25
@@ -2705,7 +2705,7 @@ msgstr ""
 
 #: .\commons\templates\activity_stream.html:31
 msgid "object type"
-msgstr ""
+msgstr "نوع الكائن"
 
 #: .\commons\templates\activity_stream.html:31
 msgid "object"
@@ -2721,7 +2721,7 @@ msgstr ""
 
 #: .\commons\templates\admin\commons\featured\change_form.html:22
 msgid "You have unsaved changes"
-msgstr ""
+msgstr "لديك تغييرات غير محفوظة"
 
 #: .\commons\templates\admin\commons\featured\change_form.html:51
 #: .\commons\templates\admin\commons\featured\change_form.html:77
@@ -2730,7 +2730,7 @@ msgstr ""
 #: .\commons\templates\admin\commons\repo\change_form.html:21
 #: .\commons\templates\admin\flatpages\flatpage\change_form.html:21
 msgid "Add"
-msgstr ""
+msgstr "إضافة"
 
 #: .\commons\templates\admin\commons\featured\change_form.html:62
 #: .\commons\templates\admin\commons\oer\change_form.html:18
@@ -2768,7 +2768,7 @@ msgstr ""
 #: .\commons\templates\admin\commons\featured\change_form.html:116
 #, python-format
 msgid "Add %(name)s"
-msgstr ""
+msgstr "إضافة%(name)s"
 
 #: .\commons\templates\admin\commons\featured\change_form.html:144
 #: .\commons\templates\admin\commons\oer\change_form.html:51
@@ -2788,7 +2788,7 @@ msgstr[5] ""
 #: .\commons\templates\admin\commons\project\change_form.html:46
 #: .\commons\templates\admin\commons\repo\change_form.html:46
 msgid "User view"
-msgstr ""
+msgstr "عرض من جانب المستخدم"
 
 #: .\commons\templates\admin\commons\oer\change_form.html:51
 #: .\commons\templates\admin\commons\project\change_form.html:51
@@ -2905,7 +2905,7 @@ msgstr "التعليق باسم"
 
 #: .\commons\templates\comments\zinnia\entry\form.html:32
 msgid "Post"
-msgstr ""
+msgstr "انشر"
 
 #: .\commons\templates\commons_base.html:249
 #: .\commons\templates\livesearch.html:9
@@ -2934,7 +2934,7 @@ msgstr "تصنيف OER"
 
 #: .\commons\templates\contributors.html:59
 msgid "OERs evaluations"
-msgstr ""
+msgstr "تقييمات OER"
 
 #: .\commons\templates\contributors.html:80
 msgid "cataloguing of OER sources"
@@ -2951,15 +2951,15 @@ msgstr "عدد المستخدمين والأعضاء"
 
 #: .\commons\templates\count_users.html:14
 msgid "user class"
-msgstr ""
+msgstr "فئة المستخدم"
 
 #: .\commons\templates\count_users.html:14
 msgid "user count"
-msgstr ""
+msgstr "عدد المستخدمين"
 
 #: .\commons\templates\count_users.html:17
 msgid "all users"
-msgstr ""
+msgstr "جميع المستخدمين"
 
 #: .\commons\templates\count_users.html:18
 msgid "regular profiles"
@@ -2995,11 +2995,11 @@ msgstr ""
 
 #: .\commons\templates\datatrans\base.html:19
 msgid "Site administration"
-msgstr ""
+msgstr "إدارة الموقع"
 
 #: .\commons\templates\datatrans\base.html:19
 msgid "Change password"
-msgstr ""
+msgstr "تغيير كلمة السر"
 
 #: .\commons\templates\datatrans\base.html:24
 msgid "Models"
@@ -3030,12 +3030,12 @@ msgstr ""
 
 #: .\commons\templates\datatrans\model_detail.html:39
 msgid "Jump to first to do"
-msgstr ""
+msgstr "اذهب إلى أول مهمة"
 
 #: .\commons\templates\datatrans\model_detail.html:43
 #, python-format
 msgid "Jump to %(field_verbose_name)s field"
-msgstr ""
+msgstr "انتقال إلى الحقل%(field_verbose_name)s"
 
 #: .\commons\templates\datatrans\model_detail.html:48
 msgid "done"
@@ -3071,7 +3071,7 @@ msgstr ""
 
 #: .\commons\templates\datatrans\model_detail.html:116
 msgid "Save"
-msgstr ""
+msgstr "حفظ"
 
 #: .\commons\templates\datatrans\model_list.html:4
 #: .\commons\templates\datatrans\model_list.html:9
@@ -3115,12 +3115,12 @@ msgstr ""
 msgid ""
 "Please review them to see if you can reuse something,\n"
 "\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
-msgstr ""
+msgstr "يرجى مراجعتها لمعرفة ما إذا كان يمكنك إعادة استخدام شيء ما ،\n\t\t\tوعند الانتهاء ، انقر فوق الزر \"إزالة جميع العناصر القديمة\" لتنظيف جدول KeyValue."
 
 #: .\commons\templates\datatrans\obsolete_list.html:17
 #: .\commons\templates\datatrans\obsolete_list.html:35
 msgid "Remove all obsoletes"
-msgstr ""
+msgstr "إزالة جميع الترجمات التي عفا عليها الزمن"
 
 #: .\commons\templates\datatrans\obsolete_list.html:21
 msgid "Obsolete message"
@@ -3238,7 +3238,7 @@ msgstr ""
 #: .\commons\templates\django_messages\new_message.html:9
 #, python-format
 msgid "Sent from %(site_url)s"
-msgstr ""
+msgstr "ارسلت من %(site_url)s"
 
 #: .\commons\templates\django_messages\trash.html:4
 #: .\commons\templates\django_messages\trash.html:7
@@ -3248,7 +3248,7 @@ msgstr "الرسائل المحذوفة"
 #: .\commons\templates\django_messages\trash.html:12
 #: .\commons\templates\django_messages\trash.html:21
 msgid "move to"
-msgstr ""
+msgstr "نقل إلى"
 
 #: .\commons\templates\django_messages\trash.html:32
 msgid ""
@@ -3268,7 +3268,7 @@ msgstr ""
 #: .\commons\templates\django_messages\view.html:12
 #: .\commons\templates\pybb\post_template.html:59
 msgid "Delete"
-msgstr ""
+msgstr "احذف"
 
 #: .\commons\templates\document_view.html:7
 #, python-format
@@ -3285,12 +3285,12 @@ msgstr "اعرض المشروع"
 #: .\commons\templates\document_view.html:49
 #, python-format
 msgid "Curriculum: %(profile_name)s"
-msgstr ""
+msgstr "المنهج: %(profile_name)s"
 
 #: .\commons\templates\edit_preferences.html:6
 #: .\commons\templates\edit_preferences.html:12
 msgid "your preferences"
-msgstr ""
+msgstr "تفضيلاتك"
 
 #: .\commons\templates\file_upload.html:10
 #: .\commons\templates\file_upload.html:13
@@ -3307,7 +3307,7 @@ msgstr "مشروع أو مجتمع: %(project_name)s"
 #: .\commons\templates\oer_detail.html:210
 #: .\commons\templates\user_profile.html:185
 msgid "upload"
-msgstr ""
+msgstr "تحميلOER"
 
 #: .\commons\templates\file_upload.html:24
 #: .\commons\templates\folder_detail.html:126
@@ -3318,11 +3318,11 @@ msgstr ""
 
 #: .\commons\templates\filebrowser\index.html:86
 msgid "New Folder"
-msgstr ""
+msgstr "مجلد جديد"
 
 #: .\commons\templates\filebrowser\index.html:87
 msgid "Upload"
-msgstr ""
+msgstr "تحميلOER"
 
 #: .\commons\templates\filebrowser\index.html:98
 #: .\commons\templates\search_lps.html:18
@@ -3345,7 +3345,7 @@ msgstr "مجلد مشترك للمشروع:: %(proj_name)s"
 #: .\commons\templates\folder_detail.html:46
 #: .\commons\templates\project_detail.html:187
 msgid "created by"
-msgstr ""
+msgstr "منشئ بواسطة"
 
 #: .\commons\templates\folder_detail.html:54
 #: .\commons\templates\folder_detail.html:87
@@ -3353,7 +3353,7 @@ msgstr ""
 #: .\commons\templates\project_edit.html:9
 #: .\commons\templates\project_edit.html:51
 msgid "edit"
-msgstr ""
+msgstr "تحرير"
 
 #: .\commons\templates\folder_detail.html:71
 msgid "added by"
@@ -3374,7 +3374,7 @@ msgstr "إضافة وثيقة"
 
 #: .\commons\templates\folder_detail.html:131
 msgid "add subfolder"
-msgstr ""
+msgstr "إضافة مجلد فرعي"
 
 #: .\commons\templates\folder_detail.html:141
 #: .\commons\templates\mentoring_detail.html:426
@@ -3382,7 +3382,7 @@ msgstr ""
 #: .\commons\templates\project_detail.html:751
 #: .\commons\templates\project_detail.html:992
 msgid "create"
-msgstr ""
+msgstr "إنشاء"
 
 #: .\commons\templates\folder_detail.html:147
 msgid "add online resource"
@@ -3394,7 +3394,7 @@ msgstr "إضافة مورد متاح على الإنترنت"
 #: .\commons\templates\oer_detail.html:325
 #: .\commons\templates\user_profile.html:337
 msgid "do you really want to delete"
-msgstr ""
+msgstr "هل تريد حقًا حذف"
 
 #: .\commons\templates\folder_detail.html:199
 #: .\commons\templates\oer_detail.html:326
@@ -3403,16 +3403,16 @@ msgstr "هذه الوثيقة"
 
 #: .\commons\templates\folder_detail.html:202
 msgid "this folder"
-msgstr ""
+msgstr "هذا المجلد"
 
 #: .\commons\templates\folder_edit.html:5
 #, python-format
 msgid "Edit folder: %(folder_title)s"
-msgstr ""
+msgstr "تحرير البيانات الوصفية للمجلد: %(folder_title)s"
 
 #: .\commons\templates\folder_edit.html:12
 msgid "edit folder"
-msgstr ""
+msgstr "تحرير البيانات الوصفية للمجلد"
 
 #: .\commons\templates\folderdocument_edit.html:4
 #, python-format
@@ -3431,7 +3431,7 @@ msgstr "تحليلات المنتدى"
 #: .\commons\templates\forum_analytics.html:12
 #, python-format
 msgid "Total number of posts: %(total)s"
-msgstr ""
+msgstr "إجمالي عدد المشاركات: %(total)s"
 
 #: .\commons\templates\forum_analytics.html:15
 msgid "forums with topics by posts"
@@ -3514,11 +3514,11 @@ msgstr "للرجوع إليها في المستقبل، يحيط علماً به
 
 #: .\commons\templates\lp_detail.html:72
 msgid "mark this LP as a candidate for cut & paste"
-msgstr ""
+msgstr "وضع علامة على هذا مسار التعلم كمرشح لقص ولصق"
 
 #: .\commons\templates\lp_detail.html:162
 msgid "convert to sequence type"
-msgstr ""
+msgstr "تحويل إلى نوع تسلسل"
 
 #: .\commons\templates\lp_detail.html:165
 msgid "convert to simple collection"
@@ -3537,14 +3537,14 @@ msgstr "التحويل إلى نوع مخطط بياني مع العقد غير 
 #: .\commons\templates\oer_detail.html:188
 #: .\commons\templates\oer_detail.html:190
 msgid "move up"
-msgstr ""
+msgstr "نقل ما يصل"
 
 #: .\commons\templates\lp_detail.html:196
 #: .\commons\templates\lp_detail.html:197
 #: .\commons\templates\oer_detail.html:188
 #: .\commons\templates\oer_detail.html:189
 msgid "move down"
-msgstr ""
+msgstr "نقل إلى أسفل"
 
 #: .\commons\templates\lp_detail.html:231
 #: .\commons\templates\pathnode_edit.html:7
@@ -3562,19 +3562,19 @@ msgstr ""
 
 #: .\commons\templates\lp_detail.html:248
 msgid "grant editor roles"
-msgstr ""
+msgstr "منح دور محرر"
 
 #: .\commons\templates\lp_detail.html:255
 msgid "editor"
-msgstr ""
+msgstr "محرر"
 
 #: .\commons\templates\lp_detail.html:259
 msgid "grant role"
-msgstr ""
+msgstr "منح دور"
 
 #: .\commons\templates\lp_detail.html:264
 msgid "remove role"
-msgstr ""
+msgstr "إلغاء الدور"
 
 #: .\commons\templates\lp_detail.html:276
 msgid ""
@@ -3603,7 +3603,7 @@ msgstr "هل تريد حقا أن تمنح دور المحرر لهذا العض
 
 #: .\commons\templates\lp_detail.html:342
 msgid "do you really want to remove this role"
-msgstr ""
+msgstr "هل تريد حقًا إلغاء هذا الدور"
 
 #: .\commons\templates\lp_edit.html:7
 #, python-format
@@ -3657,7 +3657,7 @@ msgstr "الوثائق"
 #: .\commons\templates\mentoring_detail.html:265
 #: .\commons\templates\mentoring_detail.html:313
 msgid "confirm your choice"
-msgstr ""
+msgstr "أكد اختيارك"
 
 #: .\commons\templates\mentoring_detail.html:288
 msgid "my previous refusals"
@@ -3689,11 +3689,11 @@ msgstr ""
 
 #: .\commons\templates\mentoring_detail.html:377
 msgid "submit request to admin"
-msgstr ""
+msgstr "تقديم الطلب إلى المسؤول"
 
 #: .\commons\templates\mentoring_detail.html:377
 msgid "submit request"
-msgstr ""
+msgstr "تقديم الطلب"
 
 #: .\commons\templates\mentoring_detail.html:385
 msgid "back to draft state"
@@ -3713,7 +3713,7 @@ msgstr ""
 
 #: .\commons\templates\mentoring_detail.html:394
 msgid "view the shared folder"
-msgstr ""
+msgstr "عرض المجلد المشترك"
 
 #: .\commons\templates\mentoring_detail.html:400
 #: .\commons\templates\project_detail.html:408
@@ -3762,7 +3762,7 @@ msgstr ""
 #: .\commons\templates\mentoring_detail.html:467
 #: .\commons\templates\project_detail.html:633
 msgid "last OERs"
-msgstr ""
+msgstr "Latest OERs"
 
 #: .\commons\templates\mentoring_detail.html:483
 #: .\commons\templates\project_detail.html:651
@@ -3793,11 +3793,11 @@ msgstr "مشاركات جديدة في منتدياتي"
 
 #: .\commons\templates\new_posts.html:10
 msgid "posts added to topics after you last viewed them"
-msgstr ""
+msgstr "المشاركات المضافة إلى المواضيع بعد مشاهدتها آخر مرة"
 
 #: .\commons\templates\new_posts.html:25
 msgid "no new posts are present"
-msgstr ""
+msgstr "لا توجد مشاركات جديدة"
 
 #: .\commons\templates\notification\email_body.txt:1
 #, python-format
@@ -3818,11 +3818,11 @@ msgstr ""
 #: .\commons\templates\oer_detail.html:4 .\commons\templates\oer_view.html:5
 #, python-format
 msgid "%(oer_title)s [OER]"
-msgstr ""
+msgstr "%(oer_title)s [OER]"
 
 #: .\commons\templates\oer_detail.html:41
 msgid "upload screenshot"
-msgstr ""
+msgstr "تحميل الصورة الصغيرة"
 
 #: .\commons\templates\oer_detail.html:42 .\commons\templates\oer_view.html:32
 msgid "bookmark this OER for future reference"
@@ -3830,7 +3830,7 @@ msgstr "للرجوع إليها في المستقبل، يحيط علماً به
 
 #: .\commons\templates\oer_detail.html:44
 msgid "mark this OER as a candidate for cut & paste"
-msgstr ""
+msgstr "وضع علامة على هذا OER كمرشح لقص ولصق"
 
 #: .\commons\templates\oer_detail.html:63
 #: .\commons\templates\oer_detail.html:71
@@ -3839,7 +3839,7 @@ msgstr ""
 #: .\commons\templates\oer_detail.html:94
 #, python-format
 msgid "view resource: %(oer_url)s"
-msgstr ""
+msgstr "عرض المورد: %(oer_url)s"
 
 #: .\commons\templates\oer_detail.html:63
 #: .\commons\templates\oer_detail.html:71
@@ -3851,7 +3851,7 @@ msgstr "عرض المورد"
 
 #: .\commons\templates\oer_detail.html:106
 msgid "reference info"
-msgstr ""
+msgstr "معلومات مرجعية"
 
 #: .\commons\templates\oer_detail.html:150
 msgid "other metadata"
@@ -3871,7 +3871,7 @@ msgstr "مشتق ، من خلال التكيف أو إعادة المزج ، م�
 
 #: .\commons\templates\oer_detail.html:226
 msgid "to be able to publish this OER you must, fill some required fields."
-msgstr ""
+msgstr "لتكون قادرة على نشر هذه OER، يجب أن تملأ في بعض الحقول المطلوبة"
 
 #: .\commons\templates\oer_detail.html:230
 #: .\commons\templates\oer_evaluations.html:36
@@ -3919,15 +3919,15 @@ msgstr ""
 #: .\commons\templates\oer_edit.html:7
 #, python-format
 msgid "%(oer_title)s [edit OER]"
-msgstr ""
+msgstr "%(oer_title)s [تحرير OER]"
 
 #: .\commons\templates\oer_edit.html:7 .\commons\templates\oer_edit.html:21
 msgid "add OER"
-msgstr ""
+msgstr "إضافة OER"
 
 #: .\commons\templates\oer_edit.html:19
 msgid "edit OER"
-msgstr ""
+msgstr "تحرير OER"
 
 #: .\commons\templates\oer_edit.html:40
 #: .\commons\templates\profile_edit.html:32
@@ -3941,17 +3941,17 @@ msgstr ""
 
 #: .\commons\templates\oer_edit.html:42
 msgid "source and derivation"
-msgstr ""
+msgstr "مصدر والاشتقاق"
 
 #: .\commons\templates\oer_evaluation_edit.html:6
 #, python-format
 msgid "Edit evaluation of OER: %(oer_title)s"
-msgstr ""
+msgstr "مراجعة التقييم OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluation_edit.html:6
 #, python-format
 msgid "Add evaluation of OER: %(oer_title)s"
-msgstr ""
+msgstr "إضافة تقييم OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluation_edit.html:14
 #: .\commons\templates\oer_evaluations.html:33
@@ -3966,7 +3966,7 @@ msgstr ""
 #: .\commons\templates\oer_evaluations.html:5
 #, python-format
 msgid "Evaluations of OER: %(oer_title)s"
-msgstr ""
+msgstr "تقييم OER: %(oer_title)s"
 
 #: .\commons\templates\oer_evaluations.html:45
 msgid "overall assessment"
@@ -3974,33 +3974,33 @@ msgstr ""
 
 #: .\commons\templates\oer_evaluations.html:61
 msgid "evaluated by"
-msgstr ""
+msgstr "تقييمها من قبل"
 
 #: .\commons\templates\oer_screenshot_upload.html:8
 #, python-format
 msgid "%(oer_title)s [upload screenshot OER]"
-msgstr ""
+msgstr "%(oer_title)s [تحميل الصورة الصغيرة OER]"
 
 #: .\commons\templates\oer_screenshot_upload.html:15
 msgid "upload screenshot of OER"
-msgstr ""
+msgstr "تحميل الصورة الصغيرة OER"
 
 #: .\commons\templates\oer_screenshot_upload.html:30
 msgid "remove screenshot"
-msgstr ""
+msgstr "إزالة الصورة الصغيرة"
 
 #: .\commons\templates\oer_view.html:31
 msgid "evaluate"
-msgstr ""
+msgstr "تقييم"
 
 #: .\commons\templates\online_resource_edit.html:5
 #, python-format
 msgid "Edit online resource in folder %(folder_title)s"
-msgstr ""
+msgstr "تحرير المرجع إلى المورد عبر الإنترنت في المجلد %(folder_title)s"
 
 #: .\commons\templates\online_resource_edit.html:12
 msgid "edit online resource"
-msgstr ""
+msgstr "تحرير المرجع إلى الموارد عبر الإنترنت"
 
 #: .\commons\templates\pathnode_edit.html:7
 msgid "edit learning path node"
@@ -4020,29 +4020,29 @@ msgstr "في هذا الاستمارة يمكنك تحديد 3 أنواع من �
 
 #: .\commons\templates\pathnode_edit.html:65
 msgid "remove selected file"
-msgstr ""
+msgstr "إزالة الملف المحدد"
 
 #: .\commons\templates\profile_avatar_upload.html:7
 #: .\commons\templates\profile_avatar_upload.html:14
 #: .\commons\templates\user_profile.html:24
 msgid "upload photo"
-msgstr ""
+msgstr "تحميل هوية الصورة"
 
 #: .\commons\templates\profile_avatar_upload.html:26
 msgid "remove photo"
-msgstr ""
+msgstr "إزالة هوية الصورة"
 
 #: .\commons\templates\profile_edit.html:10
 #: .\commons\templates\profile_edit.html:26
 msgid "edit the profile"
-msgstr ""
+msgstr "تحرير ملف التعريف"
 
 #: .\commons\templates\profile_edit.html:32
 #: .\commons\templates\profile_mentor_edit.html:22
 #: .\commons\templates\user_profile.html:148
 #: .\commons\templates\user_profile.html:217
 msgid "communication preferences"
-msgstr ""
+msgstr "تفضيلات التواصل"
 
 #: .\commons\templates\profile_mentor_edit.html:7
 #: .\commons\templates\profile_mentor_edit.html:16
@@ -4126,14 +4126,14 @@ msgstr "ترجمة"
 #: .\commons\templates\project_logo_upload.html:8
 #: .\commons\templates\project_logo_upload.html:15
 msgid "upload logo"
-msgstr ""
+msgstr "تحميل الشعار"
 
 #: .\commons\templates\project_detail.html:305
 #: .\commons\templates\project_detail.html:868
 #: .\commons\templates\project_image_upload.html:8
 #: .\commons\templates\project_image_upload.html:15
 msgid "upload image"
-msgstr ""
+msgstr "تحميل الصورة"
 
 #: .\commons\templates\project_detail.html:317
 msgid "new community"
@@ -4141,7 +4141,7 @@ msgstr "مجتمع جديد"
 
 #: .\commons\templates\project_detail.html:319
 msgid "create community"
-msgstr "خلق المجتمع"
+msgstr "إنشاء المجتمع"
 
 #: .\commons\templates\project_detail.html:326
 msgid "new project"
@@ -4177,7 +4177,7 @@ msgstr ""
 #: .\commons\templates\project_detail.html:391
 #: .\commons\templates\project_detail.html:959
 msgid "shared folder"
-msgstr ""
+msgstr "مجلد مشترك"
 
 #: .\commons\templates\project_detail.html:397
 #: .\commons\templates\project_detail.html:970
@@ -4194,7 +4194,7 @@ msgstr "منتدى المناقشة"
 #: .\commons\templates\project_detail.html:454
 #: .\commons\templates\project_detail.html:994
 msgid "paste"
-msgstr ""
+msgstr "لصق"
 
 #: .\commons\templates\project_detail.html:460
 msgid "clone"
@@ -4225,7 +4225,7 @@ msgstr "انضم"
 #: .\commons\templates\project_detail.html:490
 #: .\commons\templates\project_detail.html:913
 msgid "your application is waiting for acceptation by the "
-msgstr ""
+msgstr "طلبك ينتظر قبول"
 
 #: .\commons\templates\project_detail.html:501
 #: .\commons\templates\project_detail.html:514
@@ -4240,12 +4240,12 @@ msgstr "انضم إلى هذا المشروع"
 #: .\commons\templates\project_detail.html:533
 #: .\commons\templates\project_detail.html:929
 msgid "call back supervisor role"
-msgstr ""
+msgstr "خلع دور المشرف"
 
 #: .\commons\templates\project_detail.html:538
 #: .\commons\templates\project_detail.html:934
 msgid "grant supervisor role"
-msgstr ""
+msgstr "منح دور المشرف"
 
 #: .\commons\templates\project_detail.html:551
 #: .\commons\templates\project_detail.html:889
@@ -4271,23 +4271,23 @@ msgstr "أضف عضوا بمبادرتك"
 #: .\commons\templates\user_profile.html:185
 #: .\commons\templates\user_profile.html:241
 msgid "add"
-msgstr ""
+msgstr "إضافة"
 
 #: .\commons\templates\project_detail.html:573
 msgid "select new administrator"
-msgstr ""
+msgstr "اختر المسؤول الجديد"
 
 #: .\commons\templates\project_detail.html:573
 msgid "select new supervisor"
-msgstr ""
+msgstr "اختر المشرف الجديد"
 
 #: .\commons\templates\project_detail.html:574
 msgid "apply"
-msgstr ""
+msgstr "تقدم بطلب"
 
 #: .\commons\templates\project_detail.html:660
 msgid "last OERs evaluated"
-msgstr ""
+msgstr "آخر تقييمات OER"
 
 #: .\commons\templates\project_detail.html:709
 msgid "mentoring policy"
@@ -4368,11 +4368,11 @@ msgstr "مشروع فرعي"
 
 #: .\commons\templates\project_image_upload.html:28
 msgid "remove image"
-msgstr ""
+msgstr "إزالة الصورة"
 
 #: .\commons\templates\project_logo_upload.html:28
 msgid "remove logo"
-msgstr ""
+msgstr "أزل الشعار"
 
 #: .\commons\templates\project_results.html:5
 #: .\commons\templates\project_results.html:77
@@ -4382,7 +4382,7 @@ msgstr "نتائج المشروع"
 #: .\commons\templates\project_results.html:86
 #: .\commons\templates\resources_by.html:53
 msgid "OERs evaluated"
-msgstr ""
+msgstr "OERs التي تم تقييمها"
 
 #: .\commons\templates\project_results.html:97
 #: .\commons\templates\user_dashboard.html:461
@@ -4392,11 +4392,11 @@ msgstr "لم يتم إنشاء مسار تعلم حتى الآن"
 #: .\commons\templates\project_results.html:108
 #: .\commons\templates\user_dashboard.html:407
 msgid "no OER classified yet"
-msgstr ""
+msgstr "لا OER مفهرسة حتى الآن"
 
 #: .\commons\templates\project_results.html:122
 msgid "no OER evaluated yet"
-msgstr ""
+msgstr "لا OER تقييم حتى الآن"
 
 #: .\commons\templates\projects.html:6
 msgid "all projects"
@@ -4412,11 +4412,11 @@ msgstr "نوع المشروع"
 
 #: .\commons\templates\pybb\_need_to_login_message.html:4
 msgid "login"
-msgstr ""
+msgstr "تسجيل الدخول"
 
 #: .\commons\templates\pybb\_need_to_login_message.html:4
 msgid "to post a reply"
-msgstr ""
+msgstr "لنشر رد"
 
 #: .\commons\templates\pybb\base.html:13
 msgid "Latest posts on forum"
@@ -4448,7 +4448,7 @@ msgstr ""
 #: .\commons\templates\pybb\topic.html:54
 #: .\commons\templates\pybb\topic_list.html:11
 msgid "Posts"
-msgstr ""
+msgstr "أحدث"
 
 #: .\commons\templates\pybb\forum_list.html:19
 #: .\commons\templates\pybb\topic_list.html:15
@@ -4457,7 +4457,7 @@ msgstr ""
 
 #: .\commons\templates\pybb\forum_list.html:23
 msgid "Last posts"
-msgstr ""
+msgstr "أحدث المشاركات"
 
 #: .\commons\templates\pybb\forum_list.html:36
 #: .\commons\templates\pybb\forum_list.html:63
@@ -4482,19 +4482,19 @@ msgstr "لا توجد فئات المنتدى"
 
 #: .\commons\templates\pybb\index.html:21
 msgid "Add a category now"
-msgstr ""
+msgstr "أضف فئة الآن"
 
 #: .\commons\templates\pybb\index.html:27
 msgid "Last updates in topics"
-msgstr ""
+msgstr "آخر التحديثات في المواضيع"
 
 #: .\commons\templates\pybb\pagination.html:7
 msgid "previous page"
-msgstr ""
+msgstr "الصفحة السابقة"
 
 #: .\commons\templates\pybb\pagination.html:21
 msgid "next page"
-msgstr ""
+msgstr "الصفحة التالية"
 
 #: .\commons\templates\pybb\post_template.html:40
 msgid "Rank"
@@ -4502,15 +4502,15 @@ msgstr ""
 
 #: .\commons\templates\pybb\post_template.html:58
 msgid "Delete post?"
-msgstr ""
+msgstr "حذف المشاركة؟"
 
 #: .\commons\templates\pybb\post_template.html:61
 msgid "Approve post"
-msgstr ""
+msgstr "الموافقة على النشر"
 
 #: .\commons\templates\pybb\post_template.html:66
 msgid "Admin"
-msgstr ""
+msgstr "مسؤول"
 
 #: .\commons\templates\pybb\post_template.html:108
 msgid "reply"
@@ -4534,11 +4534,11 @@ msgstr ""
 
 #: .\commons\templates\pybb\topic_list.html:22
 msgid "Last post"
-msgstr ""
+msgstr "أحدث مشاركة"
 
 #: .\commons\templates\pybb\topic_list.html:32
 msgid "Go to first unread post"
-msgstr ""
+msgstr "الذهاب إلى أول مشاركة غير مقروءة"
 
 #: .\commons\templates\pybb\topic_list.html:33
 msgid "Sticky"
@@ -4550,7 +4550,7 @@ msgstr ""
 
 #: .\commons\templates\pybb\topic_list.html:38
 msgid "pages"
-msgstr ""
+msgstr "صفحات"
 
 #: .\commons\templates\repo_detail.html:5
 msgid "repository"
@@ -4575,7 +4575,7 @@ msgstr "لا يوجد OERs موجودة من هذا المستودع"
 
 #: .\commons\templates\resource_analytics.html:23
 msgid "last"
-msgstr ""
+msgstr "آخر"
 
 #: .\commons\templates\resource_analytics.html:23
 msgid "months"
@@ -4669,7 +4669,7 @@ msgstr "ملف تعريف المستخدم"
 #: .\commons\templates\user_dashboard.html:29
 #: .\commons\templates\user_profile.html:34
 msgid "preferences"
-msgstr ""
+msgstr "تفضيلات"
 
 #: .\commons\templates\user_dashboard.html:45
 msgid "manage"
@@ -4681,7 +4681,7 @@ msgstr ""
 
 #: .\commons\templates\user_dashboard.html:48
 msgid "flatpages"
-msgstr ""
+msgstr "صفحات ويب ثابتة"
 
 #: .\commons\templates\user_dashboard.html:50
 msgid "Weblog"
@@ -4737,7 +4737,7 @@ msgstr "طلبات التوجيه في مجتمعاتي"
 #: .\commons\templates\user_dashboard.html:268
 #: .\commons\templates\user_dashboard.html:283
 msgid "request of"
-msgstr ""
+msgstr "طلب"
 
 #: .\commons\templates\user_dashboard.html:249
 msgid "mentoring requests in my communities waiting for mentor answer"
@@ -4769,7 +4769,7 @@ msgstr ""
 
 #: .\commons\templates\user_dashboard.html:369
 msgid "no actions of last period"
-msgstr ""
+msgstr "لم يتم تنفيذ أي إجراء خلال الفترة الماضية"
 
 #: .\commons\templates\user_dashboard.html:376
 msgid "create personal Learning Path"
@@ -4818,7 +4818,7 @@ msgstr "يجب عليك استكمال ملف تعريف المستخدم الخ
 
 #: .\commons\templates\user_preferences.html:5
 msgid "preferences of"
-msgstr ""
+msgstr "تفضيلات"
 
 #: .\commons\templates\user_preferences.html:29
 msgid "Notification by email"
@@ -4826,7 +4826,7 @@ msgstr ""
 
 #: .\commons\templates\user_preferences.html:33
 msgid "edit preferences"
-msgstr ""
+msgstr "تحرير تفضيلات"
 
 #: .\commons\templates\user_profile.html:6
 #: .\commons\templates\user_strict_profile.html:6
@@ -4844,7 +4844,7 @@ msgstr "معلومات خاصة"
 
 #: .\commons\templates\user_profile.html:52
 msgid "username"
-msgstr ""
+msgstr "اسم المستخدم"
 
 #: .\commons\templates\user_profile.html:56
 msgid "email"
@@ -4888,7 +4888,7 @@ msgstr "أعضاء متشابهين"
 #: .\commons\templates\user_profile.html:300
 #: .\commons\templates\user_strict_profile.html:62
 msgid "anonymized user"
-msgstr ""
+msgstr "المستخدم مبهمة"
 
 #: .\commons\templates\user_profile.html:305
 #: .\commons\templates\user_strict_profile.html:67
@@ -4927,7 +4927,7 @@ msgstr ""
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:52
 msgid "Last update on"
-msgstr ""
+msgstr "آخر تحديث بواسطة في"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:104
 #, python-format
@@ -4941,20 +4941,20 @@ msgstr ""
 #: .\commons\templates\zinnia\_entry_detail_base.html:122
 #, python-format
 msgid "Show all entries tagged by %(tag)s"
-msgstr ""
+msgstr "إظهار كافة الإدخالات الموسومة%(tag)s"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:125
 msgid "No tags"
-msgstr ""
+msgstr "لا توجد وسم"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:131
 msgid "Short url"
-msgstr ""
+msgstr "URL قصير"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:133
 #, python-format
 msgid "Short URL to %(object)s"
-msgstr ""
+msgstr "عنوان URL قصير لـ %(object)s"
 
 #: .\commons\templates\zinnia\_entry_detail_base.html:141
 msgid "Discussions"
@@ -5084,7 +5084,7 @@ msgstr "رابط مباشر لهذا التعليق"
 #: .\commons\templates\zinnia\entry_detail_base.html:255
 #: .\commons\templates\zinnia\entry_detail_base.html:256
 msgid "Edit the entry"
-msgstr ""
+msgstr "تحرير هذا الادخال"
 
 #: .\commons\templates\zinnia\skeleton.html:19
 msgid "Useful links"
@@ -5104,7 +5104,7 @@ msgstr ""
 msgid ""
 "embedding inside a page the view of this resource is forbidden: please, use "
 "the link above to access it directly"
-msgstr ""
+msgstr "تضمين داخل الصفحة عرض هذا المورد غير مسموح به: من فضلك ، استخدم الرابط أعلاه للوصول إليه مباشرة"
 
 #: .\commons\views.py:789
 msgid "minimum number of LPs"
@@ -5146,11 +5146,11 @@ msgstr ""
 
 #: .\commons\vocabularies.py:86
 msgid "material type"
-msgstr ""
+msgstr "نوع المادة"
 
 #: .\commons\vocabularies.py:87
 msgid "material types"
-msgstr ""
+msgstr "أنواع المواد"
 
 #: .\commons\vocabularies.py:92
 msgid "media format"
@@ -5190,11 +5190,11 @@ msgstr "مجالات التعليم"
 
 #: .\commons\vocabularies.py:142
 msgid "professional field"
-msgstr ""
+msgstr "مجال المهني"
 
 #: .\commons\vocabularies.py:143
 msgid "professional fields"
-msgstr ""
+msgstr "المجالات المهنية"
 
 #: .\commons\vocabularies.py:148
 msgid "social network"
