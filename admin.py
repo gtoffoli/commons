@@ -26,6 +26,10 @@ from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluati
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
+from django.contrib.auth.admin import UserAdmin
+UserAdmin.list_display = ('id', 'username', 'email', 'first_name', 'last_name', 'is_active', 'is_staff', 'last_login',)
+UserAdmin.ordering = ('id',)
+
 class UserProfileInline(admin.StackedInline):
     model = UserProfile
     form = UserProfileChangeForm
