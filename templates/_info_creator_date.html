@@ -7,7 +7,7 @@
                 {{data.creator.get_display_name}}
             {% endif %}
             <br>
-            <{{ data.created|date:"d/m/Y" }}<br>
+            {{ data.created|date:"d/m/Y" }}<br>
             {% if data.project.proj_type.name == 'ment' %}
                 <span class="demiBold">{% trans "in the project of mentoring" %}</span>
             {% else %}
