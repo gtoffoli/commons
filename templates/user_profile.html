@@ -80,10 +80,10 @@
             <div class="marginB10">
               <div class="clearfix">
                 {% if profile.edu_level %}
-                  {% include "_data.html" with data=profile.edu_level data_class=" pull-left font14 paddingR20" label_data="education" action="/people/search/" type_data="edu_level" %}
+                  {% include "_data.html" with data=profile.edu_level data_class=" pull-left font14 paddingR20" label_data="education level" action="/people/search/" type_data="edu_level" %}
                 {% endif %}
                 {% if profile.pro_status %}
-                  {% include "_data.html" with data=profile.pro_status data_class=" pull-left font14 paddingR20" label_data="status" action="/people/search/" type_data="pro_status" %} 
+                  {% include "_data.html" with data=profile.pro_status data_class=" pull-left font14 paddingR20" label_data="study or work status" action="/people/search/" type_data="pro_status" %} 
                 {% endif %}
               </div>
               <div class="clearfix">
@@ -102,7 +102,7 @@
               {% endif %}
             </div>
             {% if profile.subjects.all %}
-              {% include "_data_all.html" with data=profile.subjects.all data_class=" font14 marginB10" label_data="subjects of interest" action="/people/search/" type_data="subjects" %}
+              {% include "_data_all.html" with data=profile.subjects.all data_class=" font14 marginB10" label_data="interest areas" action="/people/search/" type_data="subjects" %}
             {% endif %}
             {% if profile.languages.all or profile.other_languages %}
               <div class="clearfix marginB10">
@@ -126,7 +126,7 @@
                   </dl>
                 {% endif %}
                 {% if profile.networks.all %}
-                  {% include "_data_all.html" with data=profile.networks.all data_class=" font14 marginB10" label_data="social networks" action="/people/search/" type_data="networks" %}
+                  {% include "_data_all.html" with data=profile.networks.all data_class=" font14 marginB10" label_data="online networks / services used" action="/people/search/" type_data="networks" %}
                 {% endif %}
               </div>
             {% endif %}
