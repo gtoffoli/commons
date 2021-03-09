@@ -4300,8 +4300,11 @@ select[multiple].input-group-sm > .input-group-btn > .btn {
 .navbar-fixed-top,
 .navbar-fixed-bottom {
   position: fixed;
-   inset-inline-end: 0;
-  inset-inline-start: 0;
+  /*
+   inset-inline-end: 0; right:0;
+  inset-inline-start: 0; left: 0;
+  */
+  width:100%;
   z-index: 1030;
 }
 @media (min-width: 768px) {
