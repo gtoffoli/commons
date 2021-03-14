@@ -58,6 +58,7 @@ def projects_children(request):
     return children
 
 def search_children(request):
+    user = request.user
     children = []
     children.append (MenuItem(
          capfirst(_("all resources")),
@@ -76,10 +77,11 @@ def search_children(request):
          capfirst(_("source repositories")),
          url='/repos/search/',
         ))
-    children.append (MenuItem(
-         capfirst(_("contents analysis")),
-         url='/contents_dashboard/',
-        ))
+    if user.is_authenticated:
+        children.append (MenuItem(
+             capfirst(_("contents analysis")),
+             url='/contents_dashboard/',
+            ))
     return children
 
 def help_children(request):
