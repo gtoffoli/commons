@@ -214,7 +214,9 @@ urlpatterns += [
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>.+)$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
+    url(r"^compare_nodes/(?P<lp_slug>[\w\d-]+)/$", commons.text_analysis.lp_compare_nodes, name="lp_compare_nodes"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
+    url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
     # path('wiki/', include('wiki.urls')),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

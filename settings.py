@@ -106,7 +106,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
     # 3rd party
-    'compressor',
+    'yarn',
+    'compressor', # usato?
     'filebrowser',
     'filetransfers',
     'mptt',
@@ -170,18 +171,26 @@ if HAS_EARMASTER:
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
 
-BOWER_INSTALLED_APPS = (
-    # 'd3#3.3.13',
-    # 'nvd3#1.7.1',
-    'd3#3.5.16',
-    'nvd3#1.8.1',
-)
 
 MIGRATION_MODULES = {
     'roles': None,
 }
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+YARN_ROOT_PATH = PROJECT_ROOT
+YARN_STATIC_FILES_PREFIX = 'yarn'
+if IS_LINUX:
+    YARN_EXECUTABLE_PATH = ''
+else:
+    YARN_EXECUTABLE_PATH = os.path.join(os.path.sep, 'Program Files', 'nodejs', 'yarn.cmd')
+
+BOWER_INSTALLED_APPS = (
+    # 'd3#3.3.13',
+    # 'nvd3#1.7.1',
+    'd3#3.5.16',
+    'nvd3#1.8.1',
+)
 
 TEMPLATES = [
     {
@@ -219,6 +228,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
     'djangobower.finders.BowerFinder',
+    'yarn.finders.YarnFinder',
 )
 
 # in development, disable template caching

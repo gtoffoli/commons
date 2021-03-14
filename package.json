@@ -1,0 +1,8 @@
+{
+  "name": "commons",
+  "type": "module",
+  "dependencies": {
+    "vddl": "^0.7.1",
+    "vuedraggable": "^2.24.3"
+  }
+}

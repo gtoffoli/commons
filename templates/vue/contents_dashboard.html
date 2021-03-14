@@ -1,0 +1,177 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>vue-drag-and-drop-list</title>
+     <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
+     <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
+    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "vue_apps/vddl/vddl.css" %}">
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+{% if DEBUG %}
+    <script src="{% static "yarn/vue/dist/vue.js" %}"></script>
+{% else %}
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+{% endif %}
+<!--<script type="module" src="{% static "yarn/sortablejs/Sortable.js" %}"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js"></script>
+<!--<script type="module" src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/vuedraggable.js"></script>-->
+    <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
+{% if DEBUG %}
+    <script src="{% static "yarn/vddl/dist/vddl.js" %}"></script>
+{% else %}
+    <script src="https://cdn.jsdelivr.net/npm/vddl@0.7.1/dist/vddl.js"></script>
+{% endif %}
+  </head>
+  <body>
+    {% verbatim %}
+    <div id="app">
+    <div class="demo"> <div class="container">
+     <div class="demo-nav"> <h3 class="center">Contents Dashboard</h3></div>
+      <div class="col-md-4">
+        <div class="panel panel-vue" v-for="list in lists">
+          <div class="panel-heading">
+            <h3 class="panel-title">{{ list.label }}</h3>
+          </div>
+          <vddl-list :list=list.els class="panel-body drop-zone"
+            :inserted="handleInserted"
+            :dragover="handleDragover"
+            :drop="handleDrop">
+            <vddl-draggable v-for="item in list.els" v-bind:key="item.id" class="v-col--auto"
+              :draggable=item
+              :index=item['index']
+              :wrapper=list.els
+              effect-allowed="move"
+              :selected="selectedEvent"
+              :dragstart="handleDragstart"
+              :dragend="handleDragend"
+              :canceled="handleCanceled"
+              :moved="handleMoved"
+              v-bind:class="{'selected': list.selected === item}"
+            >
+              <div><a :href="item.url">{{ item.label }}</a></div>
+            </vddl-draggable>
+          </vddl-list>
+        </div>
+      </div>
+      <div class="col-md-8">
+        <div class="panel panel-vue">
+          <div class="panel-heading">
+            <h3 class="panel-title">Selected set of Contents</h3>
+          </div>
+          <vddl-list :list=corpus.els class="panel-body drop-zone v-col--auto"
+            :inserted="handleInserted"
+            :dragover="handleDragover"
+            :drop="handleDrop">
+            <vddl-draggable v-for="item in corpus.els" v-bind:key="item.id" class="v-col--auto"
+              :draggable=item
+              :index=item['index']
+              :wrapper=corpus.els
+              effect-allowed="move"
+              :selected="selectedEvent"
+              :dragstart="handleDragstart"
+              :dragend="handleDragend"
+              :canceled="handleCanceled"
+              :moved="handleMoved"
+              v-bind:class="{'selected': corpus.selected === item}"
+            >
+              <div><a :href="item.url">{{ item.label }}</a></div>
+            </vddl-draggable>
+          </vddl-list>
+        </div>
+      </div>
+    </div></div>
+    </div>
+    {% endverbatim %}
+
+    <script>
+      var app = new Vue({
+        name: 'contents_dashboard',
+        data: {
+          lists: { my_lps: {label: 'My LPs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {label: 'Personal LPs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {label: 'My OERs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {label: 'Personal OERs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null} },
+          corpus: {label: 'Corpus', els: [{ list: 'corpus', id: 0, label: 'empty', url: '#', index: 0, }], selected: null},
+          list: {label: '', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null},
+		},
+        el: '#app',
+        selected: null,
+        index: 0,
+        components: {
+          // 'vddl-draggable': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-draggable.vue"),
+          // 'vddl-list': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-list.vue")
+        },
+        methods: {
+          selectedEvent: function(item){
+            console.log(':v-draggable: dragstart');
+            // this.selected = item;
+            var key = item.list
+            this.lists[key].selected = item;
+          },
+          handleDragstart() {
+            console.log(':v-draggable: dragstart');
+          },
+          handleDragend() {
+            console.log(':v-draggable: dragend');
+          },
+          handleCanceled() {
+            console.log(':v-draggable: canceled');
+          },
+          handleMoved(item) {
+            console.log(':v-draggable: moved');
+            console.log(item);
+            const { index, list } = item;
+            list.splice(index, 1);
+          },
+          handleDragover() {
+            console.log(':v-list: handleDragover');
+          },
+          handleInserted() {
+            console.log(':v-list: inserted');
+          },
+          handleDrop(data) {
+            console.log(':v-list: drop');
+            console.log(data);
+            const { index, list, item } = data;
+            // change the id
+            item.id = new Date().getTime();
+            list.splice(index, 0, item);
+          },
+        },
+        mounted: function () {
+          $this = this;
+		  $.ajax({
+	        type:'GET',
+	        url: `/contents_dashboard/`,
+	        success: function(json_data) {
+	        	console.log(Object.entries(json_data).length);
+	            // set all properties from json_data into data
+	            for (var key in json_data) {
+            		// $this[key] = json_data[key];
+            		list = $this['lists'][key]
+            		list['els'] = json_data[key];
+            		var index = 0;
+            		for (var el in $this['lists'][key]['els']) {
+                		el['list'] = key;
+                		el['selected'] = false;
+                		el['index'] = index;
+                		index += 1;
+            		}
+            	}
+	        },
+	        error: function(){
+	            console.log("Hello");
+	        }
+		  });
+        },
+        updated: function () {
+        },
+        // drop: function (event, index, item, type, external) {
+        //   windows.alert(index);
+        // },
+      });
+	</script>
+  </body>
+</html>

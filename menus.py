@@ -76,6 +76,10 @@ def search_children(request):
          capfirst(_("source repositories")),
          url='/repos/search/',
         ))
+    children.append (MenuItem(
+         capfirst(_("contents analysis")),
+         url='/contents_dashboard/',
+        ))
     return children
 
 def help_children(request):

@@ -6,7 +6,6 @@ google_analytics.html
 #############
 ## Python
 #############
-
 *.py[cod]
 
 # Packages
@@ -23,3 +22,10 @@ var/
 sdist/
 develop-eggs/
 .installed.cfg
+
+## Yarn
+.yarn/
+.pnp.js
+node_modules/
+.editorconfig
+.gitattributes

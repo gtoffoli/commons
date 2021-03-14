@@ -12,17 +12,16 @@ from operator import itemgetter
 import textract
 import readability
 from bs4 import BeautifulSoup
-from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
 
 from .models import Project, OER, LearningPath, PathNode
-from .utils import strings_from_html
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 
-# nlp_url = settings.NLP_URL
-nlp_url = 'http://nlp.commonspaces.eu'
+nlp_url = settings.NLP_URL
+# nlp_url = 'http://nlp.commonspaces.eu'
 
 # from NLPBuddy
 ENTITIES_MAPPING = {
@@ -377,7 +376,7 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             obj = get_object_or_404(PathNode, id=obj_id)
         json_metadata = PathNodeSerializer(obj).data
         title = json_metadata['label']
-        description = ""
+        description = ''
         oer = obj.oer
         if oer:
             text = get_oer_text(oer, return_has_text=return_has_text)
@@ -669,3 +668,57 @@ def flatpage_text(request, flatpage_id):
 
 def brat(request):
     return render(request, 'vue/brat.html', {})
+
+def lp_compare_nodes(request, lp_slug):
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    nodes = lp.get_ordered_nodes()
+    user_key = "{}_{}".format(request.user.id, lp.id)
+    endpoint = nlp_url + '/api/delete_docs/'
+    data = json.dumps({'user_key': user_key})
+    response = requests.post(endpoint, data=data)
+    if not response.status_code==200:
+        data = {'status': response.status_code}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+    endpoint = nlp_url + '/api/add_doc/'
+    for node in nodes:
+        title, description, text = node.get_obj_text(return_has_text=False)
+        text = '{}, {}. {}'.format(title, title, text)
+        doc_key = str(node.id)
+        data = json.dumps({'user_key': user_key, 'doc_key': doc_key, 'text': text})
+        response = requests.post(endpoint, data=data)
+        if not response.status_code==200:
+            data = {'status': response.status_code}
+            return HttpResponse(json.dumps(data), content_type='application/json')
+    endpoint = nlp_url + '/api/compare_docs/'
+    data = json.dumps({'user_key': user_key, 'language': lp.original_language})
+    response = requests.post(endpoint, data=data)
+    if response and response.status_code==200:
+        return HttpResponse(response.content, content_type='application/json') 
+    else:
+        data = {'status': response.status_code}
+        return HttpResponse(json.dumps(data), content_type='application/json')
+
+def get_my_folders(request):
+    return []
+
+def contents_dashboard(request):
+    # see: views.user_dasboard()
+    var_dict = {}
+    var_dict['user'] = user = request.user
+    var_dict['profile'] = profile = user.get_profile()
+    if profile:
+        var_dict['complete_profile'] = profile.get_completeness()
+    var_dict['personal_oers'] = personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    var_dict['my_oers'] = my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    var_dict['personal_lps'] = personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    var_dict['my_folders'] = my_folders = get_my_folders(request)
+    data = {}
+    data['personal_oers'] = [{'id': oer.id, 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+    data['my_oers'] = [{'id': oer.id, 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+    data['personal_lps'] = [{'id': lp.id, 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+    data['my_lps'] = [{'id': lp.id, 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+    if request.is_ajax():
+        return JsonResponse(data)
+    else:
+        return render(request, 'vue/contents_dashboard.html', var_dict)
