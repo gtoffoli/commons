@@ -1,9 +1,13 @@
-/* original
+/* original from node_modules
 import Sortable from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 */
+/* working intermediate
 import * as Sortable from "https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js";
 import { insertNodeAt, camelize, console, removeNode } from "https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/util/helper.js";
+*/
+import * as Sortable from "../sortable/Sortable.js";
+import { insertNodeAt, camelize, console, removeNode } from "./src/util/helper.js";
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {

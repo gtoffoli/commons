@@ -6,26 +6,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>vue-drag-and-drop-list</title>
-     <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
-     <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
+    <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
     <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static "vue_apps/vddl/vddl.css" %}">
     <script src="{% static "nlp/js/jquery.min.js" %}"></script>
-{% if DEBUG %}
-    <script src="{% static "yarn/vue/dist/vue.js" %}"></script>
-{% else %}
+<!--
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-{% endif %}
-<!--<script type="module" src="{% static "yarn/sortablejs/Sortable.js" %}"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js"></script>
-<!--<script type="module" src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/vuedraggable.js"></script>-->
-    <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
-{% if DEBUG %}
-    <script src="{% static "yarn/vddl/dist/vddl.js" %}"></script>
-{% else %}
+    <script type="module" src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/vuedraggable.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vddl@0.7.1/dist/vddl.js"></script>
-{% endif %}
+-->
+    <script src="{% static "vue/vue.js" %}"></script>
+    <script type="module" src="{% static "vue_apps/sortable/Sortable.js" %}"></script>
+    <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
+    <script src="{% static "vue_apps/vddl/vddl.js" %}"></script>
   </head>
   <body>
     {% verbatim %}
