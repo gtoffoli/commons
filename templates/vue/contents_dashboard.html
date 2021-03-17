@@ -8,8 +8,9 @@
     <title>vue-drag-and-drop-list</title>
     <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
     <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
-    <link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet">
+    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+    <!-- MMR link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet"-->
     <link rel="stylesheet" href="{% static "vue_apps/vddl/vddl.css" %}">
     <script src="{% static "nlp/js/jquery.min.js" %}"></script>
 <!--
@@ -22,40 +23,65 @@
     <script type="module" src="{% static "vue_apps/sortable/Sortable.js" %}"></script>
     <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
     <script src="{% static "vue_apps/vddl/vddl.js" %}"></script>
+<style>
+
+.list-e .box-e:nth-child(4n+1) {
+    clear: both;
+}
+.list-e > div {
+    width: 24%;
+    height: auto;
+    float: left;
+    padding: 5px 0 0 10px;
+    margin: 0 10px 10px 0;
+    border: 1px solid #ddd;
+
+}
+.box-scroll {
+  overflow: auto;
+}
+.box-large {
+height:340px;
+}
+.box-medium {
+height:250px;
+}
+
+
+
+</style>
   </head>
   <body>
     {% verbatim %}
     <div id="app">
-    <div class="demo"> <div class="container">
-     <div class="demo-nav"> <h3 class="center">Contents Dashboard</h3></div>
-      <div class="col-md-4">
-        <div class="panel panel-vue" v-for="list in lists">
-          <div class="panel-heading">
-            <h3 class="panel-title">{{ list.label }}</h3>
+      <div class="container-fluid">
+        <h3 class="text-center">Contents Dashboard</h3>
+        <div class="list-e">
+            <div class="box-e panel-vue" v-for="list in lists">
+              <h3 class="panel-title text-center">{{ list.label }}</h3>
+              <vddl-list :list=list.els class="drop-zone box-scroll box-medium"
+              :inserted="handleInserted"
+              :dragover="handleDragover"
+              :drop="handleDrop">
+                <vddl-draggable v-for="item in list.els" v-bind:key="item.id" class="v-col--auto" style="padding:0 5x 5px 0"
+                :draggable=item
+                :index=item['index']
+                :wrapper=list.els
+                effect-allowed="move"
+                :selected="selectedEvent"
+                :dragstart="handleDragstart"
+                :dragend="handleDragend"
+                :canceled="handleCanceled"
+                :moved="handleMoved"
+                v-bind:class="{'selected': list.selected === item}"
+                >
+                  <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
+                </vddl-draggable>
+              </vddl-list>
+            </div>
           </div>
-          <vddl-list :list=list.els class="panel-body drop-zone"
-            :inserted="handleInserted"
-            :dragover="handleDragover"
-            :drop="handleDrop">
-            <vddl-draggable v-for="item in list.els" v-bind:key="item.id" class="v-col--auto"
-              :draggable=item
-              :index=item['index']
-              :wrapper=list.els
-              effect-allowed="move"
-              :selected="selectedEvent"
-              :dragstart="handleDragstart"
-              :dragend="handleDragend"
-              :canceled="handleCanceled"
-              :moved="handleMoved"
-              v-bind:class="{'selected': list.selected === item}"
-            >
-              <div><a :href="item.url">{{ item.label }}</a></div>
-            </vddl-draggable>
-          </vddl-list>
-        </div>
-      </div>
-      <div class="col-md-8">
-        <div class="panel panel-vue">
+          <div style="clear: both;">
+        <div class="panel-vue">
           <div class="panel-heading">
             <h3 class="panel-title">Selected set of Contents</h3>
           </div>
@@ -79,9 +105,10 @@
             </vddl-draggable>
           </vddl-list>
         </div>
+          </div>
+        </div>
       </div>
-    </div></div>
-    </div>
+    
     {% endverbatim %}
 
     <script>
