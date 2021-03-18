@@ -1,69 +1,106 @@
+{% extends "commons_base.html" %}
 {% load staticfiles %}
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>vue-drag-and-drop-list</title>
-    <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
-    <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
-    <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
+{% load i18n %}
+{% block head_title %}Contents Dashboard{% endblock %}
+{% block extra_style %}
     <!-- MMR link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet"-->
     <link rel="stylesheet" href="{% static "vue_apps/vddl/vddl.css" %}">
-    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
-<!--
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/vuedraggable.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vddl@0.7.1/dist/vddl.js"></script>
--->
-    <script src="{% static "vue/vue.js" %}"></script>
-    <script type="module" src="{% static "vue_apps/sortable/Sortable.js" %}"></script>
-    <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
-    <script src="{% static "vue_apps/vddl/vddl.js" %}"></script>
 <style>
-
+.wrapper {
+    min-height: 0;
+    margin:0;
+    padding:0;
+}
+h3 {
+    margin-top:0;
+    margin-bottom:0;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+}
+    
 .list-e .box-e:nth-child(4n+1) {
     clear: both;
 }
 .list-e > div {
-    width: 24%;
-    height: auto;
-    float: left;
-    padding: 5px 0 0 10px;
-    margin: 0 10px 10px 0;
-    border: 1px solid #ddd;
+  width: 24%;
+  height: auto;
+  float: left;
+  margin: 0 1em 1em 0;
+  background: #fff;
+  border: 1px solid #67AE73;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+}
+.list-r > div {
+  width:100%;
+  margin: 0 1em 1em 0;
+  background: #fff;
+  border: 1px solid #8c8c8c;
+  border-top-left-radius:4px;
+  border-top-right-radius:4px;
+}
+  
 
+.list-e > div.box100  {
+    width:100%;
 }
-.box-scroll {
-  overflow: auto;
+div.vddl-draggable {
+    padding:3px 10px 3px 10px;
+    border-bottom: 1px dotted #67AE73;
+    font-size:90%;
 }
-.box-large {
-height:340px;
+div.vddl-draggable:first {
+    padding-top: 6px;
 }
-.box-medium {
-height:250px;
+div.vddl-draggable:last {
+    border-bottom:none;
 }
-
-
+.panel-heading-r {
+    color: #fff;
+    background: #8c8c8c;
+}
 
 </style>
-  </head>
-  <body>
+{% endblock extra_style %}
+
+{% block extra_head %}
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+{% comment %}
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/sortablejs@1.13.0/Sortable.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/vuedraggable@2.24.3/src/vuedraggable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vddl@0.7.1/dist/vddl.js"></script>
+{% endcomment %}
+    <script src="{% static "vue/vue.js" %}"></script>
+    <script type="module" src="{% static "vue_apps/sortable/Sortable.js" %}"></script>
+    <script type="module" src="{% static "vue_apps/vuedraggable/vuedraggable.js" %}"></script>
+    <script src="{% static "vue_apps/vddl/vddl.js" %}"></script>
+{% endblock extra_head %}
+
+{% block body_class %}contents_dashboard{% endblock %}
+
+{% block nav %}
+  <div class="navbar">
+    <h2 class="text-center">Contents Dashboard</h2>
+  </div>
+{% endblock nav %}
+
+{% block body_base %}
     {% verbatim %}
     <div id="app">
-      <div class="container-fluid">
-        <h3 class="text-center">Contents Dashboard</h3>
+      <div class="container-fluid marginTB20">
+        <!-- MMR versione a 4 pannelli
         <div class="list-e">
-            <div class="box-e panel-vue" v-for="list in lists">
-              <h3 class="panel-title text-center">{{ list.label }}</h3>
-              <vddl-list :list=list.els class="drop-zone box-scroll box-medium"
+            <div class="box-e" v-for="list in lists">
+              <h3 class="text-center panel-heading-c0">{{ list.label }}</h3>
+              <vddl-list :list=list.els class="drop-zone box-scroll box-small"
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in list.els" v-bind:key="item.id" class="v-col--auto" style="padding:0 5x 5px 0"
+                <vddl-draggable v-for="item in list.els" v-bind:key="item.id"
                 :draggable=item
                 :index=item['index']
                 :wrapper=list.els
@@ -75,43 +112,71 @@ height:250px;
                 :moved="handleMoved"
                 v-bind:class="{'selected': list.selected === item}"
                 >
-                  <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
+                <div>{{ item.label }}</div>
                 </vddl-draggable>
               </vddl-list>
             </div>
+        </div -->
+        
+        <div class="list-e">
+          <div class="box100" v-for="list in lists">
+            <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp; {{ list.label }}</div>
+            <vddl-list :list=list.els class="box-scroll box-small" style="display:none"
+              :inserted="handleInserted"
+              :dragover="handleDragover"
+              :drop="handleDrop">
+                <vddl-draggable v-for="item in list.els" v-bind:key="item.id"
+                :draggable=item
+                :index=item['index']
+                :wrapper=list.els
+                effect-allowed="move"
+                :selected="selectedEvent"
+                :dragstart="handleDragstart"
+                :dragend="handleDragend"
+                :canceled="handleCanceled"
+                :moved="handleMoved"
+                v-bind:class="{'selected': list.selected === item}"
+                >
+                <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
+                </vddl-draggable>
+              </vddl-list>
           </div>
-          <div style="clear: both;">
-        <div class="panel-vue">
-          <div class="panel-heading">
-            <h3 class="panel-title">Selected set of Contents</h3>
-          </div>
-          <vddl-list :list=corpus.els class="panel-body drop-zone v-col--auto"
+        </div>
+        <hr>
+        <div class="list-r" style="clear:both">
+          <div>
+            <div class="panel-heading-r padding510 demiBold">Selected set of Contents</div>
+            <vddl-list :list=corpus.els
             :inserted="handleInserted"
             :dragover="handleDragover"
             :drop="handleDrop">
-            <vddl-draggable v-for="item in corpus.els" v-bind:key="item.id" class="v-col--auto"
+              <vddl-draggable v-for="item in corpus.els" v-bind:key="item.id"
               :draggable=item
               :index=item['index']
               :wrapper=corpus.els
-              effect-allowed="move"
+               effect-allowed="move"
               :selected="selectedEvent"
               :dragstart="handleDragstart"
               :dragend="handleDragend"
               :canceled="handleCanceled"
               :moved="handleMoved"
-              v-bind:class="{'selected': corpus.selected === item}"
-            >
-              <div><a :href="item.url">{{ item.label }}</a></div>
+               v-bind:class="{'selected': corpus.selected === item}"
+              >
+              <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
             </vddl-draggable>
-          </vddl-list>
-        </div>
+            </vddl-list>
           </div>
         </div>
       </div>
-    
+    </div>
     {% endverbatim %}
+{% endblock body_base %}
+{% block footer_base %}
+{% endblock footer_base %}
 
-    <script>
+{% block script_base %}
+    <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+    <script type="text/javascript">
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
@@ -195,6 +260,22 @@ height:250px;
         //   windows.alert(index);
         // },
       });
+      
+      $(document).ready(function (){
+        $('div a.toggleIcon').on('click', function(event){
+            event.preventDefault();
+            $("body").css("cursor", "default");
+            var accordion = $(this).parent();
+            var accordionContent = accordion.next('div');
+            var accordionToggleIcon = $(this);
+            accordion.toggleClass("open");
+            accordionContent.slideToggle(250);
+            if (accordion.hasClass("open")) {
+                accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
+            } else {
+                accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
+            }
+        });
+      });
 	</script>
-  </body>
-</html>
+{% endblock script_base %}
