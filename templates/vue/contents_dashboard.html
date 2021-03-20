@@ -167,6 +167,8 @@ div.vddl-draggable:last {
             </vddl-list>
           </div>
         </div>
+        <div id="commands"><button v-on:click="compareSelected();">Compare</button></div>
+        <div id="result" class="vddl-list">{{ result }}</div>
       </div>
     </div>
     {% endverbatim %}
@@ -180,13 +182,14 @@ div.vddl-draggable:last {
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
-          lists: { my_lps: {label: 'My LPs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {label: 'Personal LPs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {label: 'My OERs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {label: 'Personal OERs', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null} },
-          corpus: {label: 'Corpus', els: [{ list: 'corpus', id: 0, label: 'empty', url: '#', index: 0, }], selected: null},
-          list: {label: '', els: [{ list: '', id: 0, label: 'empty', url: '#', index: 0, }], selected: null},
+          lists: { my_lps: {label: 'My LPs', els: [{ list: '', obj_type: 'lp', obj_id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {label: 'Personal LPs', els: [{ list: '', obj_id: 0, obj_type: 'lp', label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {label: 'My OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {label: 'Personal OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null} },
+          corpus: {label: 'Corpus', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
+          list: {label: '', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
+          selected: null,
+          index: 0,
+          result: '',
 		},
         el: '#app',
-        selected: null,
-        index: 0,
         components: {
           // 'vddl-draggable': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-draggable.vue"),
           // 'vddl-list': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-list.vue")
@@ -227,38 +230,44 @@ div.vddl-draggable:last {
             item.id = new Date().getTime();
             list.splice(index, 0, item);
           },
+          compareSelected() {
+            console.log('compareSelected');
+            fetch('/ajax_compare_resources/', {
+              method: 'POST',
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(app.corpus)
+           	})
+            .then(response => response.json())
+            .then(data => (this['result'] = data['result']))
+            .catch(err => (this['result'] = err))
+          }
         },
         mounted: function () {
-          $this = this;
-		  $.ajax({
-	        type:'GET',
-	        url: `/contents_dashboard/`,
-	        success: function(json_data) {
-	        	console.log(Object.entries(json_data).length);
-	            // set all properties from json_data into data
-	            for (var key in json_data) {
-            		// $this[key] = json_data[key];
-            		list = $this['lists'][key]
-            		list['els'] = json_data[key];
-            		var index = 0;
-            		for (var el in $this['lists'][key]['els']) {
-                		el['list'] = key;
-                		el['selected'] = false;
-                		el['index'] = index;
-                		index += 1;
-            		}
-            	}
-	        },
-	        error: function(){
-	            console.log("Hello");
-	        }
-		  });
+          this['corpus']['els'] = [];
+          fetch('/contents_dashboard/', {
+            method: 'GET',
+            headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
+          })
+          .then(response => response.json())
+          .then(data => {
+	        console.log(Object.entries(data).length);
+            // set all properties from response data into app data
+            for (var key in data) {
+          		list = this['lists'][key]
+          		list['els'] = data[key];
+          		var index = 0;
+          		for (var el in this['lists'][key]['els']) {
+              		el['list'] = key;
+              		el['selected'] = false;
+              		el['index'] = index;
+              		index += 1;
+          		}
+          	}
+          })
+          .catch(err => (console.log('err')))
         },
         updated: function () {
         },
-        // drop: function (event, index, item, type, external) {
-        //   windows.alert(index);
-        // },
       });
       
       $(document).ready(function (){

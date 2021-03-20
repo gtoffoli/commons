@@ -191,7 +191,7 @@ class OerViewSet(viewsets.ModelViewSet):
 class LearningPathSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified', 'project', 'creator', 'editor')
+        fields = ('id', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified', 'project', 'creator', 'editor')
 
 class LearningPathViewSet(viewsets.ModelViewSet):
     """

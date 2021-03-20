@@ -12,10 +12,11 @@ from operator import itemgetter
 import textract
 import readability
 from bs4 import BeautifulSoup
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from .models import Project, OER, LearningPath, PathNode
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
@@ -335,7 +336,7 @@ def extract_annotate_with_bs4(html):
                 li.append(';')
     return soup.get_text()
 
-def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
+def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=False):
     if obj:
         if isinstance(obj, Project):
             obj_type = 'project'
@@ -363,7 +364,7 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
             text = extract_annotate_with_bs4(text)
             json_metadata = OerSerializer(obj).data
             title = json_metadata['title']
-            description = json['description']
+            description = json_metadata['description']
     elif obj_type == 'lp':
         if not obj:
             obj = get_object_or_404(LearningPath, id=obj_id)
@@ -371,6 +372,11 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True):
         title = json_metadata['title']
         description = json_metadata['short']
         text = json_metadata['long']
+        if with_children:
+            nodes = obj.get_ordered_nodes()
+            for node in nodes:
+                title, description, text = node.get_obj_text(return_has_text=False)
+                text = '{}, {}. {}'.format(title, title, text)
     elif obj_type == 'pathnode':
         if not obj:
             obj = get_object_or_404(PathNode, id=obj_id)
@@ -670,9 +676,12 @@ def brat(request):
     return render(request, 'vue/brat.html', {})
 
 def lp_compare_nodes(request, lp_slug):
-    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    if lp_slug.isdigt():
+        lp = get_object_or_404(LearningPath, id=lp_slug)
+    else:
+        lp = get_object_or_404(LearningPath, slug=lp_slug)
     nodes = lp.get_ordered_nodes()
-    user_key = "{}_{}".format(request.user.id, lp.id)
+    user_key = '{id:05d}'.format(id=request.user.id)
     endpoint = nlp_url + '/api/delete_docs/'
     data = json.dumps({'user_key': user_key})
     response = requests.post(endpoint, data=data)
@@ -683,7 +692,7 @@ def lp_compare_nodes(request, lp_slug):
     for node in nodes:
         title, description, text = node.get_obj_text(return_has_text=False)
         text = '{}, {}. {}'.format(title, title, text)
-        doc_key = str(node.id)
+        doc_key = '{id:05d}'.format(id=node.id)
         data = json.dumps({'user_key': user_key, 'doc_key': doc_key, 'text': text})
         response = requests.post(endpoint, data=data)
         if not response.status_code==200:
@@ -714,11 +723,69 @@ def contents_dashboard(request):
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['my_folders'] = my_folders = get_my_folders(request)
     data = {}
-    data['personal_oers'] = [{'id': oer.id, 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
-    data['my_oers'] = [{'id': oer.id, 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-    data['personal_lps'] = [{'id': lp.id, 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
-    data['my_lps'] = [{'id': lp.id, 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
     if request.is_ajax():
         return JsonResponse(data)
     else:
         return render(request, 'vue/contents_dashboard.html', var_dict)
+
+def ajax_lp_nodes(request, lp_id):
+    lp = get_object_or_404(LearningPath, id=lp_id)
+    nodes = lp.get_ordered_nodes()
+    data = {'nodes': [{'obj_id': node.id, 'label': node.label, 'url': node.get_absolute_url()} for node in nodes]}
+    return JsonResponse(data)
+
+def propagate_remote_server_error(response):
+    ajax_response = JsonResponse({"error": "Remote server error"})
+    ajax_response.status_code = response.status_code
+    return ajax_response
+
+"""
+called from contents_dashboard template
+to compare the texts of a list of resources
+"""
+@csrf_exempt
+def ajax_compare_resources(request):
+    data = json.loads(request.body.decode('utf-8'))
+    resources = data['els']
+    n = len(resources)
+    print(n, resources)
+    if n == 0 or (n == 1 and resources[0]['obj_type'] != 'lp'):
+        ajax_response = JsonResponse({"error": "Need at least 2 items"})
+        ajax_response.status_code = 404
+        return ajax_response
+    elif n == 1:
+        return lp_compare_nodes(request, resources[0]['obj_id'])
+    else:
+        user_key = '{id:05d}'.format(id=request.user.id)
+        endpoint = nlp_url + '/api/delete_docs/'
+        data = json.dumps({'user_key': user_key})
+        response = requests.post(endpoint, data=data)
+        if not response.status_code==200:
+            return propagate_remote_server_error(response)
+        endpoint = nlp_url + '/api/add_doc/'
+        last_language = None
+        for resource in resources:
+            title, description, text = get_obj_text(None, obj_type=resource['obj_type'], obj_id=resource['obj_id'], return_has_text=False, with_children=True)
+            text = '{}, {}. {}'.format(title, title, text)
+            doc_key = '{id:05d}'.format(id=resource['obj_id'])
+            data = json.dumps({'user_key': user_key, 'doc_key': doc_key, 'text': text})
+            response = requests.post(endpoint, data=data)
+            if not response.status_code==200:
+                return propagate_remote_server_error(response)
+            language = json.loads(response.content)['language']
+            if last_language and language!=last_language:
+                ajax_response = JsonResponse(json.loads({"error": "All items must have same language"}))
+                return ajax_response
+            last_language = language
+        endpoint = nlp_url + '/api/compare_docs/'
+        data = json.dumps({'user_key': user_key, 'language': language})
+        response = requests.post(endpoint, data=data)
+        if response.status_code==200:
+            print('ok', response.content)
+            return JsonResponse(json.loads(response.content)) 
+        else:
+            return propagate_remote_server_error(response)

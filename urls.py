@@ -217,6 +217,8 @@ urlpatterns += [
     url(r"^compare_nodes/(?P<lp_slug>[\w\d-]+)/$", commons.text_analysis.lp_compare_nodes, name="lp_compare_nodes"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
     url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
+    url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", commons.text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
+    url(r"^ajax_compare_resources/$", commons.text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
     # path('wiki/', include('wiki.urls')),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
