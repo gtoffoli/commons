@@ -776,16 +776,19 @@ def ajax_compare_resources(request):
             response = requests.post(endpoint, data=data)
             if not response.status_code==200:
                 return propagate_remote_server_error(response)
-            language = json.loads(response.content)['language']
+            # language = json.loads(response.content)['language']
+            language = json.loads(response.content.decode('utf-8')).get('language', '')
             if last_language and language!=last_language:
-                ajax_response = JsonResponse(json.loads({"error": "All items must have same language"}))
+                ajax_response = JsonResponse({"error": "All items must have same language"})
                 return ajax_response
             last_language = language
         endpoint = nlp_url + '/api/compare_docs/'
         data = json.dumps({'user_key': user_key, 'language': language})
         response = requests.post(endpoint, data=data)
         if response.status_code==200:
-            print('ok', response.content)
-            return JsonResponse(json.loads(response.content)) 
+            result = json.loads(response.content.decode('utf-8'))
+            print('ok', type(result), result)
+            # return JsonResponse(json.loads(response.content)) 
+            return JsonResponse(result)
         else:
             return propagate_remote_server_error(response)

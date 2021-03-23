@@ -234,7 +234,7 @@ div.vddl-draggable:last {
             console.log('compareSelected');
             fetch('/ajax_compare_resources/', {
               method: 'POST',
-              headers: { "Content-Type": "application/json" },
+              headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
               body: JSON.stringify(app.corpus)
            	})
             .then(response => response.json())
