@@ -323,10 +323,12 @@ def extract_annotate_with_bs4(html):
     headings = soup.find_all(re.compile('h.+'))
     for heading in headings:
         name = heading.name
-        level = name.replace('h', '')
+        # level = name.replace('h', '')
+        level = name[1:]
         if level.isdigit():
             text = heading.text
-            if not text[-1] in string.punctuation:
+            # if not text[-1] in string.punctuation:
+            if text and not text[-1] in string.punctuation:
                 heading.append('.')
     lis = soup.find_all('li')
     for li in lis:
