@@ -12,7 +12,8 @@ from operator import itemgetter
 import textract
 import readability
 from bs4 import BeautifulSoup
-from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+# from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
+from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
@@ -543,7 +544,8 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
         response = None
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
-    analyze_dict = json.loads(response.text)
+    # analyze_dict = json.loads(response.text)
+    analyze_dict = response.json()
     language = analyze_dict['language']
     language_code = language[:2].lower()
     map_token_pos_to_level(language_code)
@@ -567,7 +569,8 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
         response = None
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
-    doc_dict = json.loads(response.text)
+    # doc_dict = json.loads(response.text)
+    doc_dict = response.json()
     text = doc_dict['text']
     sentences = doc_dict['sents']
     n_sentences = len(sentences)
@@ -689,7 +692,8 @@ def lp_compare_nodes(request, lp_slug):
     response = requests.post(endpoint, data=data)
     if not response.status_code==200:
         data = {'status': response.status_code}
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        # return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
     endpoint = nlp_url + '/api/add_doc/'
     for node in nodes:
         title, description, text = node.get_obj_text(return_has_text=False)
@@ -699,15 +703,19 @@ def lp_compare_nodes(request, lp_slug):
         response = requests.post(endpoint, data=data)
         if not response.status_code==200:
             data = {'status': response.status_code}
-            return HttpResponse(json.dumps(data), content_type='application/json')
+            # return HttpResponse(json.dumps(data), content_type='application/json')
+            return JsonResponse(data)
     endpoint = nlp_url + '/api/compare_docs/'
     data = json.dumps({'user_key': user_key, 'language': lp.original_language})
     response = requests.post(endpoint, data=data)
     if response and response.status_code==200:
-        return HttpResponse(response.content, content_type='application/json') 
+        # return HttpResponse(response.content, content_type='application/json')
+        data = response.json()
+        return JsonResponse(data)
     else:
         data = {'status': response.status_code}
-        return HttpResponse(json.dumps(data), content_type='application/json')
+        # return HttpResponse(json.dumps(data), content_type='application/json')
+        return JsonResponse(data)
 
 def get_my_folders(request):
     return []
@@ -778,8 +786,8 @@ def ajax_compare_resources(request):
             response = requests.post(endpoint, data=data)
             if not response.status_code==200:
                 return propagate_remote_server_error(response)
-            # language = json.loads(response.content)['language']
-            language = json.loads(response.content.decode('utf-8')).get('language', '')
+            # language = json.loads(response.content.decode('utf-8')).get('language', '')
+            language = response.json().get('language', '')
             if last_language and language!=last_language:
                 ajax_response = JsonResponse({"error": "All items must have same language"})
                 return ajax_response
@@ -788,9 +796,9 @@ def ajax_compare_resources(request):
         data = json.dumps({'user_key': user_key, 'language': language})
         response = requests.post(endpoint, data=data)
         if response.status_code==200:
-            result = json.loads(response.content.decode('utf-8'))
+            # result = json.loads(response.content.decode('utf-8'))
+            result = response.json()
             print('ok', type(result), result)
-            # return JsonResponse(json.loads(response.content)) 
             return JsonResponse(result)
         else:
             return propagate_remote_server_error(response)
