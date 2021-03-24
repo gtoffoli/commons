@@ -384,13 +384,15 @@ LOGGING = {
         'errorlog': {
             'class': 'logging.FileHandler',
             'filename': os.path.join(BASE_DIR, 'logs', 'error.log'),
+            'formatter': 'verbose'
         },
     },
     'loggers': {
         'django.request': {
-            'handlers': ['mail_admins', 'errorlog',],
+            'handlers': ['errorlog', 'mail_admins',],
             'level': 'ERROR',
-            'propagate': True,
+            'include_html': True,
+            'propagate': False,
         },
     }
 }

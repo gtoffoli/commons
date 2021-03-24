@@ -762,7 +762,7 @@ def ajax_compare_resources(request):
     data = json.loads(request.body.decode('utf-8'))
     resources = data['els']
     n = len(resources)
-    print(n, resources)
+    # print(n, resources)
     if n == 0 or (n == 1 and resources[0]['obj_type'] != 'lp'):
         ajax_response = JsonResponse({"error": "Need at least 2 items"})
         ajax_response.status_code = 404
@@ -786,19 +786,19 @@ def ajax_compare_resources(request):
             response = requests.post(endpoint, data=data)
             if not response.status_code==200:
                 return propagate_remote_server_error(response)
-            # language = json.loads(response.content.decode('utf-8')).get('language', '')
-            language = response.json().get('language', '')
+            data = response.json()
+            language = data.get('language', '')
             if last_language and language!=last_language:
                 ajax_response = JsonResponse({"error": "All items must have same language"})
+                ajax_response.status_code = 404
                 return ajax_response
             last_language = language
         endpoint = nlp_url + '/api/compare_docs/'
         data = json.dumps({'user_key': user_key, 'language': language})
         response = requests.post(endpoint, data=data)
         if response.status_code==200:
-            # result = json.loads(response.content.decode('utf-8'))
             result = response.json()
-            print('ok', type(result), result)
+            # print('ok', type(result), result)
             return JsonResponse(result)
         else:
             return propagate_remote_server_error(response)
