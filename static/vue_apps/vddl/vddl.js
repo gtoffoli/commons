@@ -11,13 +11,17 @@
   (global.DragAndDropList = factory());
 }(this, (function () {
 
-var Draggable = { template: "<div class=\"vddl-draggable\" @dragstart.stop=\"handleDragstart\" @dragend.stop=\"handleDragend\" @click.stop=\"handleClick\" @selectstart=\"handleSelected\"><slot></slot></div>",
+var Draggable = { template: "<div class=\"vddl-draggable\" :is=\"tag\" @dragstart.stop=\"handleDragstart\" @dragend.stop=\"handleDragend\" @click.stop=\"handleClick\" @selectstart=\"handleSelected\"><slot></slot></div>",
   name: 'vddl-draggable',
   // css: vddl-dragging, vddl-dragging-source
   props: {
     draggable: [ Object, Array ],
     wrapper: Array,
     index: Number,
+    tag: {
+      type: String,
+      default: 'div'
+    },
 
     effectAllowed: String,
     type: String,
@@ -158,11 +162,15 @@ var Draggable = { template: "<div class=\"vddl-draggable\" @dragstart.stop=\"han
   },
 };
 
-var List = { template: "<div class=\"vddl-list\" @dragenter.prevent=\"handleDragenter\" @dragover.stop.prevent=\"handleDragover\" @drop.stop.prevent=\"handleDrop\" @dragleave=\"handleDragleave\"><slot></slot></div>",
+var List = { template: "<div class=\"vddl-list\" :is=\"tag\" @dragenter.prevent=\"handleDragenter\" @dragover.stop.prevent=\"handleDragover\" @drop.stop.prevent=\"handleDrop\" @dragleave=\"handleDragleave\"><slot></slot></div>",
   name: 'vddl-list',
   // css: placeholder, dragover
   props: {
     list: Array,
+    tag: {
+      type: String,
+      default: 'div'
+    },
 
     allowedTypes: Array,
     disableIf: Boolean,
@@ -407,11 +415,15 @@ var List = { template: "<div class=\"vddl-list\" @dragenter.prevent=\"handleDrag
   },
 };
 
-var Handle = { template: "<div class=\"vddl-handle\" @dragstart=\"handle\" @dragend=\"handle\"><slot></slot></div>",
+var Handle = { template: "<div class=\"vddl-handle\" :is=\"tag\" @dragstart=\"handle\" @dragend=\"handle\"><slot></slot></div>",
   name: 'vddl-handle',
   props: {
     handleLeft: Number,
     handleTop: Number,
+    tag: {
+      type: String,
+      default: 'div'
+    },
   },
   data: function data() {
     return {};
@@ -435,9 +447,14 @@ var Handle = { template: "<div class=\"vddl-handle\" @dragstart=\"handle\" @drag
   },
 };
 
-var Nodrag = { template: "<div class=\"vddl-nodrag\" @dragstart=\"handleDragstart\" @dragend=\"handleDragend\"><slot></slot></div>",
+var Nodrag = { template: "<div class=\"vddl-nodrag\" :is=\"tag\" @dragstart=\"handleDragstart\" @dragend=\"handleDragend\"><slot></slot></div>",
   name: 'vddl-nodrag',
-  props: {},
+  props: {
+    tag: {
+      type: String,
+      default: 'div'
+    },
+  },
   data: function data() {
     return {};
   },
@@ -470,8 +487,14 @@ var Nodrag = { template: "<div class=\"vddl-nodrag\" @dragstart=\"handleDragstar
   },
 };
 
-var Placeholder = { template: "<div class=\"vddl-placeholder\"><slot></slot></div>",
+var Placeholder = { template: "<div class=\"vddl-placeholder\" :is=\"tag\"><slot></slot></div>",
   name: 'vddl-placeholder',
+  props: {
+    tag: {
+      type: String,
+      default: 'div'
+    },
+  }
 };
 
 var install = function (Vue) {

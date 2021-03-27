@@ -47,15 +47,15 @@ h3 {
 .list-e > div.box100  {
     width:100%;
 }
-div.vddl-draggable {
+tr.vddl-draggable {
     padding:3px 10px 3px 10px;
     border-bottom: 1px dotted #67AE73;
     font-size:90%;
 }
-div.vddl-draggable:first {
+tr.vddl-draggable:first {
     padding-top: 6px;
 }
-div.vddl-draggable:last {
+tr.vddl-draggable:last {
     border-bottom:none;
 }
 .panel-heading-r {
@@ -92,7 +92,7 @@ div.vddl-draggable:last {
     {% verbatim %}
     <div id="app">
       <div class="container-fluid marginTB20">
-        <!-- MMR versione a 4 pannelli
+<!-- MMR versione a 4 pannelli
         <div class="list-e">
             <div class="box-e" v-for="list in lists">
               <h3 class="text-center panel-heading-c0">{{ list.label }}</h3>
@@ -116,41 +116,52 @@ div.vddl-draggable:last {
                 </vddl-draggable>
               </vddl-list>
             </div>
-        </div -->
-        
+        </div>
+-->
         <div class="list-e">
-          <div class="box100" v-for="list in lists">
-            <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp; {{ list.label }}</div>
-            <vddl-list :list=list.els class="box-scroll box-small" style="display:none"
+          <div class="box100" v-for="resource_list in resource_lists">
+            <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
+            <vddl-list :list=resource_list.els class="box-scroll box-small"
+              tag="table" width="100%" style="display: none;"
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in list.els" v-bind:key="item.id"
+                <vddl-draggable v-for="item in resource_list.els" v-bind:key="item.obj_id"
+                tag="tr"
+                :type=resource_list.list_id
                 :draggable=item
                 :index=item['index']
-                :wrapper=list.els
+                :wrapper=resource_list.els
                 effect-allowed="move"
                 :selected="selectedEvent"
                 :dragstart="handleDragstart"
                 :dragend="handleDragend"
                 :canceled="handleCanceled"
                 :moved="handleMoved"
-                v-bind:class="{'selected': list.selected === item}"
+                v-bind:class="{'selected': resource_list.selected === item}"
                 >
-                <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
+                <td width="10%">{{ item.obj_type }}</td>
+                <td width="10%">{{ item.obj_id }}</td>
+                <td width="80%"><!--a href="item.url"-->{{ item.label }}<!--/a--></td>
                 </vddl-draggable>
-              </vddl-list>
+            </vddl-list>
           </div>
         </div>
+
         <hr>
+
         <div class="list-r" style="clear:both">
           <div>
             <div class="panel-heading-r padding510 demiBold">Selected set of Contents</div>
             <vddl-list :list=corpus.els
-            :inserted="handleInserted"
-            :dragover="handleDragover"
-            :drop="handleDrop">
-              <vddl-draggable v-for="item in corpus.els" v-bind:key="item.id"
+              tag="table" width="100%" style="display: block; min-height: 40px"
+              :allowed-types=allowed_types
+              :inserted="handleInserted"
+              :dragover="handleDragover"
+              :drop="handleDrop">
+              <vddl-draggable v-for="item in corpus.els" v-bind:key="item.obj_id"
+              tag="tr" width="100%" style="display: block;"
+              :type="corpus"
               :draggable=item
               :index=item['index']
               :wrapper=corpus.els
@@ -162,13 +173,17 @@ div.vddl-draggable:last {
               :moved="handleMoved"
                v-bind:class="{'selected': corpus.selected === item}"
               >
-              <div><!--a href="item.url"-->{{ item.label }}<!--/a--></div>
-            </vddl-draggable>
+              <td width="10%">{{ item.obj_type }}</td>
+              <td width="10%">{{ item.obj_id }}</td>
+              <td width="80%"><!--a href="item.url"-->{{ item.label }}<!--/a--></td>
+              </vddl-draggable>
             </vddl-list>
           </div>
         </div>
+
         <div id="commands"><button v-on:click="compareSelected();">Compare</button></div>
         <div id="result" class="vddl-list">{{ result }}</div>
+
       </div>
     </div>
     {% endverbatim %}
@@ -182,12 +197,15 @@ div.vddl-draggable:last {
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
-          lists: { my_lps: {label: 'My LPs', els: [{ list: '', obj_type: 'lp', obj_id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {label: 'Personal LPs', els: [{ list: '', obj_id: 0, obj_type: 'lp', label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {label: 'My OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {label: 'Personal OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null} },
+          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', els: [{ list: '', obj_type: 'lp', obj_id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', els: [{ list: '', obj_id: 0, obj_type: 'lp', label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null} },
           corpus: {label: 'Corpus', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
-          list: {label: '', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
+          resource_list: {label: '', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
           selected: null,
           index: 0,
           result: '',
+          allowed_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
+          item: { list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, },
+          source_id: '',
 		},
         el: '#app',
         components: {
@@ -198,11 +216,12 @@ div.vddl-draggable:last {
           selectedEvent: function(item){
             console.log(':v-draggable: dragstart');
             // this.selected = item;
-            var key = item.list
+            var key = item.list_id
             this.lists[key].selected = item;
           },
-          handleDragstart() {
+          handleDragstart(event) {
             console.log(':v-draggable: dragstart');
+            console.log(event)
           },
           handleDragend() {
             console.log(':v-draggable: dragend');
@@ -253,18 +272,18 @@ div.vddl-draggable:last {
 	        console.log(Object.entries(data).length);
             // set all properties from response data into app data
             for (var key in data) {
-          		list = this['lists'][key]
-          		list['els'] = data[key];
+              resource_list = this['resource_lists'][key]
+              resource_list['els'] = data[key];
           		var index = 0;
-          		for (var el in this['lists'][key]['els']) {
-              		el['list'] = key;
+          		for (var el in this['resource_lists'][key]['els']) {
+              		el['list_id'] = key;
               		el['selected'] = false;
               		el['index'] = index;
               		index += 1;
           		}
           	}
           })
-          .catch(err => (console.log('err')))
+          .catch(err => (console.log(err)))
         },
         updated: function () {
         },
@@ -275,7 +294,7 @@ div.vddl-draggable:last {
             event.preventDefault();
             $("body").css("cursor", "default");
             var accordion = $(this).parent();
-            var accordionContent = accordion.next('div');
+            var accordionContent = accordion.next('table');
             var accordionToggleIcon = $(this);
             accordion.toggleClass("open");
             accordionContent.slideToggle(250);
