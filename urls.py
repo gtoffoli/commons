@@ -218,6 +218,7 @@ urlpatterns += [
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
     url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
     url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", commons.text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
+    url(r"^ajax_preprocess_resources/$", commons.text_analysis.ajax_preprocess_resources, name="ajax_preprocess_resources"),
     url(r"^ajax_compare_resources/$", commons.text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
     # path('wiki/', include('wiki.urls')),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

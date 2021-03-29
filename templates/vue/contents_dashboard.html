@@ -84,50 +84,28 @@ tr.vddl-draggable:last {
 
 {% block nav %}
   <div class="navbar">
-    <h2 class="text-center">Contents Dashboard</h2>
+    <h2 class="text-center">{% trans "contents dashboard"|capfirst %}</h2>
   </div>
 {% endblock nav %}
 
 {% block body_base %}
+
     {% verbatim %}
     <div id="app">
       <div class="container-fluid marginTB20">
-<!-- MMR versione a 4 pannelli
-        <div class="list-e">
-            <div class="box-e" v-for="list in lists">
-              <h3 class="text-center panel-heading-c0">{{ list.label }}</h3>
-              <vddl-list :list=list.els class="drop-zone box-scroll box-small"
-              :inserted="handleInserted"
-              :dragover="handleDragover"
-              :drop="handleDrop">
-                <vddl-draggable v-for="item in list.els" v-bind:key="item.id"
-                :draggable=item
-                :index=item['index']
-                :wrapper=list.els
-                effect-allowed="move"
-                :selected="selectedEvent"
-                :dragstart="handleDragstart"
-                :dragend="handleDragend"
-                :canceled="handleCanceled"
-                :moved="handleMoved"
-                v-bind:class="{'selected': list.selected === item}"
-                >
-                <div>{{ item.label }}</div>
-                </vddl-draggable>
-              </vddl-list>
-            </div>
-        </div>
--->
+
         <div class="list-e">
           <div class="box100" v-for="resource_list in resource_lists">
             <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
             <vddl-list :list=resource_list.els class="box-scroll box-small"
               tag="table" width="100%" style="display: none;"
+              :allowed-types=[resource_list.list_id]
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
+              <tbody tag='tbody' :is="draggable">
                 <vddl-draggable v-for="item in resource_list.els" v-bind:key="item.obj_id"
-                tag="tr"
+                tag="tr" style="display: block;"
                 :type=resource_list.list_id
                 :draggable=item
                 :index=item['index']
@@ -140,10 +118,11 @@ tr.vddl-draggable:last {
                 :moved="handleMoved"
                 v-bind:class="{'selected': resource_list.selected === item}"
                 >
-                <td width="10%">{{ item.obj_type }}</td>
-                <td width="10%">{{ item.obj_id }}</td>
-                <td width="80%"><!--a href="item.url"-->{{ item.label }}<!--/a--></td>
+                  <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
+                  <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
+                  <td tag='td' width="80%"><div style="display:inline;">{{ item.label }}</div></td>
                 </vddl-draggable>
+              </tbody>
             </vddl-list>
           </div>
         </div>
@@ -152,16 +131,16 @@ tr.vddl-draggable:last {
 
         <div class="list-r" style="clear:both">
           <div>
-            <div class="panel-heading-r padding510 demiBold">Selected set of Contents</div>
+            <div class="panel-heading-r padding510 demiBold">{{ label_corpus }}</div>
             <vddl-list :list=corpus.els
               tag="table" width="100%" style="display: block; min-height: 40px"
-              :allowed-types=allowed_types
+              :type=corpus.list_id
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
+              <tbody tag='tbody' :is="draggable">
               <vddl-draggable v-for="item in corpus.els" v-bind:key="item.obj_id"
               tag="tr" width="100%" style="display: block;"
-              :type="corpus"
               :draggable=item
               :index=item['index']
               :wrapper=corpus.els
@@ -173,21 +152,27 @@ tr.vddl-draggable:last {
               :moved="handleMoved"
                v-bind:class="{'selected': corpus.selected === item}"
               >
-              <td width="10%">{{ item.obj_type }}</td>
-              <td width="10%">{{ item.obj_id }}</td>
-              <td width="80%"><!--a href="item.url"-->{{ item.label }}<!--/a--></td>
+                <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
+                <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
+                <td tag='td' width="80%"><div style="display:inline;">{{ item.label }}</div></td>
               </vddl-draggable>
+              </tbody>
             </vddl-list>
           </div>
         </div>
 
-        <div id="commands"><button v-on:click="compareSelected();">Compare</button></div>
+        <div>
+          <button v-if="corpus.els.length" v-on:click="preprocessSelected();">{{ label_preprocess }}</button> &nbsp;
+      	  <button v-if="result" v-on:click="compareSelected();">{{ label_similarity }}</button>
+        </div>
         <div id="result" class="vddl-list">{{ result }}</div>
 
       </div>
     </div>
     {% endverbatim %}
+
 {% endblock body_base %}
+
 {% block footer_base %}
 {% endblock footer_base %}
 
@@ -197,15 +182,18 @@ tr.vddl-draggable:last {
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
-          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', els: [{ list: '', obj_type: 'lp', obj_id: 0, label: 'empty', url: '#', index: 0, }], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', els: [{ list: '', obj_id: 0, obj_type: 'lp', label: 'empty', url: '#', index: 0, }], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', els: [{ list: '', obj_id: 0, obj_type: 'oer', label: 'empty', url: '#', index: 0, }], selected: null} },
-          corpus: {label: 'Corpus', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
-          resource_list: {label: '', els: [{ list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, }], selected: null},
+          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', els: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', els: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', els: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', els: [], selected: null} },
+          corpus: {list_id: 'corpus', label: 'Corpus', els: [], selected: null},
+          // resource_list: {},
+          list: [],
           selected: null,
           index: 0,
           result: '',
-          allowed_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
-          item: { list: '', obj_id: 0, obj_type: '', label: 'empty', url: '#', index: 0, },
+          all_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
           source_id: '',
+          label_preprocess: '{% trans "preprocess"|capfirst %}',
+          label_similarity: '{% trans "similarity"|capfirst %}',
+          label_corpus: '{% trans "my current corpus"|capfirst %}',
 		},
         el: '#app',
         components: {
@@ -219,9 +207,8 @@ tr.vddl-draggable:last {
             var key = item.list_id
             this.lists[key].selected = item;
           },
-          handleDragstart(event) {
+          handleDragstart(target) {
             console.log(':v-draggable: dragstart');
-            console.log(event)
           },
           handleDragend() {
             console.log(':v-draggable: dragend');
@@ -238,8 +225,16 @@ tr.vddl-draggable:last {
           handleDragover() {
             console.log(':v-list: handleDragover');
           },
-          handleInserted() {
+          // handleInserted() {
+          handleInserted(event, index, transferredObject) {          
             console.log(':v-list: inserted');
+            console.log(event);
+            console.log(event['list']);
+            for (i=0; i<event['list'].length; i++) {
+              console.log(event['list'][i]['index']);
+              event['list'][i]['index'] = i
+              console.log(event['list'][i]['index']);
+            };
           },
           handleDrop(data) {
             console.log(':v-list: drop');
@@ -248,6 +243,17 @@ tr.vddl-draggable:last {
             // change the id
             item.id = new Date().getTime();
             list.splice(index, 0, item);
+          },
+          preprocessSelected() {
+            console.log('preprocessSelected');
+            fetch('/ajax_preprocess_resources/', {
+              method: 'POST',
+              headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+              body: JSON.stringify(app.corpus)
+           	})
+            .then(response => response.json())
+            .then(data => (this['result'] = data['result']))
+            .catch(err => (this['result'] = err))
           },
           compareSelected() {
             console.log('compareSelected');
@@ -272,16 +278,14 @@ tr.vddl-draggable:last {
 	        console.log(Object.entries(data).length);
             // set all properties from response data into app data
             for (var key in data) {
-              resource_list = this['resource_lists'][key]
+              var resource_list = this['resource_lists'][key]
               resource_list['els'] = data[key];
-          		var index = 0;
-          		for (var el in this['resource_lists'][key]['els']) {
-              		el['list_id'] = key;
-              		el['selected'] = false;
-              		el['index'] = index;
-              		index += 1;
-          		}
-          	}
+        	  for (index = 0; index <resource_list['els'].length; index++) {
+        	    resource_list['els'][index]['list_id'] = key;
+        	    resource_list['els'][index]['selected'] = false;
+        	    resource_list['els'][index]['index'] = index;
+        	  }
+        	}
           })
           .catch(err => (console.log(err)))
         },

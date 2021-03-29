@@ -754,6 +754,33 @@ def propagate_remote_server_error(response):
     return ajax_response
 
 """
+called from contents_dashboard template to make a corpus of a list of resources
+and return summary information on the application of the spaCy pipleline
+"""
+@csrf_exempt
+def ajax_preprocess_resources(request):
+    data = json.loads(request.body.decode('utf-8'))
+    resources = data['els']
+    n = len(resources)
+    user_key = '{id:05d}'.format(id=request.user.id)
+    endpoint = nlp_url + '/api/add_doc/'
+    processed = []
+    for resource in resources:
+        obj_type = resource['obj_type']
+        obj_id = resource['obj_id']
+        title, description, text = get_obj_text(None, obj_type=obj_type, obj_id=obj_id, return_has_text=False, with_children=True)
+        text = '{}, {}. {}'.format(title, title, text)
+        doc_key = '{id:05d}'.format(id=resource['obj_id'])
+        data = json.dumps({'user_key': user_key, 'doc_key': doc_key, 'text': text})
+        response = requests.post(endpoint, data=data)
+        if not response.status_code==200:
+            return propagate_remote_server_error(response)
+        data = response.json()
+        language = data.get('language', '')
+        processed.append({'obj_type': obj_type, 'obj_id': obj_id, 'language': language})
+    return JsonResponse({'result': processed})
+
+"""
 called from contents_dashboard template
 to compare the texts of a list of resources
 """
