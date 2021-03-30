@@ -375,12 +375,14 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
         json_metadata = LearningPathSerializer(obj).data
         title = json_metadata['title']
         description = json_metadata['short']
-        text = json_metadata['long']
+        lp_text = json_metadata['long']
         if with_children:
             nodes = obj.get_ordered_nodes()
             for node in nodes:
                 title, description, text = node.get_obj_text(return_has_text=False)
                 text = '{}, {}. {}'.format(title, title, text)
+                lp_text += text
+        text = lp_text
     elif obj_type == 'pathnode':
         if not obj:
             obj = get_object_or_404(PathNode, id=obj_id)
@@ -750,10 +752,16 @@ def contents_dashboard(request):
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['my_folders'] = my_folders = get_my_folders(request)
     data = {}
+    """
     data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers if  get_obj_text(oer)]
     data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers if get_obj_text(oer)]
     data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps if get_obj_text(lp)]
     data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps if get_obj_text(lp)]
+    """
+    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
     if request.is_ajax():
         return JsonResponse(data)
     else:
