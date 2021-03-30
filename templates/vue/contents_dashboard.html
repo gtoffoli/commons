@@ -97,13 +97,13 @@ tr.vddl-draggable:last {
         <div class="list-e">
           <div class="box100" v-for="resource_list in resource_lists">
             <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
-            <vddl-list :list=resource_list.els class="box-scroll box-small"
-              tag="table" width="100%" style="display: none;"
+            <vddl-list :list=resource_list.els
+              tag="table" width="100%" style="display: none;" class="box-scroll box-small"
               :allowed-types=[resource_list.list_id]
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-              <tbody tag='tbody' :is="draggable">
+              <tbody :is="draggable" class="box-scroll box-small">
                 <vddl-draggable v-for="item in resource_list.els" v-bind:key="item.obj_id"
                 tag="tr" style="display: block;"
                 :type=resource_list.list_id
@@ -118,9 +118,10 @@ tr.vddl-draggable:last {
                 :moved="handleMoved"
                 v-bind:class="{'selected': resource_list.selected === item}"
                 >
+                  <td tag='td' width="10%"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank">TA</a></td>
                   <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
                   <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
-                  <td tag='td' width="80%"><div style="display:inline;">{{ item.label }}</div></td>
+                  <td tag='td' width="70%"><div style="display:inline;">{{ item.label }}</div></td>
                 </vddl-draggable>
               </tbody>
             </vddl-list>
@@ -138,7 +139,7 @@ tr.vddl-draggable:last {
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-              <tbody tag='tbody' :is="draggable">
+              <tbody :is="draggable">
               <vddl-draggable v-for="item in corpus.els" v-bind:key="item.obj_id"
               tag="tr" width="100%" style="display: block;"
               :draggable=item
@@ -152,9 +153,10 @@ tr.vddl-draggable:last {
               :moved="handleMoved"
                v-bind:class="{'selected': corpus.selected === item}"
               >
+                <td tag='td' width="10%"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank">TA</a></td>
                 <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
                 <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
-                <td tag='td' width="80%"><div style="display:inline;">{{ item.label }}</div></td>
+                <td tag='td' width="70%"><div style="display:inline;">{{ item.label }}</div></td>
               </vddl-draggable>
               </tbody>
             </vddl-list>
@@ -301,9 +303,10 @@ tr.vddl-draggable:last {
             var accordionContent = accordion.next('table');
             var accordionToggleIcon = $(this);
             accordion.toggleClass("open");
-            accordionContent.slideToggle(250);
+            accordionContent.slideToggle(200);
             if (accordion.hasClass("open")) {
                 accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
+                accordionContent.attr("style", "display: block;")
             } else {
                 accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
             }

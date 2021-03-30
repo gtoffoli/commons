@@ -339,7 +339,8 @@ def extract_annotate_with_bs4(html):
                 li.append(';')
     return soup.get_text()
 
-def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=False):
+# def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=False):
+def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=True):
     if obj:
         if isinstance(obj, Project):
             obj_type = 'project'
@@ -652,6 +653,7 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
                      })
     return text_dashboard_return(request, var_dict)
 
+"""
 def project_text(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     var_dict = {'obj_type': 'project', 'obj_id': project.id}
@@ -664,6 +666,21 @@ def oer_text(request, oer_slug):
 
 def lp_text(request, lp_slug):
     lp = get_object_or_404(LearningPath, slug=lp_slug)
+    var_dict = {'obj_type': 'lp', 'obj_id': lp.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+"""
+def project_text(request, project_id):
+    project = get_object_or_404(Project, id=project_id)
+    var_dict = {'obj_type': 'project', 'obj_id': project.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def oer_text(request, oer_id):
+    oer = get_object_or_404(OER, id=oer_id)
+    var_dict = {'obj_type': 'oer', 'obj_id': oer.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
+def lp_text(request, lp_id):
+    lp = get_object_or_404(LearningPath, id=lp_id)
     var_dict = {'obj_type': 'lp', 'obj_id': lp.id}
     return render(request, 'vue/text_dashboard.html', var_dict)
 
@@ -733,10 +750,10 @@ def contents_dashboard(request):
     var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     var_dict['my_folders'] = my_folders = get_my_folders(request)
     data = {}
-    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
-    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
-    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers if  get_obj_text(oer)]
+    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers if get_obj_text(oer)]
+    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps if get_obj_text(lp)]
+    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps if get_obj_text(lp)]
     if request.is_ajax():
         return JsonResponse(data)
     else:
