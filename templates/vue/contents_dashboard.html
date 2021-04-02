@@ -25,42 +25,88 @@ h3 {
     clear: both;
 }
 .list-e > div {
-  width: 24%;
-  height: auto;
-  float: left;
-  margin: 0 1em 1em 0;
-  background: #fff;
-  border: 1px solid #67AE73;
-  border-top-left-radius:4px;
-  border-top-right-radius:4px;
+    width: 24%;
+    height: auto;
+    float: left;
+    margin: 0 1em 1em 0;
+    background: #fff;
+    border: 1px solid #67AE73;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
 }
-.list-r > div {
-  width:100%;
-  margin: 0 1em 1em 0;
-  background: #fff;
-  border: 1px solid #8c8c8c;
-  border-top-left-radius:4px;
-  border-top-right-radius:4px;
-}
-  
-
 .list-e > div.box100  {
     width:100%;
 }
-tr.vddl-draggable {
+hr {
+    clear:both;
+}
+.list-r > div {
+    width:100%;
+    margin: 0 1em 0 0;
+    background: #fff;
+    border: 1px solid #8c8c8c;
+    border-top-left-radius:4px;
+    border-top-right-radius:4px;
+}
+.list-r > div >.vddl-list{
+    min-height:50px;
+}
+.vddl-draggable {
     padding:3px 10px 3px 10px;
     border-bottom: 1px dotted #67AE73;
+    display: grid;
+    grid-template-columns: auto 8.33333333% 8.33333333% 8.33333333%;
     font-size:90%;
 }
-tr.vddl-draggable:first {
+.vddl-draggable:first {
     padding-top: 6px;
 }
-tr.vddl-draggable:last {
+.vddl-draggable:last {
     border-bottom:none;
+}
+.list-e > div .vddl-draggable:hover {
+    background-color: #F0F7F1;
+}
+.list-r > div .vddl-draggable:hover {
+    background-color: #F4F4F4;
 }
 .panel-heading-r {
     color: #fff;
     background: #8c8c8c;
+}
+.upperCase {
+    text-transform:uppercase;
+}
+a.analyzeText:before {
+    content: "TA";
+    border: 1px solid #337ab7;
+    border-radius: 3px;
+    margin: 0 5px 0 0;
+    padding: 0 4px;
+    color: #337ab7;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.btn-outline-dark {
+  color: #333;
+  background-color: #fff;
+  border-color: #8c8c8c;
+}
+
+.btn-outline-dark:hover {
+  color: #fff;
+  background-color: #8c8c8c;
+  border-color: #8c8c8c;
+}
+
+.btn-outline-dark:focus, .btn-outline-dark.focus {
+  box-shadow: 0 0 0 0.2rem rgba(52, 58, 64, 0.5);
+}
+.box-result {
+    width:100%;
+    margin: 1em 1em 1em 0;
+    font-size:90%;
 }
 
 </style>
@@ -93,19 +139,16 @@ tr.vddl-draggable:last {
     {% verbatim %}
     <div id="app">
       <div class="container-fluid marginTB20">
-
         <div class="list-e">
           <div class="box100" v-for="resource_list in resource_lists">
             <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
             <vddl-list :list=resource_list.els
-              tag="table" width="100%" style="display: none;" class="box-scroll box-small"
+               style="display: none;" class="box-scroll box-small"
               :allowed-types=[resource_list.list_id]
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-              <tbody :is="draggable" class="box-scroll box-small">
                 <vddl-draggable v-for="item in resource_list.els" v-bind:key="item.obj_id"
-                tag="tr" style="display: block;"
                 :type=resource_list.list_id
                 :draggable=item
                 :index=item['index']
@@ -118,30 +161,24 @@ tr.vddl-draggable:last {
                 :moved="handleMoved"
                 v-bind:class="{'selected': resource_list.selected === item}"
                 >
-                  <td tag='td' width="10%"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank">TA</a></td>
-                  <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
-                  <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
-                  <td tag='td' width="70%"><div style="display:inline;">{{ item.label }}</div></td>
+                  <div><span style="cursor:grab">{{ item.label }}</span></div>
+                  <div class="upperCase c-white"><!--{{ item.obj_type }}--></div>
+                  <div><a :href=item.url target="_blank">{{ item.obj_id }}</a></div>
+                  <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText"></a></div>
                 </vddl-draggable>
-              </tbody>
             </vddl-list>
           </div>
         </div>
-
         <hr>
-
-        <div class="list-r" style="clear:both">
+        <div class="list-r">
           <div>
             <div class="panel-heading-r padding510 demiBold">{{ label_corpus }}</div>
             <vddl-list :list=corpus.els
-              tag="table" width="100%" style="display: block; min-height: 40px"
               :type=corpus.list_id
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-              <tbody :is="draggable">
               <vddl-draggable v-for="item in corpus.els" v-bind:key="item.obj_id"
-              tag="tr" width="100%" style="display: block;"
               :draggable=item
               :index=item['index']
               :wrapper=corpus.els
@@ -153,22 +190,19 @@ tr.vddl-draggable:last {
               :moved="handleMoved"
                v-bind:class="{'selected': corpus.selected === item}"
               >
-                <td tag='td' width="10%"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank">TA</a></td>
-                <td tag='td' width="10%"><div style="display:inline; color: red;">{{ item.obj_type }}</div></td>
-                <td tag='td' width="10%"><a :href=item.url>{{ item.obj_id }}</a></td>
-                <td tag='td' width="70%"><div style="display:inline;">{{ item.label }}</div></td>
+                <div>{{ item.label }}</div>
+                <div class="upperCase">{{ item.obj_type }}</div>
+                <div><a :href=item.url target="_blank">{{ item.obj_id }}</a></div>
+                <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText"></a></div>
               </vddl-draggable>
-              </tbody>
             </vddl-list>
           </div>
         </div>
-
-        <div>
-          <button v-if="corpus.els.length" v-on:click="preprocessSelected();">{{ label_preprocess }}</button> &nbsp;
-      	  <button v-if="result" v-on:click="compareSelected();">{{ label_similarity }}</button>
+        <div class="paddingTB5">
+          <button v-if="corpus.els.length" v-on:click="preprocessSelected();" class="btn btn-outline-dark marginR10">{{ label_preprocess }}</button>
+      	  <button v-if="result" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
         </div>
-        <div id="result" class="vddl-list">{{ result }}</div>
-
+        <div id="result" class="box-result">{{ result }}</div>
       </div>
     </div>
     {% endverbatim %}
@@ -300,7 +334,7 @@ tr.vddl-draggable:last {
             event.preventDefault();
             $("body").css("cursor", "default");
             var accordion = $(this).parent();
-            var accordionContent = accordion.next('table');
+            var accordionContent = accordion.next('div');
             var accordionToggleIcon = $(this);
             accordion.toggleClass("open");
             accordionContent.slideToggle(200);
