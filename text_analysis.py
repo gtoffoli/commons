@@ -706,7 +706,7 @@ def lp_compare_nodes(request, lp_slug):
         lp = get_object_or_404(LearningPath, slug=lp_slug)
     nodes = lp.get_ordered_nodes()
     user_key = '{id:05d}'.format(id=request.user.id)
-    endpoint = nlp_url + '/api/delete_docs/'
+    endpoint = nlp_url + '/api/delete_corpus/'
     data = json.dumps({'user_key': user_key})
     response = requests.post(endpoint, data=data)
     if not response.status_code==200:
@@ -742,27 +742,29 @@ def get_my_folders(request):
 def contents_dashboard(request):
     # see: views.user_dasboard()
     var_dict = {}
-    var_dict['user'] = user = request.user
-    var_dict['profile'] = profile = user.get_profile()
-    if profile:
-        var_dict['complete_profile'] = profile.get_completeness()
-    var_dict['personal_oers'] = personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-    var_dict['my_oers'] = my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-    var_dict['personal_lps'] = personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-    var_dict['my_lps'] = my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-    var_dict['my_folders'] = my_folders = get_my_folders(request)
-    data = {}
-    """
-    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers if  get_obj_text(oer)]
-    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers if get_obj_text(oer)]
-    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps if get_obj_text(lp)]
-    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps if get_obj_text(lp)]
-    """
-    data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
-    data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-    data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
-    data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
     if request.is_ajax():
+        user = request.user
+        personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+        my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+        personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+        my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+        my_folders = get_my_folders(request)
+    
+        user_key = '{id:05d}'.format(id=request.user.id)
+        endpoint = nlp_url + '/api/get_corpora/'
+        data = json.dumps({'user_key': user_key})
+        response = requests.post(endpoint, data=data)
+        if not response.status_code==200:
+            return propagate_remote_server_error(response)
+        data = response.json()
+        corpora = data['corpora']
+    
+        data = {}
+        data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+        data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+        data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+        data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+        data['corpora'] = corpora
         return JsonResponse(data)
     else:
         return render(request, 'vue/contents_dashboard.html', var_dict)
@@ -778,32 +780,110 @@ def propagate_remote_server_error(response):
     ajax_response.status_code = response.status_code
     return ajax_response
 
+@csrf_exempt
+def ajax_new_corpus(request):
+    user_key = '{id:05d}'.format(id=request.user.id)
+    endpoint = nlp_url + '/api/new_corpus/'
+    data = json.dumps({'user_key': user_key})
+    response = requests.post(endpoint, data=data)
+    if not response.status_code==200:
+        return propagate_remote_server_error(response)
+    data = response.json()
+    file_key = data['file_key']
+    result = {'file_key': file_key}
+    return JsonResponse(result)
+
+@csrf_exempt
+def ajax_insert_item(request):
+    data = json.loads(request.body.decode('utf-8'))
+    file_key = data['file_key']
+    index = data['index']
+    item = data['item']
+    obj_type = item['obj_type']
+    obj_id = item['obj_id']
+    url = item['url']
+    title, description, text = get_obj_text(None, obj_type=obj_type, obj_id=obj_id, return_has_text=False, with_children=True)
+    text = ". ".join([title, description, text])
+    data = json.dumps({'file_key': file_key, 'index': index, 'obj_type': obj_type, 'obj_id': obj_id, 'label': title, 'url': url, 'text': text})
+    endpoint = nlp_url + '/api/add_doc/'
+    response = requests.post(endpoint, data=data)
+    if not response.status_code==200:
+        return propagate_remote_server_error(response)
+    data = response.json()
+    file_key = data['file_key']
+    if file_key:
+        result = {'file_key': file_key, 'index': index, 'language': data['language'], 'n_tokens': data['n_tokens'], 'n_words': data['n_words']}
+    else:
+        result = {'file_key': file_key, 'error': 'languages cannot be mixed in corpus'}
+    return JsonResponse(result)
+
+"""
+called from contents_dashboard template to remove an item (doc) from a corpus (docbin)
+"""
+@csrf_exempt
+def ajax_remove_item(request):
+    endpoint = nlp_url + '/api/remove_doc/'
+    data = json.loads(request.body.decode('utf-8'))
+    file_key = data['file_key']
+    obj_type = data['obj_type']
+    obj_id = data['obj_id']
+    data = json.dumps({'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id})
+    response = requests.post(endpoint, data=data)
+    if response.status_code==200:
+        data = response.json()
+        index = data['index']
+        result = {'index': index}
+        return JsonResponse(result)
+    else:
+        return propagate_remote_server_error(response)
+
 """
 called from contents_dashboard template to make a corpus of a list of resources
 and return summary information on the application of the spaCy pipleline
 """
 @csrf_exempt
-def ajax_preprocess_resources(request):
+def ajax_make_corpus(request):
     data = json.loads(request.body.decode('utf-8'))
-    resources = data['els']
-    n = len(resources)
+    resources = data['items']
     user_key = '{id:05d}'.format(id=request.user.id)
+    file_key = ''
     endpoint = nlp_url + '/api/add_doc/'
     processed = []
     for resource in resources:
         obj_type = resource['obj_type']
         obj_id = resource['obj_id']
+        url = resource['url']
         title, description, text = get_obj_text(None, obj_type=obj_type, obj_id=obj_id, return_has_text=False, with_children=True)
-        text = '{}, {}. {}'.format(title, title, text)
-        doc_key = '{id:05d}'.format(id=resource['obj_id'])
-        data = json.dumps({'user_key': user_key, 'doc_key': doc_key, 'text': text})
+        text = ". ".join([title, description, text])
+        data = json.dumps({'file_key': file_key, 'user_key': user_key, 'obj_type': obj_type, 'obj_id': obj_id, 'label': title, 'url': url, 'text': text})
         response = requests.post(endpoint, data=data)
         if not response.status_code==200:
             return propagate_remote_server_error(response)
         data = response.json()
-        language = data.get('language', '')
-        processed.append({'obj_type': obj_type, 'obj_id': obj_id, 'language': language})
-    return JsonResponse({'result': processed})
+        file_key = data['file_key']
+        data.update({'obj_type': obj_type, 'obj_id': obj_id, 'label': title})
+        processed.append(data)
+    return JsonResponse({'result': processed, 'file_key': file_key})
+
+
+"""
+called from contents_dashboard template
+to list corpora associated to a user or a project
+"""
+@csrf_exempt
+def ajax_get_corpora(request):
+    data = json.loads(request.body.decode('utf-8'))
+    project_key = data.get('project_key', '')
+    if not project_key:
+        user_key = '{id:05d}'.format(id=request.user.id)
+    endpoint = nlp_url + '/api/get_corpora/'
+    data = json.dumps({'user_key': user_key, 'project_key': project_key})
+    response = requests.post(endpoint, data=data)
+    if response.status_code==200:
+        corpora = response.json()
+        return JsonResponse(corpora)
+    else:
+        return propagate_remote_server_error(response)
 
 """
 called from contents_dashboard template
@@ -812,9 +892,8 @@ to compare the texts of a list of resources
 @csrf_exempt
 def ajax_compare_resources(request):
     data = json.loads(request.body.decode('utf-8'))
-    resources = data['els']
+    resources = data['items']
     n = len(resources)
-    # print(n, resources)
     if n == 0 or (n == 1 and resources[0]['obj_type'] != 'lp'):
         ajax_response = JsonResponse({"error": "Need at least 2 items"})
         ajax_response.status_code = 404
@@ -823,7 +902,7 @@ def ajax_compare_resources(request):
         return lp_compare_nodes(request, resources[0]['obj_id'])
     else:
         user_key = '{id:05d}'.format(id=request.user.id)
-        endpoint = nlp_url + '/api/delete_docs/'
+        endpoint = nlp_url + '/api/delete_corpus/'
         data = json.dumps({'user_key': user_key})
         response = requests.post(endpoint, data=data)
         if not response.status_code==200:
@@ -850,7 +929,41 @@ def ajax_compare_resources(request):
         response = requests.post(endpoint, data=data)
         if response.status_code==200:
             result = response.json()
-            # print('ok', type(result), result)
             return JsonResponse(result)
         else:
             return propagate_remote_server_error(response)
+
+"""
+called from contents_dashboard template
+to delete an entire corpus (docbin)
+"""
+@csrf_exempt
+def ajax_delete_corpus(request):
+    endpoint = nlp_url + '/api/delete_corpus/'
+    data = json.loads(request.body.decode('utf-8'))
+    file_key = data['file_key']
+    data = json.dumps({'file_key': file_key})
+    response = requests.post(endpoint, data=data)
+    if response.status_code==200:
+        result = response.json()
+        file_key = result['file_key']
+        data = {'file_key': file_key}
+        return JsonResponse(data)
+    else:
+        return propagate_remote_server_error(response)
+
+"""
+called from contents_dashboard or text_analysis template
+to find and sort document or corpus keywords and to list keyword in context
+"""
+@csrf_exempt
+def context_dashboard(request, file_key=None):
+    var_dict = {'file_key': file_key}
+    if request.is_ajax():
+        endpoint = nlp_url + '/api/word_contexts/'
+        data = json.dumps({'file_key': file_key})
+        response = requests.post(endpoint, data=data)
+        result = response.json()
+        return JsonResponse(result)
+    else:
+        return render(request, 'vue/context_dashboard.html', var_dict)

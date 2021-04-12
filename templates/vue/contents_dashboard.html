@@ -20,6 +20,11 @@ h3 {
     border-top-left-radius:4px;
     border-top-right-radius:4px;
 }
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
     
 .list-e .box-e:nth-child(4n+1) {
     clear: both;
@@ -28,7 +33,8 @@ h3 {
     width: 24%;
     height: auto;
     float: left;
-    margin: 0 1em 1em 0;
+    // margin: 0 1em 1em 0;
+    margin: 0 1em 0.1em 0;
     background: #fff;
     border: 1px solid #67AE73;
     border-top-left-radius:4px;
@@ -42,7 +48,8 @@ hr {
 }
 .list-r > div {
     width:100%;
-    margin: 0 1em 0 0;
+    // margin: 0 1em 0 0;
+    margin: 0 1em 0.1em 0;
     background: #fff;
     border: 1px solid #8c8c8c;
     border-top-left-radius:4px;
@@ -55,7 +62,8 @@ hr {
     padding:3px 10px 3px 10px;
     border-bottom: 1px dotted #67AE73;
     display: grid;
-    grid-template-columns: auto 8.33333333% 8.33333333% 8.33333333%;
+    // grid-template-columns: auto 8.33333333% 8.33333333% 8.33333333%;
+    grid-template-columns: auto 5% 5% 5% 5% 5% 5% 5% 5%;
     font-size:90%;
 }
 .vddl-draggable:first {
@@ -63,6 +71,10 @@ hr {
 }
 .vddl-draggable:last {
     border-bottom:none;
+}
+.heading_corpus {
+    display: grid;
+    grid-template-columns: 5% auto 5% 5% 5% 5% 5% 5% 5%;
 }
 .list-e > div .vddl-draggable:hover {
     background-color: #F0F7F1;
@@ -142,18 +154,18 @@ a.analyzeText:before {
         <div class="list-e">
           <div class="box100" v-for="resource_list in resource_lists">
             <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
-            <vddl-list :list=resource_list.els
-               style="display: none;" class="box-scroll box-small"
+            <vddl-list :list=resource_list.items
+              class="box-scroll box-small" style="display: none;"
               :allowed-types=[resource_list.list_id]
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in resource_list.els" v-bind:key="item.obj_id"
+                <vddl-draggable v-for="item in resource_list.items" v-bind:key="item.obj_id"
                 :type=resource_list.list_id
                 :draggable=item
                 :index=item['index']
-                :wrapper=resource_list.els
-                effect-allowed="move"
+                :wrapper=resource_list.items
+                effect-allowed="copy"
                 :selected="selectedEvent"
                 :dragstart="handleDragstart"
                 :dragend="handleDragend"
@@ -162,26 +174,36 @@ a.analyzeText:before {
                 v-bind:class="{'selected': resource_list.selected === item}"
                 >
                   <div><span style="cursor:grab">{{ item.label }}</span></div>
-                  <div class="upperCase c-white"><!--{{ item.obj_type }}--></div>
-                  <div><a :href=item.url target="_blank">{{ item.obj_id }}</a></div>
-                  <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText"></a></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div></div>
+                  <div class="upperCase c-white">{{ item.obj_type }}</div>
+                  <div><a :href=item.url target="_text">{{ item.obj_id }}</a></div>
+                  <div></div>
+                  <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
                 </vddl-draggable>
             </vddl-list>
           </div>
         </div>
         <hr>
+<!--
         <div class="list-r">
           <div>
-            <div class="panel-heading-r padding510 demiBold">{{ label_corpus }}</div>
-            <vddl-list :list=corpus.els
+            <div class="panel-heading-r padding510 heading_corpus">
+              <div class="demiBold"><span v-if="file_key">{{ label_corpus }}</span><span v-else>{{ label_selected }}</span></div>
+              <div>type</div><div>id</div><div>lang</div><div>n_tokens</div><div>n_words</div><div></div>
+            </div>
+            <vddl-list :list=corpus.items
               :type=corpus.list_id
+              :allowed-types=all_types
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-              <vddl-draggable v-for="item in corpus.els" v-bind:key="item.obj_id"
+              <vddl-draggable v-for="item in corpus.items" v-bind:key="item.obj_id"
               :draggable=item
               :index=item['index']
-              :wrapper=corpus.els
+              :wrapper=corpus.items
                effect-allowed="move"
               :selected="selectedEvent"
               :dragstart="handleDragstart"
@@ -193,14 +215,60 @@ a.analyzeText:before {
                 <div>{{ item.label }}</div>
                 <div class="upperCase">{{ item.obj_type }}</div>
                 <div><a :href=item.url target="_blank">{{ item.obj_id }}</a></div>
+                <div class="upperCase">{{ item.language }}</div>
+                <div style="text-align: center;">{{ item.n_tokens }}</div>
+                <div style="text-align: center;">{{ item.n_words }}</div>
                 <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText"></a></div>
               </vddl-draggable>
             </vddl-list>
           </div>
         </div>
+-->
+        <div class="list-r">
+          <div class="box100" v-for="corpus in corpora" :key="corpus.file_key">
+            <div class="panel-heading-r padding510 heading_corpus"><a style="display:block;" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a>
+              <div class="demiBold">&nbsp;&nbsp;<span v-if="corpus.items.length==0"> {{ label_empty_corpus }}</span><span v-else> {{ label_corpus }}</span> {{ corpus.file_key }}</div>
+              <div>type</div><div>id</div><div>lang</div><div>n_tokens</div><div>n_words</div>
+              <div><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a>
+                   <a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context"><i class="fa fa-code white"></i></a></div>
+              <div><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash red"></i></a></div>
+            </div>
+            <vddl-list :list=corpus.items
+              class="box-scroll box-small" style="display: none;" :corpus="corpus.file_key"
+              :inserted="handleInserted"
+              :dragover="handleDragover"
+              :drop="handleDrop">
+                <vddl-draggable v-for="item in corpus.items" :key="item.obj_id"
+                :type=corpus.list_id
+                :allowed-types=all_types
+                :draggable=item
+                :index=item['index']
+                :wrapper=corpus.items
+                effect-allowed="move"
+                :selected="selectedEvent"
+                :dragstart="handleDragstart"
+                :dragend="handleDragend"
+                :canceled="handleCanceled"
+                :moved="handleMoved"
+                v-bind:class="{'selected': corpus.selected === item}"
+                >
+                  <div><span style="cursor:grab">{{ item.label }}</span></div>
+                  <div></div>
+                  <div class="upperCase">{{ item.obj_type }}</div>
+                  <div>{{ item.obj_id }}</div>
+                  <div class="upperCase">{{ item.language }}</div>
+                  <div style="text-align: center;">{{ item.n_tokens }}</div>
+                  <div style="text-align: center;">{{ item.n_words }}</div>
+	              <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+                  <div><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash red"></i></a></div>
+               </vddl-draggable>
+            </vddl-list>
+          </div>
+        </div>
+        <hr>
         <div class="paddingTB5">
-          <button v-if="corpus.els.length" v-on:click="preprocessSelected();" class="btn btn-outline-dark marginR10">{{ label_preprocess }}</button>
-      	  <button v-if="result" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
+          <button v-if="!empty_corpus" v-on:click="newSelected();" class="btn btn-outline-dark marginR10">{{ label_new_corpus }}</button>
+      	  <button v-if="compare" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
         </div>
         <div id="result" class="box-result">{{ result }}</div>
       </div>
@@ -215,39 +283,74 @@ a.analyzeText:before {
 {% block script_base %}
     <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
     <script type="text/javascript">
+  	  function arrayRemove(arr, value) {    
+        return arr.filter(function(ele){ 
+            return ele != value; 
+        });
+  	  }
+  	</script>
+    
+    <script type="text/javascript">
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
-          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', els: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', els: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', els: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', els: [], selected: null} },
-          corpus: {list_id: 'corpus', label: 'Corpus', els: [], selected: null},
-          // resource_list: {},
+          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null} },
+          corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
+          file_key: null,
+          corpora: [],
+          item: {},
+          items:[],
           list: [],
           selected: null,
           index: 0,
           result: '',
+          compare: false,
           all_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
           source_id: '',
-          label_preprocess: '{% trans "preprocess"|capfirst %}',
+          label_selected: '{% trans "selected resources"|capfirst %}',
+          label_corpus: '{% trans "corpus"|capfirst %}',
+          label_empty_corpus: '{% trans "empty corpus"|capfirst %}',
+          label_new_corpus: '{% trans "new corpus"|capfirst %}',
+          label_delete_corpus: '{% trans "delete corpus"|capfirst %}',
+          label_remove_item: '{% trans "remove item"|capfirst %}',
+          label_analysis: '{% trans "text-analysis dashboard"|capfirst %}',
+          label_context: '{% trans "keywords in context"|capfirst %}',
           label_similarity: '{% trans "similarity"|capfirst %}',
-          label_corpus: '{% trans "my current corpus"|capfirst %}',
 		},
         el: '#app',
         components: {
-          // 'vddl-draggable': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-draggable.vue"),
-          // 'vddl-list': window.httpVueLoader("http://localhost:8000/static/yarn/vddl/src/components/vddl-list.vue")
+        },
+        computed: {
+          empty_corpus: {
+            get() {
+              for (i=0; i<this.corpora.length; i++)
+                if (this.corpora[i].items.length==0) return true;
+              return false;
+            },
+            set(value) {}
+          },
         },
         methods: {
+          findEmptyCorpus: function() {
+            var empty = false;
+            for (corpus in this.corpora)
+              if (!corpus.items)
+                return corpus;
+            return null;
+          },
           selectedEvent: function(item){
-            console.log(':v-draggable: dragstart');
-            // this.selected = item;
-            var key = item.list_id
-            this.lists[key].selected = item;
+            console.log(':v-draggable: selected');
+            this.selected = item;
+            // var key = item.list_id;
+            // this.lists[key].selected = item;
           },
           handleDragstart(target) {
             console.log(':v-draggable: dragstart');
+            console.log(target);
           },
-          handleDragend() {
+          handleDragend(drop_effect, target) {
             console.log(':v-draggable: dragend');
+            console.log(drop_effect, target);
           },
           handleCanceled() {
             console.log(':v-draggable: canceled');
@@ -266,6 +369,7 @@ a.analyzeText:before {
             console.log(':v-list: inserted');
             console.log(event);
             console.log(event['list']);
+            // update the index of all items in the target list
             for (i=0; i<event['list'].length; i++) {
               console.log(event['list'][i]['index']);
               event['list'][i]['index'] = i
@@ -274,22 +378,125 @@ a.analyzeText:before {
           },
           handleDrop(data) {
             console.log(':v-list: drop');
-            console.log(data);
+            var target = data.event.path[0];
+      	    var file_key = target.attributes.corpus.value;
             const { index, list, item } = data;
+            var obj_type = item.obj_type;
+            var obj_id = item.obj_id;
             // change the id
-            item.id = new Date().getTime();
+            item['id'] = new Date().getTime();
             list.splice(index, 0, item);
+            // if the list is of type corpus, update the corpus in the server and refresh the local view
+            if (file_key !== undefined) {
+              data = {file_key: file_key, item: item, index: index};
+              fetch('/ajax_insert_item/', {
+                method: 'POST',
+                headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+                body: JSON.stringify(data)
+             	})
+              .then(response => response.json())
+              .then(data => {
+             	// add a few attributes to the item and possibly update the file_key with real language code
+                for (var i=0; i<this.corpora.length; i++) {
+                  var corpus = this.corpora[i];
+                  if (corpus.file_key == file_key) {
+                    if (data['error']) {
+                      this['result'] = data['error'];
+                      this.corpora[i].items.pop();
+                      this.corpora[i].$forceUpdate();
+                      return;
+                    }
+                    this.corpora[i].file_key = data['file_key'];
+                    for (var j=0; j<corpus.items.length; j++) {
+                      var item = corpus.items[j];
+                      if (item.obj_type==obj_type && item.obj_id==obj_id) {
+                        this.corpora[i].items[j].language = data['language'];
+                        this.corpora[i].items[j].n_tokens = data['n_tokens'];
+                        this.corpora[i].items[j].n_words = data['n_words'];
+                        this.corpora[i].$forceUpdate();
+                      }
+                    }
+                  }
+             	}
+              })
+              .catch(err => (this['result'] = err))
+            }
+          },
+          newSelected() {
+            console.log('newSelected');
+            fetch('/ajax_new_corpus/', {
+              method: 'POST',
+              headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+              body: JSON.stringify({})
+           	})
+            .then(response => response.json())
+            .then(data => {
+                this['file_key'] = data['file_key'];
+                this['corpora'].push({list_id: 'corpus', file_key: this['file_key'], items: [], selected: true});
+            	}
+             )
+            .catch(err => (this['result'] = err))
           },
           preprocessSelected() {
             console.log('preprocessSelected');
-            fetch('/ajax_preprocess_resources/', {
+            fetch('/ajax_make_corpus/', {
               method: 'POST',
               headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
               body: JSON.stringify(app.corpus)
            	})
             .then(response => response.json())
-            .then(data => (this['result'] = data['result']))
+            .then(data => {
+                this['corpus']['items'] = data['result'];
+                this['file_key'] = data['file_key'];
+                this['corpora'].push(this['file_key']);
+            	}
+              )
             .catch(err => (this['result'] = err))
+          },
+          deleteCorpus(file_key) {
+            console.log('deleteCorpus');
+            data = {file_key: file_key};
+            fetch('/ajax_delete_corpus/', {
+              method: 'POST',
+              headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+              body: JSON.stringify(data)
+           	})
+            .then(response => response.json())
+            .then(data => {
+           	  // remove from corpora list the corpus with the associated file_key
+              if (data['file_key']==file_key)
+                for (var i=0; i<this.corpora.length; i++)
+                  if (this.corpora[i].file_key==file_key)
+                    this.corpora.splice(i,1);
+            })
+            .catch(err => (this['result'] = err))
+          },
+          removeItem(file_key, obj_type, obj_id) {
+            console.log('removeItem');
+            data = {file_key: file_key, obj_type: obj_type, obj_id: obj_id};
+            fetch('/ajax_remove_item/', {
+              method: 'POST',
+              headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+              body: JSON.stringify(data)
+           	})
+            .then(response => response.json())
+            .then(data => {
+              // identify the corpus
+              for (i=0; i<this['corpora'].length; i++)
+                if (this['corpora'][i].file_key == file_key)
+                  break;
+              // update the index of all items in the target corpus
+              for (j=0; j<this['corpora'][i].items.length; j++)
+                if (this['corpora'][i].items[j].obj_type == obj_type && this['corpora'][i].items[j].obj_id == obj_id) {
+                  this['corpora'][i].items.splice(j, 1);
+                  break;
+                }
+            })
+            .catch(err => (this['result'] = err))
+          },
+          contextSelected() {
+            console.log('contextSelected');
+            window.open("/context_dashboard/"+this['file_key']+"/", "_context");
           },
           compareSelected() {
             console.log('compareSelected');
@@ -304,23 +511,28 @@ a.analyzeText:before {
           }
         },
         mounted: function () {
-          this['corpus']['els'] = [];
+          this['corpus']['items'] = [];
           fetch('/contents_dashboard/', {
             method: 'GET',
             headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
           })
           .then(response => response.json())
           .then(data => {
-	        console.log(Object.entries(data).length);
             // set all properties from response data into app data
             for (var key in data) {
-              var resource_list = this['resource_lists'][key]
-              resource_list['els'] = data[key];
-        	  for (index = 0; index <resource_list['els'].length; index++) {
-        	    resource_list['els'][index]['list_id'] = key;
-        	    resource_list['els'][index]['selected'] = false;
-        	    resource_list['els'][index]['index'] = index;
-        	  }
+              if (key == 'corpora') {
+                this['corpora'] = data[key];
+                this.empty_corpus = this.findEmptyCorpus();
+              }
+              else {
+                var resource_list = this['resource_lists'][key];
+                resource_list['items'] = data[key];
+            	for (index = 0; index<resource_list['items'].length; index++) {
+            	  resource_list['items'][index]['list_id'] = key;
+            	  resource_list['items'][index]['selected'] = false;
+            	  resource_list['items'][index]['index'] = index;
+            	}
+              }
         	}
           })
           .catch(err => (console.log(err)))
@@ -328,22 +540,26 @@ a.analyzeText:before {
         updated: function () {
         },
       });
-      
+
+      function toggle_icon(element){
+        $("body").css("cursor", "default");
+        var accordion = element.parent();
+        var accordionContent = accordion.next('div');
+        var accordionToggleIcon = element;
+        accordion.toggleClass("open");
+        accordionContent.slideToggle(200);
+        if (accordion.hasClass("open")) {
+            accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
+            accordionContent.attr("style", "display: block;")
+        } else {
+            accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
+        }
+      }
+
       $(document).ready(function (){
         $('div a.toggleIcon').on('click', function(event){
-            event.preventDefault();
-            $("body").css("cursor", "default");
-            var accordion = $(this).parent();
-            var accordionContent = accordion.next('div');
-            var accordionToggleIcon = $(this);
-            accordion.toggleClass("open");
-            accordionContent.slideToggle(200);
-            if (accordion.hasClass("open")) {
-                accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
-                accordionContent.attr("style", "display: block;")
-            } else {
-                accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
-            }
+          event.preventDefault();
+          toggle_icon($(this));
         });
       });
 	</script>

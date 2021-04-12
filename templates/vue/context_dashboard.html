@@ -1,0 +1,87 @@
+{% load staticfiles %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="text/html; charset=utf-8">
+	<meta name="robots" content="noindex">
+    <title>Context Dashboard</title>
+    <link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+    <script src="{% static "vue/vue.js" %}"></script>
+<style>
+.kwic {
+    padding:3px 10px 3px 10px;
+    display: grid;
+    grid-template-columns: 5% 15% 80%;
+    // grid-template-columns: auto auto auto;
+    text-align: center;
+}
+.kw {
+    text-align: left;
+    font-size:100%;
+    font-weight: bold;
+}
+.context {
+    padding: 3px 10px 3px 10px;
+    display: grid;
+    grid-template-columns: 20% 10% 20%;
+    // grid-template-columns: auto auto auto auto auto;
+    font-size:100%;
+}
+.txt_left {text-align: left;}
+.txt_center {text-align: center;}
+.txt_right {text-align: right;}
+</style>
+</head>
+
+<body style="font-size: 11px; width: auto;">
+
+  <div class="navbar">
+    <h2 class="text-center">{% trans "keywords in context"|capfirst %}</h2>
+  </div>
+
+  {% verbatim %}
+  <div id="app">
+    <div class="container-fluid marginTB20">
+      <div class="kwic" v-for="kwic in kwics">
+        <div>{{ kwic.frequency }}</div>
+        <div class="kw">{{ kwic.kw }}</div>
+        <div>
+          <div class="context" v-for="context in kwic.contexts">
+            <div class="txt_right">{{ context[0] }}</div><div class="txt_center">{{ context[1] }}</div><div class="txt_left">{{ context[2] }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="error">{{ error }}</div>
+  </div>
+  {% endverbatim %}
+
+<script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+<script>
+  var app = new Vue({
+    name: 'context_dashboard',
+    data: {
+      file_key: '{{ file_key }}',
+      kwics: [],
+      result: [],
+      error: '',
+      window: 2,
+    },
+    el: '#app',
+    methods: {
+    },
+    mounted: function () {
+      fetch('/context_dashboard/'+this['file_key']+'/', {
+        method: 'GET',
+        headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
+      })
+      .then(response => response.json())
+      .then(data => {this['kwics'] = data['kwics']; this['result'] = data['kwics'];})
+      .catch(err => (this['error'] = err))
+    },
+  });
+</script>
+</body>
+</html>
