@@ -297,7 +297,7 @@ a.analyzeText:before {
         name: 'contents_dashboard',
         data: {
           is_authenticated: {% if user.is_authenticated %}true{% else %}false{% endif %},
-          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null} },
+          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null},  shared_lps: {list_id: 'shared_lps', label: 'Shared LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, shared_oers: {list_id: 'shared_oers', label: 'Shared OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null} },
           corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
           file_key: null,
           corpora: [],
@@ -308,7 +308,7 @@ a.analyzeText:before {
           index: 0,
           result: '',
           compare: false,
-          all_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
+          all_types: ['my_lps', 'shared_lps', 'personal_lps', 'my_oers', 'shared_oers', 'personal_oers', 'corpus'],
           source_id: '',
           msg_anonymous: '{% trans "it seems that you are not logged in."|capfirst %}',
           label_selected: '{% trans "selected resources"|capfirst %}',
@@ -407,7 +407,8 @@ a.analyzeText:before {
                     if (data['error']) {
                       this['result'] = data['error'];
                       this.corpora[i].items.pop();
-                      this.corpora[i].$forceUpdate();
+                      // this.corpora[i].$forceUpdate();
+                      this.$forceUpdate();
                       return;
                     }
                     this.corpora[i].file_key = data['file_key'];
@@ -417,7 +418,8 @@ a.analyzeText:before {
                         this.corpora[i].items[j].language = data['language'];
                         this.corpora[i].items[j].n_tokens = data['n_tokens'];
                         this.corpora[i].items[j].n_words = data['n_words'];
-                        this.corpora[i].$forceUpdate();
+                        // this.corpora[i].$forceUpdate();
+                        this.$forceUpdate();
                       }
                     }
                   }
@@ -525,17 +527,22 @@ a.analyzeText:before {
             // set all properties from response data into app data
             for (var key in data) {
               if (key == 'corpora') {
-                this['corpora'] = data[key];
+                this.corpora = data[key];
                 this.empty_corpus = this.findEmptyCorpus();
               }
               else {
-                var resource_list = this['resource_lists'][key];
-                resource_list['items'] = data[key];
-            	for (index = 0; index<resource_list['items'].length; index++) {
-            	  resource_list['items'][index]['list_id'] = key;
-            	  resource_list['items'][index]['selected'] = false;
-            	  resource_list['items'][index]['index'] = index;
-            	}
+                var resource_list = this.resource_lists[key];
+                var items = data[key];
+                if (items.length == 0)
+                  delete this.resource_lists[key];
+                else {
+                  resource_list.items = items;
+                  for (index = 0; index<resource_list.items.length; index++) {
+                	resource_list.items[index].list_id = key;
+                	resource_list.items[index].selected = false;
+                	resource_list.items[index].index = index;
+                  }
+                }
               }
         	}
           })

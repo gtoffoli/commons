@@ -19,7 +19,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Project, OER, LearningPath, PathNode
+from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 
 nlp_url = settings.NLP_URL
@@ -729,10 +729,14 @@ def contents_dashboard(request):
         user = request.user
         data = {}
         if user.is_authenticated:
-            personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
             my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-            personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+            shared = SharedOer.objects.filter(user=user).order_by('-created')
+            shared_oers = [s.oer for s in shared]
+            personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
             my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+            shared = SharedLearningPath.objects.filter(user=user).order_by('-created')
+            shared_lps = [s.lp for s in shared]
+            personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
             my_folders = get_my_folders(request)
         
             user_key = '{id:05d}'.format(id=request.user.id)
@@ -743,11 +747,13 @@ def contents_dashboard(request):
                 return propagate_remote_server_error(response)
             data = response.json()
             corpora = data['corpora']
-        
-            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+
             data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-            data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+            data['shared_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in shared_oers]
+            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
             data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+            data['shared_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in shared_lps]
+            data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
             data['corpora'] = corpora
         else:
             pass
