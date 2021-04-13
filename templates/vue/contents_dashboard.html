@@ -266,9 +266,11 @@ a.analyzeText:before {
           </div>
         </div>
         <hr>
-        <div class="paddingTB5">
-          <button v-if="!empty_corpus" v-on:click="newSelected();" class="btn btn-outline-dark marginR10">{{ label_new_corpus }}</button>
-      	  <button v-if="compare" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
+        <div class="paddingTB5"><template v-if="is_authenticated">
+            <button v-if="!empty_corpus" v-on:click="newSelected();" class="btn btn-outline-dark marginR10">{{ label_new_corpus }}</button>
+        	  <button v-if="compare" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
+          </template>  
+          <template v-else>{{ msg_anonymous }}</template>  
         </div>
         <div id="result" class="box-result">{{ result }}</div>
       </div>
@@ -294,6 +296,7 @@ a.analyzeText:before {
       var app = new Vue({
         name: 'contents_dashboard',
         data: {
+          is_authenticated: {% if user.is_authenticated %}true{% else %}false{% endif %},
           resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null} },
           corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
           file_key: null,
@@ -307,6 +310,7 @@ a.analyzeText:before {
           compare: false,
           all_types: ['my_oers', 'personal_oers', 'my_lps', 'personal_lps', 'corpus'],
           source_id: '',
+          msg_anonymous: '{% trans "it seems that you are not logged in."|capfirst %}',
           label_selected: '{% trans "selected resources"|capfirst %}',
           label_corpus: '{% trans "corpus"|capfirst %}',
           label_empty_corpus: '{% trans "empty corpus"|capfirst %}',

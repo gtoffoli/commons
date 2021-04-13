@@ -655,22 +655,6 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
                      })
     return text_dashboard_return(request, var_dict)
 
-"""
-def project_text(request, project_slug):
-    project = get_object_or_404(Project, slug=project_slug)
-    var_dict = {'obj_type': 'project', 'obj_id': project.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def oer_text(request, oer_slug):
-    oer = get_object_or_404(OER, slug=oer_slug)
-    var_dict = {'obj_type': 'oer', 'obj_id': oer.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def lp_text(request, lp_slug):
-    lp = get_object_or_404(LearningPath, slug=lp_slug)
-    var_dict = {'obj_type': 'lp', 'obj_id': lp.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-"""
 def project_text(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     var_dict = {'obj_type': 'project', 'obj_id': project.id}
@@ -741,32 +725,35 @@ def get_my_folders(request):
 
 def contents_dashboard(request):
     # see: views.user_dasboard()
-    var_dict = {}
     if request.is_ajax():
         user = request.user
-        personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-        my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-        personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-        my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-        my_folders = get_my_folders(request)
-    
-        user_key = '{id:05d}'.format(id=request.user.id)
-        endpoint = nlp_url + '/api/get_corpora/'
-        data = json.dumps({'user_key': user_key})
-        response = requests.post(endpoint, data=data)
-        if not response.status_code==200:
-            return propagate_remote_server_error(response)
-        data = response.json()
-        corpora = data['corpora']
-    
         data = {}
-        data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
-        data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-        data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
-        data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
-        data['corpora'] = corpora
+        if user.is_authenticated:
+            personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+            my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+            personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+            my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+            my_folders = get_my_folders(request)
+        
+            user_key = '{id:05d}'.format(id=request.user.id)
+            endpoint = nlp_url + '/api/get_corpora/'
+            data = json.dumps({'user_key': user_key})
+            response = requests.post(endpoint, data=data)
+            if not response.status_code==200:
+                return propagate_remote_server_error(response)
+            data = response.json()
+            corpora = data['corpora']
+        
+            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+            data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+            data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+            data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
+            data['corpora'] = corpora
+        else:
+            pass
         return JsonResponse(data)
     else:
+        var_dict = {}
         return render(request, 'vue/contents_dashboard.html', var_dict)
 
 def ajax_lp_nodes(request, lp_id):
