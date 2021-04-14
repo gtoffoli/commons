@@ -208,43 +208,6 @@ a.analyzeText-white:before {
           </div>
         </div>
         <hr>
-<!--
-        <div class="list-r">
-          <div>
-            <div class="panel-heading-r padding510 heading_corpus">
-              <div class="demiBold"><span v-if="file_key">{{ label_corpus }}</span><span v-else>{{ label_selected }}</span></div>
-              <div>type</div><div>id</div><div>lang</div><div>n_tokens</div><div>n_words</div><div></div>
-            </div>
-            <vddl-list :list=corpus.items
-              :type=corpus.list_id
-              :allowed-types=all_types
-              :inserted="handleInserted"
-              :dragover="handleDragover"
-              :drop="handleDrop">
-              <vddl-draggable v-for="item in corpus.items" v-bind:key="item.obj_id"
-              :draggable=item
-              :index=item['index']
-              :wrapper=corpus.items
-               effect-allowed="move"
-              :selected="selectedEvent"
-              :dragstart="handleDragstart"
-              :dragend="handleDragend"
-              :canceled="handleCanceled"
-              :moved="handleMoved"
-               v-bind:class="{'selected': corpus.selected === item}"
-              >
-                <div>{{ item.label }}</div>
-                <div class="upperCase">{{ item.obj_type }}</div>
-                <div><a :href=item.url target="_blank">{{ item.obj_id }}</a></div>
-                <div class="upperCase">{{ item.language }}</div>
-                <div style="text-align: center;">{{ item.n_tokens }}</div>
-                <div style="text-align: center;">{{ item.n_words }}</div>
-                <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText"></a></div>
-              </vddl-draggable>
-            </vddl-list>
-          </div>
-        </div>
--->
         <div class="list-r">
           <div class="box100" v-for="corpus in corpora" :key="corpus.file_key">
             <div class="panel-heading-r padding510 heading_corpus"><a href="#" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a>
@@ -318,7 +281,7 @@ a.analyzeText-white:before {
         name: 'contents_dashboard',
         data: {
           is_authenticated: {% if user.is_authenticated %}true{% else %}false{% endif %},
-          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null},  shared_lps: {list_id: 'shared_lps', label: 'Shared LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, shared_oers: {list_id: 'shared_oers', label: 'Shared OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null} },
+          resource_lists: { my_lps: {list_id: 'my_lps', label: 'My LPs', items: [], selected: null},  shared_lps: {list_id: 'shared_lps', label: 'Shared LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null}, my_oers: {list_id: 'my_oers', label: 'My OERs', items: [], selected: null}, shared_oers: {list_id: 'shared_oers', label: 'Shared OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null}, my_docs: {list_id: 'my_docs', label: 'My DOCs', items: [], selected: null} },
           corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
           file_key: null,
           corpora: [],
@@ -329,7 +292,7 @@ a.analyzeText-white:before {
           index: 0,
           result: '',
           compare: false,
-          all_types: ['my_lps', 'shared_lps', 'personal_lps', 'my_oers', 'shared_oers', 'personal_oers', 'corpus'],
+          all_types: ['my_lps', 'shared_lps', 'personal_lps', 'my_oers', 'shared_oers', 'personal_oers', 'my_docs', 'corpus'],
           source_id: '',
           msg_anonymous: '{% trans "it seems that you are not logged in."|capfirst %}',
           label_selected: '{% trans "selected resources"|capfirst %}',
@@ -428,7 +391,6 @@ a.analyzeText-white:before {
                     if (data['error']) {
                       this['result'] = data['error'];
                       this.corpora[i].items.pop();
-                      // this.corpora[i].$forceUpdate();
                       this.$forceUpdate();
                       return;
                     }
@@ -439,7 +401,6 @@ a.analyzeText-white:before {
                         this.corpora[i].items[j].language = data['language'];
                         this.corpora[i].items[j].n_tokens = data['n_tokens'];
                         this.corpora[i].items[j].n_words = data['n_words'];
-                        // this.corpora[i].$forceUpdate();
                         this.$forceUpdate();
                       }
                     }

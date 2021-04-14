@@ -20,10 +20,11 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
+from .models import FolderDocument
+from .documents import Document
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 
 nlp_url = settings.NLP_URL
-# nlp_url = 'http://nlp.commonspaces.eu'
 
 # from NLPBuddy
 ENTITIES_MAPPING = {
@@ -259,6 +260,10 @@ def get_web_resource_text(url):
         elif content_type.count('officedocument.spreadsheetml'):
             text = textract.process(f.name, encoding=encoding, extension='xlsx')
         f.close()
+        try:
+            text = text.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
     return text
 
 def get_document_text(document, return_has_text=False):
@@ -298,7 +303,12 @@ def get_document_text(document, return_has_text=False):
     if return_has_text:
         return has_text
     else:
+        try:
+            text = text.decode()
+        except (UnicodeDecodeError, AttributeError):
+            pass
         return text
+
 
 def get_oer_text(oer, return_has_text=False):
     text = ''
@@ -350,6 +360,8 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
             obj_type = 'lp'
         elif isinstance(obj, PathNode):
             obj_type = 'pathnode'
+        elif isinstance(obj, Document):
+            obj_type = 'doc'
         elif isinstance(obj, FlatPage):
             obj_type = 'flatpage'
     text = ''
@@ -400,6 +412,12 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
                 text = json_metadata['text']
         if text and not return_has_text:
             text = extract_annotate_with_bs4(text)
+    elif obj_type == 'doc':
+        if not obj:
+            obj = get_object_or_404(Document, id=obj_id)
+        title = obj.label
+        description = ''
+        text = get_document_text(obj)
     elif obj_type == 'flatpage':
         if not obj:
             obj = get_object_or_404(FlatPage, id=obj_id)
@@ -533,7 +551,7 @@ def text_dashboard_return(request, var_dict):
 
 def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
     """ here through ajax call from the template 'vue/text_dashboard.html' """
-    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'flatpage', 'resource',]:
+    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource',]:
         return HttpResponseForbidden()
     title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
@@ -547,7 +565,6 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
         response = None
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
-    # analyze_dict = json.loads(response.text)
     analyze_dict = response.json()
     language = analyze_dict['language']
     language_code = language[:2].lower()
@@ -572,7 +589,6 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
         response = None
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
-    # doc_dict = json.loads(response.text)
     doc_dict = response.json()
     text = doc_dict['text']
     sentences = doc_dict['sents']
@@ -675,6 +691,11 @@ def pathnode_text(request, node_id):
     var_dict = {'obj_type': 'pathnode', 'obj_id': pathnode.id}
     return render(request, 'vue/text_dashboard.html', var_dict)
 
+def doc_text(request, doc_id):
+    document = get_object_or_404(Document, id=doc_id)
+    var_dict = {'obj_type': 'doc', 'obj_id': document.id}
+    return render(request, 'vue/text_dashboard.html', var_dict)
+
 def flatpage_text(request, flatpage_id):
     flatpage = get_object_or_404(FlatPage, id=flatpage_id)
     var_dict = {'obj_type': 'flatpage', 'obj_id': flatpage.id}
@@ -720,8 +741,14 @@ def lp_compare_nodes(request, lp_slug):
         # return HttpResponse(json.dumps(data), content_type='application/json')
         return JsonResponse(data)
 
-def get_my_folders(request):
-    return []
+TEXT_MIMETYPE_KEYS = (
+  'text',
+  'pdf',
+  'rtf',
+  'msword',
+  'wordprocessingml.document',
+  'officedocument.wordprocessingml',
+)
 
 def contents_dashboard(request):
     # see: views.user_dasboard()
@@ -737,8 +764,20 @@ def contents_dashboard(request):
             shared = SharedLearningPath.objects.filter(user=user).order_by('-created')
             shared_lps = [s.lp for s in shared]
             personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-            my_folders = get_my_folders(request)
-        
+            folder_docs = FolderDocument.objects.filter(user=user).order_by('-folder__created','-created')
+            my_docs = []
+            for doc in folder_docs:
+                document = doc.document
+                if not document or not document.exists():
+                    continue                
+                mimetype = document.file_mimetype
+                if not mimetype:
+                    continue
+                for key in TEXT_MIMETYPE_KEYS:
+                    if mimetype.count(key):
+                        my_docs.append(document)
+                        break
+
             user_key = '{id:05d}'.format(id=request.user.id)
             endpoint = nlp_url + '/api/get_corpora/'
             data = json.dumps({'user_key': user_key})
@@ -748,12 +787,13 @@ def contents_dashboard(request):
             data = response.json()
             corpora = data['corpora']
 
-            data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-            data['shared_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in shared_oers]
-            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
             data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
             data['shared_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in shared_lps]
             data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
+            data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
+            data['shared_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in shared_oers]
+            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
+            data['my_docs'] = [{'obj_id': doc.id, 'obj_type': 'doc', 'label': doc.label, 'url': doc.get_absolute_url()} for doc in my_docs]
             data['corpora'] = corpora
         else:
             pass
@@ -957,6 +997,8 @@ def context_dashboard(request, file_key=None):
         data = json.dumps({'file_key': file_key})
         response = requests.post(endpoint, data=data)
         result = response.json()
-        return JsonResponse(result)
+        # return JsonResponse(result)
+        data = {'keywords': result['keywords'], 'kwics': result['kwics']}
+        return JsonResponse(data)
     else:
         return render(request, 'vue/context_dashboard.html', var_dict)
