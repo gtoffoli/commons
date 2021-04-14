@@ -33,15 +33,19 @@ hr {
     width: 24%;
     height: auto;
     float: left;
-    // margin: 0 1em 1em 0;
-    margin: 0 1em 0.1em 0;
+    /* margin: 0 1em 1em 0; */
+    margin: 0 0 0.1em 0;
     background: #fff;
     border: 1px solid #67AE73;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
+    border-top:0;
+    /* border-top-left-radius:4px;
+    border-top-right-radius:4px;*/
 }
 .list-e > div.box100  {
     width:100%;
+}
+.panel-heading-c0 {
+    border-radius:0;
 }
 hr {
     clear:both;
@@ -49,11 +53,11 @@ hr {
 .list-r > div {
     width:100%;
     // margin: 0 1em 0 0;
-    margin: 0 1em 0.1em 0;
+    margin: 0 0 0.1em 0;
     background: #fff;
     border: 1px solid #8c8c8c;
-    border-top-left-radius:4px;
-    border-top-right-radius:4px;
+   /* border-top-left-radius:4px;
+    border-top-right-radius:4px;*/
 }
 .list-r > div >.vddl-list{
     min-height:50px;
@@ -86,6 +90,13 @@ hr {
     color: #fff;
     background: #8c8c8c;
 }
+.panel-heading-r a {
+    color: #fff;
+    background: #8c8c8c;
+}
+.panel-heading-r a:hover {
+    color: #ebeded;
+}
 .upperCase {
     text-transform:uppercase;
 }
@@ -96,6 +107,16 @@ a.analyzeText:before {
     margin: 0 5px 0 0;
     padding: 0 4px;
     color: #337ab7;
+    font-size: 10px;
+    font-weight: 600;
+}
+a.analyzeText-white:before {
+    content: "TA";
+    border: 1px solid #fff;
+    border-radius: 3px;
+    margin: 0 5px 0 0;
+    padding: 0 4px;
+    color: #fff;
     font-size: 10px;
     font-weight: 600;
 }
@@ -226,12 +247,12 @@ a.analyzeText:before {
 -->
         <div class="list-r">
           <div class="box100" v-for="corpus in corpora" :key="corpus.file_key">
-            <div class="panel-heading-r padding510 heading_corpus"><a style="display:block;" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a>
+            <div class="panel-heading-r padding510 heading_corpus"><a href="#" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a>
               <div class="demiBold">&nbsp;&nbsp;<span v-if="corpus.items.length==0"> {{ label_empty_corpus }}</span><span v-else> {{ label_corpus }}</span> {{ corpus.file_key }}</div>
               <div>type</div><div>id</div><div>lang</div><div>n_tokens</div><div>n_words</div>
-              <div><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a>
-                   <a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context"><i class="fa fa-code white"></i></a></div>
-              <div><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash red"></i></a></div>
+              <div><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText-white" :title="label_analysis"></a>
+                   <a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
+              <div class="text-center"><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash bold"></i></a></div>
             </div>
             <vddl-list :list=corpus.items
               class="box-scroll box-small" style="display: none;" :corpus="corpus.file_key"
@@ -260,7 +281,7 @@ a.analyzeText:before {
                   <div style="text-align: center;">{{ item.n_tokens }}</div>
                   <div style="text-align: center;">{{ item.n_words }}</div>
 	              <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
-                  <div><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash red"></i></a></div>
+                  <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash bold c-demiblack"></i></a></div>
                </vddl-draggable>
             </vddl-list>
           </div>

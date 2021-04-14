@@ -1,14 +1,11 @@
+{% extends "commons_base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta content="text/html; charset=utf-8">
-	<meta name="robots" content="noindex">
-    <title>Context Dashboard</title>
-    <link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
-    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
-    <script src="{% static "vue/vue.js" %}"></script>
+{% block head_title %}Context Dashboard{% endblock %}
+{% block extra_style %}
+
+    <!-- MMR link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet"-->
 <style>
 .kwic {
     padding:3px 10px 3px 10px;
@@ -25,41 +22,68 @@
 .context {
     padding: 3px 10px 3px 10px;
     display: grid;
-    grid-template-columns: 20% 10% 20%;
-    // grid-template-columns: auto auto auto auto auto;
-    font-size:100%;
+    grid-template-columns: 34% 10% auto;
+    /*grid-template-columns: 20% 10% 20%;
+    grid-template-columns: auto auto auto auto auto;
+    */
+    font-size:85%;
+    background: #fff;
+    border-bottom: 1px dotted #8c8c8c;
+    border-right:1px solid #8c8c8c;
+    border-left:1px solid #8c8c8c;
 }
-.txt_left {text-align: left;}
-.txt_center {text-align: center;}
-.txt_right {text-align: right;}
+.context:hover {
+  background-color: #F4F4F4;
+}
+.panel-heading-context {
+    color: #fff;
+    background: #8c8c8c;
+}
+.panel-heading-context a {
+    color: #fff;
+}
+.panel-heading-context a:hover {
+	color: #ebeded;
+}
 </style>
-</head>
+{% endblock extra_style %}
 
-<body style="font-size: 11px; width: auto;">
+{% block extra_head %}
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+    <script src="{% static "vue/vue.js" %}"></script>
+{% endblock extra_head %}
 
+{% block body_class %}context_dashboard{% endblock %}
+{% block nav %}
   <div class="navbar">
-    <h2 class="text-center">{% trans "keywords in context"|capfirst %}</h2>
+    <h4 class="text-center">{% trans "keywords in context"|capfirst %}</h4>
   </div>
+{% endblock nav %}
 
+{% block body_base %}
   {% verbatim %}
   <div id="app">
     <div class="container-fluid marginTB20">
-      <div class="kwic" v-for="kwic in kwics">
-        <div>{{ kwic.frequency }}</div>
-        <div class="kw">{{ kwic.kw }}</div>
-        <div>
+      <div class="box100" v-for="(kwic, index) in kwics">
+        <div class="panel-heading-context padding510 demiBold"><a href="#" class="marginR10" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a><span class="marginR10">{{ kwic.frequency }}</span><span class="kw">{{ kwic.kw }}</span></div>
+        <div style="display:none">
           <div class="context" v-for="context in kwic.contexts">
-            <div class="txt_right">{{ context[0] }}</div><div class="txt_center">{{ context[1] }}</div><div class="txt_left">{{ context[2] }}</div>
+            <div class="text-right">{{ context[0] }}</div><div class="text-center"><span class="bold" style="letter-spacing:-1px">{{ context[1] }}</span></div><div>{{ context[2] }}</div>
           </div>
         </div>
       </div>
+      <div v-if="error">{{ error }}</div>
     </div>
-    <div v-if="error">{{ error }}</div>
   </div>
   {% endverbatim %}
+{% endblock body_base %}
 
+{% block footer_base %}
+{% endblock footer_base %}
+
+{% block script_base %}
 <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
-<script>
+<script type="text/javascript">
   var app = new Vue({
     name: 'context_dashboard',
     data: {
@@ -82,6 +106,21 @@
       .catch(err => (this['error'] = err))
     },
   });
+
+  function toggle_icon(element){
+        $("body").css("cursor", "default");
+        console.log("entro");
+        var accordion = element.parent();
+        var accordionContent = accordion.next('div');
+        var accordionToggleIcon = element;
+        accordion.toggleClass("open");
+        accordionContent.slideToggle(200);
+        if (accordion.hasClass("open")) {
+            accordionToggleIcon.children('i').attr("class","fa fa-minus-square");
+            accordionContent.attr("style", "display: block;")
+        } else {
+            accordionToggleIcon.children('i').attr("class","fa fa-plus-square");
+        }
+  }
 </script>
-</body>
-</html>
+{% endblock script_base %}
