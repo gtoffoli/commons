@@ -215,7 +215,8 @@ urlpatterns += [
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>.+)$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
-    url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard"),
+    url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_2"),
+    url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_1"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
     url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
     url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", commons.text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
@@ -227,6 +228,12 @@ urlpatterns += [
     url(r"^ajax_remove_item/$", commons.text_analysis.ajax_remove_item, name="ajax_remove_item"),
     url(r"^ajax_compare_resources/$", commons.text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
     # path('wiki/', include('wiki.urls')),
+    url(r"^project/(?P<project_slug>[\w-]+)/text/$", commons.text_analysis.project_text, name="project_text"),
+    url(r"^oer/(?P<oer_id>[\d-]+)/text/$", commons.text_analysis.oer_text, name="oer_text"),
+    url(r"^lp/(?P<lp_id>[\d-]+)/text/$", commons.text_analysis.lp_text, name="lp_text"),
+    url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
+    url(r"^doc/(?P<doc_id>[\d-]+)/text/$", commons.text_analysis.doc_text, name="doc_text"),
+    url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
@@ -246,17 +253,11 @@ if settings.HAS_EARMASTER:
 
 urlpatterns += i18n_patterns(
     url(r"^project/(?P<project_slug>[\w-]+)/$", commons.views.project_detail_by_slug, name="project_detail"),
-    url(r"^project/(?P<project_slug>[\w-]+)/text/$", commons.text_analysis.project_text, name="project_text"),
     url(r"^repo/(?P<repo_slug>[\w-]+)/$", commons.views.repo_detail_by_slug, name="repo_detail"),
     url(r"^oer/(?P<oer_slug>[\w\d-]+)/$", commons.views.oer_detail_by_slug, name="oer_detail"),
-    url(r"^oer/(?P<oer_id>[\d-]+)/text/$", commons.text_analysis.oer_text, name="oer_text"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/$", commons.views.lp_detail_by_slug, name="lp_detail"),
-    url(r"^lp/(?P<lp_id>[\d-]+)/text/$", commons.text_analysis.lp_text, name="lp_text"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/download/$", commons.views.lp_download_by_slug, name="lp_download"),
     url(r"^pathnode/(?P<node_id>[\d-]+)/$", commons.views.pathnode_detail, name="pathnode_detail"),
-    url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
-    url(r"^doc/(?P<doc_id>[\d-]+)/text/$", commons.text_analysis.doc_text, name="doc_text"),
-    url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
     url(r'^(?P<url>.*)$', flatpages_views.flatpage, name='django.contrib.flatpages.views.flatpage'),
 )
 

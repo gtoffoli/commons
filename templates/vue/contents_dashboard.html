@@ -243,7 +243,8 @@ a.analyzeText-white:before {
                   <div class="upperCase">{{ item.language }}</div>
                   <div style="text-align: center;">{{ item.n_tokens }}</div>
                   <div style="text-align: center;">{{ item.n_words }}</div>
-	              <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+	              <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a>
+                       <a :href="'/context_dashboard/'+corpus.file_key+'/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
                   <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash bold c-demiblack"></i></a></div>
                </vddl-draggable>
             </vddl-list>

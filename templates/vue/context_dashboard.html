@@ -88,6 +88,8 @@
     name: 'context_dashboard',
     data: {
       file_key: '{{ file_key }}',
+      obj_type: '{{ obj_type }}',
+      obj_id: '{{ obj_id }}',
       kwics: [],
       result: [],
       error: '',
@@ -97,7 +99,7 @@
     methods: {
     },
     mounted: function () {
-      fetch('/context_dashboard/'+this['file_key']+'/', {
+      fetch('/context_dashboard/'+this['file_key']+'/'+this['obj_type']+'/'+this['obj_id']+'/', {
         method: 'GET',
         headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
       })

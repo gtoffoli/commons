@@ -272,19 +272,23 @@ def get_document_text(document, return_has_text=False):
     version = document.latest_version
     mimetype = version.mimetype
     encoding = 'utf8'
-    if mimetype.endswith('text'):
+    if mimetype.count('text'): # if mimetype.endswith('text'):
         has_text = True
         if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='txt')     
-    elif mimetype.endswith('pdf'):
+            try:
+                text = textract.process(version.file.path, encoding=encoding, extension='txt')
+            except:
+                f = open(version.file.path, encoding=version.encoding or encoding)
+                text = f.read()
+    elif mimetype.count('pdf'): # elif mimetype.endswith('pdf'):
         has_text = True
         if not return_has_text:
             text = textract.process(version.file.path, encoding=encoding, extension='pdf')
-    elif mimetype.endswith('rtf'):
+    elif mimetype.count('rtf'): # elif mimetype.endswith('rtf'):
         has_text = True
         if not return_has_text:
             text = textract.process(version.file.path, encoding=encoding, extension='rtf')
-    elif mimetype.endswith('msword'):
+    elif mimetype.count('msword'): # elif mimetype.endswith('msword'):
         has_text = True
         if not return_has_text:
             text = textract.process(version.file.path, encoding=encoding, extension='doc')
@@ -990,14 +994,13 @@ called from contents_dashboard or text_analysis template
 to find and sort document or corpus keywords and to list keyword in context
 """
 @csrf_exempt
-def context_dashboard(request, file_key=None):
-    var_dict = {'file_key': file_key}
+def context_dashboard(request, file_key='', obj_type='', obj_id=''):
+    var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
     if request.is_ajax():
         endpoint = nlp_url + '/api/word_contexts/'
-        data = json.dumps({'file_key': file_key})
+        data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
         result = response.json()
-        # return JsonResponse(result)
         data = {'keywords': result['keywords'], 'kwics': result['kwics']}
         return JsonResponse(data)
     else:
