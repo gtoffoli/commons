@@ -1,0 +1,24 @@
+{% load staticfiles %}
+{% load i18n %}
+
+  <div class="navbar navbar-inverse">
+    <div class="container">
+     <div class="navbar-header pull-left">
+       <span class="navbar-brand mynavbar-brand hidden-xs"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></span>
+       <span class="navbar-brand mynavbar-brand-xs visible-xs" ><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></span>
+     </div>
+
+     {% if user.is_authenticated %}
+       <ul class="nav navbar-nav pull-right my-navbar-user-auth">
+         <li>
+           {% if user.profile.avatar %}
+             <img src="/media/{{ user.profile.avatar }}" class="avatar-small">
+           {% else %}
+             <img src="/media/images/avatars/anonymous.png" class="avatar-small">
+           {% endif %}
+           <span class="hidden-xs"> {{ user.get_display_name }}</span>
+         </li>
+       </ul>
+     {% endif %}
+    </div>
+  </div>

@@ -1,49 +1,43 @@
 {% extends "commons_base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% block head_title %}Context Dashboard{% endblock %}
+{% block head_title %}{% trans "keywords in context"|capfirst %}{% endblock %}
 {% block extra_style %}
-
-    <!-- MMR link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="//cdn.bootcss.com/highlight.js/9.5.0/styles/default.min.css" rel="stylesheet"-->
 <style>
-.kwic {
-    padding:3px 10px 3px 10px;
-    display: grid;
-    grid-template-columns: 5% 15% 80%;
-    // grid-template-columns: auto auto auto;
-    text-align: center;
-}
-.kw {
-    text-align: left;
-    font-size:100%;
-    font-weight: bold;
+.wrapper {
+  min-height: 0;
+  margin:0;
+  padding:0 0 10px 0;
 }
 .context {
-    padding: 3px 10px 3px 10px;
-    display: grid;
-    grid-template-columns: 34% 10% auto;
-    /*grid-template-columns: 20% 10% 20%;
-    grid-template-columns: auto auto auto auto auto;
-    */
-    font-size:85%;
-    background: #fff;
-    border-bottom: 1px dotted #8c8c8c;
-    border-right:1px solid #8c8c8c;
-    border-left:1px solid #8c8c8c;
+  padding: 3px 10px;
+  display: grid;
+  grid-template-columns: 34% 10% auto;
+  font-size:85%;
+  background: #fff;
+  border 1px dottoed #8c8c8c;
+  border-top-width: 0;
 }
 .context:hover {
   background-color: #F4F4F4;
 }
 .panel-heading-context {
-    color: #fff;
-    background: #8c8c8c;
+  color: #fff;
+  background: #8c8c8c;
 }
 .panel-heading-context a {
-    color: #fff;
+  color: #fff;
 }
 .panel-heading-context a:hover {
 	color: #ebeded;
+}
+.my-navbar-user-auth > li {
+  padding-inline-start: 7px !important;
+  padding-inline-end: 7px !important;
+  color: #ccc !important;
+  line-height: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 </style>
 {% endblock extra_style %}
@@ -54,17 +48,21 @@
 {% endblock extra_head %}
 
 {% block body_class %}context_dashboard{% endblock %}
+{% block user %}{% include "_header_bar.html" %} {% endblock user %}
+
+{% block topbar %}
 {% block nav %}
   <div class="navbar">
-    <h4 class="text-center">{% trans "keywords in context"|capfirst %}</h4>
+    <h3 class="text-center">{% trans "keywords in context"|capfirst %}</h3>
   </div>
 {% endblock nav %}
+{% endblock topbar %}
 
 {% block body_base %}
   {% verbatim %}
   <div id="app">
     <div class="container-fluid marginTB20">
-      <div class="box100" v-for="(kwic, index) in kwics">
+      <div v-for="(kwic, index) in kwics">
         <div class="panel-heading-context padding510 demiBold"><a href="#" class="marginR10" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a><span class="marginR10">{{ kwic.frequency }}</span><span class="kw">{{ kwic.kw }}</span></div>
         <div style="display:none">
           <div class="context" v-for="context in kwic.contexts">
