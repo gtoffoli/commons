@@ -284,7 +284,7 @@ class FolderOnlineResourceForm(forms.ModelForm):
         fields = ('label','embed_code','portlet')
         
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
-    embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('code to embed the view of an online resource in an HTML page'))
+    embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('Code to embed the view of an online resource in an HTML page. For GoogleDocs, GoogleSheets or GoogleSlides: open the document; in the menubar, click File - Publish to the web. In the panel that appears, click Embed; then copy the code and paste it here.'))
     portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
 
 class RepoForm(forms.ModelForm):
