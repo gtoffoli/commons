@@ -32,7 +32,7 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         """ return True if `user` is allowed to create a new topic in `forum` """
         if not user.is_authenticated:
             return False
-        if user.is_superuser:
+        if user.is_staff:
             return True
         elif user in forum.moderators.all():
             return True
@@ -44,10 +44,6 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_view_topic(self, user, topic):
         """ return True if user may view this topic, False otherwise """
-        """
-        if user.is_authenticated:
-            track_action(None, user, 'View', topic)
-        """
         forum = topic.forum
         project = forum.get_project()
         if project:
@@ -56,11 +52,6 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         else:
             # return (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
             may_view = (not topic.on_moderation) or (user==topic.user) or (user in forum.moderators.all())
-        """
-        20190212 MMR
-        if may_view:
-            track_action(None, user, 'View', topic, target=forum)
-        """
         return may_view
     
     def may_create_poll(self, user):
@@ -73,6 +64,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
     def may_create_post(self, user, topic):
         """ return True if `user` is allowed to create a new post in `topic` """
 
+        if not user.is_authenticated:
+            return False
         forum = topic.forum
         project = forum.get_project()
         if forum.hidden and (not user.is_staff):
@@ -90,7 +83,6 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         if self.may_create_topic(user, forum):
             return True
         
-        # return user.is_authenticated and not topic.forum.get_project()
         if project:
             return project.is_member(user)
         else:
