@@ -73,7 +73,9 @@ class ForumPermissionHandler(DefaultPermissionHandler):
     def may_create_post(self, user, topic):
         """ return True if `user` is allowed to create a new post in `topic` """
 
-        if topic.forum.hidden and (not user.is_staff):
+        forum = topic.forum
+        project = forum.get_project()
+        if forum.hidden and (not user.is_staff):
             # if topic is hidden, only staff may post
             return False
 
@@ -85,10 +87,14 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         if defaults.PYBB_ENABLE_ANONYMOUS_POST:
             return True
 
-        if self.may_create_topic(user, topic.forum):
+        if self.may_create_topic(user, forum):
             return True
         
-        return user.is_authenticated and not topic.forum.get_project()
+        # return user.is_authenticated and not topic.forum.get_project()
+        if project:
+            return project.is_member(user)
+        else:
+            return user.is_full_member()
 
     def may_view_post(self, user, post):
         """ return True if `user` may view `post`, False otherwise """
