@@ -725,3 +725,19 @@ class BlogArticleForm(forms.Form):
     title = forms.CharField(required=True, label=_('title'), widget=forms.TextInput(attrs={'class':'form-control',}))
     content = forms.CharField(required=False, label=_('article content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))
     lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
+
+from allauth.account.forms import SignupForm
+from allauth.account.adapter import get_adapter
+
+def clean_email(self):
+    value = self.cleaned_data['email']
+    value = get_adapter().clean_email(value)
+    """
+    if value and app_settings.UNIQUE_EMAIL:
+    """
+    value = self.validate_unique_email(value)
+    if value.endswith('@gmail.com') and value.count('.')>3:
+        raise forms.ValidationError(self.error_messages['email_taken'])
+    return value
+
+SignupForm.clean_email = clean_email
