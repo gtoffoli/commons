@@ -726,6 +726,7 @@ class BlogArticleForm(forms.Form):
     content = forms.CharField(required=False, label=_('article content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))
     lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
 
+# customize email validation for GMail addresses
 from allauth.account.forms import SignupForm
 from allauth.account.adapter import get_adapter
 
@@ -736,8 +737,7 @@ def clean_email(self):
     if value and app_settings.UNIQUE_EMAIL:
     """
     value = self.validate_unique_email(value)
-    if value.endswith('@gmail.com') and value.count('.')>3:
-        raise forms.ValidationError(self.error_messages['email_taken'])
+    if value.endswith('@gmail.com') and value.count('.')>2:
+        raise forms.ValidationError(get_adapter().error_messages['email_taken'])
     return value
-
 SignupForm.clean_email = clean_email
