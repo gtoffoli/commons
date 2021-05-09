@@ -442,7 +442,9 @@ class Folder(MPTTModel):
     def get_parent(self):
         return self.parent or self.get_project()
 
-    # def get_documents(self, user, project=None):
+    def get_children(self):
+        return Folder.objects.filter(parent=self)
+
     def get_documents(self, user, project=None, state=None, sign=0): # 190311 GT: added state and sign
         if not project:
             project = self.get_project()
@@ -2996,7 +2998,6 @@ class PathNode(node_factory('PathEdge')):
 
     def get_ordered_children(self):
         children = list(self.children.all())
-        # children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return children
 
@@ -3006,7 +3007,6 @@ class PathNode(node_factory('PathEdge')):
         for child in children:
             if child.get_nodetype() == 'TXT':
                 txt_children.append(child)
-        # txt_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
         txt_children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return txt_children
     
@@ -3014,18 +3014,12 @@ class PathNode(node_factory('PathEdge')):
         children = self.children.all()
         doc_children = []
         for child in children:
-           if child.get_nodetype() == 'DOC':
-              doc_children.append(child)
-        # doc_children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
+            if child.get_nodetype() == 'DOC':
+                doc_children.append(child)
         doc_children.sort(key=functools.cmp_to_key(lambda x,y: cmp_pathnode_order(x, y, parent=self)))
         return doc_children
 
     def ordered_out_edges(self):
-        """
-        children = list(self.children.all())
-        children.sort(cmp=lambda x,y: cmp_pathnode_order(x, y, parent=self))
-        return [PathEdge.objects.get(parent=self, child=child) for child in children]
-        """
         return [PathEdge.objects.get(parent=self, child=child) for child in self.get_ordered_children()]
     
     def get_subtree_as_sublist(self, visited=[]):

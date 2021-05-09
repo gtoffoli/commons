@@ -11,7 +11,7 @@ import json
 import csv
 import uuid
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import timedelta
 import pyexcel
 
 from django.utils import timezone
@@ -61,6 +61,7 @@ from .forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotF
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
 from .forms import repurpose_mentoring_form
 from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
+from .user_spaces import project_tree
 
 from .permissions import ForumPermissionHandler
 from .session import get_clipboard, set_clipboard
@@ -654,29 +655,10 @@ def mailing_list(request):
 
 def cops_tree(request):
     communities = Project.objects.filter(proj_type__name='com', state=PROJECT_OPEN, group__level=1).order_by ('name')
-    com_tree = proj_tree = []
-
-    for community in communities:
-        projects = community.get_children(states=[PROJECT_OPEN],all_proj_type_public=True)
-        proj_tree=[]
-        for project in projects:
-            subprojects = project.get_children(states=[PROJECT_OPEN])
-            if project.get_type_name() == 'com':
-                tmp_proj_tree = []
-                for subproject in subprojects:
-                    subproj_tree=[]
-                    subsubprojects = subproject.get_children(states=[PROJECT_OPEN])
-                    if subsubprojects.count() > 0:
-                        subproj_tree.append(subsubprojects)
-                    tmp_proj_tree.append([subproject,subproj_tree])
-                proj_tree.append([project,tmp_proj_tree])
-            else:
-                proj_tree.append([project,subprojects])
-        com_tree.append([community,proj_tree])
-
+    root = Project.objects.get(slug='commons')
+    tree = [root, [project_tree(community) for community in communities]]
     info = FlatPage.objects.get(url='/info/communities/').content
-    return render(request, 'cops_tree.html', {'com_tree':com_tree, 'info': info})
-
+    return render(request, 'cops_tree.html', {'com_tree': tree[1], 'info': info,})
 
 def set_original_language(object):
     object.original_language = get_current_language()
@@ -1227,6 +1209,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['can_close'] = project.can_close(user)
         var_dict['can_create_project'] = project.can_create_project(request)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or is_parent_admin or is_community_admin or user.is_superuser
+        var_dict['view_contents'] = view_shared_folder
         if proj_type.name in 'ment': 
             var_dict['can_send_message'] = is_member and (is_open or is_closed)
         elif not proj_type.name in 'com':
@@ -2088,6 +2071,10 @@ def project_mailing_list(request, project_slug):
     emails = ['%s <%s>' % (member.get_display_name(), member.email) for member in members]
     return HttpResponse(', '.join(emails), content_type="text/plain")
 
+def project_contents(request, project_slug):
+    project_id = get_object_or_404(Project, slug=project_slug).id
+    return render(request, 'vue/contents_dashboard.html', {'project_id': project_id})
+
 def repo_detail(request, repo_id, repo=None):
     protocol = request.is_secure() and 'https' or 'http'
     if not repo:
@@ -2757,15 +2744,11 @@ def oer_edit(request, oer_id=None, project_id=None):
         action = '/oer/%s/edit/' % oer.slug
         current_project = get_object_or_404(Project, id=oer.project_id)
         proj_name = current_project.name
-        print ("===== OER ====")
-        print (proj_name)
         if not oer.can_edit(request):
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
     if project_id:
         current_project = get_object_or_404(Project, id=project_id)
         proj_name = current_project.name
-        print ("==== poject_id ======")
-        print (proj_name)
         action = '/project/%s/oer_new/' % project_id
     if request.POST:
         oer_id = request.POST.get('id', '')

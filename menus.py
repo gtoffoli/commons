@@ -77,11 +77,22 @@ def search_children(request):
          capfirst(_("source repositories")),
          url='/repos/search/',
         ))
-    if user.is_authenticated:
-        children.append (MenuItem(
-             capfirst(_("contents analysis")),
-             url='/contents_dashboard/',
-            ))
+    return children
+
+def my_children(request):
+    children = []
+    children.append (MenuItem(
+         capfirst(_("my projects")),
+         url='/my_projects/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("my contents")),
+         url='/my_contents/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("my activity")),
+         url='/my_activity/',
+        ))
     return children
 
 def help_children(request):
@@ -186,18 +197,15 @@ Menu.add_item("main", MenuItem(capfirst(_("library")),
                                check=True,
                                children=search_children,
                                separator=True))
+Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
+                               url='/p',
+                               weight=30,
+                               check=lambda request: request.user.is_authenticated and request.user.is_completed_profile(),
+                               children=my_children,
+                               separator=True))
 Menu.add_item("main", MenuItem(capfirst(_("help")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=help_children,
                                separator=True))
-"""
-Menu.add_item("main", MenuItem(capfirst(_("analytics")),
-                               url='/p',
-                               weight=30,
-                               # check=admin_children,
-                               check=lambda request: admin_children(request) and True or False,
-                               children=admin_children,
-                               separator=True))
-"""

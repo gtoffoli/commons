@@ -1,9 +1,8 @@
 {% extends "commons_base.html" %}
 
 {% load i18n %}
-{% load mptt_tags %}
 
-{% block head_title %}{% trans "all communities"|capfirst %}{% endblock %}
+{% block head_title %}{% if user_projects %}{% trans "my projects"|capfirst %}{% else %}{% trans "all communities"|capfirst %}{% endif %}{% endblock %}
 
 {% block extra_style %}
 <style>
@@ -21,46 +20,57 @@
 {% block body %}
 <div class="marginTB30">
     <div class="panel-heading-c4">
-        <h1 class="text-center padding105 margin0">{% trans "all communities"|capfirst %}</h1>
+        <h1 class="text-center padding105 margin0">
+          {% if user_projects %}{% trans "my projects"|capfirst %}
+          {% else %}{% trans "all communities"|capfirst %}{% endif %}
+        </h1>
     </div>
     <div class="body-panel borderBLRradius borderColor-c4">
         <div class="bc-white padding1020 font13 marginB10">{{ info|safe }}</div>
         {% if com_tree|length > 0 %}
             <ul class="list-unstyled marginB0">
             {% for com in com_tree %}
-                <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% else %}borderBLRradius{% endif %}">
-                    <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon paddingR10 c-harvest-gold demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}{% if com.0.small_image %}<img src="/media/{{ com.0.small_image }}" class="img_small">{% endif %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a></h4>
-                    <p {% if com.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ com.0.description }}</p>
+                <li class="padding1020 bc-white {%if not forloop.last %}marginB10{% else %}borderBLRradius{% endif %}{% if user_projects %} open{% endif %}">
+                    <h4 class="marginT0 marginB5">{% if com.1|length > 0 %}<a href="#" class="toggleIcon paddingR10 c-harvest-gold demiBold"><i class="fa fa-{% if user_projects %}minus{% else %}plus{% endif %}-square-o"></i></a>{% endif %}
+                      {% if com.0.small_image %}<img src="/media/{{ com.0.small_image }}" class="img_small">{% endif %}
+                      {% if not user_projects or com.0 in user_projects %}<a href="/project/{{com.0.slug}}/">{{ com.0.name}}</a>{% else %}{{ com.0.name}}{% endif %}
+                    </h4>
+                      <p {% if com.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ com.0.description }}</p>
                     {% if com.1|length > 0 %}
-                        <div class="children marginL24" style="display:none">
+                        <div class="children marginL24" {% if not user_projects %}style="display:none"{% endif %}>
                             <ul class="list-unstyled paddingL20">
                             {% for projA in com.1 %}
-                                <li>
-                                    <h5>{% if projA.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}<a href="/project/{{projA.0.slug}}/">{{ projA.0.name }}</a> <small>[{{ projA.0.proj_type }}]</small></h5>
+                                <li{% if user_projects %} class="open"{% endif %}>
+                                    <h5>{% if projA.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-{% if user_projects %}minus{% else %}plus{% endif %}-square-o"></i></a>{% endif %}
+                                        {% if not user_projects or projA.0 in user_projects %}<a href="/project/{{projA.0.slug}}/">{{ projA.0.name }}</a>{% else %}{{ projA.0.name}}{% endif %} <small>
+                                        [{{ projA.0.proj_type }}]</small>
+                                    </h5>
                                     <p class="font13" {% if projA.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ projA.0.description|truncatechars:140 }}</p>
                                     {% if projA.1|length > 0 %}
                                         {% if projA.0.get_type_name == 'com' %}
                                             {% for projB in projA.1 %}
-                                            <div class="uno marginB20 paddingL24" style="display:none">
-                                                <h6 style="line-height: 1.5;">{% if projB|length > 1 and  projB.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-plus-square-o"></i></a>{% endif %}<a href="/project/{{ projB.0.slug }}/">{{ projB.0.name }}</a> <small>[{{ projB.0.proj_type }}]</small></h6>
+                                            <div class="uno marginB20 paddingL24{% if user_projects %} open{% endif %}" {% if not user_projects %}style="display:none"{% endif %}>
+                                              <h6 style="line-height: 1.5;">
+                                                {% if projB.1|length > 0 %}<a href="#" class="toggleIcon c-harvest-gold paddingR10 demiBold"><i class="fa fa-{% if user_projects %}minus{% else %}plus{% endif %}-square-o"></i></a>{% endif %}
+                                                {% if not user_projects or projB.0 in user_projects %}<a href="/project/{{ projB.0.slug }}/">{{ projB.0.name }}</a>{% else %}{{ projB.0.name}}{% endif %}
+                                                <small>[{{ projB.0.proj_type }}]</small>
+                                              </h6>
                                                 <p class="font12" {% if projB.1|length > 0 %}style="margin-inline-start: 24px"{% endif %}>{{ projB.0.description|truncatechars:140 }}</p>
-                                                {% if projB|length > 1 %}
-                                                    {% if projB.1|length > 0 %}
-                                                        {% for projC in projB %}
-                                                            <div class="marginB20 paddingL24" style="display:none">
-                                                            {% for projD in projC.0 %}
-                                                                <a href="/project/{{ projD.slug }}/">{{ projD.name }}</a>{% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
-                                                            {% endfor %}
-                                                            </div>
-                                                        {% endfor %}
-                                                    {% endif %}
+                                                {% if projB.1|length > 0 %}
+                                                <div class="due marginB20 paddingL24" {% if not user_projects %}style="display:none"{% endif %}>
+                                                  {% for projC in projB.1 %}
+                                                    {% if not user_projects or projC.0 in user_projects %}<a href="/project/{{ projC.0.slug }}/">{{ projC.0.name }}</a>{% else %}{{ projC.0.name}}{% endif %}
+                                                    {% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
+                                                  {% endfor %}
+                                                </div>
                                                 {% endif %}
                                             </div>
                                             {% endfor %}
                                         {% else %}
-                                            <div class="due marginB20 paddingL24" style="display:none">
+                                            <div class="due marginB20 paddingL24" {% if not user_projects %}style="display:none"{% endif %}>
                                                 {% for projB in projA.1 %}
-                                                    <a href="/project/{{ projB.slug }}/">{{ projB.name }}</a>{% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
+                                                    {% if not user_projects or projB.0 in user_projects %}<a href="/project/{{ projB.0.slug }}/">{{ projB.0.name }}</a>{% else %}{{ projB.0.name}}{% endif %}
+                                                    {% if not forloop.last %}<span class="demiBold c-harvest-gold"> | </span>{% endif %}
                                                 {% endfor %}
                                             </div>
                                         {% endif %}

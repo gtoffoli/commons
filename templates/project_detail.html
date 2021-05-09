@@ -640,9 +640,12 @@
                             </div>
                         {% endif %}
                     {% endif %}
+                    {% if view_contents %}
+                        <div class="panel-white padding510"><a href="/project/{{ project.slug }}/contents/">{% trans "contents dashboard"|capfirst %}</a></div>
+                    {% endif %}
 {% comment %} BUTTON RECENT ACTIVITIES {% endcomment %}
                     {% if recent_actions %}
-                        <div class="panel-white padding510"><a href="/analytics/project_activity/{{ project.slug }}/">{% trans "recent activity"|capfirst %}</a></div>
+                        <div class="panel-white padding510"><a href="/project/{{ project.slug }}/activity/">{% trans "recent activity"|capfirst %}</a></div>
                     {% endif %}
 {% comment %} PORTLETS BOTTOM {% endcomment %}
                     {% if portlets_bottom %}

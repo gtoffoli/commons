@@ -15,6 +15,7 @@ from bs4 import BeautifulSoup
 # from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
 from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -23,6 +24,7 @@ from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearn
 from .models import FolderDocument
 from .documents import Document
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
+from .user_spaces import project_contents, user_contents
 
 nlp_url = settings.NLP_URL
 
@@ -754,57 +756,26 @@ TEXT_MIMETYPE_KEYS = (
   'officedocument.wordprocessingml',
 )
 
-def contents_dashboard(request):
-    # see: views.user_dasboard()
-    if request.is_ajax():
-        user = request.user
-        data = {}
-        if user.is_authenticated:
-            my_oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-            shared = SharedOer.objects.filter(user=user).order_by('-created')
-            shared_oers = [s.oer for s in shared]
-            personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-            my_lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
-            shared = SharedLearningPath.objects.filter(user=user).order_by('-created')
-            shared_lps = [s.lp for s in shared]
-            personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
-            folder_docs = FolderDocument.objects.filter(user=user).order_by('-folder__created','-created')
-            my_docs = []
-            for doc in folder_docs:
-                document = doc.document
-                if not document or not document.exists():
-                    continue                
-                mimetype = document.file_mimetype
-                if not mimetype:
-                    continue
-                for key in TEXT_MIMETYPE_KEYS:
-                    if mimetype.count(key):
-                        my_docs.append(document)
-                        break
-
-            user_key = '{id:05d}'.format(id=request.user.id)
-            endpoint = nlp_url + '/api/get_corpora/'
-            data = json.dumps({'user_key': user_key})
-            response = requests.post(endpoint, data=data)
-            if not response.status_code==200:
-                return propagate_remote_server_error(response)
-            data = response.json()
-            corpora = data['corpora']
-
-            data['my_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in my_lps]
-            data['shared_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in shared_lps]
-            data['personal_lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in personal_lps]
-            data['my_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in my_oers]
-            data['shared_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in shared_oers]
-            data['personal_oers'] = [{'obj_id': oer.id, 'obj_type': 'oer', 'label': oer.title, 'url': oer.get_absolute_url()} for oer in personal_oers]
-            data['my_docs'] = [{'obj_id': doc.id, 'obj_type': 'doc', 'label': doc.label, 'url': doc.get_absolute_url()} for doc in my_docs]
-            data['corpora'] = corpora
-        else:
-            pass
-        return JsonResponse(data)
-    else:
-        var_dict = {}
-        return render(request, 'vue/contents_dashboard.html', var_dict)
+# def contents_dashboard(request):
+@csrf_exempt
+def ajax_contents(request):
+    user = request.user
+    data = json.loads(request.body.decode('utf-8'))
+    project_id = data['project_id']
+    user_key = '{id:05d}'.format(id=request.user.id)
+    endpoint = nlp_url + '/api/get_corpora/'
+    data = json.dumps({'user_key': user_key})
+    response = requests.post(endpoint, data=data)
+    if not response.status_code==200:
+        return propagate_remote_server_error(response)
+    data = response.json()
+    corpora = data['corpora']
+    if project_id:
+        data = project_contents(project_id)
+    else: # if user.is_authenticated:
+        data = user_contents(user)
+    data['corpora'] = corpora
+    return JsonResponse(data)
 
 def ajax_lp_nodes(request, lp_id):
     lp = get_object_or_404(LearningPath, id=lp_id)

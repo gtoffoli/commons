@@ -14,6 +14,7 @@ from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAuto
 from commons import bookmarklets
 from commons.api import router
 import commons.text_analysis
+import commons.user_spaces
 
 if settings.HAS_SAML2:
     import djangosaml2
@@ -58,6 +59,7 @@ urlpatterns += [
     url(r"^press_releases/$", commons.views.press_releases, name="press_releases"),
     url(r"^template_test/$", TemplateView.as_view(template_name="test.html"), name="test"),
     url(r"^cops/$", commons.views.cops_tree, name="cops_tree"),
+    url(r"^my_projects/$", commons.user_spaces.my_projects, name="my_projects"),
     url(r"^create_project_folders/$", commons.views.create_project_folders, name="create_project_folders"),
     url(r"^projects/search/$", commons.views.projects_search, name="projects_search"),
     #180924 MMR url(r"^projects/$", commons.views.projects, name="projects"),
@@ -200,7 +202,7 @@ urlpatterns += [
     url(r"^web_resource_analyzer/$", commons.bookmarklets.web_resource_analyzer, name="web_resource_analyzer"),
     url(r"^analytics/activity_stream/$", commons.analytics.activity_stream, name="activity_stream"),
     url(r"^analytics/user_activity/(?P<username>[\w\.-]+)/$", commons.views.user_activity, name="user_activity"),
-    url(r"^analytics/project_activity/(?P<project_slug>[\w-]+)/$",commons.views.project_activity, name="project_activity"),
+    url(r"^project/(?P<project_slug>[\w-]+)/activity/$",commons.views.project_activity, name="project_activity"),
     url(r"^analytics/forums/$", commons.analytics.forum_analytics, name="forum_analytics"),
     url(r"^analytics/messages/$", commons.analytics.message_analytics, name="message_analytics"),
     url(r"^analytics/oers/$", commons.analytics.oer_analytics, name="oer_analytics"),
@@ -218,7 +220,11 @@ urlpatterns += [
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_2"),
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_1"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
-    url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
+    # url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
+    url(r"^ajax_contents/$", commons.text_analysis.ajax_contents, name="ajax_contents"),
+    url(r"^project/(?P<project_slug>[\w-]+)/contents/$", commons.user_spaces.project_contents_view, name="project_contents_view"),
+    url(r"^my_contents/$", commons.user_spaces.my_contents_view, name="my_contents"),
+    url(r"^my_activity/$", commons.user_spaces.my_activity, name="my_activity"),
     url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", commons.text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
     url(r"^ajax_new_corpus/$", commons.text_analysis.ajax_new_corpus, name="ajax_new_corpus"),
     url(r"^ajax_make_corpus/$", commons.text_analysis.ajax_make_corpus, name="ajax_make_corpus"),
