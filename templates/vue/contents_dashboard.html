@@ -10,48 +10,132 @@ hr {
   padding-top: 5px;
   padding-bottom: 10px;
 }
-.wrapper {
-  min-height: 0;
-  margin:0;
-  padding:0;
-}
 .list-e > div {
   width: 100%;
   height: auto;
   margin: 0 0 0.1em 0;
   background: #fff;
-  border: 1px solid #67AE73;
-  border-top-width:0;
 }
-.list-e > div .panel-heading-c0 {
-  border-radius:0;
+{% if project_name %}
+.panel-head {
+  background-color: #FABE66;
+  border: 1px solid #FABE66;
+  border-bottom-width: 0;
+}
+{% else %}
+div.panel-head {
+  background-color: #67AE73;
+  border:1px solid #67AE73;
+  border-bottom-width: 0;
+  color: white;
+}
+{%endif%}
+div.panel-head {
+  padding: 5px 10px;
+  margin-top:30px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+div.lps, div.shared_lps, div.personal_lps {
+  padding:5px 10px;
+  background-color: #CB4F98;
+  border:1px solid #CB4F98;
+  color: white;
+  font-weight:600;
+}
+div.oers, div.shared_oers, div.personal_oers {
+  padding: 5px 10px;
+  background-color: #008BD2;
+  border: 1px solid #008BD2;
+  color: white;
+  font-weight:600;
+}
+div.docs {
+  padding: 5px 10px;
+  background-color: #C2B280;
+  border: 1px solid #C2B280;
+  color: white;
+  font-weight:600;
+}
+div.lps a, div.shared_lps a, div.personal_lps a, .oers a, div.shared_oers a, div.personal_oers a, div.docs a {
+  color: white;
+}
+div.lps a:hover, div.shared_lps a:hover, div.personal_lps a:hover, div.oers a:hover, div.shared_oers a:hover, div.personal_oers a:hover, div.docs a:hover {
+  color: #ebeded;
+}
+div.lps + div.vddl-list, div.shared_lps + div.vddl-list, div.personal_lps + div.vddl-list {
+    border: 1px solid #CB4F98;
+}
+div.oers + div.vddl-list, div.shared_oers + div.vddl-list, div.personal_oers + div.vddl-list {
+    border: 1px solid #008BD2;
+}
+div.docs + div.vddl-list {
+  border: 1px solid #C2B280;
+}
+div.vddl-list {
+    padding:0;
+    background-color: white;
+    border-top-width: 0;
+    color:#333;
+    font-weight: normal;
 }
 .list-e > div .vddl-draggable {
   padding:3px 10px 3px 10px;
-  border-bottom: 1px dotted #67AE73;
   display: grid;
   grid-template-columns: auto 8% 8% 8%;
   font-size:90%;
 }
-.list-e > div .vddl-draggable:hover {
-  background-color: #F0F7F1;
+div.lps + div.vddl-list > div.vddl-draggable,
+div.shared_lps + div.vddl-list > div.vddl-draggable,
+div.personal_lps + div.vddl-list > div.vddl-draggable {
+  border-bottom: 1px dotted #CB4F98;
+}
+div.oers + div.vddl-list > div.vddl-draggable,
+div.shared_oers + div.vddl-list > div.vddl-draggable,
+div.personal_oers + div.vddl-list > div.vddl-draggable {
+  border-bottom: 1px dotted #008BD2;
+}
+div.lps + div.vddl-list > div.vddl-draggable:hover,
+div.shared_lps + div.vddl-list > div.vddl-draggable:hover,
+div.personal_lps + div.vddl-list > div.vddl-draggable:hover {
+  background-color:#FDF7FB;
+}
+div.oers + div.vddl-list > div.vddl-draggable:hover,
+div.shared_oers + div.vddl-list > div.vddl-draggable:hover,
+div.personal_oers + div.vddl-list > div.vddl-draggable:hover {
+  background-color: #F2FBFF;
+}
+div.docs + div.vddl-list > div.vddl-draggable {
+  border: 1px dotted #C2B280;
+}
+div.docs + div.vddl-list > div.vddl-draggable:hover {
+  background-color: #FBF9F4; //#F8F5EF;
+}
+div.panel-head-corpora {
+  padding: 5px 10px;
+  // margin-top:30px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  background-color: #67AE73;
+  border: 1px solid #67AE73;
+  color: white;
 }
 .list-r > div {
   width:100%;
   margin: 0 0 0.1em 0;
   background: #fff;
-  border: 1px solid #8c8c8c;
+  border: 1px solid #B2B2B2;
   border-top-width:0;
 }
 .list-r > div .panel-heading-corpus {
   display: grid;
   grid-template-columns: auto 5% 5% 5% 10% 10% 5% 5% 3%;
   color: #fff;
-  background: #8c8c8c;
+  background: #B2B2B2;
 }
 .list-r > div .panel-heading-corpus a {
   color: #fff;
-  background: #8c8c8c;
+  background: #B2B2B2;
 }
 .list-r > div .panel-heading-corpus a:hover {
   color: #ebeded;
@@ -67,7 +151,7 @@ hr {
   padding:3px 10px;
   display: grid;
   grid-template-columns: auto 5% 5% 5% 10% 10% 5% 5% 3%;
-  border-bottom: 1px dotted #8c8c8c;
+  border-bottom: 1px dotted #B2B2B2;
   font-size:90%;
 }
 .list-r > div .vddl-draggable:hover {
@@ -105,13 +189,13 @@ a.analyzeText-white:before {
 .btn-outline-dark {
   color: #333;
   background-color: #fff;
-  border-color: #8c8c8c;
+  border-color: #B2B2B2;
 }
 
 .btn-outline-dark:hover {
   color: #fff;
-  background-color: #8c8c8c;
-  border-color: #8c8c8c;
+  background-color: #B2B2B2;
+  border-color: #B2B2B2;
 }
 
 .btn-outline-dark:focus, .btn-outline-dark.focus {
@@ -143,15 +227,30 @@ a.analyzeText-white:before {
 {% block body_class %}contents_dashboard{% endblock %}
 
 {% block body %}
+<div class="panel-head">
+{% comment %}
       <h3 class="text-center">{% trans "contents dashboard"|capfirst %}
           {% if project_name %}<small>{% trans "for project" %}</small> {{ project_name }} <small>{% trans "and its sub-projects" %}</small>
              {% else %}<small>{% trans "for user" %}</small> {{ user.get_display_name }}{% endif %}</h3>
+{% endcomment %}
+{% if project_name %}
+    <h3 class="marginT10 marginB5 demiBold">{% trans "contents dashboard"|capfirst %}</h3>
+    <h5 class="pull-left marginT5 marginB0"><span class="demiBold">{{ project_name }} </span><span style="font-size:75%">{% trans "and its sub-projects" %}</span></h5>
+    <p class="pull-right marginB0 font26 font_button_small">
+      <a href="/project/{{ project_slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
+    </p>
+{% else %}
+    <h3 class="pull-left marginT5 marginB5 demiBold">{% trans "contents dashboard"|capfirst %}</h3>
+    <h5 class="pull-right marginT10 marginB0 demiBold">{{ user.get_display_name }}</h5>
+{% endif %}
+<div style="clear:both"></div>
+</div>
+
     {% verbatim %}
-    <div id="app">
-      <div class="container-fluid marginTB20">
+    <div id="app" class="marginB20">
         <div class="list-e">
           <div v-for="resource_list in resource_lists">
-            <div class="panel-heading-c0 padding510 demiBold"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
+            <div v-bind:class="resource_list.list_id"><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> &nbsp;{{ resource_list.label }}</div>
             <vddl-list :list=resource_list.items
               class="box-scroll box-small" style="display: none;"
               :allowed-types=[resource_list.list_id]
@@ -181,7 +280,13 @@ a.analyzeText-white:before {
         </div>
         <hr>
 
-        <h4 class="text-center"><small>{{ label_corpora }}</small> {{ label_user }}</h4>
+        <!--h4 class="text-center"><small>{{ label_corpora }}</small> {{ label_user }}</h4-->
+        <div class="panel-head-corpora">
+            <h5 class="pull-left marginT5 marginB5 demiBold">{{ label_corpora }}</h5>
+            <h5 class="pull-right marginT5 marginB5 demiBold">{{ label_user }}</h5>
+            <div style="clear:both"></div>
+        </div>
+
         <div class="list-r">
           <div v-for="corpus in corpora" :key="corpus.file_key">
             <div class="panel-heading-corpus padding510">
@@ -227,7 +332,7 @@ a.analyzeText-white:before {
                 :moved="handleMoved"
                 v-bind:class="{'selected': corpus.selected === item}"
                 >
-                  <div><span style="cursor:grab">{{ item.label }}</span></div>
+                  <div><span style="cursor:default">{{ item.label }}</span></div>
                   <div class="upperCase">{{ item.obj_type }}</div>
                   <div>{{ item.obj_id }}</div>
                   <div class="upperCase">{{ item.language }}</div>
@@ -249,10 +354,8 @@ a.analyzeText-white:before {
           <template v-else>{{ msg_anonymous }}</template>  
         </div>
         <div id="result" class="box-result">{{ result }}</div>
-      </div>
     </div>
     {% endverbatim %}
-
 {% endblock body %}
 
 {% block script_base %}
@@ -286,7 +389,8 @@ a.analyzeText-white:before {
           source_id: '',
           msg_anonymous: '{% trans "it seems that you are not logged in."|capfirst %}',
           label_user: '{{user.get_display_name}}',
-          label_corpora: '{% trans "corpora of user"|capfirst %}',
+          // label_corpora: '{% trans "corpora of user"|capfirst %}',
+          label_corpora: '{% trans "corpora"|capfirst %}',
           label_selected: '{% trans "selected resources"|capfirst %}',
           label_corpus: '{% trans "corpus"|capfirst %}',
           label_empty_corpus: '{% trans "empty corpus"|capfirst %}',

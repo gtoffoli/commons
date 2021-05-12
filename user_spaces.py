@@ -77,7 +77,7 @@ def my_projects(request):
 def project_contents_view(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     if request:
-        return render(request, 'vue/contents_dashboard.html', {'project_id': project.id, 'project_name': project.name})
+        return render(request, 'vue/contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
     #
 def project_contents(project_id):
     project = get_object_or_404(Project, id=project_id)

@@ -15,18 +15,26 @@
   grid-template-columns: 34% 10% auto;
   font-size:85%;
   background: #fff;
-  border 1px dottoed #8c8c8c;
+  border 1px dotted #B2B2B2;
   border-top-width: 0;
 }
 .context:hover {
   background-color: #F4F4F4;
 }
 .panel-heading-context {
-  color: #fff;
-  background: #8c8c8c;
+  color: #333;
+  background: #fff;
+  border-bottom: 2px solid #B2B2B2;
+}
+.panel-heading-context:hover, .open {
+    background-color: #B2B2B2;
+    color: #fff;
 }
 .panel-heading-context a {
-  color: #fff;
+  color: #333;
+}
+.panel-heading-context:hover a, .open a {
+  color:white;
 }
 .panel-heading-context a:hover {
 	color: #ebeded;
@@ -61,8 +69,8 @@
 {% block body_base %}
   {% verbatim %}
   <div id="app">
-    <div class="container-fluid marginTB20">
-      <div v-for="(kwic, index) in kwics">
+    <div class="container-fluid marginTB20" >
+      <div v-for="(kwic, index) in kwics" >
         <div class="panel-heading-context padding510 demiBold"><a href="#" class="marginR10" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a><span class="marginR10">{{ kwic.frequency }}</span><span class="kw">{{ kwic.kw }}</span></div>
         <div style="display:none">
           <div class="context" v-for="context in kwic.contexts">
