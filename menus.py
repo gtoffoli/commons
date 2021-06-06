@@ -200,7 +200,7 @@ Menu.add_item("main", MenuItem(capfirst(_("library")),
 Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
                                url='/p',
                                weight=30,
-                               check=lambda request: request.user.is_authenticated and request.user.is_completed_profile(),
+                               check=lambda request: request.user.is_authenticated and request.user.is_full_member(),
                                children=my_children,
                                separator=True))
 Menu.add_item("main", MenuItem(capfirst(_("help")),

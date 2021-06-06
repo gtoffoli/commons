@@ -25,7 +25,7 @@
     </h2>
   </div>
   <p class="padding1020 demiBold font12">{% trans "In this form you can specify 3 types of resources: 1) an OER; 2) a document tailored to the needs of this learning path (LP); 3) a formatted text. When playing the LP, the platform will visualize only one of them: the OER, if present, otherwise the document or the formatted text as the last choice." %}</p>
-  <form method="POST" action="{{ action }}" id="edit_pathnode" enctype="multipart/form-data">{% csrf_token %}
+  <form method="POST" action="{{ action }}" id="edit_pathnode" enctype="multipart/form-data" onsubmit="lockoutSubmit(this); return true;">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
     {% if form.errors %}

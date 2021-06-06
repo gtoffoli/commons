@@ -250,6 +250,13 @@
             });
           }
         });
+        // https://stackoverflow.com/questions/15529836/simplest-way-to-disable-button-on-submission-of-a-form
+        // https://stackoverflow.com/questions/400616/why-doesnt-my-form-post-when-i-disable-the-submit-button-to-prevent-double-clic
+        function lockoutSubmit(form) {
+          $(form).find('button[type=submit]').hide();
+          $(form).find('a[name=cancel]').hide();
+          return false;
+      	};
       </script>
       {% block extra_script %}{% endblock %}
     {% endblock %}
