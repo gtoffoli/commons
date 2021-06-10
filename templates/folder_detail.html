@@ -118,7 +118,7 @@ dl.eval dd:nth-child(even) {
     <div class="col-md-6 col-lg-6 padding0">
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add document"|capfirst %}</dt>
-      <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/folder/add_document/">{% csrf_token %}
+      <dd><form enctype="multipart/form-data" method="post" id="add_document" action="/folder/add_document/" onsubmit="lockoutSubmit(this); return true;">{% csrf_token %}
         <input type="hidden" id="d_id" name="id" value="{{ folder.id }}">
         <div>{{ form.non_field_errors }}</div>
         <div class="marginB10"><span class="red">{{ form.docfile.errors }}</span>{{ form.docfile }}</div>
@@ -129,7 +129,7 @@ dl.eval dd:nth-child(even) {
     </dl>
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add subfolder"|capfirst %}</dt>
-      <dd><form method="post" id="add_subfolder" action="/folder/add_subfolder/">{% csrf_token %}
+      <dd><form method="post" id="add_subfolder" action="/folder/add_subfolder/" onsubmit="lockoutSubmit(this); return true;">{% csrf_token %}
         <input type="hidden" id="f_id" name="id" value="{{ folder.id }}">
         {% for field in subfolder_form.visible_fields %}
             <div class="form-group">
@@ -145,7 +145,7 @@ dl.eval dd:nth-child(even) {
     <div class="col-md-6 col-lg-6 padding0">
     <dl class="font14 padding20 bc-white marginB0 borderBLRradius">
       <dt class="demiBold marginB5">{% trans "add online resource"|capfirst %}</dt>
-      <dd><form method="post" id="add_resource_online" action="/folder/add_resource_online/">{% csrf_token %}
+      <dd><form method="post" id="add_resource_online" action="/folder/add_resource_online/" onsubmit="lockoutSubmit(this); return true;">{% csrf_token %}
         <input type="hidden" id="folder" name="folder" value="{{ folder.id }}">
         {% for field in form_res.visible_fields %}
         {% if field.name != 'portlet' %}

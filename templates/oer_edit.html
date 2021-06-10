@@ -23,7 +23,7 @@
     <h4>{% blocktrans with class_name='c-white' %}<small class="{{class_name}}">in the project</small> {{proj_name}}{% endblocktrans %}</h4>
     {% endif %}
   </div>
-  <form method="post" action="{{ action }}" id="edit_form">
+  <form method="post" action="{{ action }}" id="edit_form" onsubmit="lockoutSubmit(this); return true;">
     {% csrf_token %}
     {% if oer %}<input type="hidden" id="id" name="id" value="{{ oer.id }}">{% endif %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}

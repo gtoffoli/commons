@@ -2,10 +2,12 @@ from collections import OrderedDict
 from rest_framework import routers, serializers, viewsets
 
 from django.contrib.auth.models import Group, User
-from commons.models import UserProfile, Project, OER, LearningPath, PathNode
+from commons.models import UserProfile, Project, OER, LearningPath, PathNode, Tag
 from commons.documents import Document
+from commons.vocabularies import SubjectNode, Language
 from commons.vocabularies import EduLevelEntry, EduFieldEntry, ProStatusNode, ProFieldEntry
-from commons.vocabularies import NetworkEntry, SubjectNode, Language, CountryEntry
+from commons.vocabularies import NetworkEntry, CountryEntry
+from commons.vocabularies import LevelNode, MaterialEntry, MediaEntry, AccessibilityEntry, LicenseNode
 
 
 class DocumentSerializer(serializers.ModelSerializer):
@@ -13,63 +15,208 @@ class DocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('label',)
 
-class EduLevelEntrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EduLevelEntry
-        fields = ('id', 'name',)
-
-class EduFieldEntrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EduFieldEntry
-        fields = ('id', 'name',)
-
-class ProStatusNodeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProStatusNode
-        fields = ('id', 'name',)
-
-class ProFieldEntrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProFieldEntry
-        fields = ('id', 'name',)
-
-class NetworkEntrySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = NetworkEntry
-        fields = ('id', 'name',)
-
-class SubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SubjectNode
-        fields = ('id', 'name',)
-
-class SubjectViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows subjects to be viewed or edited.
-    """
-    queryset = SubjectNode.objects.all()
-    serializer_class = SubjectSerializer
-    http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'name',)
-
 class LanguageySerializer(serializers.ModelSerializer):
     class Meta:
         model = Language
         fields = ('code', 'name',)
 
 class LanguageViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows languages to be viewed or edited.
-    """
+    """ API endpoint for listing languages. """
     queryset = Language.objects.all()
     serializer_class = LanguageySerializer
     http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('code', 'name',)
+
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubjectNode
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class SubjectViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing subject matters. """
+    queryset = SubjectNode.objects.all()
+    serializer_class = SubjectSerializer
+    http_method_names = ['get', 'head', 'options']
 
 class CountryEntrySerializer(serializers.ModelSerializer):
     class Meta:
         model = CountryEntry
         fields = ('code', 'name',)
+
+class CountryEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing countries. """
+    queryset = CountryEntry.objects.all()
+    serializer_class = CountryEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class EduLevelEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EduLevelEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class EduLevelEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing education levels. """
+    queryset = EduLevelEntry.objects.all()
+    serializer_class = EduLevelEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class EduFieldEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EduFieldEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class EduFieldEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing education fields. """
+    queryset = EduFieldEntry.objects.all()
+    serializer_class = EduFieldEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class ProStatusNodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProStatusNode
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class ProStatusViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing professional statuses. """
+    queryset = ProStatusNode.objects.all()
+    serializer_class = ProStatusNodeSerializer
+    http_method_names = ['get', 'head', 'options']
+
+class ProFieldEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProFieldEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class ProFieldEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing professional fields. """
+    queryset = ProFieldEntry.objects.all()
+    serializer_class = ProFieldEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class NetworkEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NetworkEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class NetworkEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing social/professional network. """
+    queryset = NetworkEntry.objects.all()
+    serializer_class = NetworkEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class LevelNodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LevelNode
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class LevelNodeViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing difficulty/proficiency levels. """
+    queryset = LevelNode.objects.all()
+    serializer_class = LevelNodeSerializer
+    http_method_names = ['get', 'head', 'options']
+
+class MaterialEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MaterialEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class MaterialViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing types of educational materials. """
+    queryset = MaterialEntry.objects.all()
+    serializer_class = MaterialEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class MediaEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MediaEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class MediaEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing media types. """
+    queryset = MediaEntry.objects.all()
+    serializer_class = MediaEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class AccessibilityEntrySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccessibilityEntry
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class AccessibilityEntryViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing accessibility features. """
+    queryset = AccessibilityEntry.objects.all()
+    serializer_class = AccessibilityEntrySerializer
+    http_method_names = ['get', 'head', 'options']
+
+class LicenseNodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LicenseNode
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class LicenseNodeViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing license options. """
+    queryset = LicenseNode.objects.all()
+    serializer_class = LicenseNodeSerializer
+    http_method_names = ['get', 'head', 'options']
+
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tag
+        fields = ('id', 'label',)
+
+    label = serializers.SerializerMethodField(read_only=True)
+    def get_label(self, obj):
+        return obj.get_name_dict()
+
+class TagViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing classification tags. """
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    http_method_names = ['get', 'head', 'options']
+    filterset_fields = ('name',)
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -217,8 +364,23 @@ class PathNodeViewSet(viewsets.ModelViewSet):
     filterset_fields = ('id', 'path', 'creator', 'editor')
 
 router = routers.DefaultRouter()
-router.register(r'subject', SubjectViewSet)
 router.register(r'language', LanguageViewSet)
+router.register(r'subject', SubjectViewSet)
+
+router.register(r'country', CountryEntryViewSet)
+router.register(r'edulevel', EduLevelEntryViewSet)
+router.register(r'edufield', EduFieldEntryViewSet)
+router.register(r'prostatus', ProStatusViewSet)
+router.register(r'profield', ProFieldEntryViewSet)
+router.register(r'network', NetworkEntryViewSet)
+
+router.register(r'material', MaterialViewSet)
+router.register(r'targetlevel', LevelNodeViewSet)
+router.register(r'media', MediaEntryViewSet)
+router.register(r'tag', TagViewSet)
+router.register(r'license', LicenseNodeViewSet)
+router.register(r'accessibility', AccessibilityEntryViewSet)
+
 router.register(r'group', GroupViewSet)
 router.register(r'user', UserViewSet)
 router.register(r'profile', UserProfileViewSet)

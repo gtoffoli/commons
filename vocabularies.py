@@ -4,11 +4,13 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.db import models
+from django.utils.html import format_html
 from django.contrib import admin
+from django.contrib.contenttypes.models import ContentType
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
 from mptt.admin import MPTTModelAdmin
-from django.utils.html import format_html
+from datatrans.models import KeyValue
 
 # ABSTRACT CLASSES
 
@@ -25,6 +27,14 @@ class VocabularyEntry(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_name_dict(self):
+        content_type = ContentType.objects.get_for_model(self, for_concrete_model=True)
+        keyvalues = KeyValue.objects.filter(content_type_id=content_type.id, object_id=self.id, field='name')
+        name_dict = {}
+        for keyvalue in keyvalues:
+            name_dict[keyvalue.language] = keyvalue.value
+        return name_dict
 
 @python_2_unicode_compatible
 class VocabularyNode(MPTTModel, VocabularyEntry):
@@ -188,7 +198,7 @@ class VocabularyNodeAdmin(MPTTModelAdmin):
     list_display = ('name', 'order', 'parent_name', 'level', 'tree_id', 'id', 'lft', 'rght',)
 
     def parent_name(self, obj):
-        return obj.parent.name
+        return obj.parent and obj.parent.name or ''
 
 class LevelNodeAdmin(VocabularyNodeAdmin):
     pass

@@ -223,6 +223,14 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+    def get_name_dict(self):
+        content_type = ContentType.objects.get_for_model(Tag)
+        keyvalues = KeyValue.objects.filter(content_type_id=content_type.id, object_id=self.id, field='name')
+        name_dict = {}
+        for keyvalue in keyvalues:
+            name_dict[keyvalue.language] = keyvalue.value
+        return name_dict
+
 from filebrowser.fields import FileBrowseField
 import django_comments as comments
 class Resource(models.Model):
