@@ -61,7 +61,7 @@ from .forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotF
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
 from .forms import repurpose_mentoring_form
 from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
-from .user_spaces import project_tree
+from .user_spaces import project_tree_as_list
 
 from .permissions import ForumPermissionHandler
 from .session import get_clipboard, set_clipboard
@@ -656,7 +656,7 @@ def mailing_list(request):
 def cops_tree(request):
     communities = Project.objects.filter(proj_type__name='com', state=PROJECT_OPEN, group__level=1).order_by ('name')
     root = Project.objects.get(slug='commons')
-    tree = [root, [project_tree(community) for community in communities]]
+    tree = [root, [project_tree_as_list(community) for community in communities]]
     info = FlatPage.objects.get(url='/info/communities/').content
     return render(request, 'cops_tree.html', {'com_tree': tree[1], 'info': info,})
 

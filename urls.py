@@ -282,3 +282,11 @@ if settings.USE_HAYSTACK:
             ), name='haystack_search'),
     #)
     ]
+
+try:
+    urlpatterns += [
+        path('success/', include('success.urls')),
+    ]
+except:
+    pass
+

@@ -39,14 +39,14 @@ def filter_documents(documents):
 
 """ recursively computes the project tree with root in the given project,
     including all project and community types """
-def project_tree(project):
-    return [project, [project_tree(child) for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True)]]
+def project_tree_as_list(project):
+    return [project, [project_tree_as_list(child) for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True)]]
 
 """ recursively computes the folder tree with root in the given folder """
-def folder_tree(folder):
-    return [folder, [folder_tree(child) for child in folder.get_children()]]
+def folder_tree_as_list(folder):
+    return [folder, [folder_tree_as_list(child) for child in folder.get_children()]]
 
-""" prunes the project_tree, removing all nodes without an ancestor in user_projects:
+""" prunes the project_tree_as_list, removing all nodes without an ancestor in user_projects:
     performs a depth-first visit of the tree """
 def user_project_tree(project_tree, user_projects):
     pruned_sub_trees = []
@@ -69,7 +69,7 @@ def my_projects(request):
     user_projects = [m.project for m in memberships]
     user_projects = [project for project in user_projects if not project.proj_type.name=='com']
     root = Project.objects.get(slug='commons')
-    tree = [root, [project_tree(community) for community in communities]]
+    tree = [root, [project_tree_as_list(community) for community in communities]]
     tree = user_project_tree(tree, user_projects)
     info = FlatPage.objects.get(url='/info/user_projects/').content
     return render(request, 'cops_tree.html', {'com_tree': tree[1], 'user_projects': user_projects, 'info': info,})
@@ -81,7 +81,7 @@ def project_contents_view(request, project_slug):
     #
 def project_contents(project_id):
     project = get_object_or_404(Project, id=project_id)
-    projects = tree_to_list(project_tree(project))
+    projects = tree_to_list(project_tree_as_list(project))
     oers = OER.objects.filter(project__in=projects, state=PUBLISHED).order_by('-modified')
     shared = SharedOer.objects.filter(project__in=projects).order_by('-created')
     shared_oers = [s.oer for s in shared if s.oer.state==PUBLISHED]
@@ -89,7 +89,7 @@ def project_contents(project_id):
     shared = SharedLearningPath.objects.filter(project__in=projects).order_by('-created')
     shared_lps = [s.lp for s in shared if s.lp.state==PUBLISHED]
     folder = project.get_folder()
-    folders = folder and tree_to_list(folder_tree(folder)) or []
+    folders = folder and tree_to_list(folder_tree_as_list(folder)) or []
     folder_docs = FolderDocument.objects.filter(folder__in=folders).order_by('-folder__created','-created')
     docs = filter_documents(folder_docs)
     contents = {}
