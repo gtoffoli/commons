@@ -283,10 +283,5 @@ if settings.USE_HAYSTACK:
     #)
     ]
 
-try:
-    urlpatterns += [
-        path('success/', include('success.urls')),
-    ]
-except:
-    pass
-
+import commons.api
+import success.api

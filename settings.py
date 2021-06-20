@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'datatrans',
     'tagging',
     'zinnia',
+    'success',
     'commons',
     'pybb',
     # commons project
@@ -158,7 +159,6 @@ INSTALLED_APPS = (
     #'rdflib_django',
     'el_pagination',
     'datetimewidget',
-    'success',
 )
 """
 181212 MMR DatePickerInput required Python 3.3

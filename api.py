@@ -4,8 +4,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import Group, User
 from rest_framework import routers, serializers, viewsets
+from filetransfers.api import serve_file
 
-from commons.models import UserProfile, Project, Folder, FolderDocument, OER, LearningPath, PathNode, Tag
+from commons.models import UserProfile, Project, Folder, FolderDocument, OER, OerDocument, LearningPath, PathNode, Tag
 from commons.documents import Document
 from commons.vocabularies import SubjectNode, Language
 from commons.vocabularies import EduLevelEntry, EduFieldEntry, ProStatusNode, ProFieldEntry
@@ -22,32 +23,6 @@ router = routers.DefaultRouter()
 def api_version(request):
     data = {'api_version': API_VERSION}
     return JsonResponse(data)
-
-class DocumentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Document
-        fields = ('label',)
-
-class FolderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Folder
-        # fields = ('title', 'description',)
-        fields = ('title',)
-
-class FolderDocumentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = FolderDocument
-        fields = ('label', 'folder', 'project')
-
-    label = serializers.SerializerMethodField(read_only=True)
-    def get_label(self, obj):
-        return obj.document and obj.document.label or ''
-    folder = serializers.SerializerMethodField(read_only=True)
-    def get_folder(self, obj):
-        return obj.folder.title
-    project = serializers.SerializerMethodField(read_only=True)
-    def get_project(self, obj):
-        return obj.folder.get_project().name
 
 class LanguageySerializer(serializers.ModelSerializer):
     class Meta:
@@ -238,26 +213,22 @@ class TagViewSet(viewsets.ModelViewSet):
     serializer_class = TagSerializer
     filterset_fields = ('name',)
 
-class ProjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Project
-        fields = ('id', 'url', 'get_absolute_url', 'name', 'description', 'info', 'state', 'created', 'modified', 'proj_type')
+router.register(r'language', LanguageViewSet)
+router.register(r'subject', SubjectViewSet)
 
-class ProjectViewSet(viewsets.ViewSet):
-    queryset = Project.objects.all().order_by('-created')
-    serializer_class = ProjectSerializer
+router.register(r'country', CountryEntryViewSet)
+router.register(r'edulevel', EduLevelEntryViewSet)
+router.register(r'edufield', EduFieldEntryViewSet)
+router.register(r'prostatus', ProStatusViewSet)
+router.register(r'profield', ProFieldEntryViewSet)
+router.register(r'network', NetworkEntryViewSet)
 
-    def list(self, request):
-        queryset = Project.objects.all().order_by('-created')
-        serializer = ProjectSerializer({'projects': queryset,}, context={'request': request})
-        return JsonResponse(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        project = Project.objects.get(pk=pk)
-        serializer = ProjectSerializer(project)
-        return JsonResponse(serializer.data)
-
-# router.register(r'project', ProjectViewSet)
+router.register(r'material', MaterialViewSet)
+router.register(r'targetlevel', LevelNodeViewSet)
+router.register(r'media', MediaEntryViewSet)
+router.register(r'tag', TagViewSet)
+router.register(r'license', LicenseNodeViewSet)
+router.register(r'accessibility', AccessibilityEntryViewSet)
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
@@ -270,7 +241,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    http_method_names = ['get', 'head', 'options']
+    http_method_names = ['head', 'get', 'post', 'options']
     filterset_fields = ('id', 'name',)
 
 class UserProjectSerializer(serializers.ModelSerializer):
@@ -313,35 +284,192 @@ class UserViewSet(viewsets.ModelViewSet):
     http_method_names = ['get', 'head', 'options']
     filterset_fields = ('id', 'username', 'email')
 
-class OerSerializer(serializers.ModelSerializer):
-    url_in_model = serializers.ReadOnlyField(source='url')
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = ('id', 'local_path', 'name', 'project_type', 'state', 'description', 'info', 'created', 'modified')
 
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
+    project_type = serializers.ReadOnlyField(source='get_type_name')
+
+class ProjectViewSet(viewsets.ViewSet):
+    """ API endpoint for retrieving projects. """
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    http_method_names = ['head', 'get', 'post',]
+
+    def retrieve(self, request, pk=None):
+        project = Project.objects.get(pk=pk)
+        serializer = self.serializer_class(project)
+        return JsonResponse(serializer.data)
+
+router.register(r'project', ProjectViewSet)
+
+class FolderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Folder
+        fields = ('id', 'local_path', 'title', 'project_id', 'parent_id', 'description', 'n_documents', 'created', 'creator_id',)
+
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
+    project_id = serializers.SerializerMethodField()
+    def get_project_id(self, obj):
+        return obj.get_project().id
+    parent_id = serializers.SerializerMethodField()
+    def get_parent_id(self, obj):
+        return obj.get_parent().id
+    creator_id = serializers.SerializerMethodField()
+    def get_creator_id(self, obj):
+        return obj.user.id
+    n_documents = serializers.SerializerMethodField()
+    def get_n_documents(self, obj):
+        return obj.documents.all().count()
+
+class FolderViewSet(viewsets.ModelViewSet):
+    """ API endpoint for retrieving project folders. """
+    queryset = Folder.objects.all()
+    serializer_class = FolderSerializer
+    http_method_names = ['head', 'get', 'post', 'options',]
+
+    def retrieve(self, request, pk=None):
+        folder = Folder.objects.get(pk=pk)
+        serializer = self.serializer_class(folder)
+        return JsonResponse(serializer.data)
+
+router.register(r'folder', FolderViewSet)
+
+class DocumentFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ['id', 'uuid', 'label',]
+
+class DocumentFileViewSet(viewsets.ModelViewSet):
+    """ API endpoint for retrieving project folders. """
+    queryset = Document.objects.all()
+    serializer_class = DocumentFileSerializer
+    http_method_names = ['head', 'get', 'post', 'options',]
+
+    def retrieve(self, request, pk=None):
+        document = Document.objects.get(pk=pk)
+        return serve_file(
+                request,
+                document.file,
+                save_as = document.label or None,
+                content_type=document.file_mimetype or 'application/octet-stream'
+                )
+
+router.register(r'document_file', DocumentFileViewSet)
+
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ['id', 'uuid', 'local_path', 'name', 'mimetype', 'encoding', 'size', 'timestamp',]
+
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
+    name = serializers.SerializerMethodField()
+    def get_name(self, obj):
+        return obj.label or ''
+    mimetype = serializers.SerializerMethodField()
+    def get_mimetype(self, obj):
+        return obj.file_mimetype
+    encoding = serializers.SerializerMethodField()
+    def get_encoding(self, obj):
+        return obj.file_mime_encoding
+    size = serializers.SerializerMethodField()
+    def get_size(self, obj):
+        return obj.size
+    timestamp = serializers.SerializerMethodField()
+    def get_timestamp(self, obj):
+        return obj.date_updated
+
+class DocumentViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing documents out of context. """
+    queryset = Document.objects.all()
+    serializer_class = DocumentSerializer
+    http_method_names = ['head', 'get', 'post', 'options',]
+
+    def retrieve(self, request, pk=None):
+        document = Document.objects.get(pk=pk)
+        serializer = self.serializer_class(document)
+        return JsonResponse(serializer.data)
+
+router.register(r'document', DocumentViewSet)
+
+class FolderDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FolderDocument
+        fields = ['id', 'local_path', 'label', 'folder_id', 'project_id', 'document_id',]
+
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
+    label = serializers.SerializerMethodField()
+    def get_label(self, obj):
+        return obj.document and obj.document.label or ''
+    project_id = serializers.SerializerMethodField()
+    def get_project_id(self, obj):
+        return obj.folder.get_project().id
+    creator_id = serializers.SerializerMethodField()
+    def get_creator_id(self, obj):
+        return obj.user.id
+
+class FolderDocumentViewSet(viewsets.ModelViewSet):
+    """ API endpoint for listing documents in project folders. """
+    queryset = FolderDocument.objects.all()
+    serializer_class = FolderDocumentSerializer
+    http_method_names = ['head', 'get', 'post', 'options',]
+
+    def retrieve(self, request, pk=None):
+        folder_document = FolderDocument.objects.get(pk=pk)
+        serializer = self.serializer_class(folder_document)
+        return JsonResponse(serializer.data)
+
+router.register(r'folder_document', FolderDocumentViewSet)
+
+class OerDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OerDocument
+        fields = ['document_id',]
+
+class OerSerializer(serializers.ModelSerializer):
     class Meta:
         model = OER
-        fields = ('id', 'url', 'get_absolute_url', 'title', 'description', 'url_in_model', 'text', 'state', 'created', 'modified', 'project', 'creator', 'editor')
+        fields = ['id', 'local_path', 'url', 'title', 'project_id', 'state', 'description', 'text', 'created', 'modified', 'creator_id', 'editor_id', 'documents',]
+
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
+    documents = serializers.SerializerMethodField()
+    def get_documents(self, obj):
+        return [oer_doc.document_id for oer_doc in OerDocument.objects.filter(oer_id=obj.id)] 
 
 class OerViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows OERs to be viewed or edited.
-    """
-    queryset = OER.objects.all().order_by('-created')
+    """ API endpoint for retrieving OERs. """
+    queryset = OER.objects.all().order_by('-modified')
     serializer_class = OerSerializer
-    http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
+    http_method_names = ['head', 'get', 'post', 'options',]
+ 
+    def retrieve(self, request, pk=None):
+        oer = OER.objects.get(pk=pk)
+        serializer = self.serializer_class(oer)
+        return JsonResponse(serializer.data)
+
+router.register(r'oer', OerViewSet)
 
 class LearningPathSerializer(serializers.ModelSerializer):
     class Meta:
         model = LearningPath
-        fields = ('id', 'get_absolute_url', 'title', 'short', 'long', 'state', 'created', 'modified', 'project', 'creator', 'editor')
+        fields = ('id', 'local_path', 'title', 'short', 'project_id', 'state', 'long', 'created', 'modified', 'creator_id', 'editor_id')
+
+    local_path = serializers.ReadOnlyField(source='get_absolute_url')
 
 class LearningPathViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows learning paths to be viewed or edited.
-    """
-    queryset = LearningPath.objects.all().order_by('-created')
+    """ API endpoint for retrieving LPs. """
+    queryset = LearningPath.objects.all().order_by('-modified')
     serializer_class = LearningPathSerializer
-    http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'state', 'project', 'creator', 'editor')
+    http_method_names = ['head', 'get', 'post', 'options',]
+
+    def retrieve(self, request, pk=None):
+        lp = LearningPath.objects.get(pk=pk)
+        serializer = self.serializer_class(lp)
+        return JsonResponse(serializer.data)
+
+router.register(r'lp', LearningPathViewSet)
 
 class PathNodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -349,13 +477,10 @@ class PathNodeSerializer(serializers.ModelSerializer):
         fields = ('id', 'get_absolute_url', 'label', 'text', 'created', 'modified', 'path', 'creator', 'editor')
 
 class PathNodeViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows path nodes to be viewed or edited.
-    """
+    """ API endpoint for retrieving LP nodes. """
     queryset = PathNode.objects.all().order_by('-created')
     serializer_class = PathNodeSerializer
-    http_method_names = ['get', 'head', 'options']
-    filterset_fields = ('id', 'path', 'creator', 'editor')
+    http_method_names = ['head', 'get', 'post', 'options',]
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -388,31 +513,3 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')
     serializer_class = UserProfileSerializer
     http_method_names = ['get', 'head', 'options']
-
-
-router.register(r'language', LanguageViewSet)
-router.register(r'subject', SubjectViewSet)
-
-router.register(r'country', CountryEntryViewSet)
-router.register(r'edulevel', EduLevelEntryViewSet)
-router.register(r'edufield', EduFieldEntryViewSet)
-router.register(r'prostatus', ProStatusViewSet)
-router.register(r'profield', ProFieldEntryViewSet)
-router.register(r'network', NetworkEntryViewSet)
-
-router.register(r'material', MaterialViewSet)
-router.register(r'targetlevel', LevelNodeViewSet)
-router.register(r'media', MediaEntryViewSet)
-router.register(r'tag', TagViewSet)
-router.register(r'license', LicenseNodeViewSet)
-router.register(r'accessibility', AccessibilityEntryViewSet)
-
-"""
-router.register(r'group', GroupViewSet)
-router.register(r'user', UserViewSet)
-router.register(r'profile', UserProfileViewSet)
-router.register(r'project', ProjectViewSet)
-router.register(r'oer', OerViewSet)
-router.register(r'lp', LearningPathViewSet)
-router.register(r'node', PathNodeViewSet)
-"""
