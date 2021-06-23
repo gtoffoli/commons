@@ -427,10 +427,38 @@ class OerSerializer(serializers.ModelSerializer):
 
 class OerViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving OERs. """
-    queryset = OER.objects.all().order_by('-modified')
+    queryset = OER.objects.all()
     serializer_class = OerSerializer
     http_method_names = ['head', 'get', 'post', 'options',]
  
+    def get_queryset(self):
+        queryset = OER.objects.all()
+        languages = self.request.query_params.getlist('language')
+        if languages:
+            queryset = queryset.filter(languages__in=languages)
+        material = self.request.query_params.get('material')
+        if material:
+            queryset = queryset.filter(material=material)
+        targetlevels = self.request.query_params.getlist('targetlevel')
+        if targetlevels:
+            queryset = queryset.filter(levels__in=targetlevels)
+        subjects = self.request.query_params.getlist('subject')
+        if subjects:
+            queryset = queryset.filter(subjects__in=subjects)
+        tags = self.request.query_params.getlist('tag')
+        if tags:
+            queryset = queryset.filter(tags__in=tags)
+        media = self.request.query_params.getlist('media')
+        if media:
+            queryset = queryset.filter(media__in=media)
+        accessibility = self.request.query_params.getlist('accessibility')
+        if accessibility:
+            queryset = queryset.filter(accessibility__in=accessibility)
+        license = self.request.query_params.get('license')
+        if license:
+            queryset = queryset.filter(license=license)
+        return queryset
+
     def retrieve(self, request, pk=None):
         oer = OER.objects.get(pk=pk)
         serializer = self.serializer_class(oer)
@@ -445,9 +473,22 @@ class LearningPathSerializer(serializers.ModelSerializer):
 
 class LearningPathViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving LPs. """
-    queryset = LearningPath.objects.all().order_by('-modified')
+    queryset = LearningPath.objects.all()
     serializer_class = LearningPathSerializer
     http_method_names = ['head', 'get', 'post', 'options',]
+
+    def get_queryset(self):
+        queryset = LearningPath.objects.all()
+        targetlevels = self.request.query_params.getlist('targetlevel')
+        if targetlevels:
+            queryset = queryset.filter(levels__in=targetlevels)
+        subjects = self.request.query_params.getlist('subject')
+        if subjects:
+            queryset = queryset.filter(subjects__in=subjects)
+        tags = self.request.query_params.getlist('tag')
+        if tags:
+            queryset = queryset.filter(tags__in=tags)
+        return queryset
 
     def retrieve(self, request, pk=None):
         lp = LearningPath.objects.get(pk=pk)
