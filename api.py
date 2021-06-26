@@ -33,6 +33,7 @@ class LanguageViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing languages. """
     queryset = Language.objects.all()
     serializer_class = LanguageySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
@@ -47,6 +48,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing subject matters. """
     queryset = SubjectNode.objects.all()
     serializer_class = SubjectSerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class CountryEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -57,6 +59,7 @@ class CountryEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing countries. """
     queryset = CountryEntry.objects.all()
     serializer_class = CountryEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class EduLevelEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -71,6 +74,7 @@ class EduLevelEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing education levels. """
     queryset = EduLevelEntry.objects.all()
     serializer_class = EduLevelEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class EduFieldEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -85,6 +89,7 @@ class EduFieldEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing education fields. """
     queryset = EduFieldEntry.objects.all()
     serializer_class = EduFieldEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class ProStatusNodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -99,6 +104,7 @@ class ProStatusViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing professional statuses. """
     queryset = ProStatusNode.objects.all()
     serializer_class = ProStatusNodeSerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class ProFieldEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -113,6 +119,7 @@ class ProFieldEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing professional fields. """
     queryset = ProFieldEntry.objects.all()
     serializer_class = ProFieldEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class NetworkEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -127,6 +134,7 @@ class NetworkEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing social/professional network. """
     queryset = NetworkEntry.objects.all()
     serializer_class = NetworkEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class LevelNodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -141,6 +149,7 @@ class LevelNodeViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing difficulty/proficiency levels. """
     queryset = LevelNode.objects.all()
     serializer_class = LevelNodeSerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class MaterialEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -155,6 +164,7 @@ class MaterialViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing types of educational materials. """
     queryset = MaterialEntry.objects.all()
     serializer_class = MaterialEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class MediaEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -169,6 +179,7 @@ class MediaEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing media types. """
     queryset = MediaEntry.objects.all()
     serializer_class = MediaEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class AccessibilityEntrySerializer(serializers.ModelSerializer):
     class Meta:
@@ -183,6 +194,7 @@ class AccessibilityEntryViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing accessibility features. """
     queryset = AccessibilityEntry.objects.all()
     serializer_class = AccessibilityEntrySerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class LicenseNodeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -197,6 +209,7 @@ class LicenseNodeViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing license options. """
     queryset = LicenseNode.objects.all()
     serializer_class = LicenseNodeSerializer
+    http_method_names = ['get', 'head', 'options',]
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
@@ -211,6 +224,7 @@ class TagViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing classification tags. """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    http_method_names = ['get', 'head', 'options',]
     filterset_fields = ('name',)
 
 router.register(r'language', LanguageViewSet)
@@ -241,7 +255,7 @@ class GroupViewSet(viewsets.ModelViewSet):
     """
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
-    http_method_names = ['head', 'get', 'post', 'options']
+    http_method_names = ['get', 'head', 'options',]
     filterset_fields = ('id', 'name',)
 
 class UserProjectSerializer(serializers.ModelSerializer):
@@ -296,7 +310,7 @@ class ProjectViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving projects. """
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
-    http_method_names = ['head', 'get', 'post',]
+    http_method_names = ['get', 'head', 'options',]
 
     def retrieve(self, request, pk=None):
         project = Project.objects.get(pk=pk)
@@ -323,7 +337,7 @@ class FolderViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving project folders. """
     queryset = Folder.objects.all()
     serializer_class = FolderSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
     def retrieve(self, request, pk=None):
         folder = Folder.objects.get(pk=pk)
@@ -339,7 +353,7 @@ class DocumentFileViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving project folders. """
     queryset = Document.objects.all()
     serializer_class = DocumentFileSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
     def retrieve(self, request, pk=None):
         document = Document.objects.get(pk=pk)
@@ -376,7 +390,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing documents out of context. """
     queryset = Document.objects.all()
     serializer_class = DocumentSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
     def retrieve(self, request, pk=None):
         document = Document.objects.get(pk=pk)
@@ -403,7 +417,7 @@ class FolderDocumentViewSet(viewsets.ModelViewSet):
     """ API endpoint for listing documents in project folders. """
     queryset = FolderDocument.objects.all()
     serializer_class = FolderDocumentSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
     def retrieve(self, request, pk=None):
         folder_document = FolderDocument.objects.get(pk=pk)
@@ -429,7 +443,7 @@ class OerViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving OERs. """
     queryset = OER.objects.all()
     serializer_class = OerSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
  
     def get_queryset(self):
         queryset = OER.objects.all()
@@ -475,7 +489,7 @@ class LearningPathViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving LPs. """
     queryset = LearningPath.objects.all()
     serializer_class = LearningPathSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
     def get_queryset(self):
         queryset = LearningPath.objects.all()
@@ -504,7 +518,7 @@ class PathNodeViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving LP nodes. """
     queryset = PathNode.objects.all().order_by('-created')
     serializer_class = PathNodeSerializer
-    http_method_names = ['head', 'get', 'post', 'options',]
+    http_method_names = ['get', 'head', 'options',]
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -536,7 +550,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = UserProfile.objects.filter(user__is_active=True).order_by('-user__date_joined')
     serializer_class = UserProfileSerializer
-    http_method_names = ['get', 'head', 'options']
+    http_method_names = ['get', 'head', 'options',]
 
 def register_original_endpoints():
     router.register(r'project', ProjectViewSet)

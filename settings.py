@@ -241,21 +241,17 @@ if not IS_LINUX:
 
 # --------- Pagination ----------------
 PAGINATION_INVALID_PAGE_RAISES_404 = True
+
 # ---------- Search ------------------
 SEARCH_SHOW_OBJECT_TYPE = False
+
 # ---------- Django REST framework -----------
-"""
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10,
-    'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 100,
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-    )
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly ',
+    ]
 }
-"""
+
 # ----------- Celery ----------
 CELERY_TIMEZONE = 'UTC'
 CELERY_ENABLE_UTC = True
