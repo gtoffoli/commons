@@ -149,7 +149,8 @@ def home(request):
                 groups_lead_featured.append([lead] + [featured for featured in group_lead_featured if featured.is_actual])
     wall_dict['groups_lead_featured'] = groups_lead_featured
     min_time = timezone.now()-timedelta(days=90)
-    recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
+    # recent_projects = Project.objects.filter(state=2, proj_type__public=True, created__gt=min_time).exclude(proj_type__name='com').order_by('-created')
+    recent_projects = Project.objects.filter(state=2, proj_type__public=True, proj_type__name='com').order_by('-created')
     for recent_proj in recent_projects:
         if not recent_proj.reserved:
             wall_dict['recent_proj'] = recent_proj
@@ -175,7 +176,7 @@ def home(request):
         active_projects = popular_principals(principal_type_id, active=True, max_days=30)
         for active_proj in active_projects:
             project = Project.objects.get(pk=active_proj[0])
-            if project.state==PROJECT_OPEN and project.get_type_name() in ['oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
+            if project.state==PROJECT_OPEN and project.get_type_name() in ['com', 'oer', 'lp'] and not project.reserved and not project==wall_dict['recent_proj'] and not project==wall_dict['popular_proj']:
                 wall_dict['active_proj'] = project
                 cache.set('active_project_id', project.id, homepage_timeout)
                 break

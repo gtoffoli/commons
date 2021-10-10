@@ -288,6 +288,8 @@ contenttype_weigth_dict = {
     'room': 1,
 }
 
+project_type_id = ContentType.objects.get_for_model(Project).id
+
 def popular_principals(principal_type_id, active=False, from_time=None, to_time=None, max_days=7, exclude_creator=False):
     if active:
         verbs = ['Send', 'Create', 'Edit', 'Delete', 'Submit', 'Approve',]
@@ -319,6 +321,9 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
             contenttype_factor = contenttype_weigth_dict.get(action.action_object_content_type.model, 0)
         else:
             continue
+        if active and principal_type_id == project_type_id:
+            project = Project.objects.get(id=project_id)
+            project_id = project.get_community().id
         project_activity_dict[project_id] += math.sqrt(verb_factor * contenttype_factor)
     project_activity_list = sorted(project_activity_dict.items(), key=lambda x: x[1], reverse=True)
     return project_activity_list

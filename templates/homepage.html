@@ -197,12 +197,14 @@
       <div class="col-xs-12 col-sm-6 col-md-8 col-lg-9">
         <div class="list-h">
           {% if recent_proj %}
-            {% trans "newest project" as translatetext %}
-            {% include "_data_item_HP.html" with data=recent_proj data_ele="c4" data_label=translatetext data_parent_class="box-h" data_class="c-harvest-gold" data_type="project" data_attr="last"%}
+{% comment %} {% trans "newest project" as translatetext %} {% endcomment %}
+            {% trans "newest community" as translatetext %}
+            {% include "_data_item_HP.html" with data=recent_proj data_ele="c3" data_label=translatetext data_parent_class="box-h" data_class="c-harvest-gold" data_type="project" data_attr="last"%}
           {% endif %}
           {% if active_proj %}
-            {% trans "most active project" as translatetext %}
-            {% include "_data_item_HP.html" with data=active_proj data_ele="c4" data_label=translatetext data_parent_class="box-h" data_class="c-harvest-gold" data_type="project" data_attr="active" %}
+{% comment %} {% trans "most active project" as translatetext %} {% endcomment %}
+            {% trans "most active community" as translatetext %}
+            {% include "_data_item_HP.html" with data=active_proj data_ele="c3" data_label=translatetext data_parent_class="box-h" data_class="c-harvest-gold" data_type="project" data_attr="active" %}
           {% endif %}
           {% if popular_proj %}
             {% trans "most popular project" as translatetext %}
