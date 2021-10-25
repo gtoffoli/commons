@@ -3155,7 +3155,11 @@ def online_resource_view(request,folderdocument_id):
     folder = get_object_or_404(Folder, pk=folder_id)
     project = folder.get_project()
     view_folder = user.is_authenticated and (project.is_member(user) or user.is_superuser)
-    return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'folder': folder, 'project': project,'view_folder': view_folder})
+    # return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'folder': folder, 'project': project,'view_folder': view_folder})
+    embed_code = online_resource.embed_code
+    if not embed_code.count('<iframe'):
+        embed_code = DOCUMENT_VIEW_TEMPLATE % embed_code
+    return render(request, 'online_resource_view.html', {'online_resource': online_resource, 'folder': folder, 'project': project,'view_folder': view_folder, 'embed_code': embed_code})
 
 """
 def document_view_range(request, document_id, page_range, node_oer=False, return_url=False): # argomenti non usati !!!!!!!

@@ -282,8 +282,8 @@
                                     {% if can_translate and project.original_language %}<li class="marginB5"><a href="/datatrans/translate/project/{{ project.pk }}/" title="{% trans "show translate view" %}" class="btn btn-default"><i class="fa fa-language" aria-hidden="true"></i> {% trans "translate" %}</a></li>{% endif %}
                                     {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/logo/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload logo" %}</a></li>{% endif %}
                                     {% if can_edit %}<li class="marginB5"><a href="/project/{{ project.slug }}/upload/image/" title="" class="btn btn-default"><i class="fa fa-upload" aria-hidden="true"></i> {% trans "upload image" %}</a></li>{% endif %}
-                                    {% if can_open %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock" aria-hidden="true"></i> {% trans "open" %}</a></li>{% endif %}
-                                    {% if can_close %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock" aria-hidden="true"></i> {% trans "close" %}</a></li>{% endif %}
+                                    {% if can_open %}<li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-lock" aria-hidden="true"></i> {% trans "open" %}</a></li>{% endif %}
+                                    {% if can_close %}<li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-unlock" aria-hidden="true"></i> {% trans "close" %}</a></li>{% endif %}
                                     </ul>
                                 </li>
                             </ul>
@@ -795,11 +795,12 @@
                     </ul>
                 </div>
             {% endif %}
+{% comment %} MENTORING MESSAGE
         {% else %}
-{% comment %} MENTORING MESSAGE {% endcomment %}
             <div class="panel-white padding510">
                 <p class="demiBold">{% trans "mentoring is not available for members of this community."|capfirst %}</p>
             </div>
+{% endcomment %}
         {% endif %}
     {% else %}
 {% comment %} BODY ROLL OF MENTORS {% endcomment %}

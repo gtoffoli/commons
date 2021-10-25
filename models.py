@@ -934,7 +934,8 @@ class Project(Resource):
 
     def is_reserved_project(self):
         level = self.get_level()
-        return (level > 1 and self.reserved) or (level > 2 and self.get_parent().is_reserved_project())
+        # return (level > 1 and self.reserved) or (level > 2 and self.get_parent().is_reserved_project())
+        return self.reserved or (level > 1 and self.get_parent().is_reserved_project())
 
     def propose(self, request):
         if self.can_propose(request.user):
