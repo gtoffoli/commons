@@ -273,20 +273,23 @@ class FolderForm(forms.ModelForm):
 class FolderDocumentForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        fields = ('label','document', 'state', 'portlet')
+        # fields = ('label','document', 'portlet')
+        fields = ('label','document', 'state')
         
     label = forms.CharField(required=False, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
     state = forms.ChoiceField(required=True, choices=PUBLICATION_STATE_CHOICES, label=_('publication state'), widget=forms.Select(attrs={'class':'form-control',}))
-    portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
+    # portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
 
 class FolderOnlineResourceForm(forms.ModelForm):
     class Meta:
         model = FolderDocument
-        fields = ('label','embed_code', 'state','portlet')
+        # fields = ('label','embed_code', 'portlet')
+        fields = ('label','embed_code', 'state')
         
     label = forms.CharField(required=True, label=_('label'), widget=forms.TextInput(attrs={'class':'form-control',}))
+    # embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('Code to embed the view of an online resource in an HTML page. For GoogleDocs, GoogleSheets or GoogleSlides: open the document; in the menubar, click File - Publish to the web. In the panel that appears, click Embed; then copy the code and paste it here.'))
     embed_code = forms.CharField(required=True, label=_('embed code'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('Code to embed the view of an online resource in an HTML page. For GoogleDocs, GoogleSheets or GoogleSlides: open the document; in the menubar, click File - Publish to the web. In the panel that appears, click Embed; then copy the code and paste it here.'))
-    portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
+    # portlet = forms.BooleanField(required=False, label= 'portlet', widget=forms.CheckboxInput())
 
 class RepoForm(forms.ModelForm):
     class Meta:

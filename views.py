@@ -957,6 +957,7 @@ def online_resource_edit(request, folderdocument_id):
         if form.is_valid():
             if request.POST.get('save', ''):
                 form.save()
+                """
                 if (request.POST.get('portlet')):
                     if folderdocument.state != PORTLET:
                         folderdocument.state = PORTLET
@@ -965,6 +966,7 @@ def online_resource_edit(request, folderdocument_id):
                     if folderdocument.state == PORTLET:
                         folderdocument.state = DRAFT
                         folderdocument.save()
+                """
             return HttpResponseRedirect(folder.get_absolute_url())
     else:
         form = FolderOnlineResourceForm(instance=folderdocument, initial={'portlet': portlet })

@@ -328,7 +328,7 @@ UN_PUBLISHED = 4
 
 PUBLICATION_STATE_CHOICES = (
     (PORTLET, _('Portlet')),
-    (HIDDEN, _('Grey')),
+    (HIDDEN, _('Hidden')),
     (DRAFT, _('Draft')),
     (SUBMITTED, _('Submitted')),
     (PUBLISHED, _('Published')),

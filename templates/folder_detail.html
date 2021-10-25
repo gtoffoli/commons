@@ -100,9 +100,11 @@ dl.eval dd:nth-child(even) {
                       <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
                     {% endif %}
                     {% endif %}
+{% comment %}
                     {% if folderdocument.state == -3 %}
                     <li class="marginR10 font12">Portlet</li>
                     {% endif %}
+{% endcomment %}
                  </ul>
                </div>
              </div>
