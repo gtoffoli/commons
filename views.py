@@ -1781,6 +1781,14 @@ def project_add_member(request, project_slug):
                 membership.save()
                 project.remove_member(user)
             track_action(request, user, 'Approve', membership, target=project)
+            if project.get_type_name() == 'com':
+                project_type_name = 'community'
+            else:
+                project_type_name = 'project'
+            subject = 'You are a new member of the {} "{}" in CommonSpaces.'.format(project_type_name, project.name)
+            body = """{} has added you as a member to the {} "{}" in CommonSpaces.\nIts web address is {}{}""".format(user.get_display_name(), project_type_name, project.name, request.get_host(), project.get_absolute_url())
+            recipients = [user_to_add]
+            notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def bulk_add_member(request, project, record, email_validator):
