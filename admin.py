@@ -23,6 +23,7 @@ from tinymce.widgets import TinyMCE
 from .documents import DocumentType, Document, DocumentVersion
 from .models import Tag, UserProfile, UserPreferences, Folder, FolderDocument, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
+from .models import SiteObject
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
 from .metadata import QualityFacet
 
@@ -283,7 +284,10 @@ class FeaturedAdmin(admin.ModelAdmin):
             assert not (obj.lead and leads)
             assert obj.lead or leads
         obj.save()
-    
+
+class SiteObjectAdmin(admin.ModelAdmin):
+    list_display = ('id', 'site', 'content_type', 'object_id')
+
 admin.site.register(DocumentType, DocumentTypeAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentVersion, DocumentVersionAdmin)
@@ -307,6 +311,9 @@ admin.site.register(PathNode, PathNodeAdmin)
 admin.site.register(PathEdge, PathEdgeAdmin)
 admin.site.register(LearningPath, LearningPathAdmin)
 admin.site.register(SharedLearningPath, SharedLearningPathAdmin)
+
+admin.site.register(SiteObject, SiteObjectAdmin)
+
 admin.site.register(Featured, FeaturedAdmin)
 
 from django.contrib.flatpages.admin import FlatPageAdmin

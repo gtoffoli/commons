@@ -14,12 +14,16 @@ else:
 import django
 DJANGO_VERSION = django.VERSION[0]
 
-HAS_MEETING = True
-HAS_ZINNIA = True
-HAS_SAML2 = True
+if not 'HAS_MEETING' in globals():
+    HAS_MEETING = True
+if not 'HAS_ZINNIA' in globals():
+    HAS_ZINNIA = True
+if not 'HAS_SAML2' in globals():
+    HAS_SAML2 = True
 if HAS_SAML2:
     from commons.sso_config import *
-HAS_EARMASTER = True
+if not 'HAS_EARMASTER' in globals():
+    HAS_EARMASTER = True
 
 from commons.private import *
 if IS_LINUX:
@@ -28,7 +32,10 @@ else:
     DEBUG = True
     TEMPLATE_STRING_IF_INVALID = '%s'
 
-PROJECT_ROOT = os.path.dirname(__file__)
+if not 'BASE_DIR' in globals():
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if not 'PROJECT_ROOT' in globals():
+    PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
 
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
@@ -75,6 +82,7 @@ USER_LASTSEEN_TIMEOUT = 60 * 60 * 24 * 7
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'commons.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -176,8 +184,6 @@ if DEBUG and DEBUG_TOOLBAR:
 MIGRATION_MODULES = {
     'roles': None,
 }
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 YARN_ROOT_PATH = PROJECT_ROOT
 YARN_STATIC_FILES_PREFIX = 'yarn'

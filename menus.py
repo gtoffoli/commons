@@ -2,6 +2,10 @@ from menu import Menu, MenuItem
 from django.utils.translation import gettext_lazy as _
 from django.utils.text import capfirst
 # from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.utils.text import format_lazy
+def string_concat(*strings):
+    return format_lazy('{}' * len(strings), *strings)
 
 def community_children(request):
     children = []
@@ -9,10 +13,16 @@ def community_children(request):
          capfirst(_("the CommonS project")),
          url='/info/about/',
         ))
-    children.append (MenuItem(
-         capfirst(_("press releases")),
-         url='/press_releases/',
-        ))
+    if not settings.SITE_ID == 1:
+        children.append (MenuItem(
+             capfirst(string_concat(_('the site'), ' ', settings.SITE_NAME)),
+             url='/info/'+settings.SITE_NAME.lower()+'/',
+            ))
+    if settings.SITE_ID == 1:
+        children.append (MenuItem(
+             capfirst(_("press releases")),
+             url='/press_releases/',
+            ))
     children.append (MenuItem(
          capfirst(_("blog")),
          url='/weblog/',
@@ -25,14 +35,15 @@ def community_children(request):
 
 def projects_children(request):
     children = []
-    children.append (MenuItem(
-         capfirst(_("all communities")),
-         url='/cops/',
+    if settings.SITE_ID == 1:
+        children.append (MenuItem(
+             capfirst(_("all communities")),
+             url='/cops/',
+            ))
+        children.append (MenuItem(
+             capfirst(_("browse mentors")),
+             url='/browse_mentors/',
         ))
-    children.append (MenuItem(
-         capfirst(_("browse mentors")),
-         url='/browse_mentors/',
-    ))
     children.append (MenuItem(
          capfirst(_("projects")),
          url='/projects/search',
@@ -58,7 +69,6 @@ def projects_children(request):
     return children
 
 def search_children(request):
-    user = request.user
     children = []
     children.append (MenuItem(
          capfirst(_("all resources")),
@@ -73,10 +83,11 @@ def search_children(request):
          capfirst(_("open resources")),
          url='/oers/search/',
         ))
-    children.append (MenuItem(
-         capfirst(_("source repositories")),
-         url='/repos/search/',
-        ))
+    if settings.SITE_ID == 1:
+        children.append (MenuItem(
+             capfirst(_("source repositories")),
+             url='/repos/search/',
+            ))
     return children
 
 def my_children(request):
@@ -197,7 +208,8 @@ Menu.add_item("main", MenuItem(capfirst(_("library")),
                                check=True,
                                children=search_children,
                                separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
+if settings.SITE_ID == 1:
+    Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
                                url='/p',
                                weight=30,
                                check=lambda request: request.user.is_authenticated and request.user.is_full_member(),

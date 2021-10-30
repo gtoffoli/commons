@@ -34,6 +34,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.flatpages.models import FlatPage
+from django.contrib.sites.models import Site
 
 from mptt.models import MPTTModel
 from mptt.fields import TreeForeignKey
@@ -209,6 +210,23 @@ def create_favorites(sender, instance, created, **kwargs):
     if created:
         Favorites.objects.create(user=instance)
 """
+
+# a table mapping objects to sites
+class SiteObject(models.Model):
+    site = models.ForeignKey(Site, on_delete=models.PROTECT)
+    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
+    object_id = models.IntegerField()
+
+    class Meta:
+        verbose_name = _("Site-object mapping")
+        verbose_name_plural = _("Sites-objects map")
+
+# map an object to a site other than # 1
+def add_to_site(obj):
+    if not settings.SITE_ID == 1:
+        site = Site.objects.get(id=settings.SITE_ID)
+        site_object = SiteObject(site=site, content_type=ContentType.objects.get_for_model(obj), object_id=obj.id)
+        site_object.save()
 
 @python_2_unicode_compatible
 class Tag(models.Model):

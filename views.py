@@ -51,6 +51,7 @@ from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOS
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
+from .models import add_to_site
 from .metadata import QualityFacet
 from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
 from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
@@ -1557,6 +1558,7 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                         project.mentoring_model = MENTORING_MODEL_B
                     set_original_language(project)
                     project.save()
+                    add_to_site(project)
                     group = Group.objects.get(pk=group_id)
                     group.name='%s-%s' % (project.id, slugify(project.name[:50]))
                     group.save()
@@ -2196,6 +2198,7 @@ def repo_save(request, repo=None):
                     track_action(request, request.user, 'Edit', repo)
                 else:
                     track_action(request, request.user, 'Create', repo)
+                    add_to_site(repo)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/repo/%s/' % repo.slug)
                 else:
@@ -2799,6 +2802,7 @@ def oer_edit(request, oer_id=None, project_id=None):
                     track_action(request, request.user, 'Edit', oer, target=oer.project)
                 else:
                     track_action(request, request.user, 'Create', oer, target=oer.project)
+                    add_to_site(oer)
                 action = '/oer/%s/edit/' % oer.slug
                 if request.POST.get('save', ''):
                     return HttpResponseRedirect('/oer/%s/' % oer.slug)
@@ -3537,6 +3541,7 @@ def lp_edit(request, lp_id=None, project_id=None):
                     track_action(request, request.user, 'Edit', lp, target=lp.project)
                 else:
                     track_action(request, request.user, 'Create', lp, target=lp.project)
+                    add_to_site(lp)
                 lp = get_object_or_404(LearningPath, id=lp.id)
                 action = '/lp/%s/edit/' % lp.slug
                 if request.POST.get('save', ''): 
