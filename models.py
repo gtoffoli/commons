@@ -26,6 +26,7 @@ from django.dispatch import receiver
 from django.db import models
 from django.db.models import Max
 from django.db.models.signals import pre_save, post_save
+from django.db.models import QuerySet
 from django.db import transaction
 from django.core.validators import URLValidator
 from django.template.defaultfilters import slugify
@@ -211,6 +212,9 @@ def create_favorites(sender, instance, created, **kwargs):
         Favorites.objects.create(user=instance)
 """
 
+def flatpage_get(self, url):
+    pass
+
 # a table mapping objects to sites
 class SiteObject(models.Model):
     site = models.ForeignKey(Site, on_delete=models.PROTECT)
@@ -227,6 +231,17 @@ def add_to_site(obj):
         site = Site.objects.get(id=settings.SITE_ID)
         site_object = SiteObject(site=site, content_type=ContentType.objects.get_for_model(obj), object_id=obj.id)
         site_object.save()
+
+def filter_by_site(qs, model, user_id=False):
+    if settings.SITE_ID > 1:
+        content_type = ContentType.objects.get_for_model(model)
+        ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
+        if user_id:
+            qs = qs.filter(user_id__in=ids)
+        else:
+            qs = qs.filter(id__in=ids)
+    return qs
+QuerySet.filter_by_site = filter_by_site
 
 @python_2_unicode_compatible
 class Tag(models.Model):

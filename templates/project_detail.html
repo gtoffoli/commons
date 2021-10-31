@@ -338,7 +338,9 @@
                                         {% if not project.forum %}
                                             <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/"><i class="fa fa-comment-o" aria-hidden="true"></i> {% if proj_is_com %} {% trans "community"|capfirst %} {% else %} {% trans "project"|capfirst %}{% endif %}</a></li>
                                         {% endif %}
+                                        {% if not is_virtual_site %}
                                             <li class="marginB5"><a class="btn btn-default" href="/project/{{ project.id }}/create_forum/?thematic=true"><i class="fa fa-comment-o" aria-hidden="true"></i> {% trans "thematic" %}</a></li>
+                                        {% endif %}
                                         </ul>
                                     </li>
                                 </ul>
@@ -450,6 +452,11 @@
                         </li>
                     </ul>
                 {% endif %}
+            {% endif %}
+            {% if is_virtual_site %}
+                <div class="panel-white">
+                {{ flat_page.content|safe }}
+                </div>
             {% endif %}
             </div>
             <div class="col-sm-5 col-md-5 col-lg-4">

@@ -7,17 +7,22 @@ from django.utils.text import format_lazy
 def string_concat(*strings):
     return format_lazy('{}' * len(strings), *strings)
 
-def community_children(request):
+def about_children(request):
     children = []
+    if not settings.SITE_ID == 1:
+        children.append (MenuItem(
+             # capfirst(string_concat(_('the site'), ' ', settings.SITE_NAME)),
+             capfirst(_("this site")),
+             url='/'+settings.SITE_NAME.lower()+'/info/',
+            ))
     children.append (MenuItem(
          capfirst(_("the CommonS project")),
          url='/info/about/',
         ))
-    if not settings.SITE_ID == 1:
-        children.append (MenuItem(
-             capfirst(string_concat(_('the site'), ' ', settings.SITE_NAME)),
-             url='/info/'+settings.SITE_NAME.lower()+'/',
-            ))
+    children.append (MenuItem(
+         capfirst(_("the platform")),
+         url='/info/platform/',
+         ))
     if settings.SITE_ID == 1:
         children.append (MenuItem(
              capfirst(_("press releases")),
@@ -27,10 +32,6 @@ def community_children(request):
          capfirst(_("blog")),
          url='/weblog/',
         ))
-    children.append (MenuItem(
-         capfirst(_("the platform")),
-         url='/info/platform/',
-         ))
     return children
 
 def projects_children(request):
@@ -54,27 +55,23 @@ def projects_children(request):
          url='/resources/contributors/',
         ))
     """
-    children.append (MenuItem(
+    if settings.SITE_ID == 1:
+        children.append (MenuItem(
          capfirst(_("forums")),
          url='/forum/',
         ))
-    children.append (MenuItem(
-         capfirst(_("browse people")),
-         url='/browse_people/',
-        ))
+        children.append (MenuItem(
+             capfirst(_("browse people")),
+             url='/browse_people/',
+            ))
     children.append (MenuItem(
          capfirst(_("search people")),
          url='/people/search/',
         ))
     return children
 
-def search_children(request):
+def resources_children(request):
     children = []
-    children.append (MenuItem(
-         capfirst(_("all resources")),
-         # url='/repos/',
-         url='/browse/',
-        ))
     children.append (MenuItem(
          capfirst(_("learning paths")),
          url='/lps/search/',
@@ -88,6 +85,11 @@ def search_children(request):
              capfirst(_("source repositories")),
              url='/repos/search/',
             ))
+    children.append (MenuItem(
+         capfirst(_("all resources")),
+         # url='/repos/',
+         url='/browse/',
+        ))
     return children
 
 def my_children(request):
@@ -194,19 +196,19 @@ Menu.add_item("main", MenuItem(capfirst(_("about")),
                                url='/p',
                                weight=30,
                                check=True,
-                               children=community_children,
+                               children=about_children,
                                separator=True))
-Menu.add_item("main", MenuItem(capfirst(_("communities")),
+Menu.add_item("main", MenuItem(capfirst(_("projects")),
                                url='/p',
                                weight=30,
                                check=True,
                                children=projects_children,
                                separator=True))     
-Menu.add_item("main", MenuItem(capfirst(_("library")),
+Menu.add_item("main", MenuItem(capfirst(_("resources")),
                                url='/p',
                                weight=30,
                                check=True,
-                               children=search_children,
+                               children=resources_children,
                                separator=True))
 if settings.SITE_ID == 1:
     Menu.add_item("main", MenuItem(capfirst(_("my spaces")),

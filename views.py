@@ -26,15 +26,18 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User, Group
+from django.contrib.sites.shortcuts import get_current_site
 from allauth.account.models import EmailAddress
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http import Http404
 from django.shortcuts import render, get_object_or_404
 from django.utils.text import capfirst
 from django.utils.translation import pgettext, gettext_lazy as _
 from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage
+from django.contrib.flatpages.views import flatpage, render_flatpage
 from datatrans.utils import get_current_language
 import actstream
 
@@ -100,6 +103,43 @@ actstream.registry.register(Entry)
 actstream.registry.register(Author)
 actstream.registry.register(Topic)
 actstream.registry.register(Post)
+
+# patching flatpages.views.flatpage to fetch the flatpage associated to site 1 as a default
+def new_flatpage_view(request, url):
+    """
+    Public interface to the flat page view.
+
+    Models: `flatpages.flatpages`
+    Templates: Uses the template defined by the ``template_name`` field,
+        or :template:`flatpages/default.html` if template_name is not defined.
+    Context:
+        flatpage
+            `flatpages.flatpages` object
+    """
+    if not url.startswith('/'):
+        url = '/' + url
+    language_prefixes = ['/%s/' % language[0] for language in settings.LANGUAGES]
+    if url[:4] in language_prefixes:
+        url = url[4:]
+    site_id = get_current_site(request).id
+    try:
+        f = get_object_or_404(FlatPage,
+            url=url, sites=site_id)
+    except Http404:
+        try:
+            f = get_object_or_404(FlatPage,
+                url=url, sites=1)
+        except Http404:
+            if not url.endswith('/') and settings.APPEND_SLASH:
+                url += '/'
+                f = get_object_or_404(FlatPage,
+                    url=url, sites=site_id)
+                return HttpResponsePermanentRedirect('%s/' % request.path)
+            else:
+                raise
+    return render_flatpage(request, f)
+
+flatpage.__code__ = new_flatpage_view.__code__
 
 def robots(request):
     response = render(request, 'robots.txt')
@@ -697,6 +737,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
     min_oers = min_lps = min_members = 0
     n_members = n_lps = n_oers = 0
     qs = Project.objects.exclude(state=PROJECT_DELETED).filter(proj_type_id__in=[2,3])
+    qs = qs.filter_by_site(Project)
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -1127,12 +1168,11 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     proj_type_name = project.get_type_name()
     proj_is_com = proj_type_name == 'com'
     var_dict = {'project': project, 'proj_type': proj_type, 'proj_type_name': proj_type_name, 'proj_is_com' : proj_is_com}
-    """
-    proj_types = ProjType.objects.filter(public=True)
-    if not user.is_superuser:
-        proj_types = proj_types.exclude(name='com') 
-    var_dict['proj_types'] = proj_types
-    """
+    if settings.SITE_ID>1 and proj_is_com and project.get_level()==1:
+        var_dict['flat_page'] = FlatPage.objects.get(url='/{}/home/'.format(settings.SITE_NAME.lower()))
+        var_dict['is_virtual_site'] = True
+    else:
+        var_dict['is_virtual_site'] = False
     if proj_type_name == 'roll':
         var_dict['roll_info'] = FlatPage.objects.get(url='/infotext/mentors/').content
         var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
@@ -1166,19 +1206,19 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['is_parent_admin'] = is_parent_admin = parent and parent.is_admin(user)
         is_community_admin = project.is_admin_community (user)
         if is_admin or is_parent_admin or is_community_admin or user.is_superuser:
-            if proj_type_name == 'com':
+            if proj_is_com:
                 var_dict['communities_children'] = project.get_children(proj_type_name='com')
             var_dict['projects_children'] = project.get_children()
             var_dict['projects_support_children'] = project.get_children(proj_type_name='sup')
             var_dict['proj_type_sup'] = ProjType.objects.get(name='sup')
             var_dict['proj_type_lp'] = ProjType.objects.get(name='lp')
         elif is_member:
-            if proj_type_name == 'com':
+            if proj_is_com:
                 var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
             var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
             var_dict['projects_support_children'] = project.get_children(proj_type_name='sup',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         else:
-            if proj_type_name == 'com':
+            if proj_is_com:
                 var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
             var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         senior_admin = user==project.get_senior_admin()
@@ -1214,9 +1254,9 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['can_create_project'] = project.can_create_project(request)
         var_dict['view_shared_folder'] = view_shared_folder = is_member or is_parent_admin or is_community_admin or user.is_superuser
         var_dict['view_contents'] = view_shared_folder
-        if proj_type.name in 'ment': 
+        if proj_type.name in ['ment']: 
             var_dict['can_send_message'] = is_member and (is_open or is_closed)
-        elif not proj_type.name in 'com':
+        elif not proj_type.name in ['com']:
             var_dict['can_send_message'] = is_member and is_open
         else:
             var_dict['can_send_message'] = False
@@ -1239,7 +1279,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         if proj_type_name=='roll':
             var_dict['profile_mentoring'] = profile and profile.mentoring or None
             var_dict['can_apply'] = is_open and parent.is_member(user) and not membership
-        if proj_type_name=='com':
+        if proj_is_com:
             if is_admin or user.is_superuser:
                 var_dict['roll'] = roll = project.get_roll_of_mentors()
             else:
@@ -1303,7 +1343,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
                 var_dict['requested_mentor_refuse'] = can_accept_mentor and ProjectMember.objects.filter(project=project, state=0, user = user).exclude(refused=None)
                 var_dict['is_mentee'] = is_mentee = mentee_user == user
                 if (is_mentee or is_parent_admin) and requested_mentor:
-                   var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
+                    var_dict['selected_mentor'] = UserProfile.objects.get(pk=requested_mentor.user_id)
                 if can_accept_mentor:
                     if (accept_mentor_form):
                         var_dict['accept_mentor_form'] = AcceptMentorForm(accept_mentor_form['post'], instance=project)
@@ -1399,7 +1439,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         elif proj_type_name=='sup':
             var_dict['support'] = project
     else:
-        if proj_type_name=='com':
+        if proj_is_com:
             var_dict['roll'] = roll = project.get_roll_of_mentors(states=[PROJECT_OPEN, PROJECT_CLOSED,])
             var_dict['communities_children'] = project.get_children(proj_type_name='com',states=[PROJECT_OPEN,PROJECT_CLOSED,PROJECT_DELETED])
         var_dict['projects_children'] = project.get_children(states=[PROJECT_OPEN,PROJECT_CLOSED])
@@ -2298,7 +2338,9 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                n = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
+                qs = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                qs = qs.filter_by_site(LearningPath)
+                n = qs.count()
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2306,7 +2348,9 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label= pgettext(RequestContext(request), entry[1])
-                n = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
+                qs = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                qs = qs.filter_by_site(LearningPath)
+                n = qs.count()
                 if n:
                     entries.append([code, label, '', n])
         if entries:
@@ -2337,7 +2381,9 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                n = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED).count()
+                qs = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                qs = qs.filter_by_site(OER)
+                n = qs.count()
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2345,39 +2391,42 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                n = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED).count()
+                qs = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                qs = qs.filter_by_site(OER)
+                n = qs.count()
                 if n:
                     entries.append([code, label, '', n])
         if entries:
             oers_browse_list.append([field_name, field_label, entries])
-    form = RepoSearchForm
-    field_names = ['features', 'languages', 'subjects', 'repo_type',]
     repos_browse_list = []
-    base_fields = form.base_fields
-    for field_name in field_names:
-        field = base_fields[field_name]
-        field_label = pgettext(RequestContext(request), field.label)
-        queryset = field.queryset
-        entries = []
-        for entry in queryset:    
-            try:
-                code = entry.code
-                label = entry.name
-            except:
+    if settings.SITE_ID == 1:
+        form = RepoSearchForm
+        field_names = ['features', 'languages', 'subjects', 'repo_type',]
+        base_fields = form.base_fields
+        for field_name in field_names:
+            field = base_fields[field_name]
+            field_label = pgettext(RequestContext(request), field.label)
+            queryset = field.queryset
+            entries = []
+            for entry in queryset:    
                 try:
-                    label = entry.description
-                    code = entry.id
-                except:
+                    code = entry.code
                     label = entry.name
-                    code = entry.id
-            try:
-                prefix = '-' * entry.level
-            except:
-                prefix = ''
-            n = Repo.objects.filter(Q(**{field_name: entry}) & Q(state=PUBLISHED)).count()
-            if n:
-                entries.append([code, label, prefix, n])
-        repos_browse_list.append([field_name, field_label, entries])
+                except:
+                    try:
+                        label = entry.description
+                        code = entry.id
+                    except:
+                        label = entry.name
+                        code = entry.id
+                try:
+                    prefix = '-' * entry.level
+                except:
+                    prefix = ''
+                n = Repo.objects.filter(Q(**{field_name: entry}) & Q(state=PUBLISHED)).count()
+                if n:
+                    entries.append([code, label, prefix, n])
+            repos_browse_list.append([field_name, field_label, entries])
     return render(request, 'browse.html', {'lps_browse_list': lps_browse_list, 'oers_browse_list': oers_browse_list, 'repos_browse_list': repos_browse_list,})
 
 @page_template('_people_index_page.html')
@@ -2485,6 +2534,7 @@ def people_search(request, template='search_people.html', extra_context=None):
         qs = UserProfile.objects.filter(user__is_active=True)
         for q in qq:
             qs = qs.filter(q)
+        qs = qs.filter_by_site(UserProfile, user_id=True)
         qs = qs.distinct()
         for profile in qs:
             if profile.get_completeness():
@@ -2492,6 +2542,7 @@ def people_search(request, template='search_people.html', extra_context=None):
     else:
         form = PeopleSearchForm()
         qs = UserProfile.objects.filter(user__is_active=True)
+        qs = qs.filter_by_site(UserProfile, user_id=True)
         qs = qs.distinct()
         for profile in qs:
             if profile.get_completeness():
@@ -4034,6 +4085,7 @@ def repos_search(request, template='search_repos.html', extra_context=None):
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PUBLISHED)
+        qs = qs.filter_by_site(Repo)
         repos = qs.distinct().order_by('name')
     else:
         form = RepoSearchForm()
@@ -4227,10 +4279,13 @@ def oers_search(request, template='search_oers.html', extra_context=None):
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PUBLISHED)
-        oers = qs.distinct().order_by('title')
+        qs = qs.filter_by_site(OER)
+        oers = qs.distinct()
     else:
         form = OerSearchForm()
-        oers = OER.objects.filter(state=PUBLISHED).distinct().order_by('title')
+        qs = OER.objects.filter(state=PUBLISHED).distinct()
+        qs = qs.filter_by_site(OER)
+        oers = qs.distinct().order_by('title')
         request.session["post_dict"] = {}
 
     oers = sorted(oers, key = lambda x: x.title.strip())
@@ -4325,6 +4380,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
             qs = qs.filter(q)
         if not include_all:
             qs = qs.filter(state=PUBLISHED)
+        qs = qs.filter_by_site(LearningPath)
         lps = qs.distinct().order_by('title')
     else:
         form = LpSearchForm()
@@ -4332,7 +4388,9 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         query = Q(state=PUBLISHED)
         for q in qq:
             query = query & q
-        lps = LearningPath.objects.filter(query).distinct().order_by('title')
+        qs = LearningPath.objects.filter(query)
+        qs = qs.filter_by_site(LearningPath)
+        lps = qs.distinct().order_by('title')
         request.session["post_dict"] = {}
 
     context = {'lps': lps, 'n_lps': len(lps), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}

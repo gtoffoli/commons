@@ -10,6 +10,9 @@
    <div class="marginTB30">
    <h1 class="text-center marginT0 marginB20">{% trans "educational library"|capfirst %}</h1>
    <div class="panel-group" id="accordion">
+   {% if not lps_browse_list and not oers_browse_list and not repos_browse_list %}
+   {% trans "no resources were found"|capfirst %}.
+   {% endif %}
    {% if lps_browse_list %}
       <div class="panel panel-c1">
          <div class="panel-heading">
