@@ -65,6 +65,7 @@ def user_project_tree(project_tree, user_projects):
 def my_projects(request):
     user = request.user
     communities = Project.objects.filter(proj_type__name='com', state=PROJECT_OPEN, group__level=1).order_by ('name')
+    communities = communities.filter_by_site(Project)
     memberships = ProjectMember.objects.filter(user=user, state=1)
     user_projects = [m.project for m in memberships]
     user_projects = [project for project in user_projects if not project.proj_type.name=='com']
@@ -107,14 +108,21 @@ def my_contents_view(request):
 
 def user_contents(user):
     oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    oers = oers.filter_by_site(OER)
     shared = SharedOer.objects.filter(user=user).order_by('-created')
+    shared = shared.filter_by_site(SharedOer)
     shared_oers = [s.oer for s in shared]
     personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    personal_oers = personal_oers.filter_by_site(OER)
     lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    lps = lps.filter_by_site(LearningPath)
     shared = SharedLearningPath.objects.filter(user=user).order_by('-created')
+    shared = shared.filter_by_site(SharedLearningPath)
     shared_lps = [s.lp for s in shared]
     personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
+    personal_lps = personal_lps.filter_by_site(LearningPath)
     folder_docs = FolderDocument.objects.filter(user=user).order_by('-folder__created','-created')
+    folder_docs = folder_docs.filter_by_site(FolderDocument)
     docs = filter_documents(folder_docs)
     contents = {}
     contents['lps'] = [{'obj_id': lp.id, 'obj_type': 'lp', 'label': lp.title, 'url': lp.get_absolute_url()} for lp in lps]

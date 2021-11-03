@@ -38,15 +38,20 @@ def projects_children(request):
     children = []
     if settings.SITE_ID == 1:
         children.append (MenuItem(
-             capfirst(_("all communities")),
-             url='/cops/',
-            ))
+         capfirst(_("all communities")),
+         url='/cops/',
+        ))
         children.append (MenuItem(
              capfirst(_("browse mentors")),
              url='/browse_mentors/',
         ))
+    else:
+        children.append (MenuItem(
+         capfirst(_("projects tree")),
+         url='/cops/',
+        ))
     children.append (MenuItem(
-         capfirst(_("projects")),
+         capfirst(_("search projects")),
          url='/projects/search',
         ))
     """

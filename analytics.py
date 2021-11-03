@@ -260,6 +260,20 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
             actions = actions.filter(timestamp__gt=from_time)
     if not no_sort:
         actions = actions.order_by('-timestamp')
+
+    if settings.SITE_ID > 1:
+        all_actions = actions
+        actions = []
+        for action in all_actions:
+            if action.action_object:
+                if action.action_object.get_site() == settings.SITE_ID:
+                    actions.append(action)
+                    continue
+            if action.target:
+                if action.target.get_site() == settings.SITE_ID:
+                    actions.append(action)
+                    continue
+
     if max_actions:
         actions = actions[:max_actions]
 
@@ -494,7 +508,6 @@ def get_similarity(userprofile_dict, profile_2, max_score):
         if not field_score:
             missed_score += weight
             if missed_score >= min_score:
-                # print(min_score, missed_score)
                 break
     return score/max_score, matches
 

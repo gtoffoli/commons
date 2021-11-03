@@ -54,7 +54,7 @@ from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOS
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from .models import add_to_site
+from .models import add_to_site, site_member_users
 from .metadata import QualityFacet
 from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
 from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
@@ -274,9 +274,13 @@ class FeaturedAutocompleteView(Select2QuerySetSequenceView):
         if self.q:
             # Get querysets
             projects = Project.objects.filter(name__icontains=self.q)
+            projects = projects.filter_by_site(Project)
             lps = LearningPath.objects.filter(title__icontains=self.q)
+            lps = lps.filter_by_site(LearningPath)
             oers = OER.objects.filter(title__icontains=self.q)
+            oers = oers.filter_by_site(OER)
             entries = Entry.objects.filter(title__icontains=self.q)
+            entries = entries.filter_by_site(Entry)
 
             # Aggregate querysets
             qs = QuerySetSequence(projects, lps, oers, entries,)
@@ -348,8 +352,12 @@ def user_profile(request, username, user=None):
         
     MAX_LIKES = 10
     com_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com', project__state__in=(2,3)).order_by('project__name')
+    com_memberships = com_memberships.filter_by_site(ProjectMember)
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
+    roll_memberships = roll_memberships.filter_by_site(ProjectMember)
+
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp',), project__state__in=(2,3)).order_by('project__name')
+    memberships = memberships.filter_by_site(ProjectMember)
     if user.is_authenticated and user==request.user:
         can_edit = True
     else:
@@ -368,9 +376,11 @@ def user_profile(request, username, user=None):
         var_dict['complete_profile'] = False
 
     if profile and profile.get_completeness():
-        # var_dict['likes'] = profile.get_likes()[1:MAX_LIKES+1]
-        likes = get_likes(profile)[:MAX_LIKES]
-        var_dict['likes'] = [[score, profile.user, profile.avatar] for score, profile in likes]
+        if settings.SITE_ID == 1:
+            likes = get_likes(profile)[:MAX_LIKES]
+            var_dict['likes'] = [[score, profile.user, profile.avatar] for score, profile in likes]
+        else:
+            var_dict['likes'] = []
      
     if request.user.is_authenticated:
         if not profile or not request.user == profile.user:
@@ -391,6 +401,7 @@ def user_strict_profile(request, username):
         return HttpResponseRedirect('/profile_strict/anonymous/')
 
     roll_memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll', project__state__in=(2,3)).order_by('project__name')
+    roll_memberships = roll_memberships.filter_by_site(ProjectMember)
     profile = user.get_profile()
     var_dict = {'profile_user': user, 'profile': profile, 'roll_memberships': roll_memberships }
     return render(request, 'user_strict_profile.html', var_dict)
@@ -399,6 +410,10 @@ def user_dashboard(request, username, user=None):
     if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')
     var_dict = {}
+    if settings.SITE_ID == 1:
+        var_dict['is_virtual_site'] = False
+    else:
+        var_dict['is_virtual_site'] = True
     var_dict['user'] = user = request.user
     var_dict['profile'] = profile = user.get_profile()
     var_dict['best_mentors'] = ''
@@ -409,6 +424,7 @@ def user_dashboard(request, username, user=None):
     else:
         var_dict['complete_profile'] = False
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='com').order_by('project__state','-project__created')
+    memberships = memberships.filter_by_site(ProjectMember)
     
     com_adminships = []
     com_only_memberships = []
@@ -421,6 +437,7 @@ def user_dashboard(request, username, user=None):
     var_dict['com_adminships'] = com_adminships
     var_dict['com_only_memberships'] = com_only_memberships
     memberships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name__in=('oer','lp','sup',)).order_by('project__state','-project__created')
+    memberships = memberships.filter_by_site(ProjectMember)
     adminships = []
     adminlps = []
     adminOers = []
@@ -440,13 +457,20 @@ def user_dashboard(request, username, user=None):
     var_dict['adminships'] = adminships
     var_dict['only_memberships'] = only_memberships
 
-    var_dict['com_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
-    var_dict['proj_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
-    var_dict['roll_applications'] = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='roll').order_by('project__created')
+    memberships = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='com').order_by('project__created')
+    var_dict['com_applications'] = memberships.filter_by_site(ProjectMember)
+    memberships = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name__in=('oer','lp')).order_by('project__created')
+    var_dict['proj_applications'] = memberships.filter_by_site(ProjectMember)
+    memberships = ProjectMember.objects.filter(user=user, state=0, project__proj_type__name='roll').order_by('project__created')
+    var_dict['roll_applications'] = memberships.filter_by_site(ProjectMember)
 
-    var_dict['memberships'] = memberships = ProjectMember.objects.filter(user=user, state=1)
-    var_dict['applications'] = applications = ProjectMember.objects.filter(user=user, state=0)
+    memberships = ProjectMember.objects.filter(user=user, state=1)
+    var_dict['memberships'] = memberships = memberships.filter_by_site(ProjectMember)
+    
+    applications = ProjectMember.objects.filter(user=user, state=0)
+    var_dict['applications'] = applications = applications.filter_by_site(ProjectMember)
     rollmentorships = ProjectMember.objects.filter(user=user, state=1, project__proj_type__name='roll').order_by('project__state','-project__created')
+    rollmentorships = rollmentorships.filter_by_site(ProjectMember)
     adminrollmentorships = []
     only_rollmentorships = []
     for membership in rollmentorships:
@@ -463,10 +487,15 @@ def user_dashboard(request, username, user=None):
     var_dict['mentoring_rels_mentoring_request'] = get_mentoring_requests(user)
     var_dict['mentoring_rels_mentoring_requests_waiting'] = get_mentoring_requests_waiting(user)
     var_dict['oers'] = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    var_dict['oers'] = var_dict['oers'].filter_by_site(OER)
     var_dict['oers_admin'] = OER.objects.filter(project__in=adminOers, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
+    var_dict['oers_admin'] = var_dict['oers_admin'].filter_by_site(OER)
     var_dict['oer_evaluations'] = OerEvaluation.objects.filter(user=user).order_by('-modified')
+    var_dict['oer_evaluations'] = var_dict['oer_evaluations'].filter_by_site(OER)
     var_dict['lps'] = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
+    var_dict['lps'] = var_dict['lps'].filter_by_site(LearningPath)
     var_dict['lps_admin'] = LearningPath.objects.filter(project__in=adminlps, state__in=[DRAFT,SUBMITTED,UN_PUBLISHED]).order_by('-state','-modified')
+    var_dict['lps_admin'] = var_dict['lps_admin'].filter_by_site(LearningPath)
     var_dict['my_lps'] = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     var_dict['my_oers'] = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
 
@@ -697,6 +726,7 @@ def mailing_list(request):
 
 def cops_tree(request):
     communities = Project.objects.filter(proj_type__name='com', state=PROJECT_OPEN, group__level=1).order_by ('name')
+    communities = communities.filter_by_site(Project)
     root = Project.objects.get(slug='commons')
     tree = [root, [project_tree_as_list(community) for community in communities]]
     info = FlatPage.objects.get(url='/info/communities/').content
@@ -750,6 +780,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
             communities = post_dict.get('communities', [])
             if communities:
                 comm_objects = Project.objects.filter(id__in=communities)
+                comm_objects = comm_objects.filter_by_site(Project)
                 comm_groups = [comm.group for comm in comm_objects]
                 proj_groups = []
                 for comm_group in comm_groups:
@@ -789,6 +820,7 @@ def projects_search(request, template='search_projects.html', extra_context=None
                 communities = post.getlist('communities')
                 if communities:
                     comm_objects = Project.objects.filter(id__in=communities)
+                    comm_objects = comm_objects.filter_by_site(Project)
                     comm_groups = [comm.group for comm in comm_objects]
                     proj_groups = []
                     for comm_group in comm_groups:
@@ -2175,9 +2207,13 @@ def repo_detail_by_slug(request, repo_slug):
 def resources_by(request, username):
     user = get_object_or_404(User, username=username)
     lps = LearningPath.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    lps = lps.filter_by_site(LearningPath)
     oer_evaluations = OerEvaluation.objects.filter(user=user).order_by('-modified')
+    oer_evaluations = oer_evaluations.filter_by_site(OerEvaluation)
     oers = OER.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    oers = oers.filter_by_site(OER)
     repos = Repo.objects.filter(creator=user, state=PUBLISHED).order_by('-created')
+    repos = repos.filter_by_site(Repo)
     return render(request, 'resources_by.html', {'lps': lps, 'oer_evaluations': oer_evaluations,'oers': oers, 'repos': repos, 'submitter': user})
 
 def project_results(request, project_slug):
@@ -2532,18 +2568,18 @@ def people_search(request, template='search_people.html', extra_context=None):
             form = PeopleSearchForm()
             request.session["post_dict"] = {}
         qs = UserProfile.objects.filter(user__is_active=True)
+        if settings.SITE_ID > 1:
+            qs = qs.filter(user__in=site_member_users())
         for q in qq:
             qs = qs.filter(q)
-        qs = qs.filter_by_site(UserProfile, user_id=True)
-        qs = qs.distinct()
         for profile in qs:
             if profile.get_completeness():
                 profiles.append(profile)
     else:
         form = PeopleSearchForm()
         qs = UserProfile.objects.filter(user__is_active=True)
-        qs = qs.filter_by_site(UserProfile, user_id=True)
-        qs = qs.distinct()
+        if settings.SITE_ID > 1:
+            qs = qs.filter(user__in=site_member_users())
         for profile in qs:
             if profile.get_completeness():
                 profiles.append(profile)
@@ -4439,6 +4475,7 @@ def repo_autocomplete(request):
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = Repo.objects.filter(state=PUBLISHED, name__icontains=q).order_by('name')
+            qs = qs.filter_by_site(Repo)
             results = [{'id': repo.id, 'text': repo.name[:80]} for repo in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
@@ -4451,6 +4488,7 @@ def oer_autocomplete(request):
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = OER.objects.filter(state=PUBLISHED, title__icontains=q).order_by('title')
+            qs = qs.filter_by_site(OER)
             results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
@@ -4463,6 +4501,7 @@ def lp_autocomplete(request):
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
             qs = LearningPath.objects.filter(state=PUBLISHED, project__proj_type__name = 'roll', title__icontains=q).order_by('title')
+            qs = qs.filter_by_site(LearningPath)
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')

@@ -78,6 +78,7 @@
             </div>
           {% endif %}
 
+{% if not is_virtual_site %}
           {% if roll_applications  %}
             <div class="panel-white">
               <div class="panel-heading-c0 padding510 demiBold">{% trans "pending applications to rolls of mentors"|capfirst %}</div>
@@ -90,6 +91,8 @@
               </div>
             </div>
           {% endif %}
+{% endif %}
+
           {% if com_adminships %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "admin of the following communities"|capfirst %}</div>
@@ -110,8 +113,9 @@
                 </ul>
               </div>
             </div>
-          {% endif%}
+          {% endif %}
 
+{% if not is_virtual_site %}
           {% if adminrollmentorships %}
             <div class="panel-white">
               <div class="panel-heading-c0 padding510 demiBold">{% trans "supervisor of the following rolls of mentors"|capfirst %}</div>
@@ -132,7 +136,8 @@
                 </ul>
               </div>
             </div>
-          {% endif%}
+          {% endif %}
+{% endif %}
 
           {% if adminships %}
             <div class="panel-white">
@@ -178,6 +183,7 @@
             </div>
           {% endif%}
 
+{% if not is_virtual_site %}
           {% if only_rollmentorships %}
             <div class="panel-white">
               <div class="panel-heading-c0 padding510 demiBold">{% trans "member of the following rolls of mentors"|capfirst %}</div>
@@ -202,7 +208,8 @@
                 <div class="padding510"><small>{% trans "no projects"|capfirst %}</small></div>
               {% endif %}
             </div>
-          {% endif%}
+          {% endif %}
+{% endif %}
 
           {% if only_memberships %}
             <div class="panel-white">
@@ -229,7 +236,8 @@
               {% endif %}
             </div>
           {% endif%}
-          
+
+{% if not is_virtual_site %}
            {% with rels=mentoring_rels_mentoring_request %}{% if rels %}
             <div class="panel-white">
               <div class="panel-heading-c4 padding510 demiBold">{% trans "mentoring requests in my communities"|capfirst %}</div>
@@ -321,6 +329,8 @@
               <div class="padding510"><small>{% trans "no fit mentors were found in the communities of which you are member"|capfirst %}</small></div>
             {% endif %}
           </div>
+{% endif %}
+
         </div>	
         <div class="col-sm-8 col-md-8 col-lg-8">
           <div class="panel-white">

@@ -232,16 +232,25 @@ def add_to_site(obj):
         site_object = SiteObject(site=site, content_type=ContentType.objects.get_for_model(obj), object_id=obj.id)
         site_object.save()
 
-def filter_by_site(qs, model, user_id=False):
+def filter_by_site(qs, model):
     if settings.SITE_ID > 1:
-        content_type = ContentType.objects.get_for_model(model)
-        ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
-        if user_id:
-            qs = qs.filter(user_id__in=ids)
+        if model == ProjectMember:
+            content_type = ContentType.objects.get_for_model(Project)
+            ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
+            qs = qs.filter(project_id__in=ids)
         else:
-            qs = qs.filter(id__in=ids)
+            content_type = ContentType.objects.get_for_model(model)
+            ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
+            if model == UserProfile:
+                qs = qs.filter(user_id__in=ids)
+            else:
+                qs = qs.filter(id__in=ids)
     return qs
 QuerySet.filter_by_site = filter_by_site
+
+def site_member_users():
+    projects = Project.objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,]).filter_by_site(Project)
+    return ProjectMember.objects.filter(project__in=projects).values_list('user', flat=True)
 
 @python_2_unicode_compatible
 class Tag(models.Model):
@@ -283,6 +292,14 @@ class Resource(models.Model):
     comment_count = models.IntegerField(
         _('comment count'), default=0)
     """
+
+    def get_site(self):
+        content_type = ContentType.objects.get_for_model(self)
+        sos = SiteObject.objects.filter(content_type=content_type, object_id=self.id)
+        if sos.count():
+            return sos[0].site.id
+        else:
+            return 1
 
     def enable_comments(self):
         self.comment_enabled = True
@@ -514,6 +531,9 @@ class Folder(MPTTModel):
             folder = folder.parent
         return '/folder' + url
 
+    def get_site(self):
+        return self.get_project().get_site()
+
     def get_breadcrumbs(self):
         folder = self
         breadcrumbs = [[folder, '%s/' % folder.slug]]
@@ -594,6 +614,10 @@ class FolderDocument(models.Model, Publishable):
 
     def get_absolute_url(self):
         return '%s%s/' % (self.folder.get_absolute_url(), self.slug)
+
+    def get_site(self):
+        return self.folder.get_site()
+
 
 GENDERS = (
    ('-', _('not specified')),
@@ -756,7 +780,7 @@ class UserProfile(models.Model):
                     if mentor == self.user:
                         continue
                     score, matches = self.get_mentor_fitness(mentor)
-                    print (score, matches)
+                    # print (score, matches)
                     if score > threshold:
                         avatar = mentor.get_profile().avatar
                         best_mentors.append([score, mentor, avatar])
@@ -1267,6 +1291,7 @@ class Project(Resource):
             return None
         membership = ProjectMember(project=self, user=user, editor=editor, state=state)
         membership.save()
+        add_to_site(membership)
         if not user in self.members(user_only=True):
             self.group.user_set.add(user)
         return membership
@@ -1476,6 +1501,9 @@ class ProjectMember(models.Model):
     def user_data(self):
         user=User.objects.filter(pk=self.user_id)
         return user and user[0] or None
+
+    def get_site(self):
+        return self.project.get_site()
    
 class ProjectMessage(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('project'), related_name='message_project')
@@ -2817,6 +2845,9 @@ class PathNode(node_factory('PathEdge')):
             title = self.label or flatpage.title
             text = '<h1 style="text-align: center;">%s</h1>\n%s' % (title, text)
         return text
+
+    def get_site(self):
+        return self.path.get_site()
 
     def make_json(self):
         # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
