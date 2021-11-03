@@ -52,4 +52,5 @@ def processor(request):
         'HAS_ZINNIA': settings.HAS_ZINNIA,
         'INBOX_COUNT': inbox_count,
         'BROWSER': browser,
+        'SITE_ID': settings.SITE_ID,
     }

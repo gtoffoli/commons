@@ -2,11 +2,21 @@
 {% load staticfiles %}
 {% load i18n %}
 
+<style>
+@font-face {
+  src: url('/static/commons/fonts/LeagueMonoVariable.ttf');
+  font-family:'LeagueMonoVariable';
+  font-style: normal;
+  font-stretch: 1% 500%; /* Required by Chrome */
+}
+</style>
+
   <div class="navbar navbar-inverse">
     <div class="container">
      <div class="navbar-header pull-left">
        <a class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
        <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
+       {% if SITE_ID > 1 %}<div style="display:inline; vertical-align:text-bottom; line-height:48px; color:white; font-family: LeagueMonoVariable,sans-serif; font-stretch: extra-expanded;"><span style="font-family:'Open Sans',sans-serif;">{% trans "for" %}</span> <span style="font-size:x-large; font-weight: normal;">{{ site_name }}</span></div>{% endif %}
      </div>
 
      {% if user.is_authenticated %}
