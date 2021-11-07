@@ -3,6 +3,13 @@ from six import BytesIO
 import urllib.request as urllib2
 
 import os
+
+def tree_to_list(tree):
+    list = [tree[0]]
+    for child in tree[1]:
+        list = list + tree_to_list(child)
+    return list
+
 if os.name == "nt":
     def symlink_ms(source, link_name):
         """ creates hard (?) symbolik link in Windows

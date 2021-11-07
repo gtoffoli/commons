@@ -215,6 +215,7 @@ def create_favorites(sender, instance, created, **kwargs):
 def flatpage_get(self, url):
     pass
 
+"""
 # a table mapping objects to sites
 class SiteObject(models.Model):
     site = models.ForeignKey(Site, on_delete=models.PROTECT)
@@ -224,27 +225,26 @@ class SiteObject(models.Model):
     class Meta:
         verbose_name = _("Site-object mapping")
         verbose_name_plural = _("Sites-objects map")
+"""
 
-# map an object to a site other than # 1
-def add_to_site(obj):
-    if not settings.SITE_ID == 1:
-        site = Site.objects.get(id=settings.SITE_ID)
-        site_object = SiteObject(site=site, content_type=ContentType.objects.get_for_model(obj), object_id=obj.id)
-        site_object.save()
-
+PROJECT_IDS = []
+def get_project_ids():
+    global PROJECT_IDS
+    if not PROJECT_IDS:
+        root = Project.objects.get(slug=settings.SITE_ROOT)
+        projects = project_list(root)
+        PROJECT_IDS = [project.id for project in projects]
+    return PROJECT_IDS
+    
 def filter_by_site(qs, model):
     if settings.SITE_ID > 1:
-        if model == ProjectMember:
-            content_type = ContentType.objects.get_for_model(Project)
-            ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
-            qs = qs.filter(project_id__in=ids)
-        else:
-            content_type = ContentType.objects.get_for_model(model)
-            ids = SiteObject.objects.filter(content_type=content_type, site_id=settings.SITE_ID).values_list('object_id', flat=True)
-            if model == UserProfile:
-                qs = qs.filter(user_id__in=ids)
-            else:
-                qs = qs.filter(id__in=ids)
+        project_ids = get_project_ids()
+        if model == Project:
+            qs = qs.filter(id__in=project_ids)
+        elif model == OerEvaluation:
+            qs = qs.filter(oer__project_id__in=project_ids)
+        elif model not in [Repo, FlatPage]:
+            qs = qs.filter(project_id__in=project_ids)
     return qs
 QuerySet.filter_by_site = filter_by_site
 
@@ -280,9 +280,6 @@ class Resource(models.Model):
         abstract = True
 
     deleted = models.BooleanField(default=False, verbose_name=_('deleted'))
-    # small_image = models.ImageField('small image', upload_to='images/resources/', null=True, blank=True)
-    # small_image = FileBrowseField('small image', max_length=200, null=True, blank=True)
-    # big_image = FileBrowseField('big image', max_length=200, null=True, blank=True)
     original_language = models.CharField(verbose_name=_('original language code'), max_length=5, default='', db_index=True)
 
     comment_enabled = models.BooleanField(
@@ -295,11 +292,10 @@ class Resource(models.Model):
 
     def get_site(self):
         content_type = ContentType.objects.get_for_model(self)
-        sos = SiteObject.objects.filter(content_type=content_type, object_id=self.id)
-        if sos.count():
-            return sos[0].site.id
+        if content_type.model == 'project':
+            return self.id in PROJECT_IDS and settings.SITE_ID or 1
         else:
-            return 1
+            return self.project and self.project.get_site() or 1
 
     def enable_comments(self):
         self.comment_enabled = True
@@ -448,6 +444,10 @@ class Publishable(object):
 
 def Folder_slug_populate_from(instance):
     return instance.get_title()
+
+""" recursively computes the folder tree with root in the given folder """
+def folder_tree_as_list(folder):
+    return [folder, [folder_tree_as_list(child) for child in folder.get_children()]]
 
 @python_2_unicode_compatible
 class Folder(MPTTModel):
@@ -947,6 +947,19 @@ MENTORING_MODEL_CHOICES = (
 )
 MENTORING_MODEL_DICT = dict(MENTORING_MODEL_CHOICES)
 
+""" recursively computes the project tree with root in the given project,
+    including all project and community types """
+def project_tree_as_list(project):
+    return [project, [project_tree_as_list(child) for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True)]]
+
+""" recursively computes the list of open projects with root in the given project,
+    including all project and community types """
+def project_list(project):
+    pl = [project]
+    for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True):
+        pl = pl + project_list(child)
+    return pl
+
 @python_2_unicode_compatible
 class Project(Resource):
 
@@ -1291,7 +1304,6 @@ class Project(Resource):
             return None
         membership = ProjectMember(project=self, user=user, editor=editor, state=state)
         membership.save()
-        add_to_site(membership)
         if not user in self.members(user_only=True):
             self.group.user_set.add(user)
         return membership
@@ -2043,6 +2055,9 @@ class OerEvaluation(models.Model):
     
     def get_stars(self):
         return score_to_stars(self.overall_score)
+
+    def get_site(self):
+        return self.oer.get_site()
 
 @python_2_unicode_compatible
 class OerQualityMetadata(models.Model):

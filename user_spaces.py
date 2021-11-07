@@ -1,11 +1,12 @@
 from django.contrib.flatpages.models import FlatPage
 from django.shortcuts import render, get_object_or_404
 
-from .models import Project, ProjectMember, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
+from .models import Project, ProjectMember, OER, SharedOer, LearningPath, SharedLearningPath
 from .models import FolderDocument
 from .models import PROJECT_OPEN, PUBLISHED
-from .documents import Document
+from .models import project_tree_as_list, folder_tree_as_list
 from .analytics import activity_stream
+from .utils import tree_to_list
 
 TEXT_MIMETYPE_KEYS = (
   'text',
@@ -15,12 +16,6 @@ TEXT_MIMETYPE_KEYS = (
   'wordprocessingml.document',
   'officedocument.wordprocessingml',
 )
-
-def tree_to_list(tree):
-    list = [tree[0]]
-    for child in tree[1]:
-        list = list + tree_to_list(child)
-    return list
 
 def filter_documents(documents):
     docs = []
@@ -36,15 +31,6 @@ def filter_documents(documents):
                 docs.append(document)
                 break
     return docs
-
-""" recursively computes the project tree with root in the given project,
-    including all project and community types """
-def project_tree_as_list(project):
-    return [project, [project_tree_as_list(child) for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True)]]
-
-""" recursively computes the folder tree with root in the given folder """
-def folder_tree_as_list(folder):
-    return [folder, [folder_tree_as_list(child) for child in folder.get_children()]]
 
 """ prunes the project_tree_as_list, removing all nodes without an ancestor in user_projects:
     performs a depth-first visit of the tree """

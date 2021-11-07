@@ -22,6 +22,7 @@
     <div class="panel-heading-c4">
         <h1 class="text-center padding105 margin0">
           {% if user_projects %}{% trans "my projects"|capfirst %}
+          {% elif SITE_ID > 1 %}{% trans "projects tree"|capfirst %}
           {% else %}{% trans "all communities"|capfirst %}{% endif %}
         </h1>
     </div>

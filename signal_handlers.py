@@ -7,7 +7,6 @@ from zinnia.models.entry import Entry
 from pybb.models import Topic, Post
 from django_messages.models import Message # 180414 GT: added message_post_save_handler
 from .models import Project
-from .models import add_to_site
 from .tracking import track_action
 
 def project_post_save_handler(sender, **kwargs):
@@ -23,10 +22,7 @@ def entry_post_save_handler(sender, **kwargs):
     entry = kwargs['instance']
     created = kwargs['created']
     authors = entry.authors.all()
-    # if not created:
-    if created:
-        add_to_site(entry)
-    else:
+    if not created:
         for user in authors:
             track_action(None, user, 'Edit', entry)
 
