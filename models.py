@@ -1494,7 +1494,12 @@ def forum_get_project(self):
     except:
         return None
 Forum.get_project = forum_get_project
-   
+
+def forum_get_site(self):
+    project = self.get_project()
+    return project and project.get_site() or None
+Forum.get_site = forum_get_site
+
 class ProjectMember(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('community or project'), help_text=_('the project the user belongs or applies to'), related_name='member_project')
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name=_('user'), help_text=_('the user belonging or applying to the project'), related_name='membership_user')
