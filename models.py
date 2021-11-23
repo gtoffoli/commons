@@ -243,6 +243,10 @@ def filter_by_site(qs, model):
             qs = qs.filter(id__in=project_ids)
         elif model == OerEvaluation:
             qs = qs.filter(oer__project_id__in=project_ids)
+        elif model == Forum:
+            projects = Project.objects.filter(id__in=project_ids)
+            forum_ids = [project.forum.id for project in projects if project.forum]
+            qs = qs.filter(id__in=forum_ids)
         elif model not in [Repo, FlatPage]:
             qs = qs.filter(project_id__in=project_ids)
     return qs
