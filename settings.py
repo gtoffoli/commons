@@ -22,6 +22,8 @@ if not 'HAS_SAML2' in globals():
     HAS_SAML2 = True
 if HAS_SAML2:
     from commons.sso_config import *
+if not 'HAS_LRS' in globals():
+    HAS_LRS = True
 if not 'HAS_EARMASTER' in globals():
     HAS_EARMASTER = True
 

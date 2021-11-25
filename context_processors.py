@@ -48,6 +48,7 @@ def processor(request):
         'DOMAIN': host,
         'CANONICAL': canonical,
         'HAS_SAML2': settings.HAS_SAML2,
+        'HAS_LRS': settings.HAS_LRS,
         'HAS_MEETING': settings.HAS_MEETING,
         'HAS_ZINNIA': settings.HAS_ZINNIA,
         'INBOX_COUNT': inbox_count,

@@ -60,15 +60,15 @@ def projects_children(request):
          url='/resources/contributors/',
         ))
     """
-    if settings.SITE_ID == 1:
-        children.append (MenuItem(
+    children.append (MenuItem(
          capfirst(_("forums")),
          url='/forum/',
         ))
+    if settings.SITE_ID == 1:
         children.append (MenuItem(
              capfirst(_("browse people")),
              url='/browse_people/',
-            ))
+        ))
     children.append (MenuItem(
          capfirst(_("search people")),
          url='/people/search/',
