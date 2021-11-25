@@ -3,7 +3,7 @@
 <div class="panel-heading-{{data_ele}} padding10 borderRadius4">
 <h3 class="label-header">{{data_label}}</h3>
 <div class="bc-white c-black padding10 borderRadius4">
-<div>{% if data.get_small_image %}<img src="/media/{{data.get_small_image" class="img-responsive" style="float:left; padding-block-start: 5px; padding-inline-end:10px; {% if data_type != "project" %}max-width:30% {% endif %}">{% endif %}
+<div>{% if data.get_small_image %}<img src="/media/{{data.get_small_image}}" class="img-responsive" style="float:left; padding-block-start: 5px; padding-inline-end:10px; {% if data_type != "project" %}max-width:30% {% endif %}">{% endif %}
 <h4 class="demiBold"{% if LANGUAGE_BIDI %} dir="auto"{% endif %}>{% if data_type == "project" %}{{data.name}}{% else %}{{data.title}}{% endif %}</h4>
 {% if data_type == "oer" %}
 {% with stars=data.get_stars %}<p>{% include "_view_rating.html" with color_class="c-pacific-blue" %}</p>{% endwith %}
