@@ -3,7 +3,7 @@
  {% load i18n staticfiles %}
 
 <article class="view-card" style="min-height:130px">
-  {% if project.small_image %}<img src="/media/{{project.small_image}}" class="img-responsive hidden-xs" style="float:left; padding-block-start: 5px; padding-inline-end:10px;">{% endif %}
+  {% if project.get_small_image %}<img src="/media/{{project.get_small_image}}" class="img-responsive hidden-xs" style="float:left; padding-block-start: 5px; padding-inline-end:10px;">{% endif %}
     <p class="title-card"><a href="/project/{{ project.slug }}/">{{ project.name}}</a></p>
   <p class="text-card">
     {% if project.state == 3 %}

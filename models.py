@@ -301,6 +301,20 @@ class Resource(models.Model):
         else:
             return self.project and self.project.get_site() or 1
 
+    def get_small_image(self):
+        content_type = ContentType.objects.get_for_model(self)
+        if content_type.model == 'project':
+            return self.inherit_field_by_name('small_image')
+        else:
+            return self.small_image
+
+    def get_big_image(self):
+        content_type = ContentType.objects.get_for_model(self)
+        if content_type.model == 'project':
+            return self.inherit_field_by_name('big_image')
+        else:
+            return self.big_image
+
     def enable_comments(self):
         self.comment_enabled = True
         self.save()
@@ -1124,6 +1138,15 @@ class Project(Resource):
             qs = qs.filter(state__in=states)
         # return qs.order_by('group__name')
         return qs.order_by('name')
+
+    def inherit_field_by_name(self, field_name, empty_values=[None, '']):
+        field_value = getattr(self, field_name)
+        if field_value not in empty_values:
+            return field_value
+        parent = self.get_parent()
+        if not parent:
+            return field_value
+        return parent.inherit_field_by_name(field_name, empty_values=empty_values)
 
     def admin_name(self):
         if self.get_type_name() == 'com':

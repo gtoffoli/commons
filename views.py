@@ -1213,8 +1213,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['roll_lp_info'] = FlatPage.objects.get(url='/infotext/mentoring-lp/').content
     elif proj_type_name == 'sup':
         var_dict['member_info'] = FlatPage.objects.get(url='/infotext/project-support-member/').content
-    if project.small_image:
-        image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.small_image)
+    if project.get_small_image():
+        image= protocol + '://%s%s%s' % (request.META['HTTP_HOST'],settings.MEDIA_URL,project.get_small_image())
     else:
         image = ''
     if (proj_type.public):

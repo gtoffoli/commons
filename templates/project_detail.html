@@ -135,9 +135,9 @@
 {% include "_resource_lang_msg.html" %}
 <div class="contentBody borderColor-{% if not proj_type_name == 'roll' %}orange{% else %}fern{% endif %}">
 {% comment %} HEADER PROJECT {% endcomment %}
-    <div class="contentBodyHeader bc-c{% if not proj_type_name == 'roll' %}4{% else %}0{% endif %}"><img src="{% if project.big_image %}/media/{{ project.big_image }}{% else %}/media/images/projectBigImage.png{% endif %}" class="bc-image">
+    <div class="contentBodyHeader bc-c{% if not proj_type_name == 'roll' %}4{% else %}0{% endif %}"><img src="{% if project.get_big_image %}/media/{{ project.get_big_image }}{% else %}/media/images/projectBigImage.png{% endif %}" class="bc-image">
         <div>
-            <h1 class="font_small">{% if project.small_image %}<img src="/media/{{ project.small_image }}" class="img_small">{% endif %}{{ project.get_name }}</h1>
+            <h1 class="font_small">{% if project.get_small_image %}<img src="/media/{{ project.get_small_image }}" class="img_small">{% endif %}{{ project.get_name }}</h1>
         </div> 
     </div>
 {% comment %} LIKE BREADCRUMBS {% endcomment %}
