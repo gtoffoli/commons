@@ -2603,6 +2603,8 @@ def browse_people(request):
     field_names = ['country', 'edu_level', 'pro_status', 'edu_field', 'pro_field', 'subjects', 'languages', 'networks', ]
     people_browse_list = []
     base_fields = form.base_fields
+    if settings.SITE_ID > 1:
+        site_users = site_member_users()
     for field_name in field_names:
         field = base_fields[field_name]
         field_label = pgettext(RequestContext(request), field.label)
@@ -2625,7 +2627,11 @@ def browse_people(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                n = UserProfile.objects.filter(Q(**{field_name: entry}), user__is_active=True).count()
+                # n = UserProfile.objects.filter(Q(**{field_name: entry}), user__is_active=True).count()
+                qs = UserProfile.objects.filter(Q(**{field_name: entry}), user__is_active=True)
+                if settings.SITE_ID > 1:
+                    qs = qs.filter(user__in=site_users)
+                n = qs.count()
                 if n:
                     entries.append([code, label, prefix, n])
         else:
@@ -2633,7 +2639,11 @@ def browse_people(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                n = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED).count()
+                # n = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED).count()
+                qs = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED)
+                if settings.SITE_ID > 1:
+                    qs = qs.filter(user__in=site_users)
+                n = qs.count()
                 if n:
                     entries.append([code, label, '', n])
         if entries:
