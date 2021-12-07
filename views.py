@@ -2568,7 +2568,8 @@ def people_search(request, template='search_people.html', extra_context=None):
         else:
             form = PeopleSearchForm()
             request.session["post_dict"] = {}
-        qs = UserProfile.objects.filter(user__is_active=True)
+        # qs = UserProfile.objects.filter(user__is_active=True)
+        qs = UserProfile.objects.distinct().filter(user__is_active=True)
         if settings.SITE_ID > 1:
             qs = qs.filter(user__in=site_member_users())
         for q in qq:
@@ -2578,7 +2579,8 @@ def people_search(request, template='search_people.html', extra_context=None):
                 profiles.append(profile)
     else:
         form = PeopleSearchForm()
-        qs = UserProfile.objects.filter(user__is_active=True)
+        # qs = UserProfile.objects.filter(user__is_active=True)
+        qs = UserProfile.objects.distinct().filter(user__is_active=True)
         if settings.SITE_ID > 1:
             qs = qs.filter(user__in=site_member_users())
         for profile in qs:

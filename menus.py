@@ -64,10 +64,9 @@ def projects_children(request):
          capfirst(_("forums")),
          url='/forum/',
         ))
-    if settings.SITE_ID == 1:
-        children.append (MenuItem(
-             capfirst(_("browse people")),
-             url='/browse_people/',
+    children.append (MenuItem(
+         capfirst(_("browse people")),
+         url='/browse_people/',
         ))
     children.append (MenuItem(
          capfirst(_("search people")),
