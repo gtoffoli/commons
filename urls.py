@@ -175,6 +175,7 @@ urlpatterns += [
     url(r"^lp/(?P<lp_id>[\d-]+)/make_tree_dag/$", commons.views.lp_make_tree_dag, name="lp_make_tree_dag"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/play/$", commons.views.lp_play_by_slug, name="lp_play"),
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/download/$", commons.views.lp_download_by_slug, name="lp_download"),
+    url(r"^lp/(?P<lp_id>[\d-]+)/export/$", commons.views.lp_export, name="lp_export"),
     url(r"^pathnode/edit/$", commons.views.pathnode_edit, name='pathnode_edit'),
     url(r"^pathnode/(?P<node_id>[\d-]+)/edit/$", commons.views.pathnode_edit_by_id, name="pathnode_edit"),
     url(r'^pathnode/(?P<node_id>[\d-]+)/download/$', commons.views.pathnode_download_range, (), 'pathnode_download_range'),

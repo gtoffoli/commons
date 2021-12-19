@@ -597,3 +597,4 @@ XAPI_VERB_ALIASES = {
     'View': 'viewed',
 }
 
+GOOGLE_DRIVE_URL = "https://www.googleapis.com/drive/v3/files"

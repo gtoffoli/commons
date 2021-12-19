@@ -3365,6 +3365,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['in_bookmarked_lps'] = in_bookmarked_lps = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
+    var_dict['can_export'] = lp.can_export(request)
     var_dict['can_translate'] = lp.can_translate(request)
     current_language = get_current_language()
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
@@ -3461,6 +3462,7 @@ def lp_play(request, lp_id, lp=None):
     var_dict['current_node'] = current_node
     oer = current_node.oer
     current_document = current_node.document
+    online_document_url = current_node.get_online_document_url()
     current_text = current_node.get_text()
     ranges = current_node.get_ranges()
     def handle_view_template(mimetype, url, document=None):
@@ -3569,6 +3571,8 @@ def lp_play(request, lp_id, lp=None):
         else:
             var_dict['document_view'] = 'no_view'
             var_dict['no_viewable_document'] = current_document
+    elif online_document_url:
+        var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % online_document_url
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
     user = request.user
@@ -3583,25 +3587,25 @@ def lp_play_by_slug(request, lp_slug):
     return lp_play(request, lp.id, lp)
 
 @login_required
-def lp_download_by_slug(request, lp_slug):
-    lp = get_object_or_404(LearningPath, slug=lp_slug)
+def lp_export(request, lp_id, lp=None):
+    if not lp:
+        lp = get_object_or_404(LearningPath, pk=lp_id)
     writer, mimetype = lp.make_document_stream(request)
     stream = BytesIO()
-    """
     # https://stackoverflow.com/questions/45978113/pypdf2-write-doesnt-work-on-some-pdf-files-python-3-5-1/52687771#52687771
-    try:
-        writer.write(stream)
-    except:
-        pass
-    """
     writer.write(stream)
     response = HttpResponse(stream.getvalue(), mimetype)
     stream.seek(0, os.SEEK_END)
     l = stream.tell()
     if l:
         response['Content-Length'] = l       
-    response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % lp_slug
+    response['Content-Disposition'] = 'attachment; filename="%s.pdf"' % lp.slug
     return response
+
+@login_required
+def lp_download_by_slug(request, lp_slug):
+    lp = get_object_or_404(LearningPath, slug=lp_slug)
+    return lp_export(request, lp.id, lp)
 
 def lp_edit(request, lp_id=None, project_id=None):
     user = request.user

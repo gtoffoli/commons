@@ -57,6 +57,7 @@ from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
+from commons.google_api import youtube_search, video_getdata, googledoc_write_as_pdf
 from six import iteritems
 
 from django.utils.text import format_lazy
@@ -214,18 +215,6 @@ def create_favorites(sender, instance, created, **kwargs):
 
 def flatpage_get(self, url):
     pass
-
-"""
-# a table mapping objects to sites
-class SiteObject(models.Model):
-    site = models.ForeignKey(Site, on_delete=models.PROTECT)
-    content_type = models.ForeignKey(ContentType, on_delete=models.PROTECT)
-    object_id = models.IntegerField()
-
-    class Meta:
-        verbose_name = _("Site-object mapping")
-        verbose_name_plural = _("Sites-objects map")
-"""
 
 PROJECT_IDS = []
 def get_project_ids():
@@ -2256,6 +2245,18 @@ class LearningPath(Resource, Publishable):
                 return True
         return False
 
+    def can_export(self, request):
+        user = request.user
+        if not user.is_authenticated:
+            return False
+        if user.is_superuser:
+            return True
+        project = self.project
+        if project and (project.is_reserved_project() or  settings.SITE_ID > 1):
+            if self.creator==user or project.is_admin(user):
+                return True
+        return False
+
     def can_delete(self, request):
         user = request.user
         if not user.is_authenticated:
@@ -2793,7 +2794,9 @@ class LearningPath(Resource, Publishable):
                     writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
             elif node.document:
                 writer, mimetype = node.make_document_stream(request, writer=writer, mimetype=mimetype, export=True)
-            elif node.text:
+            elif node.get_online_document_url():
+                node.serialize_online_document(request, writer)
+            else:
                 node.serialize_textnode(request, writer)
             if not writer.getNumPages() > pagenum:
                     html_template = get_template('_cannot_serialize.html')
@@ -2851,13 +2854,12 @@ class PathEdge(edge_factory('PathNode', concrete = False)):
             json['labels'] = [{'position': .5, 'attrs': {'text': {'text': '%d - %d' % (self.order, self.id), 'font-size': 10, 'font-family': 'san-serif'}}}]
         return json
 
-import string
-from commons.google_api import youtube_search, video_getdata
 class PathNode(node_factory('PathEdge')):
     label = models.TextField(blank=True, verbose_name=_('label'))
     path = models.ForeignKey(LearningPath, on_delete=models.CASCADE, verbose_name=_('learning path or collection'), related_name='path_node')
     oer = models.ForeignKey(OER, on_delete=models.PROTECT, blank=True, null=True, verbose_name=_('stands for'))
     document = models.ForeignKey(Document, on_delete=models.SET_NULL, blank=True, null=True, related_name='pathnode_document', verbose_name=_('document'))
+    embed_code = models.TextField(blank=True, null=True, verbose_name=_('embed code'), help_text=_('code to embed an online document, such as a GoogleDoc'))
     range = models.TextField(blank=True, null=True, verbose_name=_('display range'))
     text = models.TextField(blank=True, null=True, verbose_name=_('own text content'))
     created = CreationDateTimeField(_('created'))
@@ -2870,7 +2872,8 @@ class PathNode(node_factory('PathEdge')):
         verbose_name_plural = _('path nodes')
 
     def get_nodetype(self):
-        return (self.oer and 'OER') or (self.document and 'DOC') or (self.text and 'TXT') or ''
+        # return (self.oer and 'OER') or (self.document and 'DOC') or (self.text and 'TXT') or ''
+        return (self.oer and 'OER') or (self.document and 'DOC') or (self.get_online_document_url() and 'DOC') or (self.text and 'TXT') or ''
 
     def get_label(self):
         oer = self.oer
@@ -2882,6 +2885,18 @@ class PathNode(node_factory('PathEdge')):
     def is_flatpage(self):
         text = self.text
         return text and len(text)<32 and text.count('/')==4
+
+    def get_online_document_url(self):
+        """
+        text = self.text and self.text.replace('<p>','').replace('</p>','')
+        if text and text.startswith('https://docs.google.com/'):
+            return text
+        """
+        embed_code = self.embed_code
+        if embed_code and embed_code.startswith('https://docs.google.com/'):
+            return embed_code
+        else:
+            return ''
 
     def get_text(self):
         text = self.text
@@ -2971,6 +2986,10 @@ class PathNode(node_factory('PathEdge')):
             ranges.append(r)
         return ranges            
 
+    def serialize_online_document(self, request, writer):
+        online_document_url = self.get_online_document_url()
+        googledoc_write_as_pdf(writer, online_document_url)
+ 
     def serialize_textnode(self, request, writer):
         protocol = request.is_secure() and 'https' or 'http'
         html_template = get_template('_textnode_serialize.html')

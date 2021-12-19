@@ -172,7 +172,6 @@ font-weight: 600;
             {% endif %}
           </dd>
         </dl>
-        
 
         {% if lp.get_nodes or can_edit %}
           <dl style="position:relative" class="font14 marginB10">
@@ -186,7 +185,7 @@ font-weight: 600;
               {% for node in lp.get_ordered_nodes %}
                 <li class="marginB5">
                   <div class="paddingL3">
-                  	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc {% else %}node-text{% endif %}"><li>
+                  	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc{% elif node.get_online_document_url %} node-doc {% else %}node-text{% endif %}"><li>
                   	{% comment %} /pathnode/{{ node.id }}/delete/ {% endcomment %}
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% if lp.get_ordered_nodes|length > 1 %}
@@ -229,6 +228,9 @@ font-weight: 600;
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
                 <dd class="marginT5"><a id="{{ oer.id }}" href="/lp/{{ lp.slug }}/pathnode_add/{{ oer.id }}/" class="btn btn-default add_node_oer">{% blocktrans with class_name='demiBold' oer_title=oer.title|truncatewords:5 %}Add node with OER <span class="{{class_name}}">{{ oer_title }}</span>{% endblocktrans %}</a></dd>
               {% endfor %}{% endif %}
+            {% endif %}
+            {% if can_export %}
+              <dd class="marginT5"><a href="/lp/{{ lp.id }}/export/" class="btn btn-default export_confirmation">{% trans "export as PDF"|capfirst %}</a></dd>
             {% endif %}
           </dl>
         {% endif %}
@@ -406,6 +408,13 @@ font-weight: 600;
         });
       }
   {% endif %}
+
+  {% if can_export %}
+      $('a.export_confirmation').on('click', function () {
+        return confirm('{% trans "You can export this learning path for private use only and should avoid overloading the system. Proceed?" %}');
+      });
+  {% endif %}
+  
     $('dt a.toggleIcon').on('click', function(event){
       event.preventDefault();
       $("body").css("cursor", "default");

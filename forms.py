@@ -552,7 +552,8 @@ range_ko_re = '[^0-9\.\-\,\ ]+'
 class PathNodeForm(forms.ModelForm):
     class Meta:
         model = PathNode
-        fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'text', 'creator', 'editor', )
+        # fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'text', 'creator', 'editor', )
+        fields = ('id', 'path', 'label', 'oer', 'range', 'remove_document','document','new_document', 'embed_code', 'text', 'creator', 'editor', )
 
     id = forms.CharField(required=False, widget=forms.HiddenInput())
     path = forms.ModelChoiceField(required=True, queryset=LearningPath.objects.all(), widget=forms.HiddenInput())
@@ -567,6 +568,7 @@ class PathNodeForm(forms.ModelForm):
     new_document = forms.FileField(required=False,
         label = _('document'),
         widget=forms.FileInput(attrs={'class': 'filestyle', 'data-buttonText':_("choose file"), 'data-icon':'false'}))
+    embed_code = forms.CharField(required=False, label=_('online document'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('Code to embed an online document, such as a GoogleDoc.'))
     text = forms.CharField(required=False, label=_('text content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 20,}), help_text=_('html'))
     creator = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
     editor = forms.ModelChoiceField(queryset=User.objects.all(), widget=forms.HiddenInput())
@@ -580,7 +582,8 @@ class PathNodeForm(forms.ModelForm):
         document = cd.get('document')
         remove_document = cd.get('remove_document')
         new_document = self.files
-        if (oer == None) & ((document == None) | (remove_document)) & (len(new_document) == 0) & (len(text) == 0):
+        embed_code = cd.get('embed_code')
+        if (oer == None) & ((document == None) | (remove_document)) & (len(new_document) == 0) & (len(embed_code) == 0) & (len(text) == 0):
             raise forms.ValidationError(_("the OER, the document attachment and the text content cannot be all missing"))
 
         if (oer == None) & (len(label) == 0):
