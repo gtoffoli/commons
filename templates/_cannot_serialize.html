@@ -7,14 +7,18 @@
 <p class="font15">{{ node.oer.description }}</p>
 
 {% if node.oer.url %}
-   <p>{% trans "URL" %}: <a href="{{ node.oer.url }}" target="_blank">{{ node.oer.url }}</a></p>
+    <p>{% trans "URL" %}: <a href="{{ node.oer.url }}" target="_blank">{{ node.oer.url }}</a></p>
 {% endif %}
 
 <p class="text-note">
-<span class="border-padding-top">{% trans "NOTE" %} </span><br>
+<span class="border-padding-top">{% trans "NOTE" %}</span><br>
 {% if mimetype %}{% trans "cannot convert to PDF a document of mimetype"|capfirst %} <b>{{ mimetype }}</b>.{% endif %}
-{% if mimetype and node.oer.url %}<br>{% endif %}
-{% if node.oer.url %}{% trans "this node refers to an OER that you can access online through its URL"|capfirst %}.{% endif %}
+{% if node.oer.url or node.get_online_document_url %}
+    {% if mimetype %}<br>{% endif %}
+    {% trans "this node refers to an online content that you should try to access through its URL"|capfirst %}:
+    {% if node.oer.url %}{{ node.oer.url|safe }}{% endif %}
+    {% if node.get_online_document_url %}{{ node.get_online_document_url|safe }}{% endif %}
+{% endif %}
 </p>
 
 {% endblock %}

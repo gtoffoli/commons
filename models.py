@@ -2887,14 +2887,20 @@ class PathNode(node_factory('PathEdge')):
         return text and len(text)<32 and text.count('/')==4
 
     def get_online_document_url(self):
-        """
-        text = self.text and self.text.replace('<p>','').replace('</p>','')
-        if text and text.startswith('https://docs.google.com/'):
-            return text
-        """
         embed_code = self.embed_code
         if embed_code and embed_code.startswith('https://docs.google.com/'):
             return embed_code
+        else:
+            return ''
+
+    def get_online_document_mimetype(self):
+        url = self.get_online_document_url()
+        if url.count('/document/'):
+            return "application/vnd.google-apps.document"
+        elif url.count('/spreadsheets/'):
+            return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        elif url.count('/presentation/'):
+            return "application/vnd.google-apps.presentation"
         else:
             return ''
 
@@ -2988,7 +2994,14 @@ class PathNode(node_factory('PathEdge')):
 
     def serialize_online_document(self, request, writer):
         online_document_url = self.get_online_document_url()
-        googledoc_write_as_pdf(writer, online_document_url)
+        ok, content_type = googledoc_write_as_pdf(writer, online_document_url)
+        if not ok:
+            template_name = '_cannot_serialize.html'
+            html_template = get_template(template_name)
+            domain = request.META['HTTP_HOST']
+            context = { 'request': request, 'node': self, 'mimetype': content_type, 'domain': domain }
+            rendered_html = html_template.render(context)
+            html_to_writer(rendered_html, writer)
  
     def serialize_textnode(self, request, writer):
         protocol = request.is_secure() and 'https' or 'http'

@@ -610,11 +610,13 @@ class DocumentVersion(models.Model):
     def page_count(self):
         return self.pages.count()
 
+    """
     def get_page(self, page):
         if self.mimetype.lower().count('pdf'):
             i_stream = self.open()
             self.o_stream = StringIO()
             utils.get_pdf_page(i_stream, self.o_stream, page)
+    """
 
     def get_pages(self, pageranges):
         if self.mimetype.lower().count('pdf'):

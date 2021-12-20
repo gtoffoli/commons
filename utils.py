@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-"""
+
 # Python 2 - Python 3 compatibility
 from six import BytesIO
 import urllib.request as urllib2
@@ -25,18 +27,6 @@ if os.name == "nt":
         except:
             pass
         os.symlink = symlink_ms
-
-""" from commons - windows.log del 150720
-from PyPDF2.pdf import *
-reader = PdfFileReader("git.from.bottom.up.pdf")
-reader.getNumPages()
-page = reader.getPage(3)
-writer = PdfFileWriter()
-writer.addPage(page)
-file = open("page3", "wb")
-writer.write(file)
-file.close
-"""
 
 import random
 import string
@@ -84,13 +74,13 @@ def document_to_writer(document, writer, ranges=None, mimetype='application/pdf'
         i_stream = BytesIO(pdf_data)
     else:
         return
-    write_pdf_pages(i_stream, writer, ranges=ranges)
+    return write_pdf_pages(i_stream, writer, ranges=ranges)
 
 def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
     if mimetype=='text/html':
         i_stream = BytesIO()
         stylesheets = [CSS(string='@page { size: A4 landscape; }')]
-        HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
+        HTML(url=url, encoding='utf8').write_pdf(i_stream, stylesheets=stylesheets)
     elif mimetype=='application/x-ipynb+json':
         response = urllib2.urlopen(url).read().decode()
         notebook = nbformat.reads(response, as_version=4)
@@ -98,8 +88,8 @@ def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
         pdf_data, resources = pdf_exporter.from_notebook_node(notebook)
         i_stream = BytesIO(pdf_data)
     else:
-        return
-    write_pdf_pages(i_stream, writer, ranges=ranges)
+        return 0
+    return write_pdf_pages(i_stream, writer, ranges=ranges)
 
 def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = landscape and [CSS(string='@page { size: A4 landscape; }')] or None
@@ -113,9 +103,10 @@ def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = css and [CSS(string=css)] or None
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     """
-    HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
-    write_pdf_pages(i_stream, writer, ranges=ranges)
+    HTML(string=html, encoding='utf8').write_pdf(target=i_stream, stylesheets=stylesheets)
+    return write_pdf_pages(i_stream, writer, ranges=ranges)
 
+""" WRONG!
 def get_pdf_page(i_stream, o_stream):
     from PyPDF2.pdf import PdfFileReader, PdfFileWriter
     reader = PdfFileReader(i_stream, strict=False)
@@ -125,6 +116,7 @@ def get_pdf_page(i_stream, o_stream):
     page = reader.getPage(page)
     writer.addPage(page)
     writer.write(o_stream)
+"""
 
 def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified
@@ -159,6 +151,7 @@ def write_pdf_pages(i_stream, writer, ranges=None):
                 p += 1
     else:
         writer.appendPagesFromReader(reader)
+    return n_pages
 
 empty_words = ('and', 'the', 'not', 'non',)
 

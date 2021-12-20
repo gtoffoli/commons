@@ -55,7 +55,7 @@ def googledoc_write_as_pdf(writer, document_url, ranges=None, google_key=setting
         return 0
     params = {'key': DEVELOPER_KEY}
     endpoint = GOOGLE_DRIVE_URL
-    if document_url.count('/document/d/'):
+    if document_url.count('/document/d/') or document_url.count('/presentation/d/'):
         url = '{}/{}/export'.format(endpoint, file_id)
         params['mimeType'] = 'application/pdf'
     else:
@@ -64,8 +64,13 @@ def googledoc_write_as_pdf(writer, document_url, ranges=None, google_key=setting
     querystring = urllib.parse.urlencode(params)
     url += '?' + querystring
     response = requests.get(url)
+    if response.status_code != requests.codes.ok:
+        return False, ''
     content_type = response.headers['content-type']
     print('----- googledoc_write_as_pdf', url, content_type)
     stream = BytesIO(response.content)
     if content_type.lower().count('pdf'):
         write_pdf_pages(stream, writer, ranges=ranges)
+        return True, content_type
+    else:
+        return False, content_type
