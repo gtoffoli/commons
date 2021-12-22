@@ -265,12 +265,16 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
         all_actions = actions
         actions = []
         for action in all_actions:
-            if action.action_object:
-                if action.action_object.get_site() == settings.SITE_ID:
+            # if action.action_object:
+            action_object = action.action_object
+            if action_object and hasattr(action_object, 'get_site'):
+                if action_object.get_site() == settings.SITE_ID:
                     actions.append(action)
                     continue
-            if action.target:
-                if action.target.get_site() == settings.SITE_ID:
+            # if action.target:
+            target = action.target
+            if target and hasattr(target, 'get_site'):
+                if target.get_site() == settings.SITE_ID:
                     actions.append(action)
                     continue
 
