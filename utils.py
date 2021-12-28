@@ -80,7 +80,7 @@ def url_to_writer(url, writer, ranges=None, mimetype='text/html'):
     if mimetype=='text/html':
         i_stream = BytesIO()
         stylesheets = [CSS(string='@page { size: A4 landscape; }')]
-        HTML(url=url, encoding='utf8').write_pdf(i_stream, stylesheets=stylesheets)
+        HTML(url=url).write_pdf(i_stream, stylesheets=stylesheets)
     elif mimetype=='application/x-ipynb+json':
         response = urllib2.urlopen(url).read().decode()
         notebook = nbformat.reads(response, as_version=4)
@@ -103,20 +103,8 @@ def html_to_writer(html, writer, css=None, ranges=None, landscape=False):
     stylesheets = css and [CSS(string=css)] or None
     HTML(string=html).write_pdf(i_stream, stylesheets=stylesheets)
     """
-    HTML(string=html, encoding='utf8').write_pdf(target=i_stream, stylesheets=stylesheets)
+    HTML(string=html).write_pdf(target=i_stream, stylesheets=stylesheets)
     return write_pdf_pages(i_stream, writer, ranges=ranges)
-
-""" WRONG!
-def get_pdf_page(i_stream, o_stream):
-    from PyPDF2.pdf import PdfFileReader, PdfFileWriter
-    reader = PdfFileReader(i_stream, strict=False)
-    if page > reader.getNumPages():
-        return None
-    writer = PdfFileWriter()
-    page = reader.getPage(page)
-    writer.addPage(page)
-    writer.write(o_stream)
-"""
 
 def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified

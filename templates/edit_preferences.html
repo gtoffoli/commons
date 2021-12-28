@@ -15,6 +15,11 @@
       {% for field in form.hidden_fields %}{{ field }}{% endfor %}
       <fieldset class="padding1020">
         {% for field in form.visible_fields %}{% with i=forloop.counter %}
+          {% if i == 1 %}
+            <h4 class="marginT0 paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "notification by email"|capfirst %}</strong></small></h4>
+          {% elif i == 3 %}
+            <h4 class="marginT0 paddingB5 borderBottom borderColor-c0"><small class="c-fern"><strong>{% trans "activity history"|capfirst %}</strong></small></h4>
+          {% endif %}
           <div class="form-group">
             <label for="{{ field.name }}" {% if field.field.required %}class="required"{% endif %}>{{ field.label|capfirst}}</label>
             <span class="txt-error">{{ field.errors }}</span>{{ field }}
@@ -28,3 +33,5 @@
     </form>
   </div>
 {% endblock %}
+
+            

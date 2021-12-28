@@ -1,4 +1,4 @@
-{% load staticfiles i18n %}
+{% load staticfiles %}
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
@@ -11,12 +11,3 @@
   {% endblock %}
 </body>
 </html>
-
-{% comment %}
-{% extends "commons_print_template.html" %}
-{% load staticfiles i18n %}
-
-{% block body %}
-  {{ text|safe}}
-{% endblock %}
-{% endcomment %}

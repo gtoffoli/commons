@@ -550,6 +550,9 @@ def profile_edit(request, username):
         form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name,})
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
+    if settings.ALLOW_REDUCED_PROFILE:
+        form.fields['edu_level'].required = False
+        form.fields['pro_status'].required = False
     data_dict['form'] = form
     return render(request, 'profile_edit.html', data_dict)
 

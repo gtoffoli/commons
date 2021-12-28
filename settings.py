@@ -26,6 +26,8 @@ if not 'HAS_LRS' in globals():
     HAS_LRS = True
 if not 'HAS_EARMASTER' in globals():
     HAS_EARMASTER = True
+if not 'ALLOW_REDUCED_PROFILE' in globals():
+    ALLOW_REDUCED_PROFILE = False
 
 from commons.private import *
 if IS_LINUX:
