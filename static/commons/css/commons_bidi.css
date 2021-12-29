@@ -1985,3 +1985,11 @@ div.bootbox-confirm div.modal-footer {
 a.like-btn-default {
     color: #333 !important;
 }
+/*---------------------- SCHEDULE CALENDAR ---------------------------*/
+div.calendarname {
+    text-align: center;
+	font-size: large;
+}
+div.row-centered {
+    text-align: center;
+}

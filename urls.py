@@ -40,6 +40,7 @@ urlpatterns += [
     url(r'^weblog/', include('zinnia.urls', namespace='zinnia')),
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
     url(r'^comments/', include('django_comments.urls')),
+    url(r'^schedule/', include('schedule.urls')),
     # url(r"^notification/", include("notification.urls")),
     url(r"^user_welcome/$", commons.views.user_welcome, name="user_welcome"),
     url(r"^my_profile/$", commons.views.my_profile, name="account_settings"),

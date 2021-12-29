@@ -171,6 +171,7 @@ INSTALLED_APPS = (
     #'rdflib_django',
     'el_pagination',
     'datetimewidget',
+    'schedule',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
