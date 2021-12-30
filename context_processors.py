@@ -54,4 +54,5 @@ def processor(request):
         'INBOX_COUNT': inbox_count,
         'BROWSER': browser,
         'SITE_ID': settings.SITE_ID,
+        'HAS_CALENDAR': 'HAS_CALENDAR' in dir(settings) and settings.HAS_CALENDAR or False,
     }
