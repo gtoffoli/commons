@@ -41,7 +41,7 @@
       <div class={% if likes %}"col-sm-9 col-md-9 col-lg-9"{% else %}"col-sm-12 col-md-12 col-lg-12"{% endif %}>
         <div class="panel-white">
           {% if can_edit and not complete_profile %}
-            <p class="text-center font18 txt-error paddingT10">{% trans "please, complete your profile"|capfirst %}!  &nbsp; <a href="/profile/{{ profile_user.username }}/edit/" title="show edit profile"><i class="fa fa-edit"></i></a></p>
+            <p class="text-center font18 txt-error paddingT10">{% trans "please, complete your profile"|capfirst %}!  &nbsp; <a href="/profile/{{ profile_user.username }}/edit/" title="show edit view"><i class="fa fa-edit"></i></a></p>
           {% endif %}
           <div class="padding10">
             {% if request.user.id == profile_user.id %}
@@ -169,7 +169,7 @@
            {% endif %}
            {% if can_edit and complete_profile %} 
              <ul class="list-inline margin0">
-               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit profile" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
+               <li class="list-back-c0 paddingRB10 verticalTop"><a href="/profile/{{ profile_user.username }}/edit/" title='{% trans "show edit view" %}' class="btn btn-default"><i class="fa fa-edit"></i> {% trans "modify" %}</a></li>
                <li class="list-back-c0" style="width:50%; vertical-align:top; padding-inline-end:10px; padding-block-end:10px"><dl class="bc-white font14 marginB0" style="border-radius:4px; padding:10px">
                  <dt class="demiBold">{% trans "curriculum"|capfirst %}</dt>
                  {% if profile.curriculum %}

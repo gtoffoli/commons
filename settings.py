@@ -315,9 +315,10 @@ TIME_ZONE = 'Europe/Rome'
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
     (u'en', u'English'),
-    (u'hr', u'Hrvatski'),
     (u'it', u'Italiano'),
+    (u'fr', u'French'),
     (u'pt', u'Português'),
+    (u'hr', u'Hrvatski'),
     (u'ru', u'Русский'),
     (u'ar', u'Arabic'),
 )
