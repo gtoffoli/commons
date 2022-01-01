@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-29 22:23+0100\n"
-"PO-Revision-Date: 2022-01-01 16:04+0000\n"
+"PO-Revision-Date: 2022-01-01 18:32+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: French (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1495,7 +1495,7 @@ msgstr "description plus longue / suggestions de recherche"
 
 #: .\models.py:1620 .\templates\repo_detail.html:49
 msgid "comments / evaluation"
-msgstr ""
+msgstr "commentaires / évaluations"
 
 #: .\models.py:1621
 msgid "screenshot"
@@ -1527,7 +1527,7 @@ msgstr ""
 
 #: .\models.py:1687
 msgid "Derived-translated"
-msgstr ""
+msgstr "Dérivée-traduite"
 
 #: .\models.py:1688
 msgid "Derived-adapted"
@@ -1641,11 +1641,11 @@ msgstr ""
 
 #: .\models.py:2076 .\models.py:2093
 msgid "OER evaluation"
-msgstr ""
+msgstr "évaluation d'une REL"
 
 #: .\models.py:2077
 msgid "OER evaluations"
-msgstr ""
+msgstr "évaluations de REL"
 
 #: .\models.py:2095
 msgid "facet-related score"
@@ -1886,7 +1886,7 @@ msgstr ""
 
 #: .\templates\_access_bar.html:65 .\templates\_login_model.html:29
 msgid "Remember Me"
-msgstr ""
+msgstr "Souviens-toi"
 
 #: .\templates\_access_bar.html:68 .\templates\_access_bar.html:101
 #: .\templates\_access_bar.html:109 .\templates\_login_model.html:10
@@ -1898,7 +1898,7 @@ msgstr ""
 #: .\templates\_access_bar.html:111 .\templates\flatpages\why_register.html:46
 #: .\templates\pybb\_need_to_login_message.html:4
 msgid "sign up"
-msgstr ""
+msgstr "s'enregistrer"
 
 #: .\templates\_access_bar.html:73 .\templates\_access_bar.html:75
 #: .\templates\_access_bar.html:78 .\templates\_access_bar.html:115
@@ -1988,13 +1988,13 @@ msgstr ""
 #: .\templates\project_image_upload.html:31
 #: .\templates\project_logo_upload.html:31
 msgid "save"
-msgstr ""
+msgstr "sauvegarder"
 
 #: .\templates\_edit_submit.html:4 .\templates\folder_edit.html:25
 #: .\templates\folderdocument_edit.html:25 .\templates\forum_edit.html:29
 #: .\templates\online_resource_edit.html:28
 msgid "save and exit"
-msgstr ""
+msgstr "sauvegarder et quitter"
 
 #: .\templates\_edit_submit.html:5 .\templates\folder_edit.html:26
 #: .\templates\folderdocument_edit.html:26 .\templates\forum_edit.html:30
@@ -2004,7 +2004,7 @@ msgstr ""
 #: .\templates\project_image_upload.html:32
 #: .\templates\project_logo_upload.html:32
 msgid "exit without saving"
-msgstr ""
+msgstr "quitter sans sauvegarder"
 
 #: .\templates\_footer.html:4 .\templates\base.html:215
 msgid "the CommonS Consortium"
@@ -2012,19 +2012,19 @@ msgstr ""
 
 #: .\templates\_footer.html:5 .\templates\base.html:216
 msgid "built by"
-msgstr ""
+msgstr "réalisé par"
 
 #: .\templates\_footer.html:6 .\templates\base.html:217
 msgid "with"
-msgstr ""
+msgstr "avec"
 
 #: .\templates\_footer.html:6 .\templates\base.html:217
 msgid "and"
-msgstr ""
+msgstr "et"
 
 #: .\templates\_footer.html:11 .\templates\base.html:222
 msgid "privacy policy"
-msgstr ""
+msgstr "politique de confidentialité"
 
 #: .\templates\_footer.html:16 .\templates\base.html:227
 msgid "The CommonS Project is co-funded by Programme"
@@ -2034,13 +2034,13 @@ msgstr "Le projet CommonS est cofinancé par le programme"
 #: .\templates\_homepage_main_cta.html:50
 #: .\templates\_homepage_main_cta.html:74
 msgid "explore library"
-msgstr ""
+msgstr "explorer la bibliothèque"
 
 #: .\templates\_homepage_main_cta.html:15
 #: .\templates\_homepage_main_cta.html:57
 #: .\templates\_homepage_main_cta.html:79
 msgid "learn together"
-msgstr ""
+msgstr "apprendre ensemble"
 
 #: .\templates\_homepage_main_cta.html:21
 #: .\templates\_homepage_main_cta.html:64
@@ -2053,7 +2053,7 @@ msgstr "remixer les ressources"
 #: .\templates\_homepage_main_cta.html:51
 #: .\templates\_homepage_main_cta.html:75 .\templates\browse.html:11
 msgid "educational library"
-msgstr ""
+msgstr "bibliothèque éducative"
 
 #: .\templates\_info_creator_date.html:3 .\templates\_lp_serialize.html:10
 msgid "submitted by"
@@ -2070,12 +2070,12 @@ msgstr "dans le projet"
 #: .\templates\_info_creator_date.html:18 .\templates\_pathnode_detail.html:45
 #: .\templates\project_detail.html:193
 msgid "last updated by"
-msgstr ""
+msgstr "dernière mise à jour par"
 
 #: .\templates\_info_creator_date.html:26 .\templates\_pathnode_detail.html:45
 #: .\templates\project_detail.html:189
 msgid "last updated"
-msgstr ""
+msgstr "dernière mise à jour"
 
 #: .\templates\_login_model.html:36
 msgid "Create an account"
@@ -2146,7 +2146,7 @@ msgstr ""
 #: .\templates\_object_comments.html:10 .\templates\_object_comments.html:12
 #: .\templates\zinnia\entry_detail_base.html:192
 msgid "Comments"
-msgstr ""
+msgstr "Commentaires"
 
 #: .\templates\_object_comments.html:10
 msgid "disable"
@@ -2168,7 +2168,7 @@ msgstr ""
 #: .\templates\zinnia\entry_detail_base.html:230
 #: .\templates\zinnia\entry_detail_base.html:236
 msgid "Comments are closed."
-msgstr ""
+msgstr "Les commentaires sont fermés."
 
 #: .\templates\_object_comments.html:51
 #: .\templates\zinnia\_entry_detail_base.html:153
@@ -2221,7 +2221,7 @@ msgstr "montrer la vue d'édition"
 #: .\templates\oer_detail.html:38 .\templates\project_detail.html:303
 #: .\templates\project_detail.html:878 .\templates\repo_detail.html:18
 msgid "show translate view"
-msgstr ""
+msgstr "montrer la vue de traduction"
 
 #: .\templates\_pathnode_detail.html:12 .\templates\lp_detail.html:85
 #: .\templates\lp_detail.html:104 .\templates\oer_detail.html:254
@@ -2253,7 +2253,7 @@ msgstr ""
 
 #: .\templates\_project_card.html:20
 msgid "number of members"
-msgstr ""
+msgstr "nombre de membres"
 
 #: .\templates\_project_card.html:24 .\templates\_project_card.html:27
 #: .\templates\mentoring_detail.html:168 .\templates\project_detail.html:7
@@ -2443,7 +2443,7 @@ msgstr ""
 #: .\templates\account\login.html:6 .\templates\account\login.html:61
 #: .\templates\account\login.html:103
 msgid "Sign In"
-msgstr ""
+msgstr "se connecter"
 
 #: .\templates\account\login.html:70
 #, python-format
@@ -2458,13 +2458,13 @@ msgstr "Veuillez vous connecter avec l'un\n                        de vos compte
 msgid ""
 "If you have not created an account yet, then please\n"
 "                        <a href=\"%(signup_url)s\">sign up</a> first."
-msgstr ""
+msgstr "Si vous n'avez pas encore créé de compte, veuillez vous\n                        <a href=\"%(signup_url)s\">vous enregistrer</a> d'abord."
 
 #: .\templates\account\login.html:87
 msgid ""
 "Please sign in with one\n"
 "                    of your existing third party accounts."
-msgstr ""
+msgstr "Veuillez vous connecter avec l'un\n                    de vos comptes tiers existants."
 
 #: .\templates\account\login.html:94
 #: .\templates\flatpages\why_register.html:47
@@ -2529,17 +2529,17 @@ msgstr ""
 
 #: .\templates\account\signup.html:5
 msgid "Signup"
-msgstr ""
+msgstr "Enregistrement"
 
 #: .\templates\account\signup.html:43 .\templates\account\signup.html:55
 msgid "Sign Up"
-msgstr ""
+msgstr "S'enregistrer"
 
 #: .\templates\account\signup.html:47
 #, python-format
 msgid ""
 "Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
-msgstr ""
+msgstr "Vous avez déjà un compte? Veuillez alors <a href=\"%(login_url)s\">vous connecter</a>."
 
 #: .\templates\account\verification_sent.html:5
 #: .\templates\account\verification_sent.html:10
@@ -2551,7 +2551,7 @@ msgid ""
 "We have sent an e-mail to you for verification. Follow the link provided to "
 "finalize the signup process. Please contact us if you do not receive it "
 "within a few minutes."
-msgstr ""
+msgstr "Nous vous avons envoyé un e-mail pour vérification. Suivez le lien fourni pour finaliser le processus d'enregistrement. Veuillez nous contacter si vous ne le recevez pas dans les minutes qui suivent."
 
 #: .\templates\active_users.html:5 .\templates\active_users.html:13
 msgid "recently active users"
@@ -2633,7 +2633,7 @@ msgstr ""
 #: .\templates\autocomplete.html:5 .\templates\count_users.html:20
 #: .\templates\project_detail.html:529
 msgid "members"
-msgstr ""
+msgstr "membres"
 
 #: .\templates\autocomplete.html:20
 msgid "help pages"
@@ -2761,7 +2761,7 @@ msgstr ""
 
 #: .\templates\contributors.html:59
 msgid "OERs evaluations"
-msgstr ""
+msgstr "évaluations de REL"
 
 #: .\templates\contributors.html:80
 msgid "cataloguing of OER sources"
@@ -3129,7 +3129,7 @@ msgstr "historique des activités"
 
 #: .\templates\file_upload.html:10 .\templates\file_upload.html:13
 msgid "upload file with list of candidate members"
-msgstr ""
+msgstr "télécharger le fichier avec la liste des membres candidats"
 
 #: .\templates\file_upload.html:14
 #, python-format
@@ -3198,7 +3198,7 @@ msgstr "ajouter un document"
 
 #: .\templates\folder_detail.html:137
 msgid "add subfolder"
-msgstr ""
+msgstr "ajouter un sous-dossier"
 
 #: .\templates\folder_detail.html:147 .\templates\mentoring_detail.html:426
 #: .\templates\project_detail.html:454 .\templates\project_detail.html:763
@@ -3222,7 +3222,7 @@ msgstr "ce document"
 
 #: .\templates\folder_detail.html:208
 msgid "this folder"
-msgstr ""
+msgstr "ce dossier"
 
 #: .\templates\folder_edit.html:5
 #, python-format
@@ -3270,15 +3270,15 @@ msgstr "Apprenez avec les autres, Créez, Réutilisez"
 
 #: .\templates\homepage.html:147 .\views.py:163
 msgid "learning in online communities of practice"
-msgstr ""
+msgstr "apprendre dans des communautés de pratique en ligne"
 
 #: .\templates\homepage.html:148 .\views.py:163
 msgid "reusing resources to build learning paths"
-msgstr "réutilisation des ressources pour construire des parcours d'apprentissage"
+msgstr "en réutilisant les ressources pour construire des parcours d'apprentissage"
 
 #: .\templates\homepage.html:149 .\views.py:163
 msgid "browsing collections in our library of OERs"
-msgstr ""
+msgstr "et en parcourant les collections de notre bibliothèque de REL"
 
 #: .\templates\homepage.html:150
 msgid "join the Community now"
@@ -3314,7 +3314,7 @@ msgstr "dernière REL"
 
 #: .\templates\homepage.html:228
 msgid "most popular OER"
-msgstr "le REL le plus populaire"
+msgstr "la REL la plus populaire"
 
 #: .\templates\homepage.html:251
 msgid "learn more"
@@ -3522,21 +3522,21 @@ msgstr ""
 #: .\templates\mentoring_detail.html:389 .\templates\project_detail.html:306
 #: .\templates\project_detail.html:881
 msgid "open"
-msgstr ""
+msgstr "ouvrir"
 
 #: .\templates\mentoring_detail.html:391 .\templates\project_detail.html:307
 #: .\templates\project_detail.html:882
 msgid "close"
-msgstr ""
+msgstr "fermer"
 
 #: .\templates\mentoring_detail.html:394
 msgid "view the shared folder"
-msgstr ""
+msgstr "voir le dossier partagé"
 
 #: .\templates\mentoring_detail.html:400 .\templates\project_detail.html:410
 #: .\templates\project_detail.html:988
 msgid "meeting"
-msgstr ""
+msgstr "réunion"
 
 #: .\templates\mentoring_detail.html:412 .\templates\project_detail.html:426
 #: .\templates\project_detail.html:437
@@ -3630,7 +3630,7 @@ msgstr ""
 
 #: .\templates\oer_detail.html:41
 msgid "upload screenshot"
-msgstr ""
+msgstr "télécharger une capture d'écran"
 
 #: .\templates\oer_detail.html:42 .\templates\oer_view.html:32
 msgid "bookmark this OER for future reference"
@@ -3679,28 +3679,28 @@ msgstr ""
 
 #: .\templates\oer_detail.html:230 .\templates\oer_evaluations.html:36
 msgid "evaluations"
-msgstr ""
+msgstr "évaluations"
 
 #: .\templates\oer_detail.html:233 .\templates\project_detail.html:670
 #: .\templates\project_results.html:116
 msgid "view evaluations"
-msgstr ""
+msgstr "voir évaluations"
 
 #: .\templates\oer_detail.html:235
 msgid "no evaluation"
-msgstr ""
+msgstr "pas d'évaluation"
 
 #: .\templates\oer_detail.html:240 .\templates\oer_evaluation_edit.html:17
 msgid "edit evaluation"
-msgstr ""
+msgstr "modifier l'évaluation"
 
 #: .\templates\oer_detail.html:240 .\templates\oer_evaluation_edit.html:17
 msgid "add evaluation"
-msgstr ""
+msgstr "ajouter une évaluation"
 
 #: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
 msgid "to add evaluation"
-msgstr ""
+msgstr "pour ajouter une évaluation"
 
 #: .\templates\oer_detail.html:252
 msgid "LPs referring this OER"
@@ -3779,7 +3779,7 @@ msgstr ""
 
 #: .\templates\oer_screenshot_upload.html:15
 msgid "upload screenshot of OER"
-msgstr ""
+msgstr "télécharger une capture d'écran de la REL"
 
 #: .\templates\oer_screenshot_upload.html:30
 msgid "remove screenshot"
@@ -3821,7 +3821,7 @@ msgstr ""
 #: .\templates\profile_avatar_upload.html:7
 #: .\templates\profile_avatar_upload.html:14 .\templates\user_profile.html:24
 msgid "upload photo"
-msgstr ""
+msgstr "télécharger une photo"
 
 #: .\templates\profile_avatar_upload.html:26
 msgid "remove photo"
@@ -3892,19 +3892,19 @@ msgstr "projets de support enfants"
 
 #: .\templates\project_detail.html:303 .\templates\project_detail.html:878
 msgid "translate"
-msgstr ""
+msgstr "traduire"
 
 #: .\templates\project_detail.html:304 .\templates\project_detail.html:879
 #: .\templates\project_logo_upload.html:8
 #: .\templates\project_logo_upload.html:15
 msgid "upload logo"
-msgstr ""
+msgstr "télécharger le logo"
 
 #: .\templates\project_detail.html:305 .\templates\project_detail.html:880
 #: .\templates\project_image_upload.html:8
 #: .\templates\project_image_upload.html:15
 msgid "upload image"
-msgstr ""
+msgstr "télécharger l'image"
 
 #: .\templates\project_detail.html:317
 msgid "new community"
@@ -3942,7 +3942,7 @@ msgstr ""
 
 #: .\templates\project_detail.html:393 .\templates\project_detail.html:971
 msgid "shared folder"
-msgstr "dossier partage"
+msgstr "dossier partagé"
 
 #: .\templates\project_detail.html:399 .\templates\project_detail.html:982
 msgid "message to members"
@@ -3973,7 +3973,7 @@ msgstr ""
 #: .\templates\project_detail.html:494 .\templates\project_detail.html:505
 #: .\templates\project_detail.html:518 .\templates\project_detail.html:919
 msgid "apply for membership"
-msgstr ""
+msgstr "demander l'adhésion"
 
 #: .\templates\project_detail.html:494 .\templates\project_detail.html:505
 #: .\templates\project_detail.html:518 .\templates\project_detail.html:919
@@ -4012,7 +4012,7 @@ msgstr "accepter la candidature à cette communauté / ce projet"
 
 #: .\templates\project_detail.html:570
 msgid "add a member by your initiative"
-msgstr ""
+msgstr "ajouter un membre par votre initiative"
 
 #: .\templates\project_detail.html:571 .\templates\project_edit.html:16
 #: .\templates\project_edit.html:18 .\templates\project_edit.html:57
@@ -4219,7 +4219,7 @@ msgstr ""
 
 #: .\templates\pybb\index.html:27
 msgid "Last updates in topics"
-msgstr ""
+msgstr "Dernières mises à jour des topics"
 
 #: .\templates\pybb\pagination.html:7
 msgid "previous page"
@@ -4279,7 +4279,7 @@ msgstr ""
 
 #: .\templates\pybb\topic_list.html:34
 msgid "Closed"
-msgstr ""
+msgstr "Fermé"
 
 #: .\templates\pybb\topic_list.html:38
 msgid "pages"
@@ -4444,7 +4444,7 @@ msgstr "pas de projets"
 
 #: .\templates\user_dashboard.html:216
 msgid "member of the following projects"
-msgstr ""
+msgstr "membre des projets suivants"
 
 #: .\templates\user_dashboard.html:243
 msgid "mentoring requests in my communities"
@@ -4509,7 +4509,7 @@ msgstr ""
 
 #: .\templates\user_dashboard.html:434
 msgid "my OER evaluations"
-msgstr ""
+msgstr "mes évaluations de REL"
 
 #: .\templates\user_dashboard.html:447
 msgid "my personal Learning Paths"
@@ -4545,7 +4545,7 @@ msgstr "modifier les préférences"
 
 #: .\templates\user_profile.html:6 .\templates\user_strict_profile.html:6
 msgid "member"
-msgstr ""
+msgstr "membre"
 
 #: .\templates\user_profile.html:29 .\templates\user_strict_profile.html:23
 msgid "send a message to"
@@ -4593,7 +4593,7 @@ msgstr ""
 
 #: .\templates\user_profile.html:280
 msgid "similar members"
-msgstr ""
+msgstr "membres similaires"
 
 #: .\templates\user_profile.html:300 .\templates\user_strict_profile.html:62
 msgid "anonymized user"
@@ -4689,7 +4689,7 @@ msgstr ""
 
 #: .\templates\zinnia\_entry_detail_base.html:52
 msgid "Last update on"
-msgstr ""
+msgstr "Dernière mise à jour le"
 
 #: .\templates\zinnia\_entry_detail_base.html:104
 #, python-format
@@ -4878,11 +4878,11 @@ msgstr ""
 
 #: .\views.py:1817
 msgid "membership application"
-msgstr ""
+msgstr "demande d'adhésion"
 
 #: .\views.py:1818
 msgid "has applied for membership in"
-msgstr ""
+msgstr "a demandé à devenir membre de"
 
 #: .\views.py:2085
 msgid "thematic forum"

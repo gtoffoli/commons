@@ -386,9 +386,9 @@ div.msg {
            </form></dd>
          </dl></li></ul>
      {% endif %}
-     {% if can_open %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "open" %}</a></li></ul></li></ul>{% endif %}
+     {% if can_open %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/open/" title="{% trans "open" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "open" %}</a></li></ul></li></ul>{% endif %}
 
-     {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-lock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
+     {% if can_close %}<ul class="list-inline marginLB020"><li class="list-back-c0"><ul class="list-inline"><li class="marginB5"><a href="/project/{{ project.id }}/close/" title="{% trans "close" %}" class="btn btn-default"><i class="fa fa-unlock"></i> {% trans "close" %}</a></li></ul></li></ul>{% endif %}
          <ul class="list-inline marginLB020">
          {% if view_shared_folder %}
            <li class="list-back-black marginB5"><ul class="list-inline"><li class="marginB5"><a href="{{ project.get_folder.get_absolute_url }}" class="btn btn-default"><i class="fa fa-folder-open-o"></i> {% trans "view the shared folder" %}</a></li></ul></li>
