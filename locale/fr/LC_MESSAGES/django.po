@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-29 22:23+0100\n"
-"PO-Revision-Date: 2022-01-01 18:32+0000\n"
+"PO-Revision-Date: 2022-01-06 22:56+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: French (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -1090,7 +1090,7 @@ msgstr "inconnu"
 
 #: .\models.py:84
 msgid "anonymous"
-msgstr ""
+msgstr "anonyme"
 
 #: .\models.py:259
 msgid "Tag"
@@ -1124,7 +1124,7 @@ msgstr "Portlet"
 #: .\models.py:388 .\templates\pybb\forum_list.html:36
 #: .\templates\pybb\forum_list.html:63
 msgid "Hidden"
-msgstr ""
+msgstr "Caché"
 
 #: .\models.py:389
 msgid "Draft"
@@ -1279,15 +1279,15 @@ msgstr "sujet"
 
 #: .\models.py:856 .\vocabularies.py:121
 msgid "subjects"
-msgstr ""
+msgstr "sujets"
 
 #: .\models.py:890 .\models.py:1571 .\models.py:1592 .\models.py:3272
 msgid "sort order"
-msgstr ""
+msgstr "ordre de tri"
 
 #: .\models.py:891
 msgid "public"
-msgstr ""
+msgstr "public"
 
 #: .\models.py:894
 msgid "project / community type"
@@ -1363,7 +1363,7 @@ msgstr "projet / communauté"
 
 #: .\models.py:982
 msgid "associated user group"
-msgstr ""
+msgstr "groupe d'utilisateurs associé"
 
 #: .\models.py:989
 msgid "Project type"
@@ -1396,7 +1396,7 @@ msgstr ""
 
 #: .\models.py:999
 msgid "prototypical Learning Path"
-msgstr ""
+msgstr "parcours d'apprentissage prototypique"
 
 #: .\models.py:1001
 msgid "reserved"
@@ -1435,11 +1435,11 @@ msgstr "communauté ou projet"
 
 #: .\models.py:1525
 msgid "the project the user belongs or applies to"
-msgstr ""
+msgstr "le projet auquel l'utilisateur appartient ou en fait la demande"
 
 #: .\models.py:1526
 msgid "the user belonging or applying to the project"
-msgstr ""
+msgstr "l'utilisateur appartenant au projet ou en faisant la demande"
 
 #: .\models.py:1528
 msgid "request created"
@@ -1499,7 +1499,7 @@ msgstr "commentaires / évaluations"
 
 #: .\models.py:1621
 msgid "screenshot"
-msgstr ""
+msgstr "capture d'écran"
 
 #: .\models.py:1630 .\templates\project_detail.html:424
 msgid "external repository"
@@ -1511,11 +1511,11 @@ msgstr ""
 
 #: .\models.py:1678
 msgid "Metadata only"
-msgstr ""
+msgstr "Métadonnées seulement"
 
 #: .\models.py:1679
 msgid "Metadata and online reference"
-msgstr ""
+msgstr "Métadonnées et référence en ligne"
 
 #: .\models.py:1680
 msgid "Metadata and document(s)"
@@ -1523,7 +1523,7 @@ msgstr "Métadonnées et document(s)"
 
 #: .\models.py:1681
 msgid "Metadata and richtext"
-msgstr ""
+msgstr "Métadonnées et richtext"
 
 #: .\models.py:1687
 msgid "Derived-translated"
@@ -1531,19 +1531,19 @@ msgstr "Dérivée-traduite"
 
 #: .\models.py:1688
 msgid "Derived-adapted"
-msgstr ""
+msgstr "Dérivé-adapté"
 
 #: .\models.py:1689
 msgid "Derived-remixed"
-msgstr ""
+msgstr "Dérivé-remixé"
 
 #: .\models.py:1690
 msgid "none (brand new OER)"
-msgstr ""
+msgstr "aucune (tout nouveau OER)"
 
 #: .\models.py:1697
 msgid "specific URL to the OER, if applicable"
-msgstr ""
+msgstr "l'URL spécifique du REL, le cas échéant"
 
 #: .\models.py:1699 .\models.py:2869
 msgid "own text content"
@@ -1551,15 +1551,15 @@ msgstr "propre contenu textuel"
 
 #: .\models.py:1705
 msgid "adapted / remixed"
-msgstr ""
+msgstr "adapté / remixé"
 
 #: .\models.py:1707
 msgid "reference"
-msgstr ""
+msgstr "référence"
 
 #: .\models.py:1716
 msgid "where the OER has been cataloged or created"
-msgstr ""
+msgstr "où le REL a été catalogué ou créé"
 
 #: .\models.py:1723 .\models.py:2841
 msgid "content"
@@ -1580,11 +1580,11 @@ msgstr "documents attachés"
 
 #: .\models.py:1964
 msgid "Metadatum type"
-msgstr ""
+msgstr "Type de métadonnée"
 
 #: .\models.py:1965
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: .\models.py:1973
 msgid "additional metadatum"
@@ -1596,7 +1596,7 @@ msgstr ""
 
 #: .\models.py:1981
 msgid "referenced OER"
-msgstr ""
+msgstr "REL référencée"
 
 #: .\models.py:1982 .\models.py:2822
 msgid "referencing project"
@@ -1604,40 +1604,40 @@ msgstr "projet de référencement"
 
 #: .\models.py:1988
 msgid "shared OER"
-msgstr ""
+msgstr "REL partagée"
 
 #: .\models.py:1989 .\templates\mentoring_detail.html:480
 #: .\templates\project_detail.html:655
 msgid "shared OERs"
-msgstr ""
+msgstr "REL partagées"
 
 #: .\models.py:2044
 msgid "poor"
-msgstr ""
+msgstr "faible"
 
 #: .\models.py:2045
 msgid "fair"
-msgstr ""
+msgstr "moyen"
 
 #: .\models.py:2046
 msgid "good"
-msgstr ""
+msgstr "bon "
 
 #: .\models.py:2047
 msgid "very good"
-msgstr ""
+msgstr "très bon"
 
 #: .\models.py:2048
 msgid "excellent"
-msgstr ""
+msgstr "excellent"
 
 #: .\models.py:2066
 msgid "free text review"
-msgstr ""
+msgstr "évaluation en texte libre"
 
 #: .\models.py:2069
 msgid "evaluator"
-msgstr ""
+msgstr "évaluateur"
 
 #: .\models.py:2076 .\models.py:2093
 msgid "OER evaluation"
@@ -1649,35 +1649,35 @@ msgstr "évaluations de REL"
 
 #: .\models.py:2095
 msgid "facet-related score"
-msgstr ""
+msgstr "score lié à la facette"
 
 #: .\models.py:2103
 msgid "quality metadatum"
-msgstr ""
+msgstr "métadonnée de qualité"
 
 #: .\models.py:2104
 msgid "quality metadata"
-msgstr ""
+msgstr "métadonnées de qualité"
 
 #: .\models.py:2122
 msgid "simple collection"
-msgstr ""
+msgstr "collection simple"
 
 #: .\models.py:2123
 msgid "sequence"
-msgstr ""
+msgstr "séquence"
 
 #: .\models.py:2124
 msgid "directed graph"
-msgstr ""
+msgstr "graphe orienté"
 
 #: .\models.py:2132
 msgid "original learning path"
-msgstr ""
+msgstr "parcours d'apprentissage original"
 
 #: .\models.py:2141
 msgid "group"
-msgstr ""
+msgstr "groupe"
 
 #: .\models.py:2151 .\templates\_lp_serialize.html:10
 msgid "learning path"
@@ -1711,11 +1711,11 @@ msgstr ""
 
 #: .\models.py:2848
 msgid "path edge"
-msgstr ""
+msgstr "arc de parcours"
 
 #: .\models.py:2849
 msgid "path edges"
-msgstr ""
+msgstr "arcs de parcours"
 
 #: .\models.py:2864
 msgid "learning path or collection"
@@ -1731,12 +1731,12 @@ msgstr "code permettant d'intégrer un document en ligne, tel qu'un GoogleDoc"
 
 #: .\models.py:2876
 msgid "path node"
-msgstr ""
+msgstr "nœud de parcours"
 
 #: .\models.py:2877 .\templates\lp_detail.html:178 .\templates\lp_play.html:64
 #: .\templates\lp_play.html:71
 msgid "path nodes"
-msgstr ""
+msgstr "nœuds de parcour"
 
 #: .\models.py:3050
 msgid "Youtube API are not currently available"
@@ -1780,7 +1780,7 @@ msgstr ""
 
 #: .\models.py:3271
 msgid "group name"
-msgstr ""
+msgstr "nom du groupe"
 
 #: .\models.py:3271
 msgid "Entries can be aggregated by group name."
@@ -1788,11 +1788,11 @@ msgstr ""
 
 #: .\models.py:3272
 msgid "Used to sort in ascending order, not to filter."
-msgstr ""
+msgstr "Utilisé pour trier par ordre croissant, pas pour filtrer."
 
 #: .\models.py:3273
 msgid "priority"
-msgstr ""
+msgstr "priorité"
 
 #: .\models.py:3273
 msgid ""
@@ -1810,19 +1810,19 @@ msgstr ""
 
 #: .\models.py:3283
 msgid "start publication"
-msgstr ""
+msgstr "début de la publication"
 
 #: .\models.py:3283
 msgid "Optional start date of publication."
-msgstr ""
+msgstr "Date de début de publication facultative."
 
 #: .\models.py:3284
 msgid "end publication"
-msgstr ""
+msgstr "fin de publication"
 
 #: .\models.py:3284
 msgid "Optional end date of publication."
-msgstr ""
+msgstr "Date de fin de publication facultative."
 
 #: .\search_indexes.py:137
 msgid "In"
@@ -1835,21 +1835,21 @@ msgstr "Désolé. Vous n'êtes pas autorisé à accéder au contenu ou à la fon
 
 #: .\templates\404.html:4 .\templates\404.html:10
 msgid "Sorry. We cannot find the page that you requested."
-msgstr ""
+msgstr "Désolé. Nous ne pouvons pas trouver la page que vous avez demandée."
 
 #: .\templates\_access_bar.html:19
 msgid "for"
-msgstr ""
+msgstr "pour"
 
 #: .\templates\_access_bar.html:24 .\templates\user_dashboard.html:6
 #: .\templates\user_preferences.html:23 .\templates\user_profile.html:33
 msgid "my home"
-msgstr ""
+msgstr "ma maison"
 
 #: .\templates\_access_bar.html:24 .\templates\_object_comments.html:72
 #: .\templates\oer_detail.html:246 .\templates\user_welcome.html:43
 msgid "complete your profile"
-msgstr ""
+msgstr "compléter votre profil"
 
 #: .\templates\_access_bar.html:32 .\templates\user_dashboard.html:39
 msgid "my messages"
@@ -1857,7 +1857,7 @@ msgstr "mes messages"
 
 #: .\templates\_access_bar.html:33 .\templates\user_dashboard.html:40
 msgid "new posts"
-msgstr ""
+msgstr "nouveaux posts"
 
 #: .\templates\_access_bar.html:34
 msgid "{{ site_name }} calendar"
@@ -1865,24 +1865,24 @@ msgstr "calendrier {{ site_name }}"
 
 #: .\templates\_access_bar.html:37
 msgid "admin"
-msgstr ""
+msgstr "admin"
 
 #: .\templates\_access_bar.html:45 .\templates\datatrans\base.html:19
 msgid "Log out"
-msgstr ""
+msgstr "Se déconnecter"
 
 #: .\templates\_access_bar.html:54 .\templates\_login_model.html:18
 msgid "email address"
-msgstr ""
+msgstr "adresse e-mail"
 
 #: .\templates\_access_bar.html:57 .\templates\_login_model.html:24
 msgid "password"
-msgstr ""
+msgstr "mot de passe"
 
 #: .\templates\_access_bar.html:59 .\templates\_login_model.html:37
 #: .\templates\account\login.html:104
 msgid "Forgot Password?"
-msgstr ""
+msgstr "Mot de passe oublié?"
 
 #: .\templates\_access_bar.html:65 .\templates\_login_model.html:29
 msgid "Remember Me"
@@ -1892,7 +1892,7 @@ msgstr "Souviens-toi"
 #: .\templates\_access_bar.html:109 .\templates\_login_model.html:10
 #: .\templates\_login_model.html:33
 msgid "Log in"
-msgstr ""
+msgstr "Se connecter"
 
 #: .\templates\_access_bar.html:69 .\templates\_access_bar.html:103
 #: .\templates\_access_bar.html:111 .\templates\flatpages\why_register.html:46
@@ -1907,7 +1907,7 @@ msgstr "s'enregistrer"
 #: .\templates\_login_model.html:66 .\templates\flatpages\why_register.html:48
 #: .\templates\flatpages\why_register.html:49
 msgid "Login With"
-msgstr ""
+msgstr "Se connecter avec"
 
 #: .\templates\_candidate_mentors.html:3
 msgid "select a mentor"
@@ -1930,15 +1930,15 @@ msgstr ""
 #: .\templates\_cannot_serialize.html:10 .\templates\_lp_serialize.html:18
 #: .\templates\_online_serialize.html:14
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: .\templates\_cannot_serialize.html:14 .\templates\_online_serialize.html:19
 msgid "NOTE"
-msgstr ""
+msgstr "NOTE"
 
 #: .\templates\_cannot_serialize.html:15
 msgid "cannot convert to PDF a document of mimetype"
-msgstr ""
+msgstr "ne peut pas convertir en PDF un document de mimetype"
 
 #: .\templates\_cannot_serialize.html:18
 msgid ""
@@ -1948,37 +1948,37 @@ msgstr "ce nœud fait référence à un contenu en ligne auquel vous devez essay
 
 #: .\templates\_change_state.html:8
 msgid "submit for publication"
-msgstr ""
+msgstr "soumettre pour publication"
 
 #: .\templates\_change_state.html:9
 msgid "withdraw"
-msgstr ""
+msgstr "retirer"
 
 #: .\templates\_change_state.html:10
 msgid "reject"
-msgstr ""
+msgstr "rejeter"
 
 #: .\templates\_change_state.html:11
 msgid "publish"
-msgstr ""
+msgstr "publier"
 
 #: .\templates\_change_state.html:12
 msgid "unpublish"
-msgstr ""
+msgstr "dépublier"
 
 #: .\templates\_data_confirm_js.html:11 .\templates\_lp_dag.html:165
 #: .\templates\_lp_dag.html:235 .\templates\folder_detail.html:220
 #: .\templates\folder_detail.html:249 .\templates\lp_detail.html:360
 #: .\templates\oer_detail.html:338
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: .\templates\_data_confirm_js.html:15 .\templates\_lp_dag.html:169
 #: .\templates\_lp_dag.html:239 .\templates\folder_detail.html:224
 #: .\templates\folder_detail.html:253 .\templates\lp_detail.html:364
 #: .\templates\oer_detail.html:342
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: .\templates\_edit_submit.html:3 .\templates\datatrans\translate.html:60
 #: .\templates\folder_detail.html:165
@@ -2008,7 +2008,7 @@ msgstr "quitter sans sauvegarder"
 
 #: .\templates\_footer.html:4 .\templates\base.html:215
 msgid "the CommonS Consortium"
-msgstr ""
+msgstr "le Consortium CommonS"
 
 #: .\templates\_footer.html:5 .\templates\base.html:216
 msgid "built by"
@@ -2057,7 +2057,7 @@ msgstr "bibliothèque éducative"
 
 #: .\templates\_info_creator_date.html:3 .\templates\_lp_serialize.html:10
 msgid "submitted by"
-msgstr ""
+msgstr "soumis par"
 
 #: .\templates\_info_creator_date.html:12
 msgid "in the project of mentoring"
@@ -2079,27 +2079,27 @@ msgstr "dernière mise à jour"
 
 #: .\templates\_login_model.html:36
 msgid "Create an account"
-msgstr ""
+msgstr "Créer un compte"
 
 #: .\templates\_lp_dag.html:162
 msgid "do you really want to remove this edge"
-msgstr ""
+msgstr "voulez-vous vraiment supprimer cet arc"
 
 #: .\templates\_lp_dag.html:232 .\templates\lp_detail.html:357
 msgid "do you really want to remove this node"
-msgstr ""
+msgstr "voulez-vous vraiment supprimer ce noeud"
 
 #: .\templates\_lp_serialize.html:12
 msgid "other contributors"
-msgstr ""
+msgstr "autres contributeurs"
 
 #: .\templates\_lp_serialize.html:15
 msgid "last modified on"
-msgstr ""
+msgstr "dernière modification le"
 
 #: .\templates\_lp_serialize.html:25
 msgid "IMPORTANT NOTICE"
-msgstr ""
+msgstr "AVIS IMPORTANT"
 
 #: .\templates\_lp_serialize.html:26
 msgid "this document has been produced by"
@@ -2107,7 +2107,7 @@ msgstr "ce document a été produit par"
 
 #: .\templates\_lp_serialize.html:27 .\templates\project_detail.html:187
 msgid "on"
-msgstr ""
+msgstr "le"
 
 #: .\templates\_lp_serialize.html:28
 msgid "for personal use"
@@ -2120,7 +2120,7 @@ msgstr "des restrictions pourraient s'appliquer à certains de ses contenus"
 #: .\templates\_lp_subtree.html:15 .\templates\lp_detail.html:210
 #: .\templates\lp_play.html:102
 msgid "analyze text"
-msgstr ""
+msgstr "analyser le texte"
 
 #: .\templates\_mentors_refuse.html:5
 msgid "mentors that didn't accept"
@@ -2128,20 +2128,20 @@ msgstr ""
 
 #: .\templates\_menu_analytics.html:7
 msgid "registered users"
-msgstr ""
+msgstr "utilisateurs enregistrés"
 
 #: .\templates\_menu_analytics.html:8 .\templates\contributors.html:5
 #: .\templates\contributors.html:12
 msgid "top contributors"
-msgstr ""
+msgstr "principaux contributeurs"
 
 #: .\templates\_menu_analytics.html:9
 msgid "active users"
-msgstr ""
+msgstr "utilisateurs actifs"
 
 #: .\templates\_menu_analytics.html:11
 msgid "xAPI query"
-msgstr ""
+msgstr "interrogation xAPI"
 
 #: .\templates\_object_comments.html:10 .\templates\_object_comments.html:12
 #: .\templates\zinnia\entry_detail_base.html:192
@@ -2150,18 +2150,18 @@ msgstr "Commentaires"
 
 #: .\templates\_object_comments.html:10
 msgid "disable"
-msgstr ""
+msgstr "désactiver"
 
 #: .\templates\_object_comments.html:10
 msgid "enable"
-msgstr ""
+msgstr "activer"
 
 #: .\templates\_object_comments.html:28
 #: .\templates\zinnia\_entry_detail_base.html:29
 #: .\templates\zinnia\entry_detail_base.html:212
 msgctxt "on date"
 msgid "on"
-msgstr ""
+msgstr "le"
 
 #: .\templates\_object_comments.html:47 .\templates\_object_comments.html:53
 #: .\templates\zinnia\_entry_detail_base.html:159
@@ -2174,32 +2174,32 @@ msgstr "Les commentaires sont fermés."
 #: .\templates\zinnia\_entry_detail_base.html:153
 #: .\templates\zinnia\entry_detail_base.html:234
 msgid "No comments yet."
-msgstr ""
+msgstr "Aucun commentaire pour le moment."
 
 #: .\templates\_object_comments.html:69
 msgid "Add comment"
-msgstr ""
+msgstr "Ajouter un commentaire"
 
 #: .\templates\_object_comments.html:72 .\templates\_object_comments.html:74
 #: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
 msgid "please"
-msgstr ""
+msgstr "s'il vous plaît"
 
 #: .\templates\_object_comments.html:72 .\templates\_object_comments.html:74
 msgid "to leave a comment"
-msgstr ""
+msgstr "pour laisser un commentaire"
 
 #: .\templates\_object_comments.html:74 .\templates\oer_detail.html:244
 msgid "log in"
-msgstr ""
+msgstr "connectez-vous"
 
 #: .\templates\_oer_card.html:9
 msgid "rating"
-msgstr ""
+msgstr "évaluation"
 
 #: .\templates\_online_serialize.html:20
 msgid "this node refers to an OER that you can access online through its URL"
-msgstr ""
+msgstr "ce nœud fait référence à une REL à laquelle vous pouvez accéder en ligne via son URL"
 
 #: .\templates\_online_serialize.html:22
 msgid "the associated resource has content type"
@@ -2226,14 +2226,14 @@ msgstr "montrer la vue de traduction"
 #: .\templates\_pathnode_detail.html:12 .\templates\lp_detail.html:85
 #: .\templates\lp_detail.html:104 .\templates\oer_detail.html:254
 msgid "show player view"
-msgstr ""
+msgstr "montrer la vue de reproduction"
 
 #: .\templates\_pathnode_detail.html:32 .\templates\folder_detail.html:97
 #: .\templates\lp_play.html:143 .\templates\lp_play.html:165
 #: .\templates\mentoring_detail.html:238 .\templates\oer_detail.html:196
 #: .\templates\user_profile.html:177
 msgid "download"
-msgstr ""
+msgstr "télécharger"
 
 #: .\templates\_pathnode_detail.html:33 .\templates\folder_detail.html:94
 #: .\templates\folder_detail.html:100 .\templates\mentoring_detail.html:239
@@ -2241,15 +2241,15 @@ msgstr ""
 #: .\templates\project_detail.html:842 .\templates\user_profile.html:142
 #: .\templates\user_profile.html:178
 msgid "view"
-msgstr ""
+msgstr "vue"
 
 #: .\templates\_pathnode_detail.html:39
 msgid "text"
-msgstr ""
+msgstr "texte"
 
 #: .\templates\_pathnode_detail.html:44
 msgid "node added by"
-msgstr ""
+msgstr "nœud ajouté par"
 
 #: .\templates\_project_card.html:20
 msgid "number of members"
@@ -2270,11 +2270,11 @@ msgstr "projet enfant de"
 
 #: .\templates\_project_card.html:27 .\templates\project_detail.html:168
 msgid "parent"
-msgstr ""
+msgstr "parent"
 
 #: .\templates\_project_card.html:45 .\templates\_project_card.html:58
 msgid "number of learning paths"
-msgstr ""
+msgstr "nombre de parcours d'apprentissage"
 
 #: .\templates\_project_card.html:46 .\templates\_project_card.html:52
 #: .\templates\_project_card.html:59 .\templates\_project_card.html:64
@@ -2283,23 +2283,23 @@ msgstr "résultats du projet"
 
 #: .\templates\_project_card.html:51 .\templates\_project_card.html:63
 msgid "number of OERs"
-msgstr ""
+msgstr "nombre de REL"
 
 #: .\templates\_project_mentoring_text.html:19
 #: .\templates\project_detail.html:302 .\templates\project_detail.html:877
 #: .\templates\user_preferences.html:33 .\templates\user_profile.html:172
 #: .\templates\user_profile.html:241
 msgid "modify"
-msgstr ""
+msgstr "modifier"
 
 #: .\templates\_resource_edit_lang_msg.html:6
 msgid "WARNING"
-msgstr ""
+msgstr "AVERTISSEMENT"
 
 #: .\templates\_resource_edit_lang_msg.html:6
 #: .\templates\_resource_edit_lang_msg.html:13
 msgid "You are using the currently active language"
-msgstr ""
+msgstr "Vous utilisez la langue active du moment"
 
 #: .\templates\_resource_edit_lang_msg.html:8
 #: .\templates\_resource_edit_lang_msg.html:15
@@ -2312,15 +2312,15 @@ msgstr "cela VA CHANGER sa \"langue d'édition originale\""
 
 #: .\templates\_resource_edit_lang_msg.html:12
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: .\templates\_resource_edit_lang_msg.html:16
 msgid "also"
-msgstr ""
+msgstr "aussi"
 
 #: .\templates\_resource_edit_lang_msg.html:16
 msgid "still"
-msgstr ""
+msgstr "encore"
 
 #: .\templates\_resource_edit_lang_msg.html:18
 msgid "This will set its 'original editing language'"
@@ -2381,7 +2381,7 @@ msgstr "critères de recherche"
 
 #: .\templates\_search_form.html:9 .\templates\_search_form.html:30
 msgid "Apply"
-msgstr ""
+msgstr "Postuler"
 
 #: .\templates\_search_form.html:10 .\templates\_search_form.html:31
 msgid "Reset"
@@ -2427,7 +2427,7 @@ msgstr ""
 msgid ""
 "Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
 "address for user %(user_display)s."
-msgstr ""
+msgstr "Veuillez confirmer que <a href=\"mailto:%(email)s\">%(email)s</a> est une adresse e-mail pour l'utilisateur %(user_display)s."
 
 #: .\templates\account\email_confirm.html:25
 msgid "Confirm"
@@ -2555,17 +2555,17 @@ msgstr "Nous vous avons envoyé un e-mail pour vérification. Suivez le lien fou
 
 #: .\templates\active_users.html:5 .\templates\active_users.html:13
 msgid "recently active users"
-msgstr ""
+msgstr "utilisateurs actifs récents"
 
 #: .\templates\active_users.html:11
 msgid ""
 "Recently active users <small>being members of projects shared with "
 "me</small>"
-msgstr ""
+msgstr "Utilisateurs récemment actifs <small>étant membres de projets partagés avec moi</small>"
 
 #: .\templates\active_users.html:17
 msgid "users online"
-msgstr ""
+msgstr "utilisateurs en ligne"
 
 #: .\templates\active_users.html:18
 msgid "active during last 5 minutes"
@@ -2581,7 +2581,7 @@ msgstr ""
 
 #: .\templates\active_users.html:35
 msgid "users no more online"
-msgstr ""
+msgstr "utilisateurs non plus en ligne"
 
 #: .\templates\active_users.html:38
 msgid "last seen"
@@ -2616,11 +2616,11 @@ msgstr ""
 
 #: .\templates\activity_stream.html:31
 msgid "object type"
-msgstr ""
+msgstr "type d'objet"
 
 #: .\templates\activity_stream.html:31
 msgid "object"
-msgstr ""
+msgstr "objet"
 
 #: .\templates\activity_stream.html:31
 msgid "context"
@@ -2700,7 +2700,7 @@ msgstr ""
 
 #: .\templates\browse_people.html:15
 msgid "distribution of users based on self-compiled user profiles"
-msgstr ""
+msgstr "répartition des utilisateurs sur la base de profils d'utilisateurs auto-compilés"
 
 #: .\templates\bulk_add_members.html:10 .\templates\bulk_add_members.html:13
 msgid "adding members in bulk to commmunity/project"
@@ -2748,7 +2748,7 @@ msgstr "langues de contenu et traductions"
 
 #: .\templates\contributors.html:17
 msgid "creation of learning paths"
-msgstr ""
+msgstr "création de parcours d'apprentissage"
 
 #: .\templates\contributors.html:27 .\templates\contributors.html:48
 #: .\templates\contributors.html:69 .\templates\contributors.html:90
@@ -2773,19 +2773,19 @@ msgstr "il n'y a pas de communauté"
 
 #: .\templates\count_users.html:5 .\templates\count_users.html:8
 msgid "count of users and members"
-msgstr ""
+msgstr "nombre d'utilisateurs et de membres"
 
 #: .\templates\count_users.html:14
 msgid "user class"
-msgstr ""
+msgstr "classe d'utilisateur"
 
 #: .\templates\count_users.html:14
 msgid "user count"
-msgstr ""
+msgstr "nombre d'utilisateurs"
 
 #: .\templates\count_users.html:17
 msgid "all users"
-msgstr ""
+msgstr "tous les utilisateurs"
 
 #: .\templates\count_users.html:18
 msgid "regular profiles"
@@ -2968,7 +2968,7 @@ msgstr "Merci de bien vouloir noter que la langue de rédaction originale de ce 
 
 #: .\templates\datatrans\translate.html:11
 msgid "and by the languages known by the user as declared in the user profile"
-msgstr ""
+msgstr "et des langues connues telles que déclarées dans le profil d'utilisateur"
 
 #: .\templates\datatrans\translate.html:12
 msgid "The current active language"
@@ -3323,7 +3323,7 @@ msgstr ""
 #: .\templates\lp_detail.html:4 .\templates\lp_play.html:4
 #, python-format
 msgid "%(lp_title)s [learning path]"
-msgstr ""
+msgstr "[parcours d'apprentissage] %(lp_title)s"
 
 #: .\templates\lp_detail.html:71
 msgid "bookmark this LP for future reference"
@@ -3335,19 +3335,19 @@ msgstr ""
 
 #: .\templates\lp_detail.html:162
 msgid "convert to sequence type"
-msgstr ""
+msgstr "convertir en type de séquence"
 
 #: .\templates\lp_detail.html:165
 msgid "convert to simple collection"
-msgstr ""
+msgstr "convertir en collection simple"
 
 #: .\templates\lp_detail.html:168
 msgid "convert to graph type in tree form: suggested only for few node!"
-msgstr ""
+msgstr "convertir en type de graphe sous forme d'arbre: suggéré seulement pour peu de noeuds!"
 
 #: .\templates\lp_detail.html:171
 msgid "convert to graph type with unconnected nodes"
-msgstr ""
+msgstr "convertir en type de graphe avec des noeuds non connectés"
 
 #: .\templates\lp_detail.html:195 .\templates\lp_detail.html:197
 #: .\templates\oer_detail.html:188 .\templates\oer_detail.html:190
@@ -3424,12 +3424,12 @@ msgstr ""
 msgid ""
 "You can export this learning path for private use only and should avoid "
 "overloading the system. Proceed?"
-msgstr ""
+msgstr "Vous pouvez exporter ce parcours d'apprentissage pour un usage privé uniquement et devez éviter de surcharger le système. Continuer?"
 
 #: .\templates\lp_edit.html:7
 #, python-format
 msgid "%(lp_title)s [edit learning path]"
-msgstr ""
+msgstr "[modifier le parcours d'apprentissage] %(lp_title)s "
 
 #: .\templates\lp_edit.html:7 .\templates\lp_edit.html:17
 msgid "add learning path"
@@ -3616,7 +3616,7 @@ msgstr ""
 #: .\templates\notification\email_subject.txt:1
 #, python-format
 msgid "%(subject)s"
-msgstr ""
+msgstr "%(subject)s"
 
 #: .\templates\notification\full.txt:1 .\templates\notification\short.txt:1
 #, python-format
@@ -3804,7 +3804,7 @@ msgstr "éditer le noeud du parcours d'apprentissage"
 
 #: .\templates\pathnode_edit.html:23
 msgid "add learning path node"
-msgstr ""
+msgstr "ajouter un nœud au parcours d'apprentissage"
 
 #: .\templates\pathnode_edit.html:27
 msgid ""
@@ -3812,7 +3812,7 @@ msgid ""
 "tailored to the needs of this learning path (LP); 3) a formatted text. When "
 "playing the LP, the platform will visualize only one of them: the OER, if "
 "present, otherwise the document or the formatted text as the last choice."
-msgstr ""
+msgstr "Dans ce formulaire, vous pouvez spécifier 3 types de ressources: 1) une REL ; 2) un document adapté aux besoins de ce parcours d'apprentissage; 3) un texte formaté. Lors de la présentation du LP, la plateforme ne visualisera qu'une seule de ces ressources : la REL, si elle est présente, sinon le document ou le texte formaté comme dernier choix."
 
 #: .\templates\pathnode_edit.html:65
 msgid "remove selected file"
@@ -4031,7 +4031,7 @@ msgstr ""
 
 #: .\templates\project_detail.html:581
 msgid "apply"
-msgstr ""
+msgstr "postuler"
 
 #: .\templates\project_detail.html:667
 msgid "last OERs evaluated"
@@ -4130,7 +4130,7 @@ msgstr ""
 
 #: .\templates\project_results.html:97 .\templates\user_dashboard.html:471
 msgid "no Learning Path created yet"
-msgstr ""
+msgstr "aucun parcours d'apprentissage n'a encore été créé"
 
 #: .\templates\project_results.html:108 .\templates\user_dashboard.html:417
 msgid "no OER classified yet"
@@ -4557,7 +4557,7 @@ msgstr ""
 
 #: .\templates\user_profile.html:52
 msgid "username"
-msgstr ""
+msgstr "nom utilisateur"
 
 #: .\templates\user_profile.html:56
 msgid "email"
@@ -4597,11 +4597,11 @@ msgstr "membres similaires"
 
 #: .\templates\user_profile.html:300 .\templates\user_strict_profile.html:62
 msgid "anonymized user"
-msgstr ""
+msgstr "utilisateur anonymisé"
 
 #: .\templates\user_profile.html:305 .\templates\user_strict_profile.html:67
 msgid "the user profile you are looking for is no more available on this site"
-msgstr ""
+msgstr "le profil d'utilisateur que vous recherchez n'est plus disponible sur ce site"
 
 #: .\templates\user_profile.html:338
 msgid "this Curriculum"
@@ -4621,7 +4621,7 @@ msgstr ""
 
 #: .\templates\vue\contents_dashboard.html:392
 msgid "corpora of user"
-msgstr ""
+msgstr "les corpus de l'utilisateur"
 
 #: .\templates\vue\contents_dashboard.html:393
 msgid "corpora"
@@ -4716,7 +4716,7 @@ msgstr ""
 #: .\templates\zinnia\_entry_detail_base.html:133
 #, python-format
 msgid "Short URL to %(object)s"
-msgstr ""
+msgstr "URL court vers %(object)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:141
 msgid "Discussions"
