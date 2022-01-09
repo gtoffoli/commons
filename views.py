@@ -40,6 +40,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.views import flatpage, render_flatpage
 from datatrans.utils import get_current_language
 import actstream
+from schedule.models import Calendar
 
 from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -1504,6 +1505,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['lps'] = lps[:MAX_LPS]
     shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
     var_dict['shared_lps'] = [[shared_lp, shared_lp.can_delete(request)] for shared_lp in shared_lps]
+    var_dict['calendar'] = project.get_calendar()
     if proj_type.name == 'ment':
         return render(request, 'mentoring_detail.html', var_dict)
     else:
@@ -2131,6 +2133,23 @@ def forum_edit(request, forum_id=None):
 def forum_edit_by_id(request, forum_id):
     forum = get_object_or_404(Forum, id=forum_id)
     return forum_edit(request, forum_id=forum.id)
+
+def project_calendar(request, project_id):
+    user = request.user
+    project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(user):
+        raise PermissionDenied
+    calendar = project.get_calendar()
+    if calendar:
+        return HttpResponseRedirect('/schedule/calendar/month/{}/'.format(calendar.slug))
+
+def project_create_calendar(request, project_id):
+    user = request.user
+    project = get_object_or_404(Project, id=project_id)
+    if not project.can_access(user):
+        raise PermissionDenied
+    calendar = Calendar.objects.get_or_create_calendar_for_object(project, distinction="owner", name=project.name)
+    return HttpResponseRedirect('/project/{}/'.format(project.slug))
 
 # report user accessing an online meeting (KnockPlop or MultipatyMeeting)
 def report_meeting_in(request, project_id):

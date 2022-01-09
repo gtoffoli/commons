@@ -385,6 +385,17 @@
                                     <li class="marginB5"><a href="javascript:location.href='/report_meeting_in/{{ project.id }}/'; window.open('{{ project.get_room_url }}', '{{ project.get_room_name }}')" class="btn btn-default"><div><i class="fa fa-tv" aria-hidden="true"></i>
                                         {% trans "meeting"|capfirst %}</div></a></li>
                                 {% endif %}
+                                {% if HAS_CALENDAR %}{% if calendar or can_edit %}
+                                    <li class="marginB5">
+                                     {% if calendar %}
+                                        <a href="/project/{{ project.id }}/calendar/" class="btn btn-default"><div><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                        {% trans "calendar"|capfirst %}</div></a>
+                                     {% else %}
+                                        <a href="/project/{{ project.id }}/create_calendar/" class="btn btn-default"><div><i class="fa fa-calendar-o" aria-hidden="true"></i>
+                                        {% trans "create calendar"|capfirst %}</div></a>
+                                     {% endif %}
+                                    </li>
+                                {% endif %}{% endif %}
                                 </ul>
                             </li>
                         </ul>

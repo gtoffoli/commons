@@ -49,6 +49,7 @@ from zinnia.models import Entry as BlogArticle
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
 from django_messages.models import Message
+from schedule.models import Calendar
 
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -1287,6 +1288,13 @@ class Project(Resource):
     def can_delete(self, user):
         parent = self.get_parent()
         return self.state in (PROJECT_DRAFT, PROJECT_SUBMITTED, PROJECT_CLOSED,) and (self.is_admin(user) or (parent and parent.is_admin(user)) or self.is_admin_community (user) or user.is_superuser)
+
+    def get_calendar(self):
+        if settings.HAS_CALENDAR:
+            calendars = Calendar.objects.get_calendars_for_object(self, distinction="owner")
+            if calendars:
+                return calendars[0]
+        return None
 
     if settings.HAS_MEETING:
         def get_room_name(self):

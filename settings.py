@@ -24,6 +24,8 @@ if HAS_SAML2:
     from commons.sso_config import *
 if not 'HAS_LRS' in globals():
     HAS_LRS = True
+if not 'HAS_CALENDAR' in globals():
+    HAS_CALENDAR = False
 if not 'HAS_EARMASTER' in globals():
     HAS_EARMASTER = True
 if not 'ALLOW_REDUCED_PROFILE' in globals():
