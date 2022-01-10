@@ -2,17 +2,22 @@
 Management command for notify periodically, by email, new forum posts to concerned users.
 """
 import datetime
-from django.utils import timezone
 from django.core.management.base import BaseCommand
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
+from django.contrib.auth.models import User
 
-from commons.models import site_member_users
-from commons.analytics import unviewed_posts
+from commons.models import Project, ProjectMember
+from commons.models import PROJECT_OPEN, MEMBERSHIP_ACTIVE
+from commons.analytics import recently_updated_forums
+from commons.tracking import notify_event
 
 def send_notify_new_posts(users):
-    pass
+    subject = _('Recent updates in your forums.')
+    body = _("""New messages have been posted recently in forums of communities or projects of which you are a member. You can get an overview of new/updated topics using a link in your user bar.""")
+    notify_event(users, subject, body)
 
-NOTIFICATION_PERIOD = datetime.timedelta(hours=12)
+NOTIFICATION_PERIOD = datetime.timedelta(hours=settings.RECENT_HOURS)
 
 class Command(BaseCommand):
     """
@@ -22,33 +27,12 @@ class Command(BaseCommand):
     help = """Notify new topics and posts to concerned users"""
 
     def handle(self, *args, **options):
-        print('----- handling notify_news command')
-        now = timezone.now()
-        users = site_member_users(return_ids=False)
-        print('-----', list(users))
-        receivers = []
-        for user in users:
-            must_notify = False
-            categories_list = unviewed_posts(user, count_only=False)
-            for category, forum_list in categories_list:
-                for forum, topic_list in forum_list:
-                    if forum.get_site() == settings.SITE_ID:
-                        for topic, last_viewed, new_posts_count in topic_list:
-                            print('----- last_viewed', forum, last_viewed)
-                            if last_viewed and (now - last_viewed) > NOTIFICATION_PERIOD:
-                                must_notify = True
-                                break
-                            if must_notify:
-                                break
-                    if must_notify:
-                        break
-                if must_notify:
-                    break
-            if must_notify:
-                receivers.append(users)
-        if receivers:
-            send_notify_new_posts(receivers)
-        print('----- receivers:', receivers)
+        forums = recently_updated_forums(NOTIFICATION_PERIOD)
+        projects = Project.objects.filter(forum__in=forums, state=PROJECT_OPEN)
+        user_ids = ProjectMember.objects.filter(project__in=projects, state=MEMBERSHIP_ACTIVE).values_list('user', flat=True).distinct()
+        users = User.objects.filter(id__in=user_ids, preferences__enable_new_posts_notification=True)
+        if users:
+            send_notify_new_posts(users)
         
 
             

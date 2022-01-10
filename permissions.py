@@ -16,7 +16,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         # return qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(Q(category_id=2) | Q(topic_count__gt=0))) if not user.is_superuser else qs
         if user.is_superuser: #  or user.is_staff:
             return qs
-        qs = qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(topic_count__gt=0))
+        # qs = qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(topic_count__gt=0))
+        qs = qs.filter(Q(hidden=False) & Q(category__hidden=False))
         if settings.SITE_ID > 1:
             qs = qs.filter_by_site(Forum)
         return qs

@@ -555,7 +555,8 @@ DATATRANS_TRANSLATE_MAP = {
     'pathnode': ('/pathnode/%s/', 'pk', 'label', 'commons.forms.PathNodeForm',),
 }
 
-HOMEPAGE_TIMEOUT = 60 * 60 * 24 # 1 day
+HOMEPAGE_TIMEOUT = 60 * 60 * 24 # seconds in 1 day
+RECENT_HOURS = 24 # after this time posts and messages are no more new
 
 #file attachment
 EXTS_FILE_ATTACHMENT = 'txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip'

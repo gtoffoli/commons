@@ -22,13 +22,14 @@ Sent from: https://%s
 This is an automatic notification message: please do not reply to it. """
 from django.core.mail import send_mail
 def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMAIL):
-    if not settings.PRODUCTION:
-        return
     site = Site.objects.get_current()
     subject = '%s - %s' % (site.name, subject)
     body = notification_template % (body, site.domain)
     recipient_emails = [recipient.email for recipient in recipients]
-    send_mail(subject, body, from_email, recipient_emails)
+    if settings.PRODUCTION:
+        send_mail(subject, body, from_email, recipient_emails)
+    else:
+        print('--- notify_event', subject, body, from_email, recipient_emails)
 
 def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
     if request and not actor:

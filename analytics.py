@@ -30,6 +30,7 @@ from pybb.models import Category, Forum, Topic, TopicReadTracker, Post
 from django_messages.models import Message
 from commons.models import UserProfile, Project, ProjectMember, Repo, OER, OerEvaluation, LearningPath, PathNode
 from commons.models import SUBMITTED, PUBLISHED, PROJECT_OPEN, MEMBERSHIP_ACTIVE
+from commons.models import filter_by_site
 from commons.xapi_vocabularies import xapi_namespaces, xapi_verbs, xapi_activities, xapi_contexts
 
 def user_unviewed_posts_count(self):
@@ -130,6 +131,11 @@ def topic_last_viewed(topic, user=None):
         return qs[0].timestamp
     else:
         return None
+
+def recently_updated_forums(time_delta):
+    now = timezone.now()
+    qs = Forum.objects.filter(project_forum__isnull=False, topic_count__gt=0, updated__gt=now-time_delta).order_by('-updated')
+    return filter_by_site(qs, Forum)
 
 def unviewed_posts(user, count_only=True):
     if count_only:
