@@ -28,8 +28,6 @@ def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMA
     recipient_emails = [recipient.email for recipient in recipients]
     if settings.PRODUCTION:
         send_mail(subject, body, from_email, recipient_emails)
-    else:
-        print('--- notify_event', subject, body, from_email, recipient_emails)
 
 def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
     if request and not actor:

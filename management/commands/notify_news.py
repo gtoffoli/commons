@@ -16,6 +16,7 @@ def send_notify_new_posts(users):
     subject = _('Recent updates in your forums.')
     body = _("""New messages have been posted recently in forums of communities or projects of which you are a member. You can get an overview of new/updated topics using a link in your user bar.""")
     notify_event(users, subject, body)
+    print(subject, [(user.username, user.get_display_name()) for user in users])
 
 NOTIFICATION_PERIOD = datetime.timedelta(hours=settings.RECENT_HOURS)
 
