@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 00:15+0100\n"
-"PO-Revision-Date: 2022-01-09 23:17+0000\n"
+"POT-Creation-Date: 2022-01-12 14:40+0100\n"
+"PO-Revision-Date: 2022-01-12 14:05+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: Italian (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/it/)\n"
 "MIME-Version: 1.0\n"
@@ -21,37 +21,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: .\analytics.py:750
+#: .\analytics.py:756
 msgid "OERs analytics"
 msgstr "Analitica degli OER"
 
-#: .\analytics.py:751 .\models.py:1740 .\templates\_menu_analytics.html:12
+#: .\analytics.py:757 .\models.py:1740 .\templates\_menu_analytics.html:12
 #: .\templates\autocomplete.html:14 .\templates\project_results.html:85
 #: .\templates\resources_by.html:37 .\templates\search_oers.html:12
 msgid "OERs"
 msgstr "OERs"
 
-#: .\analytics.py:752
+#: .\analytics.py:758
 msgid "published OERs"
 msgstr "OER pubblicati"
 
-#: .\analytics.py:753
+#: .\analytics.py:759
 msgid "OERs by month"
 msgstr "OER per mese"
 
-#: .\analytics.py:771
+#: .\analytics.py:777
 msgid "Learning paths analytics"
 msgstr "Analitica dei LP"
 
-#: .\analytics.py:772
+#: .\analytics.py:778
 msgid "LPs"
 msgstr "LP"
 
-#: .\analytics.py:773
+#: .\analytics.py:779
 msgid "published LPs"
 msgstr "LP pubblicati"
 
-#: .\analytics.py:774
+#: .\analytics.py:780
 msgid "LP by month"
 msgstr "LP per mese"
 
@@ -874,6 +874,17 @@ msgstr "corpo dell'articolo"
 #: .\forms.py:734
 msgid "article lead"
 msgstr "paragrafo di apertura"
+
+#: .\management\commands\notify_news.py:16
+msgid "Recent updates in your forums."
+msgstr "Aggiornamenti recenti nei tuoi forum."
+
+#: .\management\commands\notify_news.py:17
+msgid ""
+"New messages have been posted recently in forums of communities or projects "
+"of which you are a member. You can get an overview of new/updated topics "
+"using a link in your user bar."
+msgstr "Di recente sono stati pubblicati nuovi messaggi nei forum di comunità o progetti di cui sei membro. Puoi avere un sommario degli argomenti nuovi/aggiornati utilizzando un collegamento nella barra degli utenti."
 
 #: .\menus.py:15
 msgid "this site"
@@ -4848,6 +4859,18 @@ msgstr "Indice del blog"
 #: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
 msgid "Sitemap"
 msgstr "Mappa del blog"
+
+#: .\tracking.py:24
+msgid "sent from"
+msgstr "inviato da"
+
+#: .\tracking.py:25
+msgid "This is an automatic notification message: please do not reply to it."
+msgstr "Questo è un messaggio di notifica automatica: si prega di non rispondere."
+
+#: .\tracking.py:26
+msgid "Some notifications depend on settings in the user preferences."
+msgstr "Alcune notifiche dipendono dalle impostazioni nelle preferenze d'utente."
 
 #: .\utils.py:241
 msgid ""

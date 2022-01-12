@@ -1,10 +1,12 @@
 """
 Management command for notify periodically, by email, new forum posts to concerned users.
 """
+
+from collections import defaultdict
 import datetime
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import activate, gettext_lazy as _
 from django.contrib.auth.models import User
 
 from commons.models import Project, ProjectMember
@@ -12,12 +14,27 @@ from commons.models import PROJECT_OPEN, MEMBERSHIP_ACTIVE
 from commons.analytics import recently_updated_forums
 from commons.tracking import notify_event
 
+def get_user_language(user):
+    user_languages = user.get_profile().languages.all()
+    if user_languages:
+        for user_language in user_languages:
+            code = user_language.code
+            for language in settings.LANGUAGES:
+                if language[0] == code:
+                    return code
+    return 'en'
+
 def send_notify_new_posts(users):
     subject = _('Recent updates in your forums.')
     body = _("""New messages have been posted recently in forums of communities or projects of which you are a member. You can get an overview of new/updated topics using a link in your user bar.""")
-    notify_event(users, subject, body)
-    print(subject, [(user.username, user.get_display_name()) for user in users])
-
+    language_code = 'en'
+    language_users_dict = defaultdict(list)
+    for user in users:
+        language_users_dict[get_user_language(user)].append(user)
+    for language_code, users in language_users_dict.items():
+        activate(language_code)
+        notify_event(users, subject, body, blind=True)
+        
 NOTIFICATION_PERIOD = datetime.timedelta(hours=settings.RECENT_HOURS)
 
 class Command(BaseCommand):

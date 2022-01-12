@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 00:15+0100\n"
+"POT-Creation-Date: 2022-01-12 14:40+0100\n"
 "PO-Revision-Date: 2021-01-11 15:08+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,37 +18,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: .\analytics.py:750
+#: .\analytics.py:756
 msgid "OERs analytics"
 msgstr ""
 
-#: .\analytics.py:751 .\models.py:1740 .\templates\_menu_analytics.html:12
+#: .\analytics.py:757 .\models.py:1740 .\templates\_menu_analytics.html:12
 #: .\templates\autocomplete.html:14 .\templates\project_results.html:85
 #: .\templates\resources_by.html:37 .\templates\search_oers.html:12
 msgid "OERs"
 msgstr ""
 
-#: .\analytics.py:752
+#: .\analytics.py:758
 msgid "published OERs"
 msgstr ""
 
-#: .\analytics.py:753
+#: .\analytics.py:759
 msgid "OERs by month"
 msgstr ""
 
-#: .\analytics.py:771
+#: .\analytics.py:777
 msgid "Learning paths analytics"
 msgstr ""
 
-#: .\analytics.py:772
+#: .\analytics.py:778
 msgid "LPs"
 msgstr ""
 
-#: .\analytics.py:773
+#: .\analytics.py:779
 msgid "published LPs"
 msgstr ""
 
-#: .\analytics.py:774
+#: .\analytics.py:780
 msgid "LP by month"
 msgstr ""
 
@@ -869,6 +869,17 @@ msgstr ""
 
 #: .\forms.py:734
 msgid "article lead"
+msgstr ""
+
+#: .\management\commands\notify_news.py:16
+msgid "Recent updates in your forums."
+msgstr ""
+
+#: .\management\commands\notify_news.py:17
+msgid ""
+"New messages have been posted recently in forums of communities or projects "
+"of which you are a member. You can get an overview of new/updated topics "
+"using a link in your user bar."
 msgstr ""
 
 #: .\menus.py:15
@@ -4842,6 +4853,18 @@ msgstr ""
 
 #: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
 msgid "Sitemap"
+msgstr ""
+
+#: .\tracking.py:24
+msgid "sent from"
+msgstr ""
+
+#: .\tracking.py:25
+msgid "This is an automatic notification message: please do not reply to it."
+msgstr ""
+
+#: .\tracking.py:26
+msgid "Some notifications depend on settings in the user preferences."
 msgstr ""
 
 #: .\utils.py:241

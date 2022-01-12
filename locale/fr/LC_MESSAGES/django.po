@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: CommonS Platform\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 00:15+0100\n"
-"PO-Revision-Date: 2022-01-09 23:19+0000\n"
+"POT-Creation-Date: 2022-01-12 14:40+0100\n"
+"PO-Revision-Date: 2022-01-12 15:41+0000\n"
 "Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>\n"
 "Language-Team: French (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -21,37 +21,37 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "X-Generator: Poedit 2.4.2\n"
 
-#: .\analytics.py:750
+#: .\analytics.py:756
 msgid "OERs analytics"
 msgstr "Analytique des REL"
 
-#: .\analytics.py:751 .\models.py:1740 .\templates\_menu_analytics.html:12
+#: .\analytics.py:757 .\models.py:1740 .\templates\_menu_analytics.html:12
 #: .\templates\autocomplete.html:14 .\templates\project_results.html:85
 #: .\templates\resources_by.html:37 .\templates\search_oers.html:12
 msgid "OERs"
 msgstr "REL"
 
-#: .\analytics.py:752
+#: .\analytics.py:758
 msgid "published OERs"
 msgstr "REL publiés"
 
-#: .\analytics.py:753
+#: .\analytics.py:759
 msgid "OERs by month"
 msgstr "REL par mois"
 
-#: .\analytics.py:771
+#: .\analytics.py:777
 msgid "Learning paths analytics"
 msgstr "analytique des parcours d'apprentissage"
 
-#: .\analytics.py:772
+#: .\analytics.py:778
 msgid "LPs"
 msgstr "parcours d'apprentissage"
 
-#: .\analytics.py:773
+#: .\analytics.py:779
 msgid "published LPs"
 msgstr "parcours d'apprentissage publiés"
 
-#: .\analytics.py:774
+#: .\analytics.py:780
 msgid "LP by month"
 msgstr "parcours d'apprentissage par mois"
 
@@ -875,6 +875,17 @@ msgstr "contenu d'article"
 msgid "article lead"
 msgstr "article principal"
 
+#: .\management\commands\notify_news.py:16
+msgid "Recent updates in your forums."
+msgstr "Messages récents dans vos forums."
+
+#: .\management\commands\notify_news.py:17
+msgid ""
+"New messages have been posted recently in forums of communities or projects "
+"of which you are a member. You can get an overview of new/updated topics "
+"using a link in your user bar."
+msgstr "De nouveaux messages ont été récemment publiés sur des forums de communautés ou de projets dont vous êtes membre. Vous pouvez obtenir un résumé des sujets nouveaux / mis à jour en utilisant un lien dans la barre des utilisateurs."
+
 #: .\menus.py:15
 msgid "this site"
 msgstr "ce site"
@@ -1299,11 +1310,11 @@ msgstr "types de projets / communautés"
 
 #: .\models.py:907
 msgid "no chatroom"
-msgstr ""
+msgstr "pas de salle de discussion"
 
 #: .\models.py:908
 msgid "permanent chatroom"
-msgstr ""
+msgstr "salle de discussion permanente"
 
 #: .\models.py:918
 msgid "draft proposal"
@@ -1768,15 +1779,15 @@ msgstr "global"
 
 #: .\models.py:3275 .\models.py:3309
 msgid "featured item"
-msgstr ""
+msgstr "élément vedette"
 
 #: .\models.py:3276
 msgid "featured items"
-msgstr ""
+msgstr "éléments vedette"
 
 #: .\models.py:3278
 msgid "is lead item"
-msgstr ""
+msgstr "est l'élément principal"
 
 #: .\models.py:3279
 msgid "group name"
@@ -1784,7 +1795,7 @@ msgstr "nom du groupe"
 
 #: .\models.py:3279
 msgid "Entries can be aggregated by group name."
-msgstr ""
+msgstr "Les éléments peuvent être regroupées par nom de groupe."
 
 #: .\models.py:3280
 msgid "Used to sort in ascending order, not to filter."
@@ -1798,15 +1809,15 @@ msgstr "priorité"
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
-msgstr ""
+msgstr "Utilisé pour filtrer, pas pour trier, éventuellement combiné avec d'autres attributs. Un grand nombre signifie une priorité élevée."
 
 #: .\models.py:3282
 msgid "In the case of a \"lead\" item, probably you will provide this text."
-msgstr ""
+msgstr "Dans le cas d'un élément principal, vous fournirez probablement ce texte."
 
 #: .\models.py:3283
 msgid "scope"
-msgstr ""
+msgstr "étendue"
 
 #: .\models.py:3291
 msgid "start publication"
@@ -1826,7 +1837,7 @@ msgstr "Date de fin de publication facultative."
 
 #: .\search_indexes.py:137
 msgid "In"
-msgstr ""
+msgstr "En"
 
 #: .\templates\403.html:4 .\templates\403.html:10
 msgid ""
@@ -2509,7 +2520,7 @@ msgstr "changer le Mot de Passe"
 
 #: .\templates\account\password_reset_from_key.html:38
 msgid "Bad Token"
-msgstr ""
+msgstr "Mauvais Jeton"
 
 #: .\templates\account\password_reset_from_key.html:45
 #, python-format
@@ -2705,11 +2716,11 @@ msgstr "répartition des utilisateurs sur la base de profils d'utilisateurs auto
 
 #: .\templates\bulk_add_members.html:10 .\templates\bulk_add_members.html:13
 msgid "adding members in bulk to commmunity/project"
-msgstr ""
+msgstr "ajouter des membres en masse à la communauté/au projet"
 
 #: .\templates\bulk_add_members.html:18
 msgid "records found in file"
-msgstr ""
+msgstr "enregistrements trouvés dans le fichier"
 
 #: .\templates\bulk_add_members.html:19
 msgid "members added"
@@ -2721,11 +2732,11 @@ msgstr "liste des destinataires"
 
 #: .\templates\bulk_add_members.html:23
 msgid "for mailing from a plain client"
-msgstr ""
+msgstr "pour l’envoi à partir d’un client ordinaire"
 
 #: .\templates\bulk_add_members.html:29
 msgid "in CSV format for MailChimp"
-msgstr ""
+msgstr "au format CSV pour MailChimp"
 
 #: .\templates\bulk_add_members.html:37
 msgid "back to the community/project home"
@@ -2790,15 +2801,15 @@ msgstr "tous les utilisateurs"
 
 #: .\templates\count_users.html:18
 msgid "regular profiles"
-msgstr ""
+msgstr "profils normaux"
 
 #: .\templates\count_users.html:19
 msgid "profiles with avatars"
-msgstr ""
+msgstr "profils avec avatars"
 
 #: .\templates\count_users.html:21
 msgid "accepted members"
-msgstr ""
+msgstr "membres acceptés"
 
 #: .\templates\count_users.html:22
 msgid "community members"
@@ -2810,19 +2821,19 @@ msgstr "membres du projet"
 
 #: .\templates\datatrans\base.html:5
 msgid "Data Translation"
-msgstr ""
+msgstr "Traduction de données"
 
 #: .\templates\datatrans\base.html:16
 msgid "Datatrans - Model Translation"
-msgstr ""
+msgstr "Datatrans - Traduction de modèles"
 
 #: .\templates\datatrans\base.html:19
 msgid "Welcome,"
-msgstr ""
+msgstr "Bienvenue / Bienvenu ,"
 
 #: .\templates\datatrans\base.html:19
 msgid "Site administration"
-msgstr ""
+msgstr "Administration du site"
 
 #: .\templates\datatrans\base.html:19
 msgid "Change password"
@@ -2848,7 +2859,7 @@ msgstr "Modèles"
 #: .\templates\datatrans\translate.html:34
 #: .\templates\datatrans\translate.html:35
 msgid "Translations for"
-msgstr ""
+msgstr "Traductions de"
 
 #: .\templates\datatrans\model_detail.html:32
 #, python-format
@@ -2857,32 +2868,32 @@ msgstr "Progrès : %(percent)s%% (%(done)s/%(total)s)"
 
 #: .\templates\datatrans\model_detail.html:39
 msgid "Jump to first to do"
-msgstr ""
+msgstr "Aller au premier à faire"
 
 #: .\templates\datatrans\model_detail.html:43
 #, python-format
 msgid "Jump to %(field_verbose_name)s field"
-msgstr ""
+msgstr "Aller au champ %(field_verbose_name)s"
 
 #: .\templates\datatrans\model_detail.html:48
 msgid "done"
-msgstr ""
+msgstr "fait"
 
 #: .\templates\datatrans\model_detail.html:50
 msgid "to do"
-msgstr ""
+msgstr "faire"
 
 #: .\templates\datatrans\model_detail.html:52
 msgid "to do (fuzzy)"
-msgstr ""
+msgstr "à faire (flou)"
 
 #: .\templates\datatrans\model_detail.html:82
 msgid "Link to this translation"
-msgstr ""
+msgstr "Lien vers cette traduction"
 
 #: .\templates\datatrans\model_detail.html:105
 msgid "tick this checkbox if the translation is deliberately empty"
-msgstr ""
+msgstr "cochez cette case si la traduction est délibérément vide"
 
 #: .\templates\datatrans\model_detail.html:105
 msgid "empty"
@@ -2890,7 +2901,7 @@ msgstr "vide"
 
 #: .\templates\datatrans\model_detail.html:107
 msgid "keep this original or fuzzy"
-msgstr ""
+msgstr "gardez cet original ou flou"
 
 #: .\templates\datatrans\model_detail.html:107
 msgid "ignore"
@@ -2912,7 +2923,7 @@ msgstr "%(words)s mots"
 
 #: .\templates\datatrans\model_list.html:14
 msgid "Scan models"
-msgstr ""
+msgstr "Parcourir les modèles"
 
 #: .\templates\datatrans\model_list.html:15
 #: .\templates\datatrans\obsolete_list.html:3
@@ -2942,7 +2953,7 @@ msgstr "Il y a %(obsolete_count)s messages obsolètes."
 msgid ""
 "Please review them to see if you can reuse something,\n"
 "\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
-msgstr ""
+msgstr "Veuillez les examiner pour voir si vous pouvez réutiliser quelque chose,\n\t\t\tet lorsque vous avez terminé, cliquez sur le bouton «Supprimer tous les obsolètes» pour nettoyer la table KeyValue."
 
 #: .\templates\datatrans\obsolete_list.html:17
 #: .\templates\datatrans\obsolete_list.html:35
@@ -3044,7 +3055,7 @@ msgstr "Supprimer"
 #: .\templates\django_messages\trash.html:24
 #: .\templates\django_messages\view.html:15
 msgid "SHORT_DATETIME_FORMAT"
-msgstr ""
+msgstr "SHORT_DATETIME_FORMAT"
 
 #: .\templates\django_messages\inbox.html:34
 #: .\templates\django_messages\outbox.html:28
@@ -3510,7 +3521,7 @@ msgstr "envoyer"
 
 #: .\templates\mentoring_detail.html:377
 msgid "submit request to admin"
-msgstr ""
+msgstr "soumettre la demande à l'administrateur"
 
 #: .\templates\mentoring_detail.html:377
 msgid "submit request"
@@ -4220,7 +4231,7 @@ msgstr "Les catégories de forum n'ont pas été créés."
 
 #: .\templates\pybb\index.html:21
 msgid "Add a category now"
-msgstr ""
+msgstr "Ajouter une catégorie maintenant"
 
 #: .\templates\pybb\index.html:27
 msgid "Last updates in topics"
@@ -4280,7 +4291,7 @@ msgstr "Aller au premier message non lu"
 
 #: .\templates\pybb\topic_list.html:33
 msgid "Sticky"
-msgstr ""
+msgstr "Collé au sommet"
 
 #: .\templates\pybb\topic_list.html:34
 msgid "Closed"
@@ -4397,15 +4408,15 @@ msgstr "préférences"
 
 #: .\templates\user_dashboard.html:45
 msgid "manage"
-msgstr ""
+msgstr "gérer"
 
 #: .\templates\user_dashboard.html:46
 msgid "featured"
-msgstr ""
+msgstr "vedette"
 
 #: .\templates\user_dashboard.html:48
 msgid "flatpages"
-msgstr ""
+msgstr "flatpages"
 
 #: .\templates\user_dashboard.html:50
 msgid "Weblog"
@@ -4673,7 +4684,7 @@ msgstr "Rédigé par"
 #: .\templates\zinnia\_entry_detail_base.html:27
 #, python-format
 msgid "Show all %(author)s's entries"
-msgstr "Voir toutes les entrées de %(author)s"
+msgstr "Voir tous les articles de %(author)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:31
 msgid "Written on"
@@ -4686,7 +4697,7 @@ msgstr "dans"
 #: .\templates\zinnia\_entry_detail_base.html:44
 #, python-format
 msgid "Show all entries in %(category)s"
-msgstr "Voir toutes les entrées en%(category)s"
+msgstr "Voir tous les articles en%(category)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:52
 msgid "Last update on"
@@ -4695,7 +4706,7 @@ msgstr "Dernière mise à jour le"
 #: .\templates\zinnia\_entry_detail_base.html:104
 #, python-format
 msgid "%(percent)s%% of %(object)s still remains to read."
-msgstr ""
+msgstr "%(percent)s%% sur %(object)s encore à lire"
 
 #: .\templates\zinnia\_entry_detail_base.html:106
 msgid "Continue reading"
@@ -4704,7 +4715,7 @@ msgstr "Lire la suite"
 #: .\templates\zinnia\_entry_detail_base.html:122
 #, python-format
 msgid "Show all entries tagged by %(tag)s"
-msgstr "Voir tous les objets tagués avec %(tag)s"
+msgstr "Voir tous les articles tagués avec %(tag)s"
 
 #: .\templates\zinnia\_entry_detail_base.html:125
 msgid "No tags"
@@ -4712,7 +4723,7 @@ msgstr "Pas de tags"
 
 #: .\templates\zinnia\_entry_detail_base.html:131
 msgid "Short url"
-msgstr ""
+msgstr "URL courte"
 
 #: .\templates\zinnia\_entry_detail_base.html:133
 #, python-format
@@ -4770,11 +4781,11 @@ msgstr[1] ""
 
 #: .\templates\zinnia\base.html:16
 msgid "RSS feed of latest entries"
-msgstr ""
+msgstr "Flux RSS des derniers articles"
 
 #: .\templates\zinnia\base.html:17
 msgid "RSS feed of latest discussions"
-msgstr ""
+msgstr "Flux RSS des dernières discussions"
 
 #: .\templates\zinnia\base.html:38
 msgid "Authors"
@@ -4782,7 +4793,7 @@ msgstr "Auteurs"
 
 #: .\templates\zinnia\base.html:55
 msgid "Recent entries"
-msgstr "Entrées récentes"
+msgstr "Articles récents"
 
 #: .\templates\zinnia\base.html:59
 msgid "Recent comments"
@@ -4790,17 +4801,17 @@ msgstr "Commentaires récents"
 
 #: .\templates\zinnia\base.html:77
 msgid "Archives"
-msgstr ""
+msgstr "Archives"
 
 #: .\templates\zinnia\entry_detail_base.html:23
 #, python-format
 msgid "RSS feed of discussions on %(object)s"
-msgstr ""
+msgstr "Flux RSS des discussions sur %(object)s"
 
 #: .\templates\zinnia\entry_detail_base.html:25
 #, python-format
 msgid "RSS feed of comments on %(object)s"
-msgstr ""
+msgstr "Flux RSS des commentaires sur %(object)s"
 
 #: .\templates\zinnia\entry_detail_base.html:27
 #, python-format
@@ -4814,32 +4825,32 @@ msgstr ""
 
 #: .\templates\zinnia\entry_detail_base.html:48
 msgid "Next entry"
-msgstr ""
+msgstr "Article suivant"
 
 #: .\templates\zinnia\entry_detail_base.html:62
 msgid "Previous entry"
-msgstr ""
+msgstr "Article précédent"
 
 #: .\templates\zinnia\entry_detail_base.html:76
 msgid "Related entries"
-msgstr ""
+msgstr "Articles connexes"
 
 #: .\templates\zinnia\entry_detail_base.html:90
 msgid "Similar entries"
-msgstr ""
+msgstr "Articles similaires"
 
 #: .\templates\zinnia\entry_detail_base.html:218
 msgid "Direct link to this comment"
-msgstr ""
+msgstr "Lien direct vers ce commentaire"
 
 #: .\templates\zinnia\entry_detail_base.html:255
 #: .\templates\zinnia\entry_detail_base.html:256
 msgid "Edit the entry"
-msgstr "Modifier l'entrée"
+msgstr "Modifier l'article"
 
 #: .\templates\zinnia\skeleton.html:19
 msgid "Useful links"
-msgstr ""
+msgstr "Liens utiles"
 
 #: .\templates\zinnia\skeleton.html:22 .\templates\zinnia\skeleton.html:23
 msgid "Weblog index"
@@ -4847,7 +4858,19 @@ msgstr "Index du blog"
 
 #: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
 msgid "Sitemap"
-msgstr ""
+msgstr "Plan du site"
+
+#: .\tracking.py:24
+msgid "sent from"
+msgstr "envoyé de"
+
+#: .\tracking.py:25
+msgid "This is an automatic notification message: please do not reply to it."
+msgstr "Ceci est un message de notification automatique : merci de ne pas y répondre."
+
+#: .\tracking.py:26
+msgid "Some notifications depend on settings in the user preferences."
+msgstr "Certaines notifications dépendent des paramètres des préférences utilisateur."
 
 #: .\utils.py:241
 msgid ""
