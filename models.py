@@ -689,7 +689,8 @@ class UserProfile(models.Model):
     curriculum = models.ForeignKey(Document, on_delete=models.SET_NULL, blank=True, null=True, related_name='profile_curriculum', verbose_name=_('curriculum'))
     position = models.TextField(blank=True, null=True, verbose_name=_('study or work position'))
     subjects = models.ManyToManyField(SubjectNode, blank=True, verbose_name='interest areas')
-    languages = models.ManyToManyField(Language, blank=True, verbose_name='known languages', help_text=_('The UI will support only EN, IT and PT.'))
+    # languages = models.ManyToManyField(Language, blank=True, verbose_name='known languages', help_text=_('The UI will support only EN, IT and PT.'))
+    languages = models.ManyToManyField(Language, through='UserProfileLanguage', verbose_name='languages known by user')
     other_languages = models.TextField(blank=True, verbose_name=_('known languages not listed above'), help_text=_('list one per line.'))
     short = models.TextField(blank=True, verbose_name=_('short presentation'))
     long = models.TextField(blank=True, verbose_name=_('longer presentation'))
@@ -793,7 +794,6 @@ class UserProfile(models.Model):
                     if mentor == self.user:
                         continue
                     score, matches = self.get_mentor_fitness(mentor)
-                    # print (score, matches)
                     if score > threshold:
                         avatar = mentor.get_profile().avatar
                         best_mentors.append([score, mentor, avatar])
@@ -843,6 +843,19 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 post_save.connect(create_user_profile, sender=User,
                  dispatch_uid="create_user_profile")
+
+@python_2_unicode_compatible
+class UserProfileLanguage(models.Model):
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='userprofilelanguage_profile', verbose_name=_('user profile'))
+    language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='userprofilelanguage_language', verbose_name=_('language'))
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'commons_userprofile_languages'
+        unique_together = ('userprofile', 'language')
+        verbose_name = _('user language')
+        verbose_name_plural = _('user languages')
+        ordering = ('order', 'language__name')
 
 @python_2_unicode_compatible
 class Subject(models.Model):

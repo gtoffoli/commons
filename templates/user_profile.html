@@ -104,10 +104,10 @@
             {% if profile.subjects.all %}
               {% include "_data_all.html" with data=profile.subjects.all data_class=" font14 marginB10" label_data="interest areas" action="/people/search/" type_data="subjects" %}
             {% endif %}
-            {% if profile.languages.all or profile.other_languages %}
+            {% if languages or profile.other_languages %}
               <div class="clearfix marginB10">
-                {% if profile.languages.all %}
-                  {% include "_data_languages.html" with data=profile.languages.all data_class=" font14" action="/people/search/" %}
+                {% if languages %}
+                  {% include "_data_languages.html" with data=languages data_class=" font14" action="/people/search/" %}
                 {% endif %}
                 {% if profile.other_languages %}
                   <dl class="list-inline font14">

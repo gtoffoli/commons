@@ -21,7 +21,7 @@ from hierarchical_auth.admin import UserWithMPTTAdmin
 from tinymce.widgets import TinyMCE
 
 from .documents import DocumentType, Document, DocumentVersion
-from .models import Tag, UserProfile, UserPreferences, Folder, FolderDocument, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
+from .models import Tag, UserProfile, UserPreferences, UserProfileLanguage, Folder, FolderDocument, Subject, Language, ProjType, Project, ProjectMember, RepoFeature, RepoType, Repo
 from .models import OerMetadata, OER, OerQualityMetadata, SharedOer, OerEvaluation, PathNode, PathEdge, LearningPath, SharedLearningPath, Featured
 # from .models import SiteObject
 from .forms import UserChangeForm, UserProfileChangeForm, ProjectChangeForm, RepoChangeForm, OerChangeForm, LpChangeForm, FeaturedChangeForm
@@ -53,6 +53,12 @@ class UserAdmin(UserWithMPTTAdmin):
 
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
+
+class UserProfileLanguageAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'language', 'order',)
+
+    def user(self, obj):
+        return obj.userprofile.user.get_display_name()
 
 class DocumentTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name',]
@@ -290,6 +296,7 @@ class SiteObjectAdmin(admin.ModelAdmin):
     list_display = ('id', 'site', 'content_type', 'object_id')
 """
 
+admin.site.register(UserProfileLanguage, UserProfileLanguageAdmin)
 admin.site.register(DocumentType, DocumentTypeAdmin)
 admin.site.register(Document, DocumentAdmin)
 admin.site.register(DocumentVersion, DocumentVersionAdmin)
@@ -308,7 +315,6 @@ admin.site.register(OerMetadata, OerMetadataAdmin)
 admin.site.register(SharedOer, SharedOerAdmin)
 admin.site.register(OerEvaluation, OerEvaluationAdmin)
 
-# admin.site.register(OerProxy, OerProxyAdmin)
 admin.site.register(PathNode, PathNodeAdmin)
 admin.site.register(PathEdge, PathEdgeAdmin)
 admin.site.register(LearningPath, LearningPathAdmin)

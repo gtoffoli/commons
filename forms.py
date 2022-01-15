@@ -66,8 +66,8 @@ dateTimeOptions = {
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        # fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'long', 'url', 'networks', ]
-        fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'long', 'url', 'networks', 'skype', 'p2p_communication',]
+        # fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'languages', 'other_languages', 'long', 'url', 'networks', 'skype', 'p2p_communication',]
+        fields = ['user', 'short', 'dob', 'gender', 'country', 'city', 'edu_level', 'pro_status', 'position', 'edu_field', 'pro_field', 'subjects', 'extra_languages', 'other_languages', 'long', 'url', 'networks', 'skype', 'p2p_communication',]
 
     user = forms.IntegerField(widget=forms.HiddenInput())
     gender = forms.ChoiceField(required=False, label=_('gender'), choices=GENDERS, widget=forms.Select(attrs={'class':'form-control',}))
@@ -84,7 +84,8 @@ class UserProfileForm(forms.ModelForm):
     edu_field = forms.ModelChoiceField(required=False, queryset=EduFieldEntry.objects.all(), label=_('field of study'), widget=forms.Select(attrs={'class':'form-control'}))
     pro_field = forms.ModelChoiceField(required=False, queryset=ProFieldEntry.objects.all(), label=_('sector of work'), widget=forms.Select(attrs={'class':'form-control',}))
     subjects = forms.ModelMultipleChoiceField(required=False, label=_('interest areas'), queryset=SubjectNode.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 14,}))
-    languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    # languages = forms.ModelMultipleChoiceField(required=False, label=_('known languages'), queryset=Language.objects.all(), widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
+    extra_languages = forms.MultipleChoiceField(label=_('known languages'), choices=[], widget=forms.SelectMultiple(attrs={'class':'form-control', 'size': 7,}))
     other_languages = forms.CharField(required=False, label=_('known languages not listed above'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 1,}))
     short = forms.CharField(required=True, label=_('short presentation'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 2, 'cols': 80,}), help_text=_('very short presentation: 100-200 characters'))
     long = forms.CharField(required=False, label=_('longer presentation'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 5,}))

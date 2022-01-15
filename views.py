@@ -46,7 +46,7 @@ from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, Ma
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
 from .vocabularies import expand_to_descendants
 from .documents import DocumentType, Document
-from .models import Featured, Tag, UserProfile, UserPreferences, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
+from .models import Featured, Tag, UserProfile, UserPreferences, UserProfileLanguage, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
 from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from .models import RepoType, RepoFeature
 from .models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
@@ -373,6 +373,7 @@ def user_profile(request, username, user=None):
         var_dict['sub_exts'] = settings.EXTS_FILE_USER_PROFILE
     if profile:
         var_dict['complete_profile'] = profile.get_completeness()
+        var_dict['languages'] = [profile_language.language for profile_language in UserProfileLanguage.objects.filter(userprofile=profile).order_by('order')]
     else:
         var_dict['complete_profile'] = False
 
@@ -520,6 +521,36 @@ def my_home(request):
         return HttpResponseForbidden()
     return user_dashboard(request, None, user=user)
 
+# need to compute choices for languages since we use an extra field (non-model field) in the form
+def profile_make_language_choices(profile):
+        language_codes = list(UserProfileLanguage.objects.filter(userprofile=profile).values_list('language__code', flat=True))
+        if language_codes: # put known languages before other choices
+            choices = [[language_code, Language.objects.get(code=language_code).name] for language_code in language_codes]
+            for language in Language.objects.all():
+                if not language.code in language_codes:
+                    choices.append([language.code, language.name])
+        else:
+            choices = [[language.code, language.name] for language in Language.objects.all()]
+        return choices
+
+def profile_save_languages(profile, post):
+    language_codes = post.getlist('extra_languages')
+    profile_languages = UserProfileLanguage.objects.filter(userprofile=profile).order_by('order')
+    max_order = 0
+    profile_codes = []
+    for profile_language in profile_languages:
+        code = profile_language.language.code
+        if code in language_codes:
+            max_order = max(max_order, profile_language.order)
+            profile_codes.append(code)
+        else:
+            profile_language.delete()
+    for code in language_codes:
+        if code not in profile_codes:
+            max_order += 1
+            profile_language = UserProfileLanguage(userprofile=profile, language_id=code, order=max_order)    
+            profile_language.save()
+
 def profile_edit(request, username):
     user = get_object_or_404(User, username=username)
     if not user.can_edit(request):
@@ -528,16 +559,18 @@ def profile_edit(request, username):
     data_dict = {'user': user, 'info': info, 'go_caller': '/my_profile/'}
     profiles = UserProfile.objects.filter(user=user)
     profile = profiles and profiles[0] or None
+    language_codes = []
     if request.POST:
         form = UserProfileExtendedForm(request.POST, instance=profile)
+        form.fields['extra_languages'].choices = profile_make_language_choices(profile)
         data_dict['form'] = form
-
         if request.POST.get('save', '') or request.POST.get('continue', ''): 
             if form.is_valid():
-                form.save()
+                profile = form.save()
                 user.first_name = request.POST.get('first_name', '')
                 user.last_name = request.POST.get('last_name', '')
                 user.save()
+                profile_save_languages(profile, request.POST)
                 track_action(request, user, 'Edit', profile, latency=0)
                 if request.POST.get('save', ''): 
                     return HttpResponseRedirect('/my_profile/')
@@ -548,12 +581,16 @@ def profile_edit(request, username):
         elif request.POST.get('cancel', ''):
             return HttpResponseRedirect('/my_profile/')
     elif profile:
-        form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name,})
+        language_codes = list(UserProfileLanguage.objects.filter(userprofile=profile).values_list('language__code', flat=True))
+        form = UserProfileExtendedForm(instance=profile, initial={'first_name': user.first_name, 'last_name': user.last_name, 'extra_languages': language_codes})
     else:
         form = UserProfileExtendedForm(initial={'user': user.id, 'first_name': user.first_name, 'last_name': user.last_name,})
     if settings.ALLOW_REDUCED_PROFILE:
         form.fields['edu_level'].required = False
         form.fields['pro_status'].required = False
+    if profile:
+        form.fields['extra_languages'].choices = profile_make_language_choices(profile)
+    form.fields['extra_languages'].required = False
     data_dict['form'] = form
     return render(request, 'profile_edit.html', data_dict)
 
