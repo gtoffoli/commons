@@ -9,13 +9,15 @@ from django.conf import settings
 from django.utils.translation import activate, gettext_lazy as _
 from django.contrib.auth.models import User
 
-from commons.models import Project, ProjectMember
+from commons.models import UserProfileLanguage, Project, ProjectMember
 from commons.models import PROJECT_OPEN, MEMBERSHIP_ACTIVE
 from commons.analytics import recently_updated_forums
 from commons.tracking import notify_event
 
 def get_user_language(user):
-    user_languages = user.get_profile().languages.all()
+    # user_languages = user.get_profile().languages.all()
+    profile = user.get_profile()
+    user_languages = [profile_language.language for profile_language in UserProfileLanguage.objects.filter(userprofile=profile).order_by('order')]
     if user_languages:
         for user_language in user_languages:
             code = user_language.code
