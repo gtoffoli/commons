@@ -330,6 +330,8 @@ RTL_LANGUAGES = ['ar']
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
 SITE_ID = 1
+if not 'SITE_ROOT' in globals():
+    SITE_ROOT = ''
 SITE_NAME = 'CommonSpaces'
 
 WSGI_APPLICATION = 'commons.wsgi.application'

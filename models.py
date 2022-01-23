@@ -217,10 +217,14 @@ def create_favorites(sender, instance, created, **kwargs):
 def flatpage_get(self, url):
     pass
 
-PROJECT_IDS = []
+# PROJECT_IDS = []
+PROJECT_IDS = None
 def get_project_ids():
     global PROJECT_IDS
-    if not PROJECT_IDS:
+    # if not PROJECT_IDS:
+    if PROJECT_IDS is None:
+        if not settings.SITE_ROOT:
+            return []
         root = Project.objects.get(slug=settings.SITE_ROOT)
         projects = project_list(root)
         PROJECT_IDS = [project.id for project in projects]
