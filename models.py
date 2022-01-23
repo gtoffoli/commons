@@ -291,7 +291,8 @@ class Resource(models.Model):
     def get_site(self):
         content_type = ContentType.objects.get_for_model(self)
         if content_type.model == 'project':
-            return self.id in PROJECT_IDS and settings.SITE_ID or 1
+            # return self.id in PROJECT_IDS and settings.SITE_ID or 1
+            return self.id in get_project_ids() and settings.SITE_ID or 1
         else:
             return self.project and self.project.get_site() or 1
 
@@ -383,28 +384,32 @@ DRAFT = 1
 SUBMITTED = 2
 PUBLISHED = 3
 UN_PUBLISHED = 4
+RESTRICTED = 5
 
 PUBLICATION_STATE_CHOICES = (
     (PORTLET, _('Portlet')),
     (HIDDEN, _('Hidden')),
-    (DRAFT, _('Draft')),
-    (SUBMITTED, _('Submitted')),
-    (PUBLISHED, _('Published')),
+    (DRAFT, _('Private draft')),
+    (RESTRICTED, _('Published internally')),
+    (SUBMITTED, _('Submitted for publication')),
+    (PUBLISHED, _('Published for all')),
     (UN_PUBLISHED, _('Un-published')),)
 PUBLICATION_STATE_DICT = dict(PUBLICATION_STATE_CHOICES)
 
 PUBLICATION_COLOR_DICT = {
   PORTLET: 'Blue',
-  HIDDEN: 'Grey',
+  HIDDEN: 'LightGray',
   DRAFT: 'Orange',
+  RESTRICTED: 'Gray',
   SUBMITTED: 'LimeGreen',
   PUBLISHED: 'Black',
   UN_PUBLISHED: 'Red',
 }
 PUBLICATION_LINK_DICT = {
   PORTLET: 'Blue',
-  DRAFT: 'Grey',
+  HIDDEN: 'LightGray',
   DRAFT: 'Orange',
+  RESTRICTED: 'Gray',
   SUBMITTED: 'LimeGreen',
   PUBLISHED: '#428bca',
   UN_PUBLISHED: 'Red',
@@ -422,8 +427,16 @@ class Publishable(object):
     def get_link_color(self):
         return PUBLICATION_LINK_DICT[self.state]
 
+    def can_share(self,request):
+        if self.get_site()==1:
+            return False
+        return (self.state in [DRAFT] and request.user == self.creator) or (self.state in [UN_PUBLISHED] and self.project.is_admin(request.user))
     def can_submit(self, request):
-        return self.state in [DRAFT] and request.user == self.creator
+        # return self.state in [DRAFT] and request.user == self.creator
+        if self.get_site()==1:
+            return self.state in [DRAFT] and request.user == self.creator
+        else:
+            return self.state in [RESTRICTED] and request.user == self.creator
     def can_withdraw(self, request):
         return self.state in [SUBMITTED] and request.user == self.creator
     def can_reject(self, request):
@@ -433,6 +446,10 @@ class Publishable(object):
     def can_un_publish(self, request):
         return self.state in [PUBLISHED] and self.project and self.project.is_admin(request.user)
 
+    def share(self, request):
+        if self.can_share(request):
+            self.state = RESTRICTED
+            self.save()
     def submit(self, request):
         if self.can_submit(request):
             self.state = SUBMITTED
@@ -487,7 +504,6 @@ class Folder(MPTTModel):
         return self.title
 
     def remove_document(self, folderdocument, request):
-        #folderdocument = FolderDocument.objects.get(folder=self, id=document_id)
         if folderdocument.document:
             folderdocument.document.delete()
         folderdocument.delete()
@@ -518,8 +534,7 @@ class Folder(MPTTModel):
     def get_documents(self, user, project=None, state=None, sign=0): # 190311 GT: added state and sign
         if not project:
             project = self.get_project()
-        # documents = []
-        # if project.is_member(user) or project.is_admin_community(user) or user.is_superuser:
+        published_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
         if state:
             documents = FolderDocument.objects.filter(folder=self, state=state)
             if sign > 0:
@@ -531,7 +546,8 @@ class Folder(MPTTModel):
         elif user and project.is_member(user):
             documents = FolderDocument.objects.filter(folder=self).exclude(state=PORTLET).exclude(state=HIDDEN)
         else:
-            documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED)
+            # documents = FolderDocument.objects.filter(folder=self, state=PUBLISHED)
+            documents = FolderDocument.objects.filter(folder=self, state__in=published_states)
         documents = documents.order_by('order')
         return documents
 
@@ -602,16 +618,26 @@ class FolderDocument(models.Model, Publishable):
                 last_order = 0
             self.order = last_order+1
         super(FolderDocument, self).save(*args, **kwargs) # Call the "real" save() method.
+
+    @property
+    def creator(self):
+        return self.user
+
+    @property
+    def project(self):
+        return self.folder.get_project()
         
     def can_access(self, user):
         folder = self.folder
         project = folder.get_project()
-        if self.state==PUBLISHED and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
+        # if self.state==PUBLISHED and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
+        published_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+        if self.state in published_states and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
             return True
         """
         if project.state in (PROJECT_OPEN, PROJECT_CLOSED) and project.is_member(user):
             return True
-        if self.state==PUBLISHED and project.state in (PROJECT_DRAFT, PROJECT_SUBMITTED):
+        if self.state in published_states and project.state in (PROJECT_DRAFT, PROJECT_SUBMITTED):
             if user.is_superuser or project.is_admin(user):
                 return True
             else:
@@ -1442,8 +1468,10 @@ class Project(Resource):
             qs = qs.filter(state__in=states)
         return qs.order_by(order_by)
 
-    def get_oers_last_evaluated(self):
-        oers = OER.objects.filter(project=self.id, state=PUBLISHED, evaluated_oer__isnull=False).order_by('-evaluated_oer__modified')
+    # def get_oers_last_evaluated(self):
+    def get_oers_last_evaluated(self, states=[PUBLISHED]):
+        # oers = OER.objects.filter(project=self.id, state=PUBLISHED, evaluated_oer__isnull=False).order_by('-evaluated_oer__modified')
+        oers = OER.objects.filter(project=self.id, state__in=states, evaluated_oer__isnull=False).order_by('-evaluated_oer__modified')
         unique = []
         for oer in oers:
             if not oer in unique:
@@ -1774,20 +1802,17 @@ class OER(Resource, Publishable):
         return self.metadata_set.all().order_by('metadata_type__name')
 
     def can_access(self, user):
-        if self.state==PUBLISHED:
+        # if self.state==PUBLISHED:
+        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
             return True
-        """
-        if not user.is_authenticated():
-            return False
-        """
-        if not user.is_authenticated and self.state in (DRAFT, SUBMITTED):
+        if not user.is_authenticated and self.state in (DRAFT, RESTRICTED, SUBMITTED):
             return False
         project = self.project
         # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
-        return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED)) or self.state == UN_PUBLISHED
+        return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, RESTRICTED, SUBMITTED)) or self.state == UN_PUBLISHED
 
     def can_republish(self, user):
-        if self.state!=UN_PUBLISHED:
+        if self.state != UN_PUBLISHED:
             return True
         if not user.is_authenticated:
             return False
@@ -1869,12 +1894,12 @@ class OER(Resource, Publishable):
             return { 'n': n }
 
     def can_evaluate(self, user):
-        if self.state not in [PUBLISHED]:
+        # if self.state not in [PUBLISHED]:
+        published_states = self.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+        if self.state not in published_states:
             return False
         if not user.is_authenticated:
             return False
-        # profile = user.get_profile()
-        # return profile and profile.get_completeness() and not self.creator==user
         if self.creator==user or not user.is_completed_profile():
             return False
         return OerEvaluation.objects.filter(oer=self, user=user).count() == 0
@@ -2237,7 +2262,8 @@ class LearningPath(Resource, Publishable):
         return users
 
     def can_access(self, user):
-        if self.state==PUBLISHED:
+        # if self.state==PUBLISHED:
+        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
             return True
         if not user.is_authenticated:
             return False
@@ -2248,7 +2274,8 @@ class LearningPath(Resource, Publishable):
     def can_play(self, request):
         if not self.get_nodes().count():
             return False
-        if self.state == PUBLISHED:
+        # if self.state == PUBLISHED:
+        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
             return True
         user = request.user
         if not user.is_authenticated:

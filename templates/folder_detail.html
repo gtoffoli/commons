@@ -34,7 +34,7 @@ dl.eval dd:nth-child(even) {
       <p class="marginB0 paddingT10 demiBold">{% for folder, url in folder.get_breadcrumbs %}{% if not forloop.last %}<a href="{{ url }}">{% endif %}{{ folder.get_title }}{% if not forloop.last %}</a> <i class="fa fa-angle-double-right" aria-hidden="true"></i> {% endif %}{% endfor %}</p>
     </div>
   </div>
-  {% if can_share %}
+  {% if can_view_subfolders %}
     <dl class="eval">
        {% if subfolders %}
          {% for sub in subfolders %}
@@ -60,27 +60,31 @@ dl.eval dd:nth-child(even) {
            </dd>
          {% endfor %}
        {% endif %}
-       {% if folderdocuments %}
-         {% for folderdocument in folderdocuments %}{% with document=folderdocument.document %}
+       {% if folder_documents_changes %}
+         {% for folderdocument, changes in folder_documents_changes %}{% with document=folderdocument.document %}
            <dd>
              <div class="row">
                <div class="col-sm-7 col-md-7 col-lg-7">
                  {% if folderdocument.embed_code %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">
-                      <span style="color: {{ folderdocument.get_title_color }};">[{{ folderdocument.get_state }}]</span>
+                      {% comment %}<span style="color: {{ folderdocument.get_title_color }};">[{{ folderdocument.get_state }}]</span>{% endcomment %}
                       {{ folderdocument.label|safe }}</p>
                    <p class="font12" class="marginB0">
                     <span class="demiBold">{% trans "added by"|capfirst %}</span>
                     {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{ folderdocument.user.get_display_name }}{% endif %}
-                    -- {{ folderdocument.created|date:"d/m/Y" }}</p>
+                    -- {{ folderdocument.created|date:"d/m/Y" }}
+                    <span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ folderdocument.get_title_color }};">{{ folderdocument.get_state }}</span>
+                    </p>
                  {% else %}
                    <p id="v_{{ folderdocument.id }}" class="marginB0">
-                     <span style="color: {{ folderdocument.get_title_color }};">[{{ folderdocument.get_state }}]</span>
-                     {% if folderdocument.label %}{{ folderdocument.label|safe }} [ {% endif %}{{ document.label|safe }}{% if folderdocument.label %} ]{% endif %}</p>
+                     {% comment %}<span style="color: {{ folderdocument.get_title_color }};">[{{ folderdocument.get_state }}]</span>{% endcomment %}
+                     {% if folderdocument.label %}{{ folderdocument.label|safe }} [{% endif %}{{ document.label|safe }}{% if folderdocument.label %}]{% endif %}</p>
                    <p class="font12" class="marginB0">
                     <span class="demiBold">{% trans "loaded by"|capfirst %}</span>
                     {% if folderdocument.user.user_active %}<a href="/profile/{{ folderdocument.user.username }}">{{ folderdocument.user.get_display_name }}</a>{% else %}{{folderdocument.user.get_display_name}}{% endif %}
-                    -- {{ document.date_added|date:"d/m/Y" }}</p>
+                    -- {{ document.date_added|date:"d/m/Y" }} &bull;
+                    <span class="demiBold">{% trans "publication state"|capfirst %}</span>: <span style="color: {{ folderdocument.get_title_color }};">{{ folderdocument.get_state }}</span>
+                    </p>
                  {% endif %}
                </div>
                <div class="col-sm-5 col-md-5 col-lg-5">
@@ -106,12 +110,13 @@ dl.eval dd:nth-child(even) {
                     {% endif %}
 {% endcomment %}
                  </ul>
+                 {% include "_change_state.html" with data=folderdocument type_object="folderdocument" sm="-sm" can_share=changes.0 can_submit=changes.1  can_withdraw=changes.2 can_reject=changes.3 can_publish=changes.4 can_un_publish=changes.5 %}
                </div>
              </div>
            </dd>
          {% endwith %}{% endfor %}
        {% endif %}
-       {% if not subfolders %}{% if not folderdocuments %}
+       {% if not subfolders %}{% if not folder_documents_changes %}
          <dd>
            <p>{% trans "no shared documents are present"|capfirst %}</p>
          </dd>

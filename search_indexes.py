@@ -34,7 +34,6 @@ class UserProfileIndex(indexes.SearchIndex, indexes.Indexable):
         return UserProfile
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(user__first_name__isnull=False, user__last_name__isnull=False, country__isnull=False, edu_level__isnull=False, pro_status__isnull=False, short__isnull=False,)
         if settings.SITE_ID == 1:
             qs = UserProfile.objects.filter(user__first_name__isnull=False, user__last_name__isnull=False, country__isnull=False, edu_level__isnull=False, pro_status__isnull=False, short__isnull=False,)
         else:
@@ -53,7 +52,6 @@ class ProjectIndex(indexes.SearchIndex, indexes.Indexable):
         return Project
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,])
         qs = Project.objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,])
         qs = qs.filter_by_site(Project)
         return qs
@@ -69,7 +67,6 @@ class RepoIndex(indexes.SearchIndex, indexes.Indexable):
         return Repo
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(state__in=[PUBLISHED,])
         qs = Repo.objects.filter(state__in=[PUBLISHED,])
         qs = qs.filter_by_site(Repo)
         return qs
@@ -85,7 +82,6 @@ class OERIndex(indexes.SearchIndex, indexes.Indexable):
         return OER
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(state__in=[PUBLISHED,])
         qs = OER.objects.filter(state__in=[PUBLISHED,])
         qs = qs.filter_by_site(OER)
         return qs
@@ -101,7 +97,6 @@ class LearningPathIndex(indexes.SearchIndex, indexes.Indexable):
         return LearningPath
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(state__in=[PUBLISHED,])
         qs = LearningPath.objects.filter(state__in=[PUBLISHED,])
         qs = qs.filter_by_site(LearningPath)
         return qs
@@ -123,7 +118,6 @@ class FlatPageIndex(indexes.SearchIndex, indexes.Indexable):
         return FlatPage
 
     def index_queryset(self, using=None):
-        # return self.get_model().objects.filter(url__icontains='help')
         qs = FlatPage.objects.filter(url__icontains='help')
         qs = qs.filter_by_site(FlatPage)
         return qs

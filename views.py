@@ -50,7 +50,7 @@ from .models import Featured, Tag, UserProfile, UserPreferences, UserProfileLang
 from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
 from .models import RepoType, RepoFeature
 from .models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
-from .models import PORTLET, DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED
+from .models import PORTLET, DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED, RESTRICTED
 from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
@@ -980,7 +980,9 @@ def project_add_document(request):
         except:
             return HttpResponseRedirect('/project/%s/folder/' % project.slug)
         version = handle_uploaded_file(uploaded_file)
-        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
+        # folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
+        state = project.get_site() == 1 and PUBLISHED or RESTRICTED
+        folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=state)
         folderdocument.save()
         # track_action(request, request.user, 'Create', folderdocument, target=project)
         track_action(request, request.user, 'Create', folderdocument, target=folder)
@@ -1012,7 +1014,9 @@ def project_add_resource_online(request):
         form = FolderOnlineResourceForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
+            # folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
+            state = project.get_site() == 1 and PUBLISHED or RESTRICTED
+            folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=state, created=timezone.now())
             folderdocument.save()
             track_action(request, request.user, 'Create', folderdocument, target=project)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
@@ -1025,6 +1029,7 @@ def folderdocument_edit(request, folderdocument_id):
     is_community_admin = project.is_admin_community(user)
     is_admin = project.is_admin(user)
     hide_portlet = not is_community_admin and not is_admin and not user.is_superuser
+    # hide_restricted = folder.get_site() == 1
     if folderdocument.state == PORTLET:
         portlet = 'on'
     else:
@@ -1097,6 +1102,34 @@ def folderdocument_delete(request, folderdocument_id):
     folder.remove_document(folderdocument, request)
     return HttpResponseRedirect(folder.get_absolute_url())
 
+def folderdocument_share(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.share(request)
+    track_action(request, request.user, 'Share', folderdocument, target=folderdocument.folder.project)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+def folderdocument_submit(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.submit(request)
+    track_action(request, request.user, 'Submit', folderdocument, target=folderdocument.folder.project)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+def folderdocument_withdraw(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.withdraw(request)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+def folderdocument_reject(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.reject(request)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+def folderdocument_publish(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.publish(request)
+    track_action(request, request.user, 'Approve', folderdocument, target=folderdocument.folder.project)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+def folderdocument_un_publish(request, folderdocument_id):
+    folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
+    folderdocument.un_publish(request)
+    return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
+
 def folder_delete(request, folder_id):
     folder = get_object_or_404(Folder, id=folder_id)
     project = parent = None
@@ -1139,6 +1172,10 @@ def folder_detail(request, project_slug='', folder=None):
         project = get_object_or_404(Project, slug=project_slug)
         folder = project.get_folder()
     folderdocuments = folder.get_documents(user, project=project)
+    folder_documents_changes = []
+    for doc in folderdocuments:
+        folder_documents_changes.append([doc,
+             [doc.can_share(request), doc.can_submit(request), doc.can_withdraw(request), doc.can_reject(request), doc.can_publish(request), doc.can_un_publish(request)]])
     subfolders = folder.get_children()
     for sub in subfolders:
         if sub.get_children():
@@ -1165,7 +1202,7 @@ def folder_detail(request, project_slug='', folder=None):
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
-    var_dict['can_share'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
+    var_dict['can_view_subfolders'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
     var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_community_admin)
     var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
     var_dict['is_admin'] = project.is_admin(user)
@@ -1173,6 +1210,7 @@ def folder_detail(request, project_slug='', folder=None):
     var_dict['is_community_admin'] = is_community_admin
     var_dict['folder'] = folder
     var_dict['folderdocuments'] = folderdocuments
+    var_dict['folder_documents_changes'] = folder_documents_changes
     var_dict['subfolders'] = subfolders
     var_dict['subfolder_form'] = FolderForm()
     var_dict['form'] = DocumentUploadForm()
@@ -1522,14 +1560,17 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['portlets_top'] = project.get_portlets_top()
     var_dict['portlets_bottom'] = project.get_portlets_bottom()
     var_dict['repos'] = []
- 
+
+    view_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         oers = OER.objects.filter(project=project).order_by('-created')
     else:
-        oers = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        # oers = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        oers = OER.objects.filter(project=project, state__in=view_states).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
-    shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
+    # shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
+    shared_oers = SharedOer.objects.filter(project=project, oer__state__in=view_states).order_by('-created')
     var_dict['shared_oers'] = [[shared_oer, shared_oer.can_delete(request)] for shared_oer in shared_oers]
     oers_last_evaluated = project.get_oers_last_evaluated()
     var_dict['n_oers_evaluated'] = len(oers_last_evaluated)
@@ -1537,10 +1578,12 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         lps = LearningPath.objects.filter(project=project).order_by('-created')
     else:
-        lps = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        #lps = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        lps = LearningPath.objects.filter(project=project, state__in=view_states).order_by('-created')
     var_dict['n_lps'] = len(lps)
     var_dict['lps'] = lps[:MAX_LPS]
-    shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
+    # shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
+    shared_lps = SharedLearningPath.objects.filter(project=project, lp__state__in=view_states).order_by('-created')
     var_dict['shared_lps'] = [[shared_lp, shared_lp.can_delete(request)] for shared_lp in shared_lps]
     var_dict['calendar'] = project.get_calendar()
     if proj_type.name == 'ment':
@@ -2283,14 +2326,17 @@ def project_results(request, project_slug):
     if not project.can_access(user):
         raise PermissionDenied
     var_dict = { 'project': project }
+    view_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if user.is_authenticated and project.is_member(user) or user.is_superuser:
         var_dict['lps'] = LearningPath.objects.filter(project=project).order_by('-created')
         var_dict['oers'] = OER.objects.filter(project=project).order_by('-created')
     else:
-        var_dict['lps'] = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
-        var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
-    var_dict['oer_evaluations'] = project.get_oers_last_evaluated()
-    # var_dict['oer_evaluations'] = project.get_oer_evaluations()
+        # var_dict['lps'] = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        # var_dict['oers'] = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
+        var_dict['lps'] = LearningPath.objects.filter(project=project, state__in=view_states).order_by('-created')
+        var_dict['oers'] = OER.objects.filter(project=project, state__in=view_states).order_by('-created')
+    # var_dict['oer_evaluations'] = project.get_oers_last_evaluated()
+    var_dict['oer_evaluations'] = project.get_oers_last_evaluated(states=view_states)
     return render(request, 'project_results.html', var_dict)
 
 def project_activity(request, project_slug):
@@ -2698,7 +2744,6 @@ def browse_people(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                # n = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED).count()
                 qs = UserProfile.objects.filter(Q(**{field_name: code}), user__is_active=True, state=PUBLISHED)
                 if settings.SITE_ID > 1:
                     qs = qs.filter(user__in=site_users)
@@ -2758,12 +2803,13 @@ def oer_view(request, oer_id, oer=None):
         raise PermissionDenied
     language = request.LANGUAGE_CODE
     var_dict = { 'oer': oer, }
-    # var_dict['oer_url'] = oer.url
-    var_dict['is_published'] = oer.state == PUBLISHED
-    var_dict['is_un_published'] = un_published = oer.state == UN_PUBLISHED
+    # var_dict['is_published'] = oer.state == PUBLISHED
+    var_dict['is_published'] = is_published = oer.get_site()==1 and oer.state==PUBLISHED or oer.state in [RESTRICTED, PUBLISHED]
+    var_dict['is_un_published'] = oer.state==UN_PUBLISHED
     if user.is_authenticated:
         profile = user.get_profile()
-        add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
+        # add_bookmarked = oer.state == PUBLISHED and profile and profile.get_completeness()
+        add_bookmarked = is_published and profile and profile.get_completeness()
     else:
         add_bookmarked = None
     if add_bookmarked and request.GET.get('copy', ''):
@@ -2846,7 +2892,8 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['object'] = oer
     var_dict['can_comment'] = oer.can_comment(request)
     var_dict['type'] = OER_TYPE_DICT[oer.oer_type]
-    var_dict['is_published'] = is_published = oer.state == PUBLISHED
+    # var_dict['is_published'] = is_published = oer.state == PUBLISHED
+    var_dict['is_published'] = is_published = oer.get_site()==1 and oer.state==PUBLISHED or oer.state in [RESTRICTED, PUBLISHED]
     var_dict['is_un_published'] = is_un_published = oer.state == UN_PUBLISHED
     if user.is_authenticated:
         profile = user.get_profile()
@@ -2874,6 +2921,7 @@ def oer_detail(request, oer_id, oer=None):
         if not oer_id in cut_oers:
             set_clipboard(request, key='cut_oers', value=cut_oers+[oer_id])
     var_dict['in_cut_oers'] = in_cut_oers = oer_id in (get_clipboard(request, key='cut_oers') or [])
+    var_dict['can_share'] = oer.can_share(request)
     var_dict['can_submit'] = oer.can_submit(request)
     var_dict['can_withdraw'] = oer.can_withdraw(request)
     var_dict['can_reject'] = oer.can_reject(request)
@@ -2891,14 +2939,16 @@ def oer_detail(request, oer_id, oer=None):
         var_dict['sub_exts'] = settings.SUB_EXTS
     var_dict['evaluations'] = oer.get_evaluations()
     var_dict['user_evaluation'] = user.id != None and oer.get_evaluations(user)
-    var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
+    # var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state==PUBLISHED or lp.can_edit(request)]
+    var_dict['lps'] = [lp for lp in oer.get_referring_lps() if lp.state in [RESTRICTED, PUBLISHED] or lp.can_edit(request)]
     var_dict['can_toggle_comments'] = user.is_superuser or oer.creator==user or oer.project.is_admin(user)
     var_dict['view_comments'] = is_published or (is_un_published and can_republish)
     var_dict['oer_url'] = oer.url # 190919  GT added
     if oer.get_text(): # 190919  GT added
         var_dict['oer_url'] = "/oer/{}/view/".format(oer.slug)
     if user.is_authenticated:
-        if oer.state == PUBLISHED and not user == oer.creator:
+        # if oer.state == PUBLISHED and not user == oer.creator:
+        if oer.state in [RESTRICTED, PUBLISHED] and not user == oer.creator:
             track_action(request, user, 'View', oer, target=oer.project)
     return render(request, 'oer_detail.html', var_dict)
 
@@ -3046,6 +3096,13 @@ def oer_screenshot_upload(request, oer_slug):
         else:
             return HttpResponseRedirect('/oer/%s/' % oer.slug)
 
+def oer_share(request, oer_id):
+    oer = OER.objects.get(pk=oer_id)
+    if not oer.can_access(request.user):
+        raise PermissionDenied
+    oer.share(request)
+    track_action(request, request.user, 'Share', oer, target=oer.project)
+    return HttpResponseRedirect('/oer/%s/' % oer.slug)
 def oer_submit(request, oer_id):
     oer = OER.objects.get(pk=oer_id)
     if not oer.can_access(request.user):
@@ -3408,7 +3465,8 @@ def lp_detail(request, lp_id, lp=None):
         if len(proj_candidate_lp_editors) > 0:
             var_dict['proj_candidate_lp_editors'] = proj_candidate_lp_editors
             var_dict['can_delegate'] = can_delegate
-    var_dict['is_published'] = is_published = lp.state == PUBLISHED
+    # var_dict['is_published'] = is_published = lp.state == PUBLISHED
+    var_dict['is_published'] = is_published = lp.get_site()==1 and lp.state==PUBLISHED or lp.state in [RESTRICTED, PUBLISHED]
     var_dict['is_un_published'] = is_un_published = lp.state == UN_PUBLISHED
     if user.is_authenticated:
         profile = user.get_profile()
@@ -3438,6 +3496,7 @@ def lp_detail(request, lp_id, lp=None):
             set_clipboard(request, key='cut_lps', value=cut_lps+[lp_id])
     var_dict['in_cut_lps'] = in_cut_lps = lp_id in (get_clipboard(request, key='cut_lps') or [])
     var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_lps) or (can_delete and not in_cut_lps)
+    var_dict['can_share'] = lp.can_share(request)
     var_dict['can_submit'] = lp.can_submit(request)
     var_dict['can_withdraw'] = lp.can_withdraw(request)
     var_dict['can_reject'] = lp.can_reject(request)
@@ -3456,7 +3515,8 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['can_toggle_comments'] = lp.project and (user.is_superuser or lp.creator==user or lp.project.is_admin(user))
     var_dict['view_comments'] = is_published or is_un_published
     if user.is_authenticated:
-        if lp.state == PUBLISHED and not user == lp.creator:
+        # if lp.state == PUBLISHED and not user == lp.creator:
+        if lp.state in [RESTRICTED, PUBLISHED] and not user == lp.creator:
             track_action(request, user, 'View', lp, target=lp.project)
     return render(request, 'lp_detail.html', var_dict)
 
@@ -3503,7 +3563,8 @@ def lp_play(request, lp_id, lp=None):
     domain = request.META['HTTP_HOST']
     var_dict = { 'lp': lp, }
     var_dict['project'] = lp.project
-    var_dict['is_published'] = lp.state == PUBLISHED
+    # var_dict['is_published'] = lp.state == PUBLISHED
+    var_dict['is_published'] = lp.get_site()==1 and lp.state==PUBLISHED or lp.state in [RESTRICTED, PUBLISHED]
     var_dict['can_edit'] = lp.can_edit(request)
     current_language = get_current_language()
     var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
@@ -3586,7 +3647,8 @@ def lp_play(request, lp_id, lp=None):
                 var_dict['no_viewable_document'] = documents[0]
         var_dict['oer'] = oer
         var_dict['oer_url'] = url = oer.url
-        var_dict['oer_is_published'] = oer.state == PUBLISHED
+        # var_dict['oer_is_published'] = oer.state == PUBLISHED
+        var_dict['oer_is_published'] = oer.get_site()==1 and oer.state==PUBLISHED or oer.state in [RESTRICTED, PUBLISHED]
         youtube = url and (url.count('youtube.com') or url.count('youtu.be')) and url or ''
         ted_talk = url and url.count('www.ted.com/talks/') and url or ''
         ipynb = url and url.endswith('ipynb')
@@ -3777,6 +3839,13 @@ def lp_toggle_comments(request, lp_id):
         lp.enable_comments()
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
     
+def lp_share(request, lp_id):
+    lp = LearningPath.objects.get(pk=lp_id)
+    if not lp.can_access(request.user):
+        raise PermissionDenied
+    lp.share(request)
+    track_action(request, request.user, 'Share', lp, target=lp.project)
+    return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def lp_submit(request, lp_id):
     lp = LearningPath.objects.get(pk=lp_id)
     if not lp.can_access(request.user):

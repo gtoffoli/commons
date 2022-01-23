@@ -28,10 +28,10 @@ def about_children(request):
              capfirst(_("press releases")),
              url='/press_releases/',
             ))
-    children.append (MenuItem(
-         capfirst(_("blog")),
-         url='/weblog/',
-        ))
+        children.append (MenuItem(
+             capfirst(_("blog")),
+             url='/weblog/',
+            ))
     return children
 
 def projects_children(request):
