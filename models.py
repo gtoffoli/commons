@@ -1705,11 +1705,17 @@ class Repo(Resource, Publishable):
         user = request.user
         if not user.is_authenticated:
             return False
-        # return user.is_superuser or self.creator==user or user.can_add_repo(request)
         return user.is_superuser or self.creator==user
 
     def get_project(self):
-        return Project.objects.get(pk=3)
+        try: 
+            return Project.objects.get(pk=3)
+        except:
+            return None
+    @property
+    def project(self):
+        return self.get_project()
+
     def can_reject(self, request):
         return self.state in [SUBMITTED] and self.get_project().is_admin(request.user)
     def can_publish(self, request):
