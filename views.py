@@ -2454,6 +2454,7 @@ def repo_un_publish(request, repo_id):
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 
 def browse(request):
+    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     form = LpSearchForm
     field_names = ['path_type', 'levels', 'subjects', 'tags', ]
     lps_browse_list = []
@@ -2480,7 +2481,8 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                qs = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                # qs = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                qs = LearningPath.objects.filter(Q(**{field_name: entry}), state__in=view_states)
                 qs = qs.filter_by_site(LearningPath)
                 n = qs.count()
                 if n:
@@ -2490,7 +2492,8 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label= pgettext(RequestContext(request), entry[1])
-                qs = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                # qs = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                qs = LearningPath.objects.filter(Q(**{field_name: code}), state__in=view_states)
                 qs = qs.filter_by_site(LearningPath)
                 n = qs.count()
                 if n:
@@ -2523,7 +2526,8 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                qs = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                # qs = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
+                qs = OER.objects.filter(Q(**{field_name: entry}), state__in=view_states)
                 qs = qs.filter_by_site(OER)
                 n = qs.count()
                 if n:
@@ -2533,7 +2537,8 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                qs = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                # qs = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
+                qs = OER.objects.filter(Q(**{field_name: code}), state__in=view_states)
                 qs = qs.filter_by_site(OER)
                 n = qs.count()
                 if n:
@@ -4301,6 +4306,7 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     term = ''
     criteria = []
     include_all = ''
+    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -4457,12 +4463,14 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         for q in qq:
             qs = qs.filter(q)
         if not include_all:
-            qs = qs.filter(state=PUBLISHED)
+            # qs = qs.filter(state=PUBLISHED)
+            qs = qs.filter(state__in=view_states)
         qs = qs.filter_by_site(OER)
-        oers = qs.distinct()
+        oers = qs.distinct().order_by('title')
     else:
         form = OerSearchForm()
-        qs = OER.objects.filter(state=PUBLISHED).distinct()
+        # qs = OER.objects.filter(state=PUBLISHED).distinct()
+        qs = OER.objects.filter(state__in=view_states).distinct()
         qs = qs.filter_by_site(OER)
         oers = qs.distinct().order_by('title')
         request.session["post_dict"] = {}
@@ -4486,6 +4494,7 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     term= ''
     criteria = []
     include_all = ''
+    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -4558,13 +4567,15 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         for q in qq:
             qs = qs.filter(q)
         if not include_all:
-            qs = qs.filter(state=PUBLISHED)
+            # qs = qs.filter(state=PUBLISHED)
+            qs = qs.filter(state__in=view_states)
         qs = qs.filter_by_site(LearningPath)
         lps = qs.distinct().order_by('title')
     else:
         form = LpSearchForm()
         qq.append(Q(project__isnull=False))
-        query = Q(state=PUBLISHED)
+        # query = Q(state=PUBLISHED)
+        query = Q(state__in=view_states)
         for q in qq:
             query = query & q
         qs = LearningPath.objects.filter(query)

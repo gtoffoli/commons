@@ -112,7 +112,8 @@ User.get_preferences = user_get_preferences
 
 def user_get_languages(self):
     profile = self.get_profile()
-    return [l.code for l in profile.languages.all()]
+    # return [l.code for l in profile.languages.all()]
+    return [l.code for l in profile.languages.all().order_by('order')]
 User.get_languages = user_get_languages
 
 def user_get_email_notifications(self):
@@ -246,13 +247,25 @@ def filter_by_site(qs, model):
     return qs
 QuerySet.filter_by_site = filter_by_site
 
-# def site_member_users():
+def is_site_member(user):
+    assert settings.SITE_ID > 1
+    site_root = Project.objects.get(slug=settings.SITE_ROOT)
+    return ProjectMember.objects.filter(user=user, project=site_root, state=MEMBERSHIP_ACTIVE).count()==1
+
 def site_member_users(return_ids=True):
-    projects = Project.objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,]).filter_by_site(Project)
-    if return_ids:
-        return ProjectMember.objects.filter(project__in=projects).values_list('user', flat=True)
+    assert settings.SITE_ID > 1
+    if settings.SITE_ID==4:
+        projects = Project.objects.filter(proj_type__public=True, state__in=[PROJECT_OPEN,]).filter_by_site(Project)
+        if return_ids:
+            return ProjectMember.objects.filter(project__in=projects).values_list('user', flat=True)
+        else:
+            return User.objects.filter(membership_user__project__in=projects)
     else:
-        return User.objects.filter(membership_user__project__in=projects)
+        site_root = Project.objects.get(slug=settings.SITE_ROOT)
+        if return_ids:
+            return ProjectMember.objects.filter(project=site_root, state=MEMBERSHIP_ACTIVE).values_list('user', flat=True)
+        else:
+            return ProjectMember.objects.filter(project=site_root, state=MEMBERSHIP_ACTIVE).count()==1
 
 @python_2_unicode_compatible
 class Tag(models.Model):
