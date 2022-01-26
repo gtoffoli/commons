@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load i18n staticfiles %}
+
+{% block head_title %}{{ flatpage.title }}{% endblock %}
+{% block extra_style %}
+<style></style>
+{% endblock %}
+
+{% block body_class %}{{ flatpage.title }}{% endblock %}
+
+{% block topbar_base %}{% endblock %}
+
+{% block body_base %}
+<section id="content_body">
+  <div class="container-fluid">
+        <h1 class="text-center">{{ flatpage.title }}</h1>
+        <div class="font16 demiBold">{{ flatpage.content|safe }}</div>
+  </div>
+</section>
+{% endblock %}
+
+{% block footer_base %}{% endblock %}
