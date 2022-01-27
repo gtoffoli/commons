@@ -55,7 +55,7 @@ from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOS
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from .models import site_member_users
+from .models import get_site_root, site_member_users
 from .metadata import QualityFacet
 from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
 from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
@@ -1340,10 +1340,12 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['no_max_admins'] = len(project.get_admins()) < MAX_ADMINS
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
         if can_accept_member:
+            request.session['is_site_root'] = project==get_site_root()
             var_dict['add_member_form'] = ProjectAddMemberForm(initial={'role_member': 'member' })
         var_dict['can_change_admin'] = can_change_admin = senior_admin and is_draft
         if can_change_admin:
-            add_change_admin_form = ProjectAddMemberForm()
+            # add_change_admin_form = ProjectAddMemberForm()
+            request.session['is_site_root'] = project==get_site_root()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
         var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
         var_dict['can_add_repo'] = project.can_add_repo(user)
@@ -4616,7 +4618,12 @@ def user_fullname_autocomplete(request):
     create_option = []
     results = []
     if q and len(q) >= MIN_CHARS:
-        qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
+        # qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
+        if settings.SITE_ID in [3, 5] and not request.session.get('is_site_root', None):
+            qs = site_member_users()
+        else:
+            qs = User.objects.all()
+        qs = qs.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
         results = [{'id': user.id, 'text': user.get_display_name()[:80]} for user in qs if user.is_completed_profile()] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
