@@ -329,7 +329,14 @@ RTL_LANGUAGES = ['ar']
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
+SITES_PRIVATE = [3, 5] # HEALTH, WE-COLLAB
+SITES_ERASMUS = [4, 5] # SUCCESS4ALL, WE-COLLAB
+
 SITE_ID = 1
+if not 'IS_SITE_PRIVATE' in globals():
+    IS_SITE_PRIVATE = False
+if not 'IS_SITE_ERASMUS' in globals():
+    IS_SITE_ERASMUS = False
 if not 'SITE_ROOT' in globals():
     SITE_ROOT = ''
 SITE_NAME = 'CommonSpaces'

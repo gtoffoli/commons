@@ -32,7 +32,8 @@ body {
 {% block body_base %}
 <section id="content_body">
   <div>
-        <div class="font16 demiBold">{{ flatpage.content|safe }}</div>
+        {% comment %}<div class="font16 demiBold">{{ flatpage.content|safe }}</div>{% endcomment %}
+        <div>{{ flatpage.content|safe }}</div>
   </div>
 </section>
 {% endblock %}

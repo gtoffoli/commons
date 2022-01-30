@@ -55,7 +55,7 @@ from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOS
 from .models import OER_TYPE_DICT, SOURCE_TYPE_DICT, QUALITY_SCORE_DICT
 from .models import LP_COLLECTION, LP_SEQUENCE
 from .models import NO_MENTORING, MENTORING_MODEL_A, MENTORING_MODEL_B, MENTORING_MODEL_C, MENTORING_MODEL_DICT
-from .models import get_site_root, site_member_users
+from .models import get_site_root, is_site_member, site_member_users
 from .metadata import QualityFacet
 from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
 from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
@@ -1340,7 +1340,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['no_max_admins'] = len(project.get_admins()) < MAX_ADMINS
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
         if can_accept_member:
-            request.session['is_site_root'] = project==get_site_root()
+            request.session['is_site_root'] = is_site_root = project==get_site_root()
             var_dict['add_member_form'] = ProjectAddMemberForm(initial={'role_member': 'member' })
         var_dict['can_change_admin'] = can_change_admin = senior_admin and is_draft
         if can_change_admin:
@@ -1384,7 +1384,8 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['membership'] = membership = project.get_membership(user)
         var_dict['recent_actions'] = filter_actions(project=project, max_days=7, max_actions=100)
         profile = user.get_profile()
-        can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
+        # can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness()
+        can_apply = not project_no_apply and (is_open or is_submitted) and not membership and profile and profile.get_completeness() and (is_site_root or settings.SITE_ID not in settings.SITES_PRIVATE or is_site_member(user))
         # project is reserved ?
         if project.is_reserved_project():
             can_apply = can_apply and project.get_community().is_member(user)
@@ -4619,7 +4620,8 @@ def user_fullname_autocomplete(request):
     results = []
     if q and len(q) >= MIN_CHARS:
         # qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
-        if settings.SITE_ID in [3, 5] and not request.session.get('is_site_root', None):
+        # if settings.SITE_ID in [3, 5] and not request.session.get('is_site_root', None):
+        if settings.SITE_ID in settings.SITES_PRIVATE and not request.session.get('is_site_root', None):
             qs = site_member_users()
         else:
             qs = User.objects.all()
