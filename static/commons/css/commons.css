@@ -44,12 +44,14 @@ a:focus {
 .wrapper {
 	min-height: 100%;
 	height: auto;
-	margin: 0 0 -100px 0;
-	padding: 0 0 100px 0;
+	/*margin: 0 0 -100px 0;
+	padding: 0 0 100px 0;*/
+	margin: 0 0 -70px 0;
+	padding: 0 0 70px 0;
 }
 
 .footer-fixed {
-	min-height: 100px;
+	min-height: 70px; /*100px;*/
 	background: #f9f9f9;
 	box-shadow: inset 0 10px 10px -10px #999999;
 }

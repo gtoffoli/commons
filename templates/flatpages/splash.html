@@ -20,7 +20,7 @@ body {
        <div class="navbar-header pull-left">
          <a class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
          <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
-         {% if SITE_ID > 1 %}<div style="display:inline; vertical-align:text-bottom; line-height:48px; color:white; font-family: LeagueMonoVariable,sans-serif; font-stretch: extra-expanded;"><span style="font-family:'Open Sans',sans-serif;">{% trans "for" %}</span> <span style="font-size:x-large; font-weight: normal;">{{ site_name }}</span></div>{% endif %}
+         {% if SITE_ID > 1 %}<a class="navbar-brand" style="margin-inline-start: -20px; color:white; line-height:22px" href="/"><span style="font-size:85%">{% trans "for" %}</span><span style="margin-left:5px; font-family: LeagueMonoVariable,sans-serif; font-size:x-large;">{{ site_name }}</span></a>{% endif %}
        </div>
      </div>
     </div>
@@ -38,35 +38,4 @@ body {
 </section>
 {% endblock %}
 
-    {% block footer_base %}
-      <footer class="footer-fixed">
-        <div class="container">
-         {% block footer %}
-           <div class="row">
-             <div class="col-sm-5 col-md-5">
-               <div class="footer-box">&copy; 2015-{% now 'Y' %} {% trans "the CommonS Consortium"|capfirst %}, Sapienza {% trans "and" %} LINK srl<br>
-                 {% trans "built by"|capfirst %} <a href="https://www.linkroma.it" target="_blank">LINK srl</a>
-                 {% trans "with" %} <a href="https://www.python.org/" target="_blank">Python</a>, <a href="https://www.djangoproject.com/" target="_blank">Django</a>
-                 {% trans "and" %} <a href="https://github.com/gtoffoli/commons" target="_blank">the CommonS Platform</a>
-               </div>
-             </div>
-             <div class="col-sm-2 col-md-2">
-               <ul class="footer-box list-unstyled">
-                <li><small><span class="fa fa-chevron-right fa-grey"></span></small> <a href="/info/privacy/">{% trans "privacy policy"|capfirst %}</a></li>
-               </ul>
-             </div>
-             <div class="col-sm-5 col-md-5">
-               <div class="footer-box" style="text-align: right;">
-                 <span style="vertical-align: middle;">{% if SITE_ID >= 4 %}
-                   {% trans "Project co-funded by the Programme" %}
-                 {% else %}
-                   {% trans "The CommonS Project is co-funded by Programme" %}
-                 {% endif %}</span>
-                 <img src="{%static "commons/img/logo_erasmus_plus.png" %}" class="img-responsive" title="EU Erasmus+" style="float: right; width: 40%; height: auto;">
-               </div>
-             </div>
-           </div>
-         {% endblock %}
-        </div>
-      </footer>
-    {% endblock %}
+

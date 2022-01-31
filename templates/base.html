@@ -203,7 +203,39 @@
         </section>
       {% endblock %}
     </div>
-
+    {% block footer_base %}
+      <footer class="footer-fixed">
+        <div class="container">
+         {% block footer %}
+           <div class="row">
+             <div class="col-sm-5 col-md-5">
+               <div class="footer-box">&copy; 2015-{% now 'Y' %} {% trans "the CommonS Consortium"|capfirst %}, Sapienza {% trans "and" %} LINK srl<br>
+                 {% trans "built by"|capfirst %} <a href="https://www.linkroma.it" target="_blank">LINK srl</a>
+                 {% trans "with" %} <a href="https://www.python.org/" target="_blank">Python</a>, <a href="https://www.djangoproject.com/" target="_blank">Django</a>
+                 {% trans "and" %} <a href="https://github.com/gtoffoli/commons" target="_blank">the CommonS Platform</a>
+               </div>
+             </div>
+             <div class="col-sm-2 col-md-2">
+               <ul class="footer-box list-unstyled">
+                <li><small><span class="fa fa-chevron-right fa-grey"></span></small> <a href="/info/privacy/">{% trans "privacy policy"|capfirst %}</a></li>
+               </ul>
+             </div>
+             <div class="col-sm-5 col-md-5">
+               <div class="footer-box">
+                 {% if SITE_ID >= 4 %}
+                   {% trans "Project co-funded by the Programme" %}
+                 {% else %}
+                   {% trans "The CommonS Project is co-funded by Programme" %}
+                 {% endif %}
+                 <img src="{%static "commons/img/logo_erasmus_plus.png" %}" class="img-responsive" title="EU Erasmus+" style="display:inline-block; vertical-align:middle; width: 40%; height: auto;">
+               </div>
+             </div>
+           </div>
+         {% endblock %}
+        </div>
+      </footer>
+    {% endblock %}
+    {% comment %} 20220131 MMR
     {% block footer_base %}
       <footer class="footer-fixed">
         <div class="container">
@@ -236,6 +268,7 @@
         </div>
       </footer>
     {% endblock %}
+    {% endcomment %}
     
     {% block extra-body %}{% endblock extra-body %}
 

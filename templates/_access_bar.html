@@ -16,7 +16,7 @@
      <div class="navbar-header pull-left">
        <a class="navbar-brand mynavbar-brand hidden-xs" href="/"><img src="{% static "commons/img/common_logo_white.png" %}" class="img-responsive"></a>
        <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
-       {% if SITE_ID > 1 %}<div style="display:inline; vertical-align:text-bottom; line-height:48px; color:white; font-family: LeagueMonoVariable,sans-serif; font-stretch: extra-expanded;"><span style="font-family:'Open Sans',sans-serif;">{% trans "for" %}</span> <span style="font-size:x-large; font-weight: normal;">{{ site_name }}</span></div>{% endif %}
+         {% if SITE_ID > 1 %}<a class="navbar-brand" style="margin-inline-start: -20px; color:white; line-height:22px" href="/"><span style="font-size:85%">{% trans "for" %}</span><span style="margin-left:5px; font-family: LeagueMonoVariable,sans-serif; font-size:x-large;">{{ site_name }}</span></a>{% endif %}
      </div>
 
      {% if user.is_authenticated %}
