@@ -1314,6 +1314,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     var_dict['is_closed'] = is_closed = project.state==PROJECT_CLOSED
     var_dict['is_deleted'] = is_deleted = project.state==PROJECT_DELETED
     var_dict['parent'] = parent = project.get_parent()
+    request.session['is_site_root'] = is_site_root = project==get_site_root()
     if user.is_authenticated:
         var_dict['is_member'] = is_member = project.is_member(user)
         var_dict['is_admin'] = is_admin = project.is_admin(user)
@@ -1340,12 +1341,12 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
         var_dict['no_max_admins'] = len(project.get_admins()) < MAX_ADMINS
         var_dict['can_accept_member'] = can_accept_member = project.can_accept_member(user) and is_open
         if can_accept_member:
-            request.session['is_site_root'] = is_site_root = project==get_site_root()
+            # request.session['is_site_root'] = is_site_root = project==get_site_root()
             var_dict['add_member_form'] = ProjectAddMemberForm(initial={'role_member': 'member' })
         var_dict['can_change_admin'] = can_change_admin = senior_admin and is_draft
         if can_change_admin:
             # add_change_admin_form = ProjectAddMemberForm()
-            request.session['is_site_root'] = project==get_site_root()
+            # request.session['is_site_root'] = project==get_site_root()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
         var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
         var_dict['can_add_repo'] = project.can_add_repo(user)
