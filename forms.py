@@ -594,7 +594,17 @@ class PathNodeForm(forms.ModelForm):
 
         return cd
 
-    
+class FolderDocumentSearchForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        super(FolderDocumentSearchForm, self).__init__(*args,**kwargs)
+        for fieldname in self.fields:
+            self.fields[fieldname].help_text = ''
+
+    term = forms.CharField(
+        label=_("text in label and file name"), required=False,
+        widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
+
+   
 class MultipleUserChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, obj):
         return obj.get_display_name()

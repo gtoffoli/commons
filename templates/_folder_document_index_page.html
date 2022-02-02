@@ -1,0 +1,10 @@
+{% load staticfiles i18n %}
+{% load endless %}
+{% paginate folder_documents %}
+
+{% for folder_document in folder_documents %}
+    {% include "_folder_document_card.html" %}
+{% endfor %}
+
+{% show_more %}
+{% include "_search_index_page_js.html" %}

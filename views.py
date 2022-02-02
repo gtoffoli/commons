@@ -60,7 +60,7 @@ from .metadata import QualityFacet
 from .forms import UserProfileExtendedForm, UserProfileMentorForm, UserPreferencesForm, DocumentForm, ProjectForm, ProjectAddMemberForm, ProjectSearchForm
 from .forms import FolderForm, FolderDocumentForm, FolderOnlineResourceForm
 from .forms import RepoForm, OerForm, OerMetadataFormSet, OerEvaluationForm, DocumentUploadForm, LpForm, PathNodeForm # , OerQualityFormSet
-from .forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm
+from .forms import PeopleSearchForm, RepoSearchForm, OerSearchForm, LpSearchForm, FolderDocumentSearchForm
 from .forms import ProjectMessageComposeForm, ForumForm, MatchMentorForm, SelectMentoringJourneyForm, one2oneMessageComposeForm
 from .forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotForm
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
@@ -4596,6 +4596,63 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     if request.method == 'POST' and user.is_authenticated:
         track_action(request, user, 'Search', None, description='learningpath')
     return render(request, template, context)
+
+@page_template('_folder_document_index_page.html')
+def folder_documents_search(request, template='search_folder_documents.html', extra_context=None):
+    qq = []
+    term = ''
+    criteria = []
+    include_all = ''
+    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
+        if request.method == 'GET' and request.session.get('post_dict', None):
+            form = None
+            post_dict = request.session.get('post_dict', None)
+
+            term = post_dict.get('term', '')
+            if term:
+                qq.append(term_query(term, ['label', 'document__label',]))
+ 
+            include_all = post_dict.get('include_all', False)
+        elif request.method == 'POST':
+            post = request.POST
+            form = FolderDocumentSearchForm(post) # A form bound to the POST data
+            if form.is_valid(): # All validation rules pass
+                post_dict = {}
+
+                term = clean_term(post.get('term', ''))
+                if term:
+                    qq.append(term_query(term, ['label', 'document__label',]))
+                post_dict['term'] = term
+
+        else:
+            form = FolderDocumentSearchForm()
+            request.session["post_dict"] = {}
+        qs = FolderDocument.objects.all()
+        for q in qq:
+            qs = qs.filter(q)
+        if not include_all:
+            qs = qs.filter(state__in=view_states)
+        qs = qs.filter_by_site(FolderDocument)
+        folder_documents = qs.distinct().order_by('label', 'document__label')
+    else:
+        form = FolderDocumentSearchForm()
+        qs = FolderDocument.objects.filter(state__in=view_states).distinct()
+        qs = qs.filter_by_site(FolderDocument)
+        folder_documents = qs.distinct().order_by('label', 'document__label')
+        request.session["post_dict"] = {}
+    # folder_documents = folder_documents(folder_documents, key = lambda x: x.title.strip())
+        
+    context = {'folder_documents': folder_documents, 'n_folder_documents': len(folder_documents), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
+
+    if extra_context is not None:
+        context.update(extra_context)
+
+    user = request.user
+    if request.method == 'POST' and user.is_authenticated:
+        track_action(request, user, 'Search', None, description='document')
+    return render(request, template, context)
+
 
 from dal import autocomplete
 class UserAutocomplete(autocomplete.Select2QuerySetView):

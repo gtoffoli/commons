@@ -242,6 +242,10 @@ def filter_by_site(qs, model):
             projects = Project.objects.filter(id__in=project_ids)
             forum_ids = [project.forum.id for project in projects if project.forum]
             qs = qs.filter(id__in=forum_ids)
+        elif model == FolderDocument:
+            projects = Project.objects.filter(id__in=project_ids)
+            folder_ids = [folder.id for folder in Folder.objects.all() if folder.get_project() in projects]
+            qs = qs.filter(folder__id__in=folder_ids)
         elif model not in [Repo, FlatPage]:
             qs = qs.filter(project_id__in=project_ids)
     return qs
@@ -645,7 +649,11 @@ class FolderDocument(models.Model, Publishable):
     @property
     def project(self):
         return self.folder.get_project()
-        
+ 
+    @property
+    def title(self):
+        return self.label or (self.document and self.document.label) or ''
+     
     def can_access(self, user):
         folder = self.folder
         project = folder.get_project()

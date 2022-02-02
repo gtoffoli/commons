@@ -165,6 +165,7 @@ urlpatterns += [
     url(r"^document/(?P<document_id>[\d-]+)/delete/$", commons.views.document_delete, name="document_delete"),
     url(r"^document/(?P<document_id>[\d-]+)/up/$", commons.views.document_up, name="document_up"),
     url(r"^document/(?P<document_id>[\d-]+)/down/$", commons.views.document_down, name="document_down"),
+    url(r"^documents/search/$", commons.views.folder_documents_search, name="folder_documents_search"),
     url(r"^lp/edit/$", commons.views.lp_edit, name='lp_edit'),
     url(r"^lp/add_node/$", commons.views.lp_add_node, name='lp_add_node'),  
     url(r"^lp/(?P<lp_slug>[\w\d-]+)/edit/$", commons.views.lp_edit_by_slug, name="lp_edit"),
