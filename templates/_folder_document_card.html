@@ -5,4 +5,3 @@
 <article class="view-card roundCorner">
   <p class="title-card"><a href="{{ folder_document.folder.get_absolute_url }}" title='{% trans "view folder" %}'>{{ folder_document.title }}</a> {% if folder_document.state != 3 %}<small style="color: {{ folder_document.get_link_color }};">[{{ folder_document.get_state }}]</small> {% endif %}</p>
 </article>
-{% trans "search criteria"|capfirst %}
