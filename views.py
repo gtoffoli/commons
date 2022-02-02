@@ -2458,7 +2458,8 @@ def repo_un_publish(request, repo_id):
     return HttpResponseRedirect('/repo/%s/' % repo.slug)
 
 def browse(request):
-    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     form = LpSearchForm
     field_names = ['path_type', 'levels', 'subjects', 'tags', ]
     lps_browse_list = []
@@ -4310,7 +4311,8 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     term = ''
     criteria = []
     include_all = ''
-    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -4498,7 +4500,8 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     term= ''
     criteria = []
     include_all = ''
-    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
@@ -4603,7 +4606,8 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
     term = ''
     criteria = []
     include_all = ''
-    view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
