@@ -1,0 +1,62 @@
+{% load i18n scheduletags %}
+<div>
+  {% if day.has_occurrences %}
+      {% for o in day.get_occurrence_partials %}
+              <button type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#occurrenceModal">
+                  <div class="starttime">
+                      {% if o.class == 0 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
+                      {% if o.class == 1 %}{{ o.occurrence.start|time:"G:i" }}{% endif %}
+                      {% if o.class == 2 %}(All day){% endif %}
+                      {% if o.class == 3 %}Ends at {{ o.occurrence.end|time:"G:i" }}{% endif %}
+                  </div>
+                  <div class="eventdesc">
+                      {% title o.occurrence %}
+                  </div>
+              </button>
+              <div class="modal fade" id="occurrenceModal" tabindex="-1" role="dialog" aria-labelledby="occurrence_detailsl">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content" style="color:#333; font-weight:normal">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">{{ occurrence.title }}</h4>
+                    </div>
+                    <div class="modal-body">
+                      {% with occurrence=o.occurrence %}
+                        <table class="table table-striped">
+                            <tr>
+                                <td class="left">{% trans "Starts" %}</td>
+                                <td>{% blocktrans with occurrence.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}</td>
+                            </tr>
+                            <tr>
+                                <td class="left">{% trans "Ends" %}</td>
+                                <td>{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+                            </tr>
+                            {% if occurrence.event.rule %}
+                                {% if not occurrence.id %}
+                                    <tr>
+                                        <td class="left">{% trans "Reoccurs" %}</td><td>{{occurrence.event.rule}}</td>
+                                    </tr>
+                                    {% if occurrence.event.end_recurring_period %}
+                                        <tr>
+                                            <td class="left">{% trans "Until" %}</td>
+                                            <td>{% blocktrans with occurrence.event.end_recurring_period|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+                                        </tr>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </table>
+                        {% if occurrence.description %}
+                            <h3>{% trans "Description" %}</h3>
+                            <p>{{occurrence.description}}</p>
+                        {% endif %}
+                      {% endwith %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+      {% endfor %}
+  {% endif %}
+</div>

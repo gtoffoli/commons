@@ -1,0 +1,30 @@
+{% load i18n scheduletags %}
+<div class="table-responsive">
+<table class="table-condensed table-striped" style="margin:0 auto">
+{% if size == "small" %}
+<a class="btn btn-custom" href="{% url "month_calendar" calendar.slug %}{% querystring_for_date month.start 2 %}">{% trans month.name  %}</a>
+{% endif %}
+{% if day_names %}
+<thead>
+  <th>{% trans "Week" %}</th>
+  {% for day_name in day_names %}
+    <th>{{ day_name }}</th>
+  {% endfor %}
+</thead>
+{% endif %}
+<tbody>
+  {% for week in month.get_weeks %}
+      <tr>
+      <td>
+          <a href="{% url "week_calendar" calendar.slug %}{% querystring_for_date week.start 3 %}">
+            {{week.start|date:"W"}}
+          </a>
+      </td>
+      {% for day in week.get_days %}
+        {% day_cell calendar day month size %}
+      {% endfor %}
+      </tr>
+  {% endfor %}
+</tbody>
+</table>
+</div>

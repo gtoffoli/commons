@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load scheduletags i18n %}
+{% block head_title %}{% trans "Three Month Calendar" %}{% endblock %}
+
+{% block body %}
+<div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
+  <div class="text-center">
+    <h4>{{ calendar.name }}</h4>
+    <div class="padding5">{% prevnext "tri_month_calendar" calendar period "F Y" %}</div>
+    {% comment %}
+    <div class="padding5">
+        <span>&bull;</span>
+        <a href="{% url "tri_month_calendar" calendar.slug %}">
+            {% trans "Current month" %}
+        </a>
+        <span>&bull;</span>
+    </div>
+    {% endcomment %}
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-4 paddingB10">{% month_table calendar period "small" -1 %}</div>
+        <div class="col-lg-4 col-md-4 col-sm-4 paddingB10">{% month_table calendar period "small" %}</div>
+        <div class="col-lg-4 col-md-4 col-sm-4 paddingB10">{% month_table calendar period "small" +1 %}</div>
+    </div>
+    <div>
+
+        <span>&bull;</span>
+        {% comment %}
+        <a href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
+            {% trans "Monthly Calendar" %}
+        </a>
+        {% endcomment %}
+        <a href="{% url "tri_month_calendar" calendar.slug %}">
+            {% trans "Three Current Month Calendar" %}
+        </a>
+        <span>&bull;</span>
+        <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
+            {% trans "Full Year Calendar" %}
+        </a>
+        <span>&bull;</span>
+    </div>
+  </div>
+</div>
+{% endblock %}
