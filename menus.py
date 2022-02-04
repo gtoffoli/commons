@@ -72,7 +72,7 @@ def projects_children(request):
          capfirst(_("search people")),
          url='/people/search/',
         ))
-    if settings.SITE_ID in [3, 5]: # HEALTH, WE-COLLAB
+    if settings.SITE_ID in [3, 4, 5]: # HEALTH, WE-COLLAB
         children.append (MenuItem(
          capfirst(_("seach documents")),
          url='/documents/search/',
