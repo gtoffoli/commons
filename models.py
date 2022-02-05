@@ -550,6 +550,10 @@ class Folder(MPTTModel):
         if projects:
             return projects[0]
 
+    @property
+    def project(self):
+        return self.get_project()
+
     def get_parent(self):
         return self.parent or self.get_project()
 
