@@ -1,17 +1,13 @@
 {% load scheduletags %}
 {% if day.start.month != month.start.month %}
-  <td class="muted"></td>
+<td></td>
 {% else %}
-  {% if day.has_occurrences %}
-    <td class="btn-primary gradient mydaycolor">
-  {% else %}
-    <td>
-  {% endif %}
-  <a href="{% url "day_calendar" calendar.slug %}{% querystring_for_date day.start 3 %}">
+<td class="verticalTop">
+  <div ><a class="{% if day.has_occurrences %} btn btn-primary btn-block{%endif%}" {% if day.has_occurrences %}style="border-bottom: 0; border-bottom-left-radius:0; border-bottom-right-radius:0;"{% endif %} href="{% url "day_calendar" calendar.slug %}{% querystring_for_date day.start 3 %}">
     <strong>{{day.start.day}}</strong>
-  </a>
+  </a></div>
   {% if size != "small" %}
-    {% include "schedule/_day_cell_big.html" %}
+    <div class="{% if day.has_occurrences %} btn btn-primary{%endif%}" style="border-top: 0; border-top-left-radius:0; border-top-right-radius:0;">{% include "schedule/_day_cell_big.html" %}</div>
   {% endif %}
 </td>
 {% endif %}

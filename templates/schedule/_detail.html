@@ -1,31 +1,31 @@
 {% load i18n %}
 {% load scheduletags %}
 
-<div class="modal fade" id="{% hash_occurrence occurrence %}" tabindex="-1" role="dialog" >
+<div class="modal fade" id="{% hash_occurrence occurrence %}" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
-      <div class="modal-header">
+      <div class="modal-header text-center">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">{{occurrence.title}}</h4>
+        <h4 class="modal-title text-center" id="myModalLabel">{{occurrence.title}}</h4>
       </div>
       <div class="modal-body">
         <table class="table table-striped">
             <tr>
-                <td class="left">{% trans "Starts" %}</td>
+                <td class="text-center">{% trans "Starts" %}</td>
                 <td>{% blocktrans with occurrence.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}</td>
             </tr>
             <tr>
-                <td class="left">{% trans "Ends" %}</td>
+                <td class="text-center">{% trans "Ends" %}</td>
                 <td>{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
             </tr>
             {% if occurrence.event.rule %}
                 {% if not occurrence.id %}
                     <tr>
-                        <td class="left">{% trans "Reoccurs" %}</td><td>{{occurrence.event.rule}}</td>
+                        <td class="text-center">{% trans "Reoccurs" %}</td><td>{{occurrence.event.rule}}</td>
                     </tr>
                     {% if occurrence.event.end_recurring_period %}
                         <tr>
-                            <td class="left">{% trans "Until" %}</td>
+                            <td class="text-center">{% trans "Until" %}</td>
                             <td>{% blocktrans with occurrence.event.end_recurring_period|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
                         </tr>
                     {% endif %}
@@ -33,7 +33,7 @@
             {% endif %}
         </table>
         {% if occurrence.description %}
-        <h3>{% trans "Description" %}</h3>
+        <h6 class="text-center" style="font-weight:600">{% trans "Description" %}</h6>
         <p>{{occurrence.description}}</p>
         {% endif %}
       </div>

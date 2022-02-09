@@ -1988,20 +1988,6 @@ a.like-btn-default {
     color: #333 !important;
 }
 /*---------------------- SCHEDULE CALENDAR ---------------------------*/
-div.calendarname {
-    text-align: center;
-	font-size: large;
-}
-div.row-centered {
-    text-align: center;
-}
-td.mydaycolor > a {
-  color:white;
-}
-td.mydaycolor > a:hover {
-  color:rgb (242, 242,242);
-} 
-
 .btn-custom {
   background-color: #e6e6e6;
   border: 1px solid #cccccc;
@@ -2028,3 +2014,5 @@ fieldset[disabled] .btn-custom.active {
   background-color: #e6e6e6;
   border-color: #e6e6e6;
 }
+
+div.table-day  > table {border-collapse: separate;}

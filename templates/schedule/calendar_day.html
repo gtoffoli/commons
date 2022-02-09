@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load scheduletags i18n static %}
+{% block head_title %}{% trans "Daily Calendar" %}{% endblock %}
+{% block body_base %}
+<section id="content_body">
+<div class="container-fluid">
+<div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
+{% include "schedule/_dialogs.html" %}
+<div class="text-center marginB10">
+  <h4>{{ calendar.name }}</h4>
+  <div>{% prevnext "month_calendar" calendar period "l, F d, Y"%}</div>
+</div>
+<div class="table-day">
+{% daily_table period %}
+</div>
+<div class="text-center">
+  <span>&bull;</span>
+  <a href="{% url "day_calendar" calendar.slug %}">
+     {% trans "Today Calendar" %}
+  </a>
+  <span>&bull;</span>
+  <a href="{% url "week_calendar" calendar.slug %}{% querystring_for_date period.start 3 %}">
+    {% trans "Weekly Calendar" %}
+  </a>
+  <span>&bull;</span>
+  <a href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
+    {% trans "Monthly Calendar" %}
+  </a>
+  <span class="">&bull;</span>
+  <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
+    {% trans "Full Yearly Calendar" %}
+  </a>
+  <span>&bull;</span>
+</div>
+</div>
+</div>
+</section>
+{% endblock %}
+
+{% block extra_script %}
+ <script type="text/javascript" src="{% static "schedule.js" %}"></script>
+{% endblock %}
+

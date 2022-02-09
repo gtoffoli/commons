@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load scheduletags i18n %}
 
-{% block head_title %}{% trans "Full Year Calendar" %}{% endblock %}
+{% block head_title %}{% trans "Full Yearly Calendar" %}{% endblock %}
 
 {% block body_base %}
 <section id="content_body">
@@ -30,11 +30,11 @@
 <div>
   <span>&bull;</span>
   <a href="{% url "month_calendar" calendar.slug %}">
-    {% trans "Current Month Calendar" %}
+    {% trans "Current Monthly Calendar" %}
   </a>
   <span>&bull;</span>
   <a href="{% url "year_calendar" calendar.slug %}">
-    {% trans "Current Year Calendar" %}
+    {% trans "Current Yearly Calendar" %}
   </a>
   <span>&bull;</span>
 </div>

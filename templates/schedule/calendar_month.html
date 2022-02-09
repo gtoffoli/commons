@@ -4,32 +4,24 @@
 {% block body %}
 <div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
 {% include "schedule/_dialogs.html" %}
-<div class="text-center">
-  <h4>{{ calendar.name }}</h4>
-  <div class="padding5">{% prevnext "month_calendar" calendar period "F Y"%}</div>
-  {% comment %}
-  <div class="padding5">
-    <span>&bull;</span>
-    <a href="{% url "month_calendar" calendar.slug %}">
-      {% trans "Current month" %}
-    </a>
-    <span>&bull;</span>
+  <div class="text-center marginB10">
+    <h4>{{ calendar.name }}</h4>
+    <div>{% prevnext "month_calendar" calendar period "F Y"%}</div>
   </div>
-  {% endcomment %}
-  <div class="paddingB10">
+  <div class="text-center marginB10">
     {% month_table calendar period "regular" %}
   </div>
-  <div>
+  <div class="text-center">
   <span>&bull;</span>
   <a href="{% url "month_calendar" calendar.slug %}">
-      {% trans "Current Month Calendar" %}
+      {% trans "Current Monthly Calendar" %}
    </a>
   <span>&bull;</span>
   <a href="{% url "tri_month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
-    {% trans "Three Month Calendar" %}
+    {% trans "Three Monthly Calendar" %}
   </a><span class="">&bull;</span>
   <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
-    {% trans "Full Year Calendar" %}
+    {% trans "Full Yearly Calendar" %}
   </a>
   <span>&bull;</span>
   </div>

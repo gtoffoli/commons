@@ -1,0 +1,25 @@
+{% load scheduletags %}
+<table class="table table-striped">
+    {% for slot in slots %}
+    <tr>
+    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
+      <div style="float:right">
+      <span>{{ slot.start|time:"G:i" }}</span>
+      {% if addable %}
+      {% create_event_url calendar slot.start %}
+      {% endif %}
+      </div>
+    </td>
+    <td class="col-lg-10 col-md-10 col-sm-10 col-xs-9">
+      {% for occ in slot.occurrences %}
+      <button class="btn {% if occ.cancelled %} btn-danger {%else%} btn-default {% endif %}" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="margin-bottom:3px;{% if occ.event.color_event %} border-color:{{occ.event.color_event}}{% endif %}">
+        {% options occ %}
+        {% title occ %}
+      </button>
+      
+      {% include 'schedule/_detail.html' with occurrence=occ %}
+      {% endfor %}
+    </td>
+  </tr>
+    {% endfor %}
+</table>
