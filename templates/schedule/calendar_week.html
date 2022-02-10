@@ -39,7 +39,7 @@
 <div class="text-center">
   <span>&bull;</span>
   <a href="{% url "week_calendar" calendar.slug %}">
-     {% trans "This Weekly Calendar" %}
+     {% trans "This Week Calendar" %}
   </a>
   <span>&bull;</span>
   <a href="{% url "month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
@@ -48,7 +48,7 @@
   <span>&bull;</span>
 
   <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
-    {% trans "Full Yearly Calendar" %}
+    {% trans "Full Year Calendar" %}
   </a>
   <span>&bull;</span>
 </div>

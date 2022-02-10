@@ -620,3 +620,4 @@ def get_calendar_events(request, calendar):
     return models.get_calendar_events(request, calendar)
 
 GET_EVENTS_FUNC = get_calendar_events
+FIRST_DAY_OF_WEEK = 1

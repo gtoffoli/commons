@@ -275,7 +275,7 @@ def site_member_users(return_ids=False):
             return User.objects.filter(membership_user__project=site_root, membership_user__state=MEMBERSHIP_ACTIVE)
 
 def get_calendar_events(request, calendar):
-    if request.GET.get('my', None):
+    if calendar.slug == 'virtual':
         site_projects = get_site_projects()
         calendars = []
         for project in site_projects:
