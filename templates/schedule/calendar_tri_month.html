@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load scheduletags i18n %}
-{% block head_title %}{% trans "Three Monthly Calendar" %}{% endblock %}
+{% block head_title %}{% trans "This month" %}{% endblock %}
 
 {% block body %}
 <div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
@@ -18,11 +18,11 @@
   <div class="text-center">
         <span>&bull;</span>
         <a href="{% url "tri_month_calendar" calendar.slug %}">
-            {% trans "Three Current Monthly Calendar" %}
+            {% trans "Three Month Calendar" %}
         </a>
         <span>&bull;</span>
         <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
-            {% trans "Full Yearly Calendar" %}
+            {% trans "Full Year Calendar" %}
         </a>
         <span>&bull;</span>
     </div>

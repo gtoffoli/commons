@@ -54,7 +54,7 @@ def my_projects(request):
     communities = communities.filter_by_site(Project)
     memberships = ProjectMember.objects.filter(user=user, state=1)
     user_projects = [m.project for m in memberships]
-    user_projects = [project for project in user_projects if not project.proj_type.name=='com']
+    # user_projects = [project for project in user_projects if not project.proj_type.name=='com']
     root = Project.objects.get(slug='commons')
     tree = [root, [project_tree_as_list(community) for community in communities]]
     tree = user_project_tree(tree, user_projects)

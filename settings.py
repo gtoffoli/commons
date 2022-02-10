@@ -318,13 +318,13 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
-    (u'fr', u'French'),
+    (u'fr', u'Français'),
     (u'pt', u'Português'),
     (u'hr', u'Hrvatski'),
     (u'ru', u'Русский'),
-    (u'ar', u'Arabic'),
+    (u'ar', u'العربية'),
 )
-LANGUAGES_DICT = dict(LANGUAGES)
+# LANGUAGES_DICT = dict(LANGUAGES)
 RTL_LANGUAGES = ['ar']
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
@@ -614,3 +614,9 @@ XAPI_VERB_ALIASES = {
 }
 
 GOOGLE_DRIVE_URL = "https://www.googleapis.com/drive/v3/files"
+
+def get_calendar_events(request, calendar):
+    from commons import models 
+    return models.get_calendar_events(request, calendar)
+
+GET_EVENTS_FUNC = get_calendar_events

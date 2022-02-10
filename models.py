@@ -218,22 +218,21 @@ def create_favorites(sender, instance, created, **kwargs):
 def flatpage_get(self, url):
     pass
 
-# PROJECT_IDS = []
-PROJECT_IDS = None
-def get_project_ids():
-    global PROJECT_IDS
-    # if not PROJECT_IDS:
-    if PROJECT_IDS is None:
+SITE_PROJECTS = None
+def get_site_projects(return_ids=False):
+    global SITE_PROJECTS
+    if SITE_PROJECTS is None:
         if not settings.SITE_ROOT:
             return []
         root = Project.objects.get(slug=settings.SITE_ROOT)
-        projects = project_list(root)
-        PROJECT_IDS = [project.id for project in projects]
-    return PROJECT_IDS
+        SITE_PROJECTS = project_list(root)
+    if return_ids:
+        return [project.id for project in SITE_PROJECTS]
+    return SITE_PROJECTS
     
 def filter_by_site(qs, model):
     if settings.SITE_ID > 1:
-        project_ids = get_project_ids()
+        project_ids = get_site_projects(return_ids=True)
         if model == Project:
             qs = qs.filter(id__in=project_ids)
         elif model == OerEvaluation:
@@ -274,6 +273,22 @@ def site_member_users(return_ids=False):
             return ProjectMember.objects.filter(project=site_root, state=MEMBERSHIP_ACTIVE).values_list('user', flat=True)
         else:
             return User.objects.filter(membership_user__project=site_root, membership_user__state=MEMBERSHIP_ACTIVE)
+
+def get_calendar_events(request, calendar):
+    if request.GET.get('my', None):
+        site_projects = get_site_projects()
+        calendars = []
+        for project in site_projects:
+            if project.is_member(request.user):
+                calendar = project.get_calendar()
+                if calendar:
+                    calendars.append(calendar)
+        events = []
+        for calendar in calendars:
+            events.extend(calendar.event_set.prefetch_related("occurrence_set", "rule"))
+        return events
+    else:
+        return calendar.event_set.prefetch_related("occurrence_set", "rule")
 
 @python_2_unicode_compatible
 class Tag(models.Model):
@@ -316,8 +331,7 @@ class Resource(models.Model):
     def get_site(self):
         content_type = ContentType.objects.get_for_model(self)
         if content_type.model == 'project':
-            # return self.id in PROJECT_IDS and settings.SITE_ID or 1
-            return self.id in get_project_ids() and settings.SITE_ID or 1
+            return self.id in get_site_projects(return_ids=True) and settings.SITE_ID or 1
         else:
             return self.project and self.project.get_site() or 1
 
