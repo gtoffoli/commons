@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n scheduletags %}
+{% block head_title %}{% trans "View event" %}{% endblock %}
+{% block body %}
+
+<div class="marginTB30 padding10 borderRadius4 bc-white">
+<h3 class="text-center">{{event.title}}</h3>
+<div class="text-center">
+  {% if back_url %}
+  <a href="{{ back_url }}">
+    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+  </a>
+  &nbsp;
+  {% endif %}
+  <a href="{% url "edit_event" event.calendar.slug event.id %}">
+   {% trans "Edit" %} <span class="glyphicon glyphicon-pencil"></span>
+  </a>
+  &nbsp;
+  <a href="{% url "delete_event" event.id %}">
+   {% trans "Delete" %} <span class="glyphicon glyphicon-remove"></span>
+  </a>
+  &nbsp;
+  
+</div>
+<table class="table table_event">
+<tr>
+<th>{% trans "Starts" %}:</th>
+<td>{% blocktrans with event.start|date:_("DATETIME_FORMAT") as start_date %}{{ start_date }}{% endblocktrans %}</td>
+</tr>
+<tr>
+<th>{% trans "Ends" %}:</th>
+<td>{% blocktrans with event.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+</tr>
+<tr>
+<th>{% trans "Reoccurs" %}:</th>
+{% if event.rule %}
+<td>{{ event.rule.name }} {% trans "until" %} {% blocktrans with event.end_recurring_period|date:_("DATETIME_FORMAT") as end_recurring_date %}{{ end_recurring_date }}{% endblocktrans %}</td>
+{% else %}
+<td>{% trans "Never. This is a 'one time only' event." %}</td>
+{% endif %}
+</tr>
+<tr>
+<th>{% trans "Description" %}:</th>
+<td>{% if event.description %}{{event.description}}{% endif %}</td>
+</tr></table>
+<div class="text-center">
+  <span>&bull;</span>
+  <a href="{% url "day_calendar" event.calendar.slug %}{% querystring_for_date event.start 3 %}">
+    {% trans "Daily Calendar" %}
+  </a>
+  <span>&bull;</span>
+  <a href="{% url "month_calendar" event.calendar.slug %}{% querystring_for_date event.start 2 %}">
+    {% trans "Monthly Calendar" %}
+  </a>
+  <span>&bull;</span>
+  <a href="{% url "year_calendar" event.calendar.slug %}{% querystring_for_date event.start 1 %}">
+    {% trans "Full Year Calendar" %}
+  </a>
+  <span>&bull;</span>
+</div>
+</div>
+{% endblock %}

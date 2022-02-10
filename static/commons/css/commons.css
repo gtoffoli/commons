@@ -2015,4 +2015,42 @@ fieldset[disabled] .btn-custom.active {
   background-color: #e6e6e6;
   border-color: #e6e6e6;
 }
-div.table-day  > table {border-collapse: separate;}
+div.table-day  > table,
+table.table_event {border-collapse: separate;}
+
+table.table_event th {
+    text-align:right;
+}
+table.table_event th > label {
+    font-weight:600
+}
+table.table_event th,
+table.table_event td {border:none !important}
+table.table_event input, select, textarea {
+    height: 34px;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    color: #555;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+    -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+       -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+          transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    }
+table.table_event textarea {
+    height: 102px;
+}
+table.table_event input:focus, select:focus, textarea:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+
+}
+table.table_event input[type="text"] {margin-right: 8px;}
+table.table_event input[name="title"],
+table.table_event textarea {width:100%}
+
+table.table_event span.helptext {font-size: 85% }
