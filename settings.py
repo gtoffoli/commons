@@ -615,9 +615,14 @@ XAPI_VERB_ALIASES = {
 
 GOOGLE_DRIVE_URL = "https://www.googleapis.com/drive/v3/files"
 
+FIRST_DAY_OF_WEEK = 1
 def get_calendar_events(request, calendar):
     from commons import models 
     return models.get_calendar_events(request, calendar)
-
 GET_EVENTS_FUNC = get_calendar_events
-FIRST_DAY_OF_WEEK = 1
+def check_calendar_perm_func(ob, user):
+    if ob.slug == 'virtual':
+        return False
+    else:
+        return user.is_authenticated
+CHECK_CALENDAR_PERM_FUNC = check_calendar_perm_func
