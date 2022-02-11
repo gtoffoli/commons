@@ -3,5 +3,17 @@
  {% load staticfiles i18n %}
 
 <article class="view-card roundCorner">
-  <p class="title-card"><a href="{{ folder_document.folder.get_absolute_url }}" title='{% trans "view folder" %}'>{{ folder_document.title }}</a> {% if folder_document.state != 3 %}<small style="color: {{ folder_document.get_link_color }};">[{{ folder_document.get_state }}]</small> {% endif %}</p>
+  <p class="title-card">{{ folder_document.title }}</p>
+  <p class="font13">
+     {% if folder_document.state != 3 %}<small style="color: {{ folder_document.get_link_color }};">{{ folder_document.get_state }}</small>&nbsp;{% endif %}
+     {% if folder_document.embed_code %}{% trans "online document" %}
+         <a href="/online_resource/{{ folder_document.id }}/view/" title="{% trans "view document" %}"><i class="fa fa-eye"></i></a> &nbsp;
+     {% else %}
+         {% if folder_document.document.viewable %}<a href="/document/{{ folder_document.id }}/view/" title="{% trans "view document" %}"><i class="fa fa-eye"></i></a>{% endif %}
+         <a href="/document/{{ folder_document.id }}/download/" class="download-file" title="{% trans "download document" %}"><i class="fa fa-download"></i></a>
+     {% endif %}  &nbsp;&nbsp;
+     {% trans "in folder" %} {{ folder_document.folder.title }} 
+     {% if not user.is_anonymous %}<a href="{{ folder_document.folder.get_absolute_url }}" title='{% trans "view folder" %}'><i class="fa fa-external-link"></i></a>{% endif %}
+  </p>
+  <p class="font13"></p>
 </article>
