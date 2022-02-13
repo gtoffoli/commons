@@ -3,6 +3,8 @@ from django.conf import settings
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
+from django.core.mail import send_mail
+from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.contrib import admin
 from django.contrib.flatpages import views as flatpages_views
@@ -19,6 +21,15 @@ import commons.user_spaces
 if settings.HAS_SAML2:
     import djangosaml2
     from djangosaml2.urls import urlpatterns as saml2_urls
+
+def mailme(request):
+    user = request.user
+    to = user.is_authenticated and user.email or settings.ADMINS[0][1]
+    result = send_mail('Mail me', 'Just for test.', None, [to])
+    return HttpResponse(result)
+
+def test(request):
+    assert False
 
 from django.urls import path
 urlpatterns = [

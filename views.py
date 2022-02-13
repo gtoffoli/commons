@@ -1241,7 +1241,11 @@ def library_traverse(request, path):
         except Folder.DoesNotExist:
             folderdocument = get_object_or_404(FolderDocument, slug=slug, folder=folder)
             if not slugs:
-                return document_serve(request, folderdocument.document.id)
+                # return document_serve(request, folderdocument.document.id)
+                if folderdocument.embed_code:
+                    return online_resource_view(request, folderdocument.id)
+                elif folderdocument.document:
+                    return document_serve(request, folderdocument.document.id)
     if folder and not slugs:
         return folder_detail(request, folder=folder)
     else:
