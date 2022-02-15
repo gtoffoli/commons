@@ -10,7 +10,7 @@
 
 <div class="text-center marginB10">
   <h4>{{ calendar.name }}</h4>
-  <div>{% prevnext "month_calendar" calendar period "\W\e\ek W, M Y" %}</div>
+  <div>{% prevnext "week_calendar" calendar period "\W\e\ek W, M Y" %}</div>
 </div>
 
 <div class="row">
@@ -24,13 +24,17 @@
         <span>&bull;</span>
       </div>
       <div class="table-day">
+        {% comment %}
       {% if forloop.first %}
 
           {% daily_table day %}
           
       {% else %}
+      {% endcomment %}
           {% daily_table day %}
+      {% comment %}    
       {% endif %}
+      {% endcomment %}
     </div>
     </div>
   {% endfor %}
@@ -59,5 +63,5 @@
 {% endblock %}
 
 {% block extra_script %}
- <script type="text/javascript" src="{% static "schedule/schedule.js" %}"></script>
+ <script type="text/javascript" src="{% static "schedule.js" %}"></script>
 {% endblock %}

@@ -8,7 +8,7 @@
 {% include "schedule/_dialogs.html" %}
 <div class="text-center marginB10">
   <h4>{{ calendar.name }}</h4>
-  <div>{% prevnext "month_calendar" calendar period "l, F d, Y"%}</div>
+  <div>{% prevnext "day_calendar" calendar period "l, F d, Y"%}</div>
 </div>
 <div class="table-day">
 {% daily_table period %}
