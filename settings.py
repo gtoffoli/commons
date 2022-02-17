@@ -19,7 +19,7 @@ if not 'HAS_MEETING' in globals():
 if not 'HAS_ZINNIA' in globals():
     HAS_ZINNIA = True
 if not 'HAS_SAML2' in globals():
-    HAS_SAML2 = True
+    HAS_SAML2 = False # True
 if HAS_SAML2:
     from commons.sso_config import *
 if not 'HAS_LRS' in globals():
@@ -174,6 +174,7 @@ INSTALLED_APPS = (
     'el_pagination',
     'datetimewidget',
     'schedule',
+    # 'lrs',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
@@ -626,3 +627,18 @@ def check_calendar_perm_func(ob, user):
     else:
         return user.is_authenticated
 CHECK_CALENDAR_PERM_FUNC = check_calendar_perm_func
+
+"""
+# required by ADL_LRS
+from configparser import RawConfigParser
+# Root of LRS
+SETTINGS_DIR = BASE_DIR
+config = RawConfigParser()
+# config.read(SETTINGS_DIR+'/settings.ini')
+config.read(os.path.join(SETTINGS_DIR, 'settings.ini'))
+AMPQ_USERNAME = config.get('ampq', 'USERNAME')
+AMPQ_PASSWORD = config.get('ampq', 'PASSWORD')
+AMPQ_HOST = config.get('ampq', 'HOST')
+AMPQ_PORT = config.getint('ampq', 'PORT')
+AMPQ_VHOST = config.get('ampq', 'VHOST')
+"""

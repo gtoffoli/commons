@@ -600,6 +600,7 @@ class Folder(MPTTModel):
         while folder.parent:
             url = "/%s%s" % (folder.parent.slug, url)
             folder = folder.parent
+        url = "/%s%s" % (folder.get_project().slug, url)
         return '/folder' + url
 
     def get_site(self):

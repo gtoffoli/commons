@@ -84,11 +84,13 @@ form.login > ul.errorlist {
                         <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
                 {% endif %}
             {% elif is_secondary_domain or is_test_domain %}
+                {% if HAS_SAML2 %}
                 <p>{% blocktrans %}Please sign in with one
                     of your existing third party accounts.{% endblocktrans %}</p>
                 <ul class="socialaccount_providers">
                     <li><a href="/saml2/login/" title="Up2U">Up2U</a></li>
                 </ul>
+                {% endif %}
             {% endif %}
 
             <div class="login-or demiBold marginTB30">{% trans 'or'|capfirst %}</div>
