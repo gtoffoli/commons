@@ -10,16 +10,33 @@
       {% endif %}
       </div>
     </td>
-    <td class="col-lg-10 col-md-10 col-sm-10 col-xs-9">
+    {% for event in day.events %}
+    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
       {% for occ in slot.occurrences %}
-      <button class="btn {% if occ.cancelled %} btn-danger {%else%} btn-default {% endif %}" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="margin-bottom:3px;{% if occ.event.color_event %} border-color:{{occ.event.color_event}}{% endif %}">
-        {% options occ %}
-        {% title occ %}
-      </button>
-      
-      {% include 'schedule/_detail.html' with occurrence=occ %}
+      {% if occ.event == event %}{% with color="lightgrey" %}
+        {% if slot.start == event.start and slot.end == event.end %}
+          <button class="btn {% if occ.cancelled %} btn-danger {%else%} btn-default {% endif %}" data-toggle="modal" data-target="#{% hash_occurrence occ %}"
+                  style="border-style: solid; border-width: 2px 0 2px 0;{% if color %} border-color:{{ color }};{% endif %} margin: 2px 0 2px 0; background-color: white;">
+          {% options occ %} {% title occ %}
+        {% elif slot.start == event.start %}      
+          <button class="btn" data-toggle="modal" data-target="#{% hash_occurrence occ %}"
+                  style="border-style: solid; border-width: 2px 2px 0 2px;{% if color %} border-color:{{ color }};{% endif %} margin: 2px 0 0 0; background-color: white;">
+          {% options occ %} {% title occ %}
+          </button>
+        {% elif slot.end == event.end %}      
+          <button class="btn" style="border-style: solid; border-width: 0 2px 2px 2px;{% if color %} border-color:{{ color }};{% endif %} background-color: white; pointer-events: none;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: white;">{% title occ %}</span>
+          </button>
+        {% else %}      
+          <button class="btn" style="border-style: solid; border-width: 0 2px 0 2px;{% if color %} border-color:{{ color }};{% endif %} background-color: white; pointer-events: none; border-radius: 0;">
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: white;">{% title occ %}</span>
+          </button>
+        {% endif %}
+        {% include 'schedule/_detail.html' with occurrence=occ %}
+      {% endwith %}{% endif %}
       {% endfor %}
     </td>
+    {% endfor %}
   </tr>
     {% endfor %}
 </table>
