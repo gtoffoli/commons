@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+# from django.utils.encoding import python_2_unicode_compatible
 
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +14,7 @@ from datatrans.models import KeyValue
 
 # ABSTRACT CLASSES
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class VocabularyEntry(models.Model):
     name = models.CharField(max_length=100, unique=True)
     order = models.IntegerField(default=100)
@@ -36,7 +36,7 @@ class VocabularyEntry(models.Model):
             name_dict[keyvalue.language] = keyvalue.value
         return name_dict
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class VocabularyNode(MPTTModel, VocabularyEntry):
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name = 'children')
     class MPTTMeta:
@@ -67,7 +67,7 @@ def expand_to_descendants(klass, pk_list):
                 expanded.append(pk)
     return expanded
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class CodedEntry(models.Model):
     """
     Abstract class for classification entries with control on key

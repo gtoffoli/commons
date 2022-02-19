@@ -1,5 +1,5 @@
-from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+# from __future__ import unicode_literals
+# from django.utils.encoding import python_2_unicode_compatible
 
 from django.utils.translation import gettext_lazy as _
 from dateutil.parser import parse
@@ -19,7 +19,7 @@ class MetadataTypeManager(models.Manager):
     def get_by_natural_key(self, name):
         return self.get(name=name)
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class MetadataType(models.Model):
     """
     Define a type of metadata

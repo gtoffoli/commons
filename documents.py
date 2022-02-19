@@ -1,8 +1,8 @@
-from __future__ import unicode_literals
-from django.utils.encoding import python_2_unicode_compatible
+# from __future__ import unicode_literals
+# from django.utils.encoding import python_2_unicode_compatible
 
 from six import StringIO
-unicode = str
+# unicode = str
 
 import hashlib
 import logging
@@ -25,7 +25,8 @@ FILESTORAGE_LOCATION = os.path.join(settings.MEDIA_ROOT, 'document_storage')
 HASH_FUNCTION = lambda x: hashlib.sha256(x).hexdigest()  # document image cache name hash function
 # UUID_FUNCTION = lambda: unicode(uuid.uuid4())
 def UUID_FUNCTION(*args, **kwargs):
-    return unicode(uuid.uuid4())
+    # return unicode(uuid.uuid4())
+    return str(uuid.uuid4())
 logger = logging.getLogger(__name__)
 
 VIEWABLE_MIMETYPES = (
@@ -105,7 +106,7 @@ class DocumentTypeManager(models.Manager):
     def get_by_natural_key(self, name):
         return self.get(name=name)
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class DocumentType(models.Model):
     """
     Define document types or classes to which a specific set of
@@ -142,7 +143,8 @@ class DocumentManager(models.Manager):
                 for compressed_file_child in compressed_file.children():
                     if command_line:
                         print ('Uploading file #%d: %s' % (count, compressed_file_child))
-                    versions_created.append(self.upload_single_document(document_type=document_type, file_object=compressed_file_child, description=description, label=unicode(compressed_file_child), language=language or LANGUAGE, user=user))
+                    # versions_created.append(self.upload_single_document(document_type=document_type, file_object=compressed_file_child, description=description, label=unicode(compressed_file_child), language=language or LANGUAGE, user=user))
+                    versions_created.append(self.upload_single_document(document_type=document_type, file_object=compressed_file_child, description=description, label=str(compressed_file_child), language=language or LANGUAGE, user=user))
                     compressed_file_child.close()
                     count += 1
 
@@ -158,13 +160,14 @@ class DocumentManager(models.Manager):
 
     @transaction.atomic
     def upload_single_document(self, document_type, file_object, label=None, description=None, language=None, user=None):
-        document = self.model(description=description, document_type=document_type, language=language, label=label or unicode(file_object))
+        # document = self.model(description=description, document_type=document_type, language=language, label=label or unicode(file_object))
+        document = self.model(description=description, document_type=document_type, language=language, label=label or str(file_object))
         document.save(user=user)
         version = document.new_version(file_object=file_object, user=user)
         document.set_document_type(document_type, force=True)
         return version
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Document(models.Model):
     """
     Defines a single document with it's fields and properties
@@ -408,7 +411,7 @@ class Document(models.Model):
                 return True
         return False
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class DocumentVersion(models.Model):
     """
     Model that describes a document version and its properties
@@ -479,7 +482,8 @@ class DocumentVersion(models.Model):
         """
         if self.exists():
             source = self.open()
-            self.checksum = unicode(HASH_FUNCTION(source.read()))
+#           self.checksum = unicode(HASH_FUNCTION(source.read()))
+            self.checksum = str(HASH_FUNCTION(source.read()))
             source.close()
             if save:
                 self.save()

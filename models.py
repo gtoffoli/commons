@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-"""
 
 # Python 2 - Python 3 compatibility
-from __future__ import unicode_literals
-import future
-from future.builtins import str
-from django.utils.encoding import python_2_unicode_compatible
+# from __future__ import unicode_literals
+# import future
+# from future.builtins import str
+# from django.utils.encoding import python_2_unicode_compatible
 from six import BytesIO
 
 from django.conf import settings
@@ -290,7 +290,7 @@ def get_calendar_events(request, calendar):
     else:
         return calendar.event_set.prefetch_related("occurrence_set", "rule")
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Tag(models.Model):
     name = models.CharField(verbose_name=_('Name'), unique=True, max_length=100)
     slug = AutoSlugField(unique=True, populate_from='name')
@@ -517,7 +517,7 @@ def Folder_slug_populate_from(instance):
 def folder_tree_as_list(folder):
     return [folder, [folder_tree_as_list(child) for child in folder.get_children()]]
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Folder(MPTTModel):
        
     """
@@ -625,7 +625,7 @@ class Folder(MPTTModel):
 def FolderDocument_slug_populate_from(instance):
     return instance.__str__()
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class FolderDocument(models.Model, Publishable):
     """
     Link a document or an online external resource to a folder; documents are ordered
@@ -644,8 +644,6 @@ class FolderDocument(models.Model, Publishable):
     created = CreationDateTimeField(_('created'), null=True)
 
     def __str__(self):
-        # return unicode(self.document.label)
-        # return self.document.label
         return self.label or self.document.label
 
     class Meta:
@@ -918,7 +916,7 @@ def create_user_profile(sender, instance, created, **kwargs):
 post_save.connect(create_user_profile, sender=User,
                  dispatch_uid="create_user_profile")
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class UserProfileLanguage(models.Model):
     userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name='userprofilelanguage_profile', verbose_name=_('user profile'))
     language = models.ForeignKey(Language, on_delete=models.PROTECT, related_name='userprofilelanguage_language', verbose_name=_('language'))
@@ -931,7 +929,7 @@ class UserProfileLanguage(models.Model):
         verbose_name_plural = _('user languages')
         ordering = ('order', 'language__name')
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Subject(models.Model):
     """
     Enumerate languages referred by Repos and OERs
@@ -968,7 +966,7 @@ class OnlineMeeting(object):
     def get_absolute_url(self):
         return self.get_url()
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class ProjType(models.Model):
     """
     Define project/community types
@@ -1060,7 +1058,7 @@ def project_list(project):
         pl = pl + project_list(child)
     return pl
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Project(Resource):
 
     class Meta:
@@ -1658,7 +1656,7 @@ def message_project(self):
 Message.project = message_project
 
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class RepoFeature(models.Model):
     """
     Define a repertoire of miscellaneous repository features
@@ -1679,7 +1677,7 @@ class RepoFeature(models.Model):
     def __str__(self):
         return self.option_label()
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class RepoType(models.Model):
     """
     Define repository types
@@ -1703,7 +1701,7 @@ class RepoType(models.Model):
     def natural_key(self):
         return (self.name,)
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class Repo(Resource, Publishable):
     name = models.CharField(max_length=255, db_index=True, verbose_name=_('name'))
     slug = AutoSlugField(unique=True, populate_from='name', editable=True, overwrite=True, max_length=80)
@@ -1793,7 +1791,7 @@ SOURCE_TYPE_CHOICES = (
     (6, _('none (brand new OER)')),)
 SOURCE_TYPE_DICT = dict(SOURCE_TYPE_CHOICES)
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class OER(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     title = models.CharField(max_length=200, db_index=True, verbose_name=_('title'))
@@ -2027,7 +2025,7 @@ def update_oer_type(sender, **kwargs):
 
 post_save.connect(update_oer_type, sender=OER)
    
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class OerDocument(models.Model):
     """
     Link an OER to an attached document; attachments are ordered
@@ -2037,7 +2035,6 @@ class OerDocument(models.Model):
     document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='document', verbose_name=_('Document'))
 
     def __str__(self):
-        # return unicode(self.document.label)
         return self.document.label
 
     class Meta:
@@ -2055,7 +2052,7 @@ class OerDocument(models.Model):
             self.order = last_order+1
         super(OerDocument, self).save(*args, **kwargs) # Call the "real" save() method.
        
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class OerMetadata(models.Model):
     """
     Link an OER to a specific instance of a metadata type with it's current value
@@ -2065,7 +2062,6 @@ class OerMetadata(models.Model):
     value = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Value'), db_index=True)
 
     def __str__(self):
-        # return unicode(self.metadata_type)
         return str(self.metadata_type)
 
     class Meta:
@@ -2073,7 +2069,7 @@ class OerMetadata(models.Model):
         verbose_name = _('additional metadatum')
         verbose_name_plural = _('additional metadata')
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class SharedOer(models.Model):
     """
     Link to an OER catalogued in another project
@@ -2094,44 +2090,6 @@ class SharedOer(models.Model):
     def can_delete(self, request):
         user = request.user
         return user==self.user or (user.is_authenticated and self.project.is_admin(user))
-
-""" OER Evaluations will be user volunteered paradata
-from metadata.settings import AVAILABLE_VALIDATORS # ignore parse time error
-
-class EvaluationTypeManager(models.Manager):
-    def get_by_natural_key(self, name):
-        return self.get(name=name)
-
-# Similar to metadata type (see mayan.metadata)
-class EvaluationType(models.Model):
-    # Define a type of evaluation (see MetadataType in metadata.models
-    name = models.CharField(unique=True, max_length=48, verbose_name=_('name'), help_text=_('Do not use python reserved words, or spaces.'))
-    # TODO: normalize 'title' to 'label'
-    title = models.CharField(max_length=48, verbose_name=_('Title'))
-    default = models.CharField(max_length=128, blank=True, null=True,
-                               verbose_name=_('Default'),
-                               help_text=_('Enter a string to be evaluated.'))
-    # TODO: Add enable_lookup boolean to allow users to switch the lookup on and
-    # off without losing the lookup expression
-    lookup = models.TextField(blank=True, null=True,
-                              verbose_name=_('Lookup'),
-                              help_text=_('Enter a string to be evaluated that returns an iterable.'))
-    validation = models.CharField(blank=True, choices=zip(AVAILABLE_VALIDATORS, AVAILABLE_VALIDATORS), max_length=64, verbose_name=_('Validation function name'))
-    # TODO: Find a different way to let users know what models and functions are
-    # available now that we removed these from the help_text
-    objects = EvaluationTypeManager()
-
-    def __unicode__(self):
-        return self.title
-
-    def natural_key(self):
-        return (self.name,)
-
-    class Meta:
-        ordering = ('title',)
-        verbose_name = _('evaluation type')
-        verbose_name_plural = _('evaluation types')
-"""
 
 POOR = 1
 FAIR = 2
@@ -2156,7 +2114,7 @@ def score_to_stars(score):
     empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
     return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': stars }
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class OerEvaluation(models.Model):
     """
     Link an OER to instances of quality metadata
@@ -2185,7 +2143,7 @@ class OerEvaluation(models.Model):
     def get_site(self):
         return self.oer.get_site()
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class OerQualityMetadata(models.Model):
     """
     Link an OER evaluation to a specific instance of a quality facet with it's current value
@@ -2195,7 +2153,6 @@ class OerQualityMetadata(models.Model):
     value = models.IntegerField(choices=QUALITY_SCORE_CHOICES, verbose_name=_('facet-related score'))
 
     def __str__(self):
-        # return unicode(self.quality_facet)
         return str(self.quality_facet)
 
     class Meta:
@@ -2226,7 +2183,7 @@ LP_TYPE_CHOICES = (
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class LearningPath(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     cloned_from = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name=_('original learning path'), blank=True, null=True, related_name='cloned_path')
@@ -2915,7 +2872,7 @@ class LearningPath(Resource, Publishable):
             node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)
         return writer, mimetype
 
-@python_2_unicode_compatible
+# @python_2_unicode_compatible
 class SharedLearningPath(models.Model):
     """
     Link to an LearningPath created in another project
@@ -3342,22 +3299,6 @@ class TaggedLP(models.Model):
         verbose_name = _('Tagged LP')
         verbose_name_plural = _('Tagged LPs')
 
-"""
-Con la versione generica NON PARTE NEANCHE !!!
-class TaggedResource(models.Model):
-    tag = models.ForeignKey(Tag)
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    def __str__(self):              # __unicode__ on Python 2
-        return self.tag
-    class Meta:
-        db_table = 'taggit_taggeditem'
-        verbose_name = _('Tagged resource')
-        verbose_name_plural = _('Tagged resources')
-"""
-
 class Featured(models.Model):
     ANY = 0
     GLOBAL = 1
@@ -3393,7 +3334,6 @@ class Featured(models.Model):
     def title(self):
         title = ''
         if self.featured_object:
-            # title = self.featured_object.__unicode__()
             title = str(self.featured_object)
         elif self.text:
             strings = strings_from_html(self.text, fragment=True)
