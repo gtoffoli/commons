@@ -2015,9 +2015,46 @@ fieldset[disabled] .btn-custom.active {
   background-color: #e6e6e6;
   border-color: #e6e6e6;
 }
+
 div.table-day  > table,
 table.table_event {border-collapse: separate;}
 
+div.table-day > table td.slot {
+  width: 10%;
+  padding:0 6px;
+  line-height:2;
+  white-space:nowrap;
+  border-top: none;
+}
+div.table-day > table td.slot > span {
+    margin-right: 3px;
+}
+
+div.table-day > table td.occ {
+  padding:0 3px;
+  line-height:2;
+    border-top: none;
+}
+
+div.table-day > table td.occ button.btn-default {
+    border: 2px solid #999;
+}
+
+div.table-day > table td.occ div.nobtn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  vertical-align: middle;
+  cursor: default;
+  border: 2px solid #999;
+  border-radius: 4px;
+  color: white;
+  background-color: white;
+}
 table.table_event th {
     text-align:right;
 }

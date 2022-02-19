@@ -23,19 +23,7 @@
         </a>
         <span>&bull;</span>
       </div>
-      <div class="table-day">
-        {% comment %}
-      {% if forloop.first %}
-
-          {% daily_table day %}
-          
-      {% else %}
-      {% endcomment %}
-          {% daily_table day %}
-      {% comment %}    
-      {% endif %}
-      {% endcomment %}
-    </div>
+      {% daily_table day %}
     </div>
   {% endfor %}
 </div>

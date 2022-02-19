@@ -1,10 +1,10 @@
 {% load i18n scheduletags %}
-<div>
+
   {% if day.has_occurrences %}
       {% for o in day.get_occurrence_partials %}
                     {% with occurrence=o.occurrence %}
             <div class="paddingB5 paddingLR5 btn-block text-center">
-                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{ forloop.counter }}">
+                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{% hash_occurrence occurrence %}"style="{% if occurrence.event.color_event %} border-color:{{occurrence.event.color_event}};{% endif %}">
                   <div>
                       {% if o.class == 0 %}{{ occurrence.start|time:"G:i" }}{% endif %}
                       {% if o.class == 1 %}{{ occurrence.start|time:"G:i" }}{% endif %}
@@ -12,12 +12,12 @@
                       {% if o.class == 3 %}{% trans "Ends at" %} {{ occurrence.end|time:"G:i" }}{% endif %}
                   </div>
                   <div>
-                      {% title o.occurrence %}
+                      {% title occurrence %}
                   </div>
                 </button>
             </div>
 
-              <div class="modal fade " id="{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="occurrence_detailsl">
+              <div class="modal fade " id="{% hash_occurrence occurrence %}" tabindex="-1" role="dialog" aria-labelledby="occurrence_detailsl">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content c-demiblack">
                     <div class="modal-header text-center">
@@ -50,7 +50,7 @@
                         </table>
                         {% if occurrence.description %}
                             <h6 class="demiBold">{% trans "Description" %}</h6>
-                            <p class="text-left">{{occurrence.description}}</p>
+                            <p class="text-left" style="white-space:normal">{{occurrence.description}}</p>
                         {% endif %}
 
                     </div>
@@ -63,4 +63,4 @@
               {% endwith %}
       {% endfor %}
   {% endif %}
-</div>
+

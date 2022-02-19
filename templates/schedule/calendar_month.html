@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load scheduletags i18n %}
 {% block head_title %}{% trans "This month" %}{% endblock %}
-{% block body %}
+{% block body_base %}
+<section id="content_body">
+<div class="container-fluid">
 <div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
 {% include "schedule/_dialogs.html" %}
   <div class="text-center marginB10">
@@ -19,12 +21,15 @@
   <span>&bull;</span>
   <a href="{% url "tri_month_calendar" calendar.slug %}{% querystring_for_date period.start 2 %}">
     {% trans "Three Month Calendar" %}
-  </a><span class="">&bull;</span>
+  </a>
+  <span>&bull;</span>
   <a href="{% url "year_calendar" calendar.slug %}{% querystring_for_date period.start 1 %}">
     {% trans "Full Year Calendar" %}
   </a>
   <span>&bull;</span>
   </div>
 </div>
-
+</div>
+</section>
 {% endblock %}
+

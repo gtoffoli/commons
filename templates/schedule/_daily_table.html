@@ -1,42 +1,48 @@
 {% load scheduletags %}
-<table class="table table-striped">
+<div class="table-day table-responsive">
+  <table class="table table-striped">
     {% for slot in slots %}
     <tr>
-    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
-      <div style="float:right">
-      <span>{{ slot.start|time:"G:i" }}</span>
-      {% if addable %}
-      {% create_event_url calendar slot.start %}
-      {% endif %}
-      </div>
-    </td>
-    {% for event in day.events %}
-    <td class="col-lg-2 col-md-2 col-sm-2 col-xs-3">
-      {% for occ in slot.occurrences %}
-      {% if occ.event == event %}{% with color="lightgrey" %}
-        {% if slot.start == event.start and slot.end == event.end %}
-          <button class="btn {% if occ.cancelled %} btn-danger {%else%} btn-default {% endif %}" data-toggle="modal" data-target="#{% hash_occurrence occ %}"
-                  style="border-style: solid; border-width: 2px 0 2px 0;{% if color %} border-color:{{ color }};{% endif %} margin: 2px 0 2px 0; background-color: white;">
-          {% options occ %} {% title occ %}
-        {% elif slot.start == event.start %}      
-          <button class="btn" data-toggle="modal" data-target="#{% hash_occurrence occ %}"
-                  style="border-style: solid; border-width: 2px 2px 0 2px;{% if color %} border-color:{{ color }};{% endif %} margin: 2px 0 0 0; background-color: white;">
-          {% options occ %} {% title occ %}
-          </button>
-        {% elif slot.end == event.end %}      
-          <button class="btn" style="border-style: solid; border-width: 0 2px 2px 2px;{% if color %} border-color:{{ color }};{% endif %} background-color: white; pointer-events: none;">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: white;">{% title occ %}</span>
-          </button>
-        {% else %}      
-          <button class="btn" style="border-style: solid; border-width: 0 2px 0 2px;{% if color %} border-color:{{ color }};{% endif %} background-color: white; pointer-events: none; border-radius: 0;">
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: white;">{% title occ %}</span>
-          </button>
+      <td class="slot text-right">
+        <span>{{ slot.start|time:"G:i" }}</span>
+        {% if addable %}
+          {% create_event_url calendar slot.start %}
         {% endif %}
-        {% include 'schedule/_detail.html' with occurrence=occ %}
-      {% endwith %}{% endif %}
+      </td>
+      {% for event in day.events %}
+      <td class="occ">
+        {% for occ in slot.occurrences %}
+          {% if occ.event == event %}
+            {% if slot.start == occ.start and slot.end ==  occ.end %}
+              <button class="btn btn-default" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %}">
+                {% options occ %}
+                {% title occ %}
+              </button>
+            {% elif slot.start == occ.start %}
+              <button class="btn btn-default" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %} border-bottom: none; border-bottom-left-radius:0; border-bottom-right-radius:0;">
+                {% options occ %}
+                {% title occ %}
+              </button>
+            {% elif slot.end ==  occ.end %}
+              <div class="nobtn" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %} border-top: none; border-top-left-radius:0; border-top-right-radius:0;">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="glyphicon glyphicon-remove"></span>
+                {% title occ %}
+              </div>
+            {% else %}
+              <div class="nobtn" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %} border-top:none; border-bottom:none; border-radius:0;">
+                <span class="glyphicon glyphicon-pencil"></span>
+                <span class="glyphicon glyphicon-remove"></span>
+                {% title occ %}
+              </div>
+            {% endif %}
+            {% include 'schedule/_detail.html' with occurrence=occ %}
+          {% endif %}
+        {% endfor %}
+      </td>
       {% endfor %}
-    </td>
+    </tr>
     {% endfor %}
-  </tr>
-    {% endfor %}
-</table>
+  </table>
+</div>
+
