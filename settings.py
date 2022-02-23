@@ -60,7 +60,8 @@ SOCIALACCOUNT_PROVIDERS = {
     'linkedin_oauth2': { # added 180826
         'SCOPE': [
             'r_emailaddress',
-            'r_basicprofile',
+#           'r_basicprofile',
+            'r_liteprofile',
         ],
         'PROFILE_FIELDS': [
             'id',
