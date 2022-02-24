@@ -5,11 +5,9 @@ from django.contrib.sessions.models import Session
 def online_users_count():
     try:
         return Session.objects.filter(expire_date__gte = datetime.now()).count()
-        #return Session.objects.filter(expire_date__gte = timezone.now()).count()
     except:
         return 0
 
-# def sitename(request):
 def processor(request):
     path = request.path
     protocol = request.is_secure() and 'https' or 'http'
@@ -19,7 +17,8 @@ def processor(request):
     is_primary_domain = False
     is_secondary_domain = False
     is_test_domain = False
-    if host == settings.PRIMARY_DOMAIN:
+    # if host == settings.PRIMARY_DOMAIN:
+    if host == settings.PRIMARY_DOMAIN or host.count('localhost'):
         is_primary_domain = True
     elif host == settings.SECONDARY_DOMAIN:
         is_secondary_domain = True
@@ -47,6 +46,9 @@ def processor(request):
         'is_test_domain': is_test_domain,
         'DOMAIN': host,
         'CANONICAL': canonical,
+        'HAS_LINKEDIN_AUTHENTICATION': settings.HAS_LINKEDIN_AUTHENTICATION,
+        'HAS_FACEBOOK_AUTHENTICATION': settings.HAS_FACEBOOK_AUTHENTICATION,
+        'HAS_SOCIAL_AUTHENTICATION': settings.HAS_LINKEDIN_AUTHENTICATION or settings.HAS_FACEBOOK_AUTHENTICATION,
         'HAS_SAML2': settings.HAS_SAML2,
         'HAS_LRS': settings.HAS_LRS,
         'HAS_MEETING': settings.HAS_MEETING,

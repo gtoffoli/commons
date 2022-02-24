@@ -72,6 +72,9 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
+HAS_LINKEDIN_AUTHENTICATION = DEBUG
+HAS_FACEBOOK_AUTHENTICATION = True
+
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
 CACHES = {
     'default': {
