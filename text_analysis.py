@@ -18,6 +18,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
+from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 
 from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
@@ -230,18 +231,21 @@ docData = {
 };
 
 def get_web_resource_text(url):
+    err = None
     try:
         response = requests.get(url)
-    except:
-        response = None
-    if not (response and response.status_code == 200):
-        return ''
+    except ConnectionError as err:
+        return '', response, err
+    except requests.exceptions.RequestException as err:
+        return '', response, err
+    if not (response.status_code == 200):
+        return '', response, err
     text = ''
     encoding = 'utf8'
     content_type = response.headers['content-type']
     if content_type.count('text/plain'):
         text = response.text
-    elif content_type.count('text/html'):
+    elif content_type.count('text/html') or url.endswith('.htm'):
         text = response.text
         text = readability.Document(text).summary()
         text = extract_annotate_with_bs4(text)
@@ -264,9 +268,9 @@ def get_web_resource_text(url):
         f.close()
         try:
             text = text.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
-    return text
+        except (UnicodeDecodeError, AttributeError) as err:
+            return '', response, err
+    return text, response, err
 
 def get_document_text(document, return_has_text=False):
     has_text = False
@@ -430,10 +434,6 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
         title = obj.title
         description = ""
         text = extract_annotate_with_bs4(obj.content)
-    elif obj_type == 'resource':
-        title = ''
-        description = ''
-        text = get_web_resource_text(obj_id)
     if return_has_text:
         return text
     else:
@@ -527,14 +527,20 @@ def sorted_frequencies(d):
 
 token_level_dict = {}
 def map_token_pos_to_level(language_code):
-    try:
-        module = import_module('commons.lang.{0}.basic_vocabulary_{0}'.format(language_code))
-        voc = getattr(module, 'voc_'+language_code)
-        for item in voc:
-            assert len(item) == 3
-            token_level_dict['_'.join(item[:2])] = item[2]
-    except:
-        pass
+    module_name = 'commons.lang.{0}.basic_vocabulary_{0}'.format(language_code)
+    module = import_module(module_name)
+    voc = getattr(module, 'voc_'+language_code)
+    for item in voc:
+        assert len(item) >= 3
+        token_level_dict['_'.join(item[:2])] = item[2]
+
+language_code_dict = {
+    'english': 'en',
+    'italian': 'it',
+    'italiano': 'it',
+    'spanish': 'es',
+    'español': 'es',
+}
 
 def add_level_to_frequencies(frequencies, pos):
     for frequency in frequencies:
@@ -549,7 +555,7 @@ def add_level_to_frequencies(frequencies, pos):
 
 def text_dashboard_return(request, var_dict):
     if not var_dict:
-        var_dict = { 'error': 'Sorry, it looks like the language processing service is off.'}
+        var_dict = { 'error': _('sorry, it looks like the language processing service is off')}
     if request.is_ajax():
         return JsonResponse(var_dict)
     else:
@@ -559,7 +565,17 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
     """ here through ajax call from the template 'vue/text_dashboard.html' """
     if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource',]:
         return HttpResponseForbidden()
-    title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
+    if obj_type == 'resource':
+        title = ''
+        description = ''
+        body, response, err = get_web_resource_text(obj_id)
+        if not body:
+            if err:
+                return text_dashboard_return(request, { 'error': err.value })
+            else:
+                return text_dashboard_return(request, { 'error': response.status_code })
+    else:
+        title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
     if not body:
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
@@ -573,7 +589,7 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
         return text_dashboard_return(request, {})
     analyze_dict = response.json()
     language = analyze_dict['language']
-    language_code = language[:2].lower()
+    language_code = language_code_dict[language.lower()]
     map_token_pos_to_level(language_code)
     analyzed_text = analyze_dict['text']
 #   sentences = analyze_dict['sentences']
