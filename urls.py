@@ -264,6 +264,7 @@ urlpatterns += [
     url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
     url(r"^doc/(?P<doc_id>[\d-]+)/text/$", commons.text_analysis.doc_text, name="doc_text"),
     url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
+    url(r"^text_analysis_input/$", commons.text_analysis.text_analysis_input, name="text_analysis_input"),
    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

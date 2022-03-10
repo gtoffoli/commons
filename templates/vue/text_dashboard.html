@@ -96,7 +96,7 @@ var webFontURLs = [
   <div id="app" class='components-container'>
     <template v-if="error===null">
       <template>
-        <split-pane v-on:resize="resize" split="horizontal" :default-percent='15'>
+        <split-pane v-on:resize="resize" split="horizontal" :default-percent='20'>
           <template slot="paneL">
 		    <h3 class="small" style="text-align:center;  font-variant:small-caps; padding:0;">Text-analysis dashboard for {{ obj_type }}
 		      <span v-if="obj_type == 'pathnode'">{{ obj_id }} ({{ title }}) of LP</span>
@@ -123,7 +123,7 @@ var webFontURLs = [
             </div>
           </template>
           <template slot="paneR">
-            <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='75'>
+            <split-pane v-on:resize="resize" :min-percent='20' :max-percent='75' split="horizontal" :default-percent='60'>
 		      <template slot="paneL">
                 <h4 class="small" style="text-align: center;"><span style="color:cornflowerBlue;">Part-Of-Speech (POS) Tags</span>,
                 <span style="color:purple;">Syntactic Dependencies</span> and <span style="color:tomato;">Named Entities</span></h4>

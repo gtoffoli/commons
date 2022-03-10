@@ -746,6 +746,9 @@ class BlogArticleForm(forms.Form):
     content = forms.CharField(required=False, label=_('article content'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 8, 'cols': 80,}))
     lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
 
+class TextAnalysisInputForm(forms.Form):
+    text = forms.CharField(required=True, label=_('text to analyze'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 10, 'cols': 120,}), help_text=_('short text of a few paragraphs'))
+
 # customize email validation for GMail addresses
 from allauth.account.forms import SignupForm
 from allauth.account.adapter import get_adapter

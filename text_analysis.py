@@ -23,6 +23,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
 from .models import FolderDocument
+from commons.forms import TextAnalysisInputForm
 from .documents import Document
 from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from .user_spaces import project_contents, user_contents
@@ -563,9 +564,11 @@ def text_dashboard_return(request, var_dict):
 
 def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
     """ here through ajax call from the template 'vue/text_dashboard.html' """
-    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource',]:
+    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
         return HttpResponseForbidden()
-    if obj_type == 'resource':
+    if obj_type == 'text':
+        title, description, body = ['', '', request.session.get('input_text', '')]
+    elif obj_type == 'resource':
         title = ''
         description = ''
         body, response, err = get_web_resource_text(obj_id)
@@ -579,12 +582,13 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
     if not body:
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
-
+    print('text_dashboard', obj_type)
     endpoint = nlp_url + '/api/analyze'
     try:
         response = requests.post(endpoint, data=data)
     except:
         response = None
+    print('text_dashboard', response)
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
     analyze_dict = response.json()
@@ -992,3 +996,17 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
         return JsonResponse(data)
     else:
         return render(request, 'vue/context_dashboard.html', var_dict)
+
+def text_analysis_input(request):
+    var_dict = {}
+    if request.POST:
+        form = TextAnalysisInputForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            request.session['input_text'] = data['text']
+            var_dict = {'obj_type': 'text', 'obj_id': 0}
+            return render(request, 'vue/text_dashboard.html', var_dict)
+    else:
+        form = TextAnalysisInputForm() 
+    var_dict['form'] = form
+    return render(request, 'text_analysis_input.html', var_dict)

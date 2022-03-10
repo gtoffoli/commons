@@ -676,19 +676,12 @@ class FolderDocument(models.Model, Publishable):
     def can_access(self, user):
         folder = self.folder
         project = folder.get_project()
-        # if self.state==PUBLISHED and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
-        published_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+        # published_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+        published_states = [PUBLISHED]
+        if project.get_site() > 1 and is_site_member(user):
+            published_states = [RESTRICTED, PUBLISHED]
         if self.state in published_states and project.state in (PROJECT_OPEN, PROJECT_CLOSED):
             return True
-        """
-        if project.state in (PROJECT_OPEN, PROJECT_CLOSED) and project.is_member(user):
-            return True
-        if self.state in published_states and project.state in (PROJECT_DRAFT, PROJECT_SUBMITTED):
-            if user.is_superuser or project.is_admin(user):
-                return True
-            else:
-                return False
-        """
         parent = project.get_parent()
         is_parent_admin = parent and parent.is_admin(user)
         is_community_parent = project.is_admin_community(user)
