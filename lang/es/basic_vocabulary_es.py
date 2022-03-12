@@ -1,7 +1,668 @@
 ele = 'ELE B2'
-mingot = 'Joaquin FERRANDIZ MINGOT'
+mingot = 'Joaquin Ferrandiz Mingot'
 
 voc_es = [
+
+['abrazo', 'noun', 'a2', mingot],
+['ahora', 'adverb', 'a2', mingot],
+['algo', 'pronoun', 'a2', mingot],
+['alguno', 'pronoun', 'a2', mingot],
+['amigo', 'noun', 'a2', mingot],
+['año', 'noun', 'a2', mingot],
+['ante', 'preposition', 'a2', mingot],
+['antes', 'adverb', 'a2', mingot],
+['aquel', 'pronoun', 'a2', mingot],
+['aqui', 'adverb', 'a2', mingot],
+['articulo', 'noun', 'a2', mingot],
+['así', 'adverb', 'a2', mingot],
+['aún', 'adverb', 'a2', mingot],
+['aunque', 'conjunction', 'a2', mingot],
+['bueno', 'adjective', 'a2', mingot],
+['cada', 'adjective', 'a2', mingot],
+['carta', 'noun', 'a2', mingot],
+['casa', 'noun', 'a2', mingot],
+['caso', 'noun', 'a2', mingot],
+['celebrar', 'verb', 'a2', mingot],
+['clase', 'noun', 'a2', mingot],
+['comercio', 'noun', 'a2', mingot],
+['como', 'conjunction', 'a2', mingot],
+['con', 'preposition', 'a2', mingot],
+['conocer', 'verb', 'a2', mingot],
+['contar', 'verb', 'a2', mingot],
+['cosa', 'noun', 'a2', mingot],
+['creer', 'verb', 'a2', mingot],
+['cual', 'pronoun', 'a2', mingot],
+['cuando', 'adjective', 'a2', mingot],
+['cuando', 'pronoun', 'a2', mingot],
+['cuando', 'adverb', 'a2', mingot],
+['cuanto', 'adjective', 'a2', mingot],
+['cuanto', 'pronoun', 'a2', mingot],
+['cuanto', 'adverb', 'a2', mingot],
+['cuatro', 'adjective', 'a2', mingot],
+['cuatro', 'pronoun', 'a2', mingot],
+['cuyo', 'pronoun', 'a2', mingot],
+['dar', 'verb', 'a2', mingot],
+['de', 'preposition', 'a2', mingot],
+['deber', 'verb', 'a2', mingot],
+['decir', 'verb', 'a2', mingot],
+['dejar', 'verb', 'a2', mingot],
+['del', 'preposition', 'a2', mingot, '?'],
+['derecho', 'adjective', 'a2', mingot],
+['derecho', 'noun', 'a2', mingot],
+['desde', 'preposition', 'a2', mingot],
+['desear', 'verb', 'a2', mingot],
+['después', 'adverb', 'a2', mingot],
+['después', 'preposition', 'a2', mingot, '?'],
+['día', 'noun', 'a2', mingot],
+['diez', 'adjective', 'a2', mingot],
+['diez', 'pronoun', 'a2', mingot],
+['dios', 'noun', 'a2', mingot],
+['disponer', 'verb', 'a2', mingot],
+['don', 'noun', 'a2', mingot],
+['donde', 'preposition', 'a2', mingot],
+['dos', 'adjective', 'a2', mingot],
+['dos', 'pronoun', 'a2', mingot],
+['durante', 'preposition', 'a2', mingot],
+['e', 'conjunction', 'a2', mingot],
+['el', 'determiner', 'a2', mingot],
+['el', 'pronoun', 'a2', mingot],
+['él', 'pronoun', 'a2', mingot],
+['encontrar', 'verb', 'a2', mingot],
+['entre', 'preposition', 'a2', mingot],
+['escuela', 'noun', 'a2', mingot],
+['ese', 'adjective', 'a2', mingot],
+['ese', 'pronoun', 'a2', mingot],
+['español', 'adjective', 'a2', mingot],
+['español', 'noun', 'a2', mingot],
+['esperar', 'verb', 'a2', mingot],
+['estado', 'noun', 'a2', mingot],
+['estar', 'verb', 'a2', mingot],
+['este', 'noun', 'a2', mingot],
+['este', 'pronoun', 'a2', mingot],
+['familla', 'noun', 'a2', mingot],
+['fin', 'noun', 'a2', mingot],
+['forma', 'noun', 'a2', mingot],
+['general', 'adjective', 'a2', mingot],
+['gobierno', 'noun', 'a2', mingot],
+['gracia', 'noun', 'a2', mingot],
+['grande', 'adjective', 'a2', mingot],
+['haber', 'noun', 'a2', mingot],
+['hablar', 'verb', 'a2', mingot],
+['hacer', 'verb', 'a2', mingot],
+['hasta', 'preposition', 'a2', mingot],
+['hasta', 'adverb', 'a2', mingot],
+['hermano', 'adjective', 'a2', mingot],
+['hermano', 'noun', 'a2', mingot],
+['hijo', 'noun', 'a2', mingot],
+['hombre', 'noun', 'a2', mingot],
+['hora', 'noun', 'a2', mingot],
+['hoy', 'adverb', 'a2', mingot],
+['hoy', 'noun', 'a2', mingot],
+['iglesia', 'noun', 'a2', mingot],
+['igual', 'adjective', 'a2', mingot],
+['igual', 'adverb', 'a2', mingot],
+['ir', 'verb', 'a2', mingot],
+['jefe', 'noun', 'a2', mingot],
+['le', 'pronoun', 'a2', mingot],
+['ley', 'noun', 'a2', mingot],
+['lo', 'determiner', 'a2', mingot],
+['lo', 'pronoun', 'a2', mingot],
+['lugar', 'noun', 'a2', mingot],
+['llamar', 'verb', 'a2', mingot],
+['llevar', 'verb', 'a2', mingot],
+['llegar', 'verb', 'a2', mingot],
+['madre', 'noun', 'a2', mingot],
+['mandar', 'verb', 'a2', mingot],
+['mañana', 'noun', 'a2', mingot],
+['más', 'adverb', 'a2', mingot],
+['más', 'preposition', 'a2', mingot],
+['mayor', 'noun', 'a2', mingot],
+['me', 'pronoun', 'a2', mingot],
+['medio', 'adjective', 'a2', mingot],
+['medio', 'noun', 'a2', mingot],
+['medio', 'adverb', 'a2', mingot],
+['mejor', 'adjective', 'a2', mingot],
+['mejor', 'adverb', 'a2', mingot],
+['menos', 'adverb', 'a2', mingot],
+['menos', 'preposition', 'a2', mingot],
+['menos', 'conjunction', 'a2', mingot],
+['mes', 'noun', 'a2', mingot],
+['mi', 'adjective', 'a2', mingot],
+['ministerio', 'noun', 'a2', mingot],
+['ministro', 'noun', 'a2', mingot],
+['mío', 'pronoun', 'a2', mingot],
+['mismo', 'adjective', 'a2', mingot],
+['momento', 'noun', 'a2', mingot],
+['mucho', 'adjective', 'a2', mingot],
+['mucho', 'adverb', 'a2', mingot],
+['mundo', 'noun', 'a2', mingot],
+['muy', 'adverb', 'a2', mingot],
+['nacional', 'adjective', 'a2', mingot],
+['nada', 'adverb', 'a2', mingot],
+['nada', 'pronoun', 'a2', mingot],
+['ni', 'conjunction', 'a2', mingot],
+['niño', 'noun', 'a2', mingot],
+['no', 'adverb', 'a2', mingot],
+['no', 'exclamation', 'a2', mingot],
+['nos', 'pronoun', 'a2', mingot],
+['nosotros', 'pronoun', 'a2', mingot],
+['nuestro', 'adjective', 'a2', mingot],
+['nuevo', 'adjective', 'a2', mingot],
+['número', 'noun', 'a2', mingot],
+['obra', 'noun', 'a2', mingot],
+['orden', 'noun', 'a2', mingot],
+['os', 'pronoun', 'a2', mingot],
+['otro', 'adjective', 'a2', mingot],
+['padre', 'noun', 'a2', mingot],
+['padre', 'adjective', 'a2', mingot, '?'],
+['palabra', 'noun', 'a2', mingot],
+['para', 'preposition', 'a2', mingot],
+['parecer', 'verb', 'a2', mingot],
+['parecer', 'noun', 'a2', mingot],
+['parte', 'noun', 'a2', mingot],
+['pasar', 'verb', 'a2', mingot],
+['pedir', 'verb', 'a2', mingot],
+['pensar', 'verb', 'a2', mingot],
+['pero', 'conjunction', 'a2', mingot],
+['peseta', 'noun', 'a2', mingot],
+['poco', 'adjective', 'a2', mingot],
+['poco', 'noun', 'a2', mingot],
+['poco', 'adverb', 'a2', mingot],
+['poder', 'verb', 'a2', mingot],
+['poder', 'noun', 'a2', mingot],
+['poner', 'verb', 'a2', mingot],
+['por', 'preposition', 'a2', mingot],
+['porque', 'conjunction', 'a2', mingot],
+['presentar', 'verb', 'a2', mingot],
+['primero', 'adjective', 'a2', mingot],
+['primero', 'adverb', 'a2', mingot],
+['próximo', 'adjective', 'a2', mingot],
+['público', 'adjective', 'a2', mingot],
+['público', 'noun', 'a2', mingot],
+['pueblo', 'noun', 'a2', mingot],
+['pues', 'adverb', 'a2', mingot],
+['pues', 'conjunction', 'a2', mingot],
+['que', 'pronoun', 'a2', mingot],
+['que', 'conjunction', 'a2', mingot],
+['quedar', 'verb', 'a2', mingot],
+['querer', 'verb', 'a2', mingot],
+['querido', 'adjective', 'a2', mingot],
+['quien', 'pronoun', 'a2', mingot],
+['recibido', 'adjective', 'a2', mingot],
+['recuerdo', 'noun', 'a2', mingot],
+['saber', 'verb', 'a2', mingot],
+['saber', 'noun', 'a2', mingot],
+['salir', 'verb', 'a2', mingot],
+['santo', 'adjective', 'a2', mingot],
+['santo', 'noun', 'a2', mingot],
+['sed', 'noun', 'a2', mingot],
+['seguir', 'verb', 'a2', mingot],
+['según', 'preposition', 'a2', mingot],
+['segundo', 'adjective', 'a2', mingot],
+['señor', 'noun', 'a2', mingot],
+['ser', 'verb', 'a2', mingot],
+['ser', 'noun', 'a2', mingot],
+['servicio', 'noun', 'a2', mingot],
+['si', 'conjunction', 'a2', mingot],
+['sí', 'adverb', 'a2', mingot],
+['siempre', 'adverb', 'a2', mingot],
+['siguiente', 'adjective', 'a2', mingot],
+['sin', 'preposition', 'a2', mingot],
+['sindical', 'adjective', 'a2', mingot],
+['sino', 'conjunction', 'a2', mingot],
+['sobre', 'preposition', 'a2', mingot],
+['social', 'adjective', 'a2', mingot],
+['solo', 'adjective', 'a2', mingot],
+['sólo', 'adverb', 'a2', mingot],
+['suyo', 'adjective', 'a2', mingot],
+['suyo', 'pronoun', 'a2', mingot],
+['tal', 'adjective', 'a2', mingot],
+['también', 'adverb', 'a2', mingot],
+['tanto', 'adjective', 'a2', mingot],
+['tanto', 'adverb', 'a2', mingot],
+['tanto', 'noun', 'a2', mingot, '?'],
+['tarde', 'adverb', 'a2', mingot],
+['tarde', 'noun', 'a2', mingot],
+['te', 'pronoun', 'a2', mingot],
+['tener', 'verb', 'a2', mingot],
+['terminar', 'verb', 'a2', mingot],
+['tiempo', 'noun', 'a2', mingot],
+['tio', 'noun', 'a2', mingot],
+['todo', 'adjective', 'a2', mingot],
+['todo', 'pronoun', 'a2', mingot],
+['todo', 'adverb', 'a2', mingot, '?'],
+['trabajo', 'noun', 'a2', mingot],
+['tres', 'adjective', 'a2', mingot],
+['tres', 'pronoun', 'a2', mingot],
+['tu', 'pronoun', 'a2', mingot],
+['tuyo', 'adjective', 'a2', mingot],
+['tuyo', 'pronoun', 'a2', mingot],
+['último', 'adjective', 'a2', mingot],
+['un', 'determiner', 'a2', mingot],
+['un', 'adjective', 'a2', mingot],
+['un', 'pronoun', 'a2', mingot],
+['usted', 'pronoun', 'a2', mingot],
+['venir', 'verb', 'a2', mingot],
+['ver', 'verb', 'a2', mingot],
+['vez', 'noun', 'a2', mingot],
+['vida', 'noun', 'a2', mingot],
+['volver', 'verb', 'a2', mingot],
+['vuestro', 'adjective', 'a2', mingot],
+['vuestro', 'pronoun', 'a2', mingot],
+['ya', 'adverb', 'a2', mingot],
+['yo', 'pronoun', 'a2', mingot],
+['yo', 'noun', 'a2', mingot, '?'],
+# segundo nivel
+['acabar', 'verb', 'a2', mingot],
+['acción', 'noun', 'a2', mingot],
+['acordar', 'verb', 'a2', mingot],
+['acto', 'noun', 'a2', mingot],
+['actual', 'adjective', 'a2', mingot],
+['acuerdo', 'noun', 'a2', mingot],
+['además', 'adverb', 'a2', mingot],
+['alegrar', 'verb', 'a2', mingot],
+['alemán', 'adjective', 'a2', mingot],
+['alemán', 'noun', 'a2', mingot],
+['alma', 'noun', 'a2', mingot],
+['alto', 'adjective', 'a2', mingot],
+['alto', 'adverb', 'a2', mingot],
+['alto', 'noun', 'a2', mingot, '?'],
+['allí', 'adverb', 'a2', mingot],
+['amar', 'verb', 'a2', mingot],
+['amor', 'noun', 'a2', mingot],
+['anterior', 'adjective', 'a2', mingot],
+['aprobar', 'verb', 'a2', mingot],
+['arte', 'noun', 'a2', mingot],
+['artesano', 'adjective', 'a2', mingot, '?'],
+['artesano', 'noun', 'a2', mingot],
+['asunto', 'noun', 'a2', mingot],
+['autoridad', 'noun', 'a2', mingot],
+['ayer', 'adverb', 'a2', mingot],
+['bajo', 'adjective', 'a2', mingot],
+['bajo', 'adverb', 'a2', mingot],
+['bajo', 'preposition', 'a2', mingot],
+['bajo', 'noun', 'a2', mingot, '?'],
+['bastante', 'adjective', 'a2', mingot],
+['bastante', 'adverb', 'a2', mingot],
+['beso', 'noun', 'a2', mingot],
+['calle', 'noun', 'a2', mingot],
+['campo', 'noun', 'a2', mingot],
+['capital', 'adjective', 'a2', mingot],
+['capital', 'noun', 'a2', mingot],
+['casi', 'adverb', 'a2', mingot],
+['católico', 'adjective', 'a2', mingot],
+['católico', 'noun', 'a2', mingot],
+['causa', 'noun', 'a2', mingot],
+['centro', 'noun', 'a2', mingot],
+['cierto', 'adjective', 'a2', mingot],
+['cinco', 'adjective', 'a2', mingot],
+['cinco', 'pronoun', 'a2', mingot],
+['citar', 'verb', 'a2', mingot],
+['ciudad', 'noun', 'a2', mingot],
+['colegio', 'noun', 'a2', mingot],
+['compañía', 'noun', 'a2', mingot],
+['comprender', 'verb', 'a2', mingot],
+['comunicar', 'verb', 'a2', mingot],
+['conceder', 'verb', 'a2', mingot],
+['concurso', 'noun', 'a2', mingot],
+['condición', 'noun', 'a2', mingot],
+['conseguir', 'verb', 'a2', mingot],
+['consejo', 'noun', 'a2', mingot],
+['considerar', 'verb', 'a2', mingot],
+['constituir', 'verb', 'a2', mingot],
+['contento', 'adjective', 'a2', mingot],
+['contestar', 'verb', 'a2', mingot],
+['continuar', 'verb', 'a2', mingot],
+['cooperative', '', 'a2', mingot],
+['corazón', 'noun', 'a2', mingot],
+['corresponder', 'verb', 'a2', mingot],
+['cristiano', 'adjective', 'a2', mingot],
+['cristiano', 'noun', 'a2', mingot],
+['cuenta', 'noun', 'a2', mingot],
+['cuerpo', 'noun', 'a2', mingot],
+['declarar', 'verb', 'a2', mingot],
+['decreto', 'noun', 'a2', mingot],
+['delegación', 'noun', 'a2', mingot],
+['demás', 'adjective', 'a2', mingot],
+['demás', 'pronoun', 'a2', mingot],
+['dentro', 'adverb', 'a2', mingot],
+['dentro', 'preposition', 'a2', mingot],
+['diciembre', 'noun', 'a2', mingot],
+['diócesis', 'noun', 'a2', mingot],
+['dirección', 'noun', 'a2', mingot],
+['director', 'adjective', 'a2', mingot, '?'],
+['director', 'noun', 'a2', mingot],
+['dirigir', 'verb', 'a2', mingot],
+['disposición', 'noun', 'a2', mingot],
+['doctor', 'noun', 'a2', mingot],
+['dolor', 'noun', 'a2', mingot],
+['domingo', 'noun', 'a2', mingot],
+['doscientos', 'adjective', 'a2', mingot],
+['doscientos', 'noun', 'a2', mingot],
+['económico', 'adjective', 'a2', mingot],
+['efecto', 'noun', 'a2', mingot],
+['ejempio', 'noun', 'a2', mingot],
+['ejército', 'noun', 'a2', mingot],
+['elemento', 'noun', 'a2', mingot],
+['elevador', 'noun', 'a2', mingot],
+['empresa', 'noun', 'a2', mingot],
+['enfermo', 'adjective', 'a2', mingot],
+['enfermo', 'noun', 'a2', mingot],
+['entonces', 'adverb', 'a2', mingot],
+['entrar', 'verb', 'a2', mingot],
+['enviar', 'verb', 'a2', mingot],
+['especial', 'adjective', 'a2', mingot],
+['establecer', 'verb', 'a2', mingot],
+['estudiar', 'verb', 'a2', mingot],
+['estudio', 'noun', 'a2', mingot],
+['etcétera', 'adverb', 'a2', mingot],
+['excelente', 'adjective', 'a2', mingot],
+['existir', 'verb', 'a2', mingot],
+['empresar', 'verb', 'a2', mingot],
+['falta', 'noun', 'a2', mingot],
+['fecha', 'noun', 'a2', mingot],
+['fiesta', 'noun', 'a2', mingot],
+['formar', 'verb', 'a2', mingot],
+['frente', 'noun', 'a2', mingot],
+['fuerte', 'adjective', 'a2', mingot],
+['fuerza', 'noun', 'a2', mingot],
+['grupo', 'noun', 'a2', mingot],
+['guerra', 'noun', 'a2', mingot],
+['gustar', 'verb', 'a2', mingot],
+['hacia', 'preposition', 'a2', mingot],
+['hallar', 'verb', 'a2', mingot],
+['Ilustrisimo', 'adjective', 'a2', mingot],
+['importante', 'adjective', 'a2', mingot],
+['industria', 'noun', 'a2', mingot],
+['instituto', 'noun', 'a2', mingot],
+['interés', 'noun', 'a2', mingot],
+['julio', 'noun', 'a2', mingot],
+['leer', 'verb', 'a2', mingot],
+['león', 'noun', 'a2', mingot],
+['letra', 'noun', 'a2', mingot],
+['libro', 'noun', 'a2', mingot],
+['local', 'adjective', 'a2', mingot],
+['local', 'noun', 'a2', mingot],
+['luego', 'adverb', 'a2', mingot],
+['maestro', 'adjective', 'a2', mingot, '?'],
+['maestro', 'noun', 'a2', mingot],
+['mal', 'adverb', 'a2', mingot],
+['mal', 'noun', 'a2', mingot],
+['malo', 'adjective', 'a2', mingot],
+['mamá', 'noun', 'a2', mingot],
+['manera', 'noun', 'a2', mingot],
+['mano', 'noun', 'a2', mingot],
+['marchar', 'verb', 'a2', mingot],
+['mayo', 'noun', 'a2', mingot],
+['mil', 'adjective', 'a2', mingot],
+['mil', 'noun', 'a2', mingot],
+['militar', 'adjective', 'a2', mingot],
+['militar', 'noun', 'a2', mingot],
+['moro', 'adjective', 'a2', mingot],
+['moro', 'noun', 'a2', mingot],
+['morir', 'verb', 'a2', mingot],
+['motivo', 'noun', 'a2', mingot],
+['movimiento', 'noun', 'a2', mingot],
+['muerte', 'noun', 'a2', mingot],
+['mujer', 'noun', 'a2', mingot],
+['nación', 'noun', 'a2', mingot],
+['natural', 'adjective', 'a2', mingot],
+['necesario', 'adjective', 'a2', mingot],
+['necesidad', 'noun', 'a2', mingot],
+['ninguno', 'pronoun', 'a2', mingot],
+['noche', 'noun', 'a2', mingot],
+['nombre', 'noun', 'a2', mingot],
+['noticia', 'noun', 'a2', mingot],
+['noviembre', 'noun', 'a2', mingot],
+['nunca', 'adverb', 'a2', mingot],
+['obispo', 'noun', 'a2', mingot],
+['obrero', 'adjective', 'a2', mingot, '?'],
+['obrero', 'noun', 'a2', mingot],
+['ocasión', 'noun', 'a2', mingot],
+['oficial', 'adjective', 'a2', mingot],
+['oficial', 'noun', 'a2', mingot],
+['ofrecer', 'verb', 'a2', mingot],
+['olvidar', 'verb', 'a2', mingot],
+['organizacion', '', 'a2', mingot],
+['pagar', 'verb', 'a2', mingot],
+['país', 'noun', 'a2', mingot],
+['particular', 'adjective', 'a2', mingot],
+['particular', 'noun', 'a2', mingot],
+['partido', 'adjective', 'a2', mingot, '?'],
+['partido', 'noun', 'a2', mingot],
+['paz', 'noun', 'a2', mingot],
+['pequeño', 'adjective', 'a2', mingot],
+['pequeño', 'adjective', 'a2', mingot, '?'],
+['perder', 'verb', 'a2', mingot],
+['persona', 'noun', 'a2', mingot],
+['personal', 'adjective', 'a2', mingot],
+['personal', 'noun', 'a2', mingot],
+['plaza', 'noun', 'a2', mingot],
+['plato', 'noun', 'a2', mingot],
+['pobre', 'adjective', 'a2', mingot],
+['pobre', 'noun', 'a2', mingot],
+['posible', 'adjective', 'a2', mingot],
+['preguntar', 'verb', 'a2', mingot],
+['preparar', 'verb', 'a2', mingot],
+['presente', 'adjective', 'a2', mingot],
+['presente', 'noun', 'a2', mingot],
+['presidente', 'noun', 'a2', mingot],
+['primo', 'adjective', 'a2', mingot],
+['primo', 'noun', 'a2', mingot],
+['problema', 'noun', 'a2', mingot],
+['producir', 'verb', 'a2', mingot],
+['pronto', 'adjective', 'a2', mingot],
+['pronto', 'adverb', 'a2', mingot],
+['propio', 'adjective', 'a2', mingot],
+['provincia', 'noun', 'a2', mingot],
+['provincial', 'adjective', 'a2', mingot],
+['punto', 'noun', 'a2', mingot],
+['razón', 'noun', 'a2', mingot],
+['realizar', 'verb', 'a2', mingot],
+['recordar', 'verb', 'a2', mingot],
+['referir', 'verb', 'a2', mingot],
+['reglamento', 'noun', 'a2', mingot],
+['relación', 'noun', 'a2', mingot],
+['religioso', 'adjective', 'a2', mingot],
+['resultar', 'verb', 'a2', mingot],
+['rey', 'noun', 'a2', mingot],
+['salud', 'noun', 'a2', mingot],
+['salud', 'exclamation', 'a2', mingot],
+['saludo', 'noun', 'a2', mingot],
+['sección', 'noun', 'a2', mingot],
+['secretario', 'noun', 'a2', mingot],
+['seguro', 'adjective', 'a2', mingot],
+['seguro', 'noun', 'a2', mingot, '?'],
+['seis', 'adjective', 'a2', mingot],
+['seis', 'noun', 'a2', mingot],
+['semana', 'noun', 'a2', mingot],
+['sentir', 'verb', 'a2', mingot],
+['sentir', 'noun', 'a2', mingot, '?'],
+['seña', 'noun', 'a2', mingot],
+['servir', 'verb', 'a2', mingot],
+['siete', 'adjective', 'a2', mingot],
+['siete', 'noun', 'a2', mingot, '?'],
+['sindicado', 'noun', 'a2', mingot],
+['situación', 'noun', 'a2', mingot],
+['sociedad', 'noun', 'a2', mingot],
+['superior', 'adjective', 'a2', mingot],
+['superior', 'noun', 'a2', mingot, '?'],
+['suponer', 'verb', 'a2', mingot],
+['teléfono', 'noun', 'a2', mingot],
+['tercero', 'adjective', 'a2', mingot],
+['tercero', 'noun', 'a2', mingot, '?'],
+['ti', 'pronoun', 'a2', mingot],
+['tierra', 'noun', 'a2', mingot],
+['titulo', 'noun', 'a2', mingot],
+['todavía', 'adverb', 'a2', mingot],
+['tornar', 'verb', 'a2', mingot],
+['trabajador', 'noun', 'a2', mingot],
+['trabajador', 'adjective', 'a2', mingot],
+['tratar', 'verb', 'a2', mingot],
+['tribunal', 'noun', 'a2', mingot],
+['único', 'adjective', 'a2', mingot],
+['unir', 'verb', 'a2', mingot],
+['valor', 'noun', 'a2', mingot],
+['vario', 'adjective', 'a2', mingot],
+['vecino', 'adjective', 'a2', mingot],
+['vecino', 'noun', 'a2', mingot],
+['verdad', 'noun', 'a2', mingot],
+['viaje', 'noun', 'a2', mingot],
+['vivir', 'verb', 'a2', mingot],
+['vosotros', 'pronoun', 'a2', mingot],
+['voz', 'noun', 'a2', mingot],
+# tercer nivel
+['abuelo', 'noun', 'a2', mingot],
+['acompañar', 'verb', 'a2', mingot],
+['actividad', 'noun', 'a2', mingot],
+['acudir', 'verb', 'a2', mingot],
+['administración', 'noun', 'a2', mingot],
+['agradecer', 'verb', 'a2', mingot],
+['agricultura', 'noun', 'a2', mingot],
+['agua', 'noun', 'a2', mingot],
+['ahí', 'adverb', 'a2', mingot],
+['aire', 'noun', 'a2', mingot],
+['alcanzar', 'verb', 'a2', mingot],
+['alegría', 'noun', 'a2', mingot],
+['ambos', 'pronoun', 'a2', mingot],
+['andar', 'verb', 'a2', mingot],
+['anunciar', 'verb', 'a2', mingot],
+['aparecer', 'verb', 'a2', mingot],
+['asistir', 'verb', 'a2', mingot],
+['asociación', 'noun', 'a2', mingot],
+['autor', 'noun', 'a2', mingot],
+['ayudar', 'verb', 'a2', mingot],
+['ayuntamiento', 'noun', 'a2', mingot],
+['base', 'noun', 'a2', mingot],
+['base', 'adjective', 'a2', mingot, '?'],
+['blanco', 'adjective', 'a2', mingot],
+['blanco', 'noun', 'a2', mingot],
+['buscar', 'verb', 'a2', mingot],
+['cambiar', 'verb', 'a2', mingot],
+['cambio', 'noun', 'a2', mingot],
+['camino', 'noun', 'a2', mingot],
+['cantidad', 'noun', 'a2', mingot],
+['carácter', 'noun', 'a2', mingot],
+['cargo', 'noun', 'a2', mingot],
+['cariño', 'noun', 'a2', mingot],
+['cariñoso', 'adjective', 'a2', mingot],
+['centrar', 'verb', 'a2', mingot],
+['ciento', 'adjective', 'a2', mingot],
+['ciento', 'noun', 'a2', mingot, '?'],
+['cine', 'noun', 'a2', mingot],
+['civil', 'adjective', 'a2', mingot],
+['claro', 'adjective', 'a2', mingot],
+['claro', 'noun', 'a2', mingot, '?'],
+['claro', 'exclamation', 'a2', mingot],
+['colonización', 'noun', 'a2', mingot],
+['combate', 'noun', 'a2', mingot],
+['comenzar', 'verb', 'a2', mingot],
+['comer', 'verb', 'a2', mingot],
+['comisión', 'noun', 'a2', mingot],
+
+['completo', 'adjective', 'a2', mingot],
+['componer', 'verb', 'a2', mingot],
+['comprar', 'verb', 'a2', mingot],
+['comunista', 'adjective', 'a2', mingot],
+['comunista', 'noun', 'a2', mingot],
+['conferencia', 'noun', 'a2', mingot],
+['conocimiento', 'noun', 'a2', mingot],
+['contrato', 'noun', 'a2', mingot],
+['correspondiente', 'adjective', 'a2', mingot],
+['corriente', 'adjective', 'a2', mingot],
+['corriente', 'noun', 'a2', mingot],
+['crear', 'verb', 'a2', mingot],
+['cualquier', 'adjective', 'a2', mingot],
+['cualquier', 'pronoun', 'a2', mingot],
+['cuarenta', 'adjective', 'a2', mingot],
+['cuarenta', 'noun', 'a2', mingot],
+['cuatro', 'adjective', 'a2', mingot],
+['cuatro', 'noun', 'a2', mingot],
+['cultura', 'noun', 'a2', mingot],
+['cumplir', 'verb', 'a2', mingot],
+['curso', 'noun', 'a2', mingot],
+['chico', 'adjective', 'a2', mingot],
+['chico', 'noun', 'a2', mingot],
+['dedicar', 'verb', 'a2', mingot],
+['defensa', 'noun', 'a2', mingot],
+['demostrar', 'verb', 'a2', mingot],
+['deseo', 'noun', 'a2', mingot],
+
+# cuarto nivel
+"""
+['', '', 'a2', mingot],
+despedir
+destino
+detalle
+difioultad
+distinto
+doce
+duda
+echer
+edad
+educación
+empezar
+emplear
+enemigo
+enero
+enseñanza
+enseñar
+entender
+entreqar
+escrito
+espectaculo
+espiritu
+esposo
+
+Abueb. 44. Completo. 87 fxamen. 1^0. Lado.
+2. Acanpañsr. 45. Componer. 88. ^ExttO. 131. ^argo.
+3, Aatividad. 46. Comprar. 89. Expoa^ón. 732. Levsntar.
+4. Acudir. 47. ComuMsta. 90. t8xtraor^narlo. 133. Libre.
+5. AdmlNstraclón. 48. Conferenda. 91. Faltar. 134. Limite.
+6. Agradscer. 49. Conoolmtentos. 92. Favor. 135, unea.
+7. Agrbultura. 50. Contrato. 93. Fe. 136. ^Loqrar.
+8. Agua. 51, Correspondlente. 94. Febrero. 137. Luz.
+8. Ah(. 52_ CorrieMs. 95, Feliz. 138. Lleno.
+10. Ake. 53. Crear. 98. Fisl. 139. Magnítioo.
+11 , Alcanzar. 54. Cualquler. 97. Figura. 140. Manifsstar.
+12. Alsgria. 55, Cuarenta. 98. Figurar. 141. MeMener.
+13. Ambos. 56. Cuetro. 99. Flnal. 142. Msr.
+14. J4ndar. 57. Cultura. 100. Fotografta 143, Markb.
+15. Anunciar. 58. Cumplk. 101. Franois. 144. tillarzo.
+16. Apaf^sosr. 59. Curso. 102. Funclón. 145. ^Materls.
+17. Asistk. 80. Chico. 103, Oaner. 148. Maierlel.
+18. Ataocladón. 61. ^Ded^lcar. 104. Qente. 147. Mbdloo.
+19, Autor. 82. Defenea. 105. Qratlo. 148. MNntraa.
+20. Ayudar. 63, Derr^oatrar. 108. araw. 149. Mtllón.
+21. AyuntanMento. d4. t)eseo: 107. Quardar. 150. Mirer.
+22. B. 65. .Despedlr. 108. Guato. 151, Mlss.
+23. 8ase. 66. Destirw. 1G9. Hecho. 152. Mislón.
+24. 8tanco. 67. ^Dstalle. 110. Hbt^arrM. 153. Musrto.
+25. Busoar. 88. DHioultad. 111, Honor. 154. Nadle.
+2B. Csmblar. 89. DIstIMo. 112. Humano. 155. Nsoealdad
+27, Cambto. 70. Doce. 113. Idea. 156. Nene.
+28. Camino. 71, ^Duda. 114. Idloma. 157. Norteamsrk:ano.
+29. Csntldad. 72. ^Eohar. 115. 1mQorMSr. 158. Numsroso.
+30. Car6cter. 73. Edad. 118. [rnportancla. 159, Objeto.
+31. CarOo. 74. Educación. 117. Impo^lble. 180. Obtener.
+32. Carifb. 75. ^Empezar. 118. Indiasr. 181. t)ct^ar.
+33. Carlñoso. 76. ^Empleer. 119 Industrlet. 182. AcuMr.
+34. Csntrar. 77. Enemlyo. 120. Ingih. 183. Ocho.
+35, Clento. 78. Enero. 121. hncrtpclón, 164. Ofbh►a.
+36. Clna. 79, Eneeñanzs. 122. Internaclonal. 185. Otr.
+37. CFvll. 80. fnsefiar. t 23. Itallano. 188. Ojo.
+38. Claro. 81. Entender. 124. Joven. 187 Oraclón.
+39. Colonisaoión. 82. £rKr^eQar. ^25. Junlo. 188. Organhuno.
+40. Combate. 83. EscrFto. 126. Junta. 189. Papi.
+41. Co^r^snzar. 84. Espectbculo. 127, Junto. 170. PapM.
+42, Conler. 85. ^Esptrltu. 128. Justkla. 171. Parroqula.
+43, ComNlón. 8Q. Esposo. 1 ^t9. l.abor. 172. Paso.
+-
+# quinto nivel
+# sexto nivel
+# septimo nivel
+# octavo nivel
+"""
 ['abandonar', 'verb', 'b2', ele],
 ['abierto', 'adjective', 'b2', ele],
 ['abogado', 'noun', 'b2', ele],
@@ -361,535 +1022,8 @@ voc_es = [
 ['bajar(se)', 'verb', 'b2', ele],
 ['bala', 'noun', 'b2', ele],
 
-['casa', 'noun', 'b2', ele],
-['clase', 'noun', 'b2', ele],
-['colectivo', 'adjective', 'b2', ele],
-['compañía', 'noun', 'b2', ele],
-['correo', 'noun', 'b2', ele],
-['diente', 'noun', 'b2', ele],
-['foto', 'noun', 'b2', ele],
-['granja', 'noun', 'b2', ele],
-['investigación', 'noun', 'b2', ele],
-['juego', 'noun', 'b2', ele],
-['laboral', 'adjective', 'b2', ele],
-['maternidad', 'noun', 'b2', ele],
-['médico', 'adjective', 'b2', ele],
-['opinión', 'noun', 'b2', ele],
-['orina', 'noun', 'b2', ele],
-['oxigenado', 'adjective', 'b2', ele],
-['piso', 'noun', 'b2', ele],
-['planta', 'noun', 'b2', ele],
-['policía', 'noun', 'b2', ele],
-['precio', 'noun', 'b2', ele],
-['prensa', 'noun', 'b2', ele],
-['salvaje', 'adjective', 'b2', ele],
-['sangre', 'adjective', 'b2', ele],
-['viaje', 'noun', 'b2', ele],
-
-['abrazo', 'noun', 'a2', mingot],
-['ahora', 'adverb', 'a2', mingot],
-['algo', 'pronoun', 'a2', mingot],
-['alguno', 'pronoun', 'a2', mingot],
-['amigo', 'noun', 'a2', mingot],
-['año', 'noun', 'a2', mingot],
-['ante', 'preposition', 'a2', mingot],
-['antes', 'adverb', 'a2', mingot],
-['aquel', 'pronoun', 'a2', mingot],
-['aqui', 'adverb', 'a2', mingot],
-['articulo', 'noun', 'a2', mingot],
-['así', 'adverb', 'a2', mingot],
-['aún', 'adverb', 'a2', mingot],
-['aunque', 'conjunction', 'a2', mingot],
-['bueno', 'adjective', 'a2', mingot],
-['cada', 'adjective', 'a2', mingot],
-['carta', 'noun', 'a2', mingot],
-['casa', 'noun', 'a2', mingot],
-['caso', 'noun', 'a2', mingot],
-['celebrar', 'verb', 'a2', mingot],
-['clase', 'noun', 'a2', mingot],
-['comercio', 'noun', 'a2', mingot],
-['como', 'conjunction', 'a2', mingot],
-['con', 'preposition', 'a2', mingot],
-['conocer', 'verb', 'a2', mingot],
-['contar', 'verb', 'a2', mingot],
-['cosa', 'noun', 'a2', mingot],
-['creer', 'verb', 'a2', mingot],
-['cual', 'pronoun', 'a2', mingot],
-['cuando', 'adjective', 'a2', mingot],
-['cuando', 'pronoun', 'a2', mingot],
-['cuando', 'adverb', 'a2', mingot],
-['cuanto', 'adjective', 'a2', mingot],
-['cuanto', 'pronoun', 'a2', mingot],
-['cuanto', 'adverb', 'a2', mingot],
-['cuatro', 'adjective', 'a2', mingot],
-['cuatro', 'pronoun', 'a2', mingot],
-['cuyo', 'pronoun', 'a2', mingot],
-['dar', 'verb', 'a2', mingot],
-['de', 'preposition', 'a2', mingot],
-['deber', 'verb', 'a2', mingot],
-['decir', 'verb', 'a2', mingot],
-['dejar', 'verb', 'a2', mingot],
-['del', 'preposition', 'a2', mingot, '?'],
-['derecho', 'adjective', 'a2', mingot],
-['derecho', 'noun', 'a2', mingot],
-['desde', 'preposition', 'a2', mingot],
-['desear', 'verb', 'a2', mingot],
-['después', 'adverb', 'a2', mingot],
-['después', 'preposition', 'a2', mingot, '?'],
-['día', 'noun', 'a2', mingot],
-['diez', 'adjective', 'a2', mingot],
-['diez', 'pronoun', 'a2', mingot],
-['dios', 'noun', 'a2', mingot],
-['disponer', 'verb', 'a2', mingot],
-['don', 'noun', 'a2', mingot],
-['donde', 'preposition', 'a2', mingot],
-['dos', 'adjective', 'a2', mingot],
-['dos', 'pronoun', 'a2', mingot],
-['durante', 'preposition', 'a2', mingot],
-['e', 'conjunction', 'a2', mingot],
-['el', 'determiner', 'a2', mingot],
-['el', 'pronoun', 'a2', mingot],
-['él', 'pronoun', 'a2', mingot],
-['encontrar', 'verb', 'a2', mingot],
-['entre', 'preposition', 'a2', mingot],
-['escuela', 'noun', 'a2', mingot],
-['ese', 'adjective', 'a2', mingot],
-['ese', 'pronoun', 'a2', mingot],
-['español', 'adjective', 'a2', mingot],
-['español', 'noun', 'a2', mingot],
-['esperar', 'verb', 'a2', mingot],
-['estado', 'noun', 'a2', mingot],
-['estar', 'verb', 'a2', mingot],
-['este', 'noun', 'a2', mingot],
-['este', 'pronoun', 'a2', mingot],
-['familla', 'noun', 'a2', mingot],
-['fin', 'noun', 'a2', mingot],
-['forma', 'noun', 'a2', mingot],
-['general', 'adjective', 'a2', mingot],
-['gobierno', 'noun', 'a2', mingot],
-['gracia', 'noun', 'a2', mingot],
-['grande', 'adjective', 'a2', mingot],
-['haber', 'noun', 'a2', mingot],
-['hablar', 'verb', 'a2', mingot],
-['hacer', 'verb', 'a2', mingot],
-['hasta', 'preposition', 'a2', mingot],
-['hasta', 'adverb', 'a2', mingot],
-['hermano', 'adjective', 'a2', mingot],
-['hermano', 'noun', 'a2', mingot],
-['hijo', 'noun', 'a2', mingot],
-['hombre', 'noun', 'a2', mingot],
-['hora', 'noun', 'a2', mingot],
-['hoy', 'adverb', 'a2', mingot],
-['hoy', 'noun', 'a2', mingot],
-['iglesia', 'noun', 'a2', mingot],
-['igual', 'adjective', 'a2', mingot],
-['igual', 'adverb', 'a2', mingot],
-['ir', 'verb', 'a2', mingot],
-['jefe', 'noun', 'a2', mingot],
-['le', 'pronoun', 'a2', mingot],
-['ley', 'noun', 'a2', mingot],
-['lo', 'determiner', 'a2', mingot],
-['lo', 'pronoun', 'a2', mingot],
-['lugar', 'noun', 'a2', mingot],
-['llamar', 'verb', 'a2', mingot],
-['llevar', 'verb', 'a2', mingot],
-['llegar', 'verb', 'a2', mingot],
-['madre', 'noun', 'a2', mingot],
-['mandar', 'verb', 'a2', mingot],
-['mañana', 'noun', 'a2', mingot],
-['más', 'adverb', 'a2', mingot],
-['más', 'preposition', 'a2', mingot],
-['mayor', 'noun', 'a2', mingot],
-['me', 'pronoun', 'a2', mingot],
-['medio', 'adjective', 'a2', mingot],
-['medio', 'noun', 'a2', mingot],
-['medio', 'adverb', 'a2', mingot],
-['mejor', 'adjective', 'a2', mingot],
-['mejor', 'adverb', 'a2', mingot],
-['menos', 'adverb', 'a2', mingot],
-['menos', 'preposition', 'a2', mingot],
-['menos', 'conjunction', 'a2', mingot],
-['mes', 'noun', 'a2', mingot],
-['mi', 'adjective', 'a2', mingot],
-['ministerio', 'noun', 'a2', mingot],
-['ministro', 'noun', 'a2', mingot],
-['mío', 'pronoun', 'a2', mingot],
-['mismo', 'adjective', 'a2', mingot],
-['momento', 'noun', 'a2', mingot],
-['mucho', 'adjective', 'a2', mingot],
-['mucho', 'adverb', 'a2', mingot],
-['mundo', 'noun', 'a2', mingot],
-['muy', 'adverb', 'a2', mingot],
-['nacional', 'adjective', 'a2', mingot],
-['nada', 'adverb', 'a2', mingot],
-['nada', 'pronoun', 'a2', mingot],
-['ni', 'conjunction', 'a2', mingot],
-['niño', 'noun', 'a2', mingot],
-['no', 'adverb', 'a2', mingot],
-['no', 'exclamation', 'a2', mingot],
-['nos', 'pronoun', 'a2', mingot],
-['nosotros', 'pronoun', 'a2', mingot],
-['nuestro', 'adjective', 'a2', mingot],
-['nuevo', 'adjective', 'a2', mingot],
-['número', 'noun', 'a2', mingot],
-['obra', 'noun', 'a2', mingot],
-['orden', 'noun', 'a2', mingot],
-['os', 'pronoun', 'a2', mingot],
-['otro', 'adjective', 'a2', mingot],
-['padre', 'noun', 'a2', mingot],
-['padre', 'adjective', 'a2', mingot, '?'],
-['palabra', 'noun', 'a2', mingot],
-['para', 'preposition', 'a2', mingot],
-['parecer', 'verb', 'a2', mingot],
-['parecer', 'noun', 'a2', mingot],
-['parte', 'noun', 'a2', mingot],
-['pasar', 'verb', 'a2', mingot],
-['pedir', 'verb', 'a2', mingot],
-['pensar', 'verb', 'a2', mingot],
-['pero', 'conjunction', 'a2', mingot],
-['peseta', 'noun', 'a2', mingot],
-['poco', 'adjective', 'a2', mingot],
-['poco', 'noun', 'a2', mingot],
-['poco', 'adverb', 'a2', mingot],
-['poder', 'verb', 'a2', mingot],
-['poder', 'noun', 'a2', mingot],
-['poner', 'verb', 'a2', mingot],
-['por', 'preposition', 'a2', mingot],
-['porque', 'conjunction', 'a2', mingot],
-['presentar', 'verb', 'a2', mingot],
-['primero', 'adjective', 'a2', mingot],
-['primero', 'adverb', 'a2', mingot],
-['próximo', 'adjective', 'a2', mingot],
-['público', 'adjective', 'a2', mingot],
-['público', 'noun', 'a2', mingot],
-['pueblo', 'noun', 'a2', mingot],
-['pues', 'adverb', 'a2', mingot],
-['pues', 'conjunction', 'a2', mingot],
-['que', 'pronoun', 'a2', mingot],
-['que', 'conjunction', 'a2', mingot],
-['quedar', 'verb', 'a2', mingot],
-['querer', 'verb', 'a2', mingot],
-['querido', 'adjective', 'a2', mingot],
-['quien', 'pronoun', 'a2', mingot],
-['recibido', 'adjective', 'a2', mingot],
-['recuerdo', 'noun', 'a2', mingot],
-['saber', 'verb', 'a2', mingot],
-['saber', 'noun', 'a2', mingot],
-['salir', 'verb', 'a2', mingot],
-['santo', 'adjective', 'a2', mingot],
-['santo', 'noun', 'a2', mingot],
-['sed', 'noun', 'a2', mingot],
-['seguir', 'verb', 'a2', mingot],
-['según', 'preposition', 'a2', mingot],
-['segundo', 'adjective', 'a2', mingot],
-['señor', 'noun', 'a2', mingot],
-['ser', 'verb', 'a2', mingot],
-['ser', 'noun', 'a2', mingot],
-['servicio', 'noun', 'a2', mingot],
-['si', 'conjunction', 'a2', mingot],
-['sí', 'adverb', 'a2', mingot],
-['siempre', 'adverb', 'a2', mingot],
-['siguiente', 'adjective', 'a2', mingot],
-['sin', 'preposition', 'a2', mingot],
-['sindical', 'adjective', 'a2', mingot],
-['sino', 'conjunction', 'a2', mingot],
-['sobre', 'preposition', 'a2', mingot],
-['social', 'adjective', 'a2', mingot],
-['solo', 'adjective', 'a2', mingot],
-['sólo', 'adverb', 'a2', mingot],
-['suyo', 'adjective', 'a2', mingot],
-['suyo', 'pronoun', 'a2', mingot],
-['tal', 'adjective', 'a2', mingot],
-['también', 'adverb', 'a2', mingot],
-['tanto', 'adjective', 'a2', mingot],
-['tanto', 'adverb', 'a2', mingot],
-['tanto', 'noun', 'a2', mingot, '?'],
-['tarde', 'adverb', 'a2', mingot],
-['tarde', 'noun', 'a2', mingot],
-['te', 'pronoun', 'a2', mingot],
-['tener', 'verb', 'a2', mingot],
-['terminar', 'verb', 'a2', mingot],
-['tiempo', 'noun', 'a2', mingot],
-['tio', 'noun', 'a2', mingot],
-['todo', 'adjective', 'a2', mingot],
-['todo', 'pronoun', 'a2', mingot],
-['todo', 'adverb', 'a2', mingot, '?'],
-['trabajo', 'noun', 'a2', mingot],
-['tres', 'adjective', 'a2', mingot],
-['tres', 'pronoun', 'a2', mingot],
-['tu', 'pronoun', 'a2', mingot],
-['tuyo', 'adjective', 'a2', mingot],
-['tuyo', 'pronoun', 'a2', mingot],
-['último', 'adjective', 'a2', mingot],
-['un', 'determiner', 'a2', mingot],
-['un', 'adjective', 'a2', mingot],
-['un', 'pronoun', 'a2', mingot],
-['usted', 'pronoun', 'a2', mingot],
-['venir', 'verb', 'a2', mingot],
-['ver', 'verb', 'a2', mingot],
-['vez', 'noun', 'a2', mingot],
-['vida', 'noun', 'a2', mingot],
-['volver', 'verb', 'a2', mingot],
-['vuestro', 'adjective', 'a2', mingot],
-['vuestro', 'pronoun', 'a2', mingot],
-['ya', 'adverb', 'a2', mingot],
-['yo', 'pronoun', 'a2', mingot],
-['yo', 'noun', 'a2', mingot, '?'],
-
-['acabar', 'verb', 'a2', mingot],
-['acción', 'noun', 'a2', mingot],
-['acordar', 'verb', 'a2', mingot],
-['acto', 'noun', 'a2', mingot],
-['actual', 'adjective', 'a2', mingot],
-['acuerdo', 'noun', 'a2', mingot],
-['además', 'adverb', 'a2', mingot],
-['alegrar', 'verb', 'a2', mingot],
-['alemán', 'adjective', 'a2', mingot],
-['alemán', 'noun', 'a2', mingot],
-['alma', 'noun', 'a2', mingot],
-['alto', 'adjective', 'a2', mingot],
-['alto', 'adverb', 'a2', mingot],
-['alto', 'noun', 'a2', mingot, '?'],
-['allí', 'adverb', 'a2', mingot],
-['amar', 'verb', 'a2', mingot],
-['amor', 'noun', 'a2', mingot],
-['anterior', 'adjective', 'a2', mingot],
-['aprobar', 'verb', 'a2', mingot],
-['arte', 'noun', 'a2', mingot],
-['artesano', 'adjective', 'a2', mingot, '?'],
-['artesano', 'noun', 'a2', mingot],
-['asunto', 'noun', 'a2', mingot],
-['autoridad', 'noun', 'a2', mingot],
-['ayer', 'adverb', 'a2', mingot],
-['bajo', 'adjective', 'a2', mingot],
-['bajo', 'adverb', 'a2', mingot],
-['bajo', 'preposition', 'a2', mingot],
-['bajo', 'noun', 'a2', mingot, '?'],
-['bastante', 'adjective', 'a2', mingot],
-['bastante', 'adverb', 'a2', mingot],
-['beso', 'noun', 'a2', mingot],
-['calle', 'noun', 'a2', mingot],
-['campo', 'noun', 'a2', mingot],
-['capital', 'adjective', 'a2', mingot],
-['capital', 'noun', 'a2', mingot],
-['casi', 'adverb', 'a2', mingot],
-['católico', 'adjective', 'a2', mingot],
-['católico', 'noun', 'a2', mingot],
-['causa', 'noun', 'a2', mingot],
-['centro', 'noun', 'a2', mingot],
-['cierto', 'adjective', 'a2', mingot],
-['cinco', 'adjective', 'a2', mingot],
-['cinco', 'pronoun', 'a2', mingot],
-['citar', 'verb', 'a2', mingot],
-['ciudad', 'noun', 'a2', mingot],
-['colegio', 'noun', 'a2', mingot],
-['compañía', 'noun', 'a2', mingot],
-['comprender', 'verb', 'a2', mingot],
-['comunicar', 'verb', 'a2', mingot],
-['conceder', 'verb', 'a2', mingot],
-['concurso', 'noun', 'a2', mingot],
-['condición', 'noun', 'a2', mingot],
-['conseguir', 'verb', 'a2', mingot],
-['consejo', 'noun', 'a2', mingot],
-['considerar', 'verb', 'a2', mingot],
-['constituir', 'verb', 'a2', mingot],
-['contento', 'adjective', 'a2', mingot],
-['contestar', 'verb', 'a2', mingot],
-['continuar', 'verb', 'a2', mingot],
-['cooperative', '', 'a2', mingot],
-['corazón', 'noun', 'a2', mingot],
-['corresponder', 'verb', 'a2', mingot],
-['cristiano', 'adjective', 'a2', mingot],
-['cristiano', 'noun', 'a2', mingot],
-['cuenta', 'noun', 'a2', mingot],
-['cuerpo', 'noun', 'a2', mingot],
-['declarar', 'verb', 'a2', mingot],
-['decreto', 'noun', 'a2', mingot],
-['delegación', 'noun', 'a2', mingot],
-['demás', 'adjective', 'a2', mingot],
-['demás', 'pronoun', 'a2', mingot],
-['dentro', 'adverb', 'a2', mingot],
-['dentro', 'preposition', 'a2', mingot],
-['diciembre', 'noun', 'a2', mingot],
-['diócesis', 'noun', 'a2', mingot],
-['dirección', 'noun', 'a2', mingot],
-['director', 'adjective', 'a2', mingot, '?'],
-['director', 'noun', 'a2', mingot],
-['dirigir', 'verb', 'a2', mingot],
-['disposición', 'noun', 'a2', mingot],
-['doctor', 'noun', 'a2', mingot],
-['dolor', 'noun', 'a2', mingot],
-['domingo', 'noun', 'a2', mingot],
-['doscientos', 'adjective', 'a2', mingot],
-['doscientos', 'noun', 'a2', mingot],
-['económico', 'adjective', 'a2', mingot],
-['efecto', 'noun', 'a2', mingot],
-['ejempio', 'noun', 'a2', mingot],
-['ejército', 'noun', 'a2', mingot],
-['elemento', 'noun', 'a2', mingot],
-['elevador', 'noun', 'a2', mingot],
-['empresa', 'noun', 'a2', mingot],
-['enfermo', 'adjective', 'a2', mingot],
-['enfermo', 'noun', 'a2', mingot],
-['entonces', 'adverb', 'a2', mingot],
-['entrar', 'verb', 'a2', mingot],
-['enviar', 'verb', 'a2', mingot],
-['especial', 'adjective', 'a2', mingot],
-['establecer', 'verb', 'a2', mingot],
-['estudiar', 'verb', 'a2', mingot],
-['estudio', 'noun', 'a2', mingot],
-['etcétera', 'adverb', 'a2', mingot],
-['excelente', 'adjective', 'a2', mingot],
-['existir', 'verb', 'a2', mingot],
-['empresar', 'verb', 'a2', mingot],
-['falta', 'noun', 'a2', mingot],
-['fecha', 'noun', 'a2', mingot],
-['fiesta', 'noun', 'a2', mingot],
-['formar', 'verb', 'a2', mingot],
-['frente', 'noun', 'a2', mingot],
-['fuerte', 'adjective', 'a2', mingot],
-['fuerza', 'noun', 'a2', mingot],
-['grupo', 'noun', 'a2', mingot],
-['guerra', 'noun', 'a2', mingot],
-['gustar', 'verb', 'a2', mingot],
-['hacia', 'preposition', 'a2', mingot],
-['hallar', 'verb', 'a2', mingot],
-['Ilustrisimo', 'adjective', 'a2', mingot],
-['importante', 'adjective', 'a2', mingot],
-['industria', 'noun', 'a2', mingot],
-['instituto', 'noun', 'a2', mingot],
-['interés', 'noun', 'a2', mingot],
-['julio', 'noun', 'a2', mingot],
-['leer', 'verb', 'a2', mingot],
-['león', 'noun', 'a2', mingot],
-['letra', 'noun', 'a2', mingot],
-['libro', 'noun', 'a2', mingot],
-['local', 'adjective', 'a2', mingot],
-['local', 'noun', 'a2', mingot],
-['luego', 'adverb', 'a2', mingot],
-['maestro', 'adjective', 'a2', mingot, '?'],
-['maestro', 'noun', 'a2', mingot],
-['mal', 'adverb', 'a2', mingot],
-['mal', 'noun', 'a2', mingot],
-['malo', 'adjective', 'a2', mingot],
-['mamá', 'noun', 'a2', mingot],
-['manera', 'noun', 'a2', mingot],
-['mano', 'noun', 'a2', mingot],
-['marchar', 'verb', 'a2', mingot],
-['mayo', 'noun', 'a2', mingot],
-['mil', 'adjective', 'a2', mingot],
-['mil', 'noun', 'a2', mingot],
-['militar', 'adjective', 'a2', mingot],
-['militar', 'noun', 'a2', mingot],
-['moro', 'adjective', 'a2', mingot],
-['moro', 'noun', 'a2', mingot],
-['morir', 'verb', 'a2', mingot],
-['motivo', 'noun', 'a2', mingot],
-['movimiento', 'noun', 'a2', mingot],
-['muerte', 'noun', 'a2', mingot],
-['mujer', 'noun', 'a2', mingot],
-['nación', 'noun', 'a2', mingot],
-['natural', 'adjective', 'a2', mingot],
-['necesario', 'adjective', 'a2', mingot],
-['necesidad', 'noun', 'a2', mingot],
-['ninguno', 'pronoun', 'a2', mingot],
-['noche', 'noun', 'a2', mingot],
-['nombre', 'noun', 'a2', mingot],
-['noticia', 'noun', 'a2', mingot],
-['noviembre', 'noun', 'a2', mingot],
-['nunca', 'adverb', 'a2', mingot],
-['obispo', 'noun', 'a2', mingot],
-['obrero', 'adjective', 'a2', mingot, '?'],
-['obrero', 'noun', 'a2', mingot],
-['ocasión', 'noun', 'a2', mingot],
-['oficial', 'adjective', 'a2', mingot],
-['oficial', 'noun', 'a2', mingot],
-['ofrecer', 'verb', 'a2', mingot],
-['olvidar', 'verb', 'a2', mingot],
-['organizacion', '', 'a2', mingot],
-['pagar', 'verb', 'a2', mingot],
-['país', 'noun', 'a2', mingot],
-['particular', 'adjective', 'a2', mingot],
-['particular', 'noun', 'a2', mingot],
-['partido', 'adjective', 'a2', mingot, '?'],
-['partido', 'noun', 'a2', mingot],
-['paz', 'noun', 'a2', mingot],
-['pequeño', 'adjective', 'a2', mingot],
-['pequeño', 'adjective', 'a2', mingot, '?'],
-['perder', 'verb', 'a2', mingot],
-['persona', 'noun', 'a2', mingot],
-['personal', 'adjective', 'a2', mingot],
-['personal', 'noun', 'a2', mingot],
-['plaza', 'noun', 'a2', mingot],
-['plato', 'noun', 'a2', mingot],
-['pobre', 'adjective', 'a2', mingot],
-['pobre', 'noun', 'a2', mingot],
-['posible', 'adjective', 'a2', mingot],
-['preguntar', 'verb', 'a2', mingot],
-]
 
 """
-
-['preparar', '', 'a2', mingot],
-['presente', '', 'a2', mingot],
-['presidente', '', 'a2', mingot],
-['primo', '', 'a2', mingot],
-['problema', '', 'a2', mingot],
-['producir', '', 'a2', mingot],
-['pronto', '', 'a2', mingot],
-['propio', '', 'a2', mingot],
-['provincia', '', 'a2', mingot],
-['provincial', '', 'a2', mingot],
-['punto', '', 'a2', mingot],
-['razón', '', 'a2', mingot],
-['realizar', '', 'a2', mingot],
-['recordar', '', 'a2', mingot],
-['referir', '', 'a2', mingot],
-['reglamento', '', 'a2', mingot],
-['relación', '', 'a2', mingot],
-['religioso', '', 'a2', mingot],
-['resultar', '', 'a2', mingot],
-['rey', '', 'a2', mingot],
-
-['salud', '', 'a2', mingot],
-['saludo', '', 'a2', mingot],
-['seccion', '', 'a2', mingot],
-['segretario', '', 'a2', mingot],
-['seguro', '', 'a2', mingot],
-['seis', '', 'a2', mingot],
-['semana', '', 'a2', mingot],
-['sentir', '', 'a2', mingot],
-['sena', '', 'a2', mingot],
-['servir', '', 'a2', mingot],
-['siete', '', 'a2', mingot],
-['sindicado', '', 'a2', mingot],
-['situacion', '', 'a2', mingot],
-['sociedad', '', 'a2', mingot],
-['superior', '', 'a2', mingot],
-['suponer', '', 'a2', mingot],
-['telefono', '', 'a2', mingot],
-['tercero', '', 'a2', mingot],
-['ti', '', 'a2', mingot],
-['tierra', '', 'a2', mingot],
-
-['titulo', '', 'a2', mingot],
-['todavia', '', 'a2', mingot],
-['tornar', '', 'a2', mingot],
-['trabajadot', '', 'a2', mingot],
-['tratar', '', 'a2', mingot],
-['tribunal', '', 'a2', mingot],
-['unico', '', 'a2', mingot],
-['unir', '', 'a2', mingot],
-['valor', '', 'a2', mingot],
-['varios', '', 'a2', mingot],
-['vecino', '', 'a2', mingot],
-['verdad', '', 'a2', mingot],
-['viaje', '', 'a2', mingot],
-['vivis', '', 'a2', mingot],
-['vosotros', '', 'a2', mingot],
-['voz', '', 'a2', mingot],
-
-['', '', 'a2', mingot],
 -------------------------------------------- 124-1
 balar 
 balcón, cl (O) 
@@ -917,6 +1051,31 @@ barco, el (14)
 barra, la (3) 
 barrer (9) 
 barno, el (17) 
+--------------------------------------------------- 124-2
+barroco/a (18) 
+basarse (en) (16) 
+base, la (16) 
+båsico/a (Il, 16, 17) 
+bata, la (Il) 
+bate (de béisbol), el (7) 
+bateria, el/la (18) 
+bateria, la (8) 
+batido, el (3) 
+batidora, la (9, 18) 
+bautizar (19) 
+bautizo, el (19) 
+bebé, el (2) 
+beber (3) 
+beca, la (4) 
+béisbol, el (7) 
+bélico/a (18) 
+belleza, la (18) 
+bendecir (19) 
+beneficioso/a (12) 
+berenjena, la (3) 
+besar(se) (2) 
+Biblia, la (19) 
+biblioteca, la (4) 
 --------------------------------------------------------- 124-3
 biciclct a/l)icu la (O, 
 bidé, cl (9) 12) 
@@ -944,6 +1103,31 @@ blusa, la (l l)
 boca, la (l) 
 boceto, el (18) 
 boda, la (19) 
+-------------------------------------------------- 124-4
+bolera, la (6) 
+boligrafo, el (4) 
+bollo, el (3, 11) 
+bolos, los (6) 
+bolsa, la (Il, 15) 
+Bolsa, la (10) 
+bolso (de mano), el (13) 
+bomba, la (17) 
+bombero, el (10) 
+bombilla, la (9) 
+bonito/a (9, 18) 
+boquerön, el (3) 
+borrador, el (4) 
+borrar (4) 
+borrasca, la (20) 
+bosque, el (20) 
+bostezar (l) 
+botar (7) 
+botas, las (11) 
+bote, el (3, 11) 
+botella, la (3) 
+bot6n, el (8) 
+boxeador/a, el/la (7) 
+boxeo, el (7) 
 -------------------------------------------- 124-5
 bragas, las (l l) 
 bravo/a (20) 
@@ -972,6 +1156,31 @@ butaca, la (18)
 buzón, el (8, 9, 10) 
 buzón de voz, el (8) 
 buzoneo, el (15) 
+------------------------------------------- 124-6
+caballo, el (20) 
+cabana, la (13) 
+cabeza, la (l) 
+cabina, la (8) 
+cable, el (9, 16) 
+cabo, el (20) 
+cachorro, el (20) 
+cadaver, el (1) 
+cadena, la (8, 11) 
+cadera, la (l) 
+caducado/a (3, Il) 
+caducar (l l) 
+caduco/a (20) 
+caer (20) 
+caer(se) (20) 
+café, el (3) 
+café (con leche), el (3) 
+café (cortado), el (3, 6) 
+café (solo), el (3) 
+cafda, la (12) 
+caja, la (11) 
+caja fuerte, la (10) 
+cajero automåtico, 
+(10, 11) 
 -------------------------------------------------------- 124-7
 cajcro/ay cl/la (59 1 1) 
 cajón, cl (9) 
@@ -999,6 +1208,31 @@ calvo/a (1)
 calzado, el (ll) 
 calzoncillo, el (l l) 
 cama, la (9)
+------------------------------------------------- 124-8
+cama supletoria, la (13) 
+cämara, el/la (8, 18) 
+cämara, la (18) 
+camarero/a, el/la (3, 5) 
+cambiar (2, 8, Il, 13, 
+14, 20) 
+cambiar(se) (9) 
+cambio, el (l l) 
+caminar (l, 6) 
+camionero/a, el/la (14) 
+camisa, la (l l) 
+camiseta, la (l l) 
+camisön, el (Il, 14) 
+campafia, la (15, 17) 
+campeön/a, el/la (7) 
+campeonato, el (7) 
+campesino/a, el/la (15) 
+camping, el (6, 13) 
+campo, el (13) 
+campo (de fütbol/de 
+golf), el (7) 
+campus, el (4) 
+canal, el (8) 
+canas, las (l) 
 ----------------------------------------------- 125-1
 canasta (de baloncesto), 
 la (7) 
@@ -1023,6 +1257,35 @@ capitalismo, el (17)
 capitán/a, el/la (14, 17) 
 capítulo, el (4) 
 cara, la (1) 
+---------------------------------------------- 125-2
+caracter, el
+caravana, la
+carbôn, el (15) 
+carcel, la (17) 
+cargo, el (17) 
+cargos, los (5) 
+carino, el (2) 
+carifioso/a (2) 
+carne, la (3) 
+carné (de conducir), el 
+(14) 
+carné (de identidad), 
+el (13) 
+carnicerfa, la (l l) 
+carnicero/a, el/la (l l) 
+carnivoro/a (20) 
+caro/a (11, 13, 15) 
+calpeta, la (4) 
+cawrnnteria, la (9, 15) 
+carpintero/a, el/la (5) 
+carrera, la (4, 7) 
+carretera, la (14) 
+carnto, el (Il) 
+caro, el (Il) 
+carta, la (3, 8, IO) 
+canas, las (6) 
+canel, el (15) 
+cartelera, la (8, 18) 
 ------------------------- 125-3
 cartero/a, el/la (10) 
 cartón, el (l l) 
@@ -1049,164 +1312,7 @@ cazo, el (3)
 CD-ROM, el (16) 
 cebolla, la (3) 
 cebra, la (20) 
----------------------------------------- 125-5
-cercano/a (20) 
-cerdo/a, el/la (3, 20) 
-cerebro, el (l) 
-cerrado/a (l, 2) 
-cerrar (1, 8, 9, lo, 11, 
-14, 16) 
-certificado, el (4) 
-certificado/a (8, 10) 
-certificar (8, 10) 
-cerveza, la (3) 
-cesar (17) 
-cesárea, la (1) 
-césped, el (20) 
-cesta, la (l l) 
-chalé, el (9) 
-chaleco, el (14) 
-champán, el (3) 
-champú, el (12) 
-chanclas, las (l l) 
-chándal, el (7) 
-chaparrón, el (20) 
-chaqueta, la (11) 
-charla, la (4) 
-charlar (4) 
-(vuelo) chárter (14) 
----------------------------------------------------- 125-7
-cigüeña, la (20) 
-cine, el (6, 18) 
-cinematográfico/a (18) 
-cintura, la (l) 
-cinturón, el (l l) 
-cinturón (de 
-seguridad), el (14) 
-circular (14, 16) 
-círculo, el (16) 
-cirugía, la (12) 
-cirujano/a, el/la (12) 
-cita, la (12, 17) 
-citar (18) 
-ciudad, la (13, 20) 
-ciudadano/a, el/la (IO, 
-17) 
-civil (17) 
-clarinete, el (18) 
-claro/a (l, 4) 
-clase, la (4, 14, 17) 
-clasicismo, el (18) 
-clásico/a (9, 18) 
-clasificarse (7) 
-cláusula, la (5) 
-clavel, el (20) 
-claxon, el (14)
---------------------------------------------------- 124-2
-barroco/a (18) 
-basarse (en) (16) 
-base, la (16) 
-båsico/a (Il, 16, 17) 
-bata, la (Il) 
-bate (de béisbol), el (7) 
-bateria, el/la (18) 
-bateria, la (8) 
-batido, el (3) 
-batidora, la (9, 18) 
-bautizar (19) 
-bautizo, el (19) 
-bebé, el (2) 
-beber (3) 
-beca, la (4) 
-béisbol, el (7) 
-bélico/a (18) 
-belleza, la (18) 
-bendecir (19) 
-beneficioso/a (12) 
-berenjena, la (3) 
-besar(se) (2) 
-Biblia, la (19) 
-biblioteca, la (4) 
--------------------------------------------------- 124-4
-bolera, la (6) 
-boligrafo, el (4) 
-bollo, el (3, 11) 
-bolos, los (6) 
-bolsa, la (Il, 15) 
-Bolsa, la (10) 
-bolso (de mano), el (13) 
-bomba, la (17) 
-bombero, el (10) 
-bombilla, la (9) 
-bonito/a (9, 18) 
-boquerön, el (3) 
-borrador, el (4) 
-borrar (4) 
-borrasca, la (20) 
-bosque, el (20) 
-bostezar (l) 
-botar (7) 
-botas, las (11) 
-bote, el (3, 11) 
-botella, la (3) 
-bot6n, el (8) 
-boxeador/a, el/la (7) 
-boxeo, el (7) 
-------------------------------------------- 124-6
-caballo, el (20) 
-cabana, la (13) 
-cabeza, la (l) 
-cabina, la (8) 
-cable, el (9, 16) 
-cabo, el (20) 
-cachorro, el (20) 
-cadaver, el (1) 
-cadena, la (8, 11) 
-cadera, la (l) 
-caducado/a (3, Il) 
-caducar (l l) 
-caduco/a (20) 
-caer (20) 
-caer(se) (20) 
-café, el (3) 
-café (con leche), el (3) 
-café (cortado), el (3, 6) 
-café (solo), el (3) 
-cafda, la (12) 
-caja, la (11) 
-caja fuerte, la (10) 
-cajero automåtico, 
-(10, 11) 
-------------------------------------------------- 124-8
-cama supletoria, la (13) 
-cämara, el/la (8, 18) 
-cämara, la (18) 
-camarero/a, el/la (3, 5) 
-cambiar (2, 8, Il, 13, 
-14, 20) 
-cambiar(se) (9) 
-cambio, el (l l) 
-caminar (l, 6) 
-camionero/a, el/la (14) 
-camisa, la (l l) 
-camiseta, la (l l) 
-camisön, el (Il, 14) 
-campafia, la (15, 17) 
-campeön/a, el/la (7) 
-campeonato, el (7) 
-campesino/a, el/la (15) 
-camping, el (6, 13) 
-campo, el (13) 
-campo (de fütbol/de 
-golf), el (7) 
-campus, el (4) 
-canal, el (8) 
-canas, las (l) 
-
----------------------------------------------- 13
-....
-cartelera, la (8, 18) 
------------------------------------------------ 14
+---------------------------------------------- 125-4
 ceder
 cejas, las
 celebracion, la
@@ -1252,10 +1358,36 @@ cartas, las (6)
 cepillo, el (12) 
 cartel, el (15) 
 cepillo (de dientes), el 
--------------------------------------- 15
-chat, el
-chatear
-checo, el 
+---------------------------------------- 125-5
+cercano/a (20) 
+cerdo/a, el/la (3, 20) 
+cerebro, el (l) 
+cerrado/a (l, 2) 
+cerrar (1, 8, 9, lo, 11, 
+14, 16) 
+certificado, el (4) 
+certificado/a (8, 10) 
+certificar (8, 10) 
+cerveza, la (3) 
+cesar (17) 
+cesárea, la (1) 
+césped, el (20) 
+cesta, la (l l) 
+chalé, el (9) 
+chaleco, el (14) 
+champán, el (3) 
+champú, el (12) 
+chanclas, las (l l) 
+chándal, el (7) 
+chaparrón, el (20) 
+chaqueta, la (11) 
+charla, la (4) 
+charlar (4) 
+(vuelo) chárter (14) 
+---------------------------------------------- 125-6
+chat, el (8) 
+chatear (8) 
+checo, el (4) 
 cheque, el (10) 
 chequeo, el (12) 
 chico/a, el/la (2) 
@@ -1278,22 +1410,49 @@ ciencias exactas, las (16)
 ciencias naturales, las 
 (16) 
 cientffico/a (16, 18) 
-cifra, la (16) 
------------------------------------------- 16
-(double) clic
+cifra, la
+---------------------------------------------------- 125-7
+cigüeña, la (20) 
+cine, el (6, 18) 
+cinematográfico/a (18) 
+cintura, la (l) 
+cinturón, el (l l) 
+cinturón (de 
+seguridad), el (14) 
+circular (14, 16) 
+círculo, el (16) 
+cirugía, la (12) 
+cirujano/a, el/la (12) 
+cita, la (12, 17) 
+citar (18) 
+ciudad, la (13, 20) 
+ciudadano/a, el/la (IO, 
+17) 
+civil (17) 
+clarinete, el (18) 
+claro/a (l, 4) 
+clase, la (4, 14, 17) 
+clasicismo, el (18) 
+clásico/a (9, 18) 
+clasificarse (7) 
+cláusula, la (5) 
+clavel, el (20) 
+claxon, el (14)
+---------------------------------------------- 125-8
+(doble) clic
 cliente, el/la (5, Il) 
 clima, el (20) 
 climâtico/a (20) 
 clinica, la (12) 
-clinica (vetefinaria), la 
+clinica (veterinaria), la 
 (20) 
 club, el (17) 
 club (deportivo/de 
 golf), el (7) 
-coartada, la (10, 17) 
+coartada, la (IO, 17) 
 cobarde (2) 
 cobertura, la (8) 
-cobrar (3, 5, 9, 10, Il) 
+cobrar (3, 5, 9, IO, Il) 
 cobro, el (IO) 
 cocer (3) 
 coche, el (14) 
@@ -1304,7 +1463,7 @@ cocina (de gas), la (9)
 cocinar (3) 
 cocinero/a, el/la (3) 
 cocodrilo, el (20) 
-cÔdigo, el (17) 
+codigo, el (17) 
 --------------------------------------------126-1
 codigo (de circulacion), el (14) 
 codigo postal, el (10) 
@@ -1331,81 +1490,6 @@ color, el (18)
 colorantes, los (11) 
 colores, los (18) 
 colorido, el (18)
--------------------------------------- 126-3
-cémodo/a 13) 
-companero/a, el/la (2, 
-compafiia, la (8) 
-compafiia (de danza), 
-1a (18) 
-compafiia (de teatro), 
-1a (18) 
-comparable (4) 
-comparar (4) 
-compartido/a (9) 
-compartimento, el (14) 
-compartir (3, 9, 17) 
-compâs, el (18) 
-competencia, la (15) 
-competente (5) 
-competiciôn, la (7) 
-competir (7, 15) 
-complementos, los (11) 
-completar (4) 
-completo/a (13) 
-componer (18) 
-comportamiento, el (2, 
-17) 
-comportarse (17) 
-------------------------------------- 126-5
-comunién, la (19) 
-comunismo, el (17) 
-comunista, el/la (17) 
-comunitario/a (17) 
-conceder (4) 
-conceder (un crédito) 
-(10) 
-concierto, el (18) 
-concurso, el (6, 8, 18) 
-condena, la (17) 
-condenar (17) 
-condiciones de trabajo, 
-las (5) 
-condimentado/a (3) 
-condimentar (3) 
-condimentos, los (3) 
-conducciôn, la (14) 
-conducir (14) 
-conductor/a, el/la (14) 
-conectado/a (8) 
-conectar (8) 
-conectar(se) (8) 
-conejo/a, el/la (20) 
-conexiôn 
------------------------------------- 126-7
-constipado/a (12) 
-constitucién, la (17) 
-construir (9, 18) 
-consul, el/la (17) 
-consulado, el (17) 
-consulta, la (12) 
-consultar (4, 8, 13) 
-consultorio, el (8) 
-consumidor/a, el/la (Il, 
-15) 
-consumir (Il, 15) 
-consumista (15) 
-consumo, el (15) 
-contacto, el (8) 
-contagiar(se) (12) 
-contagioso/a (12) 
-contaminaciôn, la (15) 
-contaminado/a (15) 
-contaminante (15) 
-contaminar (15) 
-contar (decir) (4) 
-contar (narrar) (18) 
-contemplar (l, 20) 
-contemporâneo/a (18) 
 ----------------------------------------------- 126-2
 columna, la (18) 
 celumpos, los (6) 
@@ -1432,6 +1516,30 @@ comisaria, la (IO)
 comisario/a, el/la (IO) 
 comisién, la (5) 
 comoda, la (9) 
+-------------------------------------- 126-3
+cémodo/a 13) 
+companero/a, el/la (2, 
+compafiia, la (8) 
+compafiia (de danza), 
+1a (18) 
+compafiia (de teatro), 
+1a (18) 
+comparable (4) 
+comparar (4) 
+compartido/a (9) 
+compartimento, el (14) 
+compartir (3, 9, 17) 
+compâs, el (18) 
+competencia, la (15) 
+competente (5) 
+competiciôn, la (7) 
+competir (7, 15) 
+complementos, los (11) 
+completar (4) 
+completo/a (13) 
+componer (18) 
+comportamiento, el (2, 17) 
+comportarse (17) 
 ----------------------------------- 126-4
 compositor/a, el/la (18) 
 compra, la (9, 15) 
@@ -1458,6 +1566,31 @@ comunicar(se) (8)
 comunidad, la (17, 20) 
 comunidad (autonoma), la
 comunidad (de propietarios), la (9) 
+------------------------------------- 126-5
+comunién, la (19) 
+comunismo, el (17) 
+comunista, el/la (17) 
+comunitario/a (17) 
+conceder (4) 
+conceder (un crédito) 
+(10) 
+concierto, el (18) 
+concurso, el (6, 8, 18) 
+condena, la (17) 
+condenar (17) 
+condiciones de trabajo, 
+las (5) 
+condimentado/a (3) 
+condimentar (3) 
+condimentos, los (3) 
+conducciôn, la (14) 
+conducir (14) 
+conductor/a, el/la (14) 
+conectado/a (8) 
+conectar (8) 
+conectar(se) (8) 
+conejo/a, el/la (20) 
+conexiôn 
 --------------------------------------------- 126-6
 confesar (10) 
 confesar(se) (19) 
@@ -1485,6 +1618,31 @@ conservantes, los (l l)
 conservar (Il, 15) 
 consola, la (6) 
 constelaciôn, la (20) 
+------------------------------------ 126-7
+constipado/a (12) 
+constitucién, la (17) 
+construir (9, 18) 
+consul, el/la (17) 
+consulado, el (17) 
+consulta, la (12) 
+consultar (4, 8, 13) 
+consultorio, el (8) 
+consumidor/a, el/la (Il, 
+15) 
+consumir (Il, 15) 
+consumista (15) 
+consumo, el (15) 
+contacto, el (8) 
+contagiar(se) (12) 
+contagioso/a (12) 
+contaminaciôn, la (15) 
+contaminado/a (15) 
+contaminante (15) 
+contaminar (15) 
+contar (decir) (4) 
+contar (narrar) (18) 
+contemplar (l, 20) 
+contemporâneo/a (18) 
 ------------------------------------- 126-8
 contento/a 
 contestador automatico, 
@@ -1512,6 +1670,217 @@ convicciôn, la (19)
 convivencia, la (17) 
 convivir (2, 9, 17) 
 convocar (17) 
+----------------------------------------------- 127-1
+cooperaciôn, la (10, 17) 
+cooperar (IO, 17) 
+coordinador/a, el/la (5) 
+coordinar (5) 
+copa, la (3, 6, 7) 
+copa (del ârbol), la (20) 
+copia (oculta), la (8) 
+copiar (8, 18) 
+Corân, el (19) 
+corazôn, el (l) 
+(prensa del) corazôn 
+(8) 
+cordero, el (3, 20) 
+cordillera, la (20) 
+coreografia, la (18) 
+corner, el (7) 
+cclrecto/a (4) 
+corredor/a, el/la (7) 
+corregir (4, 8) 
+correo electrônico, el 
+(8) 
+correo postal, el (8) 
+(oficina de) correos 
+(10) 
+correr (l, 6, 7, 9, Il, 
+20) 
+corresponsal, el/la (8) 
+corrupcion, la (17) 
+----------------------------------------------- 127-2
+corrupto/a (17) 
+cortar (6, 20) 
+cortar(se) (8, 12) 
+cortaüfias, el (12) 
+corte, el (Il, 12) 
+cortés (17) 
+cortesia, la (17) 
+corteza, la (20) 
+cortina, la (9) 
+corto, el (18) 
+corto/a (1, 11, 13, 14) 
+cortometraje, el (18) 
+cosido/a (l l) 
+costa, la (20) 
+costero/a (20) 
+costilla, la (3) 
+cotizar (5, IO) 
+creaciôn, la (18) 
+crear (18) 
+creatividad, la (18) 
+creativo/a (5, 18) 
+crecer (l, 15, 16) 
+crecimiento, el (l, 15) 
+----------------------------------------------- 127-3
+crédito, el (4, 10) 
+creencias, las (19) 
+creer (19) 
+crema, la (12) 
+cremallera, la (l l) 
+creyente, el/la (19) 
+criar (20) 
+crimen, el (10, 17) 
+climinal, el/la (10) 
+crisis, la (15) 
+cristal, el (9) 
+cristalerfa, la (15) 
+cristianismo, el (19) 
+cristiano/a, el/la (19) 
+critica, la (8) 
+critico/a, el/la (18) 
+cronica, la (8) 
+crônico/a (12) 
+cruce, el (14) 
+crucero, el (14) 
+crucigrama, el (6) 
+crudo/a (3) 
+cruzar (l, 13, 14) 
+cuaderno, el (4) 
+cuadrado, el (16) 
+cuadrilâtero, el (7) 
+cuadro, el (9, I l, 18) 
+cualificado/a 5 
+----------------------------------------------- 127-4
+cuarto, el (9) 
+cuarto (de kilo) (l l) 
+cuarto/a (9) 
+(piscina) cubierta (7) 
+cubierto/a (20) 
+cubiertos, los (3) 
+cubismo, el (18) 
+cubista (18) 
+cubo, el (9) 
+cuchara, la (3) 
+cuchilla, la (12) 
+cuchillo, el (3) 
+cuello, el (l) 
+cuenta, la (8) 
+cuenta (corriente), la 
+(10) 
+cuento, el (18) 
+cuerpo, el (l) 
+cuidado/a (18) 
+cuidar (IO, 20) 
+cuidar(se) (12) 
+culebrôn, el (8) 
+culpable (17) 
+----------------------------------------------- 127-5
+cultivar (15) 
+cultivo, el (15) 
+culto/a (4) 
+cultural (8, 13, 14) 
+cumpleafios, el (2) 
+cumplir (17) 
+cufiado/a, el/la (2) 
+cupÔn (de la ONCE), 
+el (6) 
+cura, el (19) 
+curar(se) (12) 
+curativo/a (12) 
+curiosidad, la (2) 
+curioso/a (2) 
+curriculo, el (5) 
+curriculum vitae, el (5) 
+cursi (Il) 
+curso, el (4, 16) 
+cursor, el (16) 
+curva, la (14) 
+dado, el (6) 
+danés, el (4) 
+danza, la (6, 18) 
+dar (a) (9) 
+dar (propina) (4) 
+dar (un golpe/una patada) (7) 
+----------------------------------------------- 127-6
+dar (un infarto) 
+dar (una fiesta) (6) 
+dar (una/la noticia) (8) 
+dar (informaciôn/una 
+opinion) (8) 
+dar(se) (un bafio/una 
+ducha/una crema) 
+(12) 
+dar(se) la mano (2, 12) 
+dardos, los (6) 
+dato, el (8) 
+(pan) de molde, el (3) 
+debate, el (4, 8) 
+debatir (17, 19) 
+deber (11) 
+deberes, los (4, 5) 
+decimal (16) 
+décimo/a (9) 
+decir (4) 
+declaracién, la (8) 
+declarar (8, IO, 17) 
+declinar (17) 
+decorado, el (18) 
+decorar (9) 
+----------------------------------------------- 127-7
+decorativo/a (18) 
+dedicarse (5) 
+dedo, el (l) 
+deducir (19) 
+defender (7, 17, 19) 
+defensa, la (17) 
+defensivo/a (7) 
+defensor/a (17) 
+(estilo) definido (18) 
+dejar (3, 4, Il) 
+dejar (de) (20) 
+dejar (propina) (3) 
+dejar (un mensaje/ 
+recado) (8) 
+delantal, el (l l) 
+delantero/a (14) 
+deletrear (4) 
+delgado/a (l) 
+deliberar (17) 
+delicado/a (20) 
+delicioso/a (l, 3) 
+delincuente, elAa (10) 
+delito, el (10, 17) 
+demanda, la (5, 15) 
+democracia, la (17) 
+demécrata (17) 
+democratico/a (17) 
+----------------------------------------------- 127-8
+demostrar
+dental (12) 
+detener(se) (14) 
+dentifrico, el (12) 
+dentista, el/la (5, 12) 
+denunciar (10) 
+departamento, el (5, 
+11) 
+dependiente/a, el/la (5 , 
+11) 
+depilarse (12) 
+deporte, el (6, 7, 14) 
+deportista, el/la (7) 
+deportividad, la (7) 
+deportivo/a (7, 8) 
+deposito, el (14) 
+depresiôn, la (12) 
+deprimirse (2) 
+derecha, la (17, 19) 
+(a la) derecha (14) 
+derecho/a (l, 8) 
+derechos, los (5) 
+derogar (17) 
+derrota, la (7) 
 ----------------------------------------------- 128-1
 desafinar IIS) 
 desagradable QI, 2, 20) 
@@ -1542,6 +1911,29 @@ descripcién fisica, la (l)
 descubrimiento, el (16) 
 descubrir (6, 16) 
 descuento, el (Il, 15) 
+-------------------------------------- 128-2
+descuidar (IO) 
+desembarcar (14) 
+desembocar (20) 
+desempleado/a (5) 
+desempleo, el (5) 
+desenfocado/a (18) 
+desenredarse (12) 
+desertar (17) 
+desértico/a (20) 
+desesperacién, la (2) 
+desesperado/a (2) 
+desesperar(se) (2) 
+deshacer (9, 13) 
+deshojar (20) 
+desierto, el (20) 
+desigual (7) 
+desilusionado/a (2) 
+desilusionar(se) (2) 
+desinstalar (8, 16) 
+desmaquillarse (12) 
+desmontar (9, 13) 
+(leche) desnatada (3) 
 ------------------------------------------ 128-3
 desnudarse (l l) 
 desocupado/a (6) 
@@ -1572,6 +1964,28 @@ diario, el (8, 18)
 diario/a (12) 
 diarrea, la (12) 
 dibuiar (1 6 _ 1 R) 
+--------------------------------------- 128-4
+dibujo, el (18) 
+(de) dibujos animados 
+(18) 
+diccionario, el (4) 
+dictadura, la (17) 
+dictatorial (17) 
+didâctico/a (4) 
+diente, el (l) 
+dieta, la (3, 12) 
+dietas, las (5) 
+difundir (8) 
+digital (4, 8, 16, 18) 
+dimensiôn, la (1, 2) 
+dimitir (17) 
+dinero, el (IO, Il, 15) 
+Dios (19) 
+diploma, el (4) 
+diplomâtico/a, el/la (17) 
+diputado/a, el/la (17) 
+direcciôn, la (8, 14) 
+direcciôn (de internet), 
 ------------------------------------ 128-5
 directivo/a (5) 
 (vuelo) directo (14) 
@@ -1601,6 +2015,30 @@ disparar (10, 18)
 distancia, la (20) 
 distinguir (l) 
 distrafdo/a (4) 
+----------------------------- 128-6
+distribuciôn, la (l l, 
+15, 18) 
+distribuidor/a, el/la (18) 
+distribuir (5, 15, 18) 
+diurno/a (20) 
+diversiôn, la (2) 
+divertido/a (2, 6) 
+divertir(se) (2, 6) 
+dividir (16) 
+divisién, la (16) 
+divorciarse (2) 
+divorcio, el (2) 
+DNI, el (13) 
+doblado/a (11) 
+doblar (l, Il) 
+doble (9, 13, 14) 
+docil (20) 
+doctorado, el (4) 
+documental, el (8) 
+documento, el (8, 13, 
+16) 
+doler (12) 
+dolor, el (2) 
 -------------------------------- 128-7
 domesticar (20) 
 doméstico/a (20) 
@@ -1629,75 +2067,6 @@ economia, la (15)
 economico/a (8, IO, 15) 
 economista, el/la (15) 
 ecuador, el (20) 
--------------------------------------- 128-2
-descuidar (IO) 
-desembarcar (14) 
-desembocar (20) 
-desempleado/a (5) 
-desempleo, el (5) 
-desenfocado/a (18) 
-desenredarse (12) 
-desertar (17) 
-desértico/a (20) 
-desesperacién, la (2) 
-desesperado/a (2) 
-desesperar(se) (2) 
-deshacer (9, 13) 
-deshojar (20) 
-desierto, el (20) 
-desigual (7) 
-desilusionado/a (2) 
-desilusionar(se) (2) 
-desinstalar (8, 16) 
-desmaquillarse (12) 
-desmontar (9, 13) 
-(leche) desnatada (3) 
---------------------------------------- 128-4
-dibujo, el (18) 
-(de) dibujos animados 
-(18) 
-diccionario, el (4) 
-dictadura, la (17) 
-dictatorial (17) 
-didâctico/a (4) 
-diente, el (l) 
-dieta, la (3, 12) 
-dietas, las (5) 
-difundir (8) 
-digital (4, 8, 16, 18) 
-dimensiôn, la (1, 2) 
-dimitir (17) 
-dinero, el (IO, Il, 15) 
-Dios (19) 
-diploma, el (4) 
-diplomâtico/a, el/la (17) 
-diputado/a, el/la (17) 
-direcciôn, la (8, 14) 
-direcciôn (de internet), 
------------------------------ 128-6
-distribuciôn, la (l l, 
-15, 18) 
-distribuidor/a, el/la (18) 
-distribuir (5, 15, 18) 
-diurno/a (20) 
-diversiôn, la (2) 
-divertido/a (2, 6) 
-divertir(se) (2, 6) 
-dividir (16) 
-divisién, la (16) 
-divorciarse (2) 
-divorcio, el (2) 
-DNI, el (13) 
-doblado/a (11) 
-doblar (l, Il) 
-doble (9, 13, 14) 
-docil (20) 
-doctorado, el (4) 
-documental, el (8) 
-documento, el (8, 13, 
-16) 
-doler (12) 
-dolor, el (2) 
 ----------------------------------------- 128-8
 ediciôn, la (18) 
 edificio, el (9, 18) 
@@ -1748,6 +2117,32 @@ emocional (2)
 emocionante (2, 6) 
 emocionarse (2) 
 empatar (6, 7) 
+------------------------------------- 129-2
+empate, el (7) 
+empeorar (12, 20) 
+empleado/a, el/la (5) 
+empleado/a (de correos), el/la (IO) 
+empleo, el (5) 
+empresa, la (5) 
+empresario/a, el/la (5) 
+enamorarse (2) 
+encantar (2, 11) 
+encantar (18) 
+encargado/a, el/la (5) 
+encargar (l l) 
+encender (8, 9, 16) 
+encestar (7) 
+enchufar (9) 
+enchufe, el (9) 
+encfa, la (l) 
+encoger (l l) 
+encontrar (4, IO) 
+encontrar (una pista) 
+(10) 
+encontrarse (bien/mal) 
+(12) 
+enemigo/a, el/la (2, 17) 
+energético/a (15) 
 -------------------------------------------------------- 129-3
 energia, la
 energia, las (15) 
@@ -1776,6 +2171,33 @@ enterarse (de) (8)
 enterrar (1) 
 entonaciôn. la (4) 
 (7) 
+------------------------------------- 129-4
+entonar (4) 
+entrada, la (7, 18) 
+entradilla, la (8) 
+(el) entre (16) 
+entregar (8, 10) 
+entrenador/a, el/la (7) 
+entrenamiento, el (6, 7) 
+entrenar(se) (7) 
+entretener(se) (6) 
+entretenido/a (6) 
+entrevista, la (5, 8, 
+10) 
+envases, los (11) 
+enviado/a especial, el/ 
+1a (8) 
+enviar (8, IO) 
+envio, el (10) 
+eolica (15) 
+episodio, el (8) 
+equilibrado/a (18) 
+equilibrio, el (18) 
+equipaje, el (13) 
+equipamiento 
+deportivo, el (7) 
+equipo, el (5, 7) 
+(deportes de) equipo 
 -------------------------------------------------- 129-5
 equipo de musica, el 
 (9) 
@@ -1801,6 +2223,32 @@ escoba, la (9)
 escoger (l l) 
 esconderse (6) 
 escondite, el (6) 
+------------------------------------- 129-6
+escribir (4, 8, 18) 
+escrito/a (4, 8) 
+escritor/a, el/la (18) 
+escritorio, el (16) 
+escuchar (1) 
+escuela, la (4) 
+escultor/a, el/la (18) 
+escultôrico/a (18) 
+escultura, la (18) 
+espacio, el (20) 
+espacioso/a (9) 
+espada, la (17) 
+espalda, la (l) 
+espantoso/a (6) 
+espanol, el (4) 
+esparadrapo, el (12) 
+especialidad, la (3, 12) 
+especialista, el/la (12) 
+especializado/a (5) 
+especie, la (16, 20) 
+espectâculo, el (18) 
+espejo, el (9, 14) 
+esperado/a (8) 
+esperar (14) 
+espinacas, las (3) 
 ------------------------------------- 129-7
 espiritu, el ( I c)) 
 esponja, la (12) 
@@ -1828,6 +2276,32 @@ estar (de algo) (5)
 estatal (17) 
 estatua, la (18) 
 este, el (20) 
+------------------------------------- 129-8
+estelar (20) 
+estética, la (18) 
+estético/a (18) 
+elasticidad, la (16) 
+estilo, el (18) 
+estirar(se) (l, 11) 
+estômago, el (1) 
+estrecho, el (20) 
+estrecho/a (20) 
+estrella, la (20) 
+estrenar (18) 
+estreno, el (18) 
+estrés, el (2) 
+estresado/a (2, 12) 
+estresarse (2) 
+estropeado/a (9 , 14) 
+estropearse (9, 14) 
+estuche, el (4) 
+estudiante, el/la (4) 
+estudiar (4, 16) 
+estudio, el (8, 9, 16, 
+18) 
+estudioso/a (4) 
+estupendo/a (6) 
+etiqueta, la (Il) 
 ------------------------------------- 130-1
 euro, el (IO, 11) 
 euskera, el (4) 
@@ -1855,6 +2329,32 @@ exportar (15)
 exposiciôn, la (6, 15, 
 18) 
 expresiôn, la (l, 4) 
+---------------------------------------- 130-2
+expresionista (18) 
+exprimidor, el (9) 
+exprimir (3) 
+extensiôn, la (8) 
+exterior, el (9) 
+exterior (9, 15, 17, 20) 
+(ingreso/gasto) extra 
+(10) 
+extraer (15) 
+extraoficial (8) 
+extraviar (13) 
+extremidades, las (l) 
+extremista, elAa (19) 
+extremo/a (19) 
+fâbrica, la (5, 15) 
+fabricar (15) 
+fachada, la (9, 18) 
+factura, la (8, Il, 15) 
+facturar (13, 14) 
+facultad, la (4) 
+falda, la (l l) 
+fallar (7) 
+fallecer (l) 
+faltar (l l) 
+familia, la (2) 
 --------------------------------------- 130-3
 familiar (13) 
 familiar cercano/a (2) 
@@ -1882,6 +2382,31 @@ feroz (20)
 ferreterfa, la (l l) 
 ferry el (14) 
 festival, el (18) 
+------------------------------------------------- 130-4
+festivo/a (5) 
+fiable (8) 
+fibra, la (l l) 
+ficha, la (4, 6) 
+fiebre, la (12) 
+fiesta (de disfraces), la 
+figura, la (1) 
+(teléfono) fijo, el (8) 
+fijo/a (5) 
+filete, el (3, Il) 
+filôsofa/a, el/la (19) 
+filosofia, la (19) 
+filosofico/a (19) 
+fin de semana, el (6, 
+13) 
+(destino) final (13) 
+final (4) 
+financiaciôn, la (11) 
+financiero/a (15) 
+finca, la (15) 
+finés, el (4) 
+firma, la (8) 
+firmar (5, IO) 
+fiscal, el/la (17) 
 ------------------------------------------ 130-5
 fisica, la (16) 
 fisico/a, el/la (16) 
@@ -1909,83 +2434,6 @@ formular (una
 pregunta) (8) 
 foro, el (8) 
 foto, la (18)
------------------------------------------ 130-7 
-funcion, la 
-funcionario/a, el/la (5 
-17) 
-fusil, el (17) 
-fütbol, el (7) 
-futbolin, el (6) 
-futbolista, el/la (7) 
-futurista (18) 
-gafas, las (l) 
-gajo, el (Il) 
-galaxia, la (20) 
-galeria (de arte), la (18) 
-gallego, el (4) 
-galletas, las (3) 
-gallina, la (20) 
-gallo, el (20) 
-galopar (20) 
-gamba, la (3) 
-ganaderia, la (15) 
-ganadero/a, el/la (15) 
-ganado, el (15) 
-ganador/a, el/la (7) 
-ganancias, las (15) 
-ganar (5, 6, 7, 15, 17) 
-garage, el (9, 14) 
----------------------------------------- 130-2
-expresionista (18) 
-exprimidor, el (9) 
-exprimir (3) 
-extensiôn, la (8) 
-exterior, el (9) 
-exterior (9, 15, 17, 20) 
-(ingreso/gasto) extra 
-(10) 
-extraer (15) 
-extraoficial (8) 
-extraviar (13) 
-extremidades, las (l) 
-extremista, elAa (19) 
-extremo/a (19) 
-fâbrica, la (5, 15) 
-fabricar (15) 
-fachada, la (9, 18) 
-factura, la (8, Il, 15) 
-facturar (13, 14) 
-facultad, la (4) 
-falda, la (l l) 
-fallar (7) 
-fallecer (l) 
-faltar (l l) 
-familia, la (2) 
-------------------------------------------------- 130-4
-festivo/a (5) 
-fiable (8) 
-fibra, la (l l) 
-ficha, la (4, 6) 
-fiebre, la (12) 
-fiesta (de disfraces), la 
-figura, la (1) 
-(teléfono) fijo, el (8) 
-fijo/a (5) 
-filete, el (3, Il) 
-filôsofa/a, el/la (19) 
-filosofia, la (19) 
-filosofico/a (19) 
-fin de semana, el (6, 
-13) 
-(destino) final (13) 
-final (4) 
-financiaciôn, la (11) 
-financiero/a (15) 
-finca, la (15) 
-finés, el (4) 
-firma, la (8) 
-firmar (5, IO) 
-fiscal, el/la (17) 
 -------------------------------------------- 130-6
 fotografia, la
 fotografiar (18) 
@@ -2012,6 +2460,32 @@ frutero/a, el/la (l l)
 fruto, el (20) 
 fuente, la (3, 8) 
 fuerte (l, 3, 4, 9) 
+----------------------------------------- 130-7 
+funcion, la 
+funcionario/a, el/la (5 
+17) 
+fusil, el (17) 
+fütbol, el (7) 
+futbolin, el (6) 
+futbolista, el/la (7) 
+futurista (18) 
+gafas, las (l) 
+gajo, el (Il) 
+galaxia, la (20) 
+galeria (de arte), la (18) 
+gallego, el (4) 
+galletas, las (3) 
+gallina, la (20) 
+gallo, el (20) 
+galopar (20) 
+gamba, la (3) 
+ganaderia, la (15) 
+ganadero/a, el/la (15) 
+ganado, el (15) 
+ganador/a, el/la (7) 
+ganancias, las (15) 
+ganar (5, 6, 7, 15, 17) 
+garage, el (9, 14) 
 ----------------------------------------- 130-8
 garantia, la
 garbanzos, los
@@ -2062,76 +2536,6 @@ golfo, el (20)
 golpe, el (7, 12) 
 golpear (7) 
 goma, la (4) 
-------------------------------------------- 131-3
-gritar (4) 
-grüa, la (14) 
-grupo, el (4) 
-grupo (musical), el (18) 
-guantes, los (l l) 
-guantes (de boxeo), 
-los (7) 
-guapo/a (1) 
-guardar (11) 
-guarderia, la (4) 
-guardia civil, la (IO) 
-guerra, la (17) 
-guia, el/la (13) 
-guion, el (8, 18) 
-guionista, el/la (18) 
-guisantes, los (3) 
-guitarra, la (18) 
-guitarrista, el/la (18) 
-gustar (2, 11, 18) 
-gusto, el (l) 
-haber (9) 
-habil (6) 
-habitacion, la (9, 13) 
------------------------------------------- 131-5
-hemisferio, el (20) 
-hereditario/a (12) 
-herida, la (12) 
-hermano/a, el/la (2) 
-(primo/a) hermano/a 
-(3) 
-hervir (3) 
-hielo, el (20) 
-hierba, la (20) 
-hierbabuena, la (20) 
-higado, el (1) 
-higiene, la (12) 
-higiénico/a (12) 
-hijo/a, el/la (2) 
-hilo, el (11) 
-hindi, el (4) 
-hinduismo, el (19) 
-hipermercado, el (11) 
-hipica, la (7) 
-hipocresfa, la (17) 
-hipoteca, la (9, 10) 
-hipotecario/a (10) 
--------------------------------------- 131-7
-hümedo/a (9, 20) 
-hüngaro, el (4) 
-idea, la (19) 
-identificaciôn, la (2) 
-ideologia, la (19) 
-ideologico/a (19) 
-idioma, el (4) 
-iglesia, la (18, 19) 
-(el) igual (16) 
-igualado/a (7) 
-igualdad, la (17) 
-ilegal (2, 10, 15) 
-ilusiôn, la (2) 
-ilusionado/a (2) 
-ilusionar(se) (2) 
-imagen, la (8) 
-imaginaciôn, la 
-imaginar (18) 
-imân, el (19) 
-imitar (18) 
-impaciencia, la (2) 
-impaciente (2) 
 ---------------------------------------------------- 131-2
 gordo/a (l) 
 gon-a, la (Il) 
@@ -2161,6 +2565,30 @@ grave (4, 7, 12, 14)
 griego, el (4) 
 grafo, el (9, 12) 
 gris(l, 18) 
+------------------------------------------- 131-3
+gritar (4) 
+grüa, la (14) 
+grupo, el (4) 
+grupo (musical), el (18) 
+guantes, los (l l) 
+guantes (de boxeo), 
+los (7) 
+guapo/a (1) 
+guardar (11) 
+guarderia, la (4) 
+guardia civil, la (IO) 
+guerra, la (17) 
+guia, el/la (13) 
+guion, el (8, 18) 
+guionista, el/la (18) 
+guisantes, los (3) 
+guitarra, la (18) 
+guitarrista, el/la (18) 
+gustar (2, 11, 18) 
+gusto, el (l) 
+haber (9) 
+habil (6) 
+habitacion, la (9, 13) 
 --------------------------------- 131-4
 habla, el (4) 
 hablar (4) 
@@ -2190,6 +2618,29 @@ helada, la (20)
 helado/a (20) 
 helar (20) 
 helicoptero, el (14) 
+------------------------------------------ 131-5
+hemisferio, el (20) 
+hereditario/a (12) 
+herida, la (12) 
+hermano/a, el/la (2) 
+(primo/a) hermano/a 
+(3) 
+hervir (3) 
+hielo, el (20) 
+hierba, la (20) 
+hierbabuena, la (20) 
+higado, el (1) 
+higiene, la (12) 
+higiénico/a (12) 
+hijo/a, el/la (2) 
+hilo, el (11) 
+hindi, el (4) 
+hinduismo, el (19) 
+hipermercado, el (11) 
+hipica, la (7) 
+hipocresfa, la (17) 
+hipoteca, la (9, 10) 
+hipotecario/a (10) 
 ------------------------------------- 131-6
 hipotesis, la (16) 
 hipotético/a (16) 
@@ -2220,6 +2671,29 @@ hueso, el (l)
 huevos, los (3) 
 huir (IO) 
 humedad, la (20) 
+-------------------------------------- 131-7
+hümedo/a (9, 20) 
+hüngaro, el (4) 
+idea, la (19) 
+identificaciôn, la (2) 
+ideologia, la (19) 
+ideologico/a (19) 
+idioma, el (4) 
+iglesia, la (18, 19) 
+(el) igual (16) 
+igualado/a (7) 
+igualdad, la (17) 
+ilegal (2, 10, 15) 
+ilusiôn, la (2) 
+ilusionado/a (2) 
+ilusionar(se) (2) 
+imagen, la (8) 
+imaginaciôn, la 
+imaginar (18) 
+imân, el (19) 
+imitar (18) 
+impaciencia, la (2) 
+impaciente (2) 
 ------------------------------------ 131-8
 impar (16) 
 imparcial (8) 
@@ -2279,6 +2753,29 @@ inocente (17)
 inodoro, el (12) 
 inolvidable (6) 
 inorgânico/a (16) 
+--------------------------------------------- 132-2
+inscribirse (8) 
+insecto, el (20) 
+inseguridad, la (2) 
+inseguro/a (2) 
+insociable (2) 
+insolidario/a (2) 
+insonoro/a (4) 
+insoportable (l) 
+inspector/a, el/la (10) 
+inspiracién, la (18) 
+inspirar (18) 
+instalaciones, las (7) 
+instalar (8, 16) 
+instituto, el (4) 
+instrumental (18) 
+instrumento, el (18) 
+insular (20) 
+integracién, la (IO, 17) 
+(pan) integral (3) 
+integrarse (17) 
+intelectual (5) 
+inteligencia, la (2) 
 ---------------------------------- 132-3
 inteligente (2) 
 intensivo/a (4) 
@@ -2309,6 +2806,29 @@ intimo/a (2)
 intolerancia, la (17) 
 intolerante (2) 
 intranquilidad 
+--------------------------------------------- 132-4
+intranquilo/a (2) 
+introducir (16) 
+inventar (16) 
+invento, el (16) 
+invernal (20) 
+inversiôn, la (15) 
+inversor/a, el/la (IO, 15) 
+invertir (10, 15) 
+investigaciôn, la (16) 
+investigador/a, el/la 
+(16) 
+investigar (16) 
+invierno, el (20) 
+(deportes de) invierno 
+(7) 
+invitacién, la (2, 17) 
+invitado/a, el/la (2, 17) 
+invitar (2, 6, 17) 
+inyeccién, la (12) 
+ir (6) 
+ir (de) (6) 
+ir a (19) 
 ------------------------------------------- 132-5
 irlandés, el (4) 
 irregular (16) 
@@ -2337,6 +2857,30 @@ jazmin, el (20)
 jazz, el (18) 
 jefe de estudios, el/ 
 la (4) 
+--------------------------------------------- 132-6
+jefe/a, el/la (5) 
+jersey, el (Il) 
+jinete, el/la (7) 
+jirafa, la (20) 
+joven, el/la (l, 2) 
+joven (l) 
+jubilaciôn (anticipada), 
+la (5) 
+jubilado/a, el/la (5) 
+jubilarse (5) 
+judaismo, el (19) 
+judias (blancas), las (3) 
+judias verdes, las (3) 
+judicial (17) 
+judio/a (19) 
+juego, el (6) 
+juegos olimpicos, los 
+(7) 
+juez/a, el/la (17) 
+jugador/a, el/la (6, 7, 
+19) 
+jugador/a de 
+baloncesto, el/la (7)
 ---------------------------------- 132-7
 jugar (6, 7) 
 juguete, el (6) 
@@ -2366,102 +2910,113 @@ laguna, la (20)
 laico/a (4, 17, 19) 
 lamentar(se) (2) 
 lâmpara, la (9) 
---------------------------------------------- 132-2
-inscribirse (8) 
-insecto, el (2()) 
-inseguridad, la (2) 
-inseguro/a (2) 
-insonoro/a (4) 
-insoportable
-inspector/a, el/la
-inspiracion, la (IS) 
-inspirar ( IS) 
-instalaciones, las (7) 
-instalar (S, 10) 
-instituto, el (4) 
-instrumental (IS) 
-instrumento, el (IS) 
-insular (20) 
-integracion, la (IO, 17) 
-(pan) integral (3) 
-integrarse (17) 
-intelectual (5) 
-inteligencia, la (2) 
----------------------------------------- 132-4
-int ili(lad, la (2) 
-int ranquulo/a (2) 
-int roclucir ( I (o) 
-inventar (16) 
-invento, cl (l (o) 
-I n ve rnal (2()) 
-invetsi(bn, la (15) 
-inversor/a, cl/la (1(), 15) 
-jefc/a, el/la (5) 
-jersey, el (l l) 
-jincte, cl/la (7) 
-jirafa, la (20) 
-jovcn, cl/la (l, 2) 
-jovell (l) 
-(anticipacla), 
-la (5) 
-cl/la (5) 
-.j(lclaismo, cl (19) 
-invertir (IO, Dl 5) 
-invest igaci(ôn, la (10) 
-invest igaclor/a, el/la 
-igar (16) 
-insierno, el (20) 
-(deportes de) invierno 
-(7) 
-invitacién, la (2, 17) 
-invitaclo/a, el/la (2, 17) 
-imitar (2, 6, 17) 
-inyeccién, la (12) 
-ir (6) 
-ir (de) (6) 
-ira (19) 
-judias (l)lancas), las (3) 
-judias verdes, las (3) 
-juclicial (17) 
-juclio/a (19) 
-juego, el (6) 
-juegos olimpicos, los 
-(7) 
-juez/a, el/la (17) 
-jugador/a, el/la (6, 7, 
-19) 
-jugador/a de 
-baloncesto, el/la (7) 
+--------------------------------------------- 132-8 
+lana, la
 langosta, la (3) 
 langostino, el (3) 
 lanzamiento, el (15, 20) 
 lanzar (15, 20) 
-lâpiz, cl (4) 
-largo/a (1, 11, 13, 14) 
-largomctrajc, cl (18) 
-Iaia, la (3, 11) 
-lavabo, cl (9, 12) 
-lavaclora, la (9) 
-lavaplatos, cl (9) 
+lâpiz, el (4) 
+largo/a (l, Il, 13, 14) 
+largometraje, el (18) 
+lata, la (3, 11) 
+lavabo, el (9, 12) 
+lavadora, la (9) 
+lavaplatos, el (9) 
 lavar (3, 9, 14) 
 lavar(se) (12) 
 leche, la (3) 
 lechuga, la (3, 6) 
-lecr (4, 6, 18) 
-legal (2, 10, 15) 
+leer (4, 6, 18) 
+legal (2, IO, 15) 
 legislativo (17) 
 lejano/a (2, 20) 
 lengua, la (l, 4) 
 lenguado, el (3) 
 lenguaje, el (4) 
+---------------------------------------- 133-1
+lenguas, las (4) 
+legumbres, las (3) 
+lentejas, las (3) 
+lento/a (7, 14) 
+leÔn/a, el/la (20) 
+leopardo, el (20) 
+lesiÔn, la (7) 
+lesionado/a (7) 
+lesionarse (7) 
+la (4, 18) 
+levatitar (l) 
+levantar(se) (l) 
+leve (7, 12, 14) 
+ley, la (16, 17) 
+(profesiôn) liberal (5) 
+liberal (17) 
+liberalismo, el (17) 
+libre (6, 13, 14) 
+libre (dia) (5) 
+libro, el (4, 6, 18) 
+licor, el (3) 
+lider, el/la (17) 
+liga, la (7) 
+ligar (con alguien) (2) 
 ---------------------------------------- 133-2
-
-Eerano/a (18) 
-Eeratura, la (18) 
-Zio, el (Il) 
-urnada, la (8) 
+ligar (con algtlien) (2) 
+ligero/a (3, Il, 14) 
+lima, la (12) 
+limarse (12) 
+limitar (con) (20) 
+limite, el (20) 
+limén, el (3) 
+limonada, la (3) 
+limpiar (3, 8, 9, 14) 
+limpieza, la (9, 12) 
+(juego) limpio (6, 7) 
+limpio/a (l, 3, 9, 12, 
+15) 
+linea, la (8, 16) 
+linea (de autobuses), 
+la (14) 
+lineal (16) 
+Interna, la (9) 
+liquido/a (16) 
+Ilso/a (1, 11) 
+lista de distribucién, 
+la (8) 
+listo/a (2) 
+litera, la (9) 
+literario/a (18) 
+literatura, la (18) 
+litro, el (11) 
+Ilarnada, la (8) 
+---------------------------------------- 133-3
+Ilamar por teléfono (8) 
+Ilamarse (2) 
+Ilanura, la (20) 
+Ilegada, la (13, 14) 
+Ilegar (13, 14) 
+Ilegar (a/hasta) (14) 
+Ilegar con retraso (14) 
+Ilenar (3, 9, 14) 
+Ileno/a (3, 14, 20) 
+Ilevar (1, 9, Il, 14) 
+Ilevar (una tienda/un 
+negocio) (5) 
+Ilevar a cabo (5) 
+Ilorar (l) 
+Ilover (20) 
+Iluvia, la (20) 
+Iluvioso/a (20) 
+local (8) 
+local (comercial), el 
+(11) 
+localizar (20) 
+locutor/a, el/la (8) 
+locutorio, el (8) 
+logico/a (19) 
+---------------------------------------- 133-4
+lomo, el
 loncha, la (l l) 
-lotefla, la (6) 
+loteria, la (6) 
 lubina, la (3) 
 luchar (17) 
 lugar, el (5, 9, 13, 20) 
@@ -2475,7 +3030,7 @@ madre, la (2)
 madurar (l, 2, 20) 
 madurez, la (l) 
 maduro/a (l) 
-maestro/a, elAa (4) 
+maestro/a, el/la (4) 
 mafia, la (17) 
 mafioso/a (17) 
 majo/a (2) 
@@ -2484,8 +3039,35 @@ mal (estado/resultado)
 (7) 
 maleducado/a (2, 17) 
 maleta, la (13) 
-maltratador, el (IO) 
-maltratar (IO, 17) 
+maltratador, el (10) 
+maltratar (10, 17) 
+---------------------------------------- 133-5
+maltrato, el (17) 
+mamar (20) 
+mamffero, el (20) 
+mandar (10) 
+mandar (8, IO, 17) 
+mando, el (6) 
+manejar (8) 
+mano, la (l) 
+manso/a (20) 
+manta, la (9) 
+mantel, el (3) 
+mantener (8, 14) 
+mantequilla, la (3) 
+manual (5) 
+manzana, la (3) 
+mapa, el (13, 20) 
+maquillaje, el (18) 
+maquillarse (12) 
+maquinilla, la (12) 
+mar, el/la (14, 20) 
+maratôn, la (7) 
+maravilloso/a (6) 
+marcador, el (7) 
+marcar (8) 
+---------------------------------------- 133-6
+marcha, la
 marchitarse 2 
 marchito/a (20) 
 marea, la (20) 
@@ -2512,6 +3094,34 @@ mascota, la (20)
 masculino (l, 2) 
 master, el (4) 
 matar (17) 
+---------------------------------------- 133-7
+matemâticas, las (16) 
+matemâtico/a, el/la (16) 
+materia, la (4, 16) 
+materia prima, la (15) 
+material (de 
+construcciôn), el (9) 
+materiales, los (9) 
+maternidad, la (l) 
+materno/a (2) 
+matflcula, la (4, 14) 
+matricular (14) 
+matricularse (4) 
+matrimonial (2) 
+matrimonio, el (2) 
+maullar (20) 
+maximizar (16) 
+mayorfa, la (17) 
+mayoritario/a (7, 19) 
+mecânica, la (14) 
+mecânico/a, el/la (5) 
+mecânico/a (5, 14) 
+medalla, la (7) 
+(clase) media (17) 
+---------------------------------------- 133-8
+mediano/a
+medias, las
+medicamento, el
 medicina, la (12) 
 medicinal (12) 
 médico/a, el/la (5, 12) 
@@ -2537,7 +3147,6 @@ mensaje, el (8)
 (empresa de) 
 mensajeria, la (10) 
 mensajero/a, el/la (IO) 
-Glosario 133 
 ------------------------------- 134-1
 menstruaciôn, la (l) 
 mensual (12) 
@@ -2564,6 +3173,31 @@ meteorologia, la (20)
 meteorolégico/a (20) 
 meter (10) 
 meter (gol) (7) 
+------------------------------------------- 134-2
+metodolôgico/a (16) 
+metro, el (l, 14, 20) 
+mezclar (6) 
+mezquita, la (18, 19) 
+microondas, el (9) 
+microscopio, el (16) 
+miedo, el (2) 
+miel, la (3) 
+miembro, el (17) 
+milagro, el (19) 
+milagroso/a (19) 
+militar, el/la (17) 
+militar (17) 
+minifalda, la (l l) 
+mimmizar ( 16) 
+ministerio, el (17) 
+ministro/a, el/la (17) 
+minorfa, la (17) 
+minoritario/a (7, 19) 
+mirada, la (l) 
+mirar (l, Il) 
+mirar (por) (14) 
+mirar (un plano) (13) 
+misa, la (19) 
 ------------------------------- 134-3
 misiôn, la (17) 
 mochila, la (6, 13) 
@@ -2590,82 +3224,6 @@ montana, la (13, 20)
 montafioso/a (20) 
 montar (9, 13) 
 montar (en) (6) 
-------------------------------------- 134-5
-mujer, la (2) 
-multa, la (14) 
-multinacional, la (5) 
-multiplicacién, la (16) 
-multiplicar (16) 
-mundial (7, 15, 17) 
-municipal (4, IO) 
-municipio, el (17) 
-mufieca, la (l) 
-mufieco/a, ella (6) 
-mural, el (18) 
-müsculo, el (l) 
-museo, el (6, 18) 
-musica, la (6, 18) 
-musical, el (18) 
-müsico/a, el/la (5, 18) 
-muslo, el (3) 
-mustio/a (20) 
-musulmân/a, el/la (19) 
-nacer (l, 2, 16, 20) 
-nacimiento, el (20) 
-naciôn, la (17, 20) 
-nacional (6, 7, 8, 10, 
-14, 15, 17, 20) 
-nacionalista (17) 
------------------------------------------134-7
-neurona, la (16) 
-nevada, la (20) 
-nevado/a (20) 
-nevar (20) 
-nevera, la (9) 
-nido, el (20) 
-niebla, la (20) 
-nieto/a, el/la (2) 
-nieve, la (20) 
-nifiez, la (1) 
-nifio/a, el/la (2) 
-nitrogeno, el (16) 
-nivel, el (4) 
-noble (20) 
-noche, la (20) 
-nocturno/a (20) 
-nombrar (17) 
-nombre, el (2) 
-nombre de usuario/a, 
-nomina, la (5, IO, 17) 
-nordeste, el (20) 
-normal (l) 
-normas de circulacién, 
-las (14) 
-------------------------------------------- 134-2
-metodolôgico/a (16) 
-metro, el (l, 14, 20) 
-mezclar (6) 
-mezquita, la (18, 19) 
-microondas, el (9) 
-microscopio, el (16) 
-miedo, el (2) 
-miel, la (3) 
-miembro, el (17) 
-milagro, el (19) 
-milagroso/a (19) 
-militar, el/la (17) 
-militar (17) 
-minifalda, la (l l) 
-mimmizar ( 16) 
-ministerio, el (17) 
-ministro/a, el/la (17) 
-minorfa, la (17) 
-minoritario/a (7, 19) 
-mirada, la (l) 
-mirar (l, Il) 
-mirar (por) (14) 
-mirar (un plano) (13) 
-misa, la (19) 
 -------------------------------------- 134-4
 monte, el
 monumental
@@ -2693,6 +3251,32 @@ muerte, la (l, 10, 17)
 muerto/a (l) 
 muestra, la (18) 
 mugir (20) 
+------------------------------------- 134-5
+mujer, la (2) 
+multa, la (14) 
+multinacional, la (5) 
+multiplicacién, la (16) 
+multiplicar (16) 
+mundial (7, 15, 17) 
+municipal (4, IO) 
+municipio, el (17) 
+mufieca, la (l) 
+mufieco/a, ella (6) 
+mural, el (18) 
+müsculo, el (l) 
+museo, el (6, 18) 
+musica, la (6, 18) 
+musical, el (18) 
+müsico/a, el/la (5, 18) 
+muslo, el (3) 
+mustio/a (20) 
+musulmân/a, el/la (19) 
+nacer (l, 2, 16, 20) 
+nacimiento, el (20) 
+naciôn, la (17, 20) 
+nacional (6, 7, 8, 10, 
+14, 15, 17, 20) 
+nacionalista (17) 
 ------------------------------------------ 134-6
 nadar
 naranja, la
@@ -2720,6 +3304,31 @@ negocio, el (5, 15)
 negro/a (l, 18) 
 nerviosismo, el (2) 
 nervioso/a (2) 
+-----------------------------------------134-7
+neurona, la (16) 
+nevada, la (20) 
+nevado/a (20) 
+nevar (20) 
+nevera, la (9) 
+nido, el (20) 
+niebla, la (20) 
+nieto/a, el/la (2) 
+nieve, la (20) 
+nifiez, la (1) 
+nifio/a, el/la (2) 
+nitrogeno, el (16) 
+nivel, el (4) 
+noble (20) 
+noche, la (20) 
+nocturno/a (20) 
+nombrar (17) 
+nombre, el (2) 
+nombre de usuario/a, 
+nomina, la (5, IO, 17) 
+nordeste, el (20) 
+normal (l) 
+normas de circulacién, 
+las (14) 
 ------------------------------------- 134-8
 norte, el
 noruego, el (4) 
@@ -2772,6 +3381,33 @@ odiar (2)
 odio, el (2) 
 oeste, el (20) 
 oferta, 1a (5, 11, 15) 
+------------------------------------------- 135-2
+oficial
+oficina, la (5) 
+oticina de informacién/ 
+de turismo, la (6, 13) 
+oficio, el (5) 
+ofrecer (ayuda) (10) 
+oido, el (l) 
+oir (l, 8) 
+ojos, los (l) 
+01a, la (20) 
+oleo, el (18) 
+oler (l) 
+olfato, el (l) 
+olimpiadas, las (7) 
+olimpico/a (7) 
+olivo, el (20) 
+olla (a presiôn), la (3) 
+olor, el (l) 
+ONG, la (10) 
+opcional (4) 
+Opera, la (18) 
+operarse (12) 
+opinar (4, 8) 
+opinion, la (4, 8) 
+oposiciôn, la (4, 17) 
+optimismo, el (2) 
 -------------------------------------- 135-3
 optimista (2) 
 oraciôn, la (19) 
@@ -2799,6 +3435,32 @@ orquesta, la (18)
 ortodoxo/a (19) 
 ortografia, la (4) 
 oscuro/a (1, 9) 
+----------------------------------------- 135-4
+ostras, las (3) 
+otonal (20) 
+otono, el (20) 
+otorrino/a 
+(laringôlogo/a), el/la 
+(12) 
+oveja, la (20) 
+oxigeno, el (16) 
+oyente, el/la (8) 
+paciencia, la (2) 
+paciente, el (12) 
+paciente (2) 
+padecer (una 
+enfermedad) (12) 
+padre, el (2) 
+paella, la (3) 
+pagar (3, 5, 9, IO, Il, 
+14, 15) 
+pagar (una multa) (14) 
+pagina, la (4) 
+pago, el (10, Il) 
+pais, el (17, 20) 
+paisaje, el (18, 20) 
+pâjaro, el (20) 
+palabra, la (4) 
 ----------------------------------- 135-5
 palacio, el (18) 
 palo (de golf), el (7) 
@@ -2826,6 +3488,32 @@ parcial (4, 8, 20)
 parecerse (a alguien) (l , 
 2, 18) 
 pared, la (9) 
+----------------------------------- 135-6
+pareja, la (2, 6) 
+parir (l) 
+parlamentario/a, el/la 
+(17) 
+parlamento, el (17) 
+paro, el (5, IO) 
+parque, el (6) 
+parque (de atracciones), 
+el (6) 
+partes, las (1) 
+participaciôn, la (15) 
+participar (7, 8, 17) 
+(estilo) particular (18) 
+partida, la (6) 
+partido, el (7, 17, 19) 
+parto, el (1) 
+pasajero/a, el/la (13, 14) 
+pasaporte, el (13) 
+pasar (6) 
+pasar (el aspirador/el 
+polvo) (9) 
+pasar (el recibo/el 
+alquiler) (9) 
+pasar (por) (14) 
+pasar (una Ilamada) (8) 
 ----------------------------------- 135-7
 pasar(se)lo (6) 
 pasar (una enfermedad) 
@@ -2854,85 +3542,6 @@ pato/a, el/la (20)
 pavo/a, el/la (3, 20) 
 paz, la (17) 
 pc, el (16) 
-------------------------------------------- 135-2
-oficial
-oficina, la (5) 
-oticina de informacién/ 
-de turismo, la (6, 13) 
-oficio, el (5) 
-ofrecer (ayuda) (10) 
-oido, el (l) 
-oir (l, 8) 
-ojos, los (l) 
-01a, la (20) 
-oleo, el (18) 
-oler (l) 
-olfato, el (l) 
-olimpiadas, las (7) 
-olimpico/a (7) 
-olivo, el (20) 
-olla (a presiôn), la (3) 
-olor, el (l) 
-ONG, la (10) 
-opcional (4) 
-Opera, la (18) 
-operarse (12) 
-opinar (4, 8) 
-opinion, la (4, 8) 
-oposiciôn, la (4, 17) 
-optimismo, el (2) 
------------------------------------------ 135-4
-ostras, las (3) 
-otonal (20) 
-otono, el (20) 
-otorrino/a 
-(laringôlogo/a), el/la 
-(12) 
-oveja, la (20) 
-oxigeno, el (16) 
-oyente, el/la (8) 
-paciencia, la (2) 
-paciente, el (12) 
-paciente (2) 
-padecer (una 
-enfermedad) (12) 
-padre, el (2) 
-paella, la (3) 
-pagar (3, 5, 9, IO, Il, 
-14, 15) 
-pagar (una multa) (14) 
-pagina, la (4) 
-pago, el (10, Il) 
-pais, el (17, 20) 
-paisaje, el (18, 20) 
-pâjaro, el (20) 
-palabra, la (4) 
------------------------------------ 135-6
-pareja, la (2, 6) 
-parir (l) 
-parlamentario/a, el/la 
-(17) 
-parlamento, el (17) 
-paro, el (5, IO) 
-parque, el (6) 
-parque (de atracciones), 
-el (6) 
-partes, las (1) 
-participaciôn, la (15) 
-participar (7, 8, 17) 
-(estilo) particular (18) 
-partida, la (6) 
-partido, el (7, 17, 19) 
-parto, el (1) 
-pasajero/a, el/la (13, 14) 
-pasaporte, el (13) 
-pasar (6) 
-pasar (el aspirador/el 
-polvo) (9) 
-pasar (el recibo/el 
-alquiler) (9) 
-pasar (por) (14) 
-pasar (una Ilamada) (8) 
 -------------------------------------------- 135-8
 peaje, el (14) 
 peatôn/a, el/la (14) 
@@ -2990,6 +3599,28 @@ perfume, el (12)
 perilla, la (l) 
 periodico, el (8) 
 periôdico/a (10, 14) 
+------------------------------------------ 136-2
+periodismo, el (8) 
+penodista, el/la (5, 8) 
+periodistico/a (8) 
+peljudicial (12) 
+permiso (de 
+circulaciôn), el (14) 
+permitido/a (14) 
+perro/a, el/la (20) 
+perseguir (6, 10) 
+persiana, la (9) 
+persona, la (2, 9, Il) 
+persona mayor, la (2) 
+personaje, el (18) 
+personal, el (5) 
+personal (2, 8, IO) 
+personalidad, la (2) 
+pertenecer (17) 
+(vehiculo) pesado (14) 
+pesado/a (3, 1) 
+pesar(se) (1) 
+pesca, la (15) 
 ----------------------------------- 136-3
 pescaderia, 'la (11) 
 pescadero/a, el/la (l l) 
@@ -3020,6 +3651,29 @@ pierna, la (l)
 pieza, la (14) 
 pijama, el (Il) 
 pila, las (9) 
+------------------------------------------- 136-4
+pilotar (14) 
+piloto/a, el/la (14) 
+pimienta, la (3) 
+pinchar (14, 16) 
+pinchar (en) (8) 
+pinchazo, el (14) 
+pincho, el (3) 
+pino, el (20) 
+pintar (18) 
+pintar(se) (12) 
+pintor/a, el/la (18) 
+pintura, la (18) 
+Pina, la (3) 
+piramide, la (18) 
+piscina, la (7) 
+piso, el (9) 
+pista, la (7, 10, 17) 
+pistola, la (17) 
+pitar (7) 
+pizarra, la (4) 
+plan, el (6) 
+planchar (9)
 ---------------------------------- 136-5
 planeta, el (20) 
 plano, el (13, 18) 
@@ -3050,6 +3704,30 @@ poético/a (18)
 polaco, el (4) 
 polar (20) 
 polen, el (20) 
+------------------------------------------------- 136-6
+polen, el 
+policfa, la (IO) 
+policia (de trâfico), el/ 
+la (14) 
+policfaco/a (18) 
+polideportivo, el (7) 
+poliglota (4) 
+politeista (19) 
+politica, la (17, 19) 
+politico/a, el/la (10, 17, 
+18, 19) 
+pollo, el (3, 20) 
+polo, el (20) 
+pomada, la (12) 
+poner (3, 8, 9, IO, 12, 
+18, 20) 
+poner (dinero) (10) 
+poner una reclamaciôn 
+(13) 
+poner (una multa) (14) 
+ponerse (7, 8, 11, 12, 
+14, 20) 
+pop, el (18) 
 ------------------------------------ 136-7
 popular (17, 18) 
 (cl) por (16) 
@@ -3078,75 +3756,6 @@ precisiôn, la (16)
 preciso/a (16) 
 preferente (14) 
 prefijo, el (8) 
------------------------------------------- 136-2
-periodismo, el (8) 
-penodista, el/la (5, 8) 
-periodistico/a (8) 
-peljudicial (12) 
-permiso (de 
-circulaciôn), el (14) 
-permitido/a (14) 
-perro/a, el/la (20) 
-perseguir (6, 10) 
-persiana, la (9) 
-persona, la (2, 9, Il) 
-persona mayor, la (2) 
-personaje, el (18) 
-personal, el (5) 
-personal (2, 8, IO) 
-personalidad, la (2) 
-pertenecer (17) 
-(vehiculo) pesado (14) 
-pesado/a (3, 1) 
-pesar(se) (1) 
-pesca, la (15) 
-------------------------------------------- 136-4
-pilotar (14) 
-piloto/a, el/la (14) 
-pimienta, la (3) 
-pinchar (14, 16) 
-pinchar (en) (8) 
-pinchazo, el (14) 
-pincho, el (3) 
-pino, el (20) 
-pintar (18) 
-pintar(se) (12) 
-pintor/a, el/la (18) 
-pintura, la (18) 
-Pina, la (3) 
-piramide, la (18) 
-piscina, la (7) 
-piso, el (9) 
-pista, la (7, 10, 17) 
-pistola, la (17) 
-pitar (7) 
-pizarra, la (4) 
-plan, el (6) 
-planchar (9)
-------------------------------------------------- 136-6
-polen, el 
-policfa, la (IO) 
-policia (de trâfico), el/ 
-la (14) 
-policfaco/a (18) 
-polideportivo, el (7) 
-poliglota (4) 
-politeista (19) 
-politica, la (17, 19) 
-politico/a, el/la (10, 17, 
-18, 19) 
-pollo, el (3, 20) 
-polo, el (20) 
-pomada, la (12) 
-poner (3, 8, 9, IO, 12, 
-18, 20) 
-poner (dinero) (10) 
-poner una reclamaciôn 
-(13) 
-poner (una multa) (14) 
-ponerse (7, 8, 11, 12, 
-14, 20) 
-pop, el (18) 
 ------------------------------------------------ 136-8
 pregunta, la (4, 8) 
 preguntar (4, 8) 
@@ -3199,6 +3808,31 @@ programa, el (4, 8, 16)
 programaciôn, la (8) 
 programar 
 progresar 
+------------------------------------------------- 137-2
+progesismo
+progresista
+prohibido/a (14) 
+promociôn. la (15) 
+promulgar (17) 
+pronunciacién, la (4) 
+pronunciar (4) 
+propaganda, la (15, 17) 
+propietario/a, el/la (5, 
+9) 
+propina, la (l l) 
+(estilo) propio (18) 
+prosa, la (18) 
+prospecto, el (12) 
+protagonista, el/la (18) 
+protecciôn, la (10) 
+proteger (IO, 15, 17) 
+protegido/a (20) 
+protestante, el/la (19) 
+protestante (19) 
+protestantismo, el (19) 
+provincia, la (17, 20) 
+provincial (17, 20) 
+proyecto, el (5, 18) 
 ---------------------------------------------- 137-3
 prueba, la (10, 12, 17) 
 pruebas médlcas, las 
@@ -3226,6 +3860,32 @@ punetazo, el (7)
 pureza, la (18) 
 purgatorio, el ( 19) 
 puro/a ( 18) 
+----------------------------------- 137-4
+puzle
+quedar
+quedar(se)
+quedar(se) sin
+quedar(se) solero
+quemadura
+quemarse (12) 
+quererse (2) 
+queso, el (3) 
+quieto/a (l) 
+quimica, la (16) 
+quimico/a, el/la (16) 
+quincena, la (6) 
+quiniela, la (6) 
+quinto/a (9) 
+quiosco (de prensa), el 
+(8, 11) 
+quirôfano, el (12) 
+quitar (3, 9, 9) 
+quitar (la mesa) (9) 
+quitarse (l l) 
+rabino, el (19) 
+raciÔn, la (3) 
+radio, la (6, 8) 
+radio adicto/a (8)
 --------------------------------------- 137-5
 radiofonico/a (8) 
 radiografia, la (12) 
@@ -3255,6 +3915,30 @@ rebanacla, la (l l)
 rebozar (A) 
 rebuznar (20) 
 recado, el (8) 
+-------------------------------------- 137-6
+recepcion, la (13) 
+recepcionista, el/la (13) 
+receta, la (12) 
+recetar (12) 
+recibir (8, 10, 17) 
+recibo, el (8, 9, IO, 11, 
+15) 
+reciclaje, el (15) 
+reciclar (15) 
+recién nacido/a, el/la (2) 
+recipiente, el (11) 
+recipientes (de cocina y 
+de mesa), los (3) 
+recitar (18) 
+reclamaciôn, la (11, 13) 
+reclamar (Il, 13, 15) 
+recogedor, el (9) 
+recoger (3, 9, 11, 14, 
+15, 20) 
+recoger (la ropa) (9) 
+recogerse (el pelo) (12) 
+recomendable (6) 
+recomendado/a (12) 
 ------------------------------ 137-7
 recomendar (6) 
 reconocer (18) 
@@ -3284,81 +3968,6 @@ refineria, la (15)
 reflexionar (19) 
 reformar (9, 17) 
 refrescar (20) 
-------------------------------------------------- 137-2
-progesismo
-progresista
-prohibido/a (14) 
-promociôn. la (15) 
-promulgar (17) 
-pronunciacién, la (4) 
-pronunciar (4) 
-propaganda, la (15, 17) 
-propietario/a, el/la (5, 
-9) 
-propina, la (l l) 
-(estilo) propio (18) 
-prosa, la (18) 
-prospecto, el (12) 
-protagonista, el/la (18) 
-protecciôn, la (10) 
-proteger (IO, 15, 17) 
-protegido/a (20) 
-protestante, el/la (19) 
-protestante (19) 
-protestantismo, el (19) 
-provincia, la (17, 20) 
-provincial (17, 20) 
-proyecto, el (5, 18) 
------------------------------------ 137-4
-puzle
-quedar
-quedar(se)
-quedar(se) sin
-quedar(se) solero
-quemadura
-quemarse (12) 
-quererse (2) 
-queso, el (3) 
-quieto/a (l) 
-quimica, la (16) 
-quimico/a, el/la (16) 
-quincena, la (6) 
-quiniela, la (6) 
-quinto/a (9) 
-quiosco (de prensa), el 
-(8, 11) 
-quirôfano, el (12) 
-quitar (3, 9, 9) 
-quitar (la mesa) (9) 
-quitarse (l l) 
-rabino, el (19) 
-raciÔn, la (3) 
-radio, la (6, 8) 
-radio adicto/a (8)
--------------------------------------- 137-6
-recepcion, la (13) 
-recepcionista, el/la (13) 
-receta, la (12) 
-recetar (12) 
-recibir (8, 10, 17) 
-recibo, el (8, 9, IO, 11, 
-15) 
-reciclaje, el (15) 
-reciclar (15) 
-recién nacido/a, el/la (2) 
-recipiente, el (11) 
-recipientes (de cocina y 
-de mesa), los (3) 
-recitar (18) 
-reclamaciôn, la (11, 13) 
-reclamar (Il, 13, 15) 
-recogedor, el (9) 
-recoger (3, 9, 11, 14, 
-15, 20) 
-recoger (la ropa) (9) 
-recogerse (el pelo) (12) 
-recomendable (6) 
-recomendado/a (12) 
 ---------------------------------137-8
 refresco, el (3) 
 refugiado/a, el/la (10) 
@@ -3407,85 +4016,6 @@ repetir
 repetir (curso) (4) 
 reportaje, el
 reposo, el 
-------------------------------------- 138-3
-restaurante, el (3, 6) 
-resultado, el (7, 16) 
-resumir (18) 
-retirarse (7, 17) 
-retransmitir (8) 
-retrasado/a (14) 
-retrasar (14) 
-retrasar(se) (14) 
-retrato, el (18) 
-retrato (robot), el (10) 
-retroproyector, el (4) 
-reuniôn, la (6, 12, 14) 
-reunirse (2, 6, 17) 
-revelar (18) 
-revisar (14) 
-revista, la (6, 8, 18) 
-rezar (19) 
-rico/a (l, 3, 15) 
-rico/a (en vitaminas/ 
-calorias) (l l) 
-ridiculo/a (5) 
-rimar (18) 
-rinôn, el (l) 
-rio, el (14; 20) 
-riqueza, la (15)
----------------------------------------- 138-5
-rotonda, la (14) 
-rotulador, el (4) 
-rubio/a (l) 
-rueda (de repuesto), la 
-( 14) 
-rugby, el (7) 
-rugir (20) 
-rugoso/a (1) 
-ruido, el (l, 4) 
-ruidoso/a (9) 
-rumano, el (4) 
-rumiar (20) 
-rumor, el (8) 
-rural (13, 14) 
-ruso, el (4) 
-ruta, la (13, 14) 
-sâbana, la (9) 
-Sabbat, el (19) 
-saber (l) 
-sabor, el (l) 
-sabroso/a (l) 
-sacacorchos, el (3) 
-sacapuntas, el (4) 
-sacar (6, 7, 10, 15) 
-sacar (dinero) (10)
----------------------------------------- 138-7 
-saltar(se) (14) 
-salud, la (12) 
-saludar (17) 
-saludo, el (17) 
-salvaje (20) 
-san (19) 
-sandalias, las (l l) 
-sandia, la (3) 
-sangrar (12) 
-sanidad, la (12) 
-sanitario/a (IO) 
-sano/a (Il, 12) 
-santo/a, el/la (19) 
-sardina, la (3) 
-sartén, la (3) 
-satélite, el (8, 16, 20) 
-saxo(fôn), el (18) 
-saxofonista, el/la (18) 
-secador (de pelo), el 
-(12) 
-secadora, la (9) 
-secar (9) 
-secar(se) (12, 20) 
-secciôn, la (8, Il) 
-seco/a (9, 20) 
-secretaria, la (4)
 ------------------------------ 138-2
 repostar
 representacion
@@ -3513,6 +4043,32 @@ la (5)
 respuesta, la (4) 
 resta, la (16) 
 restar (16) 
+------------------------------------- 138-3
+restaurante, el (3, 6) 
+resultado, el (7, 16) 
+resumir (18) 
+retirarse (7, 17) 
+retransmitir (8) 
+retrasado/a (14) 
+retrasar (14) 
+retrasar(se) (14) 
+retrato, el (18) 
+retrato (robot), el (10) 
+retroproyector, el (4) 
+reuniôn, la (6, 12, 14) 
+reunirse (2, 6, 17) 
+revelar (18) 
+revisar (14) 
+revista, la (6, 8, 18) 
+rezar (19) 
+rico/a (l, 3, 15) 
+rico/a (en vitaminas/ 
+calorias) (l l) 
+ridiculo/a (5) 
+rimar (18) 
+rinôn, el (l) 
+rio, el (14; 20) 
+riqueza, la (15)
 -------------------------------------------- 138-4
 riquisimo/a
 (de) risa
@@ -3540,6 +4096,32 @@ ropa interior, la (11)
 rosa, la (20) 
 (prensa) rosa (8, 18) 
 rotaciôn, la (20) 
+---------------------------------------- 138-5
+rotonda, la (14) 
+rotulador, el (4) 
+rubio/a (l) 
+rueda (de repuesto), la 
+( 14) 
+rugby, el (7) 
+rugir (20) 
+rugoso/a (1) 
+ruido, el (l, 4) 
+ruidoso/a (9) 
+rumano, el (4) 
+rumiar (20) 
+rumor, el (8) 
+rural (13, 14) 
+ruso, el (4) 
+ruta, la (13, 14) 
+sâbana, la (9) 
+Sabbat, el (19) 
+saber (l) 
+sabor, el (l) 
+sabroso/a (l) 
+sacacorchos, el (3) 
+sacapuntas, el (4) 
+sacar (6, 7, 10, 15) 
+sacar (dinero) (10)
 ----------------------------------------- 138-6
 sacar (la basura)
 sacar (tarjeta) (7) 
@@ -3567,6 +4149,33 @@ salmôn, el (3)
 salén, el (9) 
 salsa, la (18) 
 saltar (1, 6, 7) 
+---------------------------------------- 138-7 
+saltar(se) (14) 
+salud, la (12) 
+saludar (17) 
+saludo, el (17) 
+salvaje (20) 
+san (19) 
+sandalias, las (l l) 
+sandia, la (3) 
+sangrar (12) 
+sanidad, la (12) 
+sanitario/a (IO) 
+sano/a (Il, 12) 
+santo/a, el/la (19) 
+sardina, la (3) 
+sartén, la (3) 
+satélite, el (8, 16, 20) 
+saxo(fôn), el (18) 
+saxofonista, el/la (18) 
+secador (de pelo), el 
+(12) 
+secadora, la (9) 
+secar (9) 
+secar(se) (12, 20) 
+secciôn, la (8, Il) 
+seco/a (9, 20) 
+secretaria, la (4)
 ------------------------------------------ 138-8
 secretario/a, el/la (5) 
 sector, el (15) 
@@ -3617,6 +4226,30 @@ senal (de trâfico), la
 senor (Sr.), el (2) 
 senora (Sra.), la (2) 
 senoras(Sras.), las (2) 
+---------------------------------------------------- 139-2
+senores (Sres.), los (2) 
+separado/a (2) 
+separarse (2) 
+séptimo/a (9) 
+sequia, la (20) 
+ser (gratis) (l l) 
+serie, la (8) 
+seriedad, la (2) 
+serio/a (2) 
+serpiente, la (20) 
+setvicio, el (8) 
+servicios, los (IO) 
+servicios comunes, los 
+servicios de seguridad, 
+los (10) 
+servicios financieros, 
+los (10) 
+servicios postales, los 
+servicios sociales, los 
+servìdor, el (8) 
+servilleta, la (3) 
+servir(se) (3) 
+servo-croata, el (4) 
 ---------------------------------------------- 139-3
 sesiôn, la (18) 
 sexo, el (l) 
@@ -3643,6 +4276,25 @@ sincero/a (2)
 sindical (5, 17) 
 sindicalista (17) 
 sindicato, el (5, 17) 
+-------------------------------- 139-4
+sinfonia, la (18) 
+sintético/a (l l) 
+sfntoma, el (12) 
+sintonizar (8) 
+sistema educativo, 
+(4) 
+sitio, el (20) 
+situar (20) 
+snowboard, el (7) 
+sobrar (l l) 
+sobre, el (8, IO, Il) 
+sobrino/a, el/la (2) 
+sociable (2, 17) 
+(red) social (8, 16) 
+social (IO, 17) 
+socialismo, el (17) 
+socialista, el/la (17) 
+sociedad, la (17) 
 ----------------------------------- 139-5
 solicitar (4, Il) 
 solicitar (un crédito) (3) 
@@ -3670,6 +4322,31 @@ sospechoso/a (IO)
 sostenible (15) 
 sôtano, el (9) 
 stop, el (14) 
+--------------------------------------- 139-6
+suave (l, 3, 4, 20) 
+suavizante, el (9) 
+(crema) suavizante (12) 
+subcampeon/a, el/la (7) 
+subdesarrollado/a (15) 
+subdirector/a, el/la (5) 
+subir (l, 5, 7, 8, 9, 14, 15, 20) 
+subir (precio) (l l) 
+subir(se) (14) 
+subirse (a) (14) 
+submarinismo, el (7) 
+submarino, el (17) 
+subrayar (4) 
+subsidio de desempleo, 
+el (10) 
+subtïtulo, el (8) 
+suciedad, la (9, 12) 
+(juego) sucio (6) 
+sucio/a (l, 3, 9, 12) 
+sucursal, la (10) 
+sudar (l) 
+sudeste, el (20) 
+sudoku, el (6) 
+sudor, el (l) 
 -------------------------------- 139-7
 sueco, el (4) 
 suegro/a, el/la (2) 
@@ -3697,74 +4374,6 @@ suscribirse (8)
 suspender (4, 13) 
 (de) suspense (18) 
 tabla (de surf), la (7) 
----------------------------------------------------- 139-2
-senores (Sres.), los (2) 
-separado/a (2) 
-separarse (2) 
-séptimo/a (9) 
-sequia, la (20) 
-ser (gratis) (l l) 
-serie, la (8) 
-seriedad, la (2) 
-serio/a (2) 
-serpiente, la (20) 
-setvicio, el (8) 
-servicios, los (IO) 
-servicios comunes, los 
-servicios de seguridad, 
-los (10) 
-servicios financieros, 
-los (10) 
-servicios postales, los 
-servicios sociales, los 
-servìdor, el (8) 
-servilleta, la (3) 
-servir(se) (3) 
-servo-croata, el (4) 
--------------------------------- 139-4
-sinfonia, la (18) 
-sintético/a (l l) 
-sfntoma, el (12) 
-sintonizar (8) 
-sistema educativo, 
-(4) 
-sitio, el (20) 
-situar (20) 
-snowboard, el (7) 
-sobrar (l l) 
-sobre, el (8, IO, Il) 
-sobrino/a, el/la (2) 
-sociable (2, 17) 
-(red) social (8, 16) 
-social (IO, 17) 
-socialismo, el (17) 
-socialista, el/la (17) 
-sociedad, la (17) 
---------------------------------------- 139-6
-suave (l, 3, 4, 20) 
-suavizante, el (9) 
-(crema) suavizante (12) 
-subcampeon/a, el/la (7) 
-subdesarrollado/a (15) 
-subdirector/a, el/la (5) 
-subir (l, 5, 7, 8, 9, 14, 15, 20) 
-subir (precio) (l l) 
-subir(se) (14) 
-subirse (a) (14) 
-submarinismo, el (7) 
-submarino, el (17) 
-subrayar (4) 
-subsidio de desempleo, 
-el (10) 
-subtïtulo, el (8) 
-suciedad, la (9, 12) 
-(juego) sucio (6) 
-sucio/a (l, 3, 9, 12) 
-sucursal, la (10) 
-sudar (l) 
-sudeste, el (20) 
-sudoku, el (6) 
-sudor, el (l) 
 ---------------------------------- 139-8
 tablero, el (6 
 tacafio/a (2) 
@@ -3821,6 +4430,26 @@ televisor, el (8, 9)
 tema, el (4, 18) 
 tematico (6) 
 temor, el (2) 
+--------------------------------------------------------- 140-2
+temperatura, la (20) 
+templado/a (12, 20) 
+temporada, la (13, 18) 
+(de) temporada (20) 
+temporal, el (20) 
+temporal (5) 
+tender (9) 
+tenedor, el (3) 
+tener (1, 2, 5, 9, 12, 14) 
+tener (informacién/una opinion) (8) 
+tener (una tienda/un negocio) (5) 
+tenis, el (7) 
+tension (alta/baja), la 
+(12) 
+teoria, la (16, 19) 
+teorico/a (4, 16) 
+terapeutico/a (12) 
+tercer
+terzera edad
 --------------------------------------- 140-3
 tercero/a (9) 
 terminal, la (14) 
@@ -3852,6 +4481,28 @@ timidez, la (2)
 timido/a (2) 
 (vino) tinto (3) 
 tio/a, el/la (2) 
+--------------------------------------------- 140-4
+tipico/a (3) 
+tipo, el (l) 
+tipos de alimentos, los 
+(3) 
+tipos de viviendas, 
+los (9) 
+tique, el (l l) 
+tirar (6, 7) 
+tirita, la (12) 
+titular, el (8) 
+titulo, el (4) 
+tiza, la (4) 
+toalla, la (12) 
+tobillo, el (l) 
+tobogân, el (6) 
+tocar (l) 
+tocar (un instrumento) 
+(18) 
+tolerancia, la (2, 17) 
+tolerante (2, 17) 
+tolerar (17) 
 ----------------------------------------------- 140-5
 tomar (3, 14) 
 tomar (algo) (3, 6) 
@@ -3884,6 +4535,27 @@ tragedia, la (18)
 (final) tragico (18) 
 trâgico/a (18) 
 traje, el (l l) 
+------------------------------------------------ 140-6
+tramposo/a (6) 
+tranquilidad, la (2) 
+tranquilo/a (2, 6, 9) 
+transacciones 
+comerciales, las (l l) 
+transbordo, el (14) 
+transferencia, la (IO) 
+transferir (10) 
+transformar(se) (16) 
+transfusién de sangre, 
+la (12) 
+transmitir (8) 
+transportar (9, 14) 
+transporte, el (14) 
+tranvia, el (14) 
+trapo, el (9) 
+trasero/a (14) 
+trasladar (9) 
+trasplantar (20) 
+tratamiento, el (12) 
 ----------------------------------------------- 140-7
 tratar (de/sobre) (18) 
 tratar(se) (17) 
@@ -3915,69 +4587,6 @@ turista, el/la (6, 13)
 (clase) turista (14) 
 turistico/a (13) 
 turno, el (6) 
---------------------------------------------------------- 140-2
-temperatura, la (20) 
-templado/a (12, 20) 
-temporada, la (13, 18) 
-(de) temporada (20) 
-temporal, el (20) 
-temporal (5) 
-tender (9) 
-tenedor, el (3) 
-tener (1, 2, 5, 9, 12, 14) 
-tener (informacién/una opinion) (8) 
-tener (una tienda/un negocio) (5) 
-tenis, el (7) 
-tension (alta/baja), la 
-(12) 
-teoria, la (16, 19) 
-teorico/a (4, 16) 
-terapeutico/a (12) 
-tercer
-terzera edad
---------------------------------------------- 140-4
-tipico/a (3) 
-tipo, el (l) 
-tipos de alimentos, los 
-(3) 
-tipos de viviendas, 
-los (9) 
-tique, el (l l) 
-tirar (6, 7) 
-tirita, la (12) 
-titular, el (8) 
-titulo, el (4) 
-tiza, la (4) 
-toalla, la (12) 
-tobillo, el (l) 
-tobogân, el (6) 
-tocar (l) 
-tocar (un instrumento) 
-(18) 
-tolerancia, la (2, 17) 
-tolerante (2, 17) 
-tolerar (17) 
------------------------------------------------- 140-6
-tramposo/a (6) 
-tranquilidad, la (2) 
-tranquilo/a (2, 6, 9) 
-transacciones 
-comerciales, las (l l) 
-transbordo, el (14) 
-transferencia, la (IO) 
-transferir (10) 
-transformar(se) (16) 
-transfusién de sangre, 
-la (12) 
-transmitir (8) 
-transportar (9, 14) 
-transporte, el (14) 
-tranvia, el (14) 
-trapo, el (9) 
-trasero/a (14) 
-trasladar (9) 
-trasplantar (20) 
-tratamiento, el (12) 
 ----------------------------------- 140-8
 (hijo/a) ünico/a (2) 
 unico/a (14) 
@@ -4018,6 +4627,17 @@ vegetariano/a (3)
 vejez, la (l, 10) 
 vela, la (7) 
 velocidad, la (14) 
+--------------------------------------------- 141-2
+veloz (7) 
+vencedor/a (7) 
+vencer (7) 
+venda, la (12) 
+vendar (12) 
+vendedor/a, el/la (l l) 
+vender (11) 
+vender (5, 9, 15) 
+venenoso/a (20) 
+venta, la (9, 15) 
 ------------------------------------------141-3
 ventana, la (9, 16) 
 ventanilla, la (14) 
@@ -4033,49 +4653,6 @@ vermü, el (3)
 verso, el (18) 
 vertical (16) 
 vestibulo, el (13) 
---------------------------------- 141-5
-viejo/a (l , 9) 
-viento, cl (20) 
-vigilancia, la (IO) 
-vigilante, el/la (TO) 
-vigilar (10) 
-vinagre, cl (3) 
-vino (de la casa), cl (3) 
-violaciôn, la (IO) 
-violar (10, 17) 
-violencia, la (10) 
-violento/a (10) 
-violfn, el (18) 
-violinista, el/la (18) 
-violonchelo, el (18) 
-------------------------------- 141-7
-voluntariado, el (10) 
-voluntario/a, el/la (6, 10) 
-vomitar (12) 
-vomito, el (12) 
-votacion, la (17) 
-votante, el/la (17) 
-votar (17) 
-voto, el (17) 
-voz, la (4) 
-vuelo, el (14) 
-vuelta, la (11) 
-vuelta (ciclista), la (7) 
-vulgar 
-(pâgina) web, 1a (8) 
-yegua, la (20) 
-yerno 
---------------------------------------------- 141-2
-veloz (7) 
-vencedor/a (7) 
-vencer (7) 
-venda, la (12) 
-vendar (12) 
-vendedor/a, el/la (l l) 
-vender (11) 
-vender (5, 9, 15) 
-venenoso/a (20) 
-venta, la (9, 15) 
 -------------------------------------- 141-4
 vestido, el (Il) 
 vestirse (l l) 
@@ -4093,6 +4670,21 @@ victima, la (10, 14, 17)
 victoria, la (7) 
 vida, la (l, 16, 17) 
 videojuego, el (6) 
+--------------------------------- 141-5
+viejo/a (l , 9) 
+viento, cl (20) 
+vigilancia, la (IO) 
+vigilante, el/la (TO) 
+vigilar (10) 
+vinagre, cl (3) 
+vino (de la casa), cl (3) 
+violaciôn, la (IO) 
+violar (10, 17) 
+violencia, la (10) 
+violento/a (10) 
+violfn, el (18) 
+violinista, el/la (18) 
+violonchelo, el (18) 
 ------------------------------------- 141-6
 virtual (4, 8, 16) 
 virus, el (8, 18, 16) 
@@ -4111,6 +4703,23 @@ volar (20)
 volcânico/a (20) 
 voleibol, el (7) 
 volumen, el (8) 
+------------------------------- 141-7
+voluntariado, el (10) 
+voluntario/a, el/la (6, 10) 
+vomitar (12) 
+vomito, el (12) 
+votacion, la (17) 
+votante, el/la (17) 
+votar (17) 
+voto, el (17) 
+voz, la (4) 
+vuelo, el (14) 
+vuelta, la (11) 
+vuelta (ciclista), la (7) 
+vulgar 
+(pâgina) web, 1a (8) 
+yegua, la (20) 
+yerno 
 ----------------------------------- 141-8
 vulgar (4) 
 (pagina) web, la (8) 
@@ -4129,4 +4738,31 @@ zona, la (20)
 zoo(1ogico), el (6) 
 zum, el (18) 
 zumo, el (3) 
+"""
+['casa', 'noun', 'b2', ele],
+['clase', 'noun', 'b2', ele],
+['colectivo', 'adjective', 'b2', ele],
+['compañía', 'noun', 'b2', ele],
+['correo', 'noun', 'b2', ele],
+['diente', 'noun', 'b2', ele],
+['foto', 'noun', 'b2', ele],
+['granja', 'noun', 'b2', ele],
+['investigación', 'noun', 'b2', ele],
+['juego', 'noun', 'b2', ele],
+['laboral', 'adjective', 'b2', ele],
+['maternidad', 'noun', 'b2', ele],
+['médico', 'adjective', 'b2', ele],
+['opinión', 'noun', 'b2', ele],
+['orina', 'noun', 'b2', ele],
+['oxigenado', 'adjective', 'b2', ele],
+['piso', 'noun', 'b2', ele],
+['planta', 'noun', 'b2', ele],
+['policía', 'noun', 'b2', ele],
+['precio', 'noun', 'b2', ele],
+['prensa', 'noun', 'b2', ele],
+['salvaje', 'adjective', 'b2', ele],
+['sangre', 'adjective', 'b2', ele],
+['viaje', 'noun', 'b2', ele],
+]
+"""
 """

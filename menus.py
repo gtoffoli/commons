@@ -108,14 +108,15 @@ def my_children(request):
              capfirst(_("my projects")),
              url='/my_projects/',
             ))
-        children.append (MenuItem(
-             capfirst(_("my contents")),
-             url='/my_contents/',
-            ))
     children.append (MenuItem(
          capfirst(_("my activity")),
          url='/my_activity/',
         ))
+    if settings.SITE_ID in [1, 5,]:
+        children.append (MenuItem(
+             capfirst(_("my contents")),
+             url='/my_contents/',
+            ))
     children.append (MenuItem(
          capfirst(_("analyze text")),
          url='/text_analysis_input/',
@@ -224,7 +225,6 @@ Menu.add_item("main", MenuItem(capfirst(_("resources")),
                                check=True,
                                children=resources_children,
                                separator=True))
-# if settings.SITE_ID == 1:
 if settings.SITE_ID in [1, 5,]:
     Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
                                url='/p',
