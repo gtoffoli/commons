@@ -13,7 +13,7 @@ import textract
 import readability
 from bs4 import BeautifulSoup
 # from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseBadRequest, JsonResponse
-from django.http import HttpResponseForbidden, HttpResponseNotFound, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.flatpages.models import FlatPage
@@ -980,6 +980,7 @@ def ajax_delete_corpus(request):
     else:
         return propagate_remote_server_error(response)
 
+# def context_dashboard(request, file_key='', obj_type='', obj_id=''):
 """
 called from contents_dashboard or text_analysis template
 to find and sort document or corpus keywords and to list keyword in context
@@ -988,6 +989,8 @@ to find and sort document or corpus keywords and to list keyword in context
 def context_dashboard(request, file_key='', obj_type='', obj_id=''):
     var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
     if request.is_ajax():
+        if not file_key:
+            var_dict['text'] = request.session.get('input_text', '')
         endpoint = nlp_url + '/api/word_contexts/'
         data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
@@ -1003,9 +1006,15 @@ def text_analysis_input(request):
         form = TextAnalysisInputForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
+            function = int(data['function'])
             request.session['input_text'] = data['text']
-            var_dict = {'obj_type': 'text', 'obj_id': 0}
-            return render(request, 'vue/text_dashboard.html', var_dict)
+            if function == 1:
+                var_dict = {'obj_type': 'text', 'obj_id': 0}
+                return render(request, 'vue/text_dashboard.html', var_dict)
+            elif function == 2:
+                # return HttpResponseRedirect('/context_dashboard/')
+                var_dict = {'file_key': None, 'obj_type': None, 'obj_id': None}
+                return render(request, 'vue/context_dashboard.html', var_dict)
     else:
         form = TextAnalysisInputForm() 
     var_dict['form'] = form

@@ -243,6 +243,7 @@ urlpatterns += [
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_2"),
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_1"),
+    url(r"^context_dashboard/$", commons.text_analysis.context_dashboard, name="context_dashboard_0"),
     url(r'^brat$', commons.text_analysis.brat, name="brat"),
     # url(r"^contents_dashboard/$", commons.text_analysis.contents_dashboard, name="contents_dashboard"),
     url(r"^ajax_contents/$", commons.text_analysis.ajax_contents, name="ajax_contents"),

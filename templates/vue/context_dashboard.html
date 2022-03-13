@@ -105,7 +105,7 @@
     methods: {
     },
     mounted: function () {
-      fetch('/context_dashboard/'+this['file_key']+'/'{% if obj_type %}+this['obj_type']+'/'+this['obj_id']+'/'{% endif %}, {
+      fetch('/context_dashboard/'{% if file_key %}+this['file_key']+'/'{% endif %}{% if obj_type %}+this['obj_type']+'/'+this['obj_id']+'/'{% endif %}, {
         method: 'GET',
         headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
       })
