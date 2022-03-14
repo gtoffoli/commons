@@ -103,22 +103,20 @@ def resources_children(request):
 
 def my_children(request):
     children = []
-    if settings.SITE_ID == 1:
-        children.append (MenuItem(
-             capfirst(_("my projects")),
-             url='/my_projects/',
-            ))
+    children.append (MenuItem(
+         capfirst(_("my projects")),
+         url='/my_projects/',
+        ))
     children.append (MenuItem(
          capfirst(_("my activity")),
          url='/my_activity/',
         ))
-    if settings.SITE_ID in [1, 5,]:
-        children.append (MenuItem(
-             capfirst(_("my contents")),
-             url='/my_contents/',
-            ))
     children.append (MenuItem(
-         capfirst(_("analyze text")),
+         capfirst(_("my contents")),
+         url='/my_contents/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("text analysis")),
          url='/text_analysis_input/',
         ))
     return children

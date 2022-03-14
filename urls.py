@@ -266,10 +266,13 @@ urlpatterns += [
     url(r"^doc/(?P<doc_id>[\d-]+)/text/$", commons.text_analysis.doc_text, name="doc_text"),
     url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
     url(r"^text_analysis_input/$", commons.text_analysis.text_analysis_input, name="text_analysis_input"),
-   ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    # ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+   ]
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration
-    https://docs.djangoproject.com/en/1.8/howto/static-files/ """
+    https://docs.djangoproject.com/en/1.8/howto/static-files/
+    https://www.pythonfixing.com/2021/10/fixed-django-cssjs-mime-type-texthtml.html """
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.HAS_SAML2:
     urlpatterns += [
@@ -310,5 +313,10 @@ if settings.USE_HAYSTACK:
     #)
     ]
 
+from django.conf.urls.static import static
+
+if settings.DEBUG:
+    urlpatterns = urlpatterns + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 import commons.api
 import success.api
