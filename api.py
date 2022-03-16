@@ -3,8 +3,11 @@ from collections import OrderedDict
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import Group, User
+from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import routers, serializers, viewsets
 from filetransfers.api import serve_file
+from actstream.models import Action
 
 from commons.models import UserProfile, Project, Folder, FolderDocument, OER, OerDocument, LearningPath, PathNode, Tag
 from commons.documents import Document
@@ -23,6 +26,12 @@ router = routers.DefaultRouter()
 def api_version(request):
     data = {'api_version': API_VERSION}
     return JsonResponse(data)
+
+def make_contenttype_dict():
+    ct_dict = {}
+    for ct in ContentType.objects.all():
+        ct_dict[ct.id] = ct.model
+    return ct_dict
 
 class LanguageySerializer(serializers.ModelSerializer):
     class Meta:
@@ -552,6 +561,18 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     http_method_names = ['get', 'head', 'options',]
 
+class ActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Action
+        fields = ('actor_object_id', 'verb', 'action_object_content_type_id', 'action_object_object_id', 'target_content_type_id', 'target_object_id', 'description', 'timestamp')
+
+class ActionViewSet(viewsets.ModelViewSet):
+    """ API endpoint for retrieving activity stream actions. """
+    queryset = Action.objects.all().order_by('-created')[:1000]
+    serializer_class = ActionSerializer
+    http_method_names = ['get', 'head', 'options',]
+
+
 def register_original_endpoints():
     router.register(r'project', ProjectViewSet)
     router.register(r'folder', FolderViewSet)
@@ -560,6 +581,7 @@ def register_original_endpoints():
     router.register(r'folder_document', FolderDocumentViewSet)
     router.register(r'oer', OerViewSet)
     router.register(r'lp', LearningPathViewSet)
+    router.register(r'action', ActionViewSet)
 
 register_original_endpoints()
 
