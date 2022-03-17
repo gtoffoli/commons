@@ -11,7 +11,15 @@
   <div class="panel-heading-c4 padding1020">
     <h2 class="marginTB5">{% trans "enter input for Text Analyzer"|capfirst %}</h2>
   </div>
-  <form method="post" action="" target="{% trans "text_analysis"|capfirst %}" id="text_analysis_input_form">{% csrf_token %}
+  <div  class="padding1020">
+{% if error %}
+  <div style="text-color: red;">{{ error }}</div>
+{% else %}
+  <div><label>{% trans "language app version" %}</label> {{ app_version }}</div>
+  <div><label>{% trans "spaCy version" %}</label> {{ spacy_version }}</div>
+  <div><label>{% trans "spaCy language models"|capfirst %}</label> {{ spacy_models }}</div>
+
+    <form method="post" action="" target="{% trans "text_analysis"|capfirst %}" id="text_analysis_input_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
         {% for field in form.visible_fields %}{% with i=forloop.counter %}
@@ -25,6 +33,8 @@
         <button type="submit" name="submit" id="submit" value="submit" class="btn btn-default">{% trans "submit text"|capfirst %}</button>&nbsp;
       </div>
   </form>
+  </div>
+{% endif %}
 </div>
 
 {% endblock %}

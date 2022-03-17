@@ -1038,6 +1038,16 @@ def text_analysis_input(request):
             elif function == 3:
                 return text_summarization(request)
     else:
-        form = TextAnalysisInputForm() 
-    var_dict['form'] = form
+        endpoint = nlp_url + '/api/configuration'
+        response = None
+        try:
+            response = requests.get(endpoint)
+        except:
+            print(response.status_code)
+        if response and response.status_code == 200:
+            var_dict = response.json()
+            form = TextAnalysisInputForm()
+            var_dict['form'] = form
+        else:
+            var_dict['error'] = off_error
     return render(request, 'text_analysis_input.html', var_dict)
