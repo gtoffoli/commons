@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n%}
+
+{% block head_title %}{% trans "text summarization"|capfirst %}{% endblock %}
+
+{% block body_class %}text_summarization{% endblock %}
+
+{% block body %}
+<div class="panel panel-c4 text-left marginTB30">
+  <div class="panel-heading-c4 padding1020">
+    <h2 class="marginTB5">{% trans "text summarization"|capfirst %}</h2>
+  </div>
+
+  <div  class="padding1020">
+    <div><label>{% trans "language"|capfirst %}</label> {{ language }}</div>
+    <div><label>{% trans "summary"|capfirst %}</label> (*)<br>{{ summary|safe }}</div>
+    <div><span style="font-size: smaller; font-style: italic;">(*) {% trans "the result of a very simple extractive algorithm"|capfirst %}</span></div>
+    <div><label>{% trans "original input"|capfirst %}</label><br><span style="font-size: smaller;">{{ text|safe }}</span></div>
+  </div>
+</div>
+
+{% endblock %}

@@ -223,8 +223,8 @@ Menu.add_item("main", MenuItem(capfirst(_("resources")),
                                check=True,
                                children=resources_children,
                                separator=True))
-if settings.SITE_ID in [1, 5,]:
-    Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
+#if settings.SITE_ID in [1, 5,]:
+Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
                                url='/p',
                                weight=30,
                                check=lambda request: request.user.is_authenticated and request.user.is_full_member(),

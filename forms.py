@@ -748,7 +748,8 @@ class BlogArticleForm(forms.Form):
 
 TA_FUNCTION_CHOICES = (
     (1, _('Text Analysis Dashboard')),
-    (2, _('Keywords In Context')),)
+    (2, _('Keywords In Context')),
+    (3, _('Text Summarization')),)
 
 class TextAnalysisInputForm(forms.Form):
     text = forms.CharField(required=True, label=_('text to analyze'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 10, 'cols': 120,}), help_text=_('short text of a few paragraphs, or url of a web page'))

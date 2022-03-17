@@ -541,7 +541,12 @@ language_code_dict = {
     'italiano': 'it',
     'spanish': 'es',
     'español': 'es',
+    'greek': 'el',
+    'greek': 'el',
+    'ελληνικά': 'el',
 }
+
+off_error = _('sorry, it looks like the language processing service is off')
 
 def add_level_to_frequencies(frequencies, pos):
     for frequency in frequencies:
@@ -556,7 +561,7 @@ def add_level_to_frequencies(frequencies, pos):
 
 def text_dashboard_return(request, var_dict):
     if not var_dict:
-        var_dict = { 'error': _('sorry, it looks like the language processing service is off')}
+        var_dict = { 'error': off_error }
     if request.is_ajax():
         return JsonResponse(var_dict)
     else:
@@ -582,13 +587,11 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
     if not body:
         return HttpResponseNotFound()
     data = json.dumps({'text': body})
-    print('text_dashboard', obj_type)
     endpoint = nlp_url + '/api/analyze'
     try:
         response = requests.post(endpoint, data=data)
     except:
         response = None
-    print('text_dashboard', response)
     if not response or response.status_code!=200:
         return text_dashboard_return(request, {})
     analyze_dict = response.json()
@@ -1000,6 +1003,24 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
     else:
         return render(request, 'vue/context_dashboard.html', var_dict)
 
+def text_summarization(request):
+    var_dict = {}
+    text = request.session.get('input_text', '')
+    data = json.dumps({'text': text})
+    endpoint = nlp_url + '/api/analyze'
+    try:
+        response = requests.post(endpoint, data=data)
+    except:
+        response = None
+    if response and response.status_code == 200:
+        analyze_dict = response.json()
+        var_dict['language'] = analyze_dict['language']
+        var_dict['text'] = text
+        var_dict['summary'] = analyze_dict['summary']
+    else:
+        var_dict['error'] = off_error
+    return render(request, 'text_summarization.html', var_dict)
+
 def text_analysis_input(request):
     var_dict = {}
     if request.POST:
@@ -1012,9 +1033,10 @@ def text_analysis_input(request):
                 var_dict = {'obj_type': 'text', 'obj_id': 0}
                 return render(request, 'vue/text_dashboard.html', var_dict)
             elif function == 2:
-                # return HttpResponseRedirect('/context_dashboard/')
                 var_dict = {'file_key': None, 'obj_type': None, 'obj_id': None}
                 return render(request, 'vue/context_dashboard.html', var_dict)
+            elif function == 3:
+                return text_summarization(request)
     else:
         form = TextAnalysisInputForm() 
     var_dict['form'] = form
