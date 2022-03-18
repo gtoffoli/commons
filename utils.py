@@ -30,9 +30,16 @@ if os.name == "nt":
 
 import random
 import string
+from datetime import datetime, timezone
 
-def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
-    return ''.join(random.choice(chars) for _ in range(size))
+# def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits):
+def random_string_generator(size=10, chars=string.ascii_lowercase + string.digits, date_seed=False, prefix=''):
+    if date_seed:
+        date = datetime.now(timezone.utc).date()
+        int_date = date.day + date.month * 32 # unique id for day in year
+        random.seed(int_date)
+    random_string = ''.join(random.choice(chars) for _ in range(size))
+    return prefix + random_string
 
 from PyPDF2.pdf import PdfFileReader, PdfFileWriter
 from weasyprint import HTML, CSS

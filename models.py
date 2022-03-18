@@ -56,6 +56,7 @@ from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, Edu
 from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Document, DocumentVersion
 from commons.metadata import MetadataType, QualityFacet
 
+from commons.utils import random_string_generator
 from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
 from commons.utils import get_request_headers, get_request_content
 from commons.google_api import youtube_search, video_getdata, googledoc_write_as_pdf
@@ -1377,7 +1378,8 @@ class Project(Resource):
 
     if settings.HAS_MEETING:
         def get_room_name(self):
-            return self.slug
+            # return self.slug
+            return random_string_generator(prefix=self.slug+'_', date_seed=True)
     
         def get_room_url(self):
             return '{}/{}'.format(settings.MEETING_SERVER, self.get_room_name())
