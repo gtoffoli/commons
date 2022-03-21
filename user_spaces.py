@@ -121,6 +121,6 @@ def user_contents(user):
     return contents
 
 def my_activity(request):
-    user = request.user
-    return activity_stream(request, user=request.user)
+    # return activity_stream(request, user=request.user)
+    return activity_stream(request, user=request.user, max_days=7)
 
