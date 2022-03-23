@@ -20,7 +20,7 @@ from django.conf import settings
 # CACHE_PATH = os.path.join(settings.MEDIA_ROOT, 'image_cache')
 LANGUAGE = 'en'
 LANGUAGE_CHOICES = settings.LANGUAGES
-FILESTORAGE_LOCATION = os.path.join(settings.MEDIA_ROOT, 'document_storage')
+# FILESTORAGE_LOCATION = os.path.join(settings.MEDIA_ROOT, 'document_storage')
 
 HASH_FUNCTION = lambda x: hashlib.sha256(x).hexdigest()  # document image cache name hash function
 # UUID_FUNCTION = lambda: unicode(uuid.uuid4())
@@ -62,7 +62,8 @@ class FileBasedStorage(FileSystemStorage):
 
     def __init__(self, *args, **kwargs):
         super(FileBasedStorage, self).__init__(*args, **kwargs)
-        self.location = FILESTORAGE_LOCATION
+        # self.location = FILESTORAGE_LOCATION
+        self.location = settings.FILESTORAGE_LOCATION
 
 storage_backend = FileBasedStorage()
 

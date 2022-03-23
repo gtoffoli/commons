@@ -359,6 +359,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
 
+FILESTORAGE_LOCATION = MEDIA_ROOT / 'document_storage'
+
 if IS_LINUX:
     SCORM_URL = '/scorm/'
     SCORM_ROOT = os.path.join(BASE_DIR, 'scorm')
