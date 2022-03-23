@@ -286,6 +286,10 @@ if settings.HAS_EARMASTER:
         path('earmaster/', include('earmaster.urls')),
     ]
 
+urlpatterns += [
+    path('h5p/', include('h5p.urls')),
+]
+
 if settings.SITE_ID == 1: # see: https://www.kite.com/python/docs/django.conf.urls.i18n.i18n_patterns
     urlpatterns += i18n_patterns(
         url(r"^project/(?P<project_slug>[\w-]+)/$", commons.views.project_detail_by_slug, name="project_detail"),

@@ -10,6 +10,7 @@ if os.name == 'nt':
     IS_LINUX = False
 else:
     IS_LINUX = True
+import pathlib
 
 import django
 DJANGO_VERSION = django.VERSION[0]
@@ -179,6 +180,7 @@ INSTALLED_APPS = (
     'datetimewidget',
     'schedule',
     # 'lrs',
+    'h5p',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
@@ -355,6 +357,7 @@ ROOT_URLCONF = 'commons.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
 
 if IS_LINUX:
     SCORM_URL = '/scorm/'
