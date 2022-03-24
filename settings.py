@@ -180,13 +180,14 @@ INSTALLED_APPS = (
     'datetimewidget',
     'schedule',
     # 'lrs',
-    'h5p',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
 INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
 """
-
+if DEBUG:
+    INSTALLED_APPS = list(INSTALLED_APPS) + ['h5p']
+    
 if HAS_SAML2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['djangosaml2']
 if HAS_EARMASTER:
