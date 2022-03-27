@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% load staticfiles i18n%}
+
+{% block head_title %}{% trans "text readability"|capfirst %}{% endblock %}
+
+{% block body_class %}text_readability{% endblock %}
+
+{% block body %}
+<div class="panel panel-c4 text-left marginTB30">
+  <div class="panel-heading-c4 padding1020">
+    <h2 class="marginTB5">{% trans "text readability"|capfirst %}</h2>
+  </div>
+
+  <div  class="padding1020">
+    <h4 class="marginTB5">{% trans "basic text properties"|capfirst %}</h4>
+    <table class="table table-responsive table-bordered table-striped">
+    <tbody>
+    <tr><td>{% trans "sentences"|capfirst %}</td> <td style="text-align: center;">{{ n_sentences }}</td><td></td><td></td></tr>
+    <tr><td>{% trans "tokens"|capfirst %}</td> <td style="text-align: center;">{{ n_tokens }}</td><td>{% trans "mean / max. tokens per sentence"|capfirst %}</td><td>{{ mean_sentence_length|floatformat:2 }} / {{ max_sentence_length }}</td></tr>
+    <tr><td>{% trans "characters"|capfirst %}</td> <td style="text-align: center;">{{ n_word_characters }}</td><td>{% trans "mean characters per token"|capfirst %}</td><td>{{ mean_chars_per_word|floatformat:2 }}</td></tr>
+    <tr><td>{% trans "syllables"|capfirst %}</td> <td style="text-align: center;">{{ n_word_syllables }}</td><td>{% trans "mean syllables per token"|capfirst %}</td><td>{{ mean_syllables_per_word|floatformat:2 }}</td></tr>
+
+    <tr><td>{% trans "unique word forms"|capfirst %}</td> <td style="text-align: center;">{{ n_unique }}</td><td>{% trans "unique word forms/tokens ratio"|capfirst %} (vocabulary density)</td><td>{{ voc_density|floatformat:2 }}</td></tr>
+    <tr><td>{% trans "mean / max. largest dependency depth"|capfirst %}</td><td>{{ mean_dependency_depth|floatformat:2 }} / {{ max_dependency_depth }}</td><td>{% trans "lexical/total tokens ratio"|capfirst %} (<a href="https://en.wikipedia.org/wiki/Lexical_density" target="_blank">lexical density</a>)</td><td>{{ lex_density|floatformat:2 }}</td></tr>
+    <tr><td>{% trans "mean / max. largest dependency distance"|capfirst %}</td><td>{{ mean_dependency_distance|floatformat:2 }} / {{ max_dependency_distance }}</td><td>{% trans "mean / max. largest weighted dependency distance"|capfirst %}</td><td>{{ mean_weighted_distance|floatformat:2 }} / {{ max_weighted_distance|floatformat:2 }}</td></tr>
+    </tbody>
+    </table>
+
+    <h4 class="marginTB5">{% trans "simple statistical formulas"|capfirst %}</h4>
+    {% if readability_indexes %}
+      <table class="table table-responsive table-bordered table-striped">
+      <thead>
+      <tr><th>{% trans "formula"|capfirst %}</th><th>{% trans "value"|capfirst %}</th><th>{% trans "range"|capfirst %}</th><th>{% trans "reference"|capfirst %}</th></tr>
+      </thead>
+      <tbody>
+      {% for index in readability_indexes.values %}
+      <tr><td>{{ index.title }}</td> <td>{{ index.value|floatformat:2 }}</td><td>{{ index.range }}</td><td><a href="{{ index.ref }}" target="doc">{% trans "see documentation" %}</a></td></tr>
+      {% endfor %}
+      </tbody>
+      </table>
+    {% else %}
+      {% trans "no readability formulas are available yet for"|capfirst %} {{ language }}.
+    {% endif %}
+    <h4 class="marginTB5">{% trans "advanced text complexity indexes"|capfirst %}</h4>
+      {% trans "in preparation"|capfirst %}.
+  </div>
+</div>
+
+{% endblock %}

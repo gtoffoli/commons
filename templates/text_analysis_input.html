@@ -19,7 +19,7 @@
   <div><label>{% trans "spaCy version" %}</label> {{ spacy_version }}</div>
   <div><label>{% trans "spaCy language models"|capfirst %}</label> {{ spacy_models }}</div>
 
-    <form method="post" action="" target="{% trans "text_analysis"|capfirst %}" id="text_analysis_input_form">{% csrf_token %}
+    <form method="post" action="" target="_blank" id="text_analysis_input_form">{% csrf_token %}
     {% for field in form.hidden_fields %}{{ field }}{% endfor %}
     <fieldset class="padding1020">
         {% for field in form.visible_fields %}{% with i=forloop.counter %}
