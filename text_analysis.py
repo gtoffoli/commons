@@ -276,13 +276,15 @@ def count_word_syllables(word, language_code):
                 elif index == n_chars-1:
                     n_syllables += 1
     elif language_code == 'es':
-        from commons.lang.es.separarsylabas import silabizer as es_syllabizer
+        from commons.lang.es.utils import silabizer as es_syllabizer
         syllabizer = es_syllabizer()
         syllables = syllabizer(word)
-        print('syllables', syllables)
         n_syllables = len(syllables) - 1
+    elif language_code == 'el':
+        from commons.lang.el.utils import count_word_syllables as count_word_syllables_el
+        n_syllables = count_word_syllables_el(word)
     else:
-        n_syllables = n_chars/2.2
+        n_syllables = n_chars/2
     return max(1, int(n_syllables))
 
 def get_web_resource_text(url):
@@ -1100,7 +1102,9 @@ readability_indexes = {
   'gulp_ease': { 'languages': ['it'], 'title': "GULP readability index for Italian (0-100)", 'ref': 'https://it.wikipedia.org/wiki/Indice_Gulpease' },
   'kincaid_flesh': { 'languages': ['en'], 'title': "Flesch–Kincaid grade level for English (Very easy-Extra difficult)", 'ref': 'https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests' },
   'fernandez_huerta': { 'languages': ['es'], 'title': "Fernandez Huerta readability index for Spanish (0-100)", 'ref': 'https://legible.es/blog/lecturabilidad-fernandez-huerta/' },
+  'gagatsis_1985': { 'languages': ['el'], 'title': "Gagatsis readability index for Greek (0-100)", 'ref': 'http://www.sfs.uni-tuebingen.de/~dm/papers/Georgatou-16.pdf' },
 }
+# gagatsis_1985. see: http://www.sfs.uni-tuebingen.de/~dm/papers/Georgatou-16.pdf
 
 readability_scales = {
     'flesch_easy': [[90, 100, 'very easy'], [80, 90, 'easy'], [70, 80, 'fairly easy'], [60, 70, 'intermediate'], [50, 60, 'fairly difficult'], [30, 50, 'difficult'], [0, 30, 'very difficult'],],
@@ -1118,11 +1122,6 @@ def readability_level(scale, score):
 def text_readability(request):
     obj_id = None
     var_dict = text_dashboard(request, 'text', obj_id, readability=True)
-    print('n_sentences', var_dict['n_sentences'])
-    print('n_words', var_dict['n_words'])
-    print('n_word_characters', var_dict['n_word_characters'])
-    print('n_word_syllables', var_dict['n_word_syllables'])
-    print('mean_sentence_length', var_dict['mean_sentence_length'])
     error = var_dict.get('error', None)
     if error:
         print('error:', error)
@@ -1157,6 +1156,11 @@ def text_readability(request):
             index['value'] = 206.84 - 1.02 * var_dict['mean_sentence_length'] - 60 * var_dict['mean_syllables_per_word']
             index['range'] = readability_level('flesch_easy', index['value'])
             var_dict['readability_indexes']['gulp_ease'] = index
+        index = readability_indexes['gagatsis_1985']
+        if language_code in index['languages']:
+            index['value'] = 206.835 - 1.015 * var_dict['mean_sentence_length'] - 59 * var_dict['mean_syllables_per_word']
+            index['range'] = readability_level('flesch_easy', index['value'])
+            var_dict['readability_indexes']['gagatsis_1985'] = index
     return render(request, 'text_readability.html', var_dict)
 
 def text_analysis_input(request):

@@ -1,0 +1,5184 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+# Dimitris Pantazatos, 2022
+msgid ""
+msgstr ""
+"Project-Id-Version: CommonS Platform\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-10 23:16+0100\n"
+"PO-Revision-Date: 2015-06-21 21:52+0000\n"
+"Last-Translator: Dimitris Pantazatos, 2022\n"
+"Language-Team: Greek (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.4.2\n"
+
+#: .\analytics.py:756
+msgid "OERs analytics"
+msgstr "Αναλυτικά στοιχεία των Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\analytics.py:757 .\models.py:1834 .\templates\_menu_analytics.html:12
+#: .\templates\autocomplete.html:14 .\templates\project_results.html:85
+#: .\templates\resources_by.html:37 .\templates\search_oers.html:12
+msgid "OERs"
+msgstr "Ανοιχτοί Εκπαιδευτικοί Πόροι"
+
+#: .\analytics.py:758
+msgid "published OERs"
+msgstr "Δημοσιευμένοι Ανοιχτοί Εκπαιδευτικοί Πόροι"
+
+#: .\analytics.py:759
+msgid "OERs by month"
+msgstr "Ανοιχτοί Εκπαιδευτικοί Πόροι ανά μήνα"
+
+#: .\analytics.py:777
+msgid "Learning paths analytics"
+msgstr "Αναλυτικά στοιχεία των Εκπαιδευτικών Μονοπατιών"
+
+#: .\analytics.py:778
+msgid "LPs"
+msgstr "Εκπαιδευτικά Μονοπάτια"
+
+#: .\analytics.py:779
+msgid "published LPs"
+msgstr "Δημοσιευμένα Εκπαιδευτικά Μονοπάτια"
+
+#: .\analytics.py:780
+msgid "LP by month"
+msgstr "Εκπαιδευτικά Μονοπάτια ανά μήνα"
+
+#: .\documents.py:115 .\documents.py:175
+msgid "Document type"
+msgstr "Τύπος αρχείου"
+
+#: .\documents.py:116
+msgid "Documents types"
+msgstr "Τύποι Αρχείων"
+
+#: .\documents.py:120 .\metadata.py:27 .\models.py:295
+msgid "Name"
+msgstr "Όνομα"
+
+#: .\documents.py:123
+msgid "Automatically queue newly created documents for OCR."
+msgstr ""
+
+#: .\documents.py:176
+msgid "Uninitialized document"
+msgstr "Μη αρχικοποιημένο έγγραφο"
+
+#: .\documents.py:176
+msgid "The name of the document"
+msgstr "Το όνομα του εγγράφου"
+
+#: .\documents.py:176
+msgid "Label"
+msgstr "Ετικέτα"
+
+#: .\documents.py:177 .\templates\schedule\_day_cell_big.html:52
+#: .\templates\schedule\_detail.html:36 .\templates\schedule\event.html:43
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: .\documents.py:178
+msgid "Added"
+msgstr "Προστέθηκε"
+
+#: .\documents.py:179 .\templates\datatrans\obsolete_list.html:22
+msgid "Language"
+msgstr "Γλώσσα"
+
+#: .\documents.py:184 .\documents.py:427 .\models.py:2036
+msgid "Document"
+msgstr "Έγγραφο"
+
+#: .\documents.py:185
+msgid "Documents"
+msgstr "Έγγραφα"
+
+#: .\documents.py:428
+msgid "Timestamp"
+msgstr "Χρονόσημο"
+
+#: .\documents.py:429
+msgid "Comment"
+msgstr "Σχόλιο"
+
+#: .\documents.py:434
+msgid "File"
+msgstr "Αρχείο"
+
+#: .\documents.py:438
+msgid "Checksum"
+msgstr ""
+
+#: .\documents.py:441 .\documents.py:442
+msgid "Document version"
+msgstr "Έκδοση εγγράφου"
+
+#: .\forms.py:73
+msgid "gender"
+msgstr "φύλο"
+
+#: .\forms.py:78 .\models.py:755
+msgid "date of birth"
+msgstr "Ημερομηνία Γέννησης"
+
+#: .\forms.py:78 .\models.py:755
+msgid "format: dd/mm/yyyy"
+msgstr "Μοτίβο ηη/μμ/εεεε"
+
+#: .\forms.py:79 .\forms.py:133 .\models.py:757
+#: .\templates\_people_card.html:36 .\templates\user_profile.html:69
+#: .\vocabularies.py:178
+msgid "country"
+msgstr "Χώρα"
+
+#: .\forms.py:80 .\models.py:756 .\templates\user_profile.html:75
+msgid "city"
+msgstr "Πόλη"
+
+#: .\forms.py:81 .\forms.py:138 .\models.py:758 .\vocabularies.py:134
+msgid "education level"
+msgstr "Επίπεδο Εκπαίδευσης"
+
+#: .\forms.py:82 .\forms.py:143 .\models.py:759 .\vocabularies.py:140
+msgid "study or work status"
+msgstr "Κατάσταση σπουδών ή εργασίας"
+
+#: .\forms.py:83 .\models.py:763
+msgid "study or work position"
+msgstr "Θέση σπουδών ή εργασίας"
+
+#: .\forms.py:84 .\forms.py:147 .\models.py:760
+msgid "field of study"
+msgstr "πεδίο σπουδών"
+
+#: .\forms.py:85 .\forms.py:151
+msgid "sector of work"
+msgstr "εργασιακός τομέας"
+
+#: .\forms.py:86
+msgid "interest areas"
+msgstr "περιοχές ενδιαφέροντος"
+
+#: .\forms.py:88
+msgid "known languages"
+msgstr "γνωστές γλώσσες"
+
+#: .\forms.py:89 .\models.py:767
+msgid "known languages not listed above"
+msgstr "γνωστές γλώσσες που δεν αναφέρονται παραπάνω"
+
+#: .\forms.py:90 .\models.py:768
+msgid "short presentation"
+msgstr "σύντομη παρουσίαση"
+
+#: .\forms.py:90
+msgid "very short presentation: 100-200 characters"
+msgstr "πολύ σύντομη παρουσίαση: 100-200 χαρακτήρες"
+
+#: .\forms.py:91 .\models.py:769
+msgid "longer presentation"
+msgstr "εκτεταμένη παρουσίαση"
+
+#: .\forms.py:92 .\forms.py:306 .\models.py:770
+#: .\templates\user_profile.html:124
+msgid "web site"
+msgstr "ιστότοπος"
+
+#: .\forms.py:93 .\forms.py:165
+msgid "social networks / services used"
+msgstr "κοινωνικά δίκτυα / υπηρεσίες που χρησιμοποιούνται"
+
+#: .\forms.py:94 .\forms.py:111 .\models.py:774
+msgid "skype id"
+msgstr "Αναγνωριστικό Skype"
+
+#: .\forms.py:94 .\forms.py:111 .\templates\user_profile.html:151
+#: .\templates\user_profile.html:220
+msgid ""
+"your Skype id will be shared only within active mentoring relationships"
+msgstr "Το αναγνωριστικό Skype σας θα κοινοποιείται μόνο σε ενεργές σχέσεις καθοδήγησης"
+
+#: .\forms.py:95 .\forms.py:112 .\models.py:775
+#: .\templates\user_profile.html:155 .\templates\user_profile.html:164
+#: .\templates\user_profile.html:226 .\templates\user_profile.html:232
+msgid "P2P communication preferences"
+msgstr "Προτιμήσεις επικοινωνίας P2P"
+
+#: .\forms.py:95 .\forms.py:112 .\templates\user_profile.html:156
+#: .\templates\user_profile.html:165 .\templates\user_profile.html:227
+#: .\templates\user_profile.html:233
+msgid ""
+"any information useful in negotiating with a partner a convenient 1:1 "
+"communication solution"
+msgstr "οποιαδήποτε πληροφορία χρήσιμη για τη διαπραγμάτευση με έναν συνεργάτη, μια βολική λύση επικοινωνίας 1:1"
+
+#: .\forms.py:108 .\models.py:776 .\templates\user_profile.html:202
+#: .\templates\user_strict_profile.html:33
+msgid "mentor presentation"
+msgstr "παρουσίαση μέντορα"
+
+#: .\forms.py:108
+msgid ""
+"an extension to your presentation focused on your qualification as a "
+"potential mentor"
+msgstr "μια επέκταση της παρουσίασής σας που επικεντρώνεται στα προσόντα σας ως δυνητικός μέντορας"
+
+#: .\forms.py:109 .\models.py:777 .\templates\user_profile.html:207
+#: .\templates\user_strict_profile.html:38
+msgid "available as mentor for other communities"
+msgstr "διαθέσιμο ως μέντορας για άλλες κοινότητες"
+
+#: .\forms.py:109
+msgid ""
+"check if available/interested to act as mentor outside the community/ies "
+"where registered to the Roll of Mentors."
+msgstr "ελέγξτε εάν είναι διαθέσιμος/ενδιαφέρεστε να ενεργήσετε ως μέντορας εκτός της/των κοινότητας/των όπου είναι εγγεγραμμένοι στη λίστα μεντόρων"
+
+#: .\forms.py:110 .\models.py:778
+msgid "currently not available as mentor"
+msgstr "επί του παρόντος δεν είναι διαθέσιμο ως μέντορας"
+
+#: .\forms.py:110
+msgid ""
+"check if temporarily unavailable to accept (more) requests by mentees; "
+"remember to update this when the situation changes!"
+msgstr "ελέγξτε εάν δεν είναι προσωρινά διαθέσιμο για αποδοχή (περισσότερων) αιτημάτων από καθοδηγούμενους· θυμηθείτε να το ενημερώσετε όταν αλλάξει η κατάσταση!"
+
+#: .\forms.py:130
+msgid "text in name and short presentation"
+msgstr "κείμενο στο όνομα και σύντομη παρουσίαση"
+
+#: .\forms.py:131 .\forms.py:246 .\forms.py:327 .\forms.py:435 .\forms.py:532
+#: .\forms.py:605
+msgid "enter search term"
+msgstr "εισάγετε τον όρο αναζήτησης"
+
+#: .\forms.py:134
+msgid "choose country (no selection = all countries)"
+msgstr "επιλέξτε χώρα (χωρίς επιλογή = όλες οι χώρες)"
+
+#: .\forms.py:139 .\forms.py:152
+msgid "choose education level (no selection = all levels)"
+msgstr "επιλέξτε επίπεδο εκπαίδευσης (χωρίς επιλογή = όλα τα επίπεδα)"
+
+#: .\forms.py:144
+msgid "choose status (no selection = all statuses)"
+msgstr "επιλογή κατάστασης (χωρίς επιλογή = όλες οι καταστάσεις)"
+
+#: .\forms.py:148
+msgid "choose field of study' (no selection = all fields)"
+msgstr "επιλέξτε πεδίο σπουδών (χωρίς επιλογή = όλα τα πεδία)"
+
+#: .\forms.py:155 .\forms.py:310 .\forms.py:329 .\forms.py:373 .\forms.py:437
+#: .\forms.py:504 .\forms.py:534
+msgid "subject areas"
+msgstr "θεματικές περιοχές"
+
+#: .\forms.py:156 .\forms.py:330 .\forms.py:438 .\forms.py:535
+msgid "choose subject areas (no selection = all areas)"
+msgstr "επιλέξτε θεματικές περιοχές (χωρίς επιλογή = όλες οι περιοχές)"
+
+#: .\forms.py:160 .\forms.py:333 .\forms.py:375 .\forms.py:444
+#: .\templates\_data_languages.html:4 .\templates\_people_card.html:25
+msgid "languages"
+msgstr "γλώσσες"
+
+#: .\forms.py:161 .\forms.py:334 .\forms.py:445
+msgid "choose languages (no selection = all areas)"
+msgstr "επιλέξτε γλώσσες (χωρίς επιλογή = όλες οι περιοχές)"
+
+#: .\forms.py:170
+msgid "person name"
+msgstr "όνομα προσώπου"
+
+#: .\forms.py:171
+msgid "family name"
+msgstr "επώνυμο"
+
+#: .\forms.py:181 .\forms.py:303 .\forms.py:647 .\models.py:939
+#: .\models.py:975 .\models.py:1074 .\models.py:1666 .\models.py:1686
+#: .\models.py:1707
+msgid "name"
+msgstr "όνομα"
+
+#: .\forms.py:181
+msgid "max length is 78 characters, but less is better"
+msgstr "Το μέγιστο μήκος είναι 78 χαρακτήρες, αλλά όσο λιγότερο τόσο το καλύτερο"
+
+#: .\forms.py:184 .\forms.py:304 .\forms.py:648 .\models.py:528
+#: .\models.py:639 .\models.py:1079 .\models.py:1711
+msgid "short description"
+msgstr "σύντομη περιγραφή"
+
+#: .\forms.py:185 .\forms.py:311 .\models.py:1080
+msgid "longer description"
+msgstr "εκτεταμένη περιγραφή"
+
+#: .\forms.py:186
+msgid "project state"
+msgstr "κατάσταση του έργου"
+
+#: .\forms.py:194
+msgid "title of the mentoring project"
+msgstr "τίτλος του καθοδηγούμενου έργου"
+
+#: .\forms.py:195 .\templates\_project_mentoring_text.html:5
+#: .\templates\_project_mentoring_text.html:7
+msgid "description of the mentoring project"
+msgstr "περιγραφή του καθοδηγούμενου έργου"
+
+#: .\forms.py:196 .\templates\_project_mentoring_text.html:12
+#: .\templates\project_detail.html:183 .\templates\project_detail.html:877
+#: .\templates\repo_detail.html:43
+msgid "additional information"
+msgstr "Επιπλέον πληροφορίες"
+
+#: .\forms.py:213 .\models.py:1084 .\templates\project_detail.html:734
+#: .\templates\project_detail.html:736
+msgid "mentoring setup model"
+msgstr "μοντέλο ρύθμισης καθοδήγησης"
+
+#: .\forms.py:220
+msgid "can choose mentor from other community"
+msgstr "μπορεί να επιλέξει μέντορα από άλλη κοινότητα"
+
+#: .\forms.py:245 .\forms.py:326
+msgid "text in name and short description"
+msgstr "κείμενο στο όνομα και σύντομη περιγραφή"
+
+#: .\forms.py:250 .\templates\_homepage_main_cta.html:34
+#: .\templates\_homepage_main_cta.html:35
+#: .\templates\_homepage_main_cta.html:58
+#: .\templates\_homepage_main_cta.html:80 .\templates\project_detail.html:205
+#: .\templates\user_profile.html:248
+msgid "communities"
+msgstr "κοινότητες"
+
+#: .\forms.py:252 .\views.py:879
+msgid "minimum number of members"
+msgstr "ελάχιστος αριθμός μελών"
+
+#: .\forms.py:253
+msgid "minimum number of learning paths"
+msgstr "ελάχιστος αριθμός μονοπατιών μάθησης"
+
+#: .\forms.py:254 .\views.py:895
+msgid "minimum number of OERs"
+msgstr "ελάχιστος αριθμός Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\forms.py:257 .\models.py:640 .\models.py:1622
+#: .\templates\active_users.html:21 .\templates\active_users.html:38
+msgid "user"
+msgstr "χρήστης"
+
+#: .\forms.py:257
+msgid "search by name"
+msgstr "αναζήτηση με το όνομα"
+
+#: .\forms.py:261 .\forms.py:281 .\forms.py:292 .\forms.py:563 .\models.py:637
+#: .\models.py:2941 .\models.py:2964
+msgid "label"
+msgstr "ετικέτα"
+
+#: .\forms.py:262 .\models.py:923
+msgid "language"
+msgstr "γλώσσα"
+
+#: .\forms.py:264 .\forms.py:475
+msgid "select a file"
+msgstr "επιλέξτε ένα αρχείο"
+
+#: .\forms.py:272 .\forms.py:365 .\forms.py:500 .\forms.py:741 .\forms.py:745
+#: .\models.py:1798 .\models.py:2232
+msgid "title"
+msgstr "τίτλος"
+
+#: .\forms.py:272
+msgid "please use a short title"
+msgstr "χρησιμοποιήστε έναν σύντομο τίτλο"
+
+#: .\forms.py:294 .\forms.py:367 .\models.py:641 .\models.py:1810
+#: .\models.py:2968 .\templates\oer_detail.html:110
+msgid "embed code"
+msgstr "ενσωματωμένος κώδικας"
+
+#: .\forms.py:294
+msgid "Code to embed the view of an online resource in an HTML page."
+msgstr "Κώδικας για την ενσωμάτωση της προβολής ενός διαδικτυακού πόρου σε μια σελίδα HTML."
+
+#: .\forms.py:307 .\forms.py:337 .\models.py:1691 .\models.py:1709
+msgid "repository type"
+msgstr "τύπος αποθετηρίου"
+
+#: .\forms.py:308 .\forms.py:340 .\models.py:1671
+msgid "repository features"
+msgstr "χαρακτηριστικά αποθετηρίου"
+
+#: .\forms.py:309
+msgid "languages of documents"
+msgstr "γλώσσες των εγγράφων"
+
+#: .\forms.py:309 .\forms.py:310
+msgid "do not select any"
+msgstr "μην επιλέξετε κανένα"
+
+#: .\forms.py:309
+msgid ""
+"if the repository includes a relevant number of contents in many languages"
+msgstr "εάν το αποθετήριο περιλαμβάνει σχετικό αριθμό περιεχομένων σε πολλές γλώσσες"
+
+#: .\forms.py:310
+msgid "if the repository is not focused on specific subjects"
+msgstr "εάν το αποθετήριο δεν εστιάζεται σε συγκεκριμένα θέματα"
+
+#: .\forms.py:311
+msgid "search suggestions"
+msgstr "προτάσεις αναζήτησης"
+
+#: .\forms.py:312 .\templates\_oer_card.html:40
+msgid "comments"
+msgstr "σχόλια"
+
+#: .\forms.py:312
+msgid "evaluation"
+msgstr "εκτίμηση"
+
+#: .\forms.py:313 .\models.py:3383 .\templates\_change_state.html:4
+#: .\templates\_change_state.html:6 .\templates\_change_state.html:17
+#: .\templates\folder_detail.html:77 .\templates\folder_detail.html:88
+#: .\templates\lp_detail.html:281 .\templates\oer_detail.html:225
+#: .\templates\oer_detail.html:259
+msgid "publication state"
+msgstr "κατάσταση δημοσίευσης"
+
+#: .\forms.py:366
+msgid "specific URL of the OER"
+msgstr "συγκεκριμένη διεύθυνση URL του Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\forms.py:366
+msgid "if applicable"
+msgstr "εάν ισχύει"
+
+#: .\forms.py:366
+msgid "if the OER is available online, put here its URL (web address)"
+msgstr "εάν ο Ανοιχτός Εκπαιδευτικός Πόρος είναι διαθέσιμος στο διαδίκτυο, βάλτε εδώ τη διεύθυνση URL του (διεύθυνση Ιστού)"
+
+#: .\forms.py:367 .\models.py:1810
+msgid "code to embed the OER view in an HTML page"
+msgstr "κώδικας για την ενσωμάτωση της προβολής Ανοιχτού Εκπαιδευτικού Πόρου σε μια σελίδα HTML"
+
+#: .\forms.py:368 .\models.py:1800
+msgid "abstract or description"
+msgstr "περίληψη ή περιγραφή"
+
+#: .\forms.py:368
+msgid ""
+"one or two lines are enough here; this short description will be displayed "
+"in search results and will be used for full-text indexing"
+msgstr "μια ή δύο γραμμές είναι αρκετές εδώ. Αυτή η σύντομη περιγραφή θα εμφανίζεται στα αποτελέσματα αναζήτησης και θα χρησιμοποιηθεί για την ευρετηρίαση πλήρους κειμένου"
+
+#: .\forms.py:369 .\forms.py:412 .\forms.py:575
+msgid "text content"
+msgstr "περιεχόμενο κειμένου"
+
+#: .\forms.py:369 .\forms.py:412 .\forms.py:575
+msgid "html"
+msgstr "html"
+
+#: .\forms.py:370 .\forms.py:457 .\models.py:1802
+msgid "terms of use"
+msgstr "όροι χρήσης"
+
+#: .\forms.py:370
+msgid ""
+"type of licence; please, don't disregard it: see the help pages for an "
+"explanation of the available options; in case of doubt, select the most "
+"cautious option \"read the fine print\""
+msgstr "τύπος άδειας· Παρακαλώ, μην το αγνοήσετε: δείτε τις σελίδες βοήθειας για μια εξήγηση των διαθέσιμων επιλογών. σε περίπτωση αμφιβολίας, επιλέξτε την πιο προσεκτική επιλογή \"διαβάστε τα ψιλά γράμματα\""
+
+#: .\forms.py:371 .\forms.py:454 .\models.py:1811
+msgid "type of material"
+msgstr "είδος υλικού"
+
+#: .\forms.py:371
+msgid ""
+"the type of (educational) material refers to the function, not the physical "
+"aspect; the options have been taken from www.oercommons.org"
+msgstr "το είδος του (εκπαιδευτικού) υλικού αναφέρεται στη λειτουργία και όχι στη φυσική πτυχή. οι επιλογές έχουν ληφθεί από το www.oercommons.org"
+
+#: .\forms.py:372 .\forms.py:503
+msgid "target audience"
+msgstr "στοχευμένο κοινό"
+
+#: .\forms.py:374 .\forms.py:414 .\forms.py:441 .\forms.py:505 .\forms.py:520
+#: .\forms.py:538
+msgid "tags"
+msgstr "ετικέτες"
+
+#: .\forms.py:374 .\forms.py:414 .\forms.py:505 .\forms.py:520
+msgid "click to add or remove a tag"
+msgstr "κάντε κλικ για να προσθέσετε ή να αφαιρέσετε μια ετικέτα"
+
+#: .\forms.py:376 .\forms.py:463 .\vocabularies.py:103
+msgid "media formats"
+msgstr "μορφές πολυμέσων"
+
+#: .\forms.py:376
+msgid "the options have been taken from www.oercommons.org"
+msgstr "οι επιλογές έχουν ληφθεί από το www.oercommons.org"
+
+#: .\forms.py:377 .\forms.py:467 .\vocabularies.py:109
+msgid "accessibility features"
+msgstr "χαρακτηριστικά προσβασιμότητας"
+
+#: .\forms.py:377
+msgid ""
+"features making easier the use of the OER also to impaired people; the "
+"options have been taken from www.oercommons.org; a help page is being "
+"prepared"
+msgstr "χαρακτηριστικά που διευκολύνουν τη χρήση του Ανοιχτού Εκπαιδευτικού Πόρου και σε άτομα με αναπηρία· οι επιλογές έχουν ληφθεί από το www.oercommons.org. ετοιμάζεται μια σελίδα βοήθειας"
+
+#: .\forms.py:378
+msgid "derived from"
+msgstr "που προέρχονται από"
+
+#: .\forms.py:378
+msgid ""
+"if derived from other OERs, please specify them by selecting one or more - "
+"enter a few chars of their names to get suggestions"
+msgstr "εάν προέρχονται από άλλους Ανοιχτούς Εκπαιδευτικούς Πόρους, προσδιορίστε τα επιλέγοντας έναν ή περισσότερους - εισαγάγετε μερικούς χαρακτήρες από τα ονόματά τους για να λάβετε προτάσεις"
+
+#: .\forms.py:379 .\models.py:1806
+msgid "translated"
+msgstr "μεταφρασμένο"
+
+#: .\forms.py:379
+msgid ""
+"specify whether the derivation of this OER has involved language translation"
+msgstr "διευκρινίστε εάν η προέλευση αυτού του Ανοιχτού Εκπαιδευτικού Πόρου περιλαμβάνει μετάφραση γλώσσας"
+
+#: .\forms.py:380
+msgid "adapted/remixed"
+msgstr "προσαρμόζεται/αναμιγνύεται"
+
+#: .\forms.py:380
+msgid ""
+"specify whether the derivation of this OER has involved adaptation/remixing "
+"of the original content(s)"
+msgstr "διευκρινίστε εάν η προέλευση αυτού του Ανοιχτού Εκπαιδευτικού Πόρου περιλάμβανε προσαρμογή/αναμίξη του αρχικού περιεχομένου(ων)"
+
+#: .\forms.py:381 .\models.py:1808
+msgid "source repository"
+msgstr "αποθετήριο πηγής"
+
+#: .\forms.py:381
+msgid ""
+"specify in which catalogued repository, if any, you found this OER; e.g. "
+"Youtube, Slideshare, etc. - enter a few chars of its name to get suggestions"
+msgstr "Προσδιορίστε σε ποιο καταλογογραφημένο αποθετήριο, εάν υπάρχει, βρήκατε αυτό τον Ανοιχτό Εκπαιδευτικό Πόρο. π.χ. Youtube, Slideshare κ.λπ. - πληκτρολογήστε μερικούς χαρακτήρες του ονόματός του για να λάβετε προτάσεις"
+
+#: .\forms.py:382 .\models.py:1809
+msgid "other info to identify/access the OER in the source"
+msgstr "άλλες πληροφορίες για την αναγνώριση/πρόσβαση στον Ανοιχτό Εκπαιδευτικό Πόρο στην πηγή"
+
+#: .\forms.py:398
+msgid ""
+"the OER(s) from which this one has been translated or remixed cannot be "
+"missing"
+msgstr "δεν μπορούν να λείπουν ο(οι) Ανοιχτός/οι Εκπαιδευτικός/οι Πόρος/οι από τις οποίες έχει μεταφραστεί ή αναμιχθεί"
+
+#: .\forms.py:418 .\models.py:1787
+msgid "Catalogued source"
+msgstr "Καταλογισμένη πηγή"
+
+#: .\forms.py:419 .\models.py:1788
+msgid "Non-catalogued source"
+msgstr "Μη καταλογοποιημένη πηγή"
+
+#: .\forms.py:423
+msgid "Translated"
+msgstr "Μεταφρασμένο"
+
+#: .\forms.py:424
+msgid "Adapted/Remixed"
+msgstr "προσαρμόζεται/αναμιγνύεται"
+
+#: .\forms.py:434
+msgid "text in title and description"
+msgstr "κείμενο στο τίτλο και περιγραφή"
+
+#: .\forms.py:448
+msgid "source type"
+msgstr "Τύπος πηγής"
+
+#: .\forms.py:451
+msgid "derivation from other OERs"
+msgstr "προέλευση από άλλους Ανοιχτούς Εκπαιδευτικούς Πόρους"
+
+#: .\forms.py:460 .\forms.py:541 .\vocabularies.py:115
+msgid "levels"
+msgstr "επίπεδα"
+
+#: .\forms.py:470 .\templates\oer_detail.html:158
+msgid "OER type"
+msgstr "Τύπος Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\forms.py:476 .\forms.py:573
+msgid "choose file"
+msgstr "επιλέξτε αρχείο"
+
+#: .\forms.py:481
+msgid "free-text review"
+msgstr "κριτική ελεύθερου κειμένου"
+
+#: .\forms.py:482
+msgid "overall quality assessment"
+msgstr "συνολική αξιολόγηση της ποιότητας"
+
+#: .\forms.py:483
+msgid "technical quality assessment"
+msgstr "τεχνική αξιολόγηση ποιότητας"
+
+#: .\forms.py:483
+msgid "e.g. audio or video quality, quality of presentation, etc."
+msgstr "π.χ. ποιότητα ήχου ή βίντεο, ποιότητα παρουσίασης κ.λπ."
+
+#: .\forms.py:484
+msgid "communicative quality assessment"
+msgstr "αξιολόγηση της επικοινωνιακής ποιότητας"
+
+#: .\forms.py:484
+msgid "e.g. message immediacy and clarity"
+msgstr "π.χ. αμεσότητα και σαφήνεια του μηνύματος"
+
+#: .\forms.py:485
+msgid "cognitive quality assessment"
+msgstr "αξιολόγηση της γνωστικής ποιότητας"
+
+#: .\forms.py:485
+msgid "e.g. originality and creativity"
+msgstr "π.χ. πρωτοτυπία και δημιουργικότητα"
+
+#: .\forms.py:486
+msgid "scientific quality assessment"
+msgstr "επιστημονική αξιολόγηση ποιότητας"
+
+#: .\forms.py:486
+msgid ""
+"e.g. scientific validity of content and methodologies, critical aspects, "
+"interdisciplinarity"
+msgstr "π.χ. επιστημονική εγκυρότητα περιεχομένου και μεθοδολογιών, κρίσιμες πτυχές, διεπιστημονικότητα"
+
+#: .\forms.py:502 .\templates\lp_detail.html:159
+msgid "type of learning path"
+msgstr "τύπος μονοπατιού μάθησης"
+
+#: .\forms.py:506 .\models.py:1643 .\models.py:2239 .\models.py:3366
+#: .\templates\project_detail.html:7 .\templates\project_detail.html:300
+#: .\templates\project_detail.html:362 .\templates\project_detail.html:376
+#: .\templates\project_edit.html:20 .\templates\project_edit.html:61
+msgid "project"
+msgstr "έργο"
+
+#: .\forms.py:506
+msgid "where the Learning Path has been created"
+msgstr "όπου έχει δημιουργηθεί το Μαθησιακό Μονοπάτι"
+
+#: .\forms.py:507 .\models.py:2233 .\templates\lp_detail.html:87
+#: .\templates\lp_detail.html:106 .\templates\lp_detail.html:129
+#: .\templates\lp_play.html:58
+msgid "objectives"
+msgstr "στόχοι"
+
+#: .\forms.py:508 .\models.py:976 .\models.py:1687 .\models.py:2238
+#: .\templates\lp_detail.html:153
+msgid "description"
+msgstr "περιγραφή"
+
+#: .\forms.py:508
+msgid "sub-objectives, strategy, method, contents"
+msgstr "επιμέρους στόχοι, στρατηγική, μέθοδος, περιεχόμενα"
+
+#: .\forms.py:531
+msgid "text in title and objectives"
+msgstr "κείμενο στον τίτλο και τους στόχους"
+
+#: .\forms.py:544
+msgid "learning path type"
+msgstr "τύπος διαδρομής μάθησης"
+
+#: .\forms.py:564 .\models.py:1833 .\models.py:2035 .\models.py:2062
+#: .\models.py:2163 .\templates\mentoring_detail.html:410
+#: .\templates\project_detail.html:446
+msgid "OER"
+msgstr "Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\forms.py:565 .\models.py:2969 .\templates\_pathnode_detail.html:25
+msgid "display range"
+msgstr "εύρος απεικόνησης"
+
+#: .\forms.py:566
+msgid "invalid range expression"
+msgstr "μη έγκυρη έκφραση εύρους"
+
+#: .\forms.py:567
+msgid "simple example"
+msgstr "απλό παράδειγμα"
+
+#: .\forms.py:567
+msgid "complex example"
+msgstr "σύνθετο παράδειγμα"
+
+#: .\forms.py:568
+msgid ""
+"Possibly specify document number and page range(s) for document(s) attached "
+"to the OER"
+msgstr "Ενδεχομένως να προσδιορίσετε τον αριθμό εγγράφων και το εύρος σελίδων για έγγραφα που επισυνάπτονται στον Ανοιχτό Εκπαιδευτικό Πόρο"
+
+#: .\forms.py:568
+msgid "see the help pages on LPs for details"
+msgstr "δείτε τις σελίδες βοήθειας στα Εκπαιδευτικά Μονοπάτια για λεπτομέρειες"
+
+#: .\forms.py:572 .\models.py:636 .\models.py:2967
+#: .\templates\_pathnode_detail.html:31 .\templates\pathnode_edit.html:44
+msgid "document"
+msgstr "έγγραφο"
+
+#: .\forms.py:574
+msgid "online document"
+msgstr "διαδικτυακό έγγραφο"
+
+#: .\forms.py:574
+msgid "Code to embed an online document, such as a GoogleDoc."
+msgstr "Κώδικας για την ενσωμάτωση ενός διαδικτυακού εγγράφου, όπως ένα GoogleDoc."
+
+#: .\forms.py:590
+msgid ""
+"the OER, the document attachment and the text content cannot be all missing"
+msgstr "Ο Ανοιχτός Εκπαιδευτικός Πόρος, το συνημμένο έγγραφο και το περιεχόμενο κειμένου δεν μπορούν να λείπουν"
+
+#: .\forms.py:593
+msgid "the node label is required"
+msgstr "απαιτείται η ετικέτα κόμβου"
+
+#: .\forms.py:604
+msgid "text in label and file name"
+msgstr "κείμενο στην ετικέτα και το όνομα αρχείου"
+
+#: .\forms.py:617 .\templates\django_messages\outbox.html:12
+#: .\templates\django_messages\view.html:16
+msgid "Recipient"
+msgstr "Παραλήπτης"
+
+#: .\forms.py:618 .\forms.py:639 .\templates\django_messages\inbox.html:12
+#: .\templates\django_messages\outbox.html:11
+#: .\templates\django_messages\trash.html:13
+#: .\templates\django_messages\view.html:14
+msgid "Subject"
+msgstr "Θέμα"
+
+#: .\forms.py:619 .\forms.py:640
+msgid "Body"
+msgstr "Σώμα"
+
+#: .\forms.py:631
+msgid "please, explicitly select the receiver(s)"
+msgstr "παρακαλώ επιλέξτε ρητά τον/τους δέκτη/ους"
+
+#: .\forms.py:647
+msgid ""
+"please, replace the automatically generated name with an appropriate one"
+msgstr "παρακαλούμε, αντικαταστήστε το όνομα που δημιουργείται αυτόματα με ένα κατάλληλο"
+
+#: .\forms.py:648
+msgid "better specify the purpose of this forum"
+msgstr "διευκρινίστε καλύτερα τον σκοπό αυτού του φόρουμ"
+
+#: .\forms.py:670 .\templates\browse_mentors.html:62
+#: .\templates\browse_mentors.html:63 .\templates\contributors.html:23
+#: .\templates\contributors.html:44 .\templates\contributors.html:65
+#: .\templates\contributors.html:86 .\templates\lp_detail.html:257
+#: .\templates\mentoring_detail.html:137 .\templates\mentoring_detail.html:143
+#: .\templates\project_detail.html:547 .\templates\project_detail.html:572
+#: .\templates\project_detail.html:916 .\templates\project_detail.html:917
+#: .\templates\project_detail.html:947 .\templates\project_detail.html:948
+#: .\templates\resources_by.html:12 .\templates\resources_by.html:16
+#: .\templates\user_dashboard.html:323 .\templates\user_profile.html:285
+#: .\templates\user_strict_profile.html:15
+#: .\templates\user_strict_profile.html:21
+msgid "view user profile"
+msgstr "προβολή προφίλ χρήστη"
+
+#: .\forms.py:695
+msgid "none"
+msgstr "κανένας"
+
+#: .\forms.py:696 .\models.py:1645
+msgid "message"
+msgstr "μήνυμα"
+
+#: .\forms.py:696
+msgid "please, enter a notice for the mentor, to motivate your choice"
+msgstr "παρακαλώ εισάγετε μια ειδοποίηση για τον μέντορα, για να παρακινήσετε την επιλογή σας"
+
+#: .\forms.py:710 .\templates\project_detail.html:787
+#: .\templates\user_profile.html:208 .\templates\user_profile.html:212
+#: .\templates\user_strict_profile.html:39
+#: .\templates\user_strict_profile.html:43
+msgid "yes"
+msgstr "ναι"
+
+#: .\forms.py:710 .\templates\project_detail.html:787
+#: .\templates\user_profile.html:208 .\templates\user_profile.html:212
+#: .\templates\user_strict_profile.html:39
+#: .\templates\user_strict_profile.html:43
+msgid "no"
+msgstr "όχι"
+
+#: .\forms.py:710
+msgid "accept"
+msgstr "αποδοχή"
+
+#: .\forms.py:711
+msgid "Reason"
+msgstr "Αιτιολογία"
+
+#: .\forms.py:711
+msgid "please, explain the motivations of your acceptation or refusal"
+msgstr "παρακαλώ, εξηγήστε τα κίνητρα της αποδοχής ή της άρνησής σας"
+
+#: .\forms.py:719 .\templates\mentoring_detail.html:178
+msgid "my mentoring journey"
+msgstr "το ταξίδι καθοδήγησης μου"
+
+#: .\forms.py:730 .\forms.py:738 .\models.py:3375
+msgid "optional text"
+msgstr "προαιρετικό κείμενο"
+
+#: .\forms.py:730
+msgid "Use formatting with care: only bold, italic and links!"
+msgstr "Χρησιμοποιήστε τη μορφοποίηση με προσοχή: μόνο έντονη γραφή, πλάγια γραφή και συνδέσμους!"
+
+#: .\forms.py:742
+msgid "page content"
+msgstr "περιεχόμενο της σελίδας"
+
+#: .\forms.py:746
+msgid "article content"
+msgstr "περιεχόμενο του άρθρου"
+
+#: .\forms.py:747
+msgid "article lead"
+msgstr "οδηγός άρθρου"
+
+#: .\management\commands\notify_news.py:30
+msgid "Recent updates in your forums."
+msgstr "Πρόσφατες ενημερώσεις στα φόρουμ σας."
+
+#: .\management\commands\notify_news.py:31
+msgid ""
+"New messages have been posted recently in forums of communities or projects "
+"of which you are a member. You can get an overview of new/updated topics "
+"using a link in your user bar."
+msgstr "Πρόσφατα δημοσιεύτηκαν νέα μηνύματα σε φόρουμ κοινοτήτων ή έργων στα οποία είστε μέλος. Μπορείτε να λάβετε μια επισκόπηση νέων/ενημερωμένων θεμάτων χρησιμοποιώντας έναν σύνδεσμο στη γραμμή χρήστη σας."
+
+#: .\menus.py:15
+msgid "this site"
+msgstr "αυτός ο ιστότοπος"
+
+#: .\menus.py:19
+msgid "the CommonS project"
+msgstr "το έργο CommonS"
+
+#: .\menus.py:23
+msgid "the platform"
+msgstr "η πλατφόρμα"
+
+#: .\menus.py:28 .\templates\press_releases.html:5
+#: .\templates\press_releases.html:61
+msgid "press releases"
+msgstr "Δελτία Τύπου"
+
+#: .\menus.py:32
+msgid "blog"
+msgstr "Blog"
+
+#: .\menus.py:41 .\templates\cops_tree.html:5 .\templates\cops_tree.html:26
+msgid "all communities"
+msgstr "όλες οι κοινότητες"
+
+#: .\menus.py:45
+msgid "browse mentors"
+msgstr "περιηγηθείτε σε μέντορες"
+
+#: .\menus.py:50 .\templates\cops_tree.html:25
+msgid "projects tree"
+msgstr "δέντρο έργων"
+
+#: .\menus.py:54
+msgid "search projects"
+msgstr "αναζήτηση έργων"
+
+#: .\menus.py:64 .\menus.py:190 .\templates\_menu_analytics.html:14
+msgid "forums"
+msgstr "φόρουμς"
+
+#: .\menus.py:68
+msgid "browse people"
+msgstr "περιηγηθείτε στους ανθρώπους"
+
+#: .\menus.py:72 .\templates\search_people.html:5
+#: .\templates\search_people.html:12
+msgid "search people"
+msgstr "αναζήτηση ανθρώπων"
+
+#: .\menus.py:77
+msgid "seach documents"
+msgstr "αναζήτηση εγγράφων"
+
+#: .\menus.py:85 .\menus.py:151 .\models.py:2251
+#: .\templates\_homepage_main_cta.html:40
+#: .\templates\_homepage_main_cta.html:41
+#: .\templates\_homepage_main_cta.html:65
+#: .\templates\_homepage_main_cta.html:85 .\templates\_menu_analytics.html:13
+#: .\templates\autocomplete.html:17 .\templates\project_results.html:83
+#: .\templates\resources_by.html:21 .\templates\search_lps.html:12
+msgid "learning paths"
+msgstr "μαθησιακά μονοπάτια"
+
+#: .\menus.py:89 .\menus.py:147
+msgid "open resources"
+msgstr "ανοιχτοί πόροι"
+
+#: .\menus.py:94
+msgid "source repositories"
+msgstr "αποθετήρια πηγών"
+
+#: .\menus.py:98
+msgid "all resources"
+msgstr "όλες οι πηγές"
+
+#: .\menus.py:107 .\templates\cops_tree.html:5 .\templates\cops_tree.html:24
+msgid "my projects"
+msgstr "τα έργα μου"
+
+#: .\menus.py:111
+msgid "my contents"
+msgstr "τα περιεχόμενά μου"
+
+#: .\menus.py:115
+msgid "my activity"
+msgstr "η δραστηριότητά μου"
+
+#: .\menus.py:123
+msgid "tutorials"
+msgstr "οδηγοί"
+
+#: .\menus.py:127
+msgid "registration and authentication"
+msgstr "εγγραφή και έλεγχος ταυτότητας"
+
+#: .\menus.py:131
+msgid "user profile and user roles"
+msgstr "προφίλ χρήστη και ρόλοι χρήστη"
+
+#: .\menus.py:135
+msgid "site navigation"
+msgstr "πλοήγηση στον ιστότοπο"
+
+#: .\menus.py:139 .\templates\autocomplete.html:8
+msgid "communities and projects"
+msgstr "κοινότητες και έργα"
+
+#: .\menus.py:143
+msgid "searching the catalogued resources"
+msgstr "αναζήτηση στους καταλογιζόμενους πόρους"
+
+#: .\menus.py:155
+msgid "mentoring"
+msgstr "καθοδήγηση"
+
+#: .\menus.py:159 .\templates\_menu_analytics.html:5
+msgid "analytics"
+msgstr "αναλυτικά στοιχεία"
+
+#: .\menus.py:163
+msgid "internationalization"
+msgstr "διεθνοποίηση"
+
+#: .\menus.py:167
+msgid "translation"
+msgstr "μετάφραση"
+
+#: .\menus.py:171
+msgid "content evaluation"
+msgstr "αξιολόγηση περιεχομένου"
+
+#: .\menus.py:175
+msgid "editorial tools"
+msgstr "εργαλεία σύνταξης"
+
+#: .\menus.py:186 .\templates\_menu_analytics.html:10
+msgid "activity stream"
+msgstr "ροή δραστηριότητας"
+
+#: .\menus.py:194 .\templates\_menu_analytics.html:15
+#: .\templates\user_dashboard.html:39
+msgid "messages"
+msgstr "μηνύματα"
+
+#: .\menus.py:204
+msgid "about"
+msgstr "σχετικά"
+
+#: .\menus.py:210 .\models.py:1067 .\templates\project_detail.html:235
+#: .\templates\search_projects.html:12 .\templates\user_profile.html:268
+msgid "projects"
+msgstr "έργα"
+
+#: .\menus.py:216
+msgid "resources"
+msgstr "πηγές"
+
+#: .\menus.py:223
+msgid "my spaces"
+msgstr "οι χώροι μου"
+
+#: .\menus.py:229
+msgid "help"
+msgstr "βοήθεια"
+
+#: .\metadata.py:27
+msgid "Do not use python reserved words, or spaces."
+msgstr "Μην χρησιμοποιείτε δεσμευμένες λέξεις της γλώσσας python ή κενά."
+
+#: .\metadata.py:29 .\models.py:526
+msgid "Title"
+msgstr "Τίτλος"
+
+#: .\metadata.py:31
+msgid "Default"
+msgstr "Προκαθορισμένο"
+
+#: .\metadata.py:32
+msgid "Enter a string to be evaluated."
+msgstr "Εισαγάγετε μια συμβολοσειρά για αξιολόγηση."
+
+#: .\metadata.py:36
+msgid "Lookup"
+msgstr "Ψάχνω"
+
+#: .\metadata.py:37
+msgid "Enter a string to be evaluated that returns an iterable."
+msgstr "Εισαγάγετε μια συμβολοσειρά προς αξιολόγηση που επιστρέφει έναν επαναληπτικό."
+
+#: .\metadata.py:38
+msgid "Validation function name"
+msgstr "Όνομα συνάρτησης επικύρωσης"
+
+#: .\metadata.py:51
+msgid "Metadata type"
+msgstr "Τύπος μεταδεδομένων"
+
+#: .\metadata.py:52
+msgid "Metadata types"
+msgstr "Τύποι μεταδεδομένων"
+
+#: .\metadata.py:63 .\models.py:2193
+msgid "quality facet"
+msgstr "ποιοτική πτυχή"
+
+#: .\metadata.py:64
+msgid "quality facets"
+msgstr "ποιοτικές πτυχές"
+
+#: .\models.py:80 .\models.py:383 .\models.py:3043 .\views.py:1367
+#: .\views.py:1616 .\views.py:2297 .\views.py:2420 .\views.py:2925
+#: .\views.py:3058 .\views.py:3498 .\views.py:3826 .\views.py:3982
+#: .\views.py:4084
+msgid "unknown"
+msgstr "άγνωστο"
+
+#: .\models.py:85
+msgid "anonymous"
+msgstr "ανώνυμο"
+
+#: .\models.py:300
+msgid "Tag"
+msgstr "Ετικέτα"
+
+#: .\models.py:301 .\templates\zinnia\_entry_detail_base.html:118
+#: .\templates\zinnia\base.html:50
+msgid "Tags"
+msgstr "Ετικέτες"
+
+#: .\models.py:320
+msgid "deleted"
+msgstr "διαγραμμένα"
+
+#: .\models.py:321
+msgid "original language code"
+msgstr "κωδικός της αρχικής γλώσσας"
+
+#: .\models.py:324
+msgid "comments enabled"
+msgstr "σχόλια ενεργοποιημένα"
+
+#: .\models.py:325
+msgid "Allows comments if checked."
+msgstr "Επιτρέπει σχόλια αν επιλεγεί."
+
+#: .\models.py:429
+msgid "Portlet"
+msgstr "Portlet"
+
+#: .\models.py:430 .\templates\pybb\forum_list.html:36
+#: .\templates\pybb\forum_list.html:63
+msgid "Hidden"
+msgstr "Κρυφό"
+
+#: .\models.py:431
+msgid "Private draft"
+msgstr "Ιδιωτικό προσχέδιο"
+
+#: .\models.py:432
+msgid "Published internally"
+msgstr "Δημοσιευμένο εσωτερικά"
+
+#: .\models.py:433
+msgid "Submitted for publication"
+msgstr "Υποβλήθηκε για δημοσίευση"
+
+#: .\models.py:434
+msgid "Published for all"
+msgstr "Δημοσιεύτηκε για όλους"
+
+#: .\models.py:435
+msgid "Un-published"
+msgstr "Μη δημοσιευμένο"
+
+#: .\models.py:530 .\models.py:3387
+msgid "User"
+msgstr "Χρήστης"
+
+#: .\models.py:532 .\models.py:643 .\models.py:1091 .\models.py:1720
+#: .\models.py:1827 .\models.py:2083 .\models.py:2244 .\models.py:2925
+#: .\models.py:2943 .\models.py:2971 .\models.py:3388
+msgid "created"
+msgstr "δημιουργήθηκε"
+
+#: .\models.py:539 .\models.py:635
+msgid "folder"
+msgstr "φάκελος"
+
+#: .\models.py:540 .\models.py:1078
+msgid "folders"
+msgstr "φάκελοι"
+
+#: .\models.py:652
+msgid "folder document"
+msgstr "φάκελος εγγράφου"
+
+#: .\models.py:653
+msgid "folder documents"
+msgstr "φάκελοι εγγράφων"
+
+#: .\models.py:708
+msgid "not specified"
+msgstr "Δεν διευκρινίζεται"
+
+#: .\models.py:709
+msgid "male"
+msgstr "Άρρεν"
+
+#: .\models.py:710
+msgid "female"
+msgstr "Θήλυ"
+
+#: .\models.py:717
+msgid "do not notify me of new private messages"
+msgstr "μην με ειδοποιείτε για νέα προσωπικά μηνύματα"
+
+#: .\models.py:718
+msgid "notify me only of individual messages"
+msgstr "ειδοποιήστε με μόνο για μεμονωμένα μηνύματα"
+
+#: .\models.py:719
+msgid "notify me of individual and group messages"
+msgstr "ειδοποιήστε με για ατομικά και ομαδικά μηνύματα"
+
+#: .\models.py:744
+msgid "accept emails from administrators"
+msgstr "αποδοχή email από διαχειριστές"
+
+#: .\models.py:744
+msgid ""
+"Occasionally, the CommonSpaces administrators will do some mailing, without "
+"disclosing email addresses to anybody."
+msgstr "Περιστασιακά, οι διαχειριστές του CommonSpaces θα κάνουν κάποια αλληλογραφία, χωρίς να αποκαλύπτουν διευθύνσεις email σε κανέναν."
+
+#: .\models.py:745
+msgid "get notification of private messages"
+msgstr "λάβετε ειδοποίηση για προσωπικά μηνύματα"
+
+#: .\models.py:745
+msgid ""
+"Do you want that private messages from other members be notified to you by "
+"email? In any case, they will not know your email address."
+msgstr "Θέλετε να σας ειδοποιούνται μέσω email τα προσωπικά μηνύματα από άλλα μέλη; Σε κάθε περίπτωση, δεν θα γνωρίζουν τη διεύθυνση email σας."
+
+#: .\models.py:746
+msgid "get notification of unread forum posts"
+msgstr "Λάβετε ειδοποιήσεις για μη αναγνωσμένες αναρτήσεις στο φόρουμ"
+
+#: .\models.py:746
+msgid "Do you want being notified by email when new forum posts are present?."
+msgstr "Θέλετε να ενημερώνεστε μέσω email όταν υπάρχουν νέες δημοσιεύσεις στο φόρουμ;"
+
+#: .\models.py:747
+msgid "activity stream max days"
+msgstr "ροή δραστηριότητας μέγ. ημέρες"
+
+#: .\models.py:747
+msgid "Max age of actions to list in my dashboard."
+msgstr "Μέγιστη ηλικία ενεργειών προς καταχώριση στον πίνακα ελέγχου μου."
+
+#: .\models.py:748
+msgid "activity stream max actions "
+msgstr "μέγ. ενέργειες ροής δραστηριότητας"
+
+#: .\models.py:748
+msgid "Max number of actions to list in my dashboard."
+msgstr "Μέγιστος αριθμός ενεργειών για λίστα στον πίνακα ελέγχου μου."
+
+#: .\models.py:761
+msgid "work sector"
+msgstr "τομέας εργασίας"
+
+#: .\models.py:762 .\templates\user_profile.html:140
+#: .\templates\user_profile.html:174
+msgid "curriculum"
+msgstr "διδακτέα ύλη"
+
+#: .\models.py:767
+msgid "list one per line."
+msgstr "αναφέρετε ένα ανά γραμμή."
+
+#: .\models.py:771
+msgid "online networks / services used"
+msgstr "διαδικτυακά δίκτυα / υπηρεσίες που χρησιμοποιούνται"
+
+#: .\models.py:773
+msgid "email notifications"
+msgstr "ειδοποιήσεις ηλεκτρονικού ταχυδρομείου"
+
+#: .\models.py:777
+msgid "available to act as mentor also for members of other communities."
+msgstr "διατίθεται να ενεργεί ως μέντορας και για μέλη άλλων κοινοτήτων."
+
+#: .\models.py:778
+msgid "temporarily unavailable to accept (more) requests by mentees."
+msgstr "προσωρινά μη διαθέσιμο για αποδοχή (περισσότερων) αιτημάτων καθοδηγούμενων."
+
+#: .\models.py:922
+msgid "user profile"
+msgstr "προφίλ χρήστη"
+
+#: .\models.py:929
+msgid "user language"
+msgstr "γλώσσα χρήστη"
+
+#: .\models.py:930
+msgid "user languages"
+msgstr "γλώσσες χρήστη"
+
+#: .\models.py:938
+msgid "code"
+msgstr "κώδικας"
+
+#: .\models.py:942 .\vocabularies.py:120
+msgid "subject"
+msgstr "θέμα"
+
+#: .\models.py:943 .\vocabularies.py:121
+msgid "subjects"
+msgstr "θέματα"
+
+#: .\models.py:977 .\models.py:1667 .\models.py:1688 .\models.py:3373
+msgid "sort order"
+msgstr "σειρά ταξινόμησης"
+
+#: .\models.py:978
+msgid "public"
+msgstr "δημόσιο"
+
+#: .\models.py:981
+msgid "project / community type"
+msgstr "τύπος έργου / κοινότητας"
+
+#: .\models.py:982
+msgid "project / community types"
+msgstr "τύποι έργου / κοινότητας"
+
+#: .\models.py:993
+msgid "no chatroom"
+msgstr "κανένα chatroom"
+
+#: .\models.py:994
+msgid "permanent chatroom"
+msgstr "μόνιμο chatroom"
+
+#: .\models.py:1004
+msgid "draft proposal"
+msgstr "προσχέδιο πρότασης"
+
+#: .\models.py:1005
+msgid "proposal submitted"
+msgstr "πρόταση που υποβλήθηκε"
+
+#: .\models.py:1006
+msgid "project open"
+msgstr "ανοιχτό έργο"
+
+#: .\models.py:1007
+msgid "project closed"
+msgstr "κλειστό έργο"
+
+#: .\models.py:1008
+msgid "project deleted"
+msgstr "διεγραμμένο έργο"
+
+#: .\models.py:1031
+msgid "request submitted"
+msgstr "υποβλήθηκε αίτημα"
+
+#: .\models.py:1032
+msgid "request accepted"
+msgstr "αίτημα δεκτό"
+
+#: .\models.py:1033
+msgid "request rejected"
+msgstr "το αίτημα απορρίφθηκε"
+
+#: .\models.py:1034
+msgid "membership suspended or expired"
+msgstr "η ιδιότητα μέλους έχει ανασταλεί ή λήξει"
+
+#: .\models.py:1042
+msgid "mentoring is not available"
+msgstr "η καθοδήγηση δεν είναι διαθέσιμη"
+
+#: .\models.py:1043
+msgid "A - The community administrator chooses the mentor"
+msgstr "Α - Ο διαχειριστής της κοινότητας επιλέγει τον μέντορα"
+
+#: .\models.py:1044
+msgid "B - The mentee chooses the mentor"
+msgstr "Β - Ο καθοδηγούμενος επιλέγει τον μέντορα"
+
+#: .\models.py:1045
+msgid "B+A - The mentee or the administrator choose the mentor"
+msgstr "B+A - Ο καθοδηγούμενος ή ο διαχειριστής επιλέγουν τον μέντορα"
+
+#: .\models.py:1066
+msgid "project / community"
+msgstr "έργο / κοινότητα"
+
+#: .\models.py:1069
+msgid "associated user group"
+msgstr "συσχετισμένη ομάδα χρηστών"
+
+#: .\models.py:1076
+msgid "Project type"
+msgstr "Τύπος έργου"
+
+#: .\models.py:1077
+msgid "project forum"
+msgstr "φόρουμ έργου"
+
+#: .\models.py:1081 .\models.py:2241
+msgid "logo"
+msgstr "λογότυπο"
+
+#: .\models.py:1082 .\models.py:1718 .\models.py:2242
+msgid "featured image"
+msgstr "επιλεγμένη εικόνα"
+
+#: .\models.py:1083
+msgid "mentoring is available"
+msgstr "η καθοδήγηση είναι διαθέσιμη"
+
+#: .\models.py:1084
+msgid ""
+"once mentoring projects exist, you can only move from model A or B to A+B."
+msgstr "Μόλις υπάρξουν έργα καθοδήγησης, μπορείτε μόνο να μετακινηθείτε από το μοντέλο Α ή Β στο Α+Β."
+
+#: .\models.py:1085
+msgid "allow external mentors"
+msgstr "επιτρέψτε εξωτερικούς μέντορες"
+
+#: .\models.py:1086
+msgid "prototypical Learning Path"
+msgstr "πρωτότυπο μαθησιακό μονοπάτι"
+
+#: .\models.py:1088
+msgid "reserved"
+msgstr "κατοχυρωμένα"
+
+#: .\models.py:1092 .\models.py:1721 .\models.py:1828 .\models.py:2167
+#: .\models.py:2245 .\models.py:2944 .\models.py:2972 .\models.py:3389
+msgid "modified"
+msgstr "τροποποιήθηκε"
+
+#: .\models.py:1093 .\models.py:1722 .\models.py:1829 .\models.py:2246
+#: .\models.py:2945 .\models.py:2973
+msgid "creator"
+msgstr "δημιουργός"
+
+#: .\models.py:1094 .\models.py:1723 .\models.py:1830 .\models.py:2082
+#: .\models.py:2247 .\models.py:2924 .\models.py:2946 .\models.py:2974
+msgid "last editor"
+msgstr "τελευταίος συντάκτης"
+
+#: .\models.py:1234
+msgid "administrator"
+msgstr "διαχειριστής"
+
+#: .\models.py:1236 .\templates\mentoring_detail.html:147
+msgid "mentor"
+msgstr "μέντορας"
+
+#: .\models.py:1238
+msgid "supervisor"
+msgstr "Επόπτης"
+
+#: .\models.py:1621
+msgid "community or project"
+msgstr "κοινότητα ή έργο"
+
+#: .\models.py:1621
+msgid "the project the user belongs or applies to"
+msgstr "το έργο στο οποίο ανήκει ή υποβάλλει ο χρήστης"
+
+#: .\models.py:1622
+msgid "the user belonging or applying to the project"
+msgstr "ο χρήστης που ανήκει ή υποβάλλει αίτηση στο έργο"
+
+#: .\models.py:1624
+msgid "request created"
+msgstr "δημιουργήθηκε αίτημα"
+
+#: .\models.py:1625
+msgid "last acceptance"
+msgstr "τελευταία αποδοχή"
+
+#: .\models.py:1626
+msgid "last refusal"
+msgstr "τελευταία άρνηση"
+
+#: .\models.py:1627
+msgid "last state change"
+msgstr "τελευταία αλλαγή κατάστασης"
+
+#: .\models.py:1628
+msgid "last state modifier"
+msgstr "τροποποιητής τελευταίας κατάστασης"
+
+#: .\models.py:1629
+msgid "history of state changes"
+msgstr "ιστορικό αλλαγών κατάστασης"
+
+#: .\models.py:1632 .\models.py:1633
+msgid "project member"
+msgstr "μέλος του έργου"
+
+#: .\models.py:1648
+msgid "project message"
+msgstr "μήνυμα του έργου"
+
+#: .\models.py:1649
+msgid "project messages"
+msgstr "μηνύματα του έργου"
+
+#: .\models.py:1670
+msgid "repository feature"
+msgstr "χαρακτηριστικό αποθετηρίου"
+
+#: .\models.py:1692
+msgid "repository types"
+msgstr "τύποι αποθετηρίου"
+
+#: .\models.py:1710
+msgid "URL of the repository site"
+msgstr "URL του ιστότοπου αποθετηρίου"
+
+#: .\models.py:1715
+msgid "longer description / search suggestions"
+msgstr "εκτεταμένη περιγραφή / προτάσεις αναζήτησης"
+
+#: .\models.py:1716 .\templates\repo_detail.html:49
+msgid "comments / evaluation"
+msgstr "σχόλια / αξιολόγηση"
+
+#: .\models.py:1717
+msgid "screenshot"
+msgstr "στιγμιότυπο οθόνης"
+
+#: .\models.py:1726 .\templates\project_detail.html:435
+msgid "external repository"
+msgstr "εξωτερικό αποθετήριο"
+
+#: .\models.py:1727 .\templates\autocomplete.html:11
+msgid "external repositories"
+msgstr "εξωτερικά αποθετήρια"
+
+#: .\models.py:1780
+msgid "Metadata only"
+msgstr "Μόνο μεταδεδομένα"
+
+#: .\models.py:1781
+msgid "Metadata and online reference"
+msgstr "Μεταδεδομένα και διαδικτυακή αναφορά"
+
+#: .\models.py:1782
+msgid "Metadata and document(s)"
+msgstr "Μεταδεδομένα και έγγραφο(α)"
+
+#: .\models.py:1783
+msgid "Metadata and richtext"
+msgstr "Μεταδεδομένα και εμπλουτισμένο κείμενο"
+
+#: .\models.py:1789
+msgid "Derived-translated"
+msgstr "Παράγωγο-μεταφρασμένο"
+
+#: .\models.py:1790
+msgid "Derived-adapted"
+msgstr "Παράγωγο-προσαρμοσμένο"
+
+#: .\models.py:1791
+msgid "Derived-remixed"
+msgstr "Παράγωγο-αναμιγμένο"
+
+#: .\models.py:1792
+msgid "none (brand new OER)"
+msgstr "τίποτα (εντελώς νέος Ανοιχτός Εκπαιδευτικός Πόρος)"
+
+#: .\models.py:1799
+msgid "specific URL to the OER, if applicable"
+msgstr "συγκεκριμένη διεύθυνση URL στον Ανοιχτό Εκπαιδευτικό Πόρο, εάν υπάρχει"
+
+#: .\models.py:1801 .\models.py:2970
+msgid "own text content"
+msgstr "δικό του περιεχόμενο κειμένου"
+
+#: .\models.py:1807
+msgid "adapted / remixed"
+msgstr "προσαρμογή / αναμίξη"
+
+#: .\models.py:1809
+msgid "reference"
+msgstr "αναφορά"
+
+#: .\models.py:1818
+msgid "where the OER has been cataloged or created"
+msgstr "όπου ο Ανοιχτός Εκπαιδευτικός Πόρος έχει καταλογογραφηθεί ή δημιουργηθεί"
+
+#: .\models.py:1825 .\models.py:2942
+msgid "content"
+msgstr "περιεχόμενο"
+
+#: .\models.py:1825
+msgid "formal description of a problem or other original content"
+msgstr "επίσημη περιγραφή ενός προβλήματος ή άλλου πρωτότυπου περιεχομένου"
+
+#: .\models.py:2044
+msgid "attached document"
+msgstr "επισυναπτόμενο έγγραφο"
+
+#: .\models.py:2045 .\templates\_oer_card.html:24
+#: .\templates\oer_detail.html:180
+msgid "attached documents"
+msgstr "επισυναπτόμενα έγγραφα"
+
+#: .\models.py:2063
+msgid "Metadatum type"
+msgstr "Τύπος μεταδεδομένων"
+
+#: .\models.py:2064
+msgid "Value"
+msgstr "Τιμή"
+
+#: .\models.py:2072
+msgid "additional metadatum"
+msgstr "πρόσθετο μεταδεδομένο"
+
+#: .\models.py:2073 .\templates\oer_edit.html:104
+msgid "additional metadata"
+msgstr "πρόσθετα μεταδεδομένα"
+
+#: .\models.py:2080
+msgid "referenced OER"
+msgstr "αναφερόμενος Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\models.py:2081 .\models.py:2923
+msgid "referencing project"
+msgstr "αναφερόμενο έργο"
+
+#: .\models.py:2087
+msgid "shared OER"
+msgstr "διαμοιρασμένος Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\models.py:2088 .\templates\mentoring_detail.html:480
+#: .\templates\project_detail.html:666
+msgid "shared OERs"
+msgstr "διαμοιρασμένοι Ανοιχτοί Εκπαιδευτικοί Πόροι"
+
+#: .\models.py:2143
+msgid "poor"
+msgstr "φτωχός"
+
+#: .\models.py:2144
+msgid "fair"
+msgstr "αξιοπρεπές"
+
+#: .\models.py:2145
+msgid "good"
+msgstr "καλό"
+
+#: .\models.py:2146
+msgid "very good"
+msgstr "πολύ καλό"
+
+#: .\models.py:2147
+msgid "excellent"
+msgstr "εξαιρετικό"
+
+#: .\models.py:2165
+msgid "free text review"
+msgstr "κριτική ελεύθερου κειμένου"
+
+#: .\models.py:2168
+msgid "evaluator"
+msgstr "αξιολογητής"
+
+#: .\models.py:2175 .\models.py:2192
+msgid "OER evaluation"
+msgstr "αξιολόγηση Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\models.py:2176
+msgid "OER evaluations"
+msgstr "αξιολογήσεις Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\models.py:2194
+msgid "facet-related score"
+msgstr "βαθμολογία που σχετίζεται με πτυχές"
+
+#: .\models.py:2202
+msgid "quality metadatum"
+msgstr "μεταδεδομένα ποιότητας"
+
+#: .\models.py:2203
+msgid "quality metadata"
+msgstr "ποιοτικά μεταδεδομένα"
+
+#: .\models.py:2221
+msgid "simple collection"
+msgstr "απλή συλλογή"
+
+#: .\models.py:2222
+msgid "sequence"
+msgstr "αλληλουχία"
+
+#: .\models.py:2223
+msgid "directed graph"
+msgstr "κατευθυνόμενο γράφημα"
+
+#: .\models.py:2231
+msgid "original learning path"
+msgstr "αρχικό μονοπάτι μάθησης"
+
+#: .\models.py:2240
+msgid "group"
+msgstr "ομάδα"
+
+#: .\models.py:2250 .\templates\_lp_serialize.html:10
+msgid "learning path"
+msgstr "διαδρομή μάθησης"
+
+#: .\models.py:2471
+msgid "this LP was created by cloning a LP with title"
+msgstr "αυτό το μαθησιακό μονοπάτι δημιουργήθηκε με την κλωνοποίηση ενός μαθησιακού μονοπατιού με τίτλο"
+
+#: .\models.py:2490
+msgid ""
+"this node derives from a document node; the name of the attached file was"
+msgstr "αυτός ο κόμβος προέρχεται από έναν κόμβο εγγράφου. το όνομα του συνημμένου αρχείου ήταν"
+
+#: .\models.py:2884
+msgid "Cover page"
+msgstr "Εξώφυλλο"
+
+#: .\models.py:2922
+msgid "referenced Learning Path"
+msgstr "αναφερόμενη Μαθησιακή Διαδρομή"
+
+#: .\models.py:2929
+msgid "shared LP"
+msgstr "κοινόχρηστο μαθησιακό μονοπάτι"
+
+#: .\models.py:2930 .\templates\mentoring_detail.html:455
+#: .\templates\project_detail.html:639
+msgid "shared LPs"
+msgstr "κοινόχρηστα μαθησιακά μονοπάτια"
+
+#: .\models.py:2949
+msgid "path edge"
+msgstr "άκρη διαδρομής"
+
+#: .\models.py:2950
+msgid "path edges"
+msgstr "άκρες διαδρομών"
+
+#: .\models.py:2965
+msgid "learning path or collection"
+msgstr "μαθησιακή διαδρομή ή συλλογή"
+
+#: .\models.py:2966
+msgid "stands for"
+msgstr "σημαίνει"
+
+#: .\models.py:2968
+msgid "code to embed an online document, such as a GoogleDoc"
+msgstr "κώδικας για την ενσωμάτωση ενός διαδικτυακού εγγράφου, όπως ένα GoogleDoc"
+
+#: .\models.py:2977
+msgid "path node"
+msgstr "κόμβος διαδρομής"
+
+#: .\models.py:2978 .\templates\lp_detail.html:178 .\templates\lp_play.html:64
+#: .\templates\lp_play.html:71
+msgid "path nodes"
+msgstr "κόμβους διαδρομής"
+
+#: .\models.py:3151
+msgid "Youtube API are not currently available"
+msgstr "Το Youtube API δεν είναι προς το παρόν διαθέσιμο"
+
+#: .\models.py:3327
+msgid "Tagged OER"
+msgstr "Ανοιχτός Εκπαιδετικός Πόρος με ετικέτα "
+
+#: .\models.py:3328
+msgid "Tagged OERs"
+msgstr "Ανοιχτοί Εκπαιδετικοί Πόροι με ετικέτα "
+
+#: .\models.py:3341
+msgid "Tagged LP"
+msgstr "Μαθησιακό Μονοπάτι με ετικέτα"
+
+#: .\models.py:3342
+msgid "Tagged LPs"
+msgstr "Μαθησιακά Μονοπάτια με ετικέτα"
+
+#: .\models.py:3364
+msgid "any"
+msgstr "κάθε"
+
+#: .\models.py:3365
+msgid "global"
+msgstr "καθολικό"
+
+#: .\models.py:3368 .\models.py:3402
+msgid "featured item"
+msgstr "χαρακτηριστικό στοιχείο"
+
+#: .\models.py:3369
+msgid "featured items"
+msgstr "χαρακτηριστικά στοιχεία"
+
+#: .\models.py:3371
+msgid "is lead item"
+msgstr "είναι βασικό στοιχείο"
+
+#: .\models.py:3372
+msgid "group name"
+msgstr "όνομα ομάδας"
+
+#: .\models.py:3372
+msgid "Entries can be aggregated by group name."
+msgstr "Οι εγγραφές μπορούν να συγκεντρωθούν με βάση το όνομα της ομάδας."
+
+#: .\models.py:3373
+msgid "Used to sort in ascending order, not to filter."
+msgstr "Χρησιμοποιείται για ταξινόμηση με αύξουσα σειρά, όχι για φιλτράρισμα."
+
+#: .\models.py:3374
+msgid "priority"
+msgstr "προτεραιότητα"
+
+#: .\models.py:3374
+msgid ""
+"Used to filter, not to sort, possibly combined with other attributes. A "
+"large number means high priority."
+msgstr "Χρησιμοποιείται για φιλτράρισμα, όχι για ταξινόμηση, πιθανώς σε συνδυασμό με άλλα χαρακτηριστικά. Ένας μεγάλος αριθμός σημαίνει υψηλή προτεραιότητα."
+
+#: .\models.py:3375
+msgid "In the case of a \"lead\" item, probably you will provide this text."
+msgstr "Στην περίπτωση ενός στοιχείου \"δυνατών\", πιθανότατα θα παρέχετε αυτό το κείμενο."
+
+#: .\models.py:3376
+msgid "scope"
+msgstr "πεδίο εφαρμογής"
+
+#: .\models.py:3384
+msgid "start publication"
+msgstr "έναρξη της δημοσίευσης"
+
+#: .\models.py:3384
+msgid "Optional start date of publication."
+msgstr "Προαιρετική ημερομηνία έναρξης δημοσίευσης."
+
+#: .\models.py:3385
+msgid "end publication"
+msgstr "τέλος δημοσίευσης"
+
+#: .\models.py:3385
+msgid "Optional end date of publication."
+msgstr "Προαιρετική ημερομηνία λήξης της δημοσίευσης."
+
+#: .\search_indexes.py:131
+msgid "In"
+msgstr "Σε"
+
+#: .\templates\403.html:4 .\templates\403.html:10
+msgid ""
+"Sorry. You are not allowed to access the requested content or function."
+msgstr "Συγνώμη. Δεν επιτρέπεται η πρόσβαση στο περιεχόμενο ή τη λειτουργία που ζητήσατε."
+
+#: .\templates\404.html:4 .\templates\404.html:10
+msgid "Sorry. We cannot find the page that you requested."
+msgstr "Συγνώμη. Δεν μπορούμε να βρούμε τη σελίδα που ζητήσατε."
+
+#: .\templates\_access_bar.html:19 .\templates\flatpages\splash.html:23
+msgid "for"
+msgstr "για"
+
+#: .\templates\_access_bar.html:24 .\templates\user_dashboard.html:6
+#: .\templates\user_preferences.html:23 .\templates\user_profile.html:33
+msgid "my home"
+msgstr "η αρχική σελίδα μου"
+
+#: .\templates\_access_bar.html:24 .\templates\_object_comments.html:72
+#: .\templates\oer_detail.html:246 .\templates\user_welcome.html:43
+msgid "complete your profile"
+msgstr "συμπληρώστε το προφίλ σας"
+
+#: .\templates\_access_bar.html:32 .\templates\user_dashboard.html:39
+msgid "my messages"
+msgstr "τα μηνύματά μου"
+
+#: .\templates\_access_bar.html:33 .\templates\user_dashboard.html:40
+msgid "new posts"
+msgstr "νέες αναρτήσεις"
+
+#: .\templates\_access_bar.html:35 .\templates\project_detail.html:416
+msgid "calendar"
+msgstr "ημερολόγιο"
+
+#: .\templates\_access_bar.html:39
+msgid "admin"
+msgstr "διαχειριστής"
+
+#: .\templates\_access_bar.html:47 .\templates\datatrans\base.html:19
+msgid "Log out"
+msgstr "Αποσύνδεση"
+
+#: .\templates\_access_bar.html:56 .\templates\_login_model.html:18
+msgid "email address"
+msgstr "διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+#: .\templates\_access_bar.html:59 .\templates\_login_model.html:24
+msgid "password"
+msgstr "κωδικός πρόσβασης"
+
+#: .\templates\_access_bar.html:61 .\templates\_login_model.html:37
+#: .\templates\account\login.html:104
+msgid "Forgot Password?"
+msgstr "Ξεχάσατε τον κωδικό;"
+
+#: .\templates\_access_bar.html:67 .\templates\_login_model.html:29
+msgid "Remember Me"
+msgstr "Θυμήσου με"
+
+#: .\templates\_access_bar.html:70 .\templates\_access_bar.html:103
+#: .\templates\_access_bar.html:111 .\templates\_login_model.html:10
+#: .\templates\_login_model.html:33
+msgid "Log in"
+msgstr "Σύνδεση"
+
+#: .\templates\_access_bar.html:71 .\templates\_access_bar.html:105
+#: .\templates\_access_bar.html:113 .\templates\flatpages\why_register.html:46
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "sign up"
+msgstr "Εγγραφείτε"
+
+#: .\templates\_access_bar.html:75 .\templates\_access_bar.html:77
+#: .\templates\_access_bar.html:80 .\templates\_access_bar.html:117
+#: .\templates\_access_bar.html:119 .\templates\_access_bar.html:122
+#: .\templates\_login_model.html:61 .\templates\_login_model.html:63
+#: .\templates\_login_model.html:66 .\templates\flatpages\why_register.html:48
+#: .\templates\flatpages\why_register.html:49
+msgid "Login With"
+msgstr "Σύνδεση με"
+
+#: .\templates\_candidate_mentors.html:3
+msgid "select a mentor"
+msgstr "επιλέξτε έναν μέντορα"
+
+#: .\templates\_candidate_mentors.html:25
+#: .\templates\_candidate_mentors.html:35
+#: .\templates\_candidate_mentors.html:47
+msgid "send the request to the mentor"
+msgstr "στείλτε το αίτημα στον μέντορα"
+
+#: .\templates\_candidate_mentors.html:48
+msgid "delegate community administrator"
+msgstr "ανάθεση διαχειριστή κοινότητας"
+
+#: .\templates\_candidate_mentors.html:53
+msgid "currently there aren't any mentors available"
+msgstr "επί του παρόντος δεν υπάρχουν διαθέσιμοι μέντορες"
+
+#: .\templates\_cannot_serialize.html:10 .\templates\_lp_serialize.html:18
+#: .\templates\_online_serialize.html:14
+msgid "URL"
+msgstr "URL"
+
+#: .\templates\_cannot_serialize.html:14 .\templates\_online_serialize.html:19
+msgid "NOTE"
+msgstr "ΣΗΜΕΙΩΣΗ"
+
+#: .\templates\_cannot_serialize.html:15
+msgid "cannot convert to PDF a document of mimetype"
+msgstr "δεν μπορεί να μετατρέψει σε PDF ένα έγγραφο τύπου mime"
+
+#: .\templates\_cannot_serialize.html:18
+msgid ""
+"this node refers to an online content that you should try to access through "
+"its URL"
+msgstr "αυτός ο κόμβος αναφέρεται σε ένα διαδικτυακό περιεχόμενο στο οποίο θα πρέπει να προσπαθήσετε να αποκτήσετε πρόσβαση μέσω της διεύθυνσης URL του"
+
+#: .\templates\_change_state.html:8
+msgid "publish internally"
+msgstr "δημοσίευση εσωτερικά"
+
+#: .\templates\_change_state.html:9
+msgid "submit for publication"
+msgstr "Υποβολή για δημοσίευση"
+
+#: .\templates\_change_state.html:10
+msgid "withdraw submission"
+msgstr "απόσυρση υποβολής"
+
+#: .\templates\_change_state.html:11
+msgid "reject publication"
+msgstr "απόρριψη δημοσίευσης"
+
+#: .\templates\_change_state.html:12
+msgid "publish for all"
+msgstr "δημοσίευση για όλους"
+
+#: .\templates\_change_state.html:13
+msgid "unpublish"
+msgstr "δημοσίευση για όλους"
+
+#: .\templates\_data_confirm_js.html:11 .\templates\_lp_dag.html:165
+#: .\templates\_lp_dag.html:235 .\templates\folder_detail.html:227
+#: .\templates\folder_detail.html:256 .\templates\lp_detail.html:360
+#: .\templates\oer_detail.html:338
+msgid "Yes"
+msgstr "Ναι"
+
+#: .\templates\_data_confirm_js.html:15 .\templates\_lp_dag.html:169
+#: .\templates\_lp_dag.html:239 .\templates\folder_detail.html:231
+#: .\templates\folder_detail.html:260 .\templates\lp_detail.html:364
+#: .\templates\oer_detail.html:342
+msgid "No"
+msgstr "Όχι"
+
+#: .\templates\_edit_submit.html:3 .\templates\datatrans\translate.html:60
+#: .\templates\folder_detail.html:172
+#: .\templates\oer_screenshot_upload.html:33
+#: .\templates\profile_avatar_upload.html:29
+#: .\templates\project_detail.html:746 .\templates\project_detail.html:760
+#: .\templates\project_image_upload.html:31
+#: .\templates\project_logo_upload.html:31
+msgid "save"
+msgstr "αποθήκευση"
+
+#: .\templates\_edit_submit.html:4 .\templates\folder_edit.html:25
+#: .\templates\folderdocument_edit.html:25 .\templates\forum_edit.html:29
+#: .\templates\online_resource_edit.html:28
+msgid "save and exit"
+msgstr "αποθήκευση και έξοδος"
+
+#: .\templates\_edit_submit.html:5 .\templates\folder_edit.html:26
+#: .\templates\folderdocument_edit.html:26 .\templates\forum_edit.html:30
+#: .\templates\oer_screenshot_upload.html:34
+#: .\templates\online_resource_edit.html:29
+#: .\templates\profile_avatar_upload.html:30
+#: .\templates\project_image_upload.html:32
+#: .\templates\project_logo_upload.html:32
+msgid "exit without saving"
+msgstr "έξοδος χωρίς αποθήκευση"
+
+#: .\templates\_folder_document_card.html:7
+msgid "view folder"
+msgstr "προβολή φακέλου"
+
+#: .\templates\_homepage_main_cta.html:9
+#: .\templates\_homepage_main_cta.html:50
+#: .\templates\_homepage_main_cta.html:74
+msgid "explore library"
+msgstr "εξερευνήστε τη βιβλιοθήκη"
+
+#: .\templates\_homepage_main_cta.html:15
+#: .\templates\_homepage_main_cta.html:57
+#: .\templates\_homepage_main_cta.html:79
+msgid "learn together"
+msgstr "μάθετε μαζί"
+
+#: .\templates\_homepage_main_cta.html:21
+#: .\templates\_homepage_main_cta.html:64
+#: .\templates\_homepage_main_cta.html:84
+msgid "remix resources"
+msgstr "άναμιξη πόρων"
+
+#: .\templates\_homepage_main_cta.html:28
+#: .\templates\_homepage_main_cta.html:29
+#: .\templates\_homepage_main_cta.html:51
+#: .\templates\_homepage_main_cta.html:75 .\templates\browse.html:11
+msgid "educational library"
+msgstr "εκπαιδευτική βιβλιοθήκη"
+
+#: .\templates\_info_creator_date.html:3 .\templates\_lp_serialize.html:10
+msgid "submitted by"
+msgstr "υποβλήθηκε από"
+
+#: .\templates\_info_creator_date.html:12
+msgid "in the project of mentoring"
+msgstr "στο έργο της καθοδήγησης"
+
+#: .\templates\_info_creator_date.html:14 .\templates\_lp_serialize.html:11
+msgid "in the project"
+msgstr "στο έργο"
+
+#: .\templates\_info_creator_date.html:18 .\templates\_pathnode_detail.html:45
+#: .\templates\project_detail.html:193
+msgid "last updated by"
+msgstr "τελευταία ενημέρωση από"
+
+#: .\templates\_info_creator_date.html:26 .\templates\_pathnode_detail.html:45
+#: .\templates\project_detail.html:189
+msgid "last updated"
+msgstr "τελευταία ενημέρωση"
+
+#: .\templates\_login_model.html:36
+msgid "Create an account"
+msgstr "Δημιουργήστε λογαριασμό"
+
+#: .\templates\_lp_dag.html:162
+msgid "do you really want to remove this edge"
+msgstr "θέλετε πραγματικά να αφαιρέσετε αυτό το άκρο"
+
+#: .\templates\_lp_dag.html:232 .\templates\lp_detail.html:357
+msgid "do you really want to remove this node"
+msgstr "θέλετε πραγματικά να αφαιρέσετε αυτόν τον κόμβο;"
+
+#: .\templates\_lp_serialize.html:12
+msgid "other contributors"
+msgstr "άλλοι συντελεστές"
+
+#: .\templates\_lp_serialize.html:15
+msgid "last modified on"
+msgstr "τελευταία τροποποίηση στις"
+
+#: .\templates\_lp_serialize.html:25
+msgid "IMPORTANT NOTICE"
+msgstr "ΣΗΜΑΝΤΙΚΗ ΣΗΜΕΙΩΣΗ"
+
+#: .\templates\_lp_serialize.html:26
+msgid "this document has been produced by"
+msgstr "αυτό το έγγραφο έχει εκπονηθεί από"
+
+#: .\templates\_lp_serialize.html:27 .\templates\project_detail.html:187
+msgid "on"
+msgstr "επί"
+
+#: .\templates\_lp_serialize.html:28
+msgid "for personal use"
+msgstr "για προσωπική χρήση"
+
+#: .\templates\_lp_serialize.html:28
+msgid "restrictions could apply to some of its contents"
+msgstr "ενδέχεται να ισχύουν περιορισμοί για ορισμένα από τα περιεχόμενά του"
+
+#: .\templates\_lp_subtree.html:15 .\templates\lp_detail.html:210
+#: .\templates\lp_play.html:102
+msgid "analyze text"
+msgstr "ανάλυση κειμένου"
+
+#: .\templates\_mentors_refuse.html:5
+msgid "mentors that didn't accept"
+msgstr "μέντορες που δεν δέχτηκαν"
+
+#: .\templates\_menu_analytics.html:7
+msgid "registered users"
+msgstr "εγγεγραμμένοι χρήστες"
+
+#: .\templates\_menu_analytics.html:8 .\templates\contributors.html:5
+#: .\templates\contributors.html:12
+msgid "top contributors"
+msgstr "κορυφαίοι συντελεστές"
+
+#: .\templates\_menu_analytics.html:9
+msgid "active users"
+msgstr "ενεργοί χρήστες"
+
+#: .\templates\_menu_analytics.html:11
+msgid "xAPI query"
+msgstr "ερώτημα xAPI"
+
+#: .\templates\_object_comments.html:10 .\templates\_object_comments.html:12
+#: .\templates\zinnia\entry_detail_base.html:192
+msgid "Comments"
+msgstr "Σχόλια"
+
+#: .\templates\_object_comments.html:10
+msgid "disable"
+msgstr "απενεργοποίηση"
+
+#: .\templates\_object_comments.html:10
+msgid "enable"
+msgstr "ενεργοποίηση"
+
+#: .\templates\_object_comments.html:28
+#: .\templates\zinnia\_entry_detail_base.html:29
+#: .\templates\zinnia\entry_detail_base.html:212
+msgctxt "on date"
+msgid "on"
+msgstr "επί"
+
+#: .\templates\_object_comments.html:47 .\templates\_object_comments.html:53
+#: .\templates\zinnia\_entry_detail_base.html:159
+#: .\templates\zinnia\entry_detail_base.html:230
+#: .\templates\zinnia\entry_detail_base.html:236
+msgid "Comments are closed."
+msgstr "Τα σχόλια είναι απενεργοποιημένα."
+
+#: .\templates\_object_comments.html:51
+#: .\templates\zinnia\_entry_detail_base.html:153
+#: .\templates\zinnia\entry_detail_base.html:234
+msgid "No comments yet."
+msgstr "Κανένα σχόλιο ακόμα."
+
+#: .\templates\_object_comments.html:69
+msgid "Add comment"
+msgstr "Προσθήκη σχολίου"
+
+#: .\templates\_object_comments.html:72 .\templates\_object_comments.html:74
+#: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
+msgid "please"
+msgstr "παρακαλώ"
+
+#: .\templates\_object_comments.html:72 .\templates\_object_comments.html:74
+msgid "to leave a comment"
+msgstr "για να αφήσετε ένα σχόλιο"
+
+#: .\templates\_object_comments.html:74 .\templates\oer_detail.html:244
+msgid "log in"
+msgstr "σύνδεση"
+
+#: .\templates\_oer_card.html:9
+msgid "rating"
+msgstr "εκτίμηση"
+
+#: .\templates\_online_serialize.html:20
+msgid "this node refers to an OER that you can access online through its URL"
+msgstr "αυτός ο κόμβος αναφέρεται σε έναν Ανοιχτό Εκπαιδευτικό Πόρο στο οποίο θα πρέπει να προσπαθήσετε να αποκτήσετε πρόσβαση μέσω της διεύθυνσης URL του"
+
+#: .\templates\_online_serialize.html:22
+msgid "the associated resource has content type"
+msgstr "ο συσχετιζόμενος πόρος έχει τύπο περιεχομένου"
+
+#: .\templates\_online_serialize.html:24
+msgid "an excerpt of the content follows"
+msgstr "ακολουθεί απόσπασμα του περιεχομένου"
+
+#: .\templates\_pathnode_detail.html:10
+#: .\templates\_project_mentoring_text.html:19 .\templates\lp_detail.html:69
+#: .\templates\oer_detail.html:37 .\templates\project_detail.html:302
+#: .\templates\project_detail.html:888
+#: .\templates\pybb\_forum_edit_link.html:2 .\templates\repo_detail.html:17
+#: .\templates\user_profile.html:172
+msgid "show edit view"
+msgstr "εμφάνιση προβολής επεξεργασίας"
+
+#: .\templates\_pathnode_detail.html:11 .\templates\lp_detail.html:70
+#: .\templates\oer_detail.html:38 .\templates\project_detail.html:303
+#: .\templates\project_detail.html:889 .\templates\repo_detail.html:18
+msgid "show translate view"
+msgstr "εμφάνιση προβολής μετάφρασης"
+
+#: .\templates\_pathnode_detail.html:12 .\templates\lp_detail.html:85
+#: .\templates\lp_detail.html:104 .\templates\oer_detail.html:254
+msgid "show player view"
+msgstr "εμφάνιση προβολής player"
+
+#: .\templates\_pathnode_detail.html:32 .\templates\folder_detail.html:103
+#: .\templates\lp_play.html:143 .\templates\lp_play.html:165
+#: .\templates\mentoring_detail.html:238 .\templates\oer_detail.html:196
+#: .\templates\user_profile.html:177
+msgid "download"
+msgstr "Κατεβάστε"
+
+#: .\templates\_pathnode_detail.html:33 .\templates\folder_detail.html:100
+#: .\templates\folder_detail.html:106 .\templates\mentoring_detail.html:239
+#: .\templates\oer_detail.html:197 .\templates\project_detail.html:772
+#: .\templates\project_detail.html:853 .\templates\user_profile.html:142
+#: .\templates\user_profile.html:178
+msgid "view"
+msgstr "άποψη"
+
+#: .\templates\_pathnode_detail.html:39
+msgid "text"
+msgstr "κείμενο"
+
+#: .\templates\_pathnode_detail.html:44
+msgid "node added by"
+msgstr "κόμβος που προστέθηκε από"
+
+#: .\templates\_project_card.html:20
+msgid "number of members"
+msgstr "αριθμός μελών"
+
+#: .\templates\_project_card.html:24 .\templates\_project_card.html:27
+#: .\templates\mentoring_detail.html:168 .\templates\project_detail.html:7
+#: .\templates\project_detail.html:165 .\templates\project_detail.html:168
+#: .\templates\project_detail.html:300 .\templates\project_detail.html:319
+#: .\templates\project_detail.html:362 .\templates\project_detail.html:376
+#: .\templates\project_edit.html:19 .\templates\project_edit.html:60
+msgid "community"
+msgstr "κοινότητα"
+
+#: .\templates\_project_card.html:26 .\templates\project_detail.html:167
+msgid "child project of"
+msgstr "υποέργο του"
+
+#: .\templates\_project_card.html:27 .\templates\project_detail.html:168
+msgid "parent"
+msgstr "γονέας"
+
+#: .\templates\_project_card.html:45 .\templates\_project_card.html:58
+msgid "number of learning paths"
+msgstr "αριθμός μαθησιακών μονοπατιών"
+
+#: .\templates\_project_card.html:46 .\templates\_project_card.html:52
+#: .\templates\_project_card.html:59 .\templates\_project_card.html:64
+msgid "project results"
+msgstr "αποτελέσματα του έργου"
+
+#: .\templates\_project_card.html:51 .\templates\_project_card.html:63
+msgid "number of OERs"
+msgstr "αριθμός Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\templates\_project_mentoring_text.html:19
+#: .\templates\project_detail.html:302 .\templates\project_detail.html:888
+#: .\templates\user_preferences.html:33 .\templates\user_profile.html:172
+#: .\templates\user_profile.html:241
+msgid "modify"
+msgstr "τροποποίηση"
+
+#: .\templates\_resource_edit_lang_msg.html:6
+msgid "WARNING"
+msgstr "ΠΡΟΕΙΔΟΠΟΙΗΣΗ"
+
+#: .\templates\_resource_edit_lang_msg.html:6
+#: .\templates\_resource_edit_lang_msg.html:13
+msgid "You are using the currently active language"
+msgstr "Χρησιμοποιείτε την τρέχουσα ενεργή γλώσσα"
+
+#: .\templates\_resource_edit_lang_msg.html:8
+#: .\templates\_resource_edit_lang_msg.html:15
+msgid "to edit a content whose 'original editing language' is"
+msgstr "για να επεξεργαστείτε ένα περιεχόμενο του οποίου η «αρχική γλώσσα επεξεργασίας» είναι"
+
+#: .\templates\_resource_edit_lang_msg.html:10
+msgid "this WILL CHANGE its 'original editing language'"
+msgstr "αυτό ΘΑ ΑΛΛΑΞΕΙ την «αρχική γλώσσα επεξεργασίας» του"
+
+#: .\templates\_resource_edit_lang_msg.html:12
+msgid "OK"
+msgstr "Εντάξει"
+
+#: .\templates\_resource_edit_lang_msg.html:16
+msgid "also"
+msgstr "επίσης"
+
+#: .\templates\_resource_edit_lang_msg.html:16
+msgid "still"
+msgstr "ακόμη"
+
+#: .\templates\_resource_edit_lang_msg.html:18
+msgid "This will set its 'original editing language'"
+msgstr "Αυτό θα ορίσει την \"αρχική γλώσσα επεξεργασίας\" του"
+
+#: .\templates\_resource_edit_lang_msg.html:21
+msgid ""
+"IMPORTANT NOTICE! The content that you are creating will take the currently "
+"active language"
+msgstr "ΣΗΜΑΝΤΙΚΗ ΣΗΜΕΙΩΣΗ! Το περιεχόμενο που δημιουργείτε θα λάβει την τρέχουσα ενεργή γλώσσα"
+
+#: .\templates\_resource_edit_lang_msg.html:23
+msgid "as its 'original editing language'"
+msgstr "ως «αρχική γλώσσα επεξεργασίας»"
+
+#: .\templates\_resource_edit_lang_msg.html:24
+msgid ""
+"Afterwards, you should edit it using always the same language, and you will "
+"be able to add translations to other languages"
+msgstr "Στη συνέχεια, θα πρέπει να το επεξεργαστείτε χρησιμοποιώντας πάντα την ίδια γλώσσα και θα μπορείτε να προσθέσετε μεταφράσεις σε άλλες γλώσσες"
+
+#: .\templates\_resource_lang_msg.html:6
+msgid ""
+"IMPORTANT NOTICE! The next time you will edit this content, it will take the"
+" current active language"
+msgstr "ΣΗΜΑΝΤΙΚΗ ΣΗΜΕΙΩΣΗ! Την επόμενη φορά που θα επεξεργαστείτε αυτό το περιεχόμενο, θα πάρει την τρέχουσα ενεργή γλώσσα"
+
+#: .\templates\_resource_lang_msg.html:8
+msgid ""
+"as its 'original editing language'. Afterwards, you should edit it using "
+"always the same language, and you will be able to add translations to other "
+"languages."
+msgstr "ως «αρχική γλώσσα επεξεργασίας». Στη συνέχεια, θα πρέπει να το επεξεργαστείτε χρησιμοποιώντας πάντα την ίδια γλώσσα και θα μπορείτε να προσθέσετε μεταφράσεις σε άλλες γλώσσες."
+
+#: .\templates\_resource_lang_msg.html:12
+msgid ""
+"Please note that, to be able to edit this content in its original language"
+msgstr "Λάβετε υπόψη ότι, για να μπορείτε να επεξεργαστείτε αυτό το περιεχόμενο στην αρχική του γλώσσα"
+
+#: .\templates\_resource_lang_msg.html:14
+msgid ""
+"you should make this the active language using the control in the menu bar"
+msgstr "θα πρέπει να κάνετε αυτήν την ενεργή γλώσσα χρησιμοποιώντας το στοιχείο ελέγχου στη γραμμή μενού"
+
+#: .\templates\_resource_original_lang.html:4
+#: .\templates\project_detail.html:171
+msgid "original editing language"
+msgstr "πρωτότυπη γλώσσα επεξεργασίας"
+
+#: .\templates\_search_form.html:8 .\templates\search_folder_documents.html:36
+#: .\templates\search_folder_documents.html:49 .\templates\search_lps.html:36
+#: .\templates\search_lps.html:52 .\templates\search_oers.html:36
+#: .\templates\search_oers.html:49 .\templates\search_people.html:36
+#: .\templates\search_people.html:52 .\templates\search_projects.html:36
+#: .\templates\search_projects.html:52 .\templates\search_repos.html:36
+#: .\templates\search_repos.html:52
+msgid "search criteria"
+msgstr "κριτήρια αναζήτησης"
+
+#: .\templates\_search_form.html:9 .\templates\_search_form.html:30
+msgid "Apply"
+msgstr "Κάνω Αίτηση"
+
+#: .\templates\_search_form.html:10 .\templates\_search_form.html:31
+msgid "Reset"
+msgstr "Επαναφορά"
+
+#: .\templates\_search_form.html:17 .\views.py:899 .\views.py:4266
+#: .\views.py:4462 .\views.py:4566
+msgid "include non published items"
+msgstr "περιλαμβάνει μη δημοσιευμένα στοιχεία"
+
+#: .\templates\_selected_mentor.html:4 .\templates\_selected_mentor.html:23
+msgid "selected mentor"
+msgstr "επιλεγμένος μέντορας"
+
+#: .\templates\_selected_mentor.html:18
+msgid "the request has been sent to the mentor on"
+msgstr "το αίτημα έχει σταλεί στον μέντορα στις"
+
+#: .\templates\_selected_mentor.html:18
+msgid "by"
+msgstr "από"
+
+#: .\templates\_selected_mentor.html:24
+msgid "the community administrator hasn't chosen a mentor yet"
+msgstr "ο διαχειριστής της κοινότητας δεν έχει επιλέξει ακόμη μέντορα"
+
+#: .\templates\account\account_inactive.html:5
+#: .\templates\account\account_inactive.html:11
+msgid "inactive account"
+msgstr "ανενεργός λογαριασμός"
+
+#: .\templates\account\account_inactive.html:14
+msgid "this account is inactive"
+msgstr "Αυτός ο λογαριασμός είναι ανενεργός"
+
+#: .\templates\account\email_confirm.html:6
+#: .\templates\account\email_confirm.html:12
+msgid "Confirm E-mail Address"
+msgstr "Επιβεβαιώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου"
+
+#: .\templates\account\email_confirm.html:21
+#, python-format
+msgid ""
+"Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> is an e-mail "
+"address for user %(user_display)s."
+msgstr "Επιβεβαιώστε το<a href=\"mailto:%(email)s\">%(email)s</a>είναι μια διεύθυνση ηλεκτρονικού ταχυδρομείου για τον χρήστη%(user_display)s"
+
+#: .\templates\account\email_confirm.html:25
+#: .\templates\schedule\delete_event.html:11
+msgid "Confirm"
+msgstr "Επιβεβαίωση"
+
+#: .\templates\account\email_confirm.html:32
+#, python-format
+msgid ""
+"This e-mail confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new e-mail confirmation request</a>."
+msgstr "Αυτός ο σύνδεσμος επιβεβαίωσης e-mail έληξε ή δεν είναι έγκυρος. Σας παρακαλούμε<a href=\"%(email_url)s\">εκδώστε ένα νέο αίτημα επιβεβαίωσης μέσω e-mail</a>"
+
+#: .\templates\account\login.html:6 .\templates\account\login.html:61
+#: .\templates\account\login.html:103
+msgid "Sign In"
+msgstr "Σύνδεση"
+
+#: .\templates\account\login.html:70
+#, python-format
+msgid ""
+"Please sign in with one\n"
+"                        of your existing third party accounts. Or, <a href=\"%(signup_url)s\">sign up</a>\n"
+"                        for a %(site_name)s account and sign in below:"
+msgstr "Παρακαλώ συνδεθείτε με έναν\nαπό τους υπάρχοντες λογαριασμούς τρίτων. Ή, <a href=\"%(signup_url)s\">εγγραφείτε</a>\nγια %(site_name)sλογαριασμό και συνδεθείτε παρακάτω:"
+
+#: .\templates\account\login.html:83
+#, python-format
+msgid ""
+"If you have not created an account yet, then please\n"
+"                        <a href=\"%(signup_url)s\">sign up</a> first."
+msgstr "Εάν δεν έχετε δημιουργήσει ακόμη λογαριασμό, τότε παρακαλούμε\n<a href=\"%(signup_url)s\">εγγραφείτε</a>πρώτα."
+
+#: .\templates\account\login.html:87
+msgid ""
+"Please sign in with one\n"
+"                    of your existing third party accounts."
+msgstr "Παρακαλώ συνδεθείτε με έναν\nαπό τους υπάρχοντες λογαριασμούς τρίτων."
+
+#: .\templates\account\login.html:94
+#: .\templates\flatpages\why_register.html:47
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "or"
+msgstr "ή"
+
+#: .\templates\account\password_reset.html:6
+#: .\templates\account\password_reset.html:42
+#: .\templates\account\password_reset_done.html:6
+#: .\templates\account\password_reset_done.html:11
+msgid "Password Reset"
+msgstr "Επαναφορά Κωδικού"
+
+#: .\templates\account\password_reset.html:50
+msgid ""
+"Forgotten your password? Enter your e-mail address below, and we'll send you"
+" an e-mail allowing you to reset it."
+msgstr "Ξέχασατε τον κωδικό σας; Εισαγάγετε τη διεύθυνση e-mail σας παρακάτω και θα σας στείλουμε ένα e-mail που θα σας επιτρέψει να το επαναφέρετε."
+
+#: .\templates\account\password_reset.html:55
+msgid "Reset My Password"
+msgstr "Επαναφορά του κωδικού μου"
+
+#: .\templates\account\password_reset.html:57
+msgid "Please contact us if you have any trouble resetting your password."
+msgstr "Επικοινωνήστε μαζί μας εάν αντιμετωπίζετε προβλήματα με την επαναφορά του κωδικού πρόσβασής σας."
+
+#: .\templates\account\password_reset_done.html:19
+msgid ""
+"We have sent you an e-mail. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr "Σας έχουμε στείλει ένα e-mail. Επικοινωνήστε μαζί μας εάν δεν το λάβετε μέσα σε λίγα λεπτά."
+
+#: .\templates\account\password_reset_from_key.html:4
+#: .\templates\account\password_reset_from_key.html:38
+#: .\templates\account\password_reset_from_key_done.html:4
+#: .\templates\account\password_reset_from_key_done.html:9
+msgid "Change Password"
+msgstr "Αλλαγή Κωδικού"
+
+#: .\templates\account\password_reset_from_key.html:38
+msgid "Bad Token"
+msgstr "Bad Token"
+
+#: .\templates\account\password_reset_from_key.html:45
+#, python-format
+msgid ""
+"The password reset link was invalid, possibly because it has already been "
+"used.  Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>."
+msgstr "Ο σύνδεσμος επαναφοράς κωδικού πρόσβασης δεν ήταν έγκυρος, πιθανώς επειδή έχει ήδη χρησιμοποιηθεί. Παρακαλώ ζητήστε μία <a href=\"%(passwd_reset_url)s\">νέα αλλαγή κωδικού</a>."
+
+#: .\templates\account\password_reset_from_key.html:51
+msgid "change password"
+msgstr "αλλάξτε κωδικό"
+
+#: .\templates\account\password_reset_from_key.html:54
+#: .\templates\account\password_reset_from_key_done.html:13
+msgid "Your password is now changed."
+msgstr "Ο κωδικός πρόσβασής σας έχει αλλάξει τώρα."
+
+#: .\templates\account\signup.html:5
+msgid "Signup"
+msgstr "Εγγραφείτε"
+
+#: .\templates\account\signup.html:43 .\templates\account\signup.html:55
+msgid "Sign Up"
+msgstr "Εγγραφή"
+
+#: .\templates\account\signup.html:47
+#, python-format
+msgid ""
+"Already have an account? Then please <a href=\"%(login_url)s\">sign in</a>."
+msgstr "Έχετε ήδη λογαριασμό? Τότε παρακαλώ<a href=\"%(login_url)s\">συνδεθείτε</a>."
+
+#: .\templates\account\verification_sent.html:5
+#: .\templates\account\verification_sent.html:10
+msgid "Verify Your E-mail Address"
+msgstr "Επιβεβαιώστε τη διεύθυνση ηλεκτρονικού ταχυδρομείου σας"
+
+#: .\templates\account\verification_sent.html:14
+msgid ""
+"We have sent an e-mail to you for verification. Follow the link provided to "
+"finalize the signup process. Please contact us if you do not receive it "
+"within a few minutes."
+msgstr "Σας έχουμε στείλει ένα e-mail για επαλήθευση. Ακολουθήστε τον σύνδεσμο που παρέχεται για να ολοκληρώσετε τη διαδικασία εγγραφής. Επικοινωνήστε μαζί μας εάν δεν το λάβετε μέσα σε λίγα λεπτά."
+
+#: .\templates\active_users.html:5 .\templates\active_users.html:13
+msgid "recently active users"
+msgstr "πρόσφατα ενεργοί χρήστες"
+
+#: .\templates\active_users.html:11
+msgid ""
+"Recently active users <small>being members of projects shared with "
+"me</small>"
+msgstr "Πρόσφατα ενεργοί χρήστες<small>ως μέλη έργων που διαμοιράζονται μαζί μου</small>"
+
+#: .\templates\active_users.html:17
+msgid "users online"
+msgstr "συνδεδεμένοι χρήστες"
+
+#: .\templates\active_users.html:18
+msgid "active during last 5 minutes"
+msgstr "ενεργός τα τελευταία 5 λεπτά"
+
+#: .\templates\active_users.html:21
+msgid "last active"
+msgstr "Τελευταίος Ενεργός"
+
+#: .\templates\active_users.html:27
+msgid "seconds ago"
+msgstr "δευτερόλεπτα πριν"
+
+#: .\templates\active_users.html:35
+msgid "users no more online"
+msgstr "χρήστες που δεν είναι πλέον συνδεδεμένοι"
+
+#: .\templates\active_users.html:38
+msgid "last seen"
+msgstr "εθεάθη τελευταία"
+
+#: .\templates\activity_stream.html:7 .\templates\activity_stream.html:25
+#, python-format
+msgid "Recent activity by %(the_actor)s"
+msgstr "Πρόσφατη δραστηριότητα από %(the_actor)s"
+
+#: .\templates\activity_stream.html:7 .\templates\activity_stream.html:25
+#, python-format
+msgid "Recent activity by %(the_project)s"
+msgstr "Πρόσφατη δραστηριότητα από %(the_project)s"
+
+#: .\templates\activity_stream.html:7 .\templates\activity_stream.html:25
+#: .\templates\project_detail.html:699
+msgid "recent activity"
+msgstr "Πρόσφατη Δραστηριότητα"
+
+#: .\templates\activity_stream.html:30
+msgid "time"
+msgstr "χρόνος"
+
+#: .\templates\activity_stream.html:30
+msgid "actor"
+msgstr "\"ηθοποιός\""
+
+#: .\templates\activity_stream.html:31
+msgid "verb"
+msgstr "ρήμα"
+
+#: .\templates\activity_stream.html:31
+msgid "object type"
+msgstr "τύπος αντικειμένου"
+
+#: .\templates\activity_stream.html:31
+msgid "object"
+msgstr "αντικείμενο"
+
+#: .\templates\activity_stream.html:31
+msgid "context"
+msgstr "γενικό πλαίσιο"
+
+#: .\templates\activity_stream.html:47
+msgid "no actions were found"
+msgstr "δεν βρέθηκαν ενέργειες"
+
+#: .\templates\autocomplete.html:5 .\templates\count_users.html:20
+#: .\templates\project_detail.html:540
+msgid "members"
+msgstr "μέλη"
+
+#: .\templates\autocomplete.html:20
+msgid "help pages"
+msgstr "σελίδες βοήθειας"
+
+#: .\templates\autocomplete.html:27
+msgid "no item"
+msgstr "κανένα αντικείμενο"
+
+#: .\templates\base.html:214
+msgid "the CommonS Consortium"
+msgstr "η Κοινοπραξία CommonS"
+
+#: .\templates\base.html:214 .\templates\base.html:217
+msgid "and"
+msgstr "και"
+
+#: .\templates\base.html:215
+msgid "built by"
+msgstr "υλοποιημένο από"
+
+#: .\templates\base.html:216
+msgid "with"
+msgstr "με"
+
+#: .\templates\base.html:222
+msgid "privacy policy"
+msgstr "πολιτική απορρήτου"
+
+#: .\templates\base.html:228
+msgid "Project co-funded by the Programme"
+msgstr "Έργο συγχρηματοδοτούμενο από το Πρόγραμμα"
+
+#: .\templates\base.html:230
+msgid "The CommonS Project is co-funded by Programme"
+msgstr "Το έργο CommonS συγχρηματοδοτείται από το Πρόγραμμα"
+
+#: .\templates\base.html:288 .\templates\livesearch.html:9
+msgid "Search ... (enter at least 3 characters)"
+msgstr "Αναζήτηση ... (εισαγάγετε τουλάχιστον 3 χαρακτήρες)"
+
+#: .\templates\browse.html:5
+msgid "distributions"
+msgstr "διανομές"
+
+#: .\templates\browse.html:14
+msgid "no resources were found"
+msgstr "δεν βρέθηκαν πόροι"
+
+#: .\templates\browse.html:19
+msgid "distributions of the learning paths"
+msgstr "κατανομές των μονοπατιών μάθησης"
+
+#: .\templates\browse.html:45
+msgid "distributions of the open educational resources (OERs)"
+msgstr "κατανομές των ανοιχτών εκπαιδευτικών πόρων"
+
+#: .\templates\browse.html:71
+msgid "distributions of the repositories"
+msgstr "διανομές των αποθετηρίων"
+
+#: .\templates\browse_mentors.html:5 .\templates\project_detail.html:941
+msgid "mentors"
+msgstr "μέντορες"
+
+#: .\templates\browse_mentors.html:51
+msgid "all mentors"
+msgstr "όλοι οι μέντορες"
+
+#: .\templates\browse_mentors.html:52 .\templates\user_profile.html:258
+msgid "rolls of mentors"
+msgstr "λίστες μεντόρων"
+
+#: .\templates\browse_mentors.html:70
+msgid "currently there aren't any mentors"
+msgstr "επί του παρόντος δεν υπάρχουν μέντορες"
+
+#: .\templates\browse_mentors.html:83
+#, python-format
+msgid ""
+"Community: <a "
+"href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
+msgstr "Κοινότητα <a href=\"/project/%(roll_parent_slug)s/\">%(roll_parent_name)s</a>"
+
+#: .\templates\browse_mentors.html:90
+msgid "no mentoring activity started yet"
+msgstr "δεν έχει ξεκινήσει ακόμη καμία δραστηριότητα καθοδήγησης"
+
+#: .\templates\browse_people.html:5 .\templates\browse_people.html:12
+msgid "all people"
+msgstr "όλοι οι άνθρωποι"
+
+#: .\templates\browse_people.html:15
+msgid "distribution of users based on self-compiled user profiles"
+msgstr "κατανομή των χρηστών με βάση τα αυτο-μεταγλωττισμένα προφίλ χρηστών"
+
+#: .\templates\bulk_add_members.html:10 .\templates\bulk_add_members.html:13
+msgid "adding members in bulk to commmunity/project"
+msgstr "προσθήκη μελών μαζικά στην κοινότητα/έργο"
+
+#: .\templates\bulk_add_members.html:18
+msgid "records found in file"
+msgstr "εγγραφές που βρέθηκαν στο αρχείο"
+
+#: .\templates\bulk_add_members.html:19
+msgid "members added"
+msgstr "μέλη που προστέθηκαν"
+
+#: .\templates\bulk_add_members.html:23 .\templates\bulk_add_members.html:29
+msgid "receivers list"
+msgstr "λίστα δεκτών"
+
+#: .\templates\bulk_add_members.html:23
+msgid "for mailing from a plain client"
+msgstr "για αποστολή αλληλογραφίας από πρόγραμμα αλληλογραφίας"
+
+#: .\templates\bulk_add_members.html:29
+msgid "in CSV format for MailChimp"
+msgstr "σε μορφή CSV για MailChimp"
+
+#: .\templates\bulk_add_members.html:37
+msgid "back to the community/project home"
+msgstr "επιστροφή στην κοινότητα/αρχική σελίδα του έργου"
+
+#: .\templates\comments\zinnia\entry\form.html:12
+msgid "Post your comment"
+msgstr "Δημοσιεύστε το σχόλιό σας"
+
+#: .\templates\comments\zinnia\entry\form.html:27
+msgid "Comment as"
+msgstr "Σχολιάστε ως"
+
+#: .\templates\comments\zinnia\entry\form.html:32
+msgid "Post"
+msgstr "Άρθρο"
+
+#: .\templates\content_languages.html:26 .\templates\content_languages.html:39
+msgid "contents languages and translations"
+msgstr "γλώσσες περιεχομένων και μεταφράσεις"
+
+#: .\templates\contributors.html:17
+msgid "creation of learning paths"
+msgstr "δημιουργία μονοπατιών μάθησης"
+
+#: .\templates\contributors.html:27 .\templates\contributors.html:48
+#: .\templates\contributors.html:69 .\templates\contributors.html:90
+msgid "view resources"
+msgstr "προβολή πόρων"
+
+#: .\templates\contributors.html:38
+msgid "cataloguing of OERs"
+msgstr "καταλογογράφηση Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\templates\contributors.html:59
+msgid "OERs evaluations"
+msgstr "αξιολογήσεις Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\templates\contributors.html:80
+msgid "cataloguing of OER sources"
+msgstr "καταλογογράφηση πηγών Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\templates\cops_tree.html:88
+msgid "no community is present."
+msgstr "δεν υπάρχει κοινότητα."
+
+#: .\templates\count_users.html:5 .\templates\count_users.html:8
+msgid "count of users and members"
+msgstr "αριθμός χρηστών και μελών"
+
+#: .\templates\count_users.html:14
+msgid "user class"
+msgstr "κατηγορία χρήστη"
+
+#: .\templates\count_users.html:14
+msgid "user count"
+msgstr "αριθμός χρηστών"
+
+#: .\templates\count_users.html:17
+msgid "all users"
+msgstr "όλοι οι χρήστες"
+
+#: .\templates\count_users.html:18
+msgid "regular profiles"
+msgstr "κανονικά προφίλ"
+
+#: .\templates\count_users.html:19
+msgid "profiles with avatars"
+msgstr "προφίλ με avatar"
+
+#: .\templates\count_users.html:21
+msgid "accepted members"
+msgstr "δεκτά μέλη"
+
+#: .\templates\count_users.html:22
+msgid "community members"
+msgstr "μέλη της κοινότητας"
+
+#: .\templates\count_users.html:23
+msgid "project members"
+msgstr "μέλη του έργου"
+
+#: .\templates\datatrans\base.html:5
+msgid "Data Translation"
+msgstr "Μετάφραση Δεδομένων"
+
+#: .\templates\datatrans\base.html:16
+msgid "Datatrans - Model Translation"
+msgstr "Datatrans - Μετάφραση Προτύπου"
+
+#: .\templates\datatrans\base.html:19
+msgid "Welcome,"
+msgstr "Καλωσήρθατε,"
+
+#: .\templates\datatrans\base.html:19
+msgid "Site administration"
+msgstr "Διαχείριση ιστοτόπου"
+
+#: .\templates\datatrans\base.html:19
+msgid "Change password"
+msgstr "Αλλάξτε κωδικό"
+
+#: .\templates\datatrans\base.html:24
+msgid "Models"
+msgstr "Μοντέλα"
+
+#: .\templates\datatrans\model_detail.html:4
+#: .\templates\datatrans\model_detail.html:9
+#: .\templates\datatrans\model_detail.html:13
+#: .\templates\datatrans\model_detail.html:29
+#: .\templates\datatrans\object_list.html:3
+#: .\templates\datatrans\object_list.html:4
+#: .\templates\datatrans\object_list.html:18
+#: .\templates\datatrans\translate.html:28
+#: .\templates\datatrans\translate.html:29
+#: .\templates\datatrans\translate.html:30
+#: .\templates\datatrans\translate.html:31
+#: .\templates\datatrans\translate.html:32
+#: .\templates\datatrans\translate.html:33
+#: .\templates\datatrans\translate.html:34
+#: .\templates\datatrans\translate.html:35
+msgid "Translations for"
+msgstr "Μεταφράσεις για"
+
+#: .\templates\datatrans\model_detail.html:32
+#, python-format
+msgid "Progress: %(percent)s%% (%(done)s/%(total)s)"
+msgstr "Πρόοδος:%(percent)s%%(%(done)s/%(total)s)"
+
+#: .\templates\datatrans\model_detail.html:39
+msgid "Jump to first to do"
+msgstr "Μεταβείτε στην πρώτη για να κάνετε"
+
+#: .\templates\datatrans\model_detail.html:43
+#, python-format
+msgid "Jump to %(field_verbose_name)s field"
+msgstr "Μεταβείτε στο πεδίο %(field_verbose_name)s "
+
+#: .\templates\datatrans\model_detail.html:48
+msgid "done"
+msgstr "ολοκληρωμένο"
+
+#: .\templates\datatrans\model_detail.html:50
+msgid "to do"
+msgstr "να κάνω"
+
+#: .\templates\datatrans\model_detail.html:52
+msgid "to do (fuzzy)"
+msgstr "να κάνω (ασαφής)"
+
+#: .\templates\datatrans\model_detail.html:82
+msgid "Link to this translation"
+msgstr "Σύνδεσμος σε αυτήν τη μετάφραση"
+
+#: .\templates\datatrans\model_detail.html:105
+msgid "tick this checkbox if the translation is deliberately empty"
+msgstr "επιλέξτε αυτό το πλαίσιο ελέγχου εάν η μετάφραση είναι εσκεμμένα κενή"
+
+#: .\templates\datatrans\model_detail.html:105
+msgid "empty"
+msgstr "κενή"
+
+#: .\templates\datatrans\model_detail.html:107
+msgid "keep this original or fuzzy"
+msgstr "κρατήστε αυτό το πρωτότυπο ή ασαφές"
+
+#: .\templates\datatrans\model_detail.html:107
+msgid "ignore"
+msgstr "ανγόησε"
+
+#: .\templates\datatrans\model_detail.html:116
+#: .\templates\schedule\create_event.html:17
+msgid "Save"
+msgstr "Αποθήκευση"
+
+#: .\templates\datatrans\model_list.html:4
+#: .\templates\datatrans\model_list.html:9
+msgid "Models to translate"
+msgstr "Models to translate"
+
+#: .\templates\datatrans\model_list.html:10
+#, python-format
+msgid "%(words)s words"
+msgstr "%(words)sλέξεις"
+
+#: .\templates\datatrans\model_list.html:14
+msgid "Scan models"
+msgstr "Σάρωση μοντέλων"
+
+#: .\templates\datatrans\model_list.html:15
+#: .\templates\datatrans\obsolete_list.html:3
+#: .\templates\datatrans\obsolete_list.html:4
+#: .\templates\datatrans\obsolete_list.html:7
+msgid "Obsolete translations"
+msgstr "Απαρχαιωμένες μεταφράσεις"
+
+#: .\templates\datatrans\model_list.html:21
+msgid "words"
+msgstr "λέξεις"
+
+#: .\templates\datatrans\model_list.html:31
+msgid "Change"
+msgstr "Αλλαγή"
+
+#: .\templates\datatrans\model_list.html:35
+msgid "Total"
+msgstr "Σύνολο"
+
+#: .\templates\datatrans\obsolete_list.html:10
+#, python-format
+msgid "There are %(obsolete_count)s obsolete messages."
+msgstr "Υπάρχουν %(obsolete_count)sπαλιά μηνύματα"
+
+#: .\templates\datatrans\obsolete_list.html:11
+msgid ""
+"Please review them to see if you can reuse something,\n"
+"\t\t\tand when done click the 'Remove all obsoletes' button to clean the KeyValue table."
+msgstr "Ελέγξτε τα για να δείτε αν μπορείτε να επαναχρησιμοποιήσετε κάτι,\n   και όταν τελειώσετε κάντε κλικ στο κουμπί «Κατάργηση όλων των παρωχημένων» για να καθαρίσετε τον πίνακα KeyValue."
+
+#: .\templates\datatrans\obsolete_list.html:17
+#: .\templates\datatrans\obsolete_list.html:35
+msgid "Remove all obsoletes"
+msgstr "Αφαιρέστε όλα τα παρωχημένα"
+
+#: .\templates\datatrans\obsolete_list.html:21
+msgid "Obsolete message"
+msgstr "Απαρχαιωμένο μήνυμα"
+
+#: .\templates\datatrans\obsolete_list.html:40
+msgid "There are no obsolete messages! Yay!"
+msgstr "Δεν υπάρχουν παρωχημένα μηνύματα! Ναι!"
+
+#: .\templates\datatrans\translate.html:7
+msgid "Translations of"
+msgstr "Μεταφράσεις από"
+
+#: .\templates\datatrans\translate.html:11
+msgid ""
+"Please, note that the translation functionality is affected by the original "
+"editing language of this content"
+msgstr "Λάβετε υπόψη ότι η λειτουργία μετάφρασης επηρεάζεται από την αρχική γλώσσα επεξεργασίας αυτού του περιεχομένου"
+
+#: .\templates\datatrans\translate.html:11
+msgid "and by the languages known by the user as declared in the user profile"
+msgstr "και από τις γλώσσες που γνωρίζει ο χρήστης όπως δηλώνεται στο προφίλ χρήστη"
+
+#: .\templates\datatrans\translate.html:12
+msgid "The current active language"
+msgstr "Η τρέχουσα ενεργή γλώσσα"
+
+#: .\templates\datatrans\translate.html:12
+msgid "affects only the UI messages of this view"
+msgstr "επηρεάζει μόνο τα μηνύματα διεπαφής χρήστη"
+
+#: .\templates\datatrans\translate.html:40
+msgid "back to the normal view of this content"
+msgstr "επιστροφή στην κανονική προβολή αυτού του περιεχομένου"
+
+#: .\templates\datatrans\translate.html:70
+msgid "The original language of this content is not known."
+msgstr "Η αρχική γλώσσα αυτού του περιεχομένου δεν είναι γνωστή."
+
+#: .\templates\django_messages\base.html:25
+msgid "New Message"
+msgstr "Νέο Μήνυμα"
+
+#: .\templates\django_messages\base.html:27
+#: .\templates\django_messages\inbox.html:3
+#: .\templates\django_messages\inbox.html:5
+#: .\templates\django_messages\trash.html:21
+msgid "Inbox"
+msgstr "Κουτί Αλληλογραφίας"
+
+#: .\templates\django_messages\base.html:28
+#: .\templates\django_messages\outbox.html:3
+#: .\templates\django_messages\outbox.html:5
+#: .\templates\django_messages\trash.html:21
+msgid "Sent Messages"
+msgstr "Απεσταλμένα Μηνύματα"
+
+#: .\templates\django_messages\base.html:29
+msgid "Trash"
+msgstr "Κάδος Διαγραμμένων"
+
+#: .\templates\django_messages\compose.html:3
+#: .\templates\django_messages\compose.html:6
+msgid "Compose Message"
+msgstr "Σύνταξη Μηνύματος"
+
+#: .\templates\django_messages\compose.html:20
+msgid "Send"
+msgstr "Αποστολή"
+
+#: .\templates\django_messages\inbox.html:13
+#: .\templates\django_messages\trash.html:14
+#: .\templates\django_messages\view.html:7
+msgid "Sender"
+msgstr "Αποστολέας"
+
+#: .\templates\django_messages\inbox.html:14
+#: .\templates\django_messages\outbox.html:13
+#: .\templates\django_messages\trash.html:15
+#: .\templates\django_messages\view.html:15
+msgid "Date"
+msgstr "Ημερομηνία"
+
+#: .\templates\django_messages\inbox.html:20
+#: .\templates\django_messages\outbox.html:19
+#: .\templates\folder_detail.html:53 .\templates\folder_detail.html:96
+#: .\templates\lp_detail.html:67 .\templates\lp_detail.html:191
+#: .\templates\oer_detail.html:34 .\templates\oer_detail.html:185
+msgid "delete"
+msgstr "Διαγραφή"
+
+#: .\templates\django_messages\inbox.html:28
+#: .\templates\django_messages\outbox.html:22
+#: .\templates\django_messages\trash.html:24
+#: .\templates\django_messages\view.html:15
+msgid "SHORT_DATETIME_FORMAT"
+msgstr ""
+
+#: .\templates\django_messages\inbox.html:34
+#: .\templates\django_messages\outbox.html:28
+#: .\templates\django_messages\trash.html:30
+msgid "No messages."
+msgstr "Δεν υπάρχουν μηνύματα"
+
+#: .\templates\django_messages\new_message.html:2
+#, python-format
+msgid ""
+"Hello %(recipient_name)s,\n"
+"you received a private message from %(sender_name)s with the following contents:"
+msgstr "Γεια σας %(recipient_name)s, \nέχετε λάβει ένα προσωπικό μήνυμα από %(sender_name)s με το παρακάτω περιεχόμενο"
+
+#: .\templates\django_messages\new_message.html:9
+#, python-format
+msgid "Sent from %(site_url)s"
+msgstr "Αποστολή από %(site_url)s"
+
+#: .\templates\django_messages\trash.html:4
+#: .\templates\django_messages\trash.html:7
+msgid "Deleted Messages"
+msgstr "Διαγραμμένα μηνύματα"
+
+#: .\templates\django_messages\trash.html:12
+#: .\templates\django_messages\trash.html:21
+msgid "move to"
+msgstr "μεταφορά σε"
+
+#: .\templates\django_messages\trash.html:32
+msgid ""
+"Deleted Messages are removed from the trash at unregular intervals, don't "
+"rely on this feature for long-time storage."
+msgstr "Τα διαγραμμένα μηνύματα αφαιρούνται από τον κάδο διέγραμμένων σε ακανόνιστα διαστήματα, μην βασίζεστε σε αυτήν τη δυνατότητα για μακροχρόνια αποθήκευση."
+
+#: .\templates\django_messages\view.html:3
+#: .\templates\django_messages\view.html:5
+msgid "View Message"
+msgstr "Δείτε το μήνυμα"
+
+#: .\templates\django_messages\view.html:10
+msgid "Reply"
+msgstr "Απάντηση"
+
+#: .\templates\django_messages\view.html:12
+#: .\templates\pybb\post_template.html:59 .\templates\schedule\event.html:20
+msgid "Delete"
+msgstr "Διαγραφή"
+
+#: .\templates\document_view.html:7
+#, python-format
+msgid "Node: %(node_label)s [document]"
+msgstr "Κόμβος: %(node_label)s [document]"
+
+#: .\templates\document_view.html:9
+#, python-format
+msgid "OER: %(oer_title)s [document]"
+msgstr "Ανοιχτός Εκπαιδευτικός Πόρος: %(oer_title)s [document]"
+
+#: .\templates\document_view.html:46 .\templates\folder_detail.html:31
+#: .\templates\online_resource_view.html:22
+#: .\templates\project_results.html:74
+#: .\templates\vue\contents_dashboard.html:240
+msgid "show project"
+msgstr "επισκόπηση έργου"
+
+#: .\templates\document_view.html:49
+#, python-format
+msgid "Curriculum: %(profile_name)s"
+msgstr "Διδακτέα ύλη: %(profile_name)s"
+
+#: .\templates\edit_preferences.html:6 .\templates\edit_preferences.html:12
+msgid "your preferences"
+msgstr "οι προτιμήσεις σας"
+
+#: .\templates\edit_preferences.html:19
+msgid "notification by email"
+msgstr "ειδοποίηση μέσω email"
+
+#: .\templates\edit_preferences.html:21
+msgid "activity history"
+msgstr "ιστορικό δραστηριότητας"
+
+#: .\templates\file_upload.html:10 .\templates\file_upload.html:13
+msgid "upload file with list of candidate members"
+msgstr "ανεβάσετε αρχείο με λίστα υποψηφίων μελών"
+
+#: .\templates\file_upload.html:14
+#, python-format
+msgid "community or project: %(project_name)s"
+msgstr "κοινότητα ή έργο: %(project_name)s"
+
+#: .\templates\file_upload.html:23 .\templates\folder_detail.html:138
+#: .\templates\oer_detail.html:210 .\templates\user_profile.html:185
+msgid "upload"
+msgstr "μεταφόρτωση"
+
+#: .\templates\file_upload.html:24 .\templates\folder_detail.html:139
+#: .\templates\oer_detail.html:211 .\templates\user_profile.html:186
+msgid "cancel"
+msgstr "Ματαίωση"
+
+#: .\templates\filebrowser\index.html:86
+msgid "New Folder"
+msgstr "Νέος Φάκελος"
+
+#: .\templates\filebrowser\index.html:87
+msgid "Upload"
+msgstr "Μεταφόρτωση"
+
+#: .\templates\filebrowser\index.html:98 .\templates\search_lps.html:18
+#: .\templates\search_projects.html:18 .\templates\search_repos.html:18
+#: .\templates\zinnia\skeleton.html:34
+msgid "Search"
+msgstr "Αναζήτηση"
+
+#: .\templates\folder_detail.html:5
+#, python-format
+msgid "Shared folder for community: %(com_name)s"
+msgstr "Κοινόχρηστος φάκελος για την κοινότητα: %(com_name)s"
+
+#: .\templates\folder_detail.html:5
+#, python-format
+msgid "Shared folder for project: %(proj_name)s"
+msgstr "Κοινόχρηστος φάκελος για το έργο: %(proj_name)s"
+
+#: .\templates\folder_detail.html:46 .\templates\project_detail.html:187
+msgid "created by"
+msgstr "δημιουργήθηκε από"
+
+#: .\templates\folder_detail.html:54 .\templates\folder_detail.html:97
+#: .\templates\pathnode_edit.html:21 .\templates\project_edit.html:9
+#: .\templates\project_edit.html:51
+msgid "edit"
+msgstr "επεξεργασία"
+
+#: .\templates\folder_detail.html:74
+msgid "added by"
+msgstr "προστέθηκε από"
+
+#: .\templates\folder_detail.html:85
+msgid "loaded by"
+msgstr "φορτωμένο από"
+
+#: .\templates\folder_detail.html:123
+msgid "no shared documents are present"
+msgstr "δεν υπάρχουν κοινά έγγραφα"
+
+#: .\templates\folder_detail.html:133 .\templates\oer_detail.html:205
+msgid "add document"
+msgstr "προσθήκη εγγράφου"
+
+#: .\templates\folder_detail.html:144
+msgid "add subfolder"
+msgstr "προσθήκη υποφακέλου"
+
+#: .\templates\folder_detail.html:154 .\templates\mentoring_detail.html:426
+#: .\templates\project_detail.html:465 .\templates\project_detail.html:774
+#: .\templates\project_detail.html:1015
+msgid "create"
+msgstr "δημιουργήστε"
+
+#: .\templates\folder_detail.html:160
+msgid "add online resource"
+msgstr "προσθέστε διαδικτυακό πόρο"
+
+#: .\templates\folder_detail.html:211 .\templates\lp_detail.html:316
+#: .\templates\oer_detail.html:304 .\templates\oer_detail.html:325
+#: .\templates\user_profile.html:337
+msgid "do you really want to delete"
+msgstr "θέλετε πραγματικά να διαγράψετε"
+
+#: .\templates\folder_detail.html:212 .\templates\oer_detail.html:326
+msgid "this document"
+msgstr "αυτό το έγγραφο"
+
+#: .\templates\folder_detail.html:215
+msgid "this folder"
+msgstr "αυτός ο φάκελος"
+
+#: .\templates\folder_edit.html:5
+#, python-format
+msgid "Edit folder: %(folder_title)s"
+msgstr "Επεξεργασία φακέλου: %(folder_title)s"
+
+#: .\templates\folder_edit.html:12
+msgid "edit folder"
+msgstr "επεξεργασία φακέλου"
+
+#: .\templates\folderdocument_edit.html:4
+#, python-format
+msgid "Edit document in folder: %(folder_title)s"
+msgstr "Επεξεργασία εγγράφου στο φάκελο: %(folder_title)s"
+
+#: .\templates\folderdocument_edit.html:11
+msgid "edit document"
+msgstr "επεξεργασία εγγράφου"
+
+#: .\templates\forum_analytics.html:5 .\templates\forum_analytics.html:11
+msgid "forum analytics"
+msgstr "αναλυτικά στοιχεία φόρουμ"
+
+#: .\templates\forum_analytics.html:12
+#, python-format
+msgid "Total number of posts: %(total)s"
+msgstr "Συνολικός αριθμός αναρτήσεων: %(total)s"
+
+#: .\templates\forum_analytics.html:15
+msgid "forums with topics by posts"
+msgstr "φόρουμ με θέματα ανά αναρτήσεις"
+
+#: .\templates\forum_analytics.html:30
+msgid "forum topics by posts"
+msgstr "θέματα φόρουμ ανά αναρτήσεις"
+
+#: .\templates\forum_edit.html:7 .\templates\forum_edit.html:13
+#, python-format
+msgid "Edit forum: %(forum_name)s"
+msgstr "Επεξεργασία φόρουμ: %(forum_name)s"
+
+#: .\templates\homepage.html:6 .\views.py:167
+msgid "Learn with others, Create, Reuse"
+msgstr "Μάθετε με άλλους, Δημιουργήστε, Επαναχρησιμοποιήστε"
+
+#: .\templates\homepage.html:147 .\views.py:164
+msgid "learning in online communities of practice"
+msgstr "μάθηση σε διαδικτυακές κοινότητες άσκησης"
+
+#: .\templates\homepage.html:148 .\views.py:164
+msgid "reusing resources to build learning paths"
+msgstr "επαναχρησιμοποίηση πόρων για τη δημιουργία μονοπατιών μάθησης"
+
+#: .\templates\homepage.html:149 .\views.py:164
+msgid "browsing collections in our library of OERs"
+msgstr "περιήγηση συλλογών στη βιβλιοθήκη των Ανοιχτών Εκπαιδευτικών Πόρων μας"
+
+#: .\templates\homepage.html:150
+msgid "join the Community now"
+msgstr "εγγραφείτε τώρα στην Κοινότητα"
+
+#: .\templates\homepage.html:171
+msgid "visible from"
+msgstr "ορατό από"
+
+#: .\templates\homepage.html:202
+msgid "newest community"
+msgstr "νεότερη κοινότητα"
+
+#: .\templates\homepage.html:208
+msgid "most active community"
+msgstr "πιο ενεργή κοινότητα"
+
+#: .\templates\homepage.html:212
+msgid "most popular project"
+msgstr "δημοφιλέστερο έργο"
+
+#: .\templates\homepage.html:216
+msgid "newest learning path"
+msgstr "νεότερο μαθησιακό μονοπάτι"
+
+#: .\templates\homepage.html:220
+msgid "most popular learning path"
+msgstr "δημοφιλέστερη διαδρομή μάθησης"
+
+#: .\templates\homepage.html:224
+msgid "newest OER"
+msgstr "νεότερος Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\templates\homepage.html:228
+msgid "most popular OER"
+msgstr "δημοφιλέστερος Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\templates\homepage.html:251
+msgid "learn more"
+msgstr "μάθετε περισσότερα"
+
+#: .\templates\lp_detail.html:4 .\templates\lp_play.html:4
+#, python-format
+msgid "%(lp_title)s [learning path]"
+msgstr "%(lp_title)s [learning path]"
+
+#: .\templates\lp_detail.html:71
+msgid "bookmark this LP for future reference"
+msgstr "προσθέστε σελιδοδείκτη αυτό το μαθησιακό μονοπάτι για μελλοντική αναφορά"
+
+#: .\templates\lp_detail.html:72
+msgid "mark this LP as a candidate for cut & paste"
+msgstr "επισημάνετε αυτό το μαθησιακό μονοπάτι ως υποψήφιο για αντιγραφή & επικόλληση"
+
+#: .\templates\lp_detail.html:162
+msgid "convert to sequence type"
+msgstr "μετατροπή σε τύπο ακολουθίας"
+
+#: .\templates\lp_detail.html:165
+msgid "convert to simple collection"
+msgstr "μετατροπή σε απλή συλλογή"
+
+#: .\templates\lp_detail.html:168
+msgid "convert to graph type in tree form: suggested only for few node!"
+msgstr "μετατροπή σε τύπο γραφήματος σε μορφή δέντρου: προτείνεται μόνο για λίγους κόμβους!"
+
+#: .\templates\lp_detail.html:171
+msgid "convert to graph type with unconnected nodes"
+msgstr "μετατροπή σε τύπο γραφήματος με μη συνδεδεμένους κόμβους"
+
+#: .\templates\lp_detail.html:195 .\templates\lp_detail.html:197
+#: .\templates\oer_detail.html:188 .\templates\oer_detail.html:190
+msgid "move up"
+msgstr "ανεβείτε"
+
+#: .\templates\lp_detail.html:195 .\templates\lp_detail.html:196
+#: .\templates\oer_detail.html:188 .\templates\oer_detail.html:189
+msgid "move down"
+msgstr "μετακινηθείτε προς τα κάτω"
+
+#: .\templates\lp_detail.html:230 .\templates\pathnode_edit.html:7
+msgid "add node"
+msgstr "προσθήκη κόμβου"
+
+#: .\templates\lp_detail.html:232
+#, python-format
+msgid "Add node with OER <span class=\"%(class_name)s\">%(oer_title)s</span>"
+msgstr "Προσθήκη κόμβου με Ανοιχτό Εκπαιδευτικό Πόρο <span class=\"%(class_name)s\">%(oer_title)s</span>"
+
+#: .\templates\lp_detail.html:236
+msgid "export as PDF"
+msgstr "εξαγωγή ως PDF"
+
+#: .\templates\lp_detail.html:243
+msgid "cloned from"
+msgstr "κλωνοποιημένο από"
+
+#: .\templates\lp_detail.html:250
+msgid "grant editor roles"
+msgstr "παραχώρηση ρόλου συντάκτη"
+
+#: .\templates\lp_detail.html:257
+msgid "editor"
+msgstr "συντάκτης"
+
+#: .\templates\lp_detail.html:261
+msgid "grant role"
+msgstr "παραχώρηση ρόλου"
+
+#: .\templates\lp_detail.html:266
+msgid "remove role"
+msgstr "αφαίρεση ρόλου"
+
+#: .\templates\lp_detail.html:278
+msgid ""
+"do not submit this LP for publication if you want that only your mentor see "
+"it"
+msgstr "μην υποβάλετε αυτό το μαθησιακό μονοπάτι για δημοσίευση εάν θέλετε να το δει μόνο ο μέντοράς σας"
+
+#: .\templates\lp_detail.html:282
+msgid ""
+"To submit for publication this LP, you must move it before to a project by "
+"using the tool"
+msgstr "Για να υποβάλετε για δημοσίευση αυτό το μαθησιακό μονοπάτι, πρέπει να το μετακινήσετε πριν σε ένα έργο χρησιμοποιώντας το εργαλείο"
+
+#: .\templates\lp_detail.html:317 .\templates\lp_detail.html:323
+msgid "this learning path"
+msgstr "αυτό το μαθησιακό μονοπάτι"
+
+#: .\templates\lp_detail.html:322
+msgid "do you really want to convert"
+msgstr "θέλετε πραγματικά να κάνετε μετατροπή"
+
+#: .\templates\lp_detail.html:342
+msgid "do you really want to grant the editor role to this member"
+msgstr "θέλετε πραγματικά να εκχωρήσετε το ρόλο του συντάκτη σε αυτό το μέλος;"
+
+#: .\templates\lp_detail.html:344
+msgid "do you really want to remove this role"
+msgstr "θέλετε πραγματικά να αφαιρέσετε αυτόν τον ρόλο;"
+
+#: .\templates\lp_detail.html:417
+msgid ""
+"You can export this learning path for private use only and should avoid "
+"overloading the system. Proceed?"
+msgstr "Μπορείτε να εξαγάγετε αυτήν τη διαδρομή εκμάθησης μόνο για ιδιωτική χρήση και θα πρέπει να αποφύγετε την υπερφόρτωση του συστήματος. Προχωρώ;"
+
+#: .\templates\lp_edit.html:7
+#, python-format
+msgid "%(lp_title)s [edit learning path]"
+msgstr "%(lp_title)s [edit learning path]"
+
+#: .\templates\lp_edit.html:7 .\templates\lp_edit.html:17
+msgid "add learning path"
+msgstr "προσθέστε διαδρομή μάθησης"
+
+#: .\templates\lp_edit.html:15
+msgid "edit learning path"
+msgstr "επεξεργασία διαδρομής μάθησης"
+
+#: .\templates\lp_edit.html:19 .\templates\oer_edit.html:23
+#, python-format
+msgid "<small class=\"%(class_name)s\">in the project</small> %(proj_name)s"
+msgstr "<small class=\"%(class_name)s\">στο έργο</small>%(proj_name)s"
+
+#: .\templates\lp_play.html:116 .\templates\lp_play.html:176
+msgid "prev"
+msgstr "προηγούμενο"
+
+#: .\templates\lp_play.html:128 .\templates\lp_play.html:177
+msgid "next"
+msgstr "επόμενο"
+
+#: .\templates\lp_play.html:160
+msgid "currently this OER is not public"
+msgstr "επί του παρόντος αυτός ο Ανοιχτός Εκπαιδευτικός Πόρος δεν είναι δημόσιος"
+
+#: .\templates\mentoring_detail.html:5
+#, python-format
+msgid "%(the_project)s [project]"
+msgstr "%(the_project)s[project]"
+
+#: .\templates\mentoring_detail.html:143
+msgid "mentee"
+msgstr "καθοδηγούμενος"
+
+#: .\templates\mentoring_detail.html:173
+msgid ""
+"a request must be submitted to the community administrator, which will try "
+"to allocate a mentor."
+msgstr "πρέπει να υποβληθεί ένα αίτημα στον διαχειριστή της κοινότητας, ο οποίος θα προσπαθήσει να διαθέσει έναν μέντορα. "
+
+#: .\templates\mentoring_detail.html:234
+msgid "documents"
+msgstr "έγγραφα"
+
+#: .\templates\mentoring_detail.html:265 .\templates\mentoring_detail.html:313
+msgid "confirm your choice"
+msgstr "επιβεβαιώστε την επιλογή σας "
+
+#: .\templates\mentoring_detail.html:288
+msgid "my previous refusals"
+msgstr "προηγούμενες απορρίψεις μου "
+
+#: .\templates\mentoring_detail.html:328
+msgid "received messages"
+msgstr "ληφθέντα μηνύματα "
+
+#: .\templates\mentoring_detail.html:329
+msgid "sent messages"
+msgstr "Απεσταλμένα Μηνύματα"
+
+#: .\templates\mentoring_detail.html:330
+msgid "new message"
+msgstr "Νέο Μήνυμα"
+
+#: .\templates\mentoring_detail.html:341
+msgid "no messages received"
+msgstr "δεν ελήφθησαν μηνύματα"
+
+#: .\templates\mentoring_detail.html:352
+msgid "no messages sent"
+msgstr "δεν εστάλησαν μηνύματα "
+
+#: .\templates\mentoring_detail.html:365
+msgid "send"
+msgstr "Αποστολή"
+
+#: .\templates\mentoring_detail.html:377
+msgid "submit request to admin"
+msgstr "υποβάλετε αίτημα στον διαχειριστή "
+
+#: .\templates\mentoring_detail.html:377
+msgid "submit request"
+msgstr "υποβάλετε αίτημα"
+
+#: .\templates\mentoring_detail.html:385
+msgid "back to draft state"
+msgstr "επιστροφή στην πρόχειρη κατάσταση"
+
+#: .\templates\mentoring_detail.html:389 .\templates\project_detail.html:306
+#: .\templates\project_detail.html:892
+msgid "open"
+msgstr "άνοιγμα"
+
+#: .\templates\mentoring_detail.html:391 .\templates\project_detail.html:307
+#: .\templates\project_detail.html:893
+msgid "close"
+msgstr "κλείσιμο"
+
+#: .\templates\mentoring_detail.html:394
+msgid "view the shared folder"
+msgstr "δείτε τον κοινόχρηστο φάκελο "
+
+#: .\templates\mentoring_detail.html:400 .\templates\project_detail.html:410
+#: .\templates\project_detail.html:999
+msgid "meeting"
+msgstr "διάσκεψη"
+
+#: .\templates\mentoring_detail.html:412 .\templates\project_detail.html:437
+#: .\templates\project_detail.html:448
+msgid "classify"
+msgstr "ταξινόμηση"
+
+#: .\templates\mentoring_detail.html:414 .\templates\mentoring_detail.html:428
+#: .\templates\project_detail.html:453 .\templates\project_detail.html:470
+msgid "share"
+msgstr "διαμοιρασμός"
+
+#: .\templates\mentoring_detail.html:424 .\templates\project_detail.html:463
+#: .\templates\project_detail.html:1013
+msgid "LP"
+msgstr "Μαθησιακό Μονοπάτι"
+
+#: .\templates\mentoring_detail.html:442 .\templates\project_detail.html:624
+msgid "last LPs"
+msgstr "τελευταία Μαθησιακά Μονοπάτια"
+
+#: .\templates\mentoring_detail.html:449 .\templates\mentoring_detail.html:474
+#: .\templates\project_detail.html:632 .\templates\project_detail.html:659
+#: .\templates\project_detail.html:685 .\templates\project_detail.html:1036
+msgid "read more"
+msgstr "διαβάστε περισσότερα"
+
+#: .\templates\mentoring_detail.html:458 .\templates\project_detail.html:642
+msgid "unshare this LP"
+msgstr "ακύρωση διαμοιρασμού Μαθησιακού Μονοπατιού"
+
+#: .\templates\mentoring_detail.html:467 .\templates\project_detail.html:651
+msgid "last OERs"
+msgstr "τελευταίοι Ανοιχτοί Εκπαιδευτικοί Πόροι"
+
+#: .\templates\mentoring_detail.html:483 .\templates\project_detail.html:669
+msgid "unshare this OER"
+msgstr "ακύρωση διαμοιρασμού αυτού του Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\templates\message_analytics.html:6 .\templates\message_analytics.html:17
+msgid "messages analytics"
+msgstr "αναλυτικά στοιχεία των μηνυμάτων"
+
+#: .\templates\message_analytics.html:18
+#, python-format
+msgid "Total number of messages: %(total)s"
+msgstr "Συνολικός αριθμός μηνυμάτων: %(total)s"
+
+#: .\templates\message_analytics.html:21
+msgid "messages by month"
+msgstr "μηνύματα ανά μήνα"
+
+#: .\templates\new_posts.html:6
+msgid "new posts in your forums"
+msgstr "Πρόσφατες αναρτήσεις στα φόρουμ σας."
+
+#: .\templates\new_posts.html:9
+msgid "new posts in my forums"
+msgstr "Πρόσφατες αναρτήσεις στα φόρουμ μου."
+
+#: .\templates\new_posts.html:10
+msgid "posts added to topics after you last viewed them"
+msgstr "αναρτήσεις που προστέθηκαν σε θέματα αφού τα προβάλατε για τελευταία φορά "
+
+#: .\templates\new_posts.html:25
+msgid "no new posts are present"
+msgstr "δεν υπάρχουν νέες αναρτήσεις "
+
+#: .\templates\new_posts.html:27
+msgid "forums of your community and or projects + thematic forums"
+msgstr "φόρουμ της κοινότητάς σας και/ή έργα + θεματικά φόρουμ "
+
+#: .\templates\notification\email_body.txt:1
+#, python-format
+msgid "%(body)s"
+msgstr "%(body)s"
+
+#: .\templates\notification\email_subject.txt:1
+#, python-format
+msgid "%(subject)s"
+msgstr "%(subject)s"
+
+#: .\templates\notification\full.txt:1 .\templates\notification\short.txt:1
+#, python-format
+msgid "%(notice)s"
+msgstr "%(notice)s"
+
+#: .\templates\oer_detail.html:4 .\templates\oer_view.html:5
+#, python-format
+msgid "%(oer_title)s [OER]"
+msgstr "%(oer_title)s [OER]"
+
+#: .\templates\oer_detail.html:41
+msgid "upload screenshot"
+msgstr "μεταφόρτωση στιγμιότυπου οθόνης "
+
+#: .\templates\oer_detail.html:42 .\templates\oer_view.html:32
+msgid "bookmark this OER for future reference"
+msgstr "προσθέστε σελιδοδείκτη αυτό τον Ανοιχτό Εκπαιδευτικό Πόρο για μελλοντική αναφορά"
+
+#: .\templates\oer_detail.html:44
+msgid "mark this OER as a candidate for cut & paste"
+msgstr "επισημάνετε αυτό τον Ανοιχτό Εκπαιδευτικό Πόρο ως υποψήφιο για αντιγραφή & επικόλληση"
+
+#: .\templates\oer_detail.html:63 .\templates\oer_detail.html:71
+#: .\templates\oer_detail.html:75 .\templates\oer_detail.html:90
+#: .\templates\oer_detail.html:94
+#, python-format
+msgid "view resource: %(oer_url)s"
+msgstr "προβολή πόρου: %(oer_url)s"
+
+#: .\templates\oer_detail.html:63 .\templates\oer_detail.html:71
+#: .\templates\oer_detail.html:75 .\templates\oer_detail.html:90
+#: .\templates\oer_detail.html:94
+msgid "view resource"
+msgstr "προβολή πόρου"
+
+#: .\templates\oer_detail.html:106
+msgid "reference info"
+msgstr "πληροφορίες αναφοράς "
+
+#: .\templates\oer_detail.html:150
+msgid "other metadata"
+msgstr "άλλα μεταδεδομένα "
+
+#: .\templates\oer_detail.html:164
+msgid "derived, through translation and adaptation / remixing, from"
+msgstr "προέρχονται, μέσω μετάφρασης και προσαρμογής / αναμίξης, από "
+
+#: .\templates\oer_detail.html:165
+msgid "derived, through translation, from"
+msgstr "προέρχεται, μέσω μετάφρασης, από "
+
+#: .\templates\oer_detail.html:166
+msgid "derived, through adaptation / remixing, from"
+msgstr "προέρχεται, μέσω προσαρμογής / αναμίξης, από "
+
+#: .\templates\oer_detail.html:226
+msgid "to be able to publish this OER you must, fill some required fields."
+msgstr "Για να μπορέσετε να δημοσιεύσετε αυτό τον Ανοιχτό Εκπαιδευτικό Πόρο πρέπει να συμπληρώσετε ορισμένα υποχρεωτικά πεδία. "
+
+#: .\templates\oer_detail.html:230 .\templates\oer_evaluations.html:36
+msgid "evaluations"
+msgstr "αξιολογήσεις"
+
+#: .\templates\oer_detail.html:233 .\templates\project_detail.html:681
+#: .\templates\project_results.html:116
+msgid "view evaluations"
+msgstr "δείτε αξιολογήσεις "
+
+#: .\templates\oer_detail.html:235
+msgid "no evaluation"
+msgstr "καμία αξιολόγηση"
+
+#: .\templates\oer_detail.html:240 .\templates\oer_evaluation_edit.html:17
+msgid "edit evaluation"
+msgstr "επεξεργασία αξιολόγησης "
+
+#: .\templates\oer_detail.html:240 .\templates\oer_evaluation_edit.html:17
+msgid "add evaluation"
+msgstr "προσθήκη αξιολόγησης "
+
+#: .\templates\oer_detail.html:244 .\templates\oer_detail.html:246
+msgid "to add evaluation"
+msgstr "για να προσθέσετε αξιολόγηση "
+
+#: .\templates\oer_detail.html:252
+msgid "LPs referring this OER"
+msgstr "Μαθησιακά Μονοπάτια που αναφέρονται σε αυτόν τον Ανοιχτό Εκπαιδευτικό Πόρο"
+
+#: .\templates\oer_detail.html:260
+msgid ""
+"To edit this OER, you must move it before to a project by using the tool"
+msgstr "Για να επεξεργαστείτε αυτό τον Ανοιχτό Εκπαιδευτικό Πόρο, πρέπει να το μετακινήσετε πριν σε ένα έργο χρησιμοποιώντας το εργαλείο "
+
+#: .\templates\oer_detail.html:305
+msgid "this OER"
+msgstr "αυτός ο Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\templates\oer_edit.html:7
+#, python-format
+msgid "%(oer_title)s [edit OER]"
+msgstr "%(oer_title)s[edit OER]"
+
+#: .\templates\oer_edit.html:7 .\templates\oer_edit.html:21
+msgid "add OER"
+msgstr "προσθήκη Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\templates\oer_edit.html:19
+msgid "edit OER"
+msgstr "επεξεργασία Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\templates\oer_edit.html:40 .\templates\profile_edit.html:32
+#: .\templates\user_profile.html:63
+msgid "general information"
+msgstr "γενικές πληροφορίες"
+
+#: .\templates\oer_edit.html:40
+msgid "classification metadata"
+msgstr "μεταδεδομένα ταξινόμησης "
+
+#: .\templates\oer_edit.html:42
+msgid "source and derivation"
+msgstr "πηγή και προέλευση "
+
+#: .\templates\oer_evaluation_edit.html:6
+#, python-format
+msgid "Edit evaluation of OER: %(oer_title)s"
+msgstr "Επεξεργασία αξιολόγησης Ανοιχτού Εκπαιδευτικού Πόρου: %(oer_title)s"
+
+#: .\templates\oer_evaluation_edit.html:6
+#, python-format
+msgid "Add evaluation of OER: %(oer_title)s"
+msgstr "Προσθήκη αξιολόγησης Ανοιχτού Εκπαιδευτικού Πόρου: %(oer_title)s"
+
+#: .\templates\oer_evaluation_edit.html:14 .\templates\oer_evaluations.html:33
+msgid "show OER"
+msgstr "εμφάνιση Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\templates\oer_evaluation_edit.html:28 .\templates\oer_evaluations.html:51
+msgid "detailed quality assessment"
+msgstr "αναλυτική αξιολόγηση της ποιότητας"
+
+#: .\templates\oer_evaluations.html:5
+#, python-format
+msgid "Evaluations of OER: %(oer_title)s"
+msgstr "Αξιολογήσεις του Ανοιχτού Εκπαιδευτικού Πόρου: %(oer_title)s"
+
+#: .\templates\oer_evaluations.html:45
+msgid "overall assessment"
+msgstr "συνολική αξιολόγηση"
+
+#: .\templates\oer_evaluations.html:61
+msgid "evaluated by"
+msgstr "αξιολογήθηκε από"
+
+#: .\templates\oer_screenshot_upload.html:8
+#, python-format
+msgid "%(oer_title)s [upload screenshot OER]"
+msgstr "%(oer_title)s [upload screenshot OER]"
+
+#: .\templates\oer_screenshot_upload.html:15
+msgid "upload screenshot of OER"
+msgstr "μεταφόρτωση στιγμιότυπου οθόνης του Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\templates\oer_screenshot_upload.html:30
+msgid "remove screenshot"
+msgstr "διαγραφή στιγμιότυπου οθόνης "
+
+#: .\templates\oer_view.html:31
+msgid "evaluate"
+msgstr "αξιολογήστε"
+
+#: .\templates\online_resource_edit.html:5
+#, python-format
+msgid "Edit online resource in folder %(folder_title)s"
+msgstr "Edit online resource in folder %(folder_title)s"
+
+#: .\templates\online_resource_edit.html:12
+msgid "edit online resource"
+msgstr "επεξεργασία διαδικτυακού πόρου "
+
+#: .\templates\pathnode_edit.html:7
+msgid "edit learning path node"
+msgstr "επεξεργασία κόμβου διαδρομής μάθησης "
+
+#: .\templates\pathnode_edit.html:23
+msgid "add learning path node"
+msgstr "προσθήκη κόμβου διαδρομής μάθησης "
+
+#: .\templates\pathnode_edit.html:27
+msgid ""
+"In this form you can specify 3 types of resources: 1) an OER; 2) a document "
+"tailored to the needs of this learning path (LP); 3) a formatted text. When "
+"playing the LP, the platform will visualize only one of them: the OER, if "
+"present, otherwise the document or the formatted text as the last choice."
+msgstr "Σε αυτή τη φόρμα μπορείτε να καθορίσετε 3 τύπους πόρων: 1) έναν Ανοιχτό Εκπαιδευτικό Πόρο. 2) ένα έγγραφο προσαρμοσμένο στις ανάγκες αυτής της διαδρομής μάθησης. 3) ένα μορφοποιημένο κείμενο. Κατά την αναπαραγωγή του μαθησιακού μονοπατιού, η πλατφόρμα θα οπτικοποιήσει μόνο ένα από αυτά: τον Ανοιχτό Εκπαιδευτικό Πόρο, εάν υπάρχει, διαφορετικά το έγγραφο ή το μορφοποιημένο κείμενο ως τελευταία επιλογή. "
+
+#: .\templates\pathnode_edit.html:65
+msgid "remove selected file"
+msgstr "αφαιρέστε το επιλεγμένο αρχείο "
+
+#: .\templates\profile_avatar_upload.html:7
+#: .\templates\profile_avatar_upload.html:14 .\templates\user_profile.html:24
+msgid "upload photo"
+msgstr "μεταφόρτωση φωτογραφίας"
+
+#: .\templates\profile_avatar_upload.html:26
+msgid "remove photo"
+msgstr "διαγραφή φωτογραφίας"
+
+#: .\templates\profile_edit.html:10 .\templates\profile_edit.html:26
+msgid "edit the profile"
+msgstr "επεξεργασία του προφίλ "
+
+#: .\templates\profile_edit.html:32 .\templates\profile_mentor_edit.html:22
+#: .\templates\user_profile.html:148 .\templates\user_profile.html:217
+msgid "communication preferences"
+msgstr "Προτιμήσεις επικοινωνίας"
+
+#: .\templates\profile_mentor_edit.html:7
+#: .\templates\profile_mentor_edit.html:16
+msgid "edit mentoring related information"
+msgstr "επεξεργασία πληροφοριών σχετικών με την καθοδήγηση"
+
+#: .\templates\profile_mentor_edit.html:22 .\templates\user_profile.html:198
+msgid "mentor information"
+msgstr "πληροφορίες μέντορα"
+
+#: .\templates\project_detail.html:7 .\templates\project_detail.html:772
+#: .\templates\project_detail.html:774 .\templates\project_detail.html:853
+#: .\templates\project_edit.html:16 .\templates\project_edit.html:57
+msgid "roll of mentors"
+msgstr "λίστα μεντόρων"
+
+#: .\templates\project_detail.html:161 .\templates\project_detail.html:167
+msgid "reserved project"
+msgstr "δεσμευμένο έργο"
+
+#: .\templates\project_detail.html:211 .\templates\project_detail.html:215
+#: .\templates\project_detail.html:219 .\templates\project_detail.html:223
+#: .\templates\project_detail.html:227 .\templates\user_profile.html:251
+msgid "view community"
+msgstr "προβολή της κοινότητας"
+
+#: .\templates\project_detail.html:235
+msgid "child projects"
+msgstr "υποέργα"
+
+#: .\templates\project_detail.html:241 .\templates\project_detail.html:245
+#: .\templates\project_detail.html:249 .\templates\project_detail.html:253
+#: .\templates\project_detail.html:257 .\templates\project_detail.html:271
+#: .\templates\project_detail.html:275 .\templates\project_detail.html:279
+#: .\templates\project_detail.html:283 .\templates\project_detail.html:287
+#: .\templates\user_profile.html:271
+msgid "view project"
+msgstr "προβολή έργου"
+
+#: .\templates\project_detail.html:241 .\templates\project_detail.html:245
+#: .\templates\project_detail.html:249 .\templates\project_detail.html:253
+#: .\templates\project_detail.html:257 .\templates\project_detail.html:271
+#: .\templates\project_detail.html:275 .\templates\project_detail.html:279
+#: .\templates\project_detail.html:283 .\templates\project_detail.html:287
+msgid "view child project"
+msgstr "προβολή υποέργου"
+
+#: .\templates\project_detail.html:265
+msgid "support projects"
+msgstr "υποστηρικτικά έργα"
+
+#: .\templates\project_detail.html:265
+msgid "child support projects"
+msgstr "υποστηρικτικά υποέργα"
+
+#: .\templates\project_detail.html:303 .\templates\project_detail.html:889
+msgid "translate"
+msgstr "μετάφραση"
+
+#: .\templates\project_detail.html:304 .\templates\project_detail.html:890
+#: .\templates\project_logo_upload.html:8
+#: .\templates\project_logo_upload.html:15
+msgid "upload logo"
+msgstr "μεταφόρτωση λογότυπου"
+
+#: .\templates\project_detail.html:305 .\templates\project_detail.html:891
+#: .\templates\project_image_upload.html:8
+#: .\templates\project_image_upload.html:15
+msgid "upload image"
+msgstr "μεταφόρτωση εικόνας"
+
+#: .\templates\project_detail.html:317
+msgid "new community"
+msgstr "νέα κοινότητα"
+
+#: .\templates\project_detail.html:319
+msgid "create community"
+msgstr "δημιουργία κοινότητας"
+
+#: .\templates\project_detail.html:326
+msgid "new project"
+msgstr "νέα έργο"
+
+#: .\templates\project_detail.html:328 .\templates\project_detail.html:329
+#: .\templates\project_detail.html:340 .\templates\project_detail.html:342
+msgid "create project"
+msgstr "δημιουργία έργου"
+
+#: .\templates\project_detail.html:328 .\templates\project_detail.html:329
+#: .\templates\project_detail.html:340 .\templates\project_detail.html:342
+msgid "create child project"
+msgstr "δημιουργία υποέργου"
+
+#: .\templates\project_detail.html:337
+msgid "new child project"
+msgstr "νέο υποέργο"
+
+#: .\templates\project_detail.html:359 .\templates\project_detail.html:374
+msgid "new forum"
+msgstr "νέο φόρουμ"
+
+#: .\templates\project_detail.html:365
+msgid "thematic"
+msgstr "θεματική"
+
+#: .\templates\project_detail.html:393 .\templates\project_detail.html:982
+msgid "shared folder"
+msgstr "διαμοιρασμένος φάκελος"
+
+#: .\templates\project_detail.html:399 .\templates\project_detail.html:993
+msgid "message to members"
+msgstr "μήνυμα στα μέλη"
+
+#: .\templates\project_detail.html:405 .\templates\project_detail.html:987
+#: .\templates\user_dashboard.html:40
+msgid "forum"
+msgstr "φόρουμ"
+
+#: .\templates\project_detail.html:419
+msgid "create calendar"
+msgstr "δημιουργία ημερολογίου"
+
+#: .\templates\project_detail.html:450 .\templates\project_detail.html:467
+#: .\templates\project_detail.html:1017
+msgid "paste"
+msgstr "επικόλληση"
+
+#: .\templates\project_detail.html:473
+msgid "clone"
+msgstr "κλώνος"
+
+#: .\templates\project_detail.html:482
+msgid "eXperience"
+msgstr "εμπειρία"
+
+#: .\templates\project_detail.html:484
+msgid "record"
+msgstr "ιστορικό"
+
+#: .\templates\project_detail.html:505 .\templates\project_detail.html:516
+#: .\templates\project_detail.html:529 .\templates\project_detail.html:930
+msgid "apply for membership"
+msgstr "αίτηση για ένταξη "
+
+#: .\templates\project_detail.html:505 .\templates\project_detail.html:516
+#: .\templates\project_detail.html:529 .\templates\project_detail.html:930
+msgid "join"
+msgstr "συμμετοχή"
+
+#: .\templates\project_detail.html:508 .\templates\project_detail.html:936
+msgid "your application is waiting for acceptance by the "
+msgstr "η αίτησή σας περιμένει αποδοχή από το "
+
+#: .\templates\project_detail.html:519 .\templates\project_detail.html:532
+msgid "to join this community"
+msgstr "για να γίνετε μέλος αυτής της κοινότητας "
+
+#: .\templates\project_detail.html:519 .\templates\project_detail.html:532
+msgid "to join this project"
+msgstr "να συμμετέχετε σε αυτό το έργο "
+
+#: .\templates\project_detail.html:551 .\templates\project_detail.html:952
+msgid "call back supervisor role"
+msgstr "ανάκληση ρόλου επόπτη "
+
+#: .\templates\project_detail.html:556 .\templates\project_detail.html:957
+msgid "grant supervisor role"
+msgstr "παραχώρηση ρόλου επόπτη"
+
+#: .\templates\project_detail.html:569 .\templates\project_detail.html:912
+#: .\templates\user_dashboard.html:110 .\templates\user_dashboard.html:133
+#: .\templates\user_dashboard.html:156
+msgid "applications"
+msgstr "αιτήσεις"
+
+#: .\templates\project_detail.html:572
+msgid "accept application to this community or project"
+msgstr "αποδεχτείτε την αίτηση σε αυτήν την κοινότητα ή το έργο "
+
+#: .\templates\project_detail.html:581
+msgid "add a member by your initiative"
+msgstr "προσθέστε ένα μέλος με πρωτοβουλία σας "
+
+#: .\templates\project_detail.html:582 .\templates\project_edit.html:16
+#: .\templates\project_edit.html:18 .\templates\project_edit.html:57
+#: .\templates\project_edit.html:59 .\templates\user_profile.html:185
+#: .\templates\user_profile.html:241
+msgid "add"
+msgstr "προσθήκη"
+
+#: .\templates\project_detail.html:591
+msgid "select new administrator"
+msgstr "επιλέξτε νέο διαχειριστή "
+
+#: .\templates\project_detail.html:591
+msgid "select new supervisor"
+msgstr "επιλέξτε νέο επόπτη "
+
+#: .\templates\project_detail.html:592
+msgid "apply"
+msgstr "αίτηση"
+
+#: .\templates\project_detail.html:678
+msgid "last OERs evaluated"
+msgstr "τελευταίοι Ανοιχτοί Εκπαιδευτικοί Πόροι που έχουν αξιολογηθεί"
+
+#: .\templates\project_detail.html:694
+#: .\templates\vue\contents_dashboard.html:4
+#: .\templates\vue\contents_dashboard.html:237
+#: .\templates\vue\contents_dashboard.html:243
+msgid "contents dashboard"
+msgstr "ταμπλό περιεχομένων "
+
+#: .\templates\project_detail.html:732
+msgid "mentoring policy"
+msgstr "πολιτική καθοδήγησης "
+
+#: .\templates\project_detail.html:774
+msgid "create roll of mentors"
+msgstr "δημιουργήστε μια λίστα μεντόρων "
+
+#: .\templates\project_detail.html:786
+msgid "current mentoring setup model for this community"
+msgstr "τρέχον μοντέλο ρύθμισης καθοδήγησης για αυτήν την κοινότητα "
+
+#: .\templates\project_detail.html:787
+msgid "it is possible to choose a mentor from another community"
+msgstr "είναι δυνατό να επιλέξετε έναν μέντορα από άλλη κοινότητα "
+
+#: .\templates\project_detail.html:795 .\templates\user_dashboard.html:299
+msgid "my mentoring projects as a mentee"
+msgstr "τα έργα καθοδήγησής μου ως καθοδηγούμενος "
+
+#: .\templates\project_detail.html:799 .\templates\project_detail.html:834
+msgid "mentoring project"
+msgstr "καθοδηγόμενα έργα"
+
+#: .\templates\project_detail.html:819 .\templates\project_edit.html:14
+#: .\templates\project_edit.html:55
+msgid "request a mentor"
+msgstr "ζητήστε έναν μέντορα "
+
+#: .\templates\project_detail.html:830
+msgid "mentoring requests"
+msgstr "αιτήματα καθοδήγησης "
+
+#: .\templates\project_detail.html:902
+msgid "create forum"
+msgstr "δημιουργία φόρουμ"
+
+#: .\templates\project_detail.html:917
+msgid "accept application to this roll of mentors"
+msgstr "αποδεχτείτε την αίτηση σε αυτή τη λίστα μεντόρων "
+
+#: .\templates\project_detail.html:932 .\templates\user_profile.html:241
+msgid "edit mentor profile"
+msgstr "επεξεργασία προφίλ μέντορα "
+
+#: .\templates\project_detail.html:932
+msgid "to apply you must fill the mentor presentation in your profile"
+msgstr "για να κάνετε αίτηση πρέπει να συμπληρώσετε την παρουσίαση του μέντορα στο προφίλ σας "
+
+#: .\templates\project_detail.html:1029
+msgid "last learning paths"
+msgstr "τελευταία μαθησιακά μονοπάτια "
+
+#: .\templates\project_detail.html:1065
+msgid ""
+"do you really want to grant the admin or supervisor role to this member"
+msgstr "θέλετε πραγματικά να εκχωρήσετε τον ρόλο διαχειριστή ή επόπτη σε αυτό το μέλος; "
+
+#: .\templates\project_detail.html:1067
+msgid ""
+"do you really want to call back the admin or supervisor role from this "
+"member"
+msgstr "θέλετε πραγματικά να ανακαλέσετε τον ρόλο διαχειριστή ή επόπτη από αυτό το μέλος; "
+
+#: .\templates\project_edit.html:21 .\templates\project_edit.html:62
+msgid "child project"
+msgstr "υποέργο"
+
+#: .\templates\project_image_upload.html:28
+msgid "remove image"
+msgstr "αφαίρεση εικόνας"
+
+#: .\templates\project_logo_upload.html:28
+msgid "remove logo"
+msgstr "αφαίρεση λογότυπου"
+
+#: .\templates\project_results.html:5 .\templates\project_results.html:77
+msgid "results of project"
+msgstr "αποτελέσματα του έργου "
+
+#: .\templates\project_results.html:86 .\templates\resources_by.html:53
+msgid "OERs evaluated"
+msgstr "Ανοιχτοί Εκπαιδευτικοί Πόροι που έχουν αξιολογηθεί"
+
+#: .\templates\project_results.html:97 .\templates\user_dashboard.html:471
+msgid "no Learning Path created yet"
+msgstr "Δεν έχει δημιουργηθεί ακόμη Μονοπάτι Εκμάθησης "
+
+#: .\templates\project_results.html:108 .\templates\user_dashboard.html:417
+msgid "no OER classified yet"
+msgstr "δεν έχει ακόμη ταξινομηθεί Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\templates\project_results.html:122
+msgid "no OER evaluated yet"
+msgstr "δεν έχει ακόμη αξιολογηθεί Ανοιχτός Εκπαιδευτικός Πόρος"
+
+#: .\templates\projects.html:6
+msgid "all projects"
+msgstr "όλα τα έργα"
+
+#: .\templates\projects.html:10
+msgid "all open projects"
+msgstr "όλα τα ανοιχτά έργα"
+
+#: .\templates\projects.html:17
+msgid "project type"
+msgstr "τύπος έργου"
+
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "login"
+msgstr "Σύνδεση "
+
+#: .\templates\pybb\_need_to_login_message.html:4
+msgid "to post a reply"
+msgstr "για να δημοσιεύσετε μια απάντηση "
+
+#: .\templates\pybb\base.html:13
+msgid "Latest posts on forum"
+msgstr "Τελευταίες δημοσιεύσεις στο φόρουμ "
+
+#: .\templates\pybb\base.html:14
+msgid "Latest topics on forum"
+msgstr "Τελευταία θέματα στο φόρουμ "
+
+#: .\templates\pybb\breadcrumb.html:6
+msgid "forums index"
+msgstr "ευρετήριο φόρουμ "
+
+#: .\templates\pybb\breadcrumb.html:27 .\templates\pybb\breadcrumb.html:33
+msgid "go to project"
+msgstr "πηγαίνετε στο έργο "
+
+#: .\templates\pybb\forum_list.html:9
+msgid "Forum"
+msgstr "Φόρουμ"
+
+#: .\templates\pybb\forum_list.html:12
+msgid "Topics"
+msgstr "Θέματα"
+
+#: .\templates\pybb\forum_list.html:15 .\templates\pybb\topic.html:34
+#: .\templates\pybb\topic.html:54 .\templates\pybb\topic_list.html:11
+msgid "Posts"
+msgstr "Άρθρα"
+
+#: .\templates\pybb\forum_list.html:19 .\templates\pybb\topic_list.html:15
+msgid "unviewed by me"
+msgstr "αθεώρητο από εμένα "
+
+#: .\templates\pybb\forum_list.html:23
+msgid "Last posts"
+msgstr "Τελευταία άρθρα"
+
+#: .\templates\pybb\forum_list.html:88
+msgid "No forums created"
+msgstr "Δεν έχουν δημιουργηθεί φόρουμς"
+
+#: .\templates\pybb\forum_list.html:89
+msgid "Add forum now"
+msgstr "Προσθήκη Φόρουμ τώρα"
+
+#: .\templates\pybb\index.html:8
+msgid "List"
+msgstr "Λίστα"
+
+#: .\templates\pybb\index.html:20
+msgid "Forum categories are not created"
+msgstr "Οι κατηγορίες φόρουμ δεν δημιουργούνται "
+
+#: .\templates\pybb\index.html:21
+msgid "Add a category now"
+msgstr "Προσθέστε μια κατηγορία τώρα "
+
+#: .\templates\pybb\index.html:27
+msgid "Last updates in topics"
+msgstr "Τελευταίες ενημερώσεις σε θέματα "
+
+#: .\templates\pybb\pagination.html:7
+msgid "previous page"
+msgstr "προηγούμενη σελίδα"
+
+#: .\templates\pybb\pagination.html:21
+msgid "next page"
+msgstr "επόμενη σελίδα"
+
+#: .\templates\pybb\post_template.html:40
+msgid "Rank"
+msgstr "Βαθμός"
+
+#: .\templates\pybb\post_template.html:58
+msgid "Delete post?"
+msgstr "Διαγραφή ανάρτησης; "
+
+#: .\templates\pybb\post_template.html:61
+msgid "Approve post"
+msgstr "Έγκριση ανάρτησης "
+
+#: .\templates\pybb\post_template.html:66
+msgid "Admin"
+msgstr "Διαχειριστής"
+
+#: .\templates\pybb\post_template.html:108
+msgid "reply"
+msgstr "απάντηση"
+
+#: .\templates\pybb\post_template.html:109
+msgid "quote all"
+msgstr "παράθεση όλων "
+
+#: .\templates\pybb\post_template.html:110
+msgid "quote selected text"
+msgstr "παράθεση επιλεγμένου κειμένου "
+
+#: .\templates\pybb\topic_list.html:8
+msgid "Topic"
+msgstr "Θέμα"
+
+#: .\templates\pybb\topic_list.html:19
+msgid "Views"
+msgstr "Προβολές"
+
+#: .\templates\pybb\topic_list.html:22
+msgid "Last post"
+msgstr "Τελευταίο άρθρο"
+
+#: .\templates\pybb\topic_list.html:32
+msgid "Go to first unread post"
+msgstr "Μετάβαση στην πρώτη αδιάβαστη δημοσίευση "
+
+#: .\templates\pybb\topic_list.html:33
+msgid "Sticky"
+msgstr ""
+
+#: .\templates\pybb\topic_list.html:34
+msgid "Closed"
+msgstr "Κλειστό"
+
+#: .\templates\pybb\topic_list.html:38
+msgid "pages"
+msgstr "σελίδες"
+
+#: .\templates\repo_detail.html:5
+msgid "repository"
+msgstr "αποθετήριο"
+
+#: .\templates\repo_edit.html:6 .\templates\repo_edit.html:14
+msgid "edit repository"
+msgstr "επεξεργασία αποθετηρίου "
+
+#: .\templates\repo_edit.html:6 .\templates\repo_edit.html:14
+msgid "add repository"
+msgstr "προσθήκη αποθετηρίου "
+
+#: .\templates\repo_oers.html:5 .\templates\repo_oers.html:12
+#: .\templates\tag_oers.html:5 .\templates\tag_oers.html:12
+msgid "OERs from repository"
+msgstr "Ανοιχτοί Εκπαιδευτικοί Πόροι από το αποθετήριο"
+
+#: .\templates\repo_oers.html:25 .\templates\tag_oers.html:22
+msgid "no OERs are present having this repository as their source"
+msgstr "Δεν υπάρχουν Ανοιχτοί Εκπαιδευτικοί Πόροι που να έχουν αυτό το αποθετήριο ως πηγή"
+
+#: .\templates\resource_analytics.html:23
+msgid "last"
+msgstr "τελευταίο"
+
+#: .\templates\resource_analytics.html:23
+msgid "months"
+msgstr "μήνες"
+
+#: .\templates\resource_analytics.html:26
+#: .\templates\resource_analytics.html:47
+msgid "published"
+msgstr "δημοσιευμένα"
+
+#: .\templates\resource_analytics.html:44
+msgid "all"
+msgstr "όλα"
+
+#: .\templates\resources_by.html:6
+msgid "resources created, catalogued and evaluated by"
+msgstr "πόροι που δημιουργούνται, καταλογίζονται και αξιολογούνται από "
+
+#: .\templates\resources_by.html:69 .\templates\search_repos.html:12
+msgid "repositories"
+msgstr "αποθετήρια"
+
+#: .\templates\schedule\_day_cell_big.html:11
+msgid "All day"
+msgstr "Όλη μέρα "
+
+#: .\templates\schedule\_day_cell_big.html:12
+msgid "Ends at"
+msgstr "Τελειώνει σε"
+
+#: .\templates\schedule\_day_cell_big.html:30
+#: .\templates\schedule\_detail.html:14 .\templates\schedule\event.html:27
+msgid "Starts"
+msgstr "Ξεκινά"
+
+#: .\templates\schedule\_day_cell_big.html:31
+#: .\templates\schedule\_day_cell_big.html:35
+#: .\templates\schedule\_day_cell_big.html:45
+#: .\templates\schedule\_detail.html:15 .\templates\schedule\_detail.html:19
+#: .\templates\schedule\_detail.html:29 .\templates\schedule\event.html:28
+#: .\templates\schedule\event.html:32 .\templates\schedule\event.html:37
+msgid "DATETIME_FORMAT"
+msgstr "DATETIME_FORMAT"
+
+#: .\templates\schedule\_day_cell_big.html:31
+#: .\templates\schedule\_detail.html:15 .\templates\schedule\event.html:28
+#, python-format
+msgid "%(start_date)s"
+msgstr "%(start_date)s"
+
+#: .\templates\schedule\_day_cell_big.html:34
+#: .\templates\schedule\_detail.html:18 .\templates\schedule\event.html:31
+msgid "Ends"
+msgstr "Τελειώνει"
+
+#: .\templates\schedule\_day_cell_big.html:35
+#: .\templates\schedule\_day_cell_big.html:45
+#: .\templates\schedule\_detail.html:19 .\templates\schedule\_detail.html:29
+#: .\templates\schedule\event.html:32
+#, python-format
+msgid "%(end_date)s"
+msgstr "%(end_date)s"
+
+#: .\templates\schedule\_day_cell_big.html:40
+#: .\templates\schedule\_detail.html:24 .\templates\schedule\event.html:35
+msgid "Reoccurs"
+msgstr "Επαναλαμβάνεται "
+
+#: .\templates\schedule\_day_cell_big.html:44
+#: .\templates\schedule\_detail.html:28
+msgid "Until"
+msgstr "Μέχρι"
+
+#: .\templates\schedule\_day_cell_big.html:58
+#: .\templates\schedule\_detail.html:41
+msgid "Close"
+msgstr "Κλείσιμο"
+
+#: .\templates\schedule\_month_table.html:9
+msgid "Week"
+msgstr "Εβδομάδα"
+
+#: .\templates\schedule\calendar_day.html:3 .\templates\schedule\event.html:49
+msgid "Daily Calendar"
+msgstr "Καθημερινό Ημερολόγιο "
+
+#: .\templates\schedule\calendar_day.html:19
+msgid "Today Calendar"
+msgstr "Σημερινό Ημερολόγιο"
+
+#: .\templates\schedule\calendar_day.html:23
+#: .\templates\schedule\calendar_week.html:3
+msgid "Weekly Calendar"
+msgstr "Εβδομαδιαίο Ημερολόγιο "
+
+#: .\templates\schedule\calendar_day.html:27
+#: .\templates\schedule\calendar_week.html:46
+#: .\templates\schedule\event.html:53
+msgid "Monthly Calendar"
+msgstr "Μηνιαίο Ημερολόγιο "
+
+#: .\templates\schedule\calendar_day.html:31
+#: .\templates\schedule\calendar_month.html:24
+#: .\templates\schedule\calendar_tri_month.html:25
+#: .\templates\schedule\calendar_week.html:51
+#: .\templates\schedule\calendar_year.html:4
+#: .\templates\schedule\event.html:57
+msgid "Full Year Calendar"
+msgstr "Ετήσιο Ημερολόγιο"
+
+#: .\templates\schedule\calendar_month.html:3
+#: .\templates\schedule\calendar_tri_month.html:3
+msgid "This month"
+msgstr "Αυτός ο μήνας"
+
+#: .\templates\schedule\calendar_month.html:17
+#: .\templates\schedule\calendar_year.html:33
+msgid "Current Month Calendar"
+msgstr "Ημερολόγιο τρέχοντος μήνα"
+
+#: .\templates\schedule\calendar_month.html:21
+#: .\templates\schedule\calendar_tri_month.html:21
+msgid "Three Month Calendar"
+msgstr "Τριμηνιαίο Ημερολόγιο"
+
+#: .\templates\schedule\calendar_week.html:42
+msgid "This Week Calendar"
+msgstr "Το Ημερολόγιο αυτή της Εβδομάδας"
+
+#: .\templates\schedule\calendar_year.html:37
+msgid "Current Year Calendar"
+msgstr "Ημερολόγιο Τρέχοντος Έτους"
+
+#: .\templates\schedule\create_event.html:4
+#: .\templates\schedule\create_event.html:9
+msgid "Create or change event"
+msgstr "Δημιουργία ή αλλαγή εκδήλωσης"
+
+#: .\templates\schedule\create_event.html:18
+#: .\templates\schedule\delete_event.html:12
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: .\templates\schedule\delete_event.html:3
+#: .\templates\schedule\delete_event.html:6
+msgid "Delete event"
+msgstr "Διαγραφή εκδήλωσης"
+
+#: .\templates\schedule\delete_event.html:8
+msgid "Are you sure that you really want to delete it?"
+msgstr "Είστε βέβαιοι ότι θέλετε πραγματικά να το διαγράψετε; "
+
+#: .\templates\schedule\event.html:3
+msgid "View event"
+msgstr "Προβολή εκδήλωσης "
+
+#: .\templates\schedule\event.html:16
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: .\templates\schedule\event.html:37
+msgid "until"
+msgstr "μέχρι"
+
+#: .\templates\schedule\event.html:37
+#, python-format
+msgid "%(end_recurring_date)s"
+msgstr "%(end_recurring_date)s"
+
+#: .\templates\schedule\event.html:39
+msgid "Never. This is a 'one time only' event."
+msgstr "Ποτέ. Αυτή είναι μια «μόνο μία» εκδήλωση. "
+
+#: .\templates\search_folder_documents.html:5
+msgid "search of documents in folders"
+msgstr "αναζήτηση εγγράφων σε φακέλους "
+
+#: .\templates\search_folder_documents.html:12
+msgid "documents in folders"
+msgstr "έγγραφα σε φακέλους "
+
+#: .\templates\search_folder_documents.html:18 .\templates\search_oers.html:18
+#: .\templates\search_people.html:18 .\templates\search_repos.html:5
+msgid "search"
+msgstr "αναζήτηση"
+
+#: .\templates\search_folder_documents.html:31 .\templates\search_lps.html:31
+#: .\templates\search_oers.html:31 .\templates\search_people.html:31
+#: .\templates\search_projects.html:31 .\templates\search_repos.html:31
+msgid "results"
+msgstr "αποτελέσματα"
+
+#: .\templates\search_folder_documents.html:31 .\templates\search_lps.html:31
+#: .\templates\search_oers.html:31 .\templates\search_people.html:31
+#: .\templates\search_projects.html:31 .\templates\search_repos.html:31
+msgid "result"
+msgstr "αποτέλεσμα"
+
+#: .\templates\search_folder_documents.html:33 .\templates\search_lps.html:33
+#: .\templates\search_lps.html:49 .\templates\search_oers.html:33
+#: .\templates\search_people.html:33 .\templates\search_people.html:49
+#: .\templates\search_projects.html:33 .\templates\search_projects.html:49
+#: .\templates\search_repos.html:33 .\templates\search_repos.html:49
+msgid "search text"
+msgstr "αναζήτηση κειμένου"
+
+#: .\templates\search_folder_documents.html:47 .\templates\search_lps.html:47
+#: .\templates\search_oers.html:47 .\templates\search_people.html:47
+#: .\templates\search_projects.html:47 .\templates\search_repos.html:47
+msgid "no results were found"
+msgstr "Δεν βρέθηκαν αποτελέσματα "
+
+#: .\templates\search_lps.html:5
+msgid "search of learning paths"
+msgstr "αναζήτηση μονοπατιών μάθησης "
+
+#: .\templates\search_oers.html:5
+msgid "search of OERs"
+msgstr "αναζήτηση Ανοιζτών Εκπαιδευτικών Πόρων"
+
+#: .\templates\search_oers.html:12
+msgid "open educational resources"
+msgstr "ανοιχτοί εκπαιδευτικοί πόροι"
+
+#: .\templates\search_projects.html:5
+msgid "search of projects"
+msgstr "αναζήτηση έργων"
+
+#: .\templates\search_repos.html:5
+msgid "of source repositories"
+msgstr "από αποθετήρια πηγών"
+
+#: .\templates\user_dashboard.html:28 .\templates\user_preferences.html:22
+msgid "my profile"
+msgstr "το προφίλ μου"
+
+#: .\templates\user_dashboard.html:29 .\templates\user_profile.html:34
+msgid "preferences"
+msgstr "προτιμήσεις"
+
+#: .\templates\user_dashboard.html:45
+msgid "manage"
+msgstr "διαχείριση"
+
+#: .\templates\user_dashboard.html:46
+msgid "featured"
+msgstr "που παρουσιάζεται "
+
+#: .\templates\user_dashboard.html:48
+msgid "flatpages"
+msgstr "flatpages"
+
+#: .\templates\user_dashboard.html:50
+msgid "Weblog"
+msgstr "Ιστολόγιο "
+
+#: .\templates\user_dashboard.html:57
+msgid "pending applications to communities"
+msgstr "εκκρεμείς αιτήσεις σε κοινότητες "
+
+#: .\templates\user_dashboard.html:70
+msgid "pending applications to projects"
+msgstr "εκκρεμείς αιτήσεις σε έργα"
+
+#: .\templates\user_dashboard.html:84
+msgid "pending applications to rolls of mentors"
+msgstr "εκκρεμείς αιτήσεις σε λίστες μεντόρων"
+
+#: .\templates\user_dashboard.html:98
+msgid "admin of the following communities"
+msgstr "διαχειριστής των παρακάτω κοινοτήτων "
+
+#: .\templates\user_dashboard.html:121
+msgid "supervisor of the following rolls of mentors"
+msgstr "διαχειριστής των παρακάτω κοινοτήτων "
+
+#: .\templates\user_dashboard.html:144
+msgid "supervisor of the following projects"
+msgstr "επιβλέπων των ακόλουθων έργων "
+
+#: .\templates\user_dashboard.html:166
+msgid "member of the following communities"
+msgstr "μέλος των παρακάτω κοινοτήτων "
+
+#: .\templates\user_dashboard.html:189
+msgid "member of the following rolls of mentors"
+msgstr "μέλος των παρακάτω καταλόγων μεντόρων "
+
+#: .\templates\user_dashboard.html:208 .\templates\user_dashboard.html:235
+msgid "no projects"
+msgstr "καθόλου έργα"
+
+#: .\templates\user_dashboard.html:216
+msgid "member of the following projects"
+msgstr "μέλος των παρακάτω έργων "
+
+#: .\templates\user_dashboard.html:243
+msgid "mentoring requests in my communities"
+msgstr "αιτήματα καθοδήγησης στις κοινότητές μου "
+
+#: .\templates\user_dashboard.html:248 .\templates\user_dashboard.html:262
+#: .\templates\user_dashboard.html:276 .\templates\user_dashboard.html:291
+msgid "request of"
+msgstr "αίτημα του "
+
+#: .\templates\user_dashboard.html:257
+msgid "mentoring requests in my communities waiting for mentor answer"
+msgstr "αιτήματα καθοδήγησης στις κοινότητές μου που περιμένουν απάντηση από μέντορα "
+
+#: .\templates\user_dashboard.html:271
+msgid "mentees requesting me as a mentor"
+msgstr "καθοδηγούμενοι που με ζητούν ως μέντορα "
+
+#: .\templates\user_dashboard.html:284
+msgid "my mentoring projects as a mentor"
+msgstr "τα έργα μου ως μέντορας"
+
+#: .\templates\user_dashboard.html:317
+msgid "suggested mentors"
+msgstr "προτεινόμενοι μέντορες "
+
+#: .\templates\user_dashboard.html:329
+msgid "no fit mentors were found in the communities of which you are member"
+msgstr "δεν βρέθηκαν κατάλληλοι μέντορες στις κοινότητες στις οποίες είστε μέλος "
+
+#: .\templates\user_dashboard.html:337
+msgid "my activity of last period"
+msgstr "η δραστηριότητα μου της τελευταίας περιόδου "
+
+#: .\templates\user_dashboard.html:337
+msgid "days"
+msgstr "μέρες"
+
+#: .\templates\user_dashboard.html:379
+msgid "no actions of last period"
+msgstr "καμία ενέργεια της τελευταίας περιόδου "
+
+#: .\templates\user_dashboard.html:386
+msgid "create personal Learning Path"
+msgstr "δημιουργία προσωπικής διαδρομής μάθησης "
+
+#: .\templates\user_dashboard.html:393
+msgid "My bookmarks (OER stubs)"
+msgstr "Οι σελιδοδείκτες μου (Ανοιχτοί Εκπαιδευτικοί Πόροι) "
+
+#: .\templates\user_dashboard.html:403
+msgid "no bookmarks (OER stubs) classified yet"
+msgstr "δεν υπάρχουν ακόμη ταξινομημένοι σελιδοδείκτες (Ανοιχτοί Εκπαιδευτικοί Πόροι). "
+
+#: .\templates\user_dashboard.html:407
+msgid "my OERs"
+msgstr "οι Ανοιχτοί Εκπαιδευτικοί Πόροι μου"
+
+#: .\templates\user_dashboard.html:422
+msgid "unpublished OERs in supervised projects"
+msgstr "μη δημοσιευμένοι Ανοιχτοί Εκπαιδευτικοί Πόροι σε εποπτευόμενα έργα"
+
+#: .\templates\user_dashboard.html:434
+msgid "my OER evaluations"
+msgstr "οι αξιολογήσεις μου σε Ανοιχτούς Εκπαιδευτικούς Πόρους"
+
+#: .\templates\user_dashboard.html:447
+msgid "my personal Learning Paths"
+msgstr "τα προσωπικά μου Μαθησιακά Μονοπάτια"
+
+#: .\templates\user_dashboard.html:457
+msgid "no personal Learning Path created yet"
+msgstr "δεν έχουν δημιουργηθεί προσωπικά Μαθησιακά Μονοπάτια"
+
+#: .\templates\user_dashboard.html:461
+msgid "my Learning Paths"
+msgstr "τα Μαθησιακά Μονοπάτια μου"
+
+#: .\templates\user_dashboard.html:476
+msgid "unpublishd LPs in supervised projects"
+msgstr "μη δημοσιευμένα εκπαιδευτικά μονοπάτια σε εποπτευόμενα έργα "
+
+#: .\templates\user_dashboard.html:491 .\templates\user_profile.html:44
+msgid "please, complete your profile"
+msgstr "παρακαλώ συμπληρώστε το προφίλ σας "
+
+#: .\templates\user_preferences.html:5
+msgid "preferences of"
+msgstr "προτιμήσεις των "
+
+#: .\templates\user_preferences.html:29
+msgid "Notification by email"
+msgstr "Ειδοποίηση μέσω email "
+
+#: .\templates\user_preferences.html:33
+msgid "edit preferences"
+msgstr "επεξεργασία προτιμήσεων "
+
+#: .\templates\user_profile.html:6 .\templates\user_strict_profile.html:6
+msgid "member"
+msgstr "μέλος"
+
+#: .\templates\user_profile.html:29 .\templates\user_strict_profile.html:23
+msgid "send a message to"
+msgstr "στείλτε ένα μήνυμα σε "
+
+#: .\templates\user_profile.html:49
+msgid "private information"
+msgstr "ιδιωτικές πληροφορίες"
+
+#: .\templates\user_profile.html:52
+msgid "username"
+msgstr "όνομα χρήστη "
+
+#: .\templates\user_profile.html:56
+msgid "email"
+msgstr "e-mail"
+
+#: .\templates\user_profile.html:99
+msgid "position"
+msgstr "θέση"
+
+#: .\templates\user_profile.html:114
+msgid "other languages"
+msgstr "άλλες γλώσσες"
+
+#: .\templates\user_profile.html:150 .\templates\user_profile.html:219
+msgid "Skype id"
+msgstr "Αναγνωριστικό Skype"
+
+#: .\templates\user_profile.html:182
+msgid "only PDF; max size: 2MB"
+msgstr "μόνο PDF, μέγιστο μέγεθος: 2MB "
+
+#: .\templates\user_profile.html:211 .\templates\user_strict_profile.html:42
+msgid "currently available as mentor"
+msgstr "επί του παρόντος διαθέσιμο ως μέντορας "
+
+#: .\templates\user_profile.html:261 .\templates\user_strict_profile.html:51
+msgid "view roll of mentors"
+msgstr "δείτε τη λίστα των μέντορων"
+
+#: .\templates\user_profile.html:280
+msgid "similar members"
+msgstr "παρόμοια μέλη "
+
+#: .\templates\user_profile.html:300 .\templates\user_strict_profile.html:62
+msgid "anonymized user"
+msgstr "anonymized user"
+
+#: .\templates\user_profile.html:305 .\templates\user_strict_profile.html:67
+msgid "the user profile you are looking for is no more available on this site"
+msgstr "το προφίλ χρήστη που ψάχνετε δεν είναι πλέον διαθέσιμο σε αυτόν τον ιστότοπο "
+
+#: .\templates\user_profile.html:338
+msgid "this Curriculum"
+msgstr "αυτό το Πρόγραμμα Σπουδών "
+
+#: .\templates\user_strict_profile.html:48
+msgid "rolls od mentors"
+msgstr "λίστες μέντορων"
+
+#: .\templates\vue\contents_dashboard.html:238
+msgid "and its sub-projects"
+msgstr "και τα υποέργα του"
+
+#: .\templates\vue\contents_dashboard.html:390
+msgid "it seems that you are not logged in."
+msgstr "φαίνεται ότι δεν είστε συνδεδεμένος. "
+
+#: .\templates\vue\contents_dashboard.html:392
+msgid "corpora of user"
+msgstr "σώμα χρήστη "
+
+#: .\templates\vue\contents_dashboard.html:393
+msgid "corpora"
+msgstr "σώματα"
+
+#: .\templates\vue\contents_dashboard.html:394
+msgid "selected resources"
+msgstr "επιλεγμένοι πόροι"
+
+#: .\templates\vue\contents_dashboard.html:395
+msgid "corpus"
+msgstr "συλλογή"
+
+#: .\templates\vue\contents_dashboard.html:396
+msgid "empty corpus"
+msgstr "άδεια συλλογή"
+
+#: .\templates\vue\contents_dashboard.html:397
+msgid "new corpus"
+msgstr "νέα συλλογή"
+
+#: .\templates\vue\contents_dashboard.html:398
+msgid "delete corpus"
+msgstr "διαγραφή συλλογής"
+
+#: .\templates\vue\contents_dashboard.html:399
+msgid "remove item"
+msgstr "αφαιρέστε το στοιχείο "
+
+#: .\templates\vue\contents_dashboard.html:400
+msgid "text-analysis dashboard"
+msgstr "πίνακας εργαλείων ανάλυσης κειμένου "
+
+#: .\templates\vue\contents_dashboard.html:401
+#: .\templates\vue\context_dashboard.html:4
+#: .\templates\vue\context_dashboard.html:64
+msgid "keywords in context"
+msgstr "λέξεις-κλειδιά στο πλαίσιο "
+
+#: .\templates\vue\contents_dashboard.html:402
+msgid "similarity"
+msgstr "ομοιότητα "
+
+#: .\templates\zinnia\_entry_detail_base.html:23
+msgid "Written by"
+msgstr "Γραμμένο από"
+
+#: .\templates\zinnia\_entry_detail_base.html:27
+#, python-format
+msgid "Show all %(author)s's entries"
+msgstr "Προβολή όλες τις καταχωρήσεις του %(author)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:31
+msgid "Written on"
+msgstr "Γραμμένο σε"
+
+#: .\templates\zinnia\_entry_detail_base.html:41
+msgid "in"
+msgstr "σε"
+
+#: .\templates\zinnia\_entry_detail_base.html:44
+#, python-format
+msgid "Show all entries in %(category)s"
+msgstr "Εμφάνιση όλων των καταχωρήσεων σε %(category)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:52
+msgid "Last update on"
+msgstr "Τελευταία ενημέρωση στις "
+
+#: .\templates\zinnia\_entry_detail_base.html:104
+#, python-format
+msgid "%(percent)s%% of %(object)s still remains to read."
+msgstr "%(percent)s%% of%(object)sμένει ακόμα να διαβαστούν."
+
+#: .\templates\zinnia\_entry_detail_base.html:106
+msgid "Continue reading"
+msgstr "Συνεχίστε την ανάγνωση"
+
+#: .\templates\zinnia\_entry_detail_base.html:122
+#, python-format
+msgid "Show all entries tagged by %(tag)s"
+msgstr "Εμφάνιση όλων των καταχωρήσεων με ετικέτα %(tag)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:125
+msgid "No tags"
+msgstr "Χωρίς ετικέτες "
+
+#: .\templates\zinnia\_entry_detail_base.html:131
+msgid "Short url"
+msgstr "Σύντομη διεύθυνση url "
+
+#: .\templates\zinnia\_entry_detail_base.html:133
+#, python-format
+msgid "Short URL to %(object)s"
+msgstr "Σύντομη διεύθυνση URL προς %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:141
+msgid "Discussions"
+msgstr "Συζητήσεις"
+
+#: .\templates\zinnia\_entry_detail_base.html:148
+#, python-format
+msgid "Comments on %(object)s"
+msgstr "Σχόλια στο %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:149
+#, python-format
+msgid "%(comment_count)s comment"
+msgid_plural "%(comment_count)s comments"
+msgstr[0] "%(comment_count)sσχόλια"
+msgstr[1] "%(comment_count)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:155
+#, python-format
+msgid "Leave a comment on %(object)s"
+msgstr "Αφήστε ένα σχόλιο για %(object)s"
+
+#: .\templates\zinnia\_entry_detail_base.html:156
+msgid "Be first to comment!"
+msgstr "Σχολιάστε πρώτοι! "
+
+#: .\templates\zinnia\_entry_detail_base.html:167
+#, python-format
+msgid "Pingbacks on %(object)s"
+msgstr ""
+
+#: .\templates\zinnia\_entry_detail_base.html:168
+#, python-format
+msgid "%(pingback_count)s pingback"
+msgid_plural "%(pingback_count)s pingbacks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\zinnia\_entry_detail_base.html:176
+#, python-format
+msgid "Trackbacks on %(object)s"
+msgstr ""
+
+#: .\templates\zinnia\_entry_detail_base.html:177
+#, python-format
+msgid "%(trackback_count)s trackback"
+msgid_plural "%(trackback_count)s trackbacks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: .\templates\zinnia\base.html:16
+msgid "RSS feed of latest entries"
+msgstr "Ροή RSS με τις τελευταίες καταχωρήσεις "
+
+#: .\templates\zinnia\base.html:17
+msgid "RSS feed of latest discussions"
+msgstr "RSS feed των τελευταίων συζητήσεων "
+
+#: .\templates\zinnia\base.html:38
+msgid "Authors"
+msgstr "Συγγραφείς "
+
+#: .\templates\zinnia\base.html:55
+msgid "Recent entries"
+msgstr "Πρόσφατες καταχωρήσεις "
+
+#: .\templates\zinnia\base.html:59
+msgid "Recent comments"
+msgstr "Πρόσφατα σχόλια"
+
+#: .\templates\zinnia\base.html:77
+msgid "Archives"
+msgstr "Archives"
+
+#: .\templates\zinnia\entry_detail_base.html:23
+#, python-format
+msgid "RSS feed of discussions on %(object)s"
+msgstr "Ροή RSS των συζητήσεων για %(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:25
+#, python-format
+msgid "RSS feed of comments on %(object)s"
+msgstr "RSS feed σχολίων για %(object)s"
+
+#: .\templates\zinnia\entry_detail_base.html:27
+#, python-format
+msgid "RSS feed of pingbacks on %(object)s"
+msgstr ""
+
+#: .\templates\zinnia\entry_detail_base.html:29
+#, python-format
+msgid "RSS feed of trackbacks on %(object)s"
+msgstr ""
+
+#: .\templates\zinnia\entry_detail_base.html:48
+msgid "Next entry"
+msgstr "Επόμενη καταχώρηση "
+
+#: .\templates\zinnia\entry_detail_base.html:62
+msgid "Previous entry"
+msgstr "Προηγούμενη καταχώρηση "
+
+#: .\templates\zinnia\entry_detail_base.html:76
+msgid "Related entries"
+msgstr "Σχετικές καταχωρήσεις "
+
+#: .\templates\zinnia\entry_detail_base.html:90
+msgid "Similar entries"
+msgstr "Παρόμοιες καταχωρήσεις "
+
+#: .\templates\zinnia\entry_detail_base.html:218
+msgid "Direct link to this comment"
+msgstr "Απευθείας σύνδεσμος σε αυτό το σχόλιο "
+
+#: .\templates\zinnia\entry_detail_base.html:255
+#: .\templates\zinnia\entry_detail_base.html:256
+msgid "Edit the entry"
+msgstr "Επεξεργαστείτε την καταχώρηση "
+
+#: .\templates\zinnia\skeleton.html:19
+msgid "Useful links"
+msgstr "Χρήσιμοι σύνδεσμοι "
+
+#: .\templates\zinnia\skeleton.html:22 .\templates\zinnia\skeleton.html:23
+msgid "Weblog index"
+msgstr "Ευρετήριο ιστολογίου "
+
+#: .\templates\zinnia\skeleton.html:27 .\templates\zinnia\skeleton.html:28
+msgid "Sitemap"
+msgstr "Χάρτης ιστότοπου "
+
+#: .\tracking.py:41
+msgid "sent from"
+msgstr "στάλθηκε από"
+
+#: .\tracking.py:42
+msgid "This is an automatic notification message: please do not reply to it."
+msgstr "Αυτό είναι ένα αυτόματο μήνυμα ειδοποίησης: μην απαντήσετε σε αυτό. "
+
+#: .\tracking.py:43
+msgid "Some notifications depend on settings in the user preferences."
+msgstr "Ορισμένες ειδοποιήσεις εξαρτώνται από τις ρυθμίσεις στις προτιμήσεις του χρήστη. "
+
+#: .\utils.py:241
+msgid ""
+"embedding inside a page the view of this resource is forbidden: please, use "
+"the link above to access it directly"
+msgstr "Η ενσωμάτωση σε μια σελίδα της προβολής αυτού του πόρου απαγορεύεται: χρησιμοποιήστε τον παραπάνω σύνδεσμο για απευθείας πρόσβαση σε αυτόν "
+
+#: .\views.py:887
+msgid "minimum number of LPs"
+msgstr "ελάχιστος αριθμός εκπαιδευτικών μονοπατιών"
+
+#: .\views.py:1459
+msgid ""
+"this request is waiting since long time: if you want to retract it, please "
+"write a notice for the mentor and push the button below"
+msgstr "αυτό το αίτημα περιμένει εδώ και πολύ καιρό: εάν θέλετε να το ανακαλέσετε, γράψτε μια ειδοποίηση για τον μέντορα και πατήστε το κουμπί παρακάτω"
+
+#: .\views.py:1480
+msgid ""
+"if you aren't able to choose another mentor, please write a notice for both "
+"the mentee and the mentor and push the button below"
+msgstr "if you aren't able to choose another mentor, please write a notice for both the mentee and the mentor and push the button below"
+
+#: .\views.py:1501
+msgid ""
+"this request is waiting since long time: please write a notice for both the "
+"mentee and the mentor and push the button below"
+msgstr "αυτό το αίτημα περιμένει εδώ και πολύ καιρό: γράψτε μια ειδοποίηση τόσο για τον καθοδηγούμενο όσο και για τον μέντορα και πατήστε το κουμπί παρακάτω"
+
+#: .\views.py:1903
+msgid "membership application"
+msgstr "αίτηση μέλους"
+
+#: .\views.py:1904
+msgid "has applied for membership in"
+msgstr "υπέβαλε αίτηση για ένταξη στο"
+
+#: .\views.py:2171
+msgid "thematic forum"
+msgstr "Θεματικό Φόρουμ"
+
+#: .\views.py:2171
+msgid "please change this name"
+msgstr "Παρακαλώ αλλάξτε αυτό το όνομα"
+
+#: .\vocabularies.py:96
+msgid "material type"
+msgstr "Τύπος υλικού"
+
+#: .\vocabularies.py:97
+msgid "material types"
+msgstr "Τύποι υλικού"
+
+#: .\vocabularies.py:102
+msgid "media format"
+msgstr "Μορφή Πολυμέσων"
+
+#: .\vocabularies.py:108
+msgid "accessibility feature"
+msgstr "Δυνατότητα Προσβασιμότητας"
+
+#: .\vocabularies.py:114
+msgid "level"
+msgstr "Επίπεδο"
+
+#: .\vocabularies.py:126
+msgid "license"
+msgstr "Άδεια"
+
+#: .\vocabularies.py:127
+msgid "licenses"
+msgstr "Άδειες"
+
+#: .\vocabularies.py:135
+msgid "education levels"
+msgstr "Εκπαιδευτικά Επίπεδα"
+
+#: .\vocabularies.py:141
+msgid "study or work statuses"
+msgstr "Κατάσταση σπουδών ή εργασίας"
+
+#: .\vocabularies.py:146
+msgid "education field"
+msgstr "Πεδίο Εκπαίδευσης"
+
+#: .\vocabularies.py:147
+msgid "education fields"
+msgstr "Πεδία Εκπαίδευσης"
+
+#: .\vocabularies.py:152
+msgid "professional field"
+msgstr "Επαγγελματικός Κλάδος"
+
+#: .\vocabularies.py:153
+msgid "professional fields"
+msgstr "Επαγγελματικοί Κλάδοι"
+
+#: .\vocabularies.py:158
+msgid "social network"
+msgstr "Μέσο Κοινωνικής Δικτύωσης"
+
+#: .\vocabularies.py:159
+msgid "social networks"
+msgstr "Μέσα Κοινωνικής Δικτύωσης"
+
+#: .\vocabularies.py:166
+msgid "OER language"
+msgstr "Γλώσσα Ανοιχτού Εκπαιδευτικού Πόρου"
+
+#: .\vocabularies.py:167
+msgid "OER languages"
+msgstr "Γλώσσες Ανοιχτών Εκπαιδευτικών Πόρων"
+
+#: .\vocabularies.py:179
+msgid "countries"
+msgstr "Χώρες"
