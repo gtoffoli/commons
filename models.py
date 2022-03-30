@@ -292,6 +292,7 @@ def get_calendar_events(request, calendar):
     else:
         return calendar.event_set.prefetch_related("occurrence_set", "rule")
 
+LANGUAGE_CODES = [language[0] for language in settings.LANGUAGES]
 # @python_2_unicode_compatible
 class Tag(models.Model):
     name = models.CharField(verbose_name=_('Name'), unique=True, max_length=100)
@@ -310,7 +311,8 @@ class Tag(models.Model):
         keyvalues = KeyValue.objects.filter(content_type_id=content_type.id, object_id=self.id, field='name')
         name_dict = {}
         for keyvalue in keyvalues:
-            name_dict[keyvalue.language] = keyvalue.value
+            if keyvalue.language in LANGUAGE_CODES:
+                name_dict[keyvalue.language] = keyvalue.value
         return name_dict
 
 from filebrowser.fields import FileBrowseField

@@ -5,12 +5,12 @@ Django settings for commons project.
 
 DEBUG_TOOLBAR= False
 
+import sys
 import os
 if os.name == 'nt':
     IS_LINUX = False
 else:
     IS_LINUX = True
-import pathlib
 
 import django
 DJANGO_VERSION = django.VERSION[0]
@@ -99,6 +99,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.RemoteUserMiddleware', # needed by DRF Basic Authentication ?
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
@@ -155,7 +156,6 @@ INSTALLED_APPS = (
     'success',
     'commons',
     'pybb',
-    # commons project
     'viewerjs',
     'django_messages',
     'roles',
@@ -172,20 +172,16 @@ INSTALLED_APPS = (
     'snowpenguin.django.recaptcha2',
     'brat_client',
     'django.contrib.humanize.apps.HumanizeConfig',
-    # 'sekizai',
-    # 'wiki',
     'xapi_client',
-    #'rdflib_django',
     'el_pagination',
     'datetimewidget',
     'schedule',
-    # 'lrs',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
 INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
 """
-if DEBUG:
+if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['h5p']
     
 if HAS_SAML2:
@@ -273,7 +269,6 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
@@ -330,6 +325,7 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
+    (u'el', u'Ελληνικά'),
     (u'fr', u'Français'),
     (u'pt', u'Português'),
     (u'hr', u'Hrvatski'),
@@ -358,9 +354,13 @@ ROOT_URLCONF = 'commons.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
-
-FILESTORAGE_LOCATION = MEDIA_ROOT / 'document_storage'
+print(sys.version_info)
+if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
+    import pathlib
+    MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
+    FILESTORAGE_LOCATION = MEDIA_ROOT / 'document_storage'
+else:
+    FILESTORAGE_LOCATION = os.path.join(MEDIA_ROOT, 'document_storage')
 
 if IS_LINUX:
     SCORM_URL = '/scorm/'
@@ -435,8 +435,8 @@ LOGGING = {
 # --------- HIERARCHICAL GROUPS ----------------
 AUTHENTICATION_BACKENDS = (
     'hierarchical_auth.backends.HierarchicalModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
-    "allauth.account.auth_backends.AuthenticationBackend",
+    "allauth.account.auth_backends.AuthenticationBackend", # allauth` specific authentication method
+    'django.contrib.auth.backends.RemoteUserBackend', # required for DRF BasicAuthentication
 )
 if HAS_SAML2:
     AUTHENTICATION_BACKENDS = list(AUTHENTICATION_BACKENDS) + ['djangosaml2.backends.Saml2Backend']

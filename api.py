@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 from django.http import JsonResponse
+from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required
@@ -572,7 +573,6 @@ class ActionViewSet(viewsets.ModelViewSet):
     serializer_class = ActionSerializer
     http_method_names = ['get', 'head', 'options',]
 
-
 def register_original_endpoints():
     router.register(r'project', ProjectViewSet)
     router.register(r'folder', FolderViewSet)
@@ -583,5 +583,6 @@ def register_original_endpoints():
     router.register(r'lp', LearningPathViewSet)
     router.register(r'action', ActionViewSet)
 
-register_original_endpoints()
+if settings.SITE_ID == 1:
+    register_original_endpoints()
 

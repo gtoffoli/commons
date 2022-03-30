@@ -13,6 +13,7 @@ from mptt.admin import MPTTModelAdmin
 from datatrans.models import KeyValue
 
 # ABSTRACT CLASSES
+LANGUAGE_CODES = [language[0] for language in settings.LANGUAGES]
 
 # @python_2_unicode_compatible
 class VocabularyEntry(models.Model):
@@ -33,7 +34,8 @@ class VocabularyEntry(models.Model):
         keyvalues = KeyValue.objects.filter(content_type_id=content_type.id, object_id=self.id, field='name')
         name_dict = {}
         for keyvalue in keyvalues:
-            name_dict[keyvalue.language] = keyvalue.value
+            if keyvalue.language in LANGUAGE_CODES:
+                name_dict[keyvalue.language] = keyvalue.value
         return name_dict
 
 # @python_2_unicode_compatible
