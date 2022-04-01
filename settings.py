@@ -461,7 +461,11 @@ TINYMCE_DEFAULT_CONFIG = {
       {'title': '16px', 'inline': 'span', 'styles': {'font-size': '16px'}},
       {'title': '17px', 'inline': 'span', 'styles': {'font-size': '17px'}},
       {'title': '18px', 'inline': 'span', 'styles': {'font-size': '18px'}},
+      {'title': 'left image caption', 'block': 'figure', 'styles': {'float': 'left', 'margin-inline-end': '10px'}},
+      {'title': 'right image caption', 'block': 'figure', 'styles': {'float': 'right', 'margin-inline-start': '10px'}},
       {'title': 'clear floats', 'block': 'div', 'styles': {'clear': 'both'}},
+      {'title': 'left float div', 'block': 'div', 'styles': {'float': 'left'}},
+      {'title': 'right float div', 'block': 'div', 'styles': {'float': 'right'}}
     ],
     'plugin_preview_width' : 800,
     'plugin_preview_height' : 600,
@@ -471,7 +475,7 @@ TINYMCE_DEFAULT_CONFIG = {
         {'title': 'image responsive left', 'value': 'img-responsive-basic pull-left'},
         {'title': 'image responsive right', 'value': 'img-responsive-basic pull-right'}],
     'image_advtab' : True,
-    'image_caption': False,
+    'image_caption': True,
     'image_class_list' : [
         {'title': 'select', 'value': ''},
         {'title': 'image responsive', 'value': 'img-responsive-basic center-block'},
