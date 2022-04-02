@@ -1101,7 +1101,7 @@ voc_es = [
 ['acercar', 'verb', 'a2', mingot],
 ['acontecimiento', 'noun', 'a2', mingot],
 ['activo', 'adjective', 'a2', mingot],
-['activo', 'noun', 'a2', mingot. '?'],
+['activo', 'noun', 'a2', mingot, '?'],
 ['actuar', 'verb', 'a2', mingot],
 ['adelante', 'adverb', 'a2', mingot],
 ['adelante', 'exclamation', 'a2', mingot],
