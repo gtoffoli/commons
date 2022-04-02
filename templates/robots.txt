@@ -10,6 +10,7 @@ Disallow: /my_chat
 Disallow: /user_welcome
 Disallow: /my_preferences
 Disallow: /edit_preferences
+Disallow: /profile
 Disallow: /project/*/edit
 Disallow: /oer/*/edit
 Disallow: /oer/*/view

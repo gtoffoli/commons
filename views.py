@@ -341,6 +341,7 @@ def user_welcome (request):
             return render(request, 'user_welcome.html', var_dict)
         return HttpResponseRedirect('/')
         
+@login_required
 def user_profile(request, username, user=None):
     if not username and (not user or not user.is_authenticated):
         return HttpResponseRedirect('/')

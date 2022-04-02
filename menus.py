@@ -9,6 +9,11 @@ def string_concat(*strings):
 
 def about_children(request):
     children = []
+    if settings.SITE_ID == 5:
+        children.append (MenuItem(
+             capfirst(_("cover page")),
+             url='/we-collab/cover/',
+            ))
     if not settings.SITE_ID == 1:
         children.append (MenuItem(
              # capfirst(string_concat(_('the site'), ' ', settings.SITE_NAME)),
@@ -64,14 +69,15 @@ def projects_children(request):
          capfirst(_("forums")),
          url='/forum/',
         ))
-    children.append (MenuItem(
-         capfirst(_("browse people")),
-         url='/browse_people/',
-        ))
-    children.append (MenuItem(
-         capfirst(_("search people")),
-         url='/people/search/',
-        ))
+    if request.user.is_authenticated:
+        children.append (MenuItem(
+             capfirst(_("browse people")),
+             url='/browse_people/',
+            ))
+        children.append (MenuItem(
+             capfirst(_("search people")),
+             url='/people/search/',
+            ))
     if settings.SITE_ID in [3, 4, 5]: # HEALTH, WE-COLLAB
         children.append (MenuItem(
          capfirst(_("seach documents")),
