@@ -11,18 +11,6 @@
      -webkit-overflow-scrolling: touch !important;
      overflow: scroll !important;
   }
-{% comment %}
-.ta-dialog {
-	max-height: none;
-}
-.ta-dialog-header {
-	background: LightGrey ;
-}
-.ta-dialog-title {
-	text-align: center;
-	font-weight: normal;
-}
-{% endcomment %}
 a.analyzeTextNode:before {
 content: "TA";
 border: 1px solid #337ab7;
@@ -71,7 +59,6 @@ font-weight: 600;
                     <dt><p class="demiBold">{% trans "path nodes"|capfirst %}</p></dt>
                     <dd>
             {% if lp.path_type == 3 %}
-{% comment %}<div id="dag"></div>{% endcomment %}
 {% comment %} SEE https://stackoverflow.com/questions/32044/how-can-i-render-a-tree-structure-recursive-using-a-django-template{% endcomment %}
                     {% for pathnode in lp.get_roots %} 
                     {% with font=14 depth=1 %}
@@ -92,10 +79,8 @@ font-weight: 600;
                         {% else %}
                             {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
                         {% endif %}
-                        {% if user.is_authenticated %}
+                        {% if user.is_full_member %}
                           {% if pathnode.get_obj_text %}
-{% comment %}               <a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
-                    	    <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>{% endcomment %}
                    	        <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
                           {% endif %}
                         {% endif %}
@@ -117,10 +102,6 @@ font-weight: 600;
                 {% if can_edit and not language_mismatch %}
                 &nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
                 {% endif %}
-{% comment %}
-{% if current_node.oer %}
-{% endif %}
-{% endcomment %}
                 </div>
                 <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
             </div>
@@ -203,34 +184,6 @@ font-weight: 600;
                 accordionToggleIcon.children('i').attr("class","fa fa-plus-circle");
             }
         });
-        {% comment %}    
-        if ($('a').hasClass('analyzeText')) {
-            $('a.analyzeText').on('click', function(event){
-               event.preventDefault();
-               $('<div/>',{
-                 'id':'link-'+($(this).index()+1)})
-               .html($('<iframe/>', {
-                 'src': $(this).attr('href'),
-                 'style': 'width:100%; height:100%'}))
-               .appendTo('body')
-               .dialog({
-                 width: 1000,
-                 height: 800,
-                 position: { my: "right top", at: "right top", of: window },
-                 modal: false,
-                 responsive: true,
-                 clickOut: false,
-                 classes: {
-                	"ui-dialog": "ta-dialog",
-               	    "ui-dialog-titlebar": "ta-dialog-header",
-               	    "ui-dialog-title": "ta-dialog-title",
-               	 },
-                 title: 'Text Analysis Dashboard for a Learning Path Node'
-               });
-               $("body").css("cursor", "default");
-            });
-        }
-        {% endcomment %}
     });
 </script>
 {% endblock %}

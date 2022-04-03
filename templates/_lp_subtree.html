@@ -7,10 +7,8 @@
     {% else %}
       <a href="/lp/{{ lp.slug }}/play/?node={{ pathnode.get_index }}" title="path node">{{ pathnode.label }}</a>
     {% endif %}
-    {% if user.is_authenticated %}
+    {% if user.is_full_member %}
       {% if pathnode.get_obj_text %}
-{% comment %}<a class="analyzeText" id="a_{{ pathnode.id }}" href="/pathnode/{{pathnode.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
-        <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{pathnode.id}}/text/" target="_blank">TA</a>{% endcomment %}
         <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
       {% endif %}
     {% endif %}

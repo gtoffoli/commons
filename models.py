@@ -127,6 +127,8 @@ User.get_email_notifications = user_get_email_notifications
 def user_is_full_member(self):
     """ user is full member of CommonSpaces if has a complete profile
     and is member of a Community (Project membership is not enough """
+    if self.is_superuser:
+        return True
     profile = self.get_profile()
     if not profile:
         return False

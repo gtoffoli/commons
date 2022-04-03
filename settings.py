@@ -310,6 +310,8 @@ PROJECT_NAME = 'commons'
 LOGIN_REDIRECT_URL = '/'
 # LOGOUT_REDIRECT_URL = '/' 
 
+CANONICAL_DOMAIN = 'www.commonspaces.eu'
+
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
 USE_I18N = True

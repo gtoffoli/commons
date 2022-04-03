@@ -28,7 +28,8 @@ def processor(request):
         if path.startswith('/' + code + '/'):
             path = path[len(code)+1:]
             break
-    canonical = '%s://%s%s' % (protocol, settings.PRIMARY_DOMAIN, path)
+    # canonical = '%s://%s%s' % (protocol, settings.PRIMARY_DOMAIN, path)
+    canonical = '%s://%s%s' % (protocol, settings.CANONICAL_DOMAIN, path)
     user = request.user
     inbox_count = 0
     if user.is_authenticated:

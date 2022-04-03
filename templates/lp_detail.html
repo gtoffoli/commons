@@ -22,26 +22,6 @@ iframe {
   margin-block-end: 10px;
   padding:10px;
 }
-{% comment %}
-.ui-widget-overlay {
-	background: #444444;
-	opacity: .7;
-	filter: Alpha(Opacity=70);
-}
-.ui-dialog {
-	z-index: 1050;
-}
-.ta-dialog {
-	max-height: none;
-}
-.ta-dialog-header {
-	background: LightGrey ;
-}
-.ta-dialog-title {
-	text-align: center;
-	font-weight: normal;
-}
-{% endcomment %}
 ol>li>div>ul {
     display:inline-block;
 }
@@ -186,7 +166,6 @@ font-weight: 600;
                 <li class="marginB5">
                   <div class="paddingL3">
                   	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc{% elif node.get_online_document_url %} node-doc {% else %}node-text{% endif %}"><li>
-                  	{% comment %} /pathnode/{{ node.id }}/delete/ {% endcomment %}
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% if lp.get_ordered_nodes|length > 1 %}
                         {% if not node.is_island %} 
@@ -200,11 +179,8 @@ font-weight: 600;
                       {% endif %}
                     {% endif %}
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
-                      {% if user.is_authenticated %}
+                      {% if user.is_full_member %}
                         {% if node.get_obj_text %}
-{% comment %}         	  <a class="analyzeText" id="a_{{ node.id }}" href="/pathnode/{{node.id}}/text/"><img src="{% static 'commons/img/text-analysis.png' %}" height="24" width="24" /></a>
-                    	  <a type="button" class="btn btn-info" style="font-size: 10px; padding: 0px 4px;" href="/pathnode/{{node.id}}/text/" target="_blank">TA</a>
-                   	      <a class="analyzeTextNode" id="a_{{ node.id }}" href="#" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>{% endcomment %}
                    	      <a class="analyzeTextNode" href="/pathnode/{{node.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
                         {% endif %}
                       {% endif %}
@@ -215,14 +191,6 @@ font-weight: 600;
               {% if lp.path_type == 2 %}</ol>{% else %}</ul>{% endif %}
             </dd>
             {% endif %}
-            {% comment %}
-            {% if lp.get_nodes %}
-              <div id="showNode" class="boxNode" style="display:none">
-                <div class="text-right"><a class="boxClose" href="#">{% trans "close" %}</a></div>
-                <iframe id="iframeNode" src=""></iframe>
-              </div>
-            {% endif %}
-            {% endcomment %}
             {% if can_edit and lp.original_language and not language_mismatch %}
               <dd class="marginT10"><a href="/lp/{{ lp.slug }}/pathnode_new/" class="btn btn-default">{% trans "add node"|capfirst %}</a></dd>
               {% if bookmarked_oers %}{% for oer in bookmarked_oers %}
@@ -448,46 +416,6 @@ font-weight: 600;
          $("body").css("cursor", "default");
       });
     }
-{% comment %}    
-    if ($('a').hasClass('analyzeText')) {
-        $('a.analyzeText').on('click', function(event){
-           event.preventDefault();
-           $('<div/>',{
-             'id':'link-'+($(this).index()+1)})
-           .html($('<iframe/>', {
-             'src': $(this).attr('href'),
-             'style': 'width:100%; height:100%'}))
-           .appendTo('body')
-           .dialog({
-             width: 'auto',
-             height: 'auto',
-             position: { my: "right top", at: "right top", of: window },
-             modal: false, // true,
-             responsive: true,
-             clickOut: false, // true,
-             classes: {
-            	"ui-dialog": "ta-dialog",
-           	    "ui-dialog-titlebar": "ta-dialog-header",
-           	    "ui-dialog-title": "ta-dialog-title",
-           	 },
-             title: 'Text Analysis Dashboard for a Learning Path Node'
-           });
-           $("body").css("cursor", "default");
-        });
-    }
-    {% if user.is_authenticated %}
-        if ($('a').hasClass('analyzeTextNode')) {
-            $('li div a.analyzeTextNode').on('click', function(event){
-                event.preventDefault();
-                var node_id = $(this).attr('id');
-                node_id = node_id.substr(2);
-                url="/pathnode/"+node_id+"/text/";
-                window.open(url, '_blank');
-                $("body").css("cursor", "default");
-            });
-        }
-    {% endif %}
-    {% endcomment %}
   });
 </script>
 
