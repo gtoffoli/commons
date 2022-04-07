@@ -102,6 +102,11 @@ dl.eval dd:nth-child(even) {
                     {% endif %}
                     {% if document.viewable %}
                       <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                      {% if can_analyse_text %}
+                        {% if user.is_staff or document.size < 100000 %}
+                           <li class="marginR10">{% include "_menu_text_analysis.html" with obj_type="doc" obj_id=document.id %}</li>
+                        {% endif %}
+                      {% endif %}
                     {% endif %}
                     {% endif %}
 {% comment %}

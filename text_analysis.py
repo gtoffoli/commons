@@ -16,6 +16,7 @@ from bs4 import BeautifulSoup
 from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponseNotFound, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -287,6 +288,15 @@ def count_word_syllables(word, language_code):
         n_syllables = n_chars/2
     return max(1, int(n_syllables))
 
+obj_type_to_class_dict = {
+    'project': Project,
+    'oer': OER,
+    'lp': LearningPath,
+    'pathnode': PathNode,
+    'doc': Document,
+    'flatpage': FlatPage,
+}
+
 def get_web_resource_text(url):
     err = None
     try:
@@ -418,7 +428,8 @@ def extract_annotate_with_bs4(html):
 
 # def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=False):
 def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=True):
-    if obj:
+    # if obj:
+    if obj and not obj_type:
         if isinstance(obj, Project):
             obj_type = 'project'
         elif isinstance(obj, OER):
@@ -582,14 +593,17 @@ def sorted_frequencies(d):
     sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
     return [{'key': key, 'freq': freq} for key, freq in sd.items()]
 
-token_level_dict = {}
+# token_level_dict = {}
+token_level_dict = defaultdict(lambda:'c2')
 def map_token_pos_to_level(language_code):
     module_name = 'commons.lang.{0}.basic_vocabulary_{0}'.format(language_code)
     module = import_module(module_name)
     voc = getattr(module, 'voc_'+language_code)
     for item in voc:
         assert len(item) >= 3
-        token_level_dict['_'.join(item[:2])] = item[2]
+        # token_level_dict['_'.join(item[:2])] = item[2]
+        key = '_'.join(item[:2])
+        token_level_dict[key] = min(item[2].lower(), token_level_dict[key])
 
 language_code_dict = {
     'english': 'en',
@@ -624,12 +638,14 @@ def text_dashboard_return(request, var_dict):
         return var_dict # only for manual test
 
 # def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
-def text_dashboard(request, obj_type, obj_id, obj=None, title='', body='', readability=False):
+def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', body='', readability=False):
     """ here through ajax call from the template 'vue/text_dashboard.html' """
-    if not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
+    if not file_key and not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
         return HttpResponseForbidden()
-    if obj_type == 'text':
-        title, description, body = ['', '', request.session.get('input_text', '')]
+    if file_key:
+        pass
+    elif obj_type == 'text':
+        title, description, body = ['', '', request.session.get('text', '')]
     elif obj_type == 'resource':
         title = ''
         description = ''
@@ -640,9 +656,12 @@ def text_dashboard(request, obj_type, obj_id, obj=None, title='', body='', reada
             else:
                 return text_dashboard_return(request, { 'error': response.status_code })
     else:
-        title, description, body = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
+        title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
+        body = '{}, {}. {}'.format(title, description, text)
+    """
     if not body:
         return HttpResponseNotFound()
+    """
     data = json.dumps({'text': body})
     endpoint = nlp_url + '/api/analyze'
     try:
@@ -1068,7 +1087,7 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
     var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
     if request.is_ajax():
         if not file_key:
-            var_dict['text'] = request.session.get('input_text', '')
+            var_dict['text'] = request.session.get('text', '')
         endpoint = nlp_url + '/api/word_contexts/'
         data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
@@ -1080,7 +1099,7 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
 
 def text_summarization(request):
     var_dict = {}
-    text = request.session.get('input_text', '')
+    text = request.session.get('text', '')
     data = json.dumps({'text': text})
     endpoint = nlp_url + '/api/analyze'
     try:
@@ -1170,16 +1189,16 @@ def text_analysis_input(request):
         if form.is_valid():
             data = form.cleaned_data
             function = int(data['function'])
-            request.session['input_text'] = data['text']
-            if function == 1:
+            request.session['text'] = data['text']
+            if function == 1: # Text Analysis Dashboard
                 var_dict = {'obj_type': 'text', 'obj_id': 0}
                 return render(request, 'vue/text_dashboard.html', var_dict)
-            elif function == 2:
+            elif function == 2: # Keywords In Context
                 var_dict = {'file_key': None, 'obj_type': None, 'obj_id': None}
                 return render(request, 'vue/context_dashboard.html', var_dict)
-            elif function == 3:
+            elif function == 3: # Text Summarization
                 return text_summarization(request)
-            elif function == 4:
+            elif function == 4: # Text Readability
                 return text_readability(request)
     else:
         endpoint = nlp_url + '/api/configuration'
@@ -1195,3 +1214,28 @@ def text_analysis_input(request):
         else:
             var_dict['error'] = off_error
     return render(request, 'text_analysis_input.html', var_dict)
+
+def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
+    function = int(function)
+    obj_id = obj_id and int(obj_id) or ''
+    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'file_key': file_key }
+    if file_key:
+        if obj_type == 'corpus':
+            var_dict['obj_type'] = ''
+    else:
+        model_class = obj_type_to_class_dict[obj_type]
+        obj = get_object_or_404(model_class, id=obj_id)
+        if not text and function in [2, 3, 4]:
+            title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
+            # request.session['text'] = text
+            request.session['text'] = '{}, {}. {}'.format(title, description, text)
+            var_dict['obj_type'] = 0
+            var_dict['obj_id'] = 0
+    if function == 1:
+        return render(request, 'vue/text_dashboard.html', var_dict)
+    elif function == 2:
+        return render(request, 'vue/context_dashboard.html', var_dict)
+    elif function == 3:
+        return text_summarization(request)
+    elif function == 4:
+        return text_readability(request)

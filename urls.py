@@ -239,8 +239,9 @@ urlpatterns += [
     url(r"^analytics/active_comembers/$", commons.analytics.active_comembers, name="active_comembers"),
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
+    url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d]+)$", commons.text_analysis.text_dashboard, name="text_dashboard_unterminated"),
     url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>.+)$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
-    url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard"),
+    url(r"^text_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\w\d-]+)/$", commons.text_analysis.text_dashboard, name="text_dashboard_by_url"),
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_2"),
     url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", commons.text_analysis.context_dashboard, name="context_dashboard_1"),
     url(r"^context_dashboard/$", commons.text_analysis.context_dashboard, name="context_dashboard_0"),
@@ -265,6 +266,8 @@ urlpatterns += [
     url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", commons.text_analysis.pathnode_text, name="pathnode_text"),
     url(r"^doc/(?P<doc_id>[\d-]+)/text/$", commons.text_analysis.doc_text, name="doc_text"),
     url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", commons.text_analysis.flatpage_text, name="flatpage_text"),
+    url(r"^text_analysis/(?P<function>[\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/(?P<file_key>[\w\.-]+)/$", commons.text_analysis.text_analysis, name="text_analysis"),
+    url(r"^text_analysis/(?P<function>[\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", commons.text_analysis.text_analysis, name="text_analysis"),
     url(r"^text_analysis_input/$", commons.text_analysis.text_analysis_input, name="text_analysis_input"),
    ]
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

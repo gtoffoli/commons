@@ -25,6 +25,7 @@ iframe {
 ol>li>div>ul {
     display:inline-block;
 }
+{% comment %}
 a.analyzeTextNode:before {
 content: "TA";
 border: 1px solid #337ab7;
@@ -35,6 +36,7 @@ color: #337ab7;
 font-size: 10px;
 font-weight: 600;
 }
+{% endcomment %}
 </style>
 {% endblock %}
 
@@ -179,9 +181,12 @@ font-weight: 600;
                       {% endif %}
                     {% endif %}
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
-                      {% if user.is_full_member %}
+                      {% if can_analyze_text %}
                         {% if node.get_obj_text %}
+{% comment %}
                    	      <a class="analyzeTextNode" href="/pathnode/{{node.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
+{% endcomment %}
+                          {% include "_menu_text_analysis.html" with obj_type="pathnode" obj_id=node.id %}
                         {% endif %}
                       {% endif %}
                     </li></ul>

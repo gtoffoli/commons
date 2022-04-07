@@ -1213,6 +1213,7 @@ def folder_detail(request, project_slug='', folder=None):
     var_dict['can_view_subfolders'] = project.is_member(user) or is_site_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
     var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_community_admin)
     var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
+    var_dict['can_analyse_text'] = project.is_member(user) or is_site_member(user)
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['is_parent_admin'] = is_parent_admin
     var_dict['is_community_admin'] = is_community_admin
@@ -2932,6 +2933,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     # var_dict['can_edit'] = can_edit = oer.can_edit(user)
     var_dict['can_edit'] = can_edit = oer.can_edit(request)
+    var_dict['can_analyze_text'] = user.is_full_member()
     var_dict['can_translate'] = oer.can_translate(request)
     current_language = get_current_language()
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
@@ -3504,6 +3506,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['in_bookmarked_lps'] = in_bookmarked_lps = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
+    var_dict['can_analyze_text'] = user.is_full_member()
     var_dict['can_export'] = lp.can_export(request)
     var_dict['can_translate'] = lp.can_translate(request)
     current_language = get_current_language()
@@ -3579,7 +3582,8 @@ def lp_play(request, lp_id, lp=None):
     protocol = request.is_secure() and 'https' or 'http'
     if not lp:
         lp = get_object_or_404(LearningPath, pk=lp_id)
-    if not lp.can_access(request.user):
+    user = request.user
+    if not lp.can_access(user):
         raise PermissionDenied
     language = request.LANGUAGE_CODE
     domain = request.META['HTTP_HOST']
@@ -3588,6 +3592,7 @@ def lp_play(request, lp_id, lp=None):
     # var_dict['is_published'] = lp.state == PUBLISHED
     var_dict['is_published'] = lp.get_site()==1 and lp.state==PUBLISHED or lp.state in [RESTRICTED, PUBLISHED]
     var_dict['can_edit'] = lp.can_edit(request)
+    var_dict['can_analyze_text'] = user.is_full_member()
     current_language = get_current_language()
     var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
     nodes = lp.get_ordered_nodes()

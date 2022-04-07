@@ -156,7 +156,11 @@ dl.eval dd:nth-child(even) {
 
       <dl class="list-inline font14 marginB10">
          <dt>{% trans "OER type"|capfirst %}</dt>
-         <dd>{{ type }}</dd>
+         <dd>{{ type }}
+         {% if can_analyze_text and oer.oer_type > 1 %}
+              {% include "_menu_text_analysis.html" with obj_type="oer" obj_id=oer.id %}
+         {% endif %}
+         </dd>
       </dl>
       
       {% if oer.oers.all %}

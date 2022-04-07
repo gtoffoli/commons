@@ -185,6 +185,7 @@ a.analyzeText-white:before {
   font-size: 10px;
   font-weight: 600;
 }
+ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 1;}
 
 .btn-outline-dark {
   color: #333;
@@ -246,7 +247,7 @@ a.analyzeText-white:before {
 <div style="clear:both"></div>
 </div>
 
-    {% verbatim %}
+{% verbatim %}
     <div id="app" class="marginB20">
         <div class="list-e">
           <div v-for="resource_list in resource_lists">
@@ -257,7 +258,8 @@ a.analyzeText-white:before {
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in resource_list.items" v-bind:key="item.obj_id"
+                <vddl-draggable v-for="item in resource_list.items"
+                :key="resource_list.list_id+item.obj_id"
                 :type=resource_list.list_id
                 :draggable=item
                 :index=item['index']
@@ -274,6 +276,15 @@ a.analyzeText-white:before {
                   <div class="upperCase c-white">{{ item.obj_type }}</div>
                   <div><a :href=item.url target="_text">{{ item.obj_id }}</a></div>
                   <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+<!--
+     <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
+     <ul v-if="item.active">
+       <li><a v-bind:href="'/text_analysis/4/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_4 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/2/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_2 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/3/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_3 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/1/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_1 }}</a></li>
+     </ul>
+-->
                 </vddl-draggable>
             </vddl-list>
           </div>
@@ -296,8 +307,19 @@ a.analyzeText-white:before {
               <div></div>
               <div></div>
               <div></div>
+<!--
               <div class="text-center"><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText-white" :title="label_analysis"></a></div>
               <div class="text-center"><a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
+              <div class="text-center">{% include "_menu_text_analysis.html" with file_key=corpus.file_key %}</div>
+-->
+   <span class="dropdown"> &nbsp;
+     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars" aria-hidden="true"></i></a>
+     <ul class="dropdown-menu ta-menu">
+       <li><a v-bind:href="'/text_analysis/4/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_4 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/2/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_2 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/3/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_3 }}</a></li>
+     </ul>
+   </span>
               <div class="text-center"><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash bold"></i></a></div>
             </div>
             <div class="test" style="display: none;">
@@ -313,12 +335,14 @@ a.analyzeText-white:before {
                 <div></div>
               </div>
               <vddl-list :list=corpus.items
-              class="box-scroll box-small"  :corpus="corpus.file_key"
+              class="box-scroll box-small"
+              :corpus="corpus.file_key"
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in corpus.items" :key="item.obj_id"
-                 class="vddl-draggable-corpus"
+                <vddl-draggable v-for="item in corpus.items"
+                :key="corpus.file_key+item.obj_id"
+                class="vddl-draggable-corpus"
                 :type=corpus.list_id
                 :allowed-types=all_types
                 :draggable=item
@@ -338,8 +362,17 @@ a.analyzeText-white:before {
                   <div class="upperCase">{{ item.language }}</div>
                   <div>{{ item.n_tokens }}</div>
                   <div>{{ item.n_words }}</div>
-	                <div class="text-center"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+	              <div class="text-center"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
                   <div class="text-center" style="white-space:nowrap;"><a :href="'/context_dashboard/'+corpus.file_key+'/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
+<!--
+     <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
+     <ul v-if="item.active">
+       <li><a v-bind:href="'/text_analysis/4/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_4 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/2/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_2 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/3/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_3 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/1/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_1 }}</a></li>
+     </ul>
+-->
                   <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash demibold"></i></a></div>
                </vddl-draggable>
               </vddl-list>
@@ -355,7 +388,7 @@ a.analyzeText-white:before {
         </div>
         <div id="result" class="box-result">{{ result }}</div>
     </div>
-    {% endverbatim %}
+{% endverbatim %}
 {% endblock body %}
 
 {% block script_base %}
@@ -375,6 +408,7 @@ a.analyzeText-white:before {
           project_id: {{project_id}},
           is_authenticated: {% if user.is_authenticated %}true{% else %}false{% endif %},
           resource_lists: {lps: {list_id: 'lps', label: 'LPs', items: [], selected: null},  shared_lps: {list_id: 'shared_lps', label: 'Shared LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null},oers: {list_id: 'oers', label: 'OERs', items: [], selected: null}, shared_oers: {list_id: 'shared_oers', label: 'Shared OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null}, docs: {list_id: 'docs', label: 'DOCs', items: [], selected: null} },
+          resource_list: {list_id: 'list', label: 'LIST', items: [], selected: null},
           corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
           file_key: null,
           corpora: [],
@@ -400,6 +434,10 @@ a.analyzeText-white:before {
           label_analysis: '{% trans "text-analysis dashboard"|capfirst %}',
           label_context: '{% trans "keywords in context"|capfirst %}',
           label_similarity: '{% trans "similarity"|capfirst %}',
+          label_function_1: '{% trans "Text Analysis Dashboard" %}',
+          label_function_2: '{% trans "Keywords In Context" %}',
+          label_function_3: '{% trans "Text Summarization" %}',
+          label_function_4: '{% trans "Text Readability" %}',
 		},
         el: '#app',
         components: {
@@ -415,6 +453,10 @@ a.analyzeText-white:before {
           },
         },
         methods: {
+          toggle_menu: function(item) {
+            Vue.set(item, 'active', !item.active);
+            console.log(item.active);
+          },
           findEmptyCorpus: function() {
             var empty = false;
             for (corpus in this.corpora)
@@ -422,7 +464,7 @@ a.analyzeText-white:before {
                 return corpus;
             return null;
           },
-          selectedEvent: function(item){
+          selectedEvent: function(item) {
             console.log(':v-draggable: selected');
             this.selected = item;
             // var key = item.list_id;
@@ -621,6 +663,7 @@ a.analyzeText-white:before {
                 	resource_list.items[index].list_id = key;
                 	resource_list.items[index].selected = false;
                 	resource_list.items[index].index = index;
+                	resource_list.items[index].active = false;
                   }
                 }
               }

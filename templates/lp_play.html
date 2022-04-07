@@ -11,6 +11,7 @@
      -webkit-overflow-scrolling: touch !important;
      overflow: scroll !important;
   }
+{% comment %}
 a.analyzeTextNode:before {
 content: "TA";
 border: 1px solid #337ab7;
@@ -20,6 +21,7 @@ padding: 0 4px;
 color: #337ab7;
 font-size: 10px;
 font-weight: 600;
+{% endcomment %}
 }
 </style>
 {% endblock %}
@@ -79,9 +81,12 @@ font-weight: 600;
                         {% else %}
                             {% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}<a href="/lp/{{ lp.slug }}/play/?node={{ forloop.counter0 }}" title="path node">{{ pathnode.label }}</a>
                         {% endif %}
-                        {% if user.is_full_member %}
+                        {% if can_analyze_text %}
                           {% if pathnode.get_obj_text %}
-                   	        <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
+{% comment %}
+                            <a class="analyzeTextNode" href="/pathnode/{{pathnode.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
+{% endcomment %}
+                            {% include "_menu_text_analysis.html" with obj_type="pathnode" obj_id=pathnode.id %}
                           {% endif %}
                         {% endif %}
                         </li>
