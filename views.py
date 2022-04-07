@@ -2933,7 +2933,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
     # var_dict['can_edit'] = can_edit = oer.can_edit(user)
     var_dict['can_edit'] = can_edit = oer.can_edit(request)
-    var_dict['can_analyze_text'] = user.is_full_member()
+    var_dict['can_analyze_text'] = not user.is_anonymous and user.is_full_member()
     var_dict['can_translate'] = oer.can_translate(request)
     current_language = get_current_language()
     var_dict['current_language_name'] = dict(settings.LANGUAGES).get(current_language, _('unknown'))
@@ -3506,7 +3506,7 @@ def lp_detail(request, lp_id, lp=None):
     var_dict['in_bookmarked_lps'] = in_bookmarked_lps = lp_id in (get_clipboard(request, key='bookmarked_lps') or [])
     var_dict['can_play'] = lp.can_play(request)
     var_dict['can_edit'] = can_edit = lp.can_edit(request)
-    var_dict['can_analyze_text'] = user.is_full_member()
+    var_dict['can_analyze_text'] = not user.is_anonymous and user.is_full_member()
     var_dict['can_export'] = lp.can_export(request)
     var_dict['can_translate'] = lp.can_translate(request)
     current_language = get_current_language()
@@ -3592,7 +3592,7 @@ def lp_play(request, lp_id, lp=None):
     # var_dict['is_published'] = lp.state == PUBLISHED
     var_dict['is_published'] = lp.get_site()==1 and lp.state==PUBLISHED or lp.state in [RESTRICTED, PUBLISHED]
     var_dict['can_edit'] = lp.can_edit(request)
-    var_dict['can_analyze_text'] = user.is_full_member()
+    var_dict['can_analyze_text'] = not user.is_anonymous and user.is_full_member()
     current_language = get_current_language()
     var_dict['language_mismatch'] = lp.original_language and not lp.original_language==current_language
     nodes = lp.get_ordered_nodes()
