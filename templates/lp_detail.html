@@ -88,18 +88,18 @@ font-weight: 600;
                 <dt>{% trans "objectives"|capfirst %}</dt>
                 <dd>{{ lp.short|safe }}</dd>
               </dl>
-              {% if lp.levels.all %}
-                {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
-              {% endif %}
-              {% if lp.subjects.all and lp.tags.all %}
-                <div class="row">
-                  <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
-                    {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                {% if lp.levels.all %}
+                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+                {% endif %}
+                {% if lp.subjects.all and lp.tags.all %}
+                  <div class="row">
+                    <div class="col-sm-6 col-md-6 col-lg-6  paddingB10 paddingR0">
+                      {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
+                    </div>
+                    <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
+                      {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
+                    </div>
                   </div>
-                  <div class="col-sm-6 col-md-6 col-lg-6  paddingB10">
-                    {% include "_data_all.html" with data=lp.tags.all data_class=" font14" label_data="tags" action="/lps/search/" type_data="tags" %}
-                  </div>
-                </div>
                 {% elif lp.subjects.all %}
                   {% include "_data_all.html" with data=lp.subjects.all data_class=" font14 marginB10" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
                 {% elif lp.tags.all %}
@@ -128,7 +128,7 @@ font-weight: 600;
             {% elif lp.tags.all %}
               {% include "_data_all.html" with data=lp.tags.all data_class=" font14 marginB10" label_data="tags" action="/lps/search/" type_data="tags" %}
             {% endif %}
-          {% endif %}
+        {% endif %}
         </div>
         {% if lp.long %}
           <dl class="list-inline font14 marginB10 clearfix">
@@ -208,6 +208,7 @@ font-weight: 600;
           </dl>
         {% endif %}
       </div>
+   {% if not EMBEDDED %}
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% if lp.cloned_from and not is_published and not is_un_published %}
         <div class="borderRadius4 font13 marginB20 paddingLR5 paddingTB5" style="border:1px solid red;"><span class="demiBold">{% trans "cloned from"|capfirst %}</span><br><a href="/lp/{{lp.cloned_from.slug}}/">{{lp.cloned_from.title}}</a></div>
@@ -252,10 +253,13 @@ font-weight: 600;
            <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c1">{% trans "To submit for publication this LP, you must move it before to a project by using the tool"|capfirst %} <i class="fa fa-cut"></i></div>
         {% endif %}
       </div>
+   {% endif %}{% comment %}EMBEDDED{% endcomment %}
     </div>
+   {% if not EMBEDDED %}
     {% if project %}
       {% include "_object_comments.html" with data_class="c1" data_obj=lp type_obj="lp" %}
     {% endif %}
+   {% endif %}{% comment %}EMBEDDED{% endcomment %}
   </section>
 </article>
 

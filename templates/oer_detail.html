@@ -219,6 +219,7 @@ dl.eval dd:nth-child(even) {
       {% endif %}
       {% endif %}
       </div>
+      {% if not EMBEDDED %}
       <div class="col-sm-3 col-md-3 col-lg-3">
         {% include "_info_creator_date.html" with data=oer %}
         {% include "_resource_original_lang.html" %}
@@ -264,11 +265,13 @@ dl.eval dd:nth-child(even) {
           <div class="marginT10 marginB10 paddingLR5 font12 borderRadius4 panel-c2">{% trans "To edit this OER, you must move it before to a project by using the tool"|capfirst %} <i class="fa fa-cut"></i></div>
         {% endif %}
       </div>
+    {% endif %}{% comment %}EMBEDDED{% endcomment %}
     </div>
-    {% if oer.project %}
-		{% include "_object_comments.html" with data_class="c2" data_obj=oer type_obj="oer" %}
-		{% endif %}
-
+    {% if not EMBEDDED %}
+      {% if oer.project %}
+	    {% include "_object_comments.html" with data_class="c2" data_obj=oer type_obj="oer" %}
+      {% endif %}
+    {% endif %}{% comment %}EMBEDDED{% endcomment %}
   </section>
 </article>
 

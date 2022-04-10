@@ -119,9 +119,10 @@
      {% endblock %}
   </head>
 
-  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default">
+  <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default;{% if EMBEDDED %} padding-top:0;{% endif %}">
     <div class="{% block wrapper_class %}wrapper{% endblock %}">
       {% block topbar_base %}
+      {% if not EMBEDDED %}
         <header>
           <div class="navbar-fixed-top">
             {% block user %} {% include "_access_bar.html" %} {% endblock user %}
@@ -192,6 +193,7 @@
           </div>
         </header>
         {% block login_model %}{% include "_login_model.html" %}{% endblock %}
+      {% endif %}{% comment %}EMBEDDED{% endcomment %}
       {% endblock %}
 
       {% block body_base %}
@@ -204,6 +206,7 @@
       {% endblock %}
     </div>
     {% block footer_base %}
+    {% if not EMBEDDED %}
       <footer class="footer-fixed">
         <div class="container">
          {% block footer %}
@@ -234,7 +237,9 @@
          {% endblock %}
         </div>
       </footer>
+    {% endif %}{% comment %}EMBEDDED{% endcomment %}
     {% endblock %}
+
     {% comment %} 20220131 MMR
     {% block footer_base %}
       <footer class="footer-fixed">
