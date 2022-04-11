@@ -8,7 +8,11 @@ def online_users_count():
     except:
         return 0
 
+USE_SESSION = False
+USE_COOKIES = True
+
 def processor(request):
+    # global EMBEDDED, embedded_cookie_changed
     path = request.path
     protocol = request.is_secure() and 'https' or 'http'
     host = request.META.get('HTTP_HOST', '')
@@ -35,15 +39,31 @@ def processor(request):
     if user.is_authenticated:
         from django_messages.models import inbox_count_for
         inbox_count = inbox_count_for(user)
-    embed = request.GET.get('embed', False)
-    embedded = request.session.get("embedded", False)
-    if embed in ['0', 'false', 'False', 'FALSE'] and embedded:
-        embedded = False
-        request.session["embedded"] = False
-    elif embed in ['1', 'true', 'True', 'TRUE'] and not embedded:
-        if user.is_anonymous or user.is_full_member():
-            embedded = True
-            request.session["embedded"] = True
+    embed = request.GET.get('embed', '')
+    # print('processor', "'{}', '{}'".format(EMBEDDED, embed))
+    embedded_cookie_changed = False
+    if settings.EMBEDDED_USE_SESSION:
+        EMBEDDED = request.session.get('EMBEDDED', '')
+        if embed in ['0', 'false', 'False', 'FALSE'] and EMBEDDED:
+            embedded_cookie_changed = True
+            EMBEDDED = ''
+        elif embed in ['1', 'true', 'True', 'TRUE'] and not EMBEDDED:
+            embedded_cookie_changed = True
+            EMBEDDED = 'true'
+        if embedded_cookie_changed:
+            request.session['EMBEDDED'] = EMBEDDED
+        setattr(request, 'embedded_cookie_changed', False) # disable middleware
+    if settings.EMBEDDED_USE_COOKIES:
+        EMBEDDED = request.COOKIES.get('EMBEDDED', '')
+        if embed in ['0', 'false', 'False', 'FALSE'] and EMBEDDED:
+            embedded_cookie_changed = True
+            EMBEDDED = ''
+        elif embed in ['1', 'true', 'True', 'TRUE'] and not EMBEDDED:
+            embedded_cookie_changed = True
+            EMBEDDED = 'true'
+        setattr(request, 'embedded_cookie_changed', embedded_cookie_changed)
+        setattr(request, 'EMBEDDED', EMBEDDED)
+    print('processor', "'{}', '{}', {}".format(EMBEDDED, embed, embedded_cookie_changed))
     return {
         'site_name': settings.SITE_NAME,
         'users_count': online_users_count(),
@@ -67,5 +87,5 @@ def processor(request):
         'BROWSER': browser,
         'SITE_ID': settings.SITE_ID,
         'HAS_CALENDAR': settings.HAS_CALENDAR,
-        'EMBEDDED': embedded,
+        'EMBEDDED': EMBEDDED,
     }

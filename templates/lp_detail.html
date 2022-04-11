@@ -70,7 +70,7 @@ font-weight: 600;
                   <dd>{{ lp.short|safe }}</dd>
                 </dl>
                 {% if lp.levels.all %}
-                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lps/search/" type_data="levels" %}
                 {% endif %}
                 {% if lp.subjects.all and lp.tags.all %}
                   {% include "_data_all.html" with data=lp.subjects.all data_class=" font14" label_data="subject areas" action="/lps/search/" type_data="subjects" %}
@@ -89,7 +89,7 @@ font-weight: 600;
                 <dd>{{ lp.short|safe }}</dd>
               </dl>
                 {% if lp.levels.all %}
-                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+                  {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lps/search/" type_data="levels" %}
                 {% endif %}
                 {% if lp.subjects.all and lp.tags.all %}
                   <div class="row">
@@ -112,7 +112,7 @@ font-weight: 600;
               <dd>{{ lp.short|safe }}</dd>
             </dl>
             {% if lp.levels.all %}
-              {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lp/search/" type_data="levels" %}
+              {% include "_data_all.html" with data=lp.levels.all data_class=" font14  marginB10" label_data="target audience" action="/lps/search/" type_data="levels" %}
             {% endif %}
             {% if lp.subjects.all and lp.tags.all %}
               <div class="row">

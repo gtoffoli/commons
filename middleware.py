@@ -27,3 +27,17 @@ class CorsMiddleware:
         # Code to be executed for each request/response after the view is called.
         response["Access-Control-Allow-Origin"] = "*"
         return response
+
+class EmbeddedMiddleware(MiddlewareMixin):
+    pass
+
+    def process_response(self, request, response):
+        embedded_cookie_changed = getattr(request, 'embedded_cookie_changed', '')
+        if embedded_cookie_changed:
+            EMBEDDED = getattr(request, 'EMBEDDED')
+            response["Access-Control-Allow-Headers"] = "true"
+            response.set_cookie('EMBEDDED', EMBEDDED, max_age=3600)
+            print('EmbeddedMiddleware - EMBEDDED cookie changed to', EMBEDDED)
+        else:
+            print("EmbeddedMiddleware - EMBEDDED cookie didn't change:")
+        return response

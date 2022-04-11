@@ -95,6 +95,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'commons.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -102,10 +103,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.RemoteUserMiddleware', # needed by DRF Basic Authentication ?
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cookies_samesite.middleware.CookiesSameSite',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'pybb.middleware.PybbMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    'commons.middleware.EmbeddedMiddleware',
     'commons.middleware.ActiveUserMiddleware',
 ]
 
@@ -126,6 +129,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.flatpages',
     # 3rd party
+    'corsheaders',
+    'django_cookies_samesite',
     'yarn',
     'compressor', # usato?
     'filebrowser',
@@ -282,8 +287,6 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 TEST_RUNNER = 'djcelery.contrib.test_runner.CeleryTestSuiteRunner'
-# ------------ CORS ------------
-CORS_ORIGIN_ALLOW_ALL = True
 # ------ Django REST Swagger -----
 SWAGGER_SETTINGS = {
     'api_version': '0',  # Specify your API's version
@@ -662,3 +665,22 @@ AMPQ_HOST = config.get('ampq', 'HOST')
 AMPQ_PORT = config.getint('ampq', 'PORT')
 AMPQ_VHOST = config.get('ampq', 'VHOST')
 """
+
+# ------------ CORS ------------
+# see https://www.stackhawk.com/blog/django-cors-guide/
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+# CSRF_COOKIE_SAMESITE = 'None'
+# see https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5
+# SESSION_COOKIE_SAMESITE = 'None'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://success.commonspaces.eu', 'https://www.commonspaces.eu', 'https://start.success4all.eu',]
+# for middleware and context_processors
+# see also: https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5 
+EMBEDDED_USE_COOKIES = True
+EMBEDDED_USE_SESSION = False
+if EMBEDDED_USE_SESSION:
+    SESSION_COOKIE_SAMESITE_FORCE_ALL = True
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
