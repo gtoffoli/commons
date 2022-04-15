@@ -747,10 +747,11 @@ class BlogArticleForm(forms.Form):
     lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
 
 TA_FUNCTION_CHOICES = (
-    (1, _('Text Analysis Dashboard')),
     (2, _('Keywords In Context')),
-    (3, _('Text Summarization')),
+    (5, _('Word Lists by POS')),
     (4, _('Text Readability')),
+    (3, _('Text Summarization')),
+    (1, _('Text Analysis Dashboard')),
     )
 
 class TextAnalysisInputForm(forms.Form):

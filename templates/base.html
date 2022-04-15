@@ -1,16 +1,18 @@
 {% load staticfiles %}
+{% if not VUE %}
 {% load i18n %}{% get_current_language_bidi as LANGUAGE_BIDI %}
 {% load commons_tags %}
 {% load menu %}
 {% generate_menu %}
+{% endif %}{% comment %} VUE {% endcomment%}
 
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %} xmlns:og="https://ogp.me/ns#">
   <head>
-    {% include 'google_analytics.html' %}
     <meta charset="utf-8">
     <title>{% block head_title_base %}{% block head_title %}{% endblock %}{% endblock %}{% if site_name  %} | {{ site_name }}{% endif %}</title>
-
+{% if not VUE %}
+    {% include 'google_analytics.html' %}
 	<link rel="canonical" href="{{ CANONICAL }}">
     {% block languages %}
     {% endblock %}
@@ -32,8 +34,10 @@
 
      <link rel="shortcut icon" href="{% static "commons/img/commons.ico" %}" type="image/x-icon">
      <link rel="apple-touch-icon" href="{% static "commons/img/commons_icon.png" %}" type="image/png">
+{% endif %}{% comment %} VUE {% endcomment%}
 
      {% block style_base %}
+{% if not VUE %}
        {% comment %}
        <link href="{% static "bootstrap/css/bootstrap.css" %}" rel="stylesheet">
        <link href="{% static "commons/css/commons.css" %}" rel="stylesheet">
@@ -98,9 +102,11 @@
          }
        }
        </style>
+{% endif %}{% comment %} VUE {% endcomment%}
        {% block extra_style %}{% endblock %}
      {% endblock %}
 
+{% if not VUE %}
      <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
      <script src="https://use.fontawesome.com/d391635073.js"></script>
      <script type="text/javascript">
@@ -113,6 +119,7 @@
           $("a.download-file").on("click", function() {$("body").css("cursor","default")});
         });
       </script>
+{% endif %}{% comment %} VUE {% endcomment%}
 
      {% block extra_head_base %}
        {% block extra_head %}{% endblock %}
@@ -122,6 +129,9 @@
   <body class="bc-demigray {% block body_class %}{% endblock %}" id="{% block body_id %}{% endblock %}" style="cursor:default;{% if EMBEDDED %} padding-top:0;{% endif %}">
     <div class="{% block wrapper_class %}wrapper{% endblock %}">
       {% block topbar_base %}
+{% if VUE %}
+      {% block nav_vue %}{% endblock %}
+{% else %}
       {% if not EMBEDDED %}
         <header>
           <div class="navbar-fixed-top">
@@ -194,6 +204,7 @@
         </header>
         {% block login_model %}{% include "_login_model.html" %}{% endblock %}
       {% endif %}{% comment %}EMBEDDED{% endcomment %}
+{% endif %}{% comment %} VUE {% endcomment%}
       {% endblock %}
 
       {% block body_base %}
@@ -278,6 +289,7 @@
     {% block extra-body %}{% endblock extra-body %}
 
     {% block script_base %}
+{% if not VUE %}
       <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
       <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.js' %}"></script>
       <script type="text/javascript">
@@ -301,6 +313,7 @@
           return false;
       	};
       </script>
+{% endif %}{% comment %} VUE {% endcomment%}
       {% block extra_script %}{% endblock %}
     {% endblock %}
 

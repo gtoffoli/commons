@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Text Analysis Dashoard" %}{% endblock %}
+
+{% block extra_style %}
+<link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
+<link rel="apple-touch-icon" href="{% static "commons/img/ta_dashboard_icon.png" %}" type="image/png">
+<link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
+<style>
+::-webkit-scrollbar { width: 10px; height: 10px; }
+.a, .a1, .a2 { color: green; }
+.b, .b1, .b2 { color: orange; }
+.c, .c1, .c2 { color: red; }
+
+body.nlp-vue-body {
+  font-size: 1.2rem;
+  margin: 0;
+}
+.components-container {
+  margin: 8px;
+}
+h3 {
+    font-size: 22px;
+    text-align: center;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: inherit;
+  font-weight: 500;
+  line-height: 1.1;
+  color: inherit;
+margin: 3px;
+padding: 3px;
+}
+*:before,
+*:after { /* from bootstrap */
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+img { /* from bootstrap */
+  border: 0;
+}
+img { /* from bootstrap */
+  vertical-align: middle;
+}
+.container { /* from bootstrap */
+  padding-inline-end: 15px;
+  padding-inline-start: 15px;
+  margin-inline-end: auto;
+  margin-inline-start: auto;
+padding-top: 3px;
+padding-bottom: 3px;
+}
+.nav { /* from bootstrap */
+  padding-inline-start: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav > li { /* from bootstrap */
+  /* position: relative; */
+  display: block;
+}
+.navbar { /* from bootstrap */
+  /* position: relative; */
+  /* min-height: 50px; */
+  /* margin-bottom: 20px; */
+  border: 1px solid transparent;
+}
+.navbar { /* from bootstrap */
+	border-radius: 0;
+	margin-block-end: 0;
+	border: none;
+}
+.navbar-default {
+	padding-block-end:5px;
+	background:white;
+	box-shadow: inset 0 -10px 10px -10px #999999;
+}
+.navbar-inverse {
+  background-color: #222;
+  border-color: #080808;
+}
+.navbar-fixed-top {
+  border-width: 0;
+}
+.navbar-fixed-top {
+  border-width: 0;
+}
+.mynavbar-brand {
+    padding:5px 15px 7px 15px;
+    height:auto;
+}
+.mynavbar-brand-xs {
+    padding:5px 7px 7px 15px;
+    height:auto;
+}
+.my-navbar-user-auth > li { /* from commons */
+  display:inline-block;
+  padding-block-start:5px;
+}
+.my-navbar-user-auth > li { /* from context_dashboard */
+  padding-inline-start: 7px !important;
+  padding-inline-end: 7px !important;
+  color: #ccc !important;
+  line-height: 20px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.my-navbar-user-auth >li:first-child { /* from commons */
+  /*padding-block-start:0;*/
+  font-size:13px;
+display: inline;
+}
+.wrapper { /* from context_dashboard */
+  min-height: 0;
+  margin:0;
+  padding:0 0 10px 0;
+}
+.pull-right { /* from fix to bootstrap */
+    float: right !important;
+}
+.avatar-small { /* commons */
+  width:25px;
+  height:auto;
+  border-radius:3px;
+  margin-block-start:-3px;
+}
+.container > .navbar-header
+ {
+  margin-inline-end: -15px;
+  margin-inline-start: -15px;
+display: inline;
+}
+.visible-xs {
+  display: none !important;
+}
+@media (max-width: 767px) { /* bootstrap */
+  .hidden-xs {
+    display: none !important;
+  }
+  .visible-xs {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) { /* bootstrap */
+  .navbar-fixed-top {
+    padding-inline-end: 0;
+    padding-inline-start: 0;
+  }
+}
+.navbar-fixed-top { /* bootstrap */
+  max-height: 340px;
+}
+.navbar-fixed-top { /* bootstrap */
+  position: fixed;
+  width:100%;
+  z-index: 1030;
+}
+@media (min-width: 768px) { /* bootstrap */
+.navbar-fixed-top {
+    border-radius: 0;
+  }
+}
+.navbar-fixed-top { /* bootstrap */
+  top: 0;
+  border-width: 0 0 1px;
+}
+.navbar-fixed-top { /* commons */
+  border-width: 0;
+}
+</style>
+{% endblock extra_style %}
+
+{% block extra_head %}
+    <script src="{% static "nlp/js/wow.min.js" %}"></script>
+    <script>
+      new WOW().init();
+    </script>
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+    <script src="{% static "nlp/js/scripts.js" %}"></script>
+    <script src='https://unpkg.com/vue@2.2.6'></script>
+    <!-- <script src="../dist/vue-split-pane.min.js"></script> -->
+    <script src="{% static "vue_apps/src/assets/vue-split-pane.min.js" %}"></script>
+{% endblock extra_head %}
+
+{% block user %}{% endblock user %}
+
+{% block nav_vue %}
+  {% include "_header_bar.html" %}
+  <div class="navbar">
+    <h3 class="text-center">{% trans "Word Lists by POS" %}</h3>
+  </div>
+{% endblock nav_vue %}
+
+{% block body_class %}nlp-vue-body{% endblock %}
+
+{% block body_base %}
+  {% verbatim %}
+  <div class="container-fluid">
+  <div id="app" class='components-container'>
+    <template v-if="error===null">
+      <template>
+        <split-pane v-on:resize="resize" split="horizontal" :default-percent='5'>
+          <template slot="paneL">
+		    <div>{{ obj_type }}:
+              <span v-if="obj_type == 'text'">{{ title }}</span>
+		      <span v-if="obj_type == 'pathnode'">{{ title }} ({{ obj_id }}) of LP</span>
+		      <span v-if="obj_type == 'flatpage'">{{ title }} ({{ obj_id }})</span>
+		    </div>
+          </template>
+          <template slot="paneR">
+            <split-pane v-on:resize="resize" split="vertical" :default-percent='25'>
+              <template slot="paneL">
+                <h4 style="text-align: center;">Verb Lemmas</h4>
+                <div v-for="item in verb_frequencies">
+                  <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                    {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                </div>
+              </template>
+              <template slot="paneR">
+                <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
+                  <template slot="paneL">
+                    <h4 style="text-align: center;">Noun Lemmas</h4>
+                    <div v-for="item in noun_frequencies">
+                      <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                        {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                    </div>
+                  </template>
+                  <template slot="paneR">
+                    <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
+                      <template slot="paneL">
+                        <h4 style="text-align: center;">Adjective Lemmas</h4>
+                        <div v-for="item in adjective_frequencies">
+                          <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                            {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                        </div>
+                      </template>
+                      <template slot="paneR">
+                        <h4 style="text-align: center;">Adverb Lemmas</h4>
+                        <div v-for="item in adverb_frequencies">
+                          <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                            {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                        </div>
+                      </template>
+                    </split-pane>
+                  </template>
+                </split-pane>
+              </template>
+            </split-pane>
+          </template>
+        </split-pane>
+      </template>
+    </template>
+    <template v-else>
+      <h4 style="color: red; text-align: center; margin: 10px;">{{ error }}</h4>
+    </template>
+  </div>
+  </div>
+  {% endverbatim %}
+{% endblock body_base %}
+
+{% block footer_base %}
+{% endblock footer_base %}
+
+{% block script_base %}
+  <script>
+      var app = new Vue({
+        name: 'test',
+        data: {
+          file_key: '{{ file_key }}',
+          obj_type: '{{ obj_type }}',
+          obj_id: '{{ obj_id }}',
+          language: null, title: null,
+          n_tokens: null, n_sentences: null,
+          verb_frequencies: null, noun_frequencies: null, adjective_frequencies: null, adverb_frequencies: null,
+          error: null,
+		},
+        el: '#app',
+        methods: {
+          resize() {
+            console.log('resize')
+          }
+        },
+        mounted: function () {
+          $this = this;
+          if (! this['obj_id'])
+            this['obj_id'] = 0;
+          fetch('/text_wordlists/'{% if file_key %}+this['file_key']+'/'{% endif %}{% if obj_type %}+this['obj_type']+'/'+this['obj_id']+'/'{% endif %}, {
+            method: 'GET',
+            headers: {"X-Requested-With": "XMLHttpRequest"}, // this is just a patch
+          })
+          .then(response => response.json())
+          .then(data => {
+             for (var key in data) {
+          		this[key] = data[key];
+          	 };
+           })
+          .catch(err => (this['error'] = err))
+		},
+      });
+  </script>
+{% endblock script_base %}

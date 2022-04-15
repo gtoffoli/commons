@@ -32,6 +32,7 @@
            {% endif %}
            <span class="hidden-xs"> {{ user.get_display_name }} {{ user.get_completeness }}</span>
          </a></li>
+{% if not VUE %}
          {% if user.is_completed_profile or user.is_superuser %}
          <li><a href="/my_mail/" title="{% trans "my messages" %}"><i class="fa fa-envelope" aria-hidden="true"></i>{% if INBOX_COUNT %}<sup class="format" style="margin-inline-start:-3px;">{{ INBOX_COUNT }}</sup>{% endif %}</a></li>
          <li><a href="/dashboard/{{ user.username }}/new_posts/" title="{% trans "new posts"|capfirst %}"><i class="fa fa-comment" aria-hidden="true"></i>{% with unviewed_posts_count=user.unviewed_posts_count %}{% if unviewed_posts_count %}<sup class="format" style="margin-inline-start:-3px;">{{ unviewed_posts_count}}</sup>{% endif %}{% endwith %}</a></li>
@@ -51,8 +52,10 @@
              <button type="submit" class="btn btn-logout" title="{% trans "Log out" %}"><span class="fa fa-power-off" aria-hidden="true"></span></button>
            </form>
          </li>
+{% endif %}{% comment %} VUE {% endcomment%}
        </ul>
      {% else %}
+{% if not VUE %}
        <!-- Login hidden on mobile -->
        <form class="navbar-form navbar-right mylogin hidden-xs hidden-sm" action="/accounts/login/{% if not "accounts" in request.get_full_path %}?next={{request.get_full_path}}{% endif %}" method="post" name="form-login" id="form-login">{% csrf_token %}
          <div class="form-group">
@@ -135,6 +138,7 @@
            {% endif %}
          </div>
        </div>
+{% endif %}{% comment %} VUE {% endcomment%}
      {% endif %}
     </div>
   </div>

@@ -44,6 +44,7 @@ POS_MAPPING = {
     'NOUN': 'nouns',
     'VERB': 'verbs',
     'ADJ': 'adjectives',
+    'ADV': 'adverbs',
 }
 
 EMPTY_POS = [
@@ -637,9 +638,9 @@ def text_dashboard_return(request, var_dict):
     else:
         return var_dict # only for manual test
 
-# def text_dashboard(request, obj_type, obj_id, obj=None, title='', body=''):
-def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', body='', readability=False):
-    """ here through ajax call from the template 'vue/text_dashboard.html' """
+def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', body='', wordlists=False, readability=False, nounchunks=False):
+    """ here (originally only) through ajax call from the template 'vue/text_dashboard.html' """
+    print('text_dashboard:', obj_type, obj_id, wordlists)
     if not file_key and not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
         return HttpResponseForbidden()
     if file_key:
@@ -658,10 +659,6 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     else:
         title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
         body = '{}, {}. {}'.format(title, description, text)
-    """
-    if not body:
-        return HttpResponseNotFound()
-    """
     data = json.dumps({'text': body})
     endpoint = nlp_url + '/api/analyze'
     try:
@@ -675,18 +672,19 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     language_code = language_code_dict[language.lower()]
     map_token_pos_to_level(language_code)
     analyzed_text = analyze_dict['text']
-#   sentences = analyze_dict['sentences']
     summary = analyze_dict['summary']
-    ncs = analyze_dict['noun_chunks']
-    noun_chunks = []
-    for nc in ncs:
-        nc = nc.replace('\n', ' ').replace('\xa0', ' ')
-        tokens = nc.split()
-        if len(tokens)>1:
-            noun_chunks.append(' '.join(tokens))
-    noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
-    var_dict = {'language_code': language_code, 'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary, 'noun_chunks': noun_chunks}
-
+    title = title or _('manually input text')
+    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'description': description, 'title': title, 'language_code': language_code, 'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary }
+    if nounchunks:
+        ncs = analyze_dict['noun_chunks']
+        noun_chunks = []
+        for nc in ncs:
+            nc = nc.replace('\n', ' ').replace('\xa0', ' ')
+            tokens = nc.split()
+            if len(tokens)>1:
+                noun_chunks.append(' '.join(tokens))
+        noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
+        var_dict['noun_chunks'] = noun_chunks
     endpoint = nlp_url + '/api/doc'
     try:
         response = requests.post(endpoint, data=data)
@@ -697,15 +695,16 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     doc_dict = response.json()
     text = doc_dict['text']
     sentences = doc_dict['sents']
-    n_sentences = len(sentences)
+    var_dict['n_sentences'] = n_sentences = len(sentences)
     tokens = doc_dict['tokens']
-    n_tokens = len(tokens)
+    var_dict['n_tokens'] = n_tokens = len(tokens)
     ents = doc_dict['ents']
 
     kw_frequencies = defaultdict(int)
-    verb_frequencies = defaultdict(int)
-    noun_frequencies = defaultdict(int)
     adjective_frequencies = defaultdict(int)
+    noun_frequencies = defaultdict(int)
+    verb_frequencies = defaultdict(int)
+    adverb_frequencies = defaultdict(int)
     n_lexical = 0
     if readability:
         n_words = 0
@@ -735,6 +734,8 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
             add_to_default_dict(verb_frequencies, lemma)
         elif pos == 'ADJ':
             add_to_default_dict(adjective_frequencies, lemma)
+        elif wordlists and pos == 'ADV':
+            add_to_default_dict(adverb_frequencies, lemma)
     if readability:
         var_dict['n_words'] = n_words
         var_dict['n_hard_words'] = n_hard_words
@@ -747,10 +748,17 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     verb_frequencies = sorted_frequencies(verb_frequencies)
     noun_frequencies = sorted_frequencies(noun_frequencies)
     adjective_frequencies = sorted_frequencies(adjective_frequencies)
+    adverb_frequencies = sorted_frequencies(adverb_frequencies)
     if token_level_dict:
         add_level_to_frequencies(verb_frequencies, 'verb')
         add_level_to_frequencies(noun_frequencies, 'noun')
         add_level_to_frequencies(adjective_frequencies, 'adjective')
+        add_level_to_frequencies(adverb_frequencies, 'adverb')
+
+    var_dict.update({'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies,
+                     'adjective_frequencies': adjective_frequencies, 'adverb_frequencies': adverb_frequencies,})
+    if wordlists:
+        return var_dict
 
     mean_sentence_length = n_tokens/n_sentences
     index_sentences(sentences, tokens)
@@ -781,14 +789,13 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     index_entities(ents, tokens, entitiy_dict)
     entity_lists = [{'key': key, 'entities': entities} for key, entities in entitiy_dict.items()]
 
-    var_dict.update({'obj_type': obj_type, 'obj_id': obj_id, 'title': title, 'description': description, 'analyzed_text': analyzed_text,
-                     'n_tokens': n_tokens, 'n_unique': n_unique, 'voc_density': voc_density, 'lex_density': lex_density,
-                     'n_sentences': n_sentences, 'mean_sentence_length': mean_sentence_length, 'max_sentence_length': max_sentence_length,
+    var_dict.update({'n_unique': n_unique, 'voc_density': voc_density, 'lex_density': lex_density,
+                     'mean_sentence_length': mean_sentence_length, 'max_sentence_length': max_sentence_length,
                      'max_dependency_depth': max_dependency_depth, 'mean_dependency_depth': mean_dependency_depth,
                      'max_dependency_distance': max_dependency_distance, 'mean_dependency_distance': mean_dependency_distance,
                      'max_weighted_distance': max_weighted_distance, 'mean_weighted_distance': mean_weighted_distance,
                      'sentences': sentences, 'tokens': tokens,
-                     'kw_frequencies': kw_frequencies[:16], 'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies, 'adjective_frequencies': adjective_frequencies,
+                     'kw_frequencies': kw_frequencies[:16],
                      'entity_lists': entity_lists, 'entities': ents,
                      'collData': collData, 'docData': docData,
                      })
@@ -1077,6 +1084,19 @@ def ajax_delete_corpus(request):
     else:
         return propagate_remote_server_error(response)
 
+@csrf_exempt
+def text_wordlists(request, file_key='', obj_type='', obj_id=''):
+    var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
+    if request.is_ajax():
+        keys = ['verb_frequencies', 'noun_frequencies',
+                'adjective_frequencies', 'adverb_frequencies',]
+        data = var_dict
+        dashboard_dict = text_dashboard(request, file_key=file_key, obj_type=obj_type, obj_id=obj_id, wordlists=True)
+        data.update([[key, dashboard_dict[key]] for key in keys])
+        return JsonResponse(data)
+    else:
+        return render(request, 'vue/text_wordlists.html', var_dict)
+
 # def context_dashboard(request, file_key='', obj_type='', obj_id=''):
 """
 called from contents_dashboard or text_analysis template
@@ -1200,6 +1220,13 @@ def text_analysis_input(request):
                 return text_summarization(request)
             elif function == 4: # Text Readability
                 return text_readability(request)
+            elif function == 5: # Word Lists by POS
+                """
+                var_dict = {'obj_type': 'text', 'obj_id': 0}
+                var_dict['VUE'] = True
+                return render(request, 'vue/text_wordlists.html', var_dict)
+                """
+                return text_analysis(request, function, 'text', 0)
     else:
         endpoint = nlp_url + '/api/configuration'
         response = None
@@ -1223,15 +1250,16 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
         if obj_type == 'corpus':
             var_dict['obj_type'] = ''
     else:
-        model_class = obj_type_to_class_dict[obj_type]
-        obj = get_object_or_404(model_class, id=obj_id)
-        if not text and function in [2, 3, 4]:
-            title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
-            # request.session['text'] = text
-            request.session['text'] = '{}, {}. {}'.format(title, description, text)
-            var_dict['obj_type'] = 0
-            var_dict['obj_id'] = 0
+        if obj_type != 'text':
+            model_class = obj_type_to_class_dict[obj_type]
+            obj = get_object_or_404(model_class, id=obj_id)
+            if function in [2, 3, 4,]:
+                title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
+                request.session['text'] = '{}, {}. {}'.format(title, description, text)
+                var_dict['obj_type'] = 0
+                var_dict['obj_id'] = 0
     if function == 1:
+        var_dict['VUE'] = True
         return render(request, 'vue/text_dashboard.html', var_dict)
     elif function == 2:
         return render(request, 'vue/context_dashboard.html', var_dict)
@@ -1239,3 +1267,6 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
         return text_summarization(request)
     elif function == 4:
         return text_readability(request)
+    elif function == 5:
+        var_dict['VUE'] = True
+        return render(request, 'vue/text_wordlists.html', var_dict)

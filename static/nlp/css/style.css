@@ -33,10 +33,10 @@ body {
 
 header {
   position: relative;
-  line-height: 4rem;
+  /* line-height: 4rem; */
   margin: 0;
-  padding: 0 1.6rem;
-  color: #ddd;
+  /* padding: 0 1.6rem; */
+  /* color: #ddd; */
   background-color: #2d2d2d;
 }
 
