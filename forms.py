@@ -747,12 +747,12 @@ class BlogArticleForm(forms.Form):
     lead = forms.CharField(required=False, label=_('article lead'), widget=forms.Textarea(attrs={'class':'form-control richtext', 'rows': 4, 'cols': 80,}))
 
 TA_FUNCTION_CHOICES = (
-    (2, _('Keywords In Context')),
-    (5, _('Word Lists by POS')),
-    (4, _('Text Readability')),
-    (3, _('Text Summarization')),
-    (1, _('Text Analysis Dashboard')),
-    )
+    ('context', _('Keywords In Context')),
+    ('wordlists', _('Word Lists by POS')),
+    ('readability', _('Text Readability')),
+    ('summarization', _('Text Summarization')),
+    ('dashboard', _('Text Analysis Dashboard')),
+)
 
 class TextAnalysisInputForm(forms.Form):
     text = forms.CharField(required=True, label=_('text to analyze'), widget=forms.Textarea(attrs={'class':'form-control', 'rows': 10, 'cols': 120,}), help_text=_('short text of a few paragraphs, or url of a web page'))

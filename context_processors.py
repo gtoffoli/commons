@@ -40,7 +40,6 @@ def processor(request):
         from django_messages.models import inbox_count_for
         inbox_count = inbox_count_for(user)
     embed = request.GET.get('embed', '')
-    # print('processor', "'{}', '{}'".format(EMBEDDED, embed))
     embedded_cookie_changed = False
     if settings.EMBEDDED_USE_SESSION:
         EMBEDDED = request.session.get('EMBEDDED', '')
@@ -63,7 +62,6 @@ def processor(request):
             EMBEDDED = 'true'
         setattr(request, 'embedded_cookie_changed', embedded_cookie_changed)
         setattr(request, 'EMBEDDED', EMBEDDED)
-    print('processor', "'{}', '{}', {}".format(EMBEDDED, embed, embedded_cookie_changed))
     return {
         'site_name': settings.SITE_NAME,
         'users_count': online_users_count(),

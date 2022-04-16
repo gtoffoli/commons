@@ -1,17 +1,35 @@
 {% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
 
-{% load staticfiles i18n%}
+{% block head_title %}{% trans "Text Readability" %}{% endblock %}
 
-{% block head_title %}{% trans "text readability"|capfirst %}{% endblock %}
+{% block extra_style %}
+<link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
+<link rel="apple-touch-icon" href="{% static "commons/img/ta_dashboard_icon.png" %}" type="image/png">
+<link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
+<link rel="stylesheet" href="{% static "commons/css/commons_vue.css" %}">
+{% endblock extra_style %}
 
-{% block body_class %}text_readability{% endblock %}
+{% block extra_head %}
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+    <script src="{% static "nlp/js/scripts.js" %}"></script>
+    <script src='https://unpkg.com/vue@2.2.6'></script>
+{% endblock extra_head %}
 
-{% block body %}
-<div class="panel panel-c4 text-left marginTB30">
-  <div class="panel-heading-c4 padding1020">
-    <h2 class="marginTB5">{% trans "text readability"|capfirst %}</h2>
+{% block user %}{% endblock user %}
+
+{% block nav_vue %}
+  {% include "_header_bar.html" %}
+  <div class="navbar">
+    <h3 class="text-center">{% trans "Text Analysis" %} - {% trans "Text Readability" %}</h3>
   </div>
+{% endblock nav_vue %}
 
+{% block body_class %}nlp-vue-body{% endblock %}
+
+{% block body_base %}
+<div class="panel panel-c4 text-left marginTB30">
   <div  class="padding1020">
     <h4 class="marginTB5">{% trans "text features"|capfirst %}</h4>
     <table class="table table-responsive table-bordered table-striped">
@@ -48,5 +66,6 @@
       {% trans "in preparation"|capfirst %}.
   </div>
 </div>
-
 {% endblock %}
+
+{% block footer_base %}{% endblock footer_base %}

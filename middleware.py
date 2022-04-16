@@ -37,7 +37,4 @@ class EmbeddedMiddleware(MiddlewareMixin):
             EMBEDDED = getattr(request, 'EMBEDDED')
             response["Access-Control-Allow-Headers"] = "true"
             response.set_cookie('EMBEDDED', EMBEDDED, max_age=3600)
-            print('EmbeddedMiddleware - EMBEDDED cookie changed to', EMBEDDED)
-        else:
-            print("EmbeddedMiddleware - EMBEDDED cookie didn't change:")
         return response

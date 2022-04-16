@@ -640,7 +640,6 @@ def text_dashboard_return(request, var_dict):
 
 def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', body='', wordlists=False, readability=False, nounchunks=False):
     """ here (originally only) through ajax call from the template 'vue/text_dashboard.html' """
-    print('text_dashboard:', obj_type, obj_id, wordlists)
     if not file_key and not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
         return HttpResponseForbidden()
     if file_key:
@@ -1112,8 +1111,10 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
         data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
         result = response.json()
-        data = {'keywords': result['keywords'], 'kwics': result['kwics']}
-        return JsonResponse(data)
+        # data = {'keywords': result['keywords'], 'kwics': result['kwics']}
+        var_dict['keywords'] = result['keywords']
+        var_dict['kwics'] = result['kwics']
+        return JsonResponse(var_dict)
     else:
         return render(request, 'vue/context_dashboard.html', var_dict)
 
@@ -1131,6 +1132,7 @@ def text_summarization(request):
         var_dict['language'] = analyze_dict['language']
         var_dict['text'] = text
         var_dict['summary'] = analyze_dict['summary']
+        var_dict['VUE'] = True
     else:
         var_dict['error'] = off_error
     return render(request, 'text_summarization.html', var_dict)
@@ -1165,6 +1167,7 @@ def text_readability(request):
     if error:
         print('error:', error)
     else:
+        var_dict['VUE'] = True
         language_code = var_dict['language_code']
         n_words = var_dict['n_words'] or 1
         var_dict['mean_chars_per_word'] = var_dict['n_word_characters'] / n_words
@@ -1208,19 +1211,30 @@ def text_analysis_input(request):
         form = TextAnalysisInputForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            function = int(data['function'])
+            function = data['function']
             request.session['text'] = data['text']
-            if function == 1: # Text Analysis Dashboard
+            return text_analysis(request, function, 'text', 0)
+            if function == 'dashboard': # Text Analysis Dashboard
                 var_dict = {'obj_type': 'text', 'obj_id': 0}
                 return render(request, 'vue/text_dashboard.html', var_dict)
-            elif function == 2: # Keywords In Context
+                return text_analysis(request, function, 'text', 0)
+            elif function == 'context': # Keywords In Context
                 var_dict = {'file_key': None, 'obj_type': None, 'obj_id': None}
+                """
                 return render(request, 'vue/context_dashboard.html', var_dict)
-            elif function == 3: # Text Summarization
+                """
+                return text_analysis(request, function, 'text', 0)
+            elif function == 'summarization': # Text Summarization
+                """
                 return text_summarization(request)
-            elif function == 4: # Text Readability
+                """
+                return text_analysis(request, function, 'text', 0)
+            elif function == 'readability': # Text Readability
+                """
                 return text_readability(request)
-            elif function == 5: # Word Lists by POS
+                """
+                return text_analysis(request, function, 'text', 0)
+            elif function == 'wordlists': # Word Lists by POS
                 """
                 var_dict = {'obj_type': 'text', 'obj_id': 0}
                 var_dict['VUE'] = True
@@ -1243,30 +1257,33 @@ def text_analysis_input(request):
     return render(request, 'text_analysis_input.html', var_dict)
 
 def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
-    function = int(function)
-    obj_id = obj_id and int(obj_id) or ''
+    # obj_id = obj_id and int(obj_id) or ''
     var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'file_key': file_key }
+    print('text_analysis - function, var_dict =', function, var_dict)
     if file_key:
         if obj_type == 'corpus':
             var_dict['obj_type'] = ''
     else:
-        if obj_type != 'text':
+        if obj_type == 'text':
+                var_dict['obj_id'] = 0
+        else:
             model_class = obj_type_to_class_dict[obj_type]
             obj = get_object_or_404(model_class, id=obj_id)
-            if function in [2, 3, 4,]:
+            if function in ['context', 'summarization', 'readability']:
                 title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
                 request.session['text'] = '{}, {}. {}'.format(title, description, text)
                 var_dict['obj_type'] = 0
-                var_dict['obj_id'] = 0
-    if function == 1:
-        var_dict['VUE'] = True
+    if function == 'dashboard':
         return render(request, 'vue/text_dashboard.html', var_dict)
-    elif function == 2:
+    elif function == 'context':
+        var_dict['VUE'] = True
         return render(request, 'vue/context_dashboard.html', var_dict)
-    elif function == 3:
+    elif function == 'summarization':
+        var_dict['VUE'] = True
         return text_summarization(request)
-    elif function == 4:
+    elif function == 'readability':
+        var_dict['VUE'] = True
         return text_readability(request)
-    elif function == 5:
+    elif function == 'wordlists':
         var_dict['VUE'] = True
         return render(request, 'vue/text_wordlists.html', var_dict)
