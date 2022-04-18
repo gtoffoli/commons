@@ -62,6 +62,12 @@
   {% verbatim %}
   <div class="container-fluid">
     <div id="app" class='components-container'>
+      <div class="marginB10">
+        <span v-if="obj_type_label"><b>{{ obj_type_label }}</b></span>
+        <span v-if="title"><i>{{ title }}</i></span>
+        <span v-if="obj_id">(id = {{ obj_id }})</span>
+      </div>
+      <div v-if="language"><label>language</label> {{ language }}</div>
       <div v-for="(kwic, index) in kwics" >
         <div class="panel-heading-context padding510 demiBold"><a href="#" class="marginR10" onclick="toggle_icon($(this)); return false;"><i class="fa fa-plus-square"></i></a><span class="marginR10">{{ kwic.frequency }}</span><span class="kw">{{ kwic.kw }}</span></div>
         <div style="display:none">
@@ -90,6 +96,9 @@
       file_key: '{{ file_key }}',
       obj_type: '{{ obj_type }}',
       obj_id: '{{ obj_id }}',
+      obj_type_label: '{{ obj_type_label }}',
+      title: '{{ title }}',
+      language: '{{ language }}',
       kwics: [],
       result: [],
       error: '',

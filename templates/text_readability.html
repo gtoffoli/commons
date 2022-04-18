@@ -31,7 +31,13 @@
 {% block body_base %}
 <div class="panel panel-c4 text-left marginTB30">
   <div  class="padding1020">
-    <h4 class="marginTB5">{% trans "text features"|capfirst %}</h4>
+    <div class="marginB5">
+      {% if obj_type_label %}<label>{{ obj_type_label|capfirst }}</label>{% endif %}
+      {% if title %}<i>{{ title }}</i></span>{% endif %}
+      {% if obj_id %}(id = {{ obj_id }})</span>{% endif %}
+    </div>
+    <div><label>{% trans "language"|capfirst %}</label> {{ language }}</div>
+    <h4 class="marginTB0 padding0">{% trans "text features"|capfirst %}</h4>
     <table class="table table-responsive table-bordered table-striped">
     <tbody>
     <tr><th colspan="4">{% trans "raw text features"|capfirst %}</th></tr>
@@ -47,7 +53,7 @@
     </tbody>
     </table>
 
-    <h4 class="marginTB5">{% trans "formulas based on raw text features"|capfirst %}</h4>
+    <h4 class="marginTB5 padding0">{% trans "formulas based on raw text features"|capfirst %}</h4>
     {% if readability_indexes %}
       <table class="table table-responsive table-bordered table-striped">
       <thead>
@@ -62,7 +68,7 @@
     {% else %}
       {% trans "no readability formulas are available yet for"|capfirst %} {{ language }}.
     {% endif %}
-    <h4 class="marginTB5">{% trans "advanced text complexity indexes"|capfirst %}</h4>
+    <h4 class="marginTB5 padding0">{% trans "advanced text complexity indexes"|capfirst %}</h4>
       {% trans "in preparation"|capfirst %}.
   </div>
 </div>

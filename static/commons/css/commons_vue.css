@@ -83,14 +83,27 @@ img { /* from bootstrap */
   vertical-align: middle;
 }
 
-.marginT5 { /* from commons */
+.marginTB0 {/* from commons */
+	margin-block-start:0;
+	margin-block-end:0;
+}
+.marginT5 {
 	margin-block-start:5px;
 }
 .marginT10 {
 	margin-block-start:10px;
 }
+.marginB5 {
+	margin-block-end: 5px;
+}
+.marginB10 {
+	margin-block-end: 10px !important;
+}
 .marginR10 {
     margin-inline-end: 10px;
+}
+.padding0 {
+	padding: 0;
 }
 .padding510 {
     padding: 5px 10px;

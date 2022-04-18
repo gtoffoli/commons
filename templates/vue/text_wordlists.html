@@ -42,13 +42,14 @@
   <div id="app" class='components-container'>
     <template v-if="error===null">
       <template>
-        <split-pane v-on:resize="resize" split="horizontal" :default-percent='5'>
+        <split-pane v-on:resize="resize" split="horizontal" :default-percent='10'>
           <template slot="paneL">
-		    <div>{{ obj_type }}:
-              <span v-if="obj_type == 'text'">{{ title }}</span>
-		      <span v-if="obj_type == 'pathnode'">{{ title }} ({{ obj_id }}) of LP</span>
-		      <span v-if="obj_type == 'flatpage'">{{ title }} ({{ obj_id }})</span>
+		    <div>
+              <span v-if="obj_type_label"><label>{{ obj_type_label }}</label></span>
+              <span v-if="title">: <i>{{ title }}</i></span>
+		      <span v-if="id">(id = {{ obj_id }})</span>
 		    </div>
+            <div v-if="language"><label>language</label> {{ language }}</div>
           </template>
           <template slot="paneR">
             <split-pane v-on:resize="resize" split="vertical" :default-percent='25'>
@@ -112,7 +113,9 @@
           file_key: '{{ file_key }}',
           obj_type: '{{ obj_type }}',
           obj_id: '{{ obj_id }}',
-          language: null, title: null,
+          obj_type_label: '{{ obj_type_label }}',
+          title: '{{ title }}',
+          language: '{{ language }}',
           n_tokens: null, n_sentences: null,
           verb_frequencies: null, noun_frequencies: null, adjective_frequencies: null, adverb_frequencies: null,
           error: null,

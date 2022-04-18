@@ -31,6 +31,16 @@ from .user_spaces import project_contents, user_contents
 
 nlp_url = settings.NLP_URL
 
+obj_type_label_dict = {
+'project': _('commonspaces project'),
+'doc': _('document file'),
+'oer': _('open educational resource'),
+'pathnode': _('node of learning path'),
+'lp': _('learning path'),
+'resource': _('remote web resource'),
+'text': _('manually input text'),
+}
+
 # from NLPBuddy
 ENTITIES_MAPPING = {
     'PERSON': 'person',
@@ -672,8 +682,8 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     map_token_pos_to_level(language_code)
     analyzed_text = analyze_dict['text']
     summary = analyze_dict['summary']
-    title = title or _('manually input text')
-    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'description': description, 'title': title, 'language_code': language_code, 'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary }
+    obj_type_label = obj_type_label_dict[obj_type]
+    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'description': description, 'title': title, 'obj_type_label': obj_type_label, 'language_code': language_code, 'language': language, 'text': body, 'analyzed_text': analyzed_text, 'summary': summary }
     if nounchunks:
         ncs = analyze_dict['noun_chunks']
         noun_chunks = []
@@ -1087,8 +1097,8 @@ def ajax_delete_corpus(request):
 def text_wordlists(request, file_key='', obj_type='', obj_id=''):
     var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
     if request.is_ajax():
-        keys = ['verb_frequencies', 'noun_frequencies',
-                'adjective_frequencies', 'adverb_frequencies',]
+        keys = ['verb_frequencies', 'noun_frequencies', 'adjective_frequencies', 'adverb_frequencies', 
+                'obj_type_label', 'title', 'language']
         data = var_dict
         dashboard_dict = text_dashboard(request, file_key=file_key, obj_type=obj_type, obj_id=obj_id, wordlists=True)
         data.update([[key, dashboard_dict[key]] for key in keys])
@@ -1096,7 +1106,6 @@ def text_wordlists(request, file_key='', obj_type='', obj_id=''):
     else:
         return render(request, 'vue/text_wordlists.html', var_dict)
 
-# def context_dashboard(request, file_key='', obj_type='', obj_id=''):
 """
 called from contents_dashboard or text_analysis template
 to find and sort document or corpus keywords and to list keyword in context
@@ -1111,15 +1120,14 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
         data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
         result = response.json()
-        # data = {'keywords': result['keywords'], 'kwics': result['kwics']}
         var_dict['keywords'] = result['keywords']
         var_dict['kwics'] = result['kwics']
         return JsonResponse(var_dict)
     else:
         return render(request, 'vue/context_dashboard.html', var_dict)
 
-def text_summarization(request):
-    var_dict = {}
+def text_summarization(request, params={}):
+    var_dict = params
     text = request.session.get('text', '')
     data = json.dumps({'text': text})
     endpoint = nlp_url + '/api/analyze'
@@ -1132,7 +1140,6 @@ def text_summarization(request):
         var_dict['language'] = analyze_dict['language']
         var_dict['text'] = text
         var_dict['summary'] = analyze_dict['summary']
-        var_dict['VUE'] = True
     else:
         var_dict['error'] = off_error
     return render(request, 'text_summarization.html', var_dict)
@@ -1160,14 +1167,18 @@ def readability_level(scale, score):
             return range[2]
     return 'out of scale'
 
+"""
 def text_readability(request):
     obj_id = None
     var_dict = text_dashboard(request, 'text', obj_id, readability=True)
+"""
+def text_readability(request, params={}):
+    var_dict = text_dashboard(request, 'text', 0, readability=True)
     error = var_dict.get('error', None)
     if error:
         print('error:', error)
     else:
-        var_dict['VUE'] = True
+        var_dict.update(params)
         language_code = var_dict['language_code']
         n_words = var_dict['n_words'] or 1
         var_dict['mean_chars_per_word'] = var_dict['n_word_characters'] / n_words
@@ -1217,31 +1228,10 @@ def text_analysis_input(request):
             if function == 'dashboard': # Text Analysis Dashboard
                 var_dict = {'obj_type': 'text', 'obj_id': 0}
                 return render(request, 'vue/text_dashboard.html', var_dict)
-                return text_analysis(request, function, 'text', 0)
-            elif function == 'context': # Keywords In Context
-                var_dict = {'file_key': None, 'obj_type': None, 'obj_id': None}
-                """
-                return render(request, 'vue/context_dashboard.html', var_dict)
-                """
-                return text_analysis(request, function, 'text', 0)
-            elif function == 'summarization': # Text Summarization
-                """
-                return text_summarization(request)
-                """
-                return text_analysis(request, function, 'text', 0)
-            elif function == 'readability': # Text Readability
-                """
-                return text_readability(request)
-                """
-                return text_analysis(request, function, 'text', 0)
-            elif function == 'wordlists': # Word Lists by POS
-                """
-                var_dict = {'obj_type': 'text', 'obj_id': 0}
-                var_dict['VUE'] = True
-                return render(request, 'vue/text_wordlists.html', var_dict)
-                """
+            else:
                 return text_analysis(request, function, 'text', 0)
     else:
+        # do not present the input form if the language server is down
         endpoint = nlp_url + '/api/configuration'
         response = None
         try:
@@ -1257,13 +1247,12 @@ def text_analysis_input(request):
     return render(request, 'text_analysis_input.html', var_dict)
 
 def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
-    # obj_id = obj_id and int(obj_id) or ''
-    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'file_key': file_key }
-    print('text_analysis - function, var_dict =', function, var_dict)
+    var_dict = { 'obj_type': obj_type, 'obj_id': obj_id, 'file_key': file_key, 'title': '' }
     if file_key:
         if obj_type == 'corpus':
             var_dict['obj_type'] = ''
     else:
+        var_dict['obj_type_label'] = obj_type_label_dict[obj_type]
         if obj_type == 'text':
                 var_dict['obj_id'] = 0
         else:
@@ -1272,7 +1261,8 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
             if function in ['context', 'summarization', 'readability']:
                 title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
                 request.session['text'] = '{}, {}. {}'.format(title, description, text)
-                var_dict['obj_type'] = 0
+                var_dict['title'] = title
+                # var_dict['obj_type'] = 0
     if function == 'dashboard':
         return render(request, 'vue/text_dashboard.html', var_dict)
     elif function == 'context':
@@ -1280,10 +1270,10 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
         return render(request, 'vue/context_dashboard.html', var_dict)
     elif function == 'summarization':
         var_dict['VUE'] = True
-        return text_summarization(request)
+        return text_summarization(request, params=var_dict)
     elif function == 'readability':
         var_dict['VUE'] = True
-        return text_readability(request)
+        return text_readability(request, params=var_dict)
     elif function == 'wordlists':
         var_dict['VUE'] = True
         return render(request, 'vue/text_wordlists.html', var_dict)
