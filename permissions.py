@@ -7,6 +7,7 @@ from pybb import defaults
 """ commented to avoid circularity in Django 2.1: django_messages -> urls.reverse -> pybb -> permissions -> track_action -> Message
 from commons.analytics import track_action
 """
+from commons.models import is_site_member
 
 class ForumPermissionHandler(DefaultPermissionHandler):
 
@@ -19,7 +20,10 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         # qs = qs.filter(Q(hidden=False) & Q(category__hidden=False) & Q(topic_count__gt=0))
         qs = qs.filter(Q(hidden=False) & Q(category__hidden=False))
         if settings.SITE_ID > 1:
-            qs = qs.filter_by_site(Forum)
+            if user.is_authenticated and is_site_member(user):
+                qs = qs.filter_by_site(Forum)
+            else:
+                qs = Forum.objects.none()
         return qs
     
     def may_view_forum(self, user, forum):
@@ -32,6 +36,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
             return False
         if project.is_member(user) or user.is_superuser:
             return True
+        if settings.SITE_ID > 1 and not is_site_member(user):
+                return False
         return settings.SITE_ID == forum.get_site() and project.get_type_name() in ['com', 'oer', 'lp', 'roll']
 
     def may_create_topic(self, user, forum):
@@ -66,6 +72,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
         """ return True if user may view this topic, False otherwise """
         if user.is_superuser or user.is_staff:
             return True
+        if not self.may_view_forum(user, topic.forum):
+            return False
         if self.may_moderate_topic(user, topic) or user==topic.user:
             return True
         return not topic.on_moderation and not topic.closed and not topic.forum.hidden

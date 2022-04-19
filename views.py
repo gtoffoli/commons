@@ -1209,7 +1209,6 @@ def folder_detail(request, project_slug='', folder=None):
     if ment_proj_submitted:
         selected_mentors = ProjectMember.objects.filter(project=project, user=user, state=0, refused=None)
         n_selected_mentors = selected_mentors.count()
-    # var_dict['can_view_subfolders'] = project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
     var_dict['can_view_subfolders'] = project.is_member(user) or is_site_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
     var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_community_admin)
     var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
@@ -1362,6 +1361,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             # request.session['is_site_root'] = project==get_site_root()
             var_dict['add_change_admin_form'] = ProjectAddMemberForm(initial={'role_member': 'senior_admin' })
         var_dict['widget_autocomplete_select2'] = can_change_admin or (can_accept_member and (proj_type.name == 'sup' or project.is_reserved_project())) 
+        var_dict['can_list_members'] = settings.SITE_ID==1 or is_site_member(user)
         var_dict['can_add_repo'] = project.can_add_repo(user)
         var_dict['can_add_oer'] = can_add_oer = project.can_add_oer(user)
         if can_add_oer:
@@ -1582,11 +1582,9 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         oers = OER.objects.filter(project=project).order_by('-created')
     else:
-        # oers = OER.objects.filter(project=project, state=PUBLISHED).order_by('-created')
         oers = OER.objects.filter(project=project, state__in=view_states).order_by('-created')
     var_dict['n_oers'] = oers.count()
     var_dict['oers'] = oers[:MAX_OERS]
-    # shared_oers = SharedOer.objects.filter(project=project, oer__state=PUBLISHED).order_by('-created')
     shared_oers = SharedOer.objects.filter(project=project, oer__state__in=view_states).order_by('-created')
     var_dict['shared_oers'] = [[shared_oer, shared_oer.can_delete(request)] for shared_oer in shared_oers]
     oers_last_evaluated = project.get_oers_last_evaluated()
@@ -1595,11 +1593,9 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
     if (user.is_authenticated and project.is_member(user)) or user.is_superuser:
         lps = LearningPath.objects.filter(project=project).order_by('-created')
     else:
-        #lps = LearningPath.objects.filter(project=project, state=PUBLISHED).order_by('-created')
         lps = LearningPath.objects.filter(project=project, state__in=view_states).order_by('-created')
     var_dict['n_lps'] = len(lps)
     var_dict['lps'] = lps[:MAX_LPS]
-    # shared_lps = SharedLearningPath.objects.filter(project=project, lp__state=PUBLISHED).order_by('-created')
     shared_lps = SharedLearningPath.objects.filter(project=project, lp__state__in=view_states).order_by('-created')
     var_dict['shared_lps'] = [[shared_lp, shared_lp.can_delete(request)] for shared_lp in shared_lps]
     var_dict['calendar'] = project.get_calendar()

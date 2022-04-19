@@ -358,12 +358,10 @@ def get_document_text(document, return_has_text=False):
     encoding = 'utf8'
     if mimetype.count('text'): # if mimetype.endswith('text'):
         has_text = True
+    if mimetype.count('text/plain'):
+        has_text = True
         if not return_has_text:
-            try:
-                text = textract.process(version.file.path, encoding=encoding, extension='txt')
-            except:
-                f = open(version.file.path, encoding=version.encoding or encoding)
-                text = f.read()
+            text = textract.process(version.file.path, encoding=encoding, extension='txt')
     elif mimetype.count('pdf'): # elif mimetype.endswith('pdf'):
         has_text = True
         if not return_has_text:
@@ -388,6 +386,14 @@ def get_document_text(document, return_has_text=False):
         has_text = True
         if not return_has_text:
             text = textract.process(version.file.path, encoding=encoding, extension='xlsx')
+    else:
+        split_label = document.label.split('.')
+        if len(split_label) > 1:
+            extension = split_label[-1]
+            if extension in ['csv', 'doc', 'docx', 'eml', 'epub', 'htm', 'html', 'json', 'msg', 'odt', 'pdf', 'pptx', 'ps', 'rtf', 'txt', 'xslx', 'xss',]:
+                has_text = True
+                if not return_has_text:
+                    text = textract.process(version.file.path, encoding=encoding, extension=extension)
     if return_has_text:
         return has_text
     else:
@@ -396,7 +402,6 @@ def get_document_text(document, return_has_text=False):
         except (UnicodeDecodeError, AttributeError):
             pass
         return text
-
 
 def get_oer_text(oer, return_has_text=False):
     text = ''
@@ -422,11 +427,9 @@ def extract_annotate_with_bs4(html):
     headings = soup.find_all(re.compile('h.+'))
     for heading in headings:
         name = heading.name
-        # level = name.replace('h', '')
         level = name[1:]
         if level.isdigit():
             text = heading.text
-            # if not text[-1] in string.punctuation:
             if text and not text[-1] in string.punctuation:
                 heading.append('.')
     lis = soup.find_all('li')
@@ -437,7 +440,6 @@ def extract_annotate_with_bs4(html):
                 li.append(';')
     return soup.get_text()
 
-# def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=False):
 def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=True):
     # if obj:
     if obj and not obj_type:
@@ -855,7 +857,6 @@ def lp_compare_nodes(request, lp_slug):
     response = requests.post(endpoint, data=data)
     if not response.status_code==200:
         data = {'status': response.status_code}
-        # return HttpResponse(json.dumps(data), content_type='application/json')
         return JsonResponse(data)
     endpoint = nlp_url + '/api/add_doc/'
     for node in nodes:
@@ -866,18 +867,15 @@ def lp_compare_nodes(request, lp_slug):
         response = requests.post(endpoint, data=data)
         if not response.status_code==200:
             data = {'status': response.status_code}
-            # return HttpResponse(json.dumps(data), content_type='application/json')
             return JsonResponse(data)
     endpoint = nlp_url + '/api/compare_docs/'
     data = json.dumps({'user_key': user_key, 'language': lp.original_language})
     response = requests.post(endpoint, data=data)
     if response and response.status_code==200:
-        # return HttpResponse(response.content, content_type='application/json')
         data = response.json()
         return JsonResponse(data)
     else:
         data = {'status': response.status_code}
-        # return HttpResponse(json.dumps(data), content_type='application/json')
         return JsonResponse(data)
 
 TEXT_MIMETYPE_KEYS = (
@@ -1120,6 +1118,7 @@ def context_dashboard(request, file_key='', obj_type='', obj_id=''):
         data = json.dumps(var_dict)
         response = requests.post(endpoint, data=data)
         result = response.json()
+        var_dict['language'] = result['language']
         var_dict['keywords'] = result['keywords']
         var_dict['kwics'] = result['kwics']
         return JsonResponse(var_dict)

@@ -508,6 +508,7 @@
                             {% endif %}
                             {% endif %}
                     {% endif %}
+                    {% if can_list_members %}
                     <div class="panel-white">
 {% comment %} LIST MEMBERS {% endcomment %}
                         <div class="panel-heading-c0 padding510 demiBold "><a class="toggleIcon" href="#"><i class="fa fa-plus-square"></i></a> {% trans "members"|capfirst %}</div>
@@ -569,6 +570,7 @@
                             {% include "earmaster/_earmaster_import_results.html" %}
                         {% endif %}
                     </div>
+                    {% endif %}
 {% comment %} PORTLETS TOP {% endcomment %}
                     {% if portlets_top %}
                     {% for portlet in portlets_top %}

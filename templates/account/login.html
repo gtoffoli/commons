@@ -69,7 +69,7 @@ form.login > ul.errorlist {
                 {% if socialaccount_providers %}
                     <p>{% blocktrans with site.name as site_name %}Please sign in with one
                         of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-                        for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+                        for a <i>{{ site_name }}</i> account and sign in below:{% endblocktrans %}</p>
 
                     <div class="socialaccount_ballot">
                         <ul class="socialaccount_providers">
