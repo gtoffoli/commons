@@ -112,10 +112,8 @@ class ForumPermissionHandler(DefaultPermissionHandler):
 
     def may_view_post(self, user, post):
         """ return True if `user` may view `post`, False otherwise """
-        topic = post.topic
-        forum = topic.forum
-        project = forum.get_project()
-        if project:
-            return user.is_authenticated
-        else:
-            return (not post.on_moderation) or (user==post.user) or self.may_moderate_post(user, post)
+        if user.is_superuser or user.is_staff:
+            return True
+        if not self.may_view_topic(user, post.topic):
+            return False
+        return (not post.on_moderation) or (user==post.user) or self.may_moderate_post(user, post)
