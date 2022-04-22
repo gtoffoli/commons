@@ -279,10 +279,10 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
 <!--
      <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
      <ul v-if="item.active">
-       <li><a v-bind:href="'/text_analysis/4/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_4 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/2/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_2 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/3/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_3 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/1/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_function_1 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/context/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_context }}</a></li>
+       <li><a v-bind:href="'/text_analysis/wordlists/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_wordlists }}</a></li>
+       <li><a v-bind:href="'/text_analysis/readability/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_readability }}</a></li>
+       <li><a v-bind:href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_dashboard }}</a></li>
      </ul>
 -->
                 </vddl-draggable>
@@ -308,16 +308,17 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
               <div></div>
               <div></div>
 <!--
-              <div class="text-center"><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText-white" :title="label_analysis"></a></div>
               <div class="text-center"><a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
-              <div class="text-center">{% include "_menu_text_analysis.html" with file_key=corpus.file_key %}</div>
+              <div class="text-center"><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText-white" :title="label_analysis"></a></div>
 -->
    <span class="dropdown"> &nbsp;
      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars" aria-hidden="true"></i></a>
      <ul class="dropdown-menu ta-menu">
-       <li><a v-bind:href="'/text_analysis/4/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_4 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/2/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_2 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/3/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_function_3 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/context/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_context }}</a></li>
+<!--
+       <li><a v-bind:href="'/text_analysis/wordlists/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_wordlists }}</a></li>
+       <li><a v-bind:href="'/text_analysis/dashboard/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_dashboard }}</a></li>
+-->
      </ul>
    </span>
               <div class="text-center"><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash bold"></i></a></div>
@@ -367,10 +368,10 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
 <!--
      <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
      <ul v-if="item.active">
-       <li><a v-bind:href="'/text_analysis/4/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_4 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/2/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_2 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/3/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_3 }}</a></li>
-       <li><a v-bind:href="'/text_analysis/1/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_function_1 }}</a></li>
+       <li><a v-bind:href="'/text_analysis/context/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_context }}</a></li>
+       <li><a v-bind:href="'/text_analysis/wordlists/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_wordlists }}</a></li>
+       <li><a v-bind:href="'/text_analysis/readability/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_readability }}</a></li>
+       <li><a v-bind:href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_dashboard }}</a></li>
      </ul>
 -->
                   <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash demibold"></i></a></div>
@@ -431,13 +432,13 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
           label_new_corpus: '{% trans "new corpus"|capfirst %}',
           label_delete_corpus: '{% trans "delete corpus"|capfirst %}',
           label_remove_item: '{% trans "remove item"|capfirst %}',
-          label_analysis: '{% trans "text-analysis dashboard"|capfirst %}',
-          label_context: '{% trans "keywords in context"|capfirst %}',
           label_similarity: '{% trans "similarity"|capfirst %}',
-          label_function_1: '{% trans "Text Analysis Dashboard" %}',
-          label_function_2: '{% trans "Keywords In Context" %}',
-          label_function_3: '{% trans "Text Summarization" %}',
-          label_function_4: '{% trans "Text Readability" %}',
+          label_analysis: '{% trans "Text Analysis Dashboard" %}',
+          label_dashboard: '{% trans "Text Analysis Dashboard" %}',
+          label_context: '{% trans "Keywords In Context" %}',
+          label_wordlists: '{% trans "Word Lists by POS" %}',
+          label_summarization: '{% trans "Text Summarization" %}',
+          label_readability: '{% trans "Text Readability" %}',
 		},
         el: '#app',
         components: {

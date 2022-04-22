@@ -7,10 +7,10 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponseForbidde
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import OER
+from commons.models import OER
 # from .analytics import track_action
-from .tracking import track_action
-from .text_analysis import get_web_resource_text, text_dashboard
+from commons.tracking import track_action
+from commons.lang.text_analysis import get_web_resource_text, text_dashboard
 
 """ implements the CS bookmarklet for page view
 javascript:location.href='<site url>/report_pageview/?url='+encodeURIComponent(location.href)+'&title='+encodeURIComponent(document.title);void 0

@@ -22,12 +22,12 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt
 
-from .models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
-from .models import FolderDocument
+from commons.models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
+from commons.models import FolderDocument
 from commons.forms import TextAnalysisInputForm
-from .documents import Document
-from .api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
-from .user_spaces import project_contents, user_contents
+from commons.documents import Document
+from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
+from commons.user_spaces import project_contents, user_contents
 
 nlp_url = settings.NLP_URL
 
@@ -656,29 +656,30 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
         return HttpResponseForbidden()
     if file_key:
         pass
-    elif obj_type == 'text':
-        title, description, body = ['', '', request.session.get('text', '')]
-    elif obj_type == 'resource':
-        title = ''
-        description = ''
-        body, response, err = get_web_resource_text(obj_id)
-        if not body:
-            if err:
-                return text_dashboard_return(request, { 'error': err.value })
-            else:
-                return text_dashboard_return(request, { 'error': response.status_code })
     else:
-        title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
-        body = '{}, {}. {}'.format(title, description, text)
-    data = json.dumps({'text': body})
-    endpoint = nlp_url + '/api/analyze'
-    try:
-        response = requests.post(endpoint, data=data)
-    except:
-        response = None
-    if not response or response.status_code!=200:
-        return text_dashboard_return(request, {})
-    analyze_dict = response.json()
+        if obj_type == 'text':
+            title, description, body = ['', '', request.session.get('text', '')]
+        elif obj_type == 'resource':
+            title = ''
+            description = ''
+            body, response, err = get_web_resource_text(obj_id)
+            if not body:
+                if err:
+                    return text_dashboard_return(request, { 'error': err.value })
+                else:
+                    return text_dashboard_return(request, { 'error': response.status_code })
+        else:
+            title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id,  return_has_text=False)
+            body = '{}, {}. {}'.format(title, description, text)
+        data = json.dumps({'text': body})
+        endpoint = nlp_url + '/api/analyze'
+        try:
+            response = requests.post(endpoint, data=data)
+        except:
+            response = None
+        if not response or response.status_code!=200:
+            return text_dashboard_return(request, {})
+        analyze_dict = response.json()
     language = analyze_dict['language']
     language_code = language_code_dict[language.lower()]
     map_token_pos_to_level(language_code)
