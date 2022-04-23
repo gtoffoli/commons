@@ -30,8 +30,8 @@ from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
 
-# nlp_url = settings.NLP_URL
-nlp_url = 'http://localhost:8001'
+nlp_url = settings.NLP_URL
+# nlp_url = 'http://localhost:8001'
 
 obj_type_label_dict = {
 'project': _('commonspaces project'),
@@ -1165,11 +1165,6 @@ def readability_level(scale, score):
             return range[2]
     return 'out of scale'
 
-"""
-def text_readability(request):
-    obj_id = None
-    var_dict = text_dashboard(request, 'text', obj_id, readability=True)
-"""
 def text_readability(request, params={}):
     var_dict = text_dashboard(request, 'text', 0, readability=True)
     error = var_dict.get('error', None)
