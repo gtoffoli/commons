@@ -275,7 +275,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
                   <div><span style="cursor:grab">{{ item.label }}</span></div>
                   <div class="upperCase c-white">{{ item.obj_type }}</div>
                   <div><a :href=item.url target="_text">{{ item.obj_id }}</a></div>
-                  <div><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+                  <div><a :href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
 <!--
      <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
      <ul v-if="item.active">
@@ -363,7 +363,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
                   <div class="upperCase">{{ item.language }}</div>
                   <div>{{ item.n_tokens }}</div>
                   <div>{{ item.n_words }}</div>
-	              <div class="text-center"><a :href="'/'+item.obj_type+'/'+item.obj_id+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
+	              <div class="text-center"><a :href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
                   <div class="text-center" style="white-space:nowrap;"><a :href="'/context_dashboard/'+corpus.file_key+'/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
 <!--
      <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>

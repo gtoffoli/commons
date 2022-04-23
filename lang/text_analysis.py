@@ -24,12 +24,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 from commons.models import Project, OER, SharedOer, LearningPath, PathNode, SharedLearningPath
 from commons.models import FolderDocument
+from commons.vocabularies import Language
 from commons.forms import TextAnalysisInputForm
 from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
 
-nlp_url = settings.NLP_URL
+# nlp_url = settings.NLP_URL
+nlp_url = 'http://localhost:8001'
 
 obj_type_label_dict = {
 'project': _('commonspaces project'),
@@ -680,8 +682,9 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
         if not response or response.status_code!=200:
             return text_dashboard_return(request, {})
         analyze_dict = response.json()
-    language = analyze_dict['language']
-    language_code = language_code_dict[language.lower()]
+        
+    language_code = analyze_dict['language']
+    language = Language.objects.get(code=language_code).name
     map_token_pos_to_level(language_code)
     analyzed_text = analyze_dict['text']
     summary = analyze_dict['summary']
@@ -697,20 +700,13 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
                 noun_chunks.append(' '.join(tokens))
         noun_chunks = [nc for nc in noun_chunks if len(nc.split())>1]
         var_dict['noun_chunks'] = noun_chunks
-    endpoint = nlp_url + '/api/doc'
-    try:
-        response = requests.post(endpoint, data=data)
-    except:
-        response = None
-    if not response or response.status_code!=200:
-        return text_dashboard_return(request, {})
-    doc_dict = response.json()
-    text = doc_dict['text']
-    sentences = doc_dict['sents']
+    text = analyze_dict['text']
+    sentences = analyze_dict['sents']
     var_dict['n_sentences'] = n_sentences = len(sentences)
-    tokens = doc_dict['tokens']
+    tokens = analyze_dict['tokens']
     var_dict['n_tokens'] = n_tokens = len(tokens)
-    ents = doc_dict['ents']
+    # ents = doc_dict['ents']
+    ents = analyze_dict['ents']
 
     kw_frequencies = defaultdict(int)
     adjective_frequencies = defaultdict(int)
@@ -813,6 +809,7 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
                      })
     return text_dashboard_return(request, var_dict)
 
+"""
 def project_text(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     var_dict = {'obj_type': 'project', 'obj_id': project.id}
@@ -842,6 +839,7 @@ def flatpage_text(request, flatpage_id):
     flatpage = get_object_or_404(FlatPage, id=flatpage_id)
     var_dict = {'obj_type': 'flatpage', 'obj_id': flatpage.id}
     return render(request, 'vue/text_dashboard.html', var_dict)
+"""
 
 def brat(request):
     return render(request, 'vue/brat.html', {})
