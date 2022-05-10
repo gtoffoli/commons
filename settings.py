@@ -340,6 +340,22 @@ LANGUAGES = (
 # LANGUAGES_DICT = dict(LANGUAGES)
 RTL_LANGUAGES = ['ar']
 
+# this is used to display the language name
+LANGUAGE_MAPPING = {
+        'ar': 'Arabic',
+        'el': 'Greek',
+        'en': 'English',
+        'de': 'German',
+        'es': 'Spanish',
+        'hr': 'Croatian',
+        'pl': 'Polish',
+        'pt': 'Portuguese',
+        'fr': 'French',
+        'it': 'Italian',
+        'nl': 'Dutch',
+        'lt': 'Lithuanian',
+}
+
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
 
 SITES_PRIVATE = [3, 5] # HEALTH, WE-COLLAB

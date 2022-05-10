@@ -538,12 +538,19 @@ def index_sentences(sentences, tokens):
 def make_sentence_tree(sentence, tokens):
     i_root = None
     i = sentence['start_token']
+    if hasattr(sentence, 'root'):
+        root = sentence.root
+    else:
+        root = None
     text = ''
     while i <= sentence['end_token']:
         token = tokens[i]
         text += token['text']
         dep = token['dep']
-        if i_root is None and dep=='ROOT':
+        # if i_root is None and dep=='ROOT':
+        # see: https://github.com/explosion/spaCy/issues/10003
+        # see: https://stackoverflow.com/questions/36610179/how-to-get-the-dependency-tree-with-spacy
+        if i_root is None and (dep=='ROOT' or dep=='dep' or i_root==root):
             i_root = sentence['root'] = i
         elif dep:
             head = tokens[token['head']]
@@ -705,8 +712,7 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     var_dict['n_sentences'] = n_sentences = len(sentences)
     tokens = analyze_dict['tokens']
     var_dict['n_tokens'] = n_tokens = len(tokens)
-    # ents = doc_dict['ents']
-    ents = analyze_dict['ents']
+    ents = analyze_dict.get('ents', [])
 
     kw_frequencies = defaultdict(int)
     adjective_frequencies = defaultdict(int)
