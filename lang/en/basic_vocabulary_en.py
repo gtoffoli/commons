@@ -1,3 +1,6 @@
+# a1: 1076, a2: 988, b1: 901, b2: 1562, c1: 1376, TOTAL: 5.093
+# noun: 2942, verb: 1229, adjective: 1073, adverb: 365, TOTAL: 3.609
+
 voc_en = [
 ['a', 'determiner', 'a1'],
 ['abandon', 'verb', 'b2'],

@@ -1,3 +1,6 @@
+# a: 2621, b: 3742, c: 2659, TOTAL: 9022
+# noun: 5075, verb: 1411, adjective: 1709, adverb: 319, TOTAL: 8514
+
 voc_it = [
 ['a', 'noun', 'c'],
 ['a', 'preposition', 'a'],

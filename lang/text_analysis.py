@@ -615,17 +615,19 @@ def sorted_frequencies(d):
     sd =  OrderedDict(sorted(d.items(), key = itemgetter(1), reverse = True))
     return [{'key': key, 'freq': freq} for key, freq in sd.items()]
 
-# token_level_dict = {}
 token_level_dict = defaultdict(lambda:'c2')
 def map_token_pos_to_level(language_code):
+    global token_level_dict
     module_name = 'commons.lang.{0}.basic_vocabulary_{0}'.format(language_code)
     module = import_module(module_name)
-    voc = getattr(module, 'voc_'+language_code)
-    for item in voc:
-        assert len(item) >= 3
-        # token_level_dict['_'.join(item[:2])] = item[2]
-        key = '_'.join(item[:2])
-        token_level_dict[key] = min(item[2].lower(), token_level_dict[key])
+    if hasattr(module, 'get_vocabulary'):
+        token_level_dict = getattr(module, 'get_vocabulary')()
+    else:
+        voc = getattr(module, 'voc_'+language_code)
+        for item in voc:
+            assert len(item) >= 3
+            key = '_'.join(item[:2])
+            token_level_dict[key] = min(item[2].lower(), token_level_dict[key])
 
 language_code_dict = {
     'english': 'en',
@@ -814,38 +816,6 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
                      'collData': collData, 'docData': docData,
                      })
     return text_dashboard_return(request, var_dict)
-
-"""
-def project_text(request, project_id):
-    project = get_object_or_404(Project, id=project_id)
-    var_dict = {'obj_type': 'project', 'obj_id': project.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def oer_text(request, oer_id):
-    oer = get_object_or_404(OER, id=oer_id)
-    var_dict = {'obj_type': 'oer', 'obj_id': oer.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def lp_text(request, lp_id):
-    lp = get_object_or_404(LearningPath, id=lp_id)
-    var_dict = {'obj_type': 'lp', 'obj_id': lp.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def pathnode_text(request, node_id):
-    pathnode = get_object_or_404(PathNode, id=node_id)
-    var_dict = {'obj_type': 'pathnode', 'obj_id': pathnode.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def doc_text(request, doc_id):
-    document = get_object_or_404(Document, id=doc_id)
-    var_dict = {'obj_type': 'doc', 'obj_id': document.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-
-def flatpage_text(request, flatpage_id):
-    flatpage = get_object_or_404(FlatPage, id=flatpage_id)
-    var_dict = {'obj_type': 'flatpage', 'obj_id': flatpage.id}
-    return render(request, 'vue/text_dashboard.html', var_dict)
-"""
 
 def brat(request):
     return render(request, 'vue/brat.html', {})
