@@ -1,27 +1,27 @@
 import os
 
 CEFR_LEVELS = { # level codes are case-insensitive
-    0: 'a',
-    1: 'b',
-    2: 'c',
+    0: 'a1',
+    1: 'a2',
+    2: 'b1',
+    3: 'b2',
+    4: 'c1',
+    5: 'c2',
 }
 
 """
-A = 'a'
-B = 'b'
-C = 'c'
-
-NOUN = 'NOUN'
-VERB = 'VERB'
-ADJ = 'ADJ'
-ADV = 'ADV'
-"""
-
 FREQUENCY_INTERVALS = { # level codes are case-insensitive
     'NOUN': [1200, 1200, 1200,],
     'VERB': [500, 500, 500],
-    'ADJ': [500, 500, 500],
-    'ADV': [120, 120, 120],
+    'ADJECTIVE': [500, 500, 500],
+    'ADVERB': [120, 120, 120],
+}
+"""
+FREQUENCY_INTERVALS = { # level codes are case-insensitive
+    'NOUN': [400, 500, 600, 800, 700, 600,],
+    'VERB': [200, 250, 300, 300, 250, 200,],
+    'ADJECTIVE': [200, 250, 300, 300, 250, 200],
+    'ADVERB': [50, 60, 70, 80, 70, 50],
 }
 
 def frequency_to_level(index, intervals):
@@ -53,6 +53,10 @@ def load_vocabulary(file_name='hrLex_v1.3.txt'):
             if not upos in ['NOUN', 'VERB', 'ADJ', 'ADV',]:
                 line = infile.readline()
                 continue
+            if upos == 'ADJ':
+                upos = 'ADJECTIVE'
+            elif upos == 'ADV':
+                upos = 'ADVERB'
             if upos != prev_pos:
                 index = 0
                 prev_pos = upos

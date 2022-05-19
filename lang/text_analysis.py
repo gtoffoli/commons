@@ -30,8 +30,8 @@ from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
 
-nlp_url = settings.NLP_URL
-# nlp_url = 'http://localhost:8001'
+# nlp_url = settings.NLP_URL
+nlp_url = 'http://localhost:8001'
 
 obj_type_label_dict = {
 'project': _('commonspaces project'),
