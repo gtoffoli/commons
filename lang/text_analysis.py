@@ -30,8 +30,8 @@ from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
 
-# nlp_url = settings.NLP_URL
-nlp_url = 'http://localhost:8001'
+nlp_url = settings.NLP_URL
+# nlp_url = 'http://localhost:8001'
 
 obj_type_label_dict = {
 'project': _('commonspaces project'),
@@ -627,7 +627,8 @@ def map_token_pos_to_level(language_code):
         for item in voc:
             assert len(item) >= 3
             key = '_'.join(item[:2])
-            token_level_dict[key] = min(item[2].lower(), token_level_dict[key])
+            # token_level_dict[key] = min(item[2].lower(), token_level_dict[key])
+            token_level_dict[key] = min(item[2].lower(), token_level_dict.get(key, 'c1'))
 
 language_code_dict = {
     'english': 'en',
@@ -643,15 +644,20 @@ language_code_dict = {
 off_error = _('sorry, it looks like the language processing service is off')
 
 def add_level_to_frequencies(frequencies, pos):
+    level_count_dict = defaultdict(int)
     for frequency in frequencies:
         key = '_'.join([frequency['key'].lower(), pos])
         level = token_level_dict.get(key, None)
         if level:
-            frequency['level'] = level        
+            frequency['level'] = level
             frequency[level[0]] = True
-        elif frequency['key'].islower():
-            frequency['level'] = 'c2'        
-            frequency['c'] = True
+        else:
+            level = 'c2'
+            if frequency['key'].islower():
+                frequency['level'] = 'c2'        
+                frequency['c'] = True
+        level_count_dict[level] += frequency['freq']
+    return level_count_dict
 
 def text_dashboard_return(request, var_dict):
     if not var_dict:
@@ -663,6 +669,8 @@ def text_dashboard_return(request, var_dict):
 
 def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', body='', wordlists=False, readability=False, nounchunks=False):
     """ here (originally only) through ajax call from the template 'vue/text_dashboard.html' """
+    if readability:
+        wordlists = True
     if not file_key and not obj_type in ['project', 'oer', 'lp', 'pathnode', 'doc', 'flatpage', 'resource', 'text',]:
         return HttpResponseForbidden()
     if file_key:
@@ -739,10 +747,12 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
             n_word_syllables += word_syllables
             if word_syllables > 2:
                 n_hard_words += 1
+        if pos in ['NOUN', 'PROPN', 'VERB', 'ADJ', 'ADV',]:
+            n_lexical += 1
         lemma = item['lemma']
         if token.isnumeric() or pos in EMPTY_POS or item['stop']:
             continue
-        n_lexical += 1
+        # n_lexical += 1
         add_to_default_dict(kw_frequencies, token)
         if pos in ['NOUN', 'PROPN']:
             add_to_default_dict(noun_frequencies, lemma)
@@ -766,14 +776,25 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     adjective_frequencies = sorted_frequencies(adjective_frequencies)
     adverb_frequencies = sorted_frequencies(adverb_frequencies)
     if token_level_dict:
-        add_level_to_frequencies(verb_frequencies, 'verb')
-        add_level_to_frequencies(noun_frequencies, 'noun')
-        add_level_to_frequencies(adjective_frequencies, 'adjective')
-        add_level_to_frequencies(adverb_frequencies, 'adverb')
+        levels_counts = defaultdict(int)
+        lc_dict = add_level_to_frequencies(verb_frequencies, 'verb')
+        for item in lc_dict.items():
+            levels_counts[item[0]] += item[1]
+        lc_dict = add_level_to_frequencies(noun_frequencies, 'noun')
+        for item in lc_dict.items():
+            levels_counts[item[0]] += item[1]
+        lc_dict = add_level_to_frequencies(adjective_frequencies, 'adjective')
+        for item in lc_dict.items():
+            levels_counts[item[0]] += item[1]
+        lc_dict = add_level_to_frequencies(adverb_frequencies, 'adverb')
+        for item in lc_dict.items():
+            levels_counts[item[0]] += item[1]
+        print(levels_counts)
 
     var_dict.update({'verb_frequencies': verb_frequencies, 'noun_frequencies': noun_frequencies,
-                     'adjective_frequencies': adjective_frequencies, 'adverb_frequencies': adverb_frequencies,})
-    if wordlists:
+        'adjective_frequencies': adjective_frequencies, 'adverb_frequencies': adverb_frequencies,
+        'levels_counts': levels_counts,})
+    if wordlists and not readability:
         return var_dict
 
     mean_sentence_length = n_tokens/n_sentences
@@ -1141,6 +1162,26 @@ def readability_level(scale, score):
             return range[2]
     return 'out of scale'
 
+level_rarity_factors = {
+  'a': 0.1,
+  'a1': 0.0,
+  'a2': 0.2,
+  'b': 0.4,
+  'b1': 0.3,
+  'b2': 0.5,
+  'c': 0.7,
+  'c1': 0.6,
+  'c2': 1.0,
+}
+
+def compute_lexical_rarity(levels_counts):
+    total_count = 0
+    absolute_rarity = 0
+    for level, count in levels_counts.items():
+        total_count += count
+        absolute_rarity += count*level_rarity_factors[level]
+    return total_count and absolute_rarity/total_count or 0
+
 def text_readability(request, params={}):
     var_dict = text_dashboard(request, 'text', 0, readability=True)
     error = var_dict.get('error', None)
@@ -1149,9 +1190,11 @@ def text_readability(request, params={}):
     else:
         var_dict.update(params)
         language_code = var_dict['language_code']
+        n_tokens = var_dict['n_tokens'] or 1
         n_words = var_dict['n_words'] or 1
         var_dict['mean_chars_per_word'] = var_dict['n_word_characters'] / n_words
         var_dict['mean_syllables_per_word'] = var_dict['n_word_syllables'] / n_words
+        var_dict['lexical_rarity'] = compute_lexical_rarity(var_dict['levels_counts']) 
         var_dict['readability_indexes'] = {}
         index = readability_indexes['flesch_easy']
         if language_code in index['languages']:
