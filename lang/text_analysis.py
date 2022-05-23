@@ -297,6 +297,9 @@ def count_word_syllables(word, language_code):
     elif language_code == 'el':
         from commons.lang.el.utils import count_word_syllables as count_word_syllables_el
         n_syllables = count_word_syllables_el(word)
+    elif language_code == 'hr':
+        from commons.lang.hr.slog2 import count_word_syllables as count_word_syllables_hr
+        n_syllables = count_word_syllables_hr(word)
     else:
         n_syllables = n_chars/2
     return max(1, int(n_syllables))
