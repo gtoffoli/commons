@@ -642,6 +642,10 @@ language_code_dict = {
     'greek': 'el',
     'greek': 'el',
     'ελληνικά': 'el',
+    'croatian': 'hr',
+    'hrvatski': 'hr',
+    'lithuanian': 'lt',
+    'lietuvių': 'lt',
 }
 
 off_error = _('sorry, it looks like the language processing service is off')
