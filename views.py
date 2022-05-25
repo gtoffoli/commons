@@ -1374,6 +1374,7 @@ def project_detail(request, project_id, project=None, accept_mentor_form=None, s
             bookmarked_lps = lps_in_clipboard(request, 'bookmarked_lps')
             var_dict['bookmarked_lps'] = bookmarked_lps
             var_dict['shareable_lps'] = [lp for lp in bookmarked_lps if not lp.project==project and not SharedLearningPath.objects.filter(project=project, lp=lp).count()]
+        var_dict['can_share_CS'] = user.is_staff and settings.SITE_ID == 5
         var_dict['can_edit'] = project.can_edit(request)
         var_dict['can_translate'] = project.can_translate(request)
         current_language = get_current_language()
@@ -2086,13 +2087,15 @@ def project_add_shared_oer(request, project_id, oer_id):
     project = get_object_or_404(Project, id=project_id)
     if user.is_authenticated and project.can_add_oer(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_oers') or []
-        if oer_id in bookmarked_ids:
+        # if oer_id in bookmarked_ids:
+        if oer_id in bookmarked_ids or user.is_staff:
             oer = get_object_or_404(OER, id=oer_id)
             if not oer.project==project:
                 shared_oer = SharedOer(oer=oer, project=project, user=user)
                 shared_oer.save()
-                bookmarked_ids.remove(oer_id)
-                set_clipboard(request, key='bookmarked_oers', value=bookmarked_ids or None)
+                if oer_id in bookmarked_ids:
+                    bookmarked_ids.remove(oer_id)
+                    set_clipboard(request, key='bookmarked_oers', value=bookmarked_ids or None)
     return HttpResponseRedirect('/project/%s/' % project.slug)    
 
 def shared_oer_delete(request, shared_oer_id):
@@ -2123,13 +2126,15 @@ def project_add_shared_lp(request, project_id, lp_id):
     project = get_object_or_404(Project, id=project_id)
     if user.is_authenticated and project.can_add_lp(user):
         bookmarked_ids = get_clipboard(request, key='bookmarked_lps') or []
-        if lp_id in bookmarked_ids:
+        # if lp_id in bookmarked_ids:
+        if lp_id in bookmarked_ids or user.is_staff:
             lp = get_object_or_404(LearningPath, id=lp_id)
             if not lp.project==project:
                 shared_lp = SharedLearningPath(lp=lp, project=project, user=user)
                 shared_lp.save()
-                bookmarked_ids.remove(lp_id)
-                set_clipboard(request, key='bookmarked_lps', value=bookmarked_ids or None)
+                if lp_id in bookmarked_ids:
+                    bookmarked_ids.remove(lp_id)
+                    set_clipboard(request, key='bookmarked_lps', value=bookmarked_ids or None)
     return HttpResponseRedirect('/project/%s/' % project.slug)
 
 def shared_lp_delete(request, shared_lp_id):

@@ -423,10 +423,14 @@
                                         <li class="marginB5"><a href="/project/{{ project.id }}/oer_new/" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i> {% trans "classify"|capfirst %}</a></li>
                                         {% if cut_oers %}{% for oer in cut_oers %}
                                             <li class="marginB5"><a href="/project/{{ project.id }}/paste_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% trans "paste"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-                                        {% endfor %}{% endif %}
-                                        {% if shareable_oers %}{% for oer in shareable_oers %}
+                                          {% endfor %}
+                                        {% elif shareable_oers %}{% for oer in shareable_oers %}
                                             <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_oer/{{ oer.id }}/" class="btn btn-default" title="{{ oer.title }}"><i class="fa fa-share-alt" aria-hidden="true"></i> {% trans "share"|capfirst %} "{{ oer.title|truncatewords:5 }}"</a></li>
-                                        {% endfor %}{% endif %}
+                                          {% endfor %}
+                                        {% elif can_share_CS %}
+                                            <li class="marginB5"><input type="text" id="oer_id" size="3" />
+                                            <a id="btn_oer" class="btn btn-default" title="{% trans "share CS resource" %}" onClick="javascript: window.location.href='/project/{{ project.id }}/add_shared_oer/' + document.getElementById('oer_id').value + '/';" />{% trans "share"|capfirst %} <i class="fa fa-share-alt" aria-hidden="true"></i></a></li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                             </ul>
@@ -440,13 +444,17 @@
                                         <li class="marginB5"><a href="/project/{{ project.id }}/lp_new/" class="btn btn-default"><i class="fa fa-file-o" aria-hidden="true"></i> {% trans "create"|capfirst %}</a></li>
                                         {% if cut_lps %}{% for lp in cut_lps %}
                                             <li class="marginB5"><a href="/project/{{ project.id }}/paste_lp/{{ lp.id }}/" class="btn btn-default"  title="{{ lp.title }}"><i class="fa fa-clipboard" aria-hidden="true"></i> {% trans "paste"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-                                        {% endfor %}{% endif %}
-                                        {% if shareable_lps %}{% for lp in shareable_lps %}
+                                          {% endfor %}
+                                        {% elif shareable_lps %}{% for lp in shareable_lps %}
                                             <li class="marginB5"><a href="/project/{{ project.id }}/add_shared_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-share-alt" aria-hidden="true"></i> {% trans "share"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-                                        {% endfor %}{% endif %}
-                                        {% if bookmarked_lps %}{% for lp in bookmarked_lps %}
+                                          {% endfor %}
+                                        {% elif bookmarked_lps %}{% for lp in bookmarked_lps %}
                                             <li class="marginB5"><a href="/project/{{ project.id }}/clone_lp/{{ lp.id }}/" class="btn btn-default" title="{{ lp.title }}"><i class="fa fa-clone" aria-hidden="true"></i> {% trans "clone"|capfirst %} "{{ lp.title|truncatewords:5 }}"</a></li>
-                                        {% endfor %}{% endif %}
+                                          {% endfor %}
+                                        {% elif can_share_CS %}
+                                            <li class="marginB5"><input type="text" id="lp_id" size="3" />
+                                            <a id="btn_lp" class="btn btn-default" title="{% trans "share CS resource" %}" onClick="javascript: window.location.href='/project/{{ project.id }}/add_shared_lp/' + document.getElementById('lp_id').value + '/';" />{% trans "share"|capfirst %} <i class="fa fa-share-alt" aria-hidden="true"></i></a></li>
+                                        {% endif %}
                                     </ul>
                                 </li>
                             </ul>
