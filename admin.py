@@ -259,7 +259,7 @@ class SharedLearningPathAdmin(admin.ModelAdmin):
     list_display = ('id', 'lp_title', 'project_name', 'user', 'created',)
 
     def lp_title(self, obj):
-        return obj.oer and obj.lp.title or ''
+        return obj.lp and obj.lp.title or ''
 
     def project_name(self, obj):
         return obj.project.get_name()
