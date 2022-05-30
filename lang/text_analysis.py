@@ -29,6 +29,7 @@ from commons.forms import TextAnalysisInputForm
 from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
+from commons.lang.utils import GenericSyllabizer
 
 nlp_url = settings.NLP_URL
 # nlp_url = 'http://localhost:8001'
@@ -301,7 +302,13 @@ def count_word_syllables(word, language_code):
         from commons.lang.hr.slog2 import count_word_syllables as count_word_syllables_hr
         n_syllables = count_word_syllables_hr(word)
     else:
-        n_syllables = n_chars/2
+        # currently, the generic syllabyzer is based on hyphenation!
+        syllabyzer = GenericSyllabizer(language_code)
+        syllables = syllabyzer(word)
+        if syllables:
+            n_syllables = len(syllables)
+        else:
+            n_syllables = n_chars/2
     return max(1, int(n_syllables))
 
 obj_type_to_class_dict = {

@@ -85,6 +85,7 @@ class FolderAdmin(MPTTModelAdmin):
 
 class FolderDocumentAdmin(admin.ModelAdmin):
     list_display = ['id', 'folder', 'document', 'label', 'slug', 'user', 'state', 'created']
+    search_fields = ('label', 'document__label',)
 
 class ProjTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'description', 'public', 'order',]
@@ -216,6 +217,7 @@ class OerEvaluationAdmin(admin.ModelAdmin):
 class LearningPathAdmin(admin.ModelAdmin):
     form = LpChangeForm
     list_display = ('id', 'title', 'slug', 'path_type', 'project', 'group', 'state', 'creator', 'created',)
+    search_fields = ['title', 'short',]
     formfield_overrides = {
        models.CharField: {'widget': TextInput(attrs={'class': 'span8'})},
        models.TextField: {'widget': Textarea(attrs={'class': 'span8', 'rows': 2, 'cols': 80})},
