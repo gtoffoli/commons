@@ -304,7 +304,7 @@ def count_word_syllables(word, language_code):
     else:
         # currently, the generic syllabyzer is based on hyphenation!
         syllabyzer = GenericSyllabizer(language_code)
-        syllables = syllabyzer(word)
+        syllables = syllabyzer.syllabize(word)
         if syllables:
             n_syllables = len(syllables)
         else:
