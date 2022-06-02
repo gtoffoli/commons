@@ -749,6 +749,7 @@ class BlogArticleForm(forms.Form):
 TA_FUNCTION_CHOICES = (
     ('context', _('Keywords In Context')),
     ('wordlists', _('Word Lists by POS')),
+    ('nounchunks', _('Noun chunks')),
     ('readability', _('Text Readability')),
     ('summarization', _('Text Summarization')),
     ('dashboard', _('Text Analysis Dashboard')),

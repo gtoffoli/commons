@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head_title %}{% trans "Text Analysis" %} - {% trans "Noun chunks" %}{% endblock %}
+
+{% block extra_style %}
+<link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
+<link rel="apple-touch-icon" href="{% static "commons/img/ta_dashboard_icon.png" %}" type="image/png">
+<link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
+<link rel="stylesheet" href="{% static "commons/css/commons_vue.css" %}">
+{% endblock extra_style %}
+
+{% block extra_head %}
+    <script src="{% static "nlp/js/jquery.min.js" %}"></script>
+    <script src="{% static "nlp/js/scripts.js" %}"></script>
+    <script src='https://unpkg.com/vue@2.2.6'></script>
+{% endblock extra_head %}
+
+{% block user %}{% endblock user %}
+
+{% block nav_vue %}
+  {% include "_header_bar.html" %}
+  <div class="navbar">
+    <h3 class="text-center">{% trans "Text Analysis" %} - {% trans "Noun chunks" %}</h3>
+  </div>
+{% endblock nav_vue %}
+
+{% block body_class %}nlp-vue-body{% endblock %}
+
+{% block body_base %}
+<div class="panel panel-c4 text-left marginTB30">
+  <div  class="padding1020">
+    <div class="marginB10">
+      {% if obj_type_label %}<b>{{ obj_type_label|capfirst }}</b>{% endif %}
+      {% if title %}: <i>{{ title }}</i></span>{% endif %}
+      {% if obj_id %}(id = {{ obj_id }})</span>{% endif %}
+    </div>
+    <div><label>{% trans "language"|capfirst %}</label> {{ language }}</div>
+    <div class="marginT5"><label>{% trans "chunk list"|capfirst %}</label> (*)</div>
+    <div style="margin-left: 10px;">
+      {% for nc in noun_chunks %}
+        <div>{{ nc }}</div>
+      {% endfor %}    
+    </div>
+    <div><span style="font-size: smaller; font-style: italic;">(*) {% trans "simple noun phrases without subordinates"|capfirst %}</span></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block footer_base %}{% endblock footer_base %}

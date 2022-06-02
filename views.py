@@ -1212,7 +1212,7 @@ def folder_detail(request, project_slug='', folder=None):
     var_dict['can_view_subfolders'] = project.is_member(user) or is_site_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_parent_admin or is_community_admin or user.is_superuser 
     var_dict['can_add'] = not project_is_closed and (project.is_member(user) or (n_selected_mentors > 0 and selected_mentors[0]) or is_community_admin)
     var_dict['can_edit_delete'] = not project_is_closed and not ment_proj_submitted
-    var_dict['can_analyse_text'] = project.is_member(user) or is_site_member(user)
+    var_dict['can_analyze_text'] = project.is_member(user) or is_site_member(user)
     var_dict['is_admin'] = project.is_admin(user)
     var_dict['is_parent_admin'] = is_parent_admin
     var_dict['is_community_admin'] = is_community_admin

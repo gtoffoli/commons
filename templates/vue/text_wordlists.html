@@ -52,39 +52,76 @@
             <div v-if="language"><label>language</label> {{ language }}</div>
           </template>
           <template slot="paneR">
-            <split-pane v-on:resize="resize" split="vertical" :default-percent='25'>
+            <split-pane v-on:resize="resize" split="vertical" :default-percent='14'>
               <template slot="paneL">
-                <h4 style="text-align: center;">Verb Lemmas</h4>
+                <h4 style="text-align: center;">Verb lemmas</h4>
                 <div v-for="item in verb_frequencies">
                   <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                     {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                 </div>
               </template>
               <template slot="paneR">
-                <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
+                <split-pane v-on:resize="resize" split="vertical" :default-percent='17'>
                   <template slot="paneL">
-                    <h4 style="text-align: center;">Noun Lemmas</h4>
+                    <h4 style="text-align: center;">Noun lemmas</h4>
                     <div v-for="item in noun_frequencies">
                       <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                         {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                     </div>
                   </template>
                   <template slot="paneR">
-                    <split-pane v-on:resize="resize" split="vertical" :default-percent='50'>
+                    <split-pane v-on:resize="resize" split="vertical" :default-percent='20'>
                       <template slot="paneL">
-                        <h4 style="text-align: center;">Adjective Lemmas</h4>
+                        <h4 style="text-align: center;">Adjective lemmas</h4>
                         <div v-for="item in adjective_frequencies">
                           <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                             {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
                         </div>
                       </template>
+
                       <template slot="paneR">
-                        <h4 style="text-align: center;">Adverb Lemmas</h4>
-                        <div v-for="item in adverb_frequencies">
-                          <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
-                            {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
-                        </div>
+                        <split-pane v-on:resize="resize" split="vertical" :default-percent='25'>
+                          <template slot="paneL">
+                            <h4 style="text-align: center;">Adverbs</h4>
+                            <div v-for="item in adverb_frequencies">
+                              <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                            </div>
+                          </template>
+
+                          <template slot="paneR">
+                            <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
+                              <template slot="paneL">
+                                <h4 style="text-align: center;">Proper noun tokens</h4>
+                                <div v-for="item in propn_frequencies">
+                                  <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                    {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                                </div>
+                              </template>
+                              <template slot="paneR">
+                                <split-pane v-on:resize="resize" split="vertical" :default-percent='49'>
+                                  <template slot="paneL">
+                                    <h4 style="text-align: center;">Coordinating conjunctions</h4>
+                                    <div v-for="item in cconj_frequencies">
+                                      <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                        {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                                    </div>
+                                  </template>
+                                  <template slot="paneR">
+                                    <h4 style="text-align: center;">Subordinating conjunctions</h4>
+                                    <div v-for="item in sconj_frequencies">
+                                      <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
+                                        {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
+                                    </div>
+                                  </template>
+                                </split-pane>
+                              </template>
+                            </split-pane>
+                          </template>
+
+                        </split-pane>
                       </template>
+
                     </split-pane>
                   </template>
                 </split-pane>
@@ -117,7 +154,7 @@
           title: '{{ title }}',
           language: '{{ language }}',
           n_tokens: null, n_sentences: null,
-          verb_frequencies: null, noun_frequencies: null, adjective_frequencies: null, adverb_frequencies: null,
+          verb_frequencies: null, noun_frequencies: null, adjective_frequencies: null, adverb_frequencies: null, propn_frequencies: null, cconj_frequencies: null, sconj_frequencies: null,
           error: null,
 		},
         el: '#app',

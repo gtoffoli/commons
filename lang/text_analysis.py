@@ -741,8 +741,11 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     kw_frequencies = defaultdict(int)
     adjective_frequencies = defaultdict(int)
     noun_frequencies = defaultdict(int)
+    propn_frequencies = defaultdict(int)
     verb_frequencies = defaultdict(int)
     adverb_frequencies = defaultdict(int)
+    cconj_frequencies = defaultdict(int)
+    sconj_frequencies = defaultdict(int)
     n_lexical = 0
     if readability:
         n_words = 0
@@ -764,18 +767,26 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
         if pos in ['NOUN', 'PROPN', 'VERB', 'ADJ', 'ADV',]:
             n_lexical += 1
         lemma = item['lemma']
+        if wordlists:
+            if pos == 'CCONJ':
+                add_to_default_dict(cconj_frequencies, lemma)
+            elif pos == 'SCONJ':
+                add_to_default_dict(sconj_frequencies, lemma)
         if token.isnumeric() or pos in EMPTY_POS or item['stop']:
             continue
         # n_lexical += 1
         add_to_default_dict(kw_frequencies, token)
-        if pos in ['NOUN', 'PROPN']:
+        if pos in ['NOUN',]:
             add_to_default_dict(noun_frequencies, lemma)
         elif pos == 'VERB':
             add_to_default_dict(verb_frequencies, lemma)
         elif pos == 'ADJ':
             add_to_default_dict(adjective_frequencies, lemma)
-        elif wordlists and pos == 'ADV':
-            add_to_default_dict(adverb_frequencies, lemma)
+        elif wordlists:
+            if pos == 'PROPN':
+                add_to_default_dict(propn_frequencies, lemma)
+            elif pos == 'ADV':
+                add_to_default_dict(adverb_frequencies, lemma)
     if readability:
         var_dict['n_words'] = n_words
         var_dict['n_hard_words'] = n_hard_words
@@ -789,6 +800,12 @@ def text_dashboard(request, obj_type, obj_id, file_key='', obj=None, title='', b
     noun_frequencies = sorted_frequencies(noun_frequencies)
     adjective_frequencies = sorted_frequencies(adjective_frequencies)
     adverb_frequencies = sorted_frequencies(adverb_frequencies)
+    if wordlists:
+        propn_frequencies = sorted_frequencies(propn_frequencies)
+        cconj_frequencies = sorted_frequencies(cconj_frequencies)
+        sconj_frequencies = sorted_frequencies(sconj_frequencies)
+        var_dict.update({'propn_frequencies': propn_frequencies,
+            'cconj_frequencies': cconj_frequencies, 'sconj_frequencies': sconj_frequencies,})
     if token_level_dict:
         levels_counts = defaultdict(int)
         lc_dict = add_level_to_frequencies(verb_frequencies, 'verb')
@@ -1106,6 +1123,7 @@ def text_wordlists(request, file_key='', obj_type='', obj_id=''):
     var_dict = {'file_key': file_key, 'obj_type': obj_type, 'obj_id': obj_id}
     if request.is_ajax():
         keys = ['verb_frequencies', 'noun_frequencies', 'adjective_frequencies', 'adverb_frequencies', 
+                'propn_frequencies', 'cconj_frequencies', 'sconj_frequencies',
                 'obj_type_label', 'title', 'language']
         data = var_dict
         dashboard_dict = text_dashboard(request, file_key=file_key, obj_type=obj_type, obj_id=obj_id, wordlists=True)
@@ -1152,6 +1170,16 @@ def text_summarization(request, params={}):
     else:
         var_dict['error'] = off_error
     return render(request, 'text_summarization.html', var_dict)
+
+def text_nounchunks(request, params={}):
+    var_dict = text_dashboard(request, 'text', 0, nounchunks=True)
+    error = var_dict.get('error', None)
+    if error:
+        print('error:', error)
+    else:
+        var_dict.update(params)
+    language_code = var_dict['language_code']
+    return render(request, 'text_nounchunks.html', var_dict)
 
 readability_indexes = {
   'flesch_easy': { 'languages': ['en'], 'title': "Flesch Reading Ease score for English (0-100)", 'ref': 'https://en.wikipedia.org/wiki/Flesch%E2%80%93Kincaid_readability_tests' },
@@ -1284,7 +1312,7 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
         else:
             model_class = obj_type_to_class_dict[obj_type]
             obj = get_object_or_404(model_class, id=obj_id)
-            if function in ['context', 'summarization', 'readability']:
+            if function in ['context', 'nounchunks', 'summarization', 'readability']:
                 title, description, text = get_obj_text(obj, obj_type=obj_type, obj_id=obj_id, return_has_text=False)
                 request.session['text'] = '{}, {}. {}'.format(title, description, text)
                 var_dict['title'] = title
@@ -1300,6 +1328,9 @@ def text_analysis(request, function, obj_type, obj_id, file_key='', text=''):
     elif function == 'readability':
         var_dict['VUE'] = True
         return text_readability(request, params=var_dict)
+    elif function == 'nounchunks':
+        var_dict['VUE'] = True
+        return text_nounchunks(request, params=var_dict)
     elif function == 'wordlists':
         var_dict['VUE'] = True
         return render(request, 'vue/text_wordlists.html', var_dict)
