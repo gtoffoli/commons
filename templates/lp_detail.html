@@ -155,21 +155,26 @@ font-weight: 600;
           </dd>
         </dl>
 
-        {% if lp.get_nodes or can_edit %}
+        {% with nodes=lp.get_ordered_nodes %}
+        {% comment %}{% if lp.get_nodes or can_edit %}{% endcomment %}
+        {% if nodes|length or can_edit %}
           <dl style="position:relative" class="font14 marginB10">
             <dt class="demiBold">{% trans "path nodes"|capfirst %}</dt>
             {% if lp.path_type == 3 %}
-              {% if lp.get_nodes %}
+              {% comment %}{% if lp.get_nodes %}{% endcomment %}
+              {% if nodes|length %}
                 <dd id="dag"></dd>
               {% endif %}
             {% else %}
             <dd>{% if lp.path_type == 2 %}<ol class="paddingL24">{% else %}<ul class="list-unstyled">{% endif %}
-              {% for node in lp.get_ordered_nodes %}
+              {% comment %}{% for node in lp.get_ordered_nodes %}{% endcomment %}
+              {% for node in nodes %}
                 <li class="marginB5">
                   <div class="paddingL3">
                   	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc{% elif node.get_online_document_url %} node-doc {% else %}node-text{% endif %}"><li>
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
-                      {% if lp.get_ordered_nodes|length > 1 %}
+                      {% comment %}{% if lp.get_ordered_nodes|length > 1 %}{% endcomment %}
+                      {% if nodes|length > 1 %}
                         {% if not node.is_island %} 
                           <span class="font12">
                             {% if not node.is_root and not node.is_leaf %}<a class="upNode" id="u_{{ node.id }}" href="#" title="{% trans "move up" %}"><i class="fa fa-arrow-up"></i></a> &nbsp; <a class="downNode" id="d_{{ node.id }}" href="#" title="{% trans "move down" %}"><i class="fa fa-arrow-down"></i></a> &nbsp;
@@ -183,9 +188,6 @@ font-weight: 600;
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
                       {% if can_analyze_text %}
                         {% if node.get_obj_text %}
-{% comment %}
-                   	      <a class="analyzeTextNode" href="/pathnode/{{node.id}}/text/" target="_blank" title="{% trans "analyze text" %}" rel="noopener nofollow"></a>
-{% endcomment %}
                           {% include "_menu_text_analysis.html" with obj_type="pathnode" obj_id=node.id %}
                         {% endif %}
                       {% endif %}
@@ -207,6 +209,7 @@ font-weight: 600;
             {% endif %}
           </dl>
         {% endif %}
+        {% endwith %}
       </div>
    {% if not EMBEDDED %}
       <div class="col-sm-3 col-md-3 col-lg-3">
