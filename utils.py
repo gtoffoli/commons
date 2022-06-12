@@ -6,6 +6,8 @@ import urllib.request as urllib2
 
 import os
 
+from pikepdf import Pdf, OutlineItem
+
 def tree_to_list(tree):
     list = [tree[0]]
     for child in tree[1]:
@@ -54,7 +56,19 @@ def text_to_html(text):
     return text.replace('\n', '<br>')
 
 def make_pdf_writer():
-    return PdfFileWriter()
+    # return PdfFileWriter()
+    return Pdf.new()
+
+def pdf_get_numpages(pdf):
+    # return pdf.getNumPages()
+    return len(pdf.pages)
+
+def pdf_add_bookmark(writer, s, p):
+    with writer.open_outline() as outline:
+        outline.root.extend([OutlineItem(s, p)])
+
+def pdf_writer_save(writer, stream):
+    writer.save(stream)
 
 def ipynb_to_html(data):
     try:
@@ -117,8 +131,10 @@ def write_pdf_pages(i_stream, writer, ranges=None):
     """ append to the writer pages from the source PDF stream in the range specified
         range is a list of 2 elements: [low, high]
     """ 
-    reader = PdfFileReader(i_stream, strict=False)
-    n_pages = reader.getNumPages()
+    # reader = PdfFileReader(i_stream, strict=False)
+    reader = Pdf.open(i_stream)
+    # n_pages = reader.getNumPages()
+    n_pages = len(reader.pages)
     if ranges:
         for r in ranges:
             if not isinstance(r, (list, tuple)):
@@ -142,10 +158,12 @@ def write_pdf_pages(i_stream, writer, ranges=None):
                     # raise 'invalid page range'
                     continue
             while p < high and p < n_pages:
-                writer.addPage(reader.getPage(p))
+                # writer.addPage(reader.getPage(p))
+                writer.pages.append(reader.pages[p])
                 p += 1
     else:
-        writer.appendPagesFromReader(reader)
+        # writer.appendPagesFromReader(reader)
+        writer.pages.extend(reader.pages)
     return n_pages
 
 empty_words = ('and', 'the', 'not', 'non',)

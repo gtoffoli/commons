@@ -75,6 +75,7 @@ from .analytics import filter_actions, post_views_by_user, popular_principals, f
 from commons.scorm import ContentPackage
 
 from .utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
+from commons.utils import pdf_writer_save
 from six import iteritems
 
 from .mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
@@ -3742,7 +3743,8 @@ def lp_export(request, lp_id, lp=None):
     writer, mimetype = lp.make_document_stream(request)
     stream = BytesIO()
     # https://stackoverflow.com/questions/45978113/pypdf2-write-doesnt-work-on-some-pdf-files-python-3-5-1/52687771#52687771
-    writer.write(stream)
+    # writer.write(stream)
+    pdf_writer_save(writer, stream)
     response = HttpResponse(stream.getvalue(), mimetype)
     stream.seek(0, os.SEEK_END)
     l = stream.tell()

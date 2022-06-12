@@ -33,6 +33,7 @@ from commons.lang.utils import GenericSyllabizer
 
 nlp_url = settings.NLP_URL
 # nlp_url = 'http://localhost:8001'
+# nlp_url = 'http://nlp.test.commonspaces.eu'
 
 obj_type_label_dict = {
 'project': _('commonspaces project'),

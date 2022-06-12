@@ -57,10 +57,15 @@ from commons.documents import storage_backend, UUID_FUNCTION, DocumentType, Docu
 from commons.metadata import MetadataType, QualityFacet
 
 from commons.utils import random_string_generator
-from commons.utils import filter_empty_words, strings_from_html, make_pdf_writer, url_to_writer, document_to_writer, html_to_writer, write_pdf_pages, text_to_html
+from commons.utils import filter_empty_words, strings_from_html, text_to_html
+from commons.utils import make_pdf_writer, write_pdf_pages
+from commons.utils import pdf_get_numpages, pdf_add_bookmark
+from commons.utils import url_to_writer, document_to_writer, html_to_writer
 from commons.utils import get_request_headers, get_request_content
 from commons.google_api import youtube_search, video_getdata, googledoc_write_as_pdf
 from six import iteritems
+
+from pikepdf import Pdf
 
 from django.utils.text import format_lazy
 def string_concat(*strings):
@@ -2840,12 +2845,14 @@ class LearningPath(Resource, Publishable):
         # writer.addBookmark(str(_('Cover page')), 0)
         # writer.addBookmark(str(_('Cover page')).encode('utf-8'), 0)
         s = str(_('Cover page'))
-        writer.addBookmark(s, 0)
+        # writer.addBookmark(s, 0)
+        pdf_add_bookmark(writer, s, 0)
         is_dag = self.path_type==LP_DAG
         nodes_with_levels = self.get_ordered_nodes(with_levels=True)
-        node_bookmark_dict = {}
+        # node_bookmark_dict = {}
         for node, level, parent in nodes_with_levels:
-            pagenum = writer.getNumPages()
+            # pagenum = writer.getNumPages()
+            pagenum = pdf_get_numpages(writer)
             viewable_documents = []
             oer = node.oer
             if oer:
@@ -2862,14 +2869,16 @@ class LearningPath(Resource, Publishable):
                 node.serialize_online_document(request, writer)
             else:
                 node.serialize_textnode(request, writer)
-            if not writer.getNumPages() > pagenum:
-                    html_template = get_template('_cannot_serialize.html')
-                    domain = request.META['HTTP_HOST']
-                    context = { 'request': request, 'node': node, 'oer': oer, 'domain': domain }
-                    rendered_html = html_template.render(context)
-                    html_to_writer(rendered_html, writer)    
-            parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
-            node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)
+            # if not writer.getNumPages() > pagenum:
+            if not pdf_get_numpages(writer) > pagenum:
+                html_template = get_template('_cannot_serialize.html')
+                domain = request.META['HTTP_HOST']
+                context = { 'request': request, 'node': node, 'oer': oer, 'domain': domain }
+                rendered_html = html_template.render(context)
+                html_to_writer(rendered_html, writer)    
+            # parent_bookmark = is_dag and level and parent and node_bookmark_dict.get(parent.id) or None
+            # node_bookmark_dict[node.id] = writer.addBookmark(node.get_label(), pagenum, parent=parent_bookmark)
+            pdf_add_bookmark(writer, node.get_label(), pagenum)
         return writer, mimetype
 
 # @python_2_unicode_compatible
