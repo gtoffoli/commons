@@ -4113,7 +4113,8 @@ def pathnode_download_range(request, node_id):
     node = get_object_or_404(PathNode, pk=node_id)
     writer, mimetype = node.make_document_stream(request)
     stream = BytesIO()
-    writer.write(stream)
+    # writer.write(stream)
+    pdf_writer_save(writer, stream)
     if not stream:
         return
     response = HttpResponse(stream.getvalue(), mimetype)
