@@ -7,7 +7,8 @@ from django.contrib.auth.models import Group, User
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from rest_framework import routers, serializers, viewsets
-from filetransfers.api import serve_file
+# from filetransfers.api import serve_file
+from commons.filetransfer import serve_file
 from actstream.models import Action
 
 from commons.models import UserProfile, Project, Folder, FolderDocument, OER, OerDocument, LearningPath, PathNode, Tag
@@ -569,7 +570,8 @@ class ActionSerializer(serializers.ModelSerializer):
 
 class ActionViewSet(viewsets.ModelViewSet):
     """ API endpoint for retrieving activity stream actions. """
-    queryset = Action.objects.all().order_by('-created')[:1000]
+    # queryset = Action.objects.all().order_by('-created')[:1000]
+    queryset = Action.objects.all().order_by('-timestamp')[:1000]
     serializer_class = ActionSerializer
     http_method_names = ['get', 'head', 'options',]
 

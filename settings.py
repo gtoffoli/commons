@@ -103,7 +103,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.RemoteUserMiddleware', # needed by DRF Basic Authentication ?
     'django.contrib.messages.middleware.MessageMiddleware',
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_cookies_samesite.middleware.CookiesSameSite',
+    # 'django_cookies_samesite.middleware.CookiesSameSite',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'pybb.middleware.PybbMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -130,11 +130,11 @@ INSTALLED_APPS = (
     'django.contrib.flatpages',
     # 3rd party
     'corsheaders',
-    'django_cookies_samesite',
+    # 'django_cookies_samesite',
     'yarn',
     'compressor', # usato?
     'filebrowser',
-    'filetransfers',
+    # 'filetransfers',
     'mptt',
     # extend auth model
     "hierarchical_auth",
@@ -330,6 +330,7 @@ LANGUAGE_CODE = 'en'
 LANGUAGES = (
     (u'en', u'English'),
     (u'it', u'Italiano'),
+    (u'es', u'Spanish'),
     (u'el', u'Ελληνικά'),
     (u'fr', u'Français'),
     (u'pt', u'Português'),
@@ -700,3 +701,13 @@ if EMBEDDED_USE_SESSION:
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+
+import django.utils.translation
+django.utils.translation.ugettext = django.utils.translation.gettext
+django.utils.translation.ugettext_lazy = django.utils.translation.gettext_lazy
+django.utils.translation.ungettext = django.utils.translation.ngettext
+import django.utils.encoding
+django.utils.encoding.smart_text = django.utils.encoding.smart_str
+django.utils.encoding.force_text = django.utils.encoding.force_str
+import django.conf.urls
+django.conf.urls.url = django.urls.re_path

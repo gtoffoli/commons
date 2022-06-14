@@ -43,7 +43,7 @@ def random_string_generator(size=10, chars=string.ascii_lowercase + string.digit
     random_string = ''.join(random.choice(chars) for _ in range(size))
     return prefix + random_string
 
-from PyPDF2.pdf import PdfFileReader, PdfFileWriter
+# from PyPDF2.pdf import PdfFileReader, PdfFileWriter
 from weasyprint import HTML, CSS
 
 try:

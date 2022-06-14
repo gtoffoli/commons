@@ -82,7 +82,8 @@ from .mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_me
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 # from taggit.models import Tag
-from filetransfers.api import serve_file
+# from filetransfers.api import serve_file
+from commons.filetransfer import serve_file
 # 20190111 MMR - from notification import models as notification
 from pybb.models import Forum, Category, Topic, Post
 from zinnia.models import Entry
