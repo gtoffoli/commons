@@ -14,9 +14,11 @@ import commons
 from commons import search_indexes
 from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
 from commons import bookmarklets
+from commons import text_utils
 from commons.api import router
-import commons.lang.text_analysis as text_analysis
 import commons.user_spaces
+# import commons.lang.text_analysis as text_analysis
+from textanalysis import views as text_analysis
 
 if settings.HAS_SAML2:
     import djangosaml2
@@ -251,18 +253,21 @@ urlpatterns += [
     url(r"^text_wordlists/$", text_analysis.text_wordlists, name="text_wordlists_0"),
     url(r'^brat$', text_analysis.brat, name="brat"),
     # url(r"^contents_dashboard/$", text_analysis.contents_dashboard, name="contents_dashboard"),
-    url(r"^ajax_contents/$", text_analysis.ajax_contents, name="ajax_contents"),
+    ### url(r"^ajax_contents/$", text_analysis.ajax_contents, name="ajax_contents"),
+    url(r"^ajax_contents/$", text_utils.ajax_contents, name="ajax_contents"),
     url(r"^project/(?P<project_slug>[\w-]+)/contents/$", commons.user_spaces.project_contents_view, name="project_contents_view"),
     url(r"^my_contents/$", commons.user_spaces.my_contents_view, name="my_contents"),
     url(r"^my_activity/$", commons.user_spaces.my_activity, name="my_activity"),
-    url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
+    ### url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", text_analysis.ajax_lp_nodes, name="ajax_lp_nodes"),
+    url(r"^ajax_lp_nodes/(?P<lp_id>[\d-]+)/$", text_utils.ajax_lp_nodes, name="ajax_lp_nodes"),
     url(r"^ajax_new_corpus/$", text_analysis.ajax_new_corpus, name="ajax_new_corpus"),
     url(r"^ajax_make_corpus/$", text_analysis.ajax_make_corpus, name="ajax_make_corpus"),
     url(r"^ajax_get_corpora/$", text_analysis.ajax_get_corpora, name="ajax_get_corpora"),
     url(r"^ajax_delete_corpus/$", text_analysis.ajax_delete_corpus, name="ajax_delete_corpus"),
     url(r"^ajax_insert_item/$", text_analysis.ajax_insert_item, name="ajax_insert_item"),
     url(r"^ajax_remove_item/$", text_analysis.ajax_remove_item, name="ajax_remove_item"),
-    url(r"^ajax_compare_resources/$", text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
+    ### url(r"^ajax_compare_resources/$", text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
+    url(r"^ajax_compare_resources/$", text_utils.ajax_compare_resources, name="ajax_compare_resources"),
     # path('wiki/', include('wiki.urls')),
     # url(r"^project/(?P<project_slug>[\w-]+)/text/$", text_analysis.project_text, name="project_text"),
     # url(r"^oer/(?P<oer_id>[\d-]+)/text/$", text_analysis.oer_text, name="oer_text"),
@@ -270,8 +275,8 @@ urlpatterns += [
     # url(r"^pathnode/(?P<node_id>[\d-]+)/text/$", text_analysis.pathnode_text, name="pathnode_text"),
     # url(r"^doc/(?P<doc_id>[\d-]+)/text/$", text_analysis.doc_text, name="doc_text"),
     # url(r"^flatpage/(?P<flatpage_id>[\d-]+)/text/$", text_analysis.flatpage_text, name="flatpage_text"),
-    url(r"^text_analysis/(?P<function>[\w\.-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/(?P<file_key>[\w\.-]+)/$", text_analysis.text_analysis, name="text_analysis"),
-    url(r"^text_analysis/(?P<function>[\w\.-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", text_analysis.text_analysis, name="text_analysis"),
+    url(r"^text_analysis/(?P<function>[\w\.-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/(?P<file_key>[\w\.-]+)/$", text_analysis.text_analyze, name="text_analysis"),
+    url(r"^text_analysis/(?P<function>[\w\.-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\d-]+)/$", text_analysis.text_analyze, name="text_analysis"),
     url(r"^text_analysis_input/$", text_analysis.text_analysis_input, name="text_analysis_input"),
    ]
 """ http://stackoverflow.com/questions/28013711/django-zinnia-can-not-get-image-for-entrys-illustration

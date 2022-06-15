@@ -181,6 +181,7 @@ INSTALLED_APPS = (
     'el_pagination',
     'datetimewidget',
     'schedule',
+    'textanalysis',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
