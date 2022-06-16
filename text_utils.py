@@ -1,6 +1,9 @@
+import json
+import requests
 import textract
 import readability
 
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.flatpages.models import FlatPage
 from django.conf import settings
