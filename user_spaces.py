@@ -90,21 +90,32 @@ def project_contents(project_id):
     return contents
 
 def my_contents_view(request):
-    return render(request, 'vue/contents_dashboard.html', {'project_id': 0})
+    # return render(request, 'vue/contents_dashboard.html', {'project_id': 0})
+    return render(request, 'vue/contents_dashboard.html', {'project_id': 0, 'VUE': True,})
 
 def user_contents(user):
     oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     oers = oers.filter_by_site(OER)
     shared = SharedOer.objects.filter(user=user).order_by('-created')
     shared = shared.filter_by_site(SharedOer)
-    shared_oers = [s.oer for s in shared]
+    # shared_oers = [s.oer for s in shared]
+    shared_oers = []
+    for s in shared:
+        oer = s.oer
+        if oer not in shared_oers:
+            shared_oers.append(oer)
     personal_oers = OER.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     personal_oers = personal_oers.filter_by_site(OER)
     lps = LearningPath.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     lps = lps.filter_by_site(LearningPath)
     shared = SharedLearningPath.objects.filter(user=user).order_by('-created')
     shared = shared.filter_by_site(SharedLearningPath)
-    shared_lps = [s.lp for s in shared]
+    # shared_lps = [s.lp for s in shared]
+    shared_lps = []
+    for s in shared:
+        lp = s.lp
+        if lp not in shared_lps:
+            shared_lps.append(lp)
     personal_lps = LearningPath.objects.filter(creator=user, project__isnull=True).order_by('-modified')
     personal_lps = personal_lps.filter_by_site(LearningPath)
     folder_docs = FolderDocument.objects.filter(user=user).order_by('-folder__created','-created')

@@ -3,6 +3,10 @@
 {% load i18n %}
 {% block head_title %}{% trans "contents dashboard"|capfirst %}{% endblock %}
 {% block extra_style %}
+<link rel="shortcut icon" href="{% static "commons/img/ta_dashboard.ico" %}" type="image/x-icon">
+<link rel="apple-touch-icon" href="{% static "commons/img/ta_dashboard_icon.png" %}" type="image/png">
+<link rel="stylesheet" href="{% static "vue_apps/src/assets/index.css" %}">
+<link rel="stylesheet" href="{% static "commons/css/commons_vue.css" %}">
     <link rel="stylesheet" href="{% static "vue_apps/vddl/vddl.css" %}">
 <style>
 hr {
@@ -212,6 +216,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
 {% endblock extra_style %}
 
 {% block extra_head %}
+    <script src="https://use.fontawesome.com/d391635073.js"></script>
     <script src="{% static "nlp/js/jquery.min.js" %}"></script>
 {% comment %}
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
@@ -227,13 +232,14 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
 
 {% block body_class %}contents_dashboard{% endblock %}
 
+{% block user %}{% endblock user %}
+
+{% block nav_vue %}
+  {% include "_header_bar.html" %}
+{% endblock nav_vue %}
+
 {% block body %}
 <div class="panel-head">
-{% comment %}
-      <h3 class="text-center">{% trans "contents dashboard"|capfirst %}
-          {% if project_name %}<small>{% trans "for project" %}</small> {{ project_name }} <small>{% trans "and its sub-projects" %}</small>
-             {% else %}<small>{% trans "for user" %}</small> {{ user.get_display_name }}{% endif %}</h3>
-{% endcomment %}
 {% if project_name %}
     <h3 class="marginT10 marginB5 demiBold">{% trans "contents dashboard"|capfirst %}</h3>
     <h5 class="pull-left marginT5 marginB0"><span class="demiBold">{{ project_name }} </span><span style="font-size:75%">{% trans "and its sub-projects" %}</span></h5>
@@ -258,11 +264,11 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in resource_list.items"
-                :key="resource_list.list_id+item.obj_id"
+                <vddl-draggable v-for="r_item in resource_list.items"
+                :key="resource_list.list_id+r_item.obj_id"
                 :type=resource_list.list_id
-                :draggable=item
-                :index=item['index']
+                :draggable=r_item
+                :index=r_item['index']
                 :wrapper=resource_list.items
                 effect-allowed="copy"
                 :selected="selectedEvent"
@@ -270,21 +276,20 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
                 :dragend="handleDragend"
                 :canceled="handleCanceled"
                 :moved="handleMoved"
-                v-bind:class="{'selected': resource_list.selected === item}"
+                v-bind:class="{'selected': resource_list.selected === r_item}"
                 >
-                  <div><span style="cursor:grab">{{ item.label }}</span></div>
-                  <div class="upperCase c-white">{{ item.obj_type }}</div>
-                  <div><a :href=item.url target="_text">{{ item.obj_id }}</a></div>
-                  <div><a :href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
-<!--
-     <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
-     <ul v-if="item.active">
-       <li><a v-bind:href="'/text_analysis/context/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_context }}</a></li>
-       <li><a v-bind:href="'/text_analysis/wordlists/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_wordlists }}</a></li>
-       <li><a v-bind:href="'/text_analysis/readability/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_readability }}</a></li>
-       <li><a v-bind:href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'">{{ label_dashboard }}</a></li>
-     </ul>
--->
+                  <div><span style="cursor:grab">{{ r_item.label }}</span></div>
+                  <div class="upperCase c-white">{{ r_item.obj_type }}</div>
+                  <div><a :href=r_item.url target="_text">{{ r_item.obj_id }}</a></div>
+                  <a v-on:click.stop="toggle_menu(r_item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
+                  <ul v-if="r_item.active">
+                    <li><a v-bind:href="'/text_analysis/context/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_context }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/wordlists/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_wordlists }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/nounchunks/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_nounchunks }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/readability/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_readability }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/summarization/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_summarization }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/dashboard/'+r_item.obj_type+'/'+r_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_dashboard }}</a></li>
+                  </ul>
                 </vddl-draggable>
             </vddl-list>
           </div>
@@ -307,22 +312,15 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
               <div></div>
               <div></div>
               <div></div>
-<!--
-              <div class="text-center"><a :href="'/context_dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
-              <div class="text-center"><a :href="'/corpus/'+corpus.file_key+'/text/'" target="_blank" rel="noopener nofollow" class="analyzeText-white" :title="label_analysis"></a></div>
--->
-   <span class="dropdown"> &nbsp;
-     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars" aria-hidden="true"></i></a>
-     <ul class="dropdown-menu ta-menu">
-       <li><a v-bind:href="'/text_analysis/context/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_context }}</a></li>
-<!--
-       <li><a v-bind:href="'/text_analysis/wordlists/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_wordlists }}</a></li>
-       <li><a v-bind:href="'/text_analysis/dashboard/corpus/0/'+corpus.file_key+'/'" target="_blank">{{ label_dashboard }}</a></li>
--->
-     </ul>
-   </span>
+              <a v-on:click.stop="toggle_menu(corpus);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
               <div class="text-center"><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash bold"></i></a></div>
             </div>
+              <ul v-if="corpus.active" style="font-size: 0.8em;">
+                <li><a v-bind:href="'/text_analysis/context/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_context }}</a></li>
+                <li><a v-bind:href="'/text_analysis/wordlists/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_wordlists }}</a></li>
+                <li><a v-bind:href="'/text_analysis/readability/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_readability }}</a></li>
+                <li><a v-bind:href="'/text_analysis/dashboard/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_dashboard }}</a></li>
+              </ul>
             <div class="test" style="display: none;">
               <div class="subheading-corpus">
                 <div>title</div>
@@ -341,13 +339,13 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
               :inserted="handleInserted"
               :dragover="handleDragover"
               :drop="handleDrop">
-                <vddl-draggable v-for="item in corpus.items"
-                :key="corpus.file_key+item.obj_id"
+                <vddl-draggable v-for="c_item in corpus.items"
+                :key="corpus.file_key+c_item.obj_id"
                 class="vddl-draggable-corpus"
                 :type=corpus.list_id
                 :allowed-types=all_types
-                :draggable=item
-                :index=item['index']
+                :draggable=c_item
+                :index=c_item['index']
                 :wrapper=corpus.items
                 effect-allowed="move"
                 :selected="selectedEvent"
@@ -355,26 +353,25 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
                 :dragend="handleDragend"
                 :canceled="handleCanceled"
                 :moved="handleMoved"
-                v-bind:class="{'selected': corpus.selected === item}"
+                v-bind:class="{'selected': corpus.selected === c_item}"
                 >
-                  <div><span style="cursor:default">{{ item.label }}</span></div>
-                  <div class="upperCase">{{ item.obj_type }}</div>
-                  <div>{{ item.obj_id }}</div>
-                  <div class="upperCase">{{ item.language }}</div>
-                  <div>{{ item.n_tokens }}</div>
-                  <div>{{ item.n_words }}</div>
-	              <div class="text-center"><a :href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="analyzeText" :title="label_analysis"></a></div>
-                  <div class="text-center" style="white-space:nowrap;"><a :href="'/context_dashboard/'+corpus.file_key+'/'+item.obj_type+'/'+item.obj_id+'/'" target="_blank" rel="noopener nofollow" class="conText" :title="label_context">&gt;|&lt;</a></div>
-<!--
-     <a v-on:click.stop="toggle_menu(item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
-     <ul v-if="item.active">
-       <li><a v-bind:href="'/text_analysis/context/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_context }}</a></li>
-       <li><a v-bind:href="'/text_analysis/wordlists/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_wordlists }}</a></li>
-       <li><a v-bind:href="'/text_analysis/readability/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_readability }}</a></li>
-       <li><a v-bind:href="'/text_analysis/dashboard/'+item.obj_type+'/'+item.obj_id+'/'+corpus.file_key+'/'">{{ label_dashboard }}</a></li>
-     </ul>
--->
-                  <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, item.obj_type, item.obj_id);" :title="label_remove_item"><i class="fa fa-trash demibold"></i></a></div>
+                  <div><span style="cursor:default">{{ c_item.label }}</span></div>
+                  <div class="upperCase">{{ c_item.obj_type }}</div>
+                  <div>{{ c_item.obj_id }}</div>
+                  <div class="upperCase">{{ c_item.language }}</div>
+                  <div>{{ c_item.n_tokens }}</div>
+                  <div>{{ c_item.n_words }}</div>
+                  <a v-on:click.stop="toggle_menu(c_item);"><i class="fa fa-bars" style="cursor: pointer;"></i></a>
+                  <div class="text-center"><a href="#" v-on:click="removeItem(corpus.file_key, c_item.obj_type, c_item.obj_id);" :title="label_remove_item"><i class="fa fa-trash demibold"></i></a></div>
+                  <br v-if="c_item.active">
+                  <ul v-if="c_item.active" style="font-size: 0.8em;">
+                    <li><a v-bind:href="'/text_analysis/context/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_context }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/wordlists/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_wordlists }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/nounchunks/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_nounchunks }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/readability/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_readability }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/summarization/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_summarization }}</a></li>
+                    <li><a v-bind:href="'/text_analysis/dashboard/'+corpus.file_key+'/'+c_item.obj_type+'/'+c_item.obj_id+'/'" target="_blank" rel="noopener nofollow">{{ label_dashboard }}</a></li>
+                  </ul>
                </vddl-draggable>
               </vddl-list>
             </div>
@@ -382,7 +379,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
         </div>
         <hr>
         <div><template v-if="is_authenticated">
-            <button v-if="!empty_corpus" v-on:click="newSelected();" class="btn btn-outline-dark marginR10">{{ label_new_corpus }}</button>
+              <button v-if="!empty_corpus" v-on:click="newSelected();" class="btn btn-outline-dark marginR10">{{ label_new_corpus }}</button>
         	  <button v-if="compare" v-on:click="compareSelected();" class="btn btn-outline-dark">{{ label_similarity }}</button>
           </template>  
           <template v-else>{{ msg_anonymous }}</template>  
@@ -391,6 +388,9 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
     </div>
 {% endverbatim %}
 {% endblock body %}
+
+{% block footer_base %}
+{% endblock footer_base %}
 
 {% block script_base %}
     <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
@@ -403,21 +403,24 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
   	</script>
     
     <script type="text/javascript">
-      var app = new Vue({
+
+    var app = new Vue({
         name: 'contents_dashboard',
         data: {
           project_id: {{project_id}},
           is_authenticated: {% if user.is_authenticated %}true{% else %}false{% endif %},
           resource_lists: {lps: {list_id: 'lps', label: 'LPs', items: [], selected: null},  shared_lps: {list_id: 'shared_lps', label: 'Shared LPs', items: [], selected: null}, personal_lps: {list_id: 'personal_lps', label: 'Personal LPs', items: [], selected: null},oers: {list_id: 'oers', label: 'OERs', items: [], selected: null}, shared_oers: {list_id: 'shared_oers', label: 'Shared OERs', items: [], selected: null}, personal_oers: {list_id: 'personal_oers', label: 'Personal OERs', items: [], selected: null}, docs: {list_id: 'docs', label: 'DOCs', items: [], selected: null} },
           resource_list: {list_id: 'list', label: 'LIST', items: [], selected: null},
-          corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
-          file_key: null,
           corpora: [],
-          item: {},
-          items:[],
-          list: [],
+          corpus: {list_id: 'corpus', label: 'Corpus', items: [], selected: null},
+          // file_key: null,
+          item: {active: false},
+          // r_item: {},
+          // c_item: {},
+          // items: [],
+          // list: [],
           selected: null,
-          index: 0,
+          // index: 0,
           result: '',
           compare: false,
           all_types: ['lps', 'shared_lps', 'personal_lps', 'oers', 'shared_oers', 'personal_oers', 'docs', 'corpus'],
@@ -443,6 +446,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
 		},
         el: '#app',
         components: {
+          // Vue.component('vue-simple-context-menu', VueSimpleContextMenu)
         },
         computed: {
           empty_corpus: {
@@ -457,7 +461,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
         methods: {
           toggle_menu: function(item) {
             Vue.set(item, 'active', !item.active);
-            console.log(item.active);
+            this.$forceUpdate();
           },
           findEmptyCorpus: function() {
             var empty = false;
