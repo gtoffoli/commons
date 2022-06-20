@@ -304,6 +304,7 @@ var webFontURLs = [
       var app = new Vue({
         name: 'test',
         data: {
+		  file_key: null,
           obj_type: null, obj_id: null,
           language: null,title: null,
           n_tokens: null, n_unique: null, voc_density: null, lex_density: null,
@@ -330,9 +331,13 @@ var webFontURLs = [
         },
         mounted: function () {
           $this = this;
+          if (`{{ file_key }}`)
+            url = `/text_dashboard/{{ file_key }}/`;
+          else
+            url = `/text_dashboard/{{ obj_type }}/`+encodeURIComponent(`{{ obj_id }}`);
 		  $.ajax({
 	        type:'GET',
-	        url: `/text_dashboard/{{ obj_type }}/`+encodeURIComponent(`{{ obj_id }}`),
+	        url: url,
 	        success: function(json_data){
 	        	console.log(Object.entries(json_data).length);
 	            // set all properties from json_data into data

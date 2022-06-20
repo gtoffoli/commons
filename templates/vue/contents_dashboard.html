@@ -316,10 +316,10 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
               <div class="text-center"><a href="#" v-on:click="deleteCorpus(corpus.file_key);" :title="label_delete_corpus"><i class="fa fa-trash bold"></i></a></div>
             </div>
               <ul v-if="corpus.active" style="font-size: 0.8em;">
-                <li><a v-bind:href="'/text_analysis/context/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_context }}</a></li>
-                <li><a v-bind:href="'/text_analysis/wordlists/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_wordlists }}</a></li>
-                <li><a v-bind:href="'/text_analysis/readability/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_readability }}</a></li>
-                <li><a v-bind:href="'/text_analysis/dashboard/'+corpus.obj_type+'/'+corpus.obj_id+'/'">{{ label_dashboard }}</a></li>
+                <li><a v-bind:href="'/text_analysis/context/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow">{{ label_context }}</a></li>
+                <li><a v-bind:href="'/text_analysis/wordlists/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow">{{ label_wordlists }}</a></li>
+                <li><a v-bind:href="'/text_analysis/readability/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow">{{ label_readability }}</a></li>
+                <li><a v-bind:href="'/text_analysis/dashboard/'+corpus.file_key+'/'" target="_blank" rel="noopener nofollow">{{ label_dashboard }}</a></li>
               </ul>
             <div class="test" style="display: none;">
               <div class="subheading-corpus">
@@ -417,7 +417,7 @@ ul.ta-menu li, ul.ta-menu li a { display: inline; font-size: 12px; line-height: 
           item: {active: false},
           // r_item: {},
           // c_item: {},
-          // items: [],
+          items: [],
           // list: [],
           selected: null,
           // index: 0,
