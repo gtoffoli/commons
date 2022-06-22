@@ -115,7 +115,7 @@ MIDDLEWARE = [
 INSTALLED_APPS = (
     'haystack',
     # 3rd party
-    # 'suit',
+    'suit',
     # Django
     'django.contrib.admin',
     'django.contrib.admindocs',
