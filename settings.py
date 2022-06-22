@@ -33,10 +33,12 @@ if not 'ALLOW_REDUCED_PROFILE' in globals():
     ALLOW_REDUCED_PROFILE = False
 
 from commons.private import *
-if IS_LINUX:
-    DEBUG = False
-else:
-    DEBUG = True
+if not 'DEBUG' in globals():
+    if IS_LINUX:
+        DEBUG = False
+    else:
+        DEBUG = True
+if DEBUG:
     TEMPLATE_STRING_IF_INVALID = '%s'
 
 if not 'BASE_DIR' in globals():
@@ -712,3 +714,8 @@ django.utils.encoding.smart_text = django.utils.encoding.smart_str
 django.utils.encoding.force_text = django.utils.encoding.force_str
 import django.conf.urls
 django.conf.urls.url = django.urls.re_path
+
+try:
+    print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
+except:
+    pass
