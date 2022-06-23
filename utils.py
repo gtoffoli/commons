@@ -265,3 +265,6 @@ def x_frame_protection(url):
     if x_frame_options:
         return string_concat(capfirst(_('embedding inside a page the view of this resource is forbidden: please, use the link above to access it directly')), '. ')
     return ''
+
+def is_ajax(request): 
+    return request.headers.get('x-requested-with') == 'XMLHttpRequest'

@@ -66,19 +66,19 @@ from .forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotF
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
 from .forms import repurpose_mentoring_form
 from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
-from .user_spaces import project_tree_as_list
+from commons.user_spaces import project_tree_as_list
 
-from .permissions import ForumPermissionHandler
-from .session import get_clipboard, set_clipboard
-from .tracking import notify_event, track_action
-from .analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
+from commons.permissions import ForumPermissionHandler
+from commons.session import get_clipboard, set_clipboard
+from commons.tracking import notify_event, track_action
+from commons.analytics import filter_actions, post_views_by_user, popular_principals, filter_users, get_likes
 from commons.scorm import ContentPackage
 
-from .utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html
+from commons.utils import x_frame_protection, ipynb_to_html, ipynb_url_to_html, is_ajax
 from commons.utils import pdf_writer_save
 from six import iteritems
 
-from .mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
+from commons.mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
 from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
 from roles.models import Role
 # from taggit.models import Tag
@@ -3427,21 +3427,24 @@ def document_delete(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.remove_document(oer_document.document, request)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 def document_up(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.document_up(oer_document.document, request)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 def document_down(request, document_id):
     oer_document = OerDocument.objects.get(document_id=document_id)
     oer = oer_document.oer
     oer.document_down(oer_document.document, request)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return oer_detail(request, oer.id, oer=oer)
 
@@ -4134,7 +4137,8 @@ def pathnode_delete(request, node_id):
     track_action(request, request.user, 'Delete', node, target=lp)
     lp.remove_node(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
@@ -4174,7 +4178,8 @@ def pathnode_up(request, node_id):
         raise PermissionDenied
     lp.node_up(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 def pathnode_down(request, node_id):
@@ -4184,7 +4189,8 @@ def pathnode_down(request, node_id):
         raise PermissionDenied
     lp.node_down(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
-    if request.is_ajax():
+    # if request.is_ajax():
+    if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
 
