@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-21 09:17+0200\n"
 "PO-Revision-Date: 2015-06-21 21:52+0000\n"
-"Last-Translator: Giovanni Toffoli <toffoli@linkroma.it>, 2022\n"
+"Last-Translator: Rocío Jiménez, 2022\n"
 "Language-Team: Spanish (http://www.transifex.com/commons-erasmus-eu-project/commons-platform/language/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,41 +127,41 @@ msgstr "Versión del documento"
 
 #: .\forms.py:73
 msgid "gender"
-msgstr "Sexo"
+msgstr "sexo"
 
 #: .\forms.py:78 .\models.py:753
 msgid "date of birth"
-msgstr "Fecha de nacimiento"
+msgstr "fecha de nacimiento"
 
 #: .\forms.py:78 .\models.py:753
 msgid "format: dd/mm/yyyy"
-msgstr "Formato: dd/mm/aa"
+msgstr "formato: dd/mm/aa"
 
 #: .\forms.py:79 .\forms.py:133 .\models.py:755
 #: .\templates\_people_card.html:36 .\templates\user_profile.html:69
 #: .\vocabularies.py:180
 msgid "country"
-msgstr "País"
+msgstr "país"
 
 #: .\forms.py:80 .\models.py:754 .\templates\user_profile.html:75
 msgid "city"
-msgstr "Ciudad"
+msgstr "ciudad"
 
 #: .\forms.py:81 .\forms.py:138 .\models.py:756 .\vocabularies.py:136
 msgid "education level"
-msgstr "Nivel educativo"
+msgstr "nivel educativo"
 
 #: .\forms.py:82 .\forms.py:143 .\models.py:757 .\vocabularies.py:142
 msgid "study or work status"
-msgstr "Estatus: trabajador o estudiante"
+msgstr "estatus: trabajador o estudiante"
 
 #: .\forms.py:83 .\models.py:761
 msgid "study or work position"
-msgstr "Puesto de trabajo o estudios"
+msgstr "puesto de trabajo o estudios"
 
 #: .\forms.py:84 .\forms.py:147 .\models.py:758
 msgid "field of study"
-msgstr "Campo de estudio"
+msgstr "campo de estudio"
 
 #: .\forms.py:85 .\forms.py:151
 msgid "sector of work"
@@ -169,15 +169,15 @@ msgstr "sector laboral"
 
 #: .\forms.py:86
 msgid "interest areas"
-msgstr "Áreas de interés"
+msgstr "áreas de interés"
 
 #: .\forms.py:88
 msgid "known languages"
-msgstr "Idiomas conocidos"
+msgstr "idiomas conocidos"
 
 #: .\forms.py:89 .\models.py:765
 msgid "known languages not listed above"
-msgstr "Idiomas conocidos no incluidos arriba"
+msgstr "idiomas conocidos no incluidos arriba"
 
 #: .\forms.py:90 .\models.py:766
 msgid "short presentation"
@@ -194,21 +194,21 @@ msgstr "presentación más larga"
 #: .\forms.py:92 .\forms.py:306 .\models.py:768
 #: .\templates\user_profile.html:124
 msgid "web site"
-msgstr "Sitio web"
+msgstr "sitio web"
 
 #: .\forms.py:93 .\forms.py:165
 msgid "social networks / services used"
-msgstr "Redes sociales / servicios usados"
+msgstr "redes sociales / servicios usados"
 
 #: .\forms.py:94 .\forms.py:111 .\models.py:772
 msgid "skype id"
-msgstr "Identificación de Skype"
+msgstr "identificación de Skype"
 
 #: .\forms.py:94 .\forms.py:111 .\templates\user_profile.html:151
 #: .\templates\user_profile.html:220
 msgid ""
 "your Skype id will be shared only within active mentoring relationships"
-msgstr "Su identificación de Skype será compartida solo con sus relaciones de mentoría activas "
+msgstr "su identificación de Skype será compartida solo con sus relaciones de mentorazgo activas "
 
 #: .\forms.py:95 .\forms.py:112 .\models.py:773
 #: .\templates\user_profile.html:155 .\templates\user_profile.html:164
@@ -254,7 +254,7 @@ msgstr "en este momento no está disponible como mentor/a"
 msgid ""
 "check if temporarily unavailable to accept (more) requests by mentees; "
 "remember to update this when the situation changes!"
-msgstr "marque si temporalmente no está disponible para aceptar (más) solicitudes del alumnado; ¡recuerde actualizar esto cuando la situación cambie!"
+msgstr "marque si temporalmente no está disponible para aceptar (más) solicitudes del alumnado; ¡recuerde actualizarlo cuando la situación cambie!"
 
 #: .\forms.py:130
 msgid "text in name and short presentation"
@@ -267,19 +267,19 @@ msgstr "introduzca el término de búsqueda"
 
 #: .\forms.py:134
 msgid "choose country (no selection = all countries)"
-msgstr "Elija su país (sin seleccionar = todos los países)"
+msgstr "elija su país (sin seleccionar = todos los países)"
 
 #: .\forms.py:139 .\forms.py:152
 msgid "choose education level (no selection = all levels)"
-msgstr "Elija su nivel educativo (sin seleccionar = todos los niveles)"
+msgstr "elija su nivel educativo (sin seleccionar = todos los niveles)"
 
 #: .\forms.py:144
 msgid "choose status (no selection = all statuses)"
-msgstr "Elija su estatus (sin seleccionar = todos los estatus)"
+msgstr "elija su estatus (sin seleccionar = todos los estatus)"
 
 #: .\forms.py:148
 msgid "choose field of study' (no selection = all fields)"
-msgstr "Elija su campo de estudio (sin seleccionar = todos los campos)"
+msgstr "elija su campo de estudio (sin seleccionar = todos los campos)"
 
 #: .\forms.py:155 .\forms.py:310 .\forms.py:329 .\forms.py:373 .\forms.py:437
 #: .\forms.py:504 .\forms.py:534
@@ -315,7 +315,7 @@ msgstr "nombre"
 
 #: .\forms.py:181
 msgid "max length is 78 characters, but less is better"
-msgstr "la longitud máxima es 78 caracteres, pero menos es mejor"
+msgstr "la longitud máxima es de 78 caracteres, pero menos es mejor"
 
 #: .\forms.py:184 .\forms.py:304 .\forms.py:648 .\models.py:534
 #: .\models.py:646 .\models.py:1077 .\models.py:1710
@@ -1290,11 +1290,11 @@ msgstr "¿Quiere que se le notifiquen por correo electrónico los mensaje privad
 
 #: .\models.py:744
 msgid "get notification of unread forum posts"
-msgstr "recibir notificaciones de mensajes no léidos en el foro no leídos "
+msgstr "recibir notificaciones de los mensajes no léidos en el foro "
 
 #: .\models.py:744
 msgid "Do you want being notified by email when new forum posts are present?."
-msgstr "¿Quiere que se le notifiquen por correo electrónico cuando haya nuevos mensajes en el foro? "
+msgstr "¿Quiere que se le notifique por correo electrónico cuando haya nuevos mensajes en el foro? "
 
 #: .\models.py:745
 msgid "activity stream max days"
@@ -1339,7 +1339,7 @@ msgstr "disponible para actuar como mentor/a también para miembros de otras com
 
 #: .\models.py:776
 msgid "temporarily unavailable to accept (more) requests by mentees."
-msgstr "temporalmente no disponible para aceptar (más) solicitudes de los/as tutelados/as."
+msgstr "temporalmente no disponible para aceptar (más) solicitudes del alumnado."
 
 #: .\models.py:920
 msgid "user profile"
@@ -1375,11 +1375,11 @@ msgstr "público/a"
 
 #: .\models.py:979
 msgid "project / community type"
-msgstr "tipo de comunidad/proyecto"
+msgstr "proyecto/tipo de comunidad"
 
 #: .\models.py:980
 msgid "project / community types"
-msgstr "tipos de comunidades/proyectos"
+msgstr "proyecto/tipos de comunidades"
 
 #: .\models.py:991
 msgid "no chatroom"
@@ -1423,353 +1423,353 @@ msgstr "solicitud rechazada"
 
 #: .\models.py:1032
 msgid "membership suspended or expired"
-msgstr ""
+msgstr "afiliación suspendida o caducada"
 
 #: .\models.py:1040
 msgid "mentoring is not available"
-msgstr ""
+msgstr "la mentoría no está disponible"
 
 #: .\models.py:1041
 msgid "A - The community administrator chooses the mentor"
-msgstr ""
+msgstr "A - El/La administrador/a de la comunidad elige al mentor/a"
 
 #: .\models.py:1042
 msgid "B - The mentee chooses the mentor"
-msgstr ""
+msgstr "B - El alumnado elige al mentor/a"
 
 #: .\models.py:1043
 msgid "B+A - The mentee or the administrator choose the mentor"
-msgstr ""
+msgstr "B+A - El alumnado o el/la administrador/a elige al mentor/a"
 
 #: .\models.py:1064
 msgid "project / community"
-msgstr ""
+msgstr "proyecto / comunidad"
 
 #: .\models.py:1067
 msgid "associated user group"
-msgstr ""
+msgstr "grupo de usuarios asociado"
 
 #: .\models.py:1074
 msgid "Project type"
-msgstr ""
+msgstr "Tipo de proyecto"
 
 #: .\models.py:1075
 msgid "project forum"
-msgstr ""
+msgstr "Foro del proyecto"
 
 #: .\models.py:1079 .\models.py:2199
 msgid "logo"
-msgstr ""
+msgstr "logo"
 
 #: .\models.py:1080 .\models.py:1717 .\models.py:2200
 msgid "featured image"
-msgstr ""
+msgstr "imagen destacada"
 
 #: .\models.py:1081
 msgid "mentoring is available"
-msgstr ""
+msgstr "la mentoría está disponible"
 
 #: .\models.py:1082
 msgid ""
 "once mentoring projects exist, you can only move from model A or B to A+B."
-msgstr ""
+msgstr "una vez que existen los proyectos de mentoría, solo se puede pasar del modelo A o B al A+B."
 
 #: .\models.py:1083
 msgid "allow external mentors"
-msgstr ""
+msgstr "permitir mentores/as externos/as"
 
 #: .\models.py:1084
 msgid "prototypical Learning Path"
-msgstr ""
+msgstr "Itinerario de Aprendizaje prototípico"
 
 #: .\models.py:1086
 msgid "reserved"
-msgstr ""
+msgstr "reservado/a"
 
 #: .\models.py:1090 .\models.py:1720 .\models.py:1827 .\models.py:2126
 #: .\models.py:2203 .\models.py:2902 .\models.py:2930 .\models.py:3331
 msgid "modified"
-msgstr ""
+msgstr "moficado/a"
 
 #: .\models.py:1091 .\models.py:1721 .\models.py:1828 .\models.py:2204
 #: .\models.py:2903 .\models.py:2931
 msgid "creator"
-msgstr ""
+msgstr "creador/a"
 
 #: .\models.py:1092 .\models.py:1722 .\models.py:1829 .\models.py:2079
 #: .\models.py:2205 .\models.py:2882 .\models.py:2904 .\models.py:2932
 msgid "last editor"
-msgstr ""
+msgstr "último/a editor/a"
 
 #: .\models.py:1232
 msgid "administrator"
-msgstr ""
+msgstr "administrador/a"
 
 #: .\models.py:1234 .\templates\mentoring_detail.html:147
 msgid "mentor"
-msgstr ""
+msgstr "mentor/a"
 
 #: .\models.py:1236
 msgid "supervisor"
-msgstr ""
+msgstr "supervisor/a"
 
 #: .\models.py:1620
 msgid "community or project"
-msgstr ""
+msgstr "comunidad o proyecto"
 
 #: .\models.py:1620
 msgid "the project the user belongs or applies to"
-msgstr ""
+msgstr "proyecto al que pertenece o que solicita el/la usuario/a"
 
 #: .\models.py:1621
 msgid "the user belonging or applying to the project"
-msgstr ""
+msgstr "el/la usuario/a que pertenece al o solicita el proyecto"
 
 #: .\models.py:1623
 msgid "request created"
-msgstr ""
+msgstr "solicitud creada"
 
 #: .\models.py:1624
 msgid "last acceptance"
-msgstr ""
+msgstr "última aceptación"
 
 #: .\models.py:1625
 msgid "last refusal"
-msgstr ""
+msgstr "última negativa"
 
 #: .\models.py:1626
 msgid "last state change"
-msgstr ""
+msgstr "último cambio de estado"
 
 #: .\models.py:1627
 msgid "last state modifier"
-msgstr ""
+msgstr "último modificador de estado"
 
 #: .\models.py:1628
 msgid "history of state changes"
-msgstr ""
+msgstr "historial de cambios de estado"
 
 #: .\models.py:1631 .\models.py:1632
 msgid "project member"
-msgstr ""
+msgstr "miembro del proyecto"
 
 #: .\models.py:1647
 msgid "project message"
-msgstr ""
+msgstr "mensaje del proyecto"
 
 #: .\models.py:1648
 msgid "project messages"
-msgstr ""
+msgstr "mensajes del proyecto"
 
 #: .\models.py:1669
 msgid "repository feature"
-msgstr ""
+msgstr "característica del repositorio"
 
 #: .\models.py:1691
 msgid "repository types"
-msgstr ""
+msgstr "tipos de repositorio"
 
 #: .\models.py:1709
 msgid "URL of the repository site"
-msgstr ""
+msgstr "URL del sitio del repositorio"
 
 #: .\models.py:1714
 msgid "longer description / search suggestions"
-msgstr ""
+msgstr "descripción más larga / sugerencias de búsqueda"
 
 #: .\models.py:1715 .\templates\repo_detail.html:49
 msgid "comments / evaluation"
-msgstr ""
+msgstr "comentarios / evaluación"
 
 #: .\models.py:1716
 msgid "screenshot"
-msgstr ""
+msgstr "captura de pantalla"
 
 #: .\models.py:1725 .\templates\project_detail.html:435
 msgid "external repository"
-msgstr ""
+msgstr "repositorio externo"
 
 #: .\models.py:1726 .\templates\autocomplete.html:11
 msgid "external repositories"
-msgstr ""
+msgstr "repositorios externos"
 
 #: .\models.py:1779
 msgid "Metadata only"
-msgstr ""
+msgstr "Solo metadatos"
 
 #: .\models.py:1780
 msgid "Metadata and online reference"
-msgstr ""
+msgstr "Metadatos y referencias en línea"
 
 #: .\models.py:1781
 msgid "Metadata and document(s)"
-msgstr ""
+msgstr "Metadatos y documento(s)"
 
 #: .\models.py:1782
 msgid "Metadata and richtext"
-msgstr ""
+msgstr "Metadatos y texto enriquecido"
 
 #: .\models.py:1788
 msgid "Derived-translated"
-msgstr ""
+msgstr "Derivado/a-traduccido/a"
 
 #: .\models.py:1789
 msgid "Derived-adapted"
-msgstr ""
+msgstr "Derivado/a-adaptado/a"
 
 #: .\models.py:1790
 msgid "Derived-remixed"
-msgstr ""
+msgstr "Derivado/a-remezclado/a"
 
 #: .\models.py:1791
 msgid "none (brand new OER)"
-msgstr ""
+msgstr "ninguno (REA nuevo)"
 
 #: .\models.py:1798
 msgid "specific URL to the OER, if applicable"
-msgstr ""
+msgstr "URL específica al REA, si procede"
 
 #: .\models.py:1800 .\models.py:2928
 msgid "own text content"
-msgstr ""
+msgstr "contenido del texto propio"
 
 #: .\models.py:1806
 msgid "adapted / remixed"
-msgstr ""
+msgstr "adaptado-a/remezclado-a"
 
 #: .\models.py:1808 .\templates\text_readability.html:60
 msgid "reference"
-msgstr ""
+msgstr "referencia"
 
 #: .\models.py:1817
 msgid "where the OER has been cataloged or created"
-msgstr ""
+msgstr "donde se ha catalogado o creado el REA"
 
 #: .\models.py:1824 .\models.py:2900
 msgid "content"
-msgstr ""
+msgstr "contenido"
 
 #: .\models.py:1824
 msgid "formal description of a problem or other original content"
-msgstr ""
+msgstr "descripción formal de un problema u otro contenido original"
 
 #: .\models.py:2042
 msgid "attached document"
-msgstr ""
+msgstr "documento adjunto"
 
 #: .\models.py:2043 .\templates\_oer_card.html:24
 #: .\templates\oer_detail.html:184
 msgid "attached documents"
-msgstr ""
+msgstr "documentos adjuntos"
 
 #: .\models.py:2061
 msgid "Metadatum type"
-msgstr ""
+msgstr "Tipo de metadato"
 
 #: .\models.py:2062
 msgid "Value"
-msgstr ""
+msgstr "Valor"
 
 #: .\models.py:2069
 msgid "additional metadatum"
-msgstr ""
+msgstr "metadato adicional"
 
 #: .\models.py:2070 .\templates\oer_edit.html:104
 msgid "additional metadata"
-msgstr ""
+msgstr "metadatos adicionales"
 
 #: .\models.py:2077
 msgid "referenced OER"
-msgstr ""
+msgstr "REA referenciado"
 
 #: .\models.py:2078 .\models.py:2881
 msgid "referencing project"
-msgstr ""
+msgstr "proyecto de referencia"
 
 #: .\models.py:2084
 msgid "shared OER"
-msgstr ""
+msgstr "REA compartido"
 
 #: .\models.py:2085 .\templates\mentoring_detail.html:480
 #: .\templates\project_detail.html:668
 msgid "shared OERs"
-msgstr ""
+msgstr "REAs compartidos"
 
 #: .\models.py:2102
 msgid "poor"
-msgstr ""
+msgstr "malo/a"
 
 #: .\models.py:2103
 msgid "fair"
-msgstr ""
+msgstr "regular"
 
 #: .\models.py:2104
 msgid "good"
-msgstr ""
+msgstr "bueno/a"
 
 #: .\models.py:2105
 msgid "very good"
-msgstr ""
+msgstr "muy bueno/a"
 
 #: .\models.py:2106
 msgid "excellent"
-msgstr ""
+msgstr "excelente"
 
 #: .\models.py:2124
 msgid "free text review"
-msgstr ""
+msgstr "revisión de texto libre"
 
 #: .\models.py:2127
 msgid "evaluator"
-msgstr ""
+msgstr "evaluador/a"
 
 #: .\models.py:2134 .\models.py:2151
 msgid "OER evaluation"
-msgstr ""
+msgstr "evaluación de REA"
 
 #: .\models.py:2135
 msgid "OER evaluations"
-msgstr ""
+msgstr "evaluaciones de REAs"
 
 #: .\models.py:2153
 msgid "facet-related score"
-msgstr ""
+msgstr "puntuación relacionada con la faceta"
 
 #: .\models.py:2160
 msgid "quality metadatum"
-msgstr ""
+msgstr "metadato de calidad"
 
 #: .\models.py:2161
 msgid "quality metadata"
-msgstr ""
+msgstr "metadatos de calidad"
 
 #: .\models.py:2179
 msgid "simple collection"
-msgstr ""
+msgstr "colección simple"
 
 #: .\models.py:2180
 msgid "sequence"
-msgstr ""
+msgstr "secuencia"
 
 #: .\models.py:2181
 msgid "directed graph"
-msgstr ""
+msgstr "gráfico dirigido"
 
 #: .\models.py:2189
 msgid "original learning path"
-msgstr ""
+msgstr "itinerario de aprendizaje original"
 
 #: .\models.py:2198
 msgid "group"
-msgstr ""
+msgstr "grupo"
 
 #: .\models.py:2208 .\templates\_lp_serialize.html:10 .\text_analysis.py:39
 msgid "learning path"
-msgstr ""
+msgstr "itinerario de aprendizaje"
 
 #: .\models.py:2429
 msgid "this LP was created by cloning a LP with title"
-msgstr ""
+msgstr "este IA se creó clonando un IA con título"
 
 #: .\models.py:2448
 msgid ""
@@ -1778,20 +1778,20 @@ msgstr ""
 
 #: .\models.py:2842
 msgid "Cover page"
-msgstr ""
+msgstr "Portada"
 
 #: .\models.py:2880
 msgid "referenced Learning Path"
-msgstr ""
+msgstr "Itinerario de Aprendizaje referenciado"
 
 #: .\models.py:2887
 msgid "shared LP"
-msgstr ""
+msgstr "IA compartido"
 
 #: .\models.py:2888 .\templates\mentoring_detail.html:455
 #: .\templates\project_detail.html:641
 msgid "shared LPs"
-msgstr ""
+msgstr "IAs compartidos"
 
 #: .\models.py:2907
 msgid "path edge"
@@ -1803,94 +1803,94 @@ msgstr ""
 
 #: .\models.py:2923
 msgid "learning path or collection"
-msgstr ""
+msgstr "itinerario de aprendizaje o colección"
 
 #: .\models.py:2924
 msgid "stands for"
-msgstr ""
+msgstr "significa"
 
 #: .\models.py:2926
 msgid "code to embed an online document, such as a GoogleDoc"
-msgstr ""
+msgstr "código para insertar un documento en línea, como un GoogleDoc."
 
 #: .\models.py:2935
 msgid "path node"
-msgstr ""
+msgstr "nodo de itinerario"
 
 #: .\models.py:2936 .\templates\lp_detail.html:160 .\templates\lp_play.html:54
 #: .\templates\lp_play.html:61
 msgid "path nodes"
-msgstr ""
+msgstr "nodos de itinerario"
 
 #: .\models.py:3109
 msgid "Youtube API are not currently available"
-msgstr ""
+msgstr "Las API de Youtube no están disponibles en este momento"
 
 #: .\models.py:3285
 msgid "Tagged OER"
-msgstr ""
+msgstr "REA etiquetado"
 
 #: .\models.py:3286
 msgid "Tagged OERs"
-msgstr ""
+msgstr "REAs etiquetados"
 
 #: .\models.py:3299
 msgid "Tagged LP"
-msgstr ""
+msgstr "IA etiquetados"
 
 #: .\models.py:3300
 msgid "Tagged LPs"
-msgstr ""
+msgstr "IAs etiquetados"
 
 #: .\models.py:3306
 msgid "any"
-msgstr ""
+msgstr "cualquier/a"
 
 #: .\models.py:3307
 msgid "global"
-msgstr ""
+msgstr "global"
 
 #: .\models.py:3310 .\models.py:3343
 msgid "featured item"
-msgstr ""
+msgstr "elemento destacado"
 
 #: .\models.py:3311
 msgid "featured items"
-msgstr ""
+msgstr "elementos destacados"
 
 #: .\models.py:3313
 msgid "is lead item"
-msgstr ""
+msgstr "es el elemento principal"
 
 #: .\models.py:3314
 msgid "group name"
-msgstr ""
+msgstr "nombre del grupo"
 
 #: .\models.py:3314
 msgid "Entries can be aggregated by group name."
-msgstr ""
+msgstr "Las entradas se pueden agrupar por el nombre del grupo."
 
 #: .\models.py:3315
 msgid "Used to sort in ascending order, not to filter."
-msgstr ""
+msgstr "Usado para ordenar en orden ascendente, no para filtrar."
 
 #: .\models.py:3316
 msgid "priority"
-msgstr ""
+msgstr "prioridad"
 
 #: .\models.py:3316
 msgid ""
 "Used to filter, not to sort, possibly combined with other attributes. A "
 "large number means high priority."
-msgstr ""
+msgstr "Usado para filtrar, no para clasificar, posiblemente combinado con otros atributos. Un número grande significa alta prioridad. "
 
 #: .\models.py:3317
 msgid "In the case of a \"lead\" item, probably you will provide this text."
-msgstr ""
+msgstr "En el caso de un elemento \"principal\", probablemente aportará este texto."
 
 #: .\models.py:3318
 msgid "scope"
-msgstr ""
+msgstr "alcance"
 
 #: .\models.py:3326
 msgid "start publication"
@@ -1910,20 +1910,20 @@ msgstr ""
 
 #: .\search_indexes.py:131
 msgid "In"
-msgstr ""
+msgstr "En"
 
 #: .\templates\403.html:4 .\templates\403.html:10
 msgid ""
 "Sorry. You are not allowed to access the requested content or function."
-msgstr ""
+msgstr "Lo sentimos. No tiene permiso para acceder al contenido o función solicitados."
 
 #: .\templates\404.html:4 .\templates\404.html:10
 msgid "Sorry. We cannot find the page that you requested."
-msgstr ""
+msgstr "Lo sentimos. No podemos encontrar la página solicitada."
 
 #: .\templates\_access_bar.html:19 .\templates\flatpages\splash.html:23
 msgid "for"
-msgstr ""
+msgstr "para"
 
 #: .\templates\_access_bar.html:24 .\templates\user_dashboard.html:6
 #: .\templates\user_preferences.html:23 .\templates\user_profile.html:33
