@@ -691,9 +691,8 @@ AMPQ_VHOST = config.get('ampq', 'VHOST')
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
-# CSRF_COOKIE_SAMESITE = 'None'
 # see https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5
-# SESSION_COOKIE_SAMESITE = 'None'
+CSRF_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://success.commonspaces.eu', 'https://www.commonspaces.eu', 'https://start.success4all.eu',]
 # for middleware and context_processors
 # see also: https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5 
