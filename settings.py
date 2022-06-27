@@ -688,21 +688,22 @@ AMPQ_VHOST = config.get('ampq', 'VHOST')
 
 # ------------ CORS ------------
 # see https://www.stackhawk.com/blog/django-cors-guide/
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+SESSION_COOKIE_SAMESITE = 'None'
 # see https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5
 CSRF_COOKIE_SAMESITE = 'None'
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://success.commonspaces.eu', 'https://www.commonspaces.eu', 'https://start.success4all.eu',]
 # for middleware and context_processors
 # see also: https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5 
-EMBEDDED_USE_COOKIES = True
-EMBEDDED_USE_SESSION = False
-if EMBEDDED_USE_SESSION:
-    SESSION_COOKIE_SAMESITE_FORCE_ALL = True
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+#see commons.context_processors.py e commons.middleware.py
+EMBEDDED_USE_COOKIES = True
+EMBEDDED_USE_SESSION = False
 
 import django.utils.translation
 django.utils.translation.ugettext = django.utils.translation.gettext
@@ -713,6 +714,10 @@ django.utils.encoding.smart_text = django.utils.encoding.smart_str
 django.utils.encoding.force_text = django.utils.encoding.force_str
 import django.conf.urls
 django.conf.urls.url = django.urls.re_path
+from django.core.handlers.wsgi import WSGIRequest
+def is_ajax(self):
+    return self.headers.get('x-requested-with') == 'XMLHttpRequest'
+WSGIRequest.is_ajax = is_ajax
 
 try:
     print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
