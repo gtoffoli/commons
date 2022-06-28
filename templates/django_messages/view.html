@@ -6,9 +6,9 @@
 <div class="font13">
 <p style="width:70%; display:inline-block"><span class="demiBold">{% trans "Sender" %}:</span> {{ message.sender.get_display_name }}</p>
 <p style="width:20%; display:inline-block">
-    {% ifequal message.recipient.pk user.pk %}
+    {% if message.recipient.pk == user.pk %}
     <a href="{% url 'messages_reply' message.id %}"><i class="fa fa-reply" aria-hidden="true"></i> {% trans "Reply" %}</a> &nbsp; &nbsp; 
-    {% endifequal %}
+    {% endif %}
     <a href="{% url 'messages_delete' message.id %}"><i class="fa fa-trash-o" aria-hidden="true"></i> {% trans "Delete" %}</a>
 </p>
 <p style="width:70%; display:inline-block"><span class="demiBold">{% trans "Subject" %}:</span> {{ message.subject }}</p>

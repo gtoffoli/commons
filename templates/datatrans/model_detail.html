@@ -5,13 +5,13 @@
 {% block breadcrumbs %}
     {{ block.super }} 
     &rsaquo; 
-    {% ifequal objects|length 1 %}
+    {% if objects|length == 1 %}
         <a href='..'>{% trans "Translations for" %} {{ model }}</a>
         &rsaquo; 
         {% for object in objects %}{{ object.name }}{% endfor %}
     {% else %}
         {% trans "Translations for" %} {{ model }}
-    {% endifequal %}
+    {% endif %}
 {% endblock %}
 
 {% block extrahead %}
@@ -101,9 +101,9 @@
                     name="translation_{{ field.translation.pk }}"
                     cols="60" rows="6"
                 >{% if field.translation.edited %}{{ field.translation.value }}{% endif %}</textarea>
-                <input type="checkbox" name="empty_{{ field.translation.pk }}" {% ifequal field.translation.value "" %}{% if field.translation.edited %}checked="checked"{% endif %}{% endifequal %} />
+                <input type="checkbox" name="empty_{{ field.translation.pk }}" {% if field.translation.value == "" %}{% if field.translation.edited %}checked="checked"{% endif %}{% endif %} />
                 <span title="{% trans "tick this checkbox if the translation is deliberately empty" %}">{% trans "empty" %}</span>
-                <input type="checkbox" name="ignore_{{ field.translation.pk }}" {% ifequal field.translation.value field.original.value %}{% if field.translation.edited %}checked="checked"{% endif %}{% endifequal %} />
+                <input type="checkbox" name="ignore_{{ field.translation.pk }}" {% if field.translation.value == field.original.value %}{% if field.translation.edited %}checked="checked"{% endif %}{% endif %} />
                 <span title="{% trans "keep this original or fuzzy" %}">{% trans "ignore" %}</span>
             </td>
         </tr>
