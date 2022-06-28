@@ -686,21 +686,28 @@ AMPQ_PORT = config.getint('ampq', 'PORT')
 AMPQ_VHOST = config.get('ampq', 'VHOST')
 """
 
-# ------------ CORS ------------
-# see https://www.stackhawk.com/blog/django-cors-guide/
-# CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SAMESITE = 'Lax'
 # see https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5
-CSRF_COOKIE_SAMESITE = 'None'
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://success.commonspaces.eu', 'https://www.commonspaces.eu', 'https://start.success4all.eu',]
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://success.commonspaces.eu', 'https://www.commonspaces.eu', 'https://start.success4all.eu']
 # for middleware and context_processors
 # see also: https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5 
 if not DEBUG:
-    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SAMESITE = 'None'
     CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'None'
+    SESSION_COOKIE_SECURE = True
+
+# ------------ CORS ------------
+# see https://www.stackhawk.com/blog/django-cors-guide/
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_ORIGINS = CSRF_TRUSTED_ORIGINS
+CORS_ORIGIN_WHITELIST = CSRF_TRUSTED_ORIGINS
+from corsheaders.defaults import default_headers
+CORS_ALLOW_HEADERS = list(default_headers) + ['Set-Cookie']
+
 #see commons.context_processors.py e commons.middleware.py
 EMBEDDED_USE_COOKIES = True
 EMBEDDED_USE_SESSION = False
