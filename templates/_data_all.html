@@ -3,7 +3,7 @@
   <dl class="list-inline {{data_class}}">
     <dt>{% trans label_data|capfirst %}</dt>
     {% for ele_data in data %}
-      <dd><form action="{{ action }}" method="post">{% csrf_token %}<button type="submit" class="btn-link" name="{{ type_data }}" value="{{ ele_data.id }}">{{ ele_data.name|safe }}</button></form></dd>
+      <dd>{% if not EMBEDDED %}<form action="{{ action }}" method="post">{% csrf_token %}{% endif %}<button type="submit" class="btn-link" name="{{ type_data }}" value="{{ ele_data.id }}">{{ ele_data.name|safe }}</button>{% if not EMBEDDED %}</form>{% endif %}</dd>
     {% endfor %}
   </dl>
 

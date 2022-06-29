@@ -64,7 +64,7 @@ font-weight: 600;
           {% if can_play %}
             <div class="hidden-xs">
               <div class="posRel">
-                <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/?node=0" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
+                <div class="bg_play floatL"><a href="/lp/{{ lp.slug }}/play/?node=0{% if EMBEDDED %}&embed=true{% endif %}" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></div>
                 <dl class="list-inline font14 marginB10">
                   <dt>{% trans "objectives"|capfirst %}</dt>
                   <dd>{{ lp.short|safe }}</dd>
@@ -83,7 +83,7 @@ font-weight: 600;
               </div>
             </div>
             <div class="visible-xs">
-              <p class="bg_play"><a href="/lp/{{ lp.slug }}/play/" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></p>
+              <p class="bg_play"><a href="/lp/{{ lp.slug }}/play/{% if EMBEDDED %}?embed=true{% endif %}" title="{% trans "show player view" %}"><i class="fa fa-youtube-play"></i></a></p>
               <dl class="list-inline font14 marginB10">
                 <dt>{% trans "objectives"|capfirst %}</dt>
                 <dd>{{ lp.short|safe }}</dd>
@@ -185,11 +185,15 @@ font-weight: 600;
                         {% endif %}
                       {% endif %}
                     {% endif %}
+                      {% if EMBEDDED %}
+                        {{ node.label }}
+                      {% else %}
                       <a class="viewNode" id="v_{{ node.id }}" href="/pathnode/{{node.id}}/">{{ node.label }}</a>
                       {% if can_analyze_text %}
                         {% if node.get_obj_text %}
                           {% include "_menu_text_analysis.html" with obj_type="pathnode" obj_id=node.id %}
                         {% endif %}
+                      {% endif %}
                       {% endif %}
                     </li></ul>
                   </div>
@@ -228,7 +232,7 @@ font-weight: 600;
                     <ul class="list-unstyled my-list-unstyled padding510">
                     {% for u in users %}
                       <li>
-                        <img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <a href="/profile/{{ u.0.username }}/" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if  u.1 %}, <small><i>{% trans "editor" %}</i></small>{% endif %}
+                        <img {% if u.0.get_profile.avatar %} src="/media/{{ u.0.get_profile.avatar }}" {% else %} src="/media/images/avatars/anonymous.png" {% endif %} class="avatar-small"> <a href="/profile/{{ u.0.username }}/{% if EMBEDDED %}?embed=true{% endif %}" title="{% trans "view user profile" %}"><small>{{ u.0.get_display_name }}</small></a>{% if  u.1 %}, <small><i>{% trans "editor" %}</i></small>{% endif %}
                            {% if not u.1 %}
                             <form class="delegate" style="display:inline" action="/lp/{{ lp.id }}/toggle_editor_role/" method="post" id="delegate_{{ u.0.username }}">
                              {% csrf_token %}<input type="hidden" name="user" value="{{ u.0.username }}">
