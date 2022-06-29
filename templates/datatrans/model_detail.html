@@ -25,9 +25,9 @@
 {% endblock %}
 
 {% block content %}
-{% ifnotequal objects|length 1 %}
+{% if not objects|length == 1 %}
 <h1>{% trans "Translations for" %} {{ model }}</h1>
-{% endifnotequal %}
+{% endif %}
 <div style="width: 128px; position: fixed; right: 8px; top: 72px; border: 1px solid #CCC; padding: 8px; background: #FFF;">
 	{% blocktrans with progress.0 as percent and progress.1 as done and progress.2 as total %}Progress: {{ percent }}% ({{ done }}/{{ total }}){% endblocktrans %}
 	<div style="width: 64px; border: 1px solid #CCC; margin: 0; padding: 0;">
