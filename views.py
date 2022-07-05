@@ -3399,6 +3399,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
         return serve_file(
             request,
             document_version.file,
+            save_as=None,
             content_type=document_version.mimetype
             )
 
