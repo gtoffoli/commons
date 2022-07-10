@@ -4,8 +4,10 @@
 {% load commons_tags %}
 
 {% block head_title %}
-{% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %}{% elif project %}{% blocktrans with the_project=project.name%}Recent activity by {{ the_project }}{% endblocktrans %}{% else %}{% trans "recent activity"|capfirst %}{% endif %}
-
+  {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %}
+  {% elif project %}{% blocktrans with the_project=project.name%}Recent activity by {{ the_project }}{% endblocktrans %}
+  {% else %}{% trans "recent activity"|capfirst %}
+  {% endif %}
 {% endblock %}
 
 {% block body_class %}activity_stream{% endblock %}
@@ -20,8 +22,10 @@
     <section>
         <div class="container">
             <h1 class="marginT30">
-{% comment %}{% if actor %}{% trans "recent activity by"|capfirst %} {{ actor.get_display_name }}{% elif project %}{% trans "recent activity in"|capfirst %} <a href="/project/{{ project.slug }}/">{{ project.name }}</a>{% else %}{% trans "recent activity"|capfirst %}{% endif %}{% endcomment %}
-             {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %}{% elif project %}{% blocktrans with the_project=project.name%}Recent activity by {{ the_project }}{% endblocktrans %}{% else %}{% trans "recent activity"|capfirst %}{% endif %}
+              {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %} <span class="small">({{ actor.id }})</span>
+              {% elif project %}{% blocktrans with the_project=project.name%}Recent activity by {{ the_project }}{% endblocktrans %}
+              {% else %}{% trans "recent activity"|capfirst %}
+              {% endif %}
             </h1>
 			{% if actions %}
 			<table id="stream" style="padding: 1em;">

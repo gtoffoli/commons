@@ -724,7 +724,8 @@ django.conf.urls.url = django.urls.re_path
 from django.core.handlers.wsgi import WSGIRequest
 def is_ajax(self):
     return self.headers.get('x-requested-with') == 'XMLHttpRequest'
-WSGIRequest.is_ajax = is_ajax
+if not getattr(WSGIRequest, 'is_ajax'):
+    WSGIRequest.is_ajax = is_ajax
 
 try:
     print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
