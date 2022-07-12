@@ -687,7 +687,6 @@ class FolderDocument(models.Model, Publishable):
     def can_access(self, user):
         folder = self.folder
         project = folder.get_project()
-        # published_states = project.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
         published_states = [PUBLISHED]
         if project.get_site() > 1 and is_site_member(user):
             published_states = [RESTRICTED, PUBLISHED]
@@ -1859,8 +1858,11 @@ class OER(Resource, Publishable):
         return self.metadata_set.all().order_by('metadata_type__name')
 
     def can_access(self, user):
-        # if self.state==PUBLISHED:
-        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
+        published_states = [PUBLISHED]
+        if self.get_site() > 1 and is_site_member(user):
+            published_states = [RESTRICTED, PUBLISHED]
+        # if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
+        if self.state in published_states:
             return True
         if not user.is_authenticated and self.state in (DRAFT, RESTRICTED, SUBMITTED):
             return False
@@ -2278,22 +2280,27 @@ class LearningPath(Resource, Publishable):
         return users
 
     def can_access(self, user):
-        # if self.state==PUBLISHED:
-        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
+        published_states = [PUBLISHED]
+        if self.get_site() > 1 and is_site_member(user):
+            published_states = [RESTRICTED, PUBLISHED]
+        # if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
+        if self.state in published_states:
             return True
         if not user.is_authenticated:
             return False
         project = self.project
-        # return user.is_superuser or self.creator==user or (project and project.is_admin(user)) or (project and project.is_member(user) and self.state in (DRAFT, SUBMITTED))
         return user.is_superuser or self.creator==user or (project and project.is_member(user))
 
     def can_play(self, request):
         if not self.get_nodes().count():
             return False
-        # if self.state == PUBLISHED:
-        if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
-            return True
         user = request.user
+        published_states = [PUBLISHED]
+        if self.get_site() > 1 and is_site_member(user):
+            published_states = [RESTRICTED, PUBLISHED]
+        # if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
+        if self.state in published_states:
+            return True
         if not user.is_authenticated:
             return False
         project = self.project
