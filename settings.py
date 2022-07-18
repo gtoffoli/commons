@@ -15,10 +15,9 @@ else:
 import django
 DJANGO_VERSION = django.VERSION[0]
 
+HAS_BLOG = True
 if not 'HAS_MEETING' in globals():
     HAS_MEETING = True
-if not 'HAS_ZINNIA' in globals():
-    HAS_ZINNIA = True
 if not 'HAS_SAML2' in globals():
     HAS_SAML2 = False # True
 if HAS_SAML2:
@@ -466,6 +465,7 @@ AUTHENTICATION_BACKENDS = (
 if HAS_SAML2:
     AUTHENTICATION_BACKENDS = list(AUTHENTICATION_BACKENDS) + ['djangosaml2.backends.Saml2Backend']
 
+TINYMCE_JS_URL = os.path.join(STATIC_URL,"tinymce/tinymce.min.js") # this is the default
 TINYMCE_DEFAULT_CONFIG = {
     'schema': "html5",
     'resize' : "both",

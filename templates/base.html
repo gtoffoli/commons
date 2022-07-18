@@ -105,6 +105,7 @@
 {% endif %}{% comment %} VUE {% endcomment%}
        {% block extra_style %}{% endblock %}
      {% endblock %}
+     {% block link %}{% endblock %}{% comment %} needed by zinnia {% endcomment%}
 
 {% if not VUE %}
      <script src="{% static "jquery/js/jquery-2.1.4.min.js" %}"></script>
@@ -316,6 +317,7 @@
 {% endif %}{% comment %} VUE {% endcomment%}
       {% block extra_script %}{% endblock %}
     {% endblock %}
+    {% block script %}{% endblock %}{% comment %} needed by zinnia {% endcomment%}
 
     {% block extra_body_base %}
       {% block extra_body %}{% endblock %}

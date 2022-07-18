@@ -33,6 +33,7 @@ def about_children(request):
              capfirst(_("press releases")),
              url='/press_releases/',
             ))
+    if settings.HAS_BLOG:
         children.append (MenuItem(
              capfirst(_("blog")),
              url='/weblog/',

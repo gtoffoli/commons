@@ -80,7 +80,7 @@ def processor(request):
         'HAS_SAML2': settings.HAS_SAML2,
         'HAS_LRS': settings.HAS_LRS,
         'HAS_MEETING': settings.HAS_MEETING,
-        'HAS_ZINNIA': settings.HAS_ZINNIA,
+        'HAS_BLOG': settings.HAS_BLOG,
         'INBOX_COUNT': inbox_count,
         'BROWSER': browser,
         'SITE_ID': settings.SITE_ID,

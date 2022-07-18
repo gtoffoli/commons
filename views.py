@@ -262,7 +262,7 @@ def home(request):
                 wall_dict['popular_oer'] = oer
                 cache.set('popular_oer_id', oer.id, homepage_timeout)
                 break
-    if settings.HAS_ZINNIA:
+    if settings.HAS_BLOG:
         #180924 MMR wall_dict['articles'] = Entry.objects.order_by('-creation_date')[:MAX_ARTICLES]
         qend = timezone.now()
         articles = Entry.objects.filter(status=2).order_by('-creation_date')[:MAX_ARTICLES]

@@ -2,13 +2,8 @@
 {% load i18n staticfiles %}
 
 {% block title %}{% block title-page %}{% endblock title-page %} - CommonS Weblog{% endblock title %}
-{% comment %}
-{% block extra_style %}
-    <link rel="stylesheet" type="text/css" media="screen, projection" href="{% static "zinnia/theme/css/screen.css" %}" />
-    <link rel="stylesheet" type="text/css" media="print" href="{% static "zinnia/theme/css/print.css" %}" />
-{% endblock %}
-{% endcomment %}
- {% block body %}
+
+{% block body %}
  {% block breadcrumbs %}{% endblock breadcrumbs %}
  <div class="row">
  	<div class="col-md-9">
