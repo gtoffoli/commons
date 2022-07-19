@@ -1,5 +1,6 @@
 
 from django.conf import settings
+from django.urls import re_path
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
@@ -17,6 +18,7 @@ from commons import bookmarklets
 from commons import text_utils
 from commons.api import router
 import commons.user_spaces
+from commons import weblog
 # import commons.lang.text_analysis as text_analysis
 from textanalysis import views as text_analysis
 
@@ -50,6 +52,9 @@ urlpatterns += [
     url(r'^accounts/', include('allauth.urls')),
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^my_mail/', include('django_messages.urls')),
+    re_path(r'^weblog/entry/new/$', weblog.EntryCreate, name='entry_create'),
+    re_path(r'^weblog/entry/(?P<entry_id>[\d-]+)/$', weblog.EntryView, name='entry_view'),
+    re_path(r'^weblog/entry/(?P<entry_id>[\d-]+)/update/$', weblog.EntryUpdate, name='entry_update'),
     url(r'^weblog/', include('zinnia.urls', namespace='zinnia')),
     url(r'^forum/', include('pybb.urls', namespace='pybb')),
     url(r'^comments/', include('django_comments.urls')),
