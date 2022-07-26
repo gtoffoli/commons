@@ -183,6 +183,7 @@ INSTALLED_APPS = (
     'datetimewidget',
     'schedule',
     'textanalysis',
+    # 'channels',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
@@ -731,3 +732,11 @@ try:
     print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
 except:
     pass
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "asgiref.inmemory.ChannelLayer",
+        "ROUTING": "commons.routing.channel_routing",
+    },
+}
+ASGI_APPLICATION = 'commons.routing.application'
