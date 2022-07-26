@@ -130,13 +130,6 @@
 {% endblock %}
 
 {% block extra_script %}
-{% comment %}
-   <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
-   <script type="text/javascript" src="{% static 'commons/js/select2.js' %}"></script>
-   <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
-{% endcomment %}
-
 {% include "_select2_js.html" %}
 
 <script type="text/javascript">

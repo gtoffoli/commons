@@ -1,10 +1,17 @@
-{% load staticfiles%}
+{% load static %}
 
+{% comment %} see: \commons310\Lib\site-packages\dal_select2\widgets.py
+   another version of jquery is present; not sure autocomplete.init.js is needed;
+   forward.js was removed in version 3.2.7; select2.full.js is in admin
 <script type="text/javascript" src="{% static 'autocomplete_light/jquery.init.js' %}"></script>
 <script type="text/javascript" src="{% static 'autocomplete_light/autocomplete.init.js' %}"></script>
 <script type="text/javascript" src="{% static 'autocomplete_light/forward.js' %}"></script>
 <script type="text/javascript" src="{% static 'autocomplete_light/vendor/select2/dist/js/select2.full.js' %}"></script>
+{% endcomment %}
+<script type="text/javascript" src="{% static 'admin/js/vendor/select2/select2.full.js' %}"></script>
+<script type="text/javascript" src="{% static 'autocomplete_light/autocomplete_light.js' %}"></script>
 {% if LANGUAGE_CODE != 'en' %}
-    <script type="text/javascript" src="{{STATIC_URL}}autocomplete_light/vendor/select2/dist/js/i18n/{{LANGUAGE_CODE}}.js"></script>
+    {% comment %}<script type="text/javascript" src="{{STATIC_URL}}autocomplete_light/vendor/select2/dist/js/i18n/{{LANGUAGE_CODE}}.js"></script>{% endcomment %}
+    <script type="text/javascript" src="{{STATIC_URL}}vendor/select2/dist/js/i18n/{{LANGUAGE_CODE}}.js"></script>
 {% endif %}
 <script type="text/javascript" src="{% static 'autocomplete_light/select2.js' %}"></script>
