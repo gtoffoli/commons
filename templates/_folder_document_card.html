@@ -1,9 +1,9 @@
  {% comment %} items FolderDocument {% endcomment %}
 
- {% load staticfiles i18n %}
+ {% load static i18n %}
 
 <article class="view-card roundCorner">
-  <p class="title-card">{{ folder_document.title }}</p>
+  <p class="title-card">{% if folder_document.label %}{{ folder_document.label }}{% else %}{{ folder_document.document.label }}{% endif %}</p>
   <p class="font13">
      {% if folder_document.state != 3 %}<small style="color: {{ folder_document.get_link_color }};">{{ folder_document.get_state }}</small>&nbsp;{% endif %}
      {% if folder_document.embed_code %}{% trans "online document" %}

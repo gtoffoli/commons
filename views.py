@@ -66,6 +66,7 @@ from .forms import AvatarForm, ProjectLogoForm, ProjectImageForm, OerScreenshotF
 from .forms import ProjectMentoringModelForm, AcceptMentorForm, ProjectMentoringPolicyForm
 from .forms import repurpose_mentoring_form
 from .forms import N_MEMBERS_CHOICES, N_OERS_CHOICES, N_LPS_CHOICES, DERIVED_TYPE_DICT, ORIGIN_TYPE_DICT
+from .forms import SORT_ORDER_CHOICES, LEXICOGRAPHIC, BY_ASCENDING_DATE, BY_DESCENDING_DATE
 from commons.user_spaces import project_tree_as_list
 
 from commons.permissions import ForumPermissionHandler
@@ -4635,16 +4636,17 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
     term = ''
     criteria = []
     include_all = ''
-    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+    default_sort_order = BY_DESCENDING_DATE
+    sort_order = default_sort_order
     view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
             form = None
             post_dict = request.session.get('post_dict', None)
-
             term = post_dict.get('term', '')
             if term:
                 qq.append(term_query(term, ['label', 'document__label',]))
+            sort_order = int(post_dict.get('sort_order', default_sort_order))
  
             include_all = post_dict.get('include_all', False)
         elif request.method == 'POST':
@@ -4657,9 +4659,11 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
                 if term:
                     qq.append(term_query(term, ['label', 'document__label',]))
                 post_dict['term'] = term
-
+                sort_order = int(post.get('sort_order', default_sort_order))
+                post_dict['sort_order'] = sort_order
+                request.session['post_dict'] = post_dict
         else:
-            form = FolderDocumentSearchForm()
+            form = FolderDocumentSearchForm(initial={'sort_order': default_sort_order})
             request.session["post_dict"] = {}
         qs = FolderDocument.objects.all()
         for q in qq:
@@ -4667,14 +4671,19 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
         if not include_all:
             qs = qs.filter(state__in=view_states)
         qs = qs.filter_by_site(FolderDocument)
-        folder_documents = qs.distinct().order_by('label', 'document__label')
     else:
-        form = FolderDocumentSearchForm()
+        form = FolderDocumentSearchForm(initial={'sort_order': default_sort_order})
         qs = FolderDocument.objects.filter(state__in=view_states).distinct()
         qs = qs.filter_by_site(FolderDocument)
-        folder_documents = qs.distinct().order_by('label', 'document__label')
         request.session["post_dict"] = {}
-    # folder_documents = folder_documents(folder_documents, key = lambda x: x.title.strip())
+
+    sort_order = int(sort_order)
+    if sort_order == LEXICOGRAPHIC:
+        folder_documents = qs.order_by('label', 'document__label')
+    elif sort_order == BY_ASCENDING_DATE:
+        folder_documents = qs.order_by('created')
+    elif sort_order == BY_DESCENDING_DATE:
+        folder_documents = qs.order_by('-created')
         
     context = {'folder_documents': folder_documents, 'n_folder_documents': len(folder_documents), 'term': term, 'criteria': criteria, 'include_all': include_all, 'form': form,}
 

@@ -594,12 +594,23 @@ class PathNodeForm(forms.ModelForm):
 
         return cd
 
+LEXICOGRAPHIC = 0
+BY_ASCENDING_DATE = 1
+BY_DESCENDING_DATE = 2
+SORT_ORDER_CHOICES = (
+    (LEXICOGRAPHIC, _('lexicographic')),
+    (BY_ASCENDING_DATE, _('by ascending date')),
+    (BY_DESCENDING_DATE, _('by descending date')),
+)
+SORT_ORDER_DICT = dict(SORT_ORDER_CHOICES)
+
 class FolderDocumentSearchForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(FolderDocumentSearchForm, self).__init__(*args,**kwargs)
         for fieldname in self.fields:
             self.fields[fieldname].help_text = ''
 
+    sort_order = forms.ChoiceField(required=False, label=_('sort order'), choices=SORT_ORDER_CHOICES, widget=forms.Select(attrs={'class':'form-control',}))
     term = forms.CharField(
         label=_("text in label and file name"), required=False,
         widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':_("enter search term")}))
