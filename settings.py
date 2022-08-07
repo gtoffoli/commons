@@ -3,7 +3,7 @@
 Django settings for commons project.
 """
 
-DEBUG_TOOLBAR= False
+DEBUG_TOOLBAR = False
 
 import sys
 import os
@@ -16,23 +16,24 @@ import django
 DJANGO_VERSION = django.VERSION[0]
 
 HAS_BLOG = True
-if not 'HAS_MEETING' in globals():
-    HAS_MEETING = True
-if not 'HAS_SAML2' in globals():
-    HAS_SAML2 = False # True
+HAS_MEETING = True
+try: HAS_SAML2
+except NameError: HAS_SAML2 = False
 if HAS_SAML2:
     from commons.sso_config import *
-if not 'HAS_LRS' in globals():
-    HAS_LRS = True
-if not 'HAS_CALENDAR' in globals():
-    HAS_CALENDAR = False
-if not 'HAS_EARMASTER' in globals():
-    HAS_EARMASTER = True
-if not 'ALLOW_REDUCED_PROFILE' in globals():
-    ALLOW_REDUCED_PROFILE = False
+try: HAS_LRS
+except NameError: HAS_LRS = True
+try: HAS_CALENDAR
+except NameError: HAS_CALENDAR = False
+try: HAS_EARMASTER
+except NameError: HAS_EARMASTER = True
+try: ALLOW_REDUCED_PROFILE
+except NameError: ALLOW_REDUCED_PROFILE = False
 
 from commons.private import *
-if not 'DEBUG' in globals():
+
+try: DEBUG
+except NameError:
     if IS_LINUX:
         DEBUG = False
     else:
@@ -40,10 +41,10 @@ if not 'DEBUG' in globals():
 if DEBUG:
     TEMPLATE_STRING_IF_INVALID = '%s'
 
-if not 'BASE_DIR' in globals():
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if not 'PROJECT_ROOT' in globals():
-    PROJECT_ROOT = os.path.dirname(__file__)
+try: BASE_DIR
+except NameError: BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+try: PROJECT_ROOT
+except NameError: PROJECT_ROOT = os.path.dirname(__file__)
 PARENT_ROOT = os.path.dirname(PROJECT_ROOT)
 
 ACCOUNT_AUTHENTICATION_METHOD = "email" # "username"
@@ -183,7 +184,6 @@ INSTALLED_APPS = (
     'datetimewidget',
     'schedule',
     'textanalysis',
-    # 'channels',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
@@ -198,7 +198,6 @@ if HAS_EARMASTER:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['earmaster']
 if DEBUG and DEBUG_TOOLBAR:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['debug_toolbar']
-
 
 MIGRATION_MODULES = {
     'roles': None,
@@ -366,12 +365,12 @@ SITES_PRIVATE = [3, 5] # HEALTH, WE-COLLAB
 SITES_ERASMUS = [4, 5] # SUCCESS4ALL, WE-COLLAB
 
 SITE_ID = 1
-if not 'IS_SITE_PRIVATE' in globals():
-    IS_SITE_PRIVATE = False
-if not 'IS_SITE_ERASMUS' in globals():
-    IS_SITE_ERASMUS = False
-if not 'SITE_ROOT' in globals():
-    SITE_ROOT = ''
+try: IS_SITE_PRIVATE
+except NameError: IS_SITE_PRIVATE = False
+try: IS_SITE_ERASMUS
+except NameError: IS_SITE_ERASMUS = False
+try: SITE_ROOT
+except NameError: SITE_ROOT = ''
 SITE_NAME = 'CommonSpaces'
 
 WSGI_APPLICATION = 'commons.wsgi.application'
@@ -723,20 +722,14 @@ django.utils.encoding.force_text = django.utils.encoding.force_str
 import django.conf.urls
 django.conf.urls.url = django.urls.re_path
 from django.core.handlers.wsgi import WSGIRequest
+from django.core.handlers.asgi import ASGIRequest
 def is_ajax(self):
     return self.headers.get('x-requested-with') == 'XMLHttpRequest'
 if not getattr(WSGIRequest, 'is_ajax', None):
     WSGIRequest.is_ajax = is_ajax
+    ASGIRequest.is_ajax = is_ajax
 
 try:
     print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
 except:
     pass
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "asgiref.inmemory.ChannelLayer",
-        "ROUTING": "commons.routing.channel_routing",
-    },
-}
-ASGI_APPLICATION = 'commons.routing.application'
