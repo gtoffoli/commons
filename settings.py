@@ -567,11 +567,6 @@ ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 365 # 0 means no comments enabled at all
 ZINNIA_AUTO_CLOSE_PINGBACKS_AFTER = 0 # 0 means disabling pingbacks completely
 ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely.
 
-"""
-WIKI_ACCOUNT_HANDLING = False # True
-WIKI_ANONYMOUS_WRITE = False # True
-"""
-
 COMMONS_COMMUNITIES_MAX_DEPTH = 2
 COMMONS_PROJECTS_MAX_DEPTH = 2
 COMMONS_PROJECTS_NO_APPLY = ('sup',)
@@ -670,22 +665,6 @@ def check_calendar_perm_func(ob, user):
     else:
         return user.is_authenticated
 CHECK_CALENDAR_PERM_FUNC = check_calendar_perm_func
-
-"""
-# required by ADL_LRS
-from configparser import RawConfigParser
-# Root of LRS
-SETTINGS_DIR = BASE_DIR
-config = RawConfigParser()
-# config.read(SETTINGS_DIR+'/settings.ini')
-config.read(os.path.join(SETTINGS_DIR, 'settings.ini'))
-AMPQ_USERNAME = config.get('ampq', 'USERNAME')
-AMPQ_PASSWORD = config.get('ampq', 'PASSWORD')
-AMPQ_HOST = config.get('ampq', 'HOST')
-AMPQ_PORT = config.getint('ampq', 'PORT')
-AMPQ_VHOST = config.get('ampq', 'VHOST')
-"""
-
 
 SESSION_COOKIE_SAMESITE = 'Lax'
 # see https://stackoverflow.com/questions/63454537/csrf-cookie-samesite-equivalent-for-django-1-6-5
