@@ -67,7 +67,7 @@ def googledoc_write_as_pdf(writer, document_url, ranges=None, google_key=setting
     if response.status_code != requests.codes.ok:
         return False, ''
     content_type = response.headers['content-type']
-    print('----- googledoc_write_as_pdf', url, content_type)
+    # print('----- googledoc_write_as_pdf', url, content_type)
     stream = BytesIO(response.content)
     if content_type.lower().count('pdf'):
         write_pdf_pages(stream, writer, ranges=ranges)

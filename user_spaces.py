@@ -1,17 +1,10 @@
-import json
-
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.models import User
 from django.contrib.flatpages.models import FlatPage
 from django.shortcuts import render, get_object_or_404
-from schedule.models import Calendar, Event, CalendarRelation
 
 from commons.models import Project, ProjectMember, OER, SharedOer, LearningPath, SharedLearningPath
 from commons.models import FolderDocument
 from commons.models import PROJECT_OPEN, PUBLISHED
 from commons.models import project_tree_as_list, folder_tree_as_list
-from commons.tracking import track_action
 from commons.analytics import activity_stream
 from commons.utils import tree_to_list
 
@@ -141,30 +134,3 @@ def user_contents(user):
 def my_activity(request):
     # return activity_stream(request, user=request.user)
     return activity_stream(request, user=request.user, max_days=7)
-
-@csrf_exempt
-def my_feedback(request):
-    """ Gets and processes real-time user feedback from mobile app in xAPI compatible format.
-        user_id: the id of a registered user
-        event_id: the id of an Event in a django-schedule Calendar associated to a Project or Community
-    """
-    assert request.method == 'POST'
-    data = json.loads(request.body.decode('utf-8'))
-    user_id = data.get('user_id', '')
-    actor = User.objects.get(id=user_id)
-    verb = 'feedback'
-    event_id = data.get('event', '')
-    event = Event.objects.get(id=event_id)
-    calendar = event.calendar
-    relations = CalendarRelation.objects.filter(calendar=calendar)
-    project_id = relations[0].object_id
-    project = Project.objects.get(id=project_id)
-    feedback = data.get('feedback', '')
-    text = 'got feedback {} from {} on event {} in project {}'.format(feedback, actor.get_display_name(), event.title, project.name)
-    print(text)
-    if project.is_member(actor):
-        track_action(request, actor, verb, event, target=project)
-    else:
-        print('but user {} is not member of community/project {}'.format(actor.get_display_name(), project.name))
-    data = {'text': text}
-    return JsonResponse(data)
