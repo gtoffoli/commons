@@ -3,6 +3,7 @@
 from django import template
 register = template.Library()
 
+import commons.utils
 from commons.analytics import post_views_by_user
 
 @register.filter
@@ -29,6 +30,10 @@ def lookup(d, key):
         return d[key]
     except KeyError:
         return ''
+
+@register.filter
+def private_code(object, user_id):
+    return commons.utils.private_code(object, user_id)
 
 @register.filter
 def split(value):

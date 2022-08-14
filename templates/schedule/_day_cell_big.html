@@ -1,4 +1,5 @@
 {% load i18n scheduletags %}
+{% load commons_tags %}
 
   {% if day.has_occurrences %}
       {% for o in day.get_occurrence_partials %}
@@ -33,6 +34,12 @@
                             <tr>
                                 <td class="text-center">{% trans "Ends" %}</td>
                                 <td>{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">{% trans "Personal event code" %}</td>
+                                {% with user_id=user.id %}
+                                <td><textarea cols="8" style="text-align:center;">{{ occurrence.event|private_code:user_id }}</textarea></td>
+                                {% endwith %}
                             </tr>
                             {% if occurrence.event.rule %}
                                 {% if not occurrence.id %}
