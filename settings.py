@@ -562,10 +562,14 @@ PYBB_PREMODERATION = need_moderation
 """
 PYBB_PREMODERATION = False # otherwise, should customize also filter_topics and filter_posts
 
-ZINNIA_AUTO_MODERATE_COMMENTS = False # True means that comments are marked as non public
+ZINNIA_PROTOCOL = 'https' # default is http
+ZINNIA_MAIL_COMMENT_AUTHORS = True # default
+ZINNIA_AUTO_MODERATE_COMMENTS = True # means that comments are marked as non public
 ZINNIA_AUTO_CLOSE_COMMENTS_AFTER = 365 # 0 means no comments enabled at all
 ZINNIA_AUTO_CLOSE_PINGBACKS_AFTER = 0 # 0 means disabling pingbacks completely
 ZINNIA_AUTO_CLOSE_TRACKBACKS_AFTER = 0 # 0 means disabling trackbacks completely.
+
+ZINNIA_PERMISSION_HANDLER = 'commons.zinnia_adapter.BlogPermissionHandler'
 
 COMMONS_COMMUNITIES_MAX_DEPTH = 2
 COMMONS_PROJECTS_MAX_DEPTH = 2

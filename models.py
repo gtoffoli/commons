@@ -267,6 +267,7 @@ def is_site_member(user):
     if user.is_anonymous or settings.SITE_ID == 1:
         return False
     return ProjectMember.objects.filter(user=user, project=get_site_root(), state=MEMBERSHIP_ACTIVE).count()==1
+User.is_site_member = is_site_member
 
 def site_member_users(return_ids=False):
     assert settings.SITE_ID > 1

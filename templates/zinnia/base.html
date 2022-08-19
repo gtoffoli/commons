@@ -46,17 +46,25 @@
   <h4>{% trans "Calendar" %}</h4>
   {% get_calendar_entries %}
 </aside>
-{% endcomment %}
 <aside id="widget-tags" class="widget">
   <h4>
     <a href="{% url 'zinnia:tag_list' %}">{% trans "Tags" %}</a>
   </h4>
   {% get_tag_cloud %}
 </aside>
+{% endcomment %}
 <aside id="widget-recents" class="widget">
   <h4>{% trans "Recent entries" %}</h4>
   {% get_recent_entries %}
 </aside>
+{% if user|zinnia_can_create_entry %}
+<aside id="widget-add-entry" class="widget">
+  <h4>{% trans "Contribute" %}</h4>
+  <ul>
+  <li><a href="{% url 'zinnia:entry_create' %}">{% trans "write entry"|capfirst %}</a></li>
+  </ul>
+</aside>
+{% endif %}
 <aside id="widget-comments" class="widget">
   <h4>{% trans "Recent comments" %}</h4>
   {% get_recent_comments %}
