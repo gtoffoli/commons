@@ -82,7 +82,7 @@ MarkupSafe==2.1.1
 mistune==0.8.4
 mots-vides==2015.5.11
 nbclient==0.6.4
-nbconvert==6.5.0
+nbconvert==6.5.1
 nbformat==5.4.0
 nest-asyncio==1.5.5
 numpy==1.22.4
