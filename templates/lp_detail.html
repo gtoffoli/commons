@@ -171,7 +171,7 @@ font-weight: 600;
               {% for node in nodes %}
                 <li class="marginB5">
                   <div class="paddingL3">
-                  	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document %} node-doc{% elif node.get_online_document_url %} node-doc {% else %}node-text{% endif %}"><li>
+                  	<ul class="list-unstyled paddingL24 {% if node.oer %}node-oer{% elif node.document or node.embed_code %} node-doc{% elif node.get_online_document_url %} node-doc {% else %}node-text{% endif %}"><li>
                     {% if can_edit %}<a class="deleteNode" id="r_{{ node.id }}" href="#" title="{% trans "delete" %}"><i class="fa fa-times-circle red"></i></a> &nbsp;
                       {% comment %}{% if lp.get_ordered_nodes|length > 1 %}{% endcomment %}
                       {% if nodes|length > 1 %}

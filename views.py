@@ -3617,6 +3617,7 @@ def lp_play(request, lp_id, lp=None):
     var_dict['current_node'] = current_node
     oer = current_node.oer
     current_document = current_node.document
+    embed_code = current_node.embed_code
     online_document_url = current_node.get_online_document_url()
     current_text = current_node.get_text()
     ranges = current_node.get_ranges()
@@ -3731,6 +3732,21 @@ def lp_play(request, lp_id, lp=None):
         var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % online_document_url
     elif current_text:
         var_dict['text_view'] = TEXT_VIEW_TEMPLATE % current_text
+    elif embed_code and embed_code.startswith('/'): # local url path of weblog article or flatpage?
+        splitted = embed_code.split('/')
+        if len(splitted)==5 and splitted[1]=='weblog' and splitted[2]=='entry' and splitted[3].isnumeric():
+            entry_id = int(splitted[3])
+            try:
+                entry = Entry.objects.get(id=entry_id)
+                var_dict['text_view'] = TEXT_VIEW_TEMPLATE % entry.content
+            except:
+                pass
+        else:
+            try:
+                text = FlatPage.objects.get(url=embed_code).content
+                var_dict['text_view'] = TEXT_VIEW_TEMPLATE % text
+            except:
+                pass
     user = request.user
     if user.is_authenticated:
         if from_start:

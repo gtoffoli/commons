@@ -74,7 +74,7 @@ font-weight: 600;
                     {% endfor %}
             {% else %}
                     {% for pathnode in nodes %}
-                    <ul class="nodes-unlisted {% if pathnode.oer %} node-oer {% elif pathnode.document %} node-doc {% else %} node-text {% endif %} font14">
+                    <ul class="nodes-unlisted {% if pathnode.oer %} node-oer {% elif pathnode.document or pathnode.embed_code %} node-doc {% else %} node-text {% endif %} font14">
                         <li>
                         {% if pathnode == current_node %}
                             <div>{% if lp.path_type == 2 %}{{ forloop.counter }}. {% endif %}{{ pathnode.label }}</div>
@@ -103,7 +103,7 @@ font-weight: 600;
                 <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
                 <div class="text-center pull-left" style="width:80%"><span class="paddingR10">{{ i_node|add:"1" }}/{{ nodes|length }}</span>
                 {% if current_node.oer %} {% if not EMBEDDED %}<a href="/oer/{{ oer.slug }}/">{% endif %}<span class="c-pacific-blue">OER <i class="fa fa-list-alt c-pacific-blue" aria-hidden="true"></i></span>{% if not EMBEDDED %}</a>{% endif %}
-                {% elif current_node.document %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}
+                {% elif current_node.document or current_node.embed_code %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}
                 {% if can_edit and not language_mismatch %}{% if not EMBEDDED %}
                 &nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
                 {% endif %}{% endif %}
