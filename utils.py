@@ -273,36 +273,39 @@ def shuffle_integers(l_substring, integers):
     """ creates a shuffled code by converting to decimal strings N integers,
         splitting each decimal in substrings of fixed length
         and interleaving substrings in the same order the integers have in the list """
-    assert len(integers)
-    l_string = len(str(max(integers)))
-    assert (l_substring > 0) and (l_substring <= l_string)
-    rest = l_string % l_substring
-    if rest != 0:
-        l_string += (l_substring - rest)
-    quote = l_string / l_substring
-    string_format = '{:%02dd}' % l_string
-    strings = [string_format.format(i) for i in integers]
-    shuffled = ''
-    for j in range(0, l_string, l_substring):
-        for i in range(len(integers)):
-            shuffled += strings[i][j:j+l_substring]
-    return shuffled
+    if len(integers):
+        l_string = len(str(max(integers)))
+        if (l_substring > 0) and (l_substring <= l_string):
+            rest = l_string % l_substring
+            if rest != 0:
+                l_string += (l_substring - rest)
+            quote = l_string / l_substring
+            string_format = '{:%02dd}' % l_string
+            strings = [string_format.format(i) for i in integers]
+            shuffled = ''
+            for j in range(0, l_string, l_substring):
+                for i in range(len(integers)):
+                    shuffled += strings[i][j:j+l_substring]
+            return shuffled
+    return '' # illegal input
 
 def unshuffle_integers(shuffled, n_integers=2, l_substring=2):
     """ performs the inverse operation than shuffle_integers,
         using some default parameters """
     l_shuffled = len(shuffled)
-    assert l_shuffled and (n_integers > 0) and (l_substring > 0) and shuffled.isdecimal()
-    n_substrings = l_shuffled / n_integers / l_substring
-    assert n_integers*n_substrings*l_substring == l_shuffled
-    decimals = ['' for i in range(n_integers)]
-    i = 0
-    offset = 0
-    for j in range(0, l_shuffled, l_substring):
-        decimals[i%n_integers] += shuffled[offset : offset+l_substring]
-        offset += l_substring
-        i += 1
-    return [int(s) for s in decimals]
+    # if l_shuffled and (n_integers > 0) and (l_substring > 0) and shuffled.isdecimal():
+    if (n_integers > 0) and (l_substring > 0) and l_shuffled >= (n_integers*l_substring) and shuffled.isdecimal():
+        n_substrings = l_shuffled / n_integers / l_substring
+        if n_integers*n_substrings*l_substring == l_shuffled:
+            decimals = ['' for i in range(n_integers)]
+            i = 0
+            offset = 0
+            for j in range(0, l_shuffled, l_substring):
+                decimals[i%n_integers] += shuffled[offset : offset+l_substring]
+                offset += l_substring
+                i += 1
+            return [int(s) for s in decimals]
+    return [False, False] # illegal input
 
 def private_code(object, other_id):
     return shuffle_integers(2, [object.id, other_id])
