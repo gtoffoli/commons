@@ -92,7 +92,7 @@
                           <template slot="paneR">
                             <split-pane v-on:resize="resize" split="vertical" :default-percent='33'>
                               <template slot="paneL">
-                                <h4 style="text-align: center;">Proper noun tokens</h4>
+                                <h4 style="text-align: center;">Proper nouns and OOV tokens</h4>
                                 <div v-for="item in propn_frequencies">
                                   <div style="margin-inline-start: 5px; margin-inline-end: 5px;"><span v-bind:class="{'a': item.a, 'b': item.b, 'c': item.c}">
                                     {{ item.key }}</span> ({{ item.freq }}) {{ item.level }}</div>
