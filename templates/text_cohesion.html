@@ -69,7 +69,7 @@ th, td {
       </tbody>
     </table>
     <div><i><span style="font-size: smaller;">(1) {{ label_see }}:
-         <a target="_blank" href="https://aclanthology.org/P13-1010/">Graph-based Local Coherence Modeling</a>,
+         <a target="_blank" href="https://aclanthology.org/P13-1010/">Graph-based Local Coherence Modeling</a>,<br>
          <a target="_blank" href="https://trunajod20.readthedocs.io/en/latest/index.html">TRUNAJOD: A text complexity library for text analysis built on spaCy</a>
     </i></span></div>
     <div><i><span style="font-size: smaller">(2) {{ label_syntax }}</span></i></div>
@@ -79,25 +79,34 @@ th, td {
     <div class="marginT5"><label>{{ label_cohesive_nouns }}</label>:
       <template v-for="(item, index) in repeated_lemmas">
           <span v-if="index != 0">, </span>
-          <span>{{ item[0] }} ({{ item[1] }})</span>
+          <span :style="'background-color:'+colors[index][1]">{{ item[0] }}</span> ({{ item[1] }})
       </template>
     </div>
     <table style="margin: 0 auto; border-collapse: collapse;">
       <thead>
          <th style="width:5%">#</th><th style="width:55%">{{ label_paragraph }}</th>
-         <th style="width:20%">{{ label_repetitions }} <span>(**)</span></th>
-         <th style="width:20%">{{ label_similarity }} <span>(**)</span></th>
+         <th style="width:20%">{{ label_repetitions }} <span>(3)</span></th>
+         <th style="width:20%">{{ label_similarity }} <span>(3)(4)</span></th>
       </thead>
       <tbody>
         <tr v-for="(p, index) in paragraphs">
           <td style="vertical-align:top; text-align:center;">{{ p[0] }}</td>
-          <td>{{ p[1] }}</td>
+          <td>
+              <span v-for="token in tokens.slice(p[2], p[3])">
+                <template v-if="token['lemma'] in lemma_color_map">
+                  <span :style="'background-color:'+lemma_color_map[token['lemma']]">{{ token['text'] }}</span>
+                </template>
+                <template v-else>
+                  {{ token['text'] }}
+                </template>
+              </span>
+          </td>
           <template v-if="index===0">
-            <td style="vertical-align:top; text-align:center;">-</td>
-            <td style="vertical-align:top; text-align:center;">-</td>
+            <td style="font-weight: bold; text-align:center;"><i>document average {{ parseFloat(cohesion_by_repetitions[index]).toFixed(2) }}</i></td>
+            <td style="font-weight: bold; text-align:center;"><i>document average {{ parseFloat(cohesion_by_similarity[index]).toFixed(2) }}</i></td>
           </template>
           <template v-else>
-            <td style="vertical-align:top; text-align:center;">{{ cohesion_by_repetitions[index] }}</td>
+            <td style="vertical-align:top; text-align:center;">{{ parseFloat(cohesion_by_repetitions[index]).toFixed(2) }}</td>
             <td style="vertical-align:top; text-align:center;">{{ parseFloat(cohesion_by_similarity[index]).toFixed(2) }}</td>
           </template>
           </tr>
@@ -105,6 +114,8 @@ th, td {
       {% endverbatim %}
       </tbody>
     </table>
+    <div><i><span style="font-size: smaller">(3) {% trans "with reference to max 3 previous paragraphs"|capfirst %}</span></i></div>
+    <div><i><span style="font-size: smaller">(4) {% trans "similarity is computed by spaCy using feature vectors"|capfirst %}</span></i></div>
     </template>
   </div>
 </div>
@@ -123,10 +134,10 @@ th, td {
           obj_type_label: '{{ obj_type_label }}',
           title: '{{ title }}',
           language: '{{ language }}',
-          paragraphs: null,
+          tokens: null, paragraphs: null,
           cohesion_by_entity_graph: null,
-          cohesion_by_repetitions: null, repeated_lemmas: null,
-          cohesion_by_similarity: null,
+          repeated_lemmas: null, colors: null, lemma_color_map: null,
+          cohesion_by_repetitions: null, cohesion_by_similarity: null,
           error: null,
           label_local_cohesion: "{% trans "local cohesion"|capfirst %}",
           label_cohesive_nouns: "{% trans "most cohesive nominal lemmas"|capfirst %}",
@@ -135,10 +146,10 @@ th, td {
           label_see: "{% trans "see"|capfirst %}",
           label_repetitions: "{% trans "text cohesion based on shared lexicon"|capfirst %}",
           label_similarity: "{% trans "text cohesion based on paragraphs similarity"|capfirst %}",
-          label_weighted: "{% trans "weight on # of entities shared" %}",
+          label_weighted: "{% trans "weight on number of entities shared" %}",
           label_syntax: "{% trans "in weighting, take into account also syntax" %}",
           label_distance: "{% trans "take into account distance between sentences" %}",
-    },
+        },
         el: '#app',
         methods: {
           resize() {
@@ -160,7 +171,7 @@ th, td {
              };
            })
           .catch(err => (this['error'] = err))
-    },
+        },
       });
-  </script>
+ </script>
 {% endblock script_base %}
