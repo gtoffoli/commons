@@ -2283,7 +2283,8 @@ def project_mailing_list(request, project_slug):
 
 def project_contents(request, project_slug):
     project_id = get_object_or_404(Project, slug=project_slug).id
-    return render(request, 'vue/contents_dashboard.html', {'project_id': project_id})
+    # return render(request, 'vue/contents_dashboard.html', {'project_id': project_id})
+    return render(request, 'contents_dashboard.html', {'project_id': project_id})
 
 def repo_detail(request, repo_id, repo=None):
     protocol = request.is_secure() and 'https' or 'http'

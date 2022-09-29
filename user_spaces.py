@@ -64,7 +64,8 @@ def my_projects(request):
 def project_contents_view(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     if request:
-        return render(request, 'vue/contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
+        # return render(request, 'vue/contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
+        return render(request, 'contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
     #
 def project_contents(project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -90,15 +91,14 @@ def project_contents(project_id):
     return contents
 
 def my_contents_view(request):
-    # return render(request, 'vue/contents_dashboard.html', {'project_id': 0})
-    return render(request, 'vue/contents_dashboard.html', {'project_id': 0, 'VUE': True,})
+    # return render(request, 'vue/contents_dashboard.html', {'project_id': 0, 'VUE': True,})
+    return render(request, 'contents_dashboard.html', {'project_id': 0, 'VUE': True,})
 
 def user_contents(user):
     oers = OER.objects.filter(creator=user, project__isnull=False).order_by('state','-modified')
     oers = oers.filter_by_site(OER)
     shared = SharedOer.objects.filter(user=user).order_by('-created')
     shared = shared.filter_by_site(SharedOer)
-    # shared_oers = [s.oer for s in shared]
     shared_oers = []
     for s in shared:
         oer = s.oer

@@ -215,7 +215,6 @@ def lp_compare_nodes(request, lp_slug):
         data = {'status': response.status_code}
         return JsonResponse(data)
 
-# def contents_dashboard(request):
 @csrf_exempt
 def ajax_contents(request):
     user = request.user
