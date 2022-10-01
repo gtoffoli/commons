@@ -124,7 +124,7 @@ def my_children(request):
         ))
     children.append (MenuItem(
          capfirst(_("text analysis")),
-         url='/text_analysis_input/',
+         url='/textanalysis/ta_input/',
         ))
     return children
 

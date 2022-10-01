@@ -8,9 +8,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from commons.models import OER
-# from .analytics import track_action
 from commons.tracking import track_action
-# from commons.lang.text_analysis import get_web_resource_text, text_dashboard
 from textanalysis.views import get_web_resource_text
 
 """ implements the CS bookmarklet for page view
@@ -101,4 +99,5 @@ def web_resource_analyzer(request):
         return HttpResponseForbidden()
     url = request.GET.get('url', '')
     var_dict = {'obj_type': 'resource', 'obj_id': url}
-    return render(request, 'vue/text_dashboard.html', var_dict)
+    # return render(request, 'vue/text_dashboard.html', var_dict)
+    return render(request, 'text_dashboard.html', var_dict)
