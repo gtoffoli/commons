@@ -81,7 +81,8 @@ HAS_FACEBOOK_AUTHENTICATION = True
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        # 'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': '127.0.0.1:11211',
         'MAX_ENTRIES': 2000,
     }

@@ -38,7 +38,7 @@ A **User Guide** is available online as a number of *help pages*, under the *Hel
 ***Core architecture***
 
 *CommonSpaces* is a **multiplatform** application: the *production* version runs on *Linux-Ubuntu*, while we are performing most of the development on Windows.
-The current deployment is based on Python 3.10, Django 4 and PostgreSQL 14.
+The current deployment is based on Python 3.10.5, Django 4.1.1 and PostgreSQL 14.4.
 
 The following *Django apps* are in large part autonomous, but were initially developed as extensions of *CommonSpaces*:
 - *[commons-language](/gtoffoli/commons-language)* provides basic NLP services by  integrating **[spaCy](https://spacy.io/)**, with the associated language resources, extends someway its functionality and runs as a distict service exposing *HTTP API*;
