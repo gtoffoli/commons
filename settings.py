@@ -192,7 +192,6 @@ INSTALLED_APPS = list(INSTALLED_APPS) + ['bootstrap_datepicker_plus']
 """
 if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['h5p']
-    
 if HAS_SAML2:
     INSTALLED_APPS = list(INSTALLED_APPS) + ['djangosaml2']
 if HAS_EARMASTER:
@@ -212,8 +211,6 @@ else:
     YARN_EXECUTABLE_PATH = os.path.join(os.path.sep, 'Program Files', 'nodejs', 'yarn.cmd')
 
 BOWER_INSTALLED_APPS = (
-    # 'd3#3.3.13',
-    # 'nvd3#1.7.1',
     'd3#3.5.16',
     'nvd3#1.8.1',
 )
@@ -221,7 +218,6 @@ BOWER_INSTALLED_APPS = (
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'DIRS': [os.path.join(BASE_DIR, "commons", "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -243,7 +239,6 @@ TEMPLATES = [
                 'zinnia.context_processors.version',  # Optional
                 'pybb.context_processors.processor',
                 'commons.context_processors.processor',
-                # 'sekizai.context_processors.sekizai',
             ],
         },
     },
@@ -379,7 +374,7 @@ ROOT_URLCONF = 'commons.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-print(sys.version_info)
+# print(sys.version_info)
 if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
     import pathlib
     MEDIA_ROOT = pathlib.Path(MEDIA_ROOT)
@@ -554,13 +549,6 @@ PYBB_DEFAULT_TITLE = 'Forum'
 PYBB_TOPIC_PAGE_SIZE = 20 # 10
 PYBB_NICE_URL = True
 # PYBB_MARKUP = 'pybb.markup.markdown.MarkdownParser'
-"""!
-def need_moderation(user, body):
-    if user.is_full_member():
-        return False
-    return True
-PYBB_PREMODERATION = need_moderation
-"""
 PYBB_PREMODERATION = False # otherwise, should customize also filter_topics and filter_posts
 
 ZINNIA_PROTOCOL = 'https' # default is http
