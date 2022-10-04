@@ -374,6 +374,7 @@ ROOT_URLCONF = 'commons.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 # print(sys.version_info)
 if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
     import pathlib
@@ -701,7 +702,4 @@ if not getattr(WSGIRequest, 'is_ajax', None):
     WSGIRequest.is_ajax = is_ajax
     ASGIRequest.is_ajax = is_ajax
 
-try:
-    print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
-except:
-    pass
+# print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
