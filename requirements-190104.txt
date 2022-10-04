@@ -92,7 +92,7 @@ Pygments==2.3.1
 pyoai==2.5.0
 pyOpenSSL==18.0.0
 pyparsing==2.3.0
-PyPDF2==1.26.0
+PyPDF2==1.27.5
 Pyphen==0.9.5
 pysaml2==4.6.4
 python-dateutil==2.7.5
