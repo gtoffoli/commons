@@ -8,6 +8,7 @@ ul.ta-menu li:before { display: none; }
    <span class="dropdown"> &nbsp;
      <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars" aria-hidden="true"></i></b></a>
      <ul class="dropdown-menu ta-menu">
+       <li><a href="/textanalysis/dependency/{{ obj_type }}/{{ obj_id }}/" target="_blank">{% trans "Dependency parse" %}</a></li>
        <li><a href="/textanalysis/context/{{ obj_type }}/{{ obj_id }}/" target="_blank">{% trans "Keywords In Context" %}</a></li>
        <li><a href="/textanalysis/wordlists/{{ obj_type }}/{{ obj_id }}/" target="_blank">{% trans "Word Lists by POS" %}</a></li>
        <li><a href="/textanalysis/annotations/{{ obj_type }}/{{ obj_id }}/" target="_blank">{% trans "Annotated text" %}</a></li>
