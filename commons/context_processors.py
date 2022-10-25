@@ -81,6 +81,7 @@ def processor(request):
         'HAS_LRS': settings.HAS_LRS,
         'HAS_MEETING': settings.HAS_MEETING,
         'HAS_BLOG': settings.HAS_BLOG,
+        'HAS_FEEDBACK': 'feedback' in settings.INSTALLED_APPS,
         'INBOX_COUNT': inbox_count,
         'BROWSER': browser,
         'SITE_ID': settings.SITE_ID,

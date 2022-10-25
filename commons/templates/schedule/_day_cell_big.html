@@ -35,12 +35,18 @@
                                 <td class="text-center">{% trans "Ends" %}</td>
                                 <td>{% blocktrans with occurrence.end|date:_("DATETIME_FORMAT") as end_date %}{{ end_date }}{% endblocktrans %}</td>
                             </tr>
+                            {% if HAS_FEEDBACK %}
+                            {% with user_id=user.id %}{% with event_code=occurrence.event|private_code:user_id %}
                             <tr>
-                                <td class="text-center">{% trans "Personal event code" %}</td>
-                                {% with user_id=user.id %}
-                                <td><textarea cols="8" style="text-align:center;">{{ occurrence.event|private_code:user_id }}</textarea></td>
-                                {% endwith %}
+                                <td class="text-center">{% trans "personal event code"|capfirst %}</td>
+                                <td><textarea cols="8" style="text-align:center;">{{ event_code }}</textarea></td>
                             </tr>
+                            <tr>
+                                <td class="text-center">{% trans "event dashboard"|capfirst %}</td>
+                                <td><a class="btn btn-default" href="/feedback/dashboard/{{ event_code }}/" target="_{{ event_code }}">{% trans "open"|capfirst %}</a></td>
+                            </tr>
+                            {% endwith %}{% endwith %}
+                            {% endif %}
                             {% if occurrence.event.rule %}
                                 {% if not occurrence.id %}
                                     <tr>
