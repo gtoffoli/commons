@@ -64,8 +64,7 @@ def my_projects(request):
 def project_contents_view(request, project_slug):
     project = get_object_or_404(Project, slug=project_slug)
     if request:
-        # return render(request, 'vue/contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
-        return render(request, 'contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug})
+        return render(request, 'contents_dashboard.html', {'project_id': project.id, 'project_name': project.name, 'project_slug':project.slug, 'VUE': True,})
     #
 def project_contents(project_id):
     project = get_object_or_404(Project, id=project_id)
@@ -91,7 +90,6 @@ def project_contents(project_id):
     return contents
 
 def my_contents_view(request):
-    # return render(request, 'vue/contents_dashboard.html', {'project_id': 0, 'VUE': True,})
     return render(request, 'contents_dashboard.html', {'project_id': 0, 'VUE': True,})
 
 def user_contents(user):
@@ -132,5 +130,4 @@ def user_contents(user):
     return contents
 
 def my_activity(request):
-    # return activity_stream(request, user=request.user)
     return activity_stream(request, user=request.user, max_days=7)
