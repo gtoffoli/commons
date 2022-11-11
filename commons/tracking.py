@@ -62,17 +62,16 @@ def track_action(request, actor, verb, action_object, target=None, description=N
         actor = request.user
     if not (actor and verb and action_object):
         return
+    ### try:
+    if latency:
+        min_time = timezone.now()-timedelta(days=latency)
+        actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
+        if actions.count():
+            return
+    actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
+    ### except:
+    ### pass
     try:
-        if latency:
-            min_time = timezone.now()-timedelta(days=latency)
-            actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
-            if actions.count():
-                return
-        actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
-    except:
-        pass
-    try:
-        # if not settings.LRS_ENDPOINT:
         if not settings.HAS_LRS or not settings.LRS_ENDPOINT:
             return
     except:
