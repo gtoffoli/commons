@@ -101,12 +101,14 @@ actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
 actstream.registry.register(Repo)
 actstream.registry.register(OER)
+actstream.registry.register(OerEvaluation)
 actstream.registry.register(LearningPath)
 actstream.registry.register(PathNode)
 actstream.registry.register(Entry)
 actstream.registry.register(Author)
 actstream.registry.register(Topic)
 actstream.registry.register(Post)
+actstream.registry.register(Message)
 
 # patching flatpages.views.flatpage to fetch the flatpage associated to site 1 as a default
 def new_flatpage_view(request, url):
@@ -965,7 +967,6 @@ def folder_add_document(request):
         version = handle_uploaded_file(uploaded_file)
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=DRAFT)
         folderdocument.save()
-        # track_action(request, request.user, 'Create', folderdocument, target=project)
         track_action(request, request.user, 'Create', folderdocument, target=folder)
     return HttpResponseRedirect(folder.get_absolute_url())
 
@@ -984,11 +985,9 @@ def project_add_document(request):
         except:
             return HttpResponseRedirect('/project/%s/folder/' % project.slug)
         version = handle_uploaded_file(uploaded_file)
-        # folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=PUBLISHED)
         state = project.get_site() == 1 and PUBLISHED or RESTRICTED
         folderdocument = FolderDocument(folder=folder, document=version.document, user=request.user, state=state)
         folderdocument.save()
-        # track_action(request, request.user, 'Create', folderdocument, target=project)
         track_action(request, request.user, 'Create', folderdocument, target=folder)
     return HttpResponseRedirect('/project/%s/folder/' % project.slug)
 
@@ -1018,7 +1017,6 @@ def project_add_resource_online(request):
         form = FolderOnlineResourceForm(request.POST)
         if form.is_valid():
             data = form.cleaned_data
-            # folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=PUBLISHED, created=timezone.now())
             state = project.get_site() == 1 and PUBLISHED or RESTRICTED
             folderdocument = FolderDocument(folder=folder, label=data['label'], embed_code=data['embed_code'], user=request.user, state=state, created=timezone.now())
             folderdocument.save()
@@ -1110,34 +1108,28 @@ def folderdocument_share(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.share(request)
     track_action(request, request.user, 'Share', folderdocument, target=folderdocument.folder.project)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_submit(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.submit(request)
     track_action(request, request.user, 'Submit', folderdocument, target=folderdocument.folder.project)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_withdraw(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.withdraw(request)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_reject(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.reject(request)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_publish(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.publish(request)
     track_action(request, request.user, 'Approve', folderdocument, target=folderdocument.folder.project)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_un_publish(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.un_publish(request)
-    # return HttpResponseRedirect('/folder/%s/' % folderdocument.folder.slug)
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 
 def folder_delete(request, folder_id):
@@ -2252,7 +2244,7 @@ def project_create_calendar(request, project_id):
     calendar = Calendar.objects.get_or_create_calendar_for_object(project, distinction="owner", name=project.name)
     return HttpResponseRedirect('/project/{}/'.format(project.slug))
 
-# report user accessing an online meeting (KnockPlop or MultipatyMeeting)
+# report user accessing an online meeting (such as letsmeet - MultipartyMeeting)
 def report_meeting_in(request, project_id):
     user = request.user
     if not user.is_authenticated:
@@ -4152,11 +4144,9 @@ def pathnode_delete(request, node_id):
     lp = node.path
     if not lp.can_access(request.user):
         raise PermissionDenied
-    # track_action(request, request.user, 'Delete', node, target=lp.project)
     track_action(request, request.user, 'Delete', node, target=lp)
     lp.remove_node(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
-    # if request.is_ajax():
     if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -4208,7 +4198,6 @@ def pathnode_down(request, node_id):
         raise PermissionDenied
     lp.node_down(node, request)
     track_action(request, request.user, 'Edit', lp, target=lp.project)
-    # if request.is_ajax():
     if is_ajax(request):
         return JsonResponse({"data": 'ok'})
     return HttpResponseRedirect('/lp/%s/' % lp.slug)
@@ -4335,7 +4324,6 @@ def repos_search(request, template='search_repos.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        # actstream.action.send(user, verb='Search', description='repo')
         track_action(request, user, 'Search', None, description='repo')
     return render(request, template, context)
 
