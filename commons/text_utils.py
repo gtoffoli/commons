@@ -1,6 +1,5 @@
 import json
 import requests
-import textract
 import readability
 
 from django.http import JsonResponse
@@ -15,7 +14,7 @@ from commons.documents import Document
 from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer, PathNodeSerializer
 from commons.user_spaces import project_contents, user_contents
 
-from textanalysis.utils import extract_annotate_with_bs4
+from textanalysis.utils import get_document_text, extract_annotate_with_bs4
 
 nlp_url = settings.NLP_URL
 
@@ -27,59 +26,6 @@ obj_type_to_class_dict = {
     'doc': Document,
     'flatpage': FlatPage,
 }
-
-def get_document_text(document, return_has_text=False):
-    has_text = False
-    text = ''
-    version = document.latest_version
-    mimetype = version.mimetype
-    encoding = 'utf8'
-    if mimetype.count('text'): # if mimetype.endswith('text'):
-        has_text = True
-    if mimetype.count('text/plain'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='txt')
-    elif mimetype.count('pdf'): # elif mimetype.endswith('pdf'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='pdf')
-    elif mimetype.count('rtf'): # elif mimetype.endswith('rtf'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='rtf')
-    elif mimetype.count('msword'): # elif mimetype.endswith('msword'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='doc')
-    elif mimetype.count('officedocument.wordprocessingml') and mimetype.count('document'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='docx')
-    elif mimetype.count('officedocument.presentationml'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='pptx')
-    elif mimetype.count('officedocument.spreadsheetml'):
-        has_text = True
-        if not return_has_text:
-            text = textract.process(version.file.path, encoding=encoding, extension='xlsx')
-    else:
-        split_label = document.label.split('.')
-        if len(split_label) > 1:
-            extension = split_label[-1]
-            if extension in ['csv', 'doc', 'docx', 'eml', 'epub', 'htm', 'html', 'json', 'msg', 'odt', 'pdf', 'pptx', 'ps', 'rtf', 'txt', 'xslx', 'xss',]:
-                has_text = True
-                if not return_has_text:
-                    text = textract.process(version.file.path, encoding=encoding, extension=extension)
-    if return_has_text:
-        return has_text
-    else:
-        try:
-            text = text.decode()
-        except (UnicodeDecodeError, AttributeError):
-            pass
-        return text
 
 def get_oer_text(oer, return_has_text=False):
     text = ''
@@ -214,26 +160,6 @@ def lp_compare_nodes(request, lp_slug):
     else:
         data = {'status': response.status_code}
         return JsonResponse(data)
-
-@csrf_exempt
-def ajax_contents(request):
-    user = request.user
-    data = json.loads(request.body.decode('utf-8'))
-    project_id = data['project_id']
-    user_key = '{id:05d}'.format(id=request.user.id)
-    endpoint = nlp_url + '/api/get_corpora/'
-    data = json.dumps({'user_key': user_key})
-    response = requests.post(endpoint, data=data)
-    if not response.status_code==200:
-        return propagate_remote_server_error(response)
-    data = response.json()
-    corpora = data['corpora']
-    if project_id:
-        data = project_contents(project_id)
-    else: # if user.is_authenticated:
-        data = user_contents(user)
-    data['corpora'] = corpora
-    return JsonResponse(data)
 
 def ajax_lp_nodes(request, lp_id):
     lp = get_object_or_404(LearningPath, id=lp_id)
