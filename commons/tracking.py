@@ -57,7 +57,8 @@ def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMA
         to = []
     send_email_message(to, subject, body, bcc=bcc, from_email=from_email)
     
-def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
+# def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
+def track_action(request, actor, verb, action_object, target=None, description=None, response=None, latency=0):
     if request and not actor:
         actor = request.user
     if not (actor and verb and action_object):
@@ -68,7 +69,8 @@ def track_action(request, actor, verb, action_object, target=None, description=N
         actions = Action.objects.filter(actor_object_id=actor.id, verb=verb, action_object_content_type=ContentType.objects.get_for_model(action_object), action_object_object_id=action_object.pk, timestamp__gt=min_time).all()
         if actions.count():
             return
-    actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
+    # actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description)
+    actstream.action.send(actor, verb=verb, action_object=action_object, target=target, description=description or response)
     ### except:
     ### pass
     try:
@@ -83,7 +85,7 @@ def track_action(request, actor, verb, action_object, target=None, description=N
     if action and XAPI_VERB_ALIASES.get(verb, verb) in xapi_verbs and XAPI_ACTIVITY_ALIASES.get(action, action) in xapi_activities:
         if action == 'Post' and target: # 190307 GT: Forum is a more useful context than Topic
             target = target.forum
-        # success = put_statement(request, actor, verb, action_object, target)
-        success = put_statement(request, actor, verb, action_object, target, timeout=1)
+        # success = put_statement(request, actor, verb, action_object, target, timeout=1)
+        success = put_statement(request, actor, verb, action_object, target, response=response, timeout=1)
         if not success:
             print ("--- tracciamento su LRS non riuscito ---")

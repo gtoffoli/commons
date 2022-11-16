@@ -629,12 +629,14 @@ XAPI_ACTIVITY_ALIASES = {
     'Message': 'private message',
     'Webpage': 'web page',
     'OnlineMeeting': 'meeting',
+    'Event': 'event',
 }
 XAPI_VERB_ALIASES = {
     'Accept': 'accepted',
     'Access': 'accessed',
     'Approve': 'approved',
     'Bookmark': 'bookmarked',
+    'Comment': 'commented',
     'Create': 'created',
     'Delete': 'deleted',
     'Edit': 'edited',
