@@ -935,7 +935,8 @@ def projects_search(request, template='search_projects.html', extra_context=None
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='project')
+        # track_action(request, user, 'Search', None, description='project')
+        track_action(request, user, 'Search', None, activity_id='project')
     return render(request, template, context)
 
 @login_required
@@ -2720,7 +2721,8 @@ def people_search(request, template='search_people.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='user profile')
+        # track_action(request, user, 'Search', None, description='user profile')
+        track_action(request, user, 'Search', None, activity_id='user profile')
     return render(request, template, context)
 
 def browse_people(request):
@@ -4324,7 +4326,8 @@ def repos_search(request, template='search_repos.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='repo')
+        # track_action(request, user, 'Search', None, description='repo')
+        track_action(request, user, 'Search', None, activity_id='resource repository')
     return render(request, template, context)
 
 def clean_term(term):
@@ -4525,7 +4528,8 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='oer')
+        # track_action(request, user, 'Search', None, description='oer')
+        track_action(request, user, 'Search', None, activity_id='oer')
     return render(request, template, context)
 
 @page_template('_lp_index_page.html')
@@ -4632,7 +4636,8 @@ def lps_search(request, template='search_lps.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='learningpath')
+        # track_action(request, user, 'Search', None, description='learningpath')
+        track_action(request, user, 'Search', None, activity_id='learning path')
     return render(request, template, context)
 
 @page_template('_folder_document_index_page.html')
@@ -4697,7 +4702,8 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        track_action(request, user, 'Search', None, description='document')
+        # track_action(request, user, 'Search', None, description='document')
+        track_action(request, user, 'Search', None, activity_id='document')
     return render(request, template, context)
 
 
