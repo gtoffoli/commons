@@ -40,7 +40,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.views import flatpage, render_flatpage
 from datatrans.utils import get_current_language
 import actstream
-from schedule.models import Calendar
+from schedule.models import Calendar, Event
 
 from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -109,6 +109,7 @@ actstream.registry.register(Author)
 actstream.registry.register(Topic)
 actstream.registry.register(Post)
 actstream.registry.register(Message)
+actstream.registry.register(Event)
 
 # patching flatpages.views.flatpage to fetch the flatpage associated to site 1 as a default
 def new_flatpage_view(request, url):
