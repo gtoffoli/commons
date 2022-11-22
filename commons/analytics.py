@@ -673,10 +673,6 @@ def resource_contributors(request):
     return render(request, 'contributors.html', var_dict)
 
 # def make_qs(resource):
-# Exception Value: DatabaseOperations.date_trunc_sql() missing 1 required positional argument: 'params'
-# see: https://docs.djangoproject.com/en/4.1/releases/4.1/
-# see: https://github.com/django/django/blob/stable/4.1.x/django/db/backends/postgresql/operations.py
-# see: https://stackoverflow.com/questions/13189563/how-can-i-insert-parameters-in-raw-sql-in-django-python
 def make_qs(resource, months=None): # last 24 months
     truncate_date = connection.ops.date_trunc_sql('month', 'created')
     qs = resource.objects.extra({'month':truncate_date})
