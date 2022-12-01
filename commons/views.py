@@ -1110,12 +1110,12 @@ def folderdocument_delete(request, folderdocument_id):
 def folderdocument_share(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.share(request)
-    track_action(request, request.user, 'Share', folderdocument, target=folderdocument.folder.project)
+    track_action(request, request.user, 'Share', folderdocument, target=folderdocument.folder.get_project())
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_submit(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.submit(request)
-    track_action(request, request.user, 'Submit', folderdocument, target=folderdocument.folder.project)
+    track_action(request, request.user, 'Submit', folderdocument, target=folderdocument.folder.get_project())
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_withdraw(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
@@ -1128,7 +1128,7 @@ def folderdocument_reject(request, folderdocument_id):
 def folderdocument_publish(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
     folderdocument.publish(request)
-    track_action(request, request.user, 'Approve', folderdocument, target=folderdocument.folder.project)
+    track_action(request, request.user, 'Approve', folderdocument, target=folderdocument.folder.get_project())
     return HttpResponseRedirect(folderdocument.folder.get_absolute_url())
 def folderdocument_un_publish(request, folderdocument_id):
     folderdocument = FolderDocument.objects.get(pk=folderdocument_id)
