@@ -97,6 +97,7 @@ def string_concat(*strings):
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)
 actstream.registry.register(ProjectMember)
+actstream.registry.register(Folder)
 actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
 actstream.registry.register(Repo)
