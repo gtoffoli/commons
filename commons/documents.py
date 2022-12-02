@@ -16,6 +16,11 @@ from commons.compressed_files import CompressedFile, NotACompressedFile
 from commons.scorm import ContentPackage
 import commons.utils
 from django.conf import settings
+try:
+    from textanalysis.utils import get_document_text
+    HAS_TEXT_EXTRACTOR = True
+except:
+    HAS_TEXT_EXTRACTOR = False  
 
 # CACHE_PATH = os.path.join(settings.MEDIA_ROOT, 'image_cache')
 LANGUAGE = 'en'
@@ -410,6 +415,12 @@ class Document(models.Model):
         for mt in VIEWERJS_MIMETYPES:
             if mimetype.count(mt):
                 return True
+        return False
+
+    @property
+    def has_extractable_text(self):
+        if HAS_TEXT_EXTRACTOR:
+            return get_document_text(self, return_has_text=True)
         return False
 
 # @python_2_unicode_compatible
