@@ -36,5 +36,9 @@ def private_code(object, user_id):
     return commons.utils.private_code(object, user_id)
 
 @register.filter
-def split(value):
-    return value.split()
+def split(value, separator=None):
+    # return value.split()
+    if separator:
+        return value.split(separator)
+    else:
+        return value.split()
