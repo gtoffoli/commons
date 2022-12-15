@@ -46,9 +46,10 @@ from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, Ma
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
 from .vocabularies import expand_to_descendants
 from .documents import DocumentType, Document
-from .models import Featured, Tag, UserProfile, UserPreferences, UserProfileLanguage, Folder, FolderDocument, Repo, ProjType, Project, ProjectMember
-from .models import OER, OerMetadata, SharedOer, OerEvaluation, OerQualityMetadata, OerDocument
-from .models import RepoType, RepoFeature
+from .models import Featured, Tag, UserProfile, UserPreferences, UserProfileLanguage
+from .models import ProjType, Project, ProjectMember, Folder, FolderDocument, Room
+from .models import OER, OerMetadata, SharedOer, OerDocument, OerEvaluation, OerQualityMetadata
+from .models import RepoType, Repo, RepoFeature
 from .models import LearningPath, PathNode, PathEdge, SharedLearningPath, LP_TYPE_DICT
 from .models import PORTLET, DRAFT, SUBMITTED, PUBLISHED, UN_PUBLISHED, RESTRICTED
 from .models import PROJECT_SUBMITTED, PROJECT_OPEN, PROJECT_DRAFT, PROJECT_CLOSED, PROJECT_DELETED
@@ -100,6 +101,7 @@ actstream.registry.register(ProjectMember)
 actstream.registry.register(Folder)
 actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
+actstream.registry.register(Room)
 actstream.registry.register(Repo)
 actstream.registry.register(OER)
 actstream.registry.register(OerEvaluation)

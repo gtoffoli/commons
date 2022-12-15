@@ -628,7 +628,8 @@ XAPI_ACTIVITY_ALIASES = {
     'Entry': 'article',
     'Message': 'private message',
     'Webpage': 'web page',
-    'OnlineMeeting': 'meeting',
+    # 'OnlineMeeting': 'meeting',
+    'Room': 'meeting',
     'Event': 'event',
 }
 XAPI_VERB_ALIASES = {

@@ -958,6 +958,7 @@ class Subject(models.Model):
     def __str__(self):
         return self.option_label()
 
+"""
 class OnlineMeeting(object):
     def __init__(self, project):
         self.project = project
@@ -969,6 +970,7 @@ class OnlineMeeting(object):
         return self.project.get_name()
     def get_absolute_url(self):
         return self.get_url()
+"""
 
 # @python_2_unicode_compatible
 class ProjType(models.Model):
@@ -1061,6 +1063,23 @@ def project_list(project):
     for child in project.get_children(states=[PROJECT_OPEN], all_proj_type_public=True):
         pl = pl + project_list(child)
     return pl
+
+
+class Room(models.Model):
+    '''
+    From former class dmuc.room, corresponding to a room on the XMPP server.
+    Now, used only for tracking the access action in actstream and/or in a xAPI LRS.
+    '''
+    class Meta:
+        db_table = 'dmuc_room'
+        verbose_name = _('conference room')
+        verbose_name_plural = _('conference rooms')
+
+    name = models.CharField(max_length=200, unique=True)
+    title = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 # @python_2_unicode_compatible
 class Project(Resource):
@@ -1387,14 +1406,21 @@ class Project(Resource):
 
     if settings.HAS_MEETING:
         def get_room_name(self):
-            # return self.slug
             return random_string_generator(prefix=self.slug+'_', date_seed=True)
     
         def get_room_url(self):
             return '{}/{}'.format(settings.MEETING_SERVER, self.get_room_name())
 
+        """
         def get_room(self):
             return OnlineMeeting(self)
+        """
+        def get_room(self):
+            room, created = Room.objects.get_or_create(name='room_{}'.format(self.id))
+            if created:
+                room.title = string_concat(_('Room for project'), ' "', self.name, '"')
+                room.save()
+            return room
 
     def members(self, user_only=False, sort_on='last_name'):
         memberships = self.get_memberships(state=1).order_by('user__'+sort_on)
@@ -1562,17 +1588,9 @@ class Project(Resource):
                     return member
         return None
     
-    """
-    def get_mentoring_projects(self):
-        return self.get_children(proj_type_name='ment')
-    """
     def get_mentoring_projects(self, states=None):
         return self.get_children(proj_type_name='ment', states=states)
 
-    """
-    def get_mentoring(self, user=None):
-        children = self.get_children(proj_type_name='ment')
-    """
     def get_mentoring(self, user=None, states=None):
         mentoring_children = self.get_children(proj_type_name='ment', states=states)
         children = []
