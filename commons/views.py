@@ -81,8 +81,8 @@ from commons.utils import pdf_writer_save
 from six import iteritems
 
 from commons.mentoring import get_all_mentors, get_all_candidate_mentors, get_mentor_memberships, get_mentee_memberships, get_mentoring_requests, get_mentoring_requests_waiting, mentoring_project_accept_mentor, mentoring_project_select_mentoring_journey
-from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles
-from roles.models import Role
+from roles.utils import add_local_role, remove_local_role, grant_permission, get_local_roles, get_local_role
+from roles.models import Role, PrincipalRoleRelation
 # from taggit.models import Tag
 # from filetransfers.api import serve_file
 from commons.filetransfer import serve_file
@@ -98,6 +98,7 @@ def string_concat(*strings):
 actstream.registry.register(UserProfile)
 actstream.registry.register(Project)
 actstream.registry.register(ProjectMember)
+actstream.registry.register(PrincipalRoleRelation)
 actstream.registry.register(Folder)
 actstream.registry.register(FolderDocument)
 actstream.registry.register(Forum)
@@ -1743,7 +1744,9 @@ def project_edit(request, project_id=None, parent_id=None, proj_type_id=None):
                     project.accept_application(request, membership)
                     if not proj_type_name == 'ment':
                         role_admin = Role.objects.get(name='admin')
-                        add_local_role(project, user, role_admin)
+                        # add_local_role(project, user, role_admin)
+                        local_role = add_local_role(project, user, role_admin)
+                        track_action(request, request.user, 'Approve', local_role, target=project)
                 else:
                     set_original_language(project) 
                     project.save()
@@ -2065,10 +2068,14 @@ def project_toggle_supervisor_role(request, project_id):
         role_admin = Role.objects.get(name='admin')
         membership = ProjectMember.objects.get(user=user, project=project, state=1)
         if project.is_admin(user):
+            local_role = get_local_role(project, user, role_admin)
+            track_action(request, request.user, 'Retract', local_role, target=project)
             remove_local_role(project, user, role_admin)
             text = 'Removed role Administrator/Supervisor by %s %s [id: %s].' % (user.last_name, user.first_name, user.id)
         else:
-            add_local_role(project, user, role_admin)
+            # add_local_role(project, user, role_admin)
+            local_role = add_local_role(project, user, role_admin)
+            track_action(request, request.user, 'Approve', local_role, target=project)
             text = text = 'Assigned role Administrator/Supervisor by %s %s [id: %s].' % (user.last_name, user.first_name, user.id)
         if membership.history:
             membership.history = '%s\n%s' % (membership.history,text)
