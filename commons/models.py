@@ -481,7 +481,8 @@ class Publishable(object):
     def can_share(self,request):
         if self.get_site()==1:
             return False
-        return (self.state in [DRAFT] and request.user == self.creator) or (self.state in [UN_PUBLISHED] and self.project.is_admin(request.user))
+        # return (self.state in [DRAFT] and request.user == self.creator) or (self.state in [UN_PUBLISHED] and self.project.is_admin(request.user))
+        return (self.state in [DRAFT] and request.user == self.creator) or (self.state in [SUBMITTED, UN_PUBLISHED] and self.project.is_admin(request.user))
     def can_submit(self, request):
         # return self.state in [DRAFT] and request.user == self.creator
         if self.get_site()==1:
