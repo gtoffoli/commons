@@ -21,6 +21,8 @@ import commons.user_spaces
 from commons import weblog
 import textanalysis
 from textanalysis import views as text_analysis
+if settings.HAS_LRS:
+    from xapi_client.report.views import MyStatements
 
 if settings.HAS_SAML2:
     import djangosaml2
@@ -309,6 +311,11 @@ if settings.USE_HAYSTACK:
                 load_all=False
             ), name='haystack_search'),
     #)
+    ]
+
+if settings.HAS_LRS:
+    urlpatterns += [
+        url(r"^my_statements/$", MyStatements.as_view(), name="my_statements"),
     ]
 
 from django.conf.urls.static import static

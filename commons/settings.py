@@ -609,7 +609,10 @@ PLUS_SIZE = 4
 SUB_EXTS = 'zip'
 
 XAPI_VOCABULARIES_MODULE = None
-XAPI_DEFAULT_PLATFORM = 'CommonS Platform'
+if DEBUG:
+    XAPI_DEFAULT_PLATFORM = 'CS devel'
+else:
+    XAPI_DEFAULT_PLATFORM = 'CommonSpaces'
 XAPI_DEFAULT_RECIPES = ['Events']
 XAPI_ACTIVITY_ALIASES = {
     'UserProfile': 'user profile',

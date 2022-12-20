@@ -111,13 +111,24 @@ def resources_children(request):
 def my_children(request):
     children = []
     children.append (MenuItem(
+         capfirst(_("my dashboard")),
+         url='/my_home/',
+        ))
+    children.append (MenuItem(
          capfirst(_("my projects")),
          url='/my_projects/',
         ))
-    children.append (MenuItem(
-         capfirst(_("my activity")),
-         url='/my_activity/',
-        ))
+    if request.user.is_staff: # CS, WE-COLLAB
+        children.append (MenuItem(
+             capfirst(_("my activity")),
+             url='/my_activity/',
+            ))
+    # new, test only:
+    if settings.HAS_LRS and ((request.user.is_authenticated and settings.SITE_ID in [5]) or (request.user.is_staff and settings.SITE_ID in [1, 5])): # CS, WE-COLLAB
+        children.append (MenuItem(
+             capfirst(_("my statements")),
+             url='/my_statements/',
+            ))
     children.append (MenuItem(
          capfirst(_("my contents")),
          url='/my_contents/',
