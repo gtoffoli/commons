@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% load i18n %}
 {% load commons_tags %}
 
@@ -13,42 +12,59 @@
 {% block body_class %}activity_stream{% endblock %}
 
 {% block extra_head %}
+    {{ form.media }}
 <style>
-	th, td { padding: 0 1em }
+    .date { width: 70%; }
+    .form-group { vertical-align: top;}
+    /* th, td { padding: 0 1em } */
+    td { inline-size: 160px; }
 </style>
 {% endblock extra_head %}
 
 {% block body %}
+<div class="panel panel-c0 text-left marginTB30">
+    <div class="panel-heading-c0 padding1020">
+      <h2 class="marginTB5">
+        {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %} <span class="small">({{ actor.id }})</span>
+        {% elif project %}{% blocktrans with the_project=project.name%}Recent activity in {{ the_project }}{% endblocktrans %}
+        {% else %}{% trans "recent activity"|capfirst %}
+        {% endif %}
+      </h2>
+    </div>
+
     <section>
-        <div class="container">
-            <h1 class="marginT30">
-              {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Recent activity by {{ the_actor }}{% endblocktrans %} <span class="small">({{ actor.id }})</span>
-              {% elif project %}{% blocktrans with the_project=project.name%}Recent activity by {{ the_project }}{% endblocktrans %}
-              {% else %}{% trans "recent activity"|capfirst %}
-              {% endif %}
-            </h1>
-			{% if actions %}
-			<table id="stream" style="padding: 1em;">
-			<thead><tr class="panel-white">
-				<th>{% trans "time" %}</th>{% if not actor %}<th>{% trans "actor" %}</th>{% endif %}
+      <div class="container">
+          <h3 class="marginT30">
+            {% if actor %}{% blocktrans with the_actor=actor.get_display_name %}Activity stream of user {{ the_actor }}{% endblocktrans %} <span class="small">({{ actor.id }})</span>
+            {% elif project %}{% blocktrans with the_project=project.name%}Activity stream of project {{ the_project }}{% endblocktrans %}
+            {% else %}{% trans "activity stream"|capfirst %}
+            {% endif %}
+          </h3>
+
+		  {% if actions %}
+			<table class="table table-responsive table-bordered table-striped">
+			<thead><tr>
+				<th></th><th>{% trans "time" %}</th>{% if not actor %}<th>{% trans "actor" %}</th>{% endif %}
 			    <th>{% trans "verb" %}</th><th>{% trans "object type" %}</th><th>{% trans "object" %}</th><th>{% trans "context" %}</th>
 			</tr></thead>
 			<tbody>
 		    {% for action in actions %}<tr>
-		        <td>{{ action.timestamp|date:"d.m.Y H:i" }}</td>
-		        {% if not actor %}<td><a href="/profile/{{ action.actor.username }}/">{{ action.actor.get_display_name }}</a></td>{% endif %}
-		        <td class="text-center">{{ action.verb }}</td>
-		        <td class="text-center">{% if action.description and not action.action_object %}{{ action.description }}{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}</td>
-		        <td>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% endif %}{% if action.action_object.name %}{{ action.action_object.name|truncatechars:60 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:60 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% if action.action_object %}</a>{% endif %}{% endif %}</td>
+                <td style="text-align: center;"><small>{{ forloop.counter }}</small></td>
+		        <td><nobr><small>{{ action.timestamp|date:"d-m-Y H:i" }}</small></nobr></td>
+		        {% if not actor %}<td><a href="/profile/{{ action.actor.username }}/">{{ action.actor.get_display_name }}</a></small></small></td>{% endif %}
+		        <td><nobr><small>{{ action.verb }}</small></small></td>
+		        <td><nobr><small>{% if action.description and not action.action_object %}{{ action.description }}{% elif action.action_object %}{{ action.action_object|object_class }}{% endif %}</small></small></td>
+		        <td><nobr><small>{% if action.action_object.get_absolute_url %}<a href="{{ action.action_object.get_absolute_url }}">{% if action.action_object.name %}{{ action.action_object.name|truncatechars:100 }}{% elif action.action_object.title %}{{ action.action_object.title|truncatechars:60 }}{% elif action.action_object.label %}{{ action.action_object.label|truncatechars:60 }}{% elif action.action_object %}{{ action.action_object }}{% endif %}</a>{% endif %}</small></small></td>
 				{% if action.target %}
-		        <td><a href="{{ action.target.get_absolute_url }}">{{ action.target.name|truncatechars:60 }}</a></td>
+		        <td><nobr><small><a href="{{ action.target.get_absolute_url }}">{{ action.target.name|truncatechars:100 }}</a></small></small></td>
 				{% endif %}
 		    </tr>{% endfor %}
 			</tbody>
 			</table>
-			{% else %}
+		  {% else %}
 				<div style="margin-inline-start: 1.5em;"><i>{% trans "no actions were found"|capfirst %}.</i></div>
-			{% endif %}
+		  {% endif %}
         </div>
     </section>
+</div>
 {% endblock %}

@@ -612,7 +612,16 @@ XAPI_VOCABULARIES_MODULE = None
 if DEBUG:
     XAPI_DEFAULT_PLATFORM = 'CS devel'
 else:
-    XAPI_DEFAULT_PLATFORM = 'CommonSpaces'
+    XAPI_DEFAULT_PLATFORM = 'CS Platform'
+
+XAPI_PLATFORMS = [
+    ('CS Platform', 'CommonSpaces'),
+    ('CS devel', 'CommonSpaces devel'),
+    ('Moodle', 'Moodle'),
+    # ('Jupyter', 'SWAN'),
+    # ('EarMaster', 'EarMaster'),
+]
+
 XAPI_DEFAULT_RECIPES = ['Events']
 XAPI_ACTIVITY_ALIASES = {
     'UserProfile': 'user profile',

@@ -1655,6 +1655,12 @@ class ProjectMember(models.Model):
         verbose_name = _('project member')
         verbose_name_plural = _('project member')
 
+    def __str__(self):
+        return self.user.get_display_name()
+
+    def get_absolute_url(self):
+        return self.user.get_profile().get_absolute_url()
+
     def user_data(self):
         user=User.objects.filter(pk=self.user_id)
         return user and user[0] or None
