@@ -98,6 +98,7 @@ def web_resource_analyzer(request):
     if not user.is_authenticated:
         return HttpResponseForbidden()
     url = request.GET.get('url', '')
-    var_dict = {'obj_type': 'resource', 'obj_id': url}
+    # var_dict = {'obj_type': 'resource', 'obj_id': url}
+    var_dict = {'obj_type': 'web', 'obj_id': url}
     # return render(request, 'vue/text_dashboard.html', var_dict)
     return render(request, 'text_dashboard.html', var_dict)
