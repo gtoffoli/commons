@@ -185,6 +185,7 @@ INSTALLED_APPS = (
     'datetimewidget',
     'schedule',
     'textanalysis',
+    # 'xblock',
 )
 """
 181212 MMR DatePickerInput required Python 3.3
