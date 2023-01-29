@@ -95,17 +95,20 @@ dl.eval dd:nth-child(even) {
                       <li class="marginR20"><a href="/{% if folderdocument.embed_code %}online_resource{% else %}folderdocument{% endif %}/{{ folderdocument.id }}/edit/" title="{% trans "edit" %}"><i class="fa fa-edit"></i></a></li>
                     {% endif %}{% endif %}
                     {% if folderdocument.embed_code %}
-                       <li class="marginR10"><a href="/online_resource/{{ folderdocument.id }}/view" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                      <li class="marginR10"><a href="/online_resource/{{ folderdocument.id }}/view" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                      {% if folderdocument.get_googledoc_id %}
+                         <li class="marginR10" title="{% trans "warning"|capfirst %}: {% trans "text could be too long" %}">{% include "_menu_text_analysis.html" with obj_type="drive" obj_id=folderdocument.id %}</li>
+                      {% endif %}
                     {% else %}
-                    {% if folderdocument.state > 0 %}
-                    <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
-                    {% endif %}
-                    {% if document.viewable %}
-                      <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
-                    {% endif %}
-                    {% if can_analyze_text and document.has_extractable_text %}
+                      {% if folderdocument.state > 0 %}
+                      <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
+                      {% endif %}
+                      {% if document.viewable %}
+                         <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                      {% endif %}
+                      {% if can_analyze_text and document.has_extractable_text %}
                          <li class="marginR10" {% if document.size > 100000 %}title="{% trans "warning"|capfirst %}: {% trans "text could be too long" %}"{% endif %}>{% include "_menu_text_analysis.html" with obj_type="doc" obj_id=document.id %}</li>
-                    {% endif %}
+                      {% endif %}
                     {% endif %}
 {% comment %}
                     {% if folderdocument.state == -3 %}

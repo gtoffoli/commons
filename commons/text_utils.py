@@ -15,6 +15,7 @@ from commons.api import ProjectSerializer, OerSerializer, LearningPathSerializer
 from commons.user_spaces import project_contents, user_contents
 
 from textanalysis.utils import get_document_text, extract_annotate_with_bs4
+from textanalysis.utils import get_googledoc_fileid, get_googledoc_name_type, get_googledoc_text
 
 nlp_url = settings.NLP_URL
 
@@ -47,10 +48,24 @@ def get_oer_text(oer, return_has_text=False):
     return text
 
 def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_children=True):
-    # if obj:
+    title = ''
+    text = ''
+    description = ''
     if obj and not obj_type:
         if isinstance(obj, Project):
             obj_type = 'project'
+            """
+        elif isinstance(obj, FolderDocument):
+            if obj.document:
+                obj_type = 'doc'
+                obj = obj.document
+                obj_id = obj.id
+                title = obj.label
+            elif obj.embed_code and get_googledoc_fileid(obj.embed_code):
+                obj_type = 'drive'
+                title = obj.label
+                fileid = get_googledoc_fileid(obj.embed_code)
+            """
         elif isinstance(obj, OER):
             obj_type = 'oer'
         elif isinstance(obj, LearningPath):
@@ -61,7 +76,6 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
             obj_type = 'doc'
         elif isinstance(obj, FlatPage):
             obj_type = 'flatpage'
-    text = ''
     if obj_type == 'project':
         if not obj:
             obj = get_object_or_404(Project, id=obj_id)
@@ -112,9 +126,14 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
     elif obj_type == 'doc':
         if not obj:
             obj = get_object_or_404(Document, id=obj_id)
-        title = obj.label
-        description = ''
+        title = title or obj.label
         text = get_document_text(obj)
+    elif obj_type == 'drive':
+        obj = get_object_or_404(FolderDocument, id=obj_id)
+        fileid = get_googledoc_fileid(obj.embed_code)
+        status, filename, mimetype = get_googledoc_name_type(None, fileid=fileid)
+        title = obj.label or filename
+        text = get_googledoc_text(None, fileid=fileid)
     elif obj_type == 'flatpage':
         if not obj:
             obj = get_object_or_404(FlatPage, id=obj_id)

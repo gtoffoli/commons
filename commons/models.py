@@ -63,8 +63,10 @@ from commons.utils import pdf_get_numpages, pdf_add_bookmark
 from commons.utils import url_to_writer, document_to_writer, html_to_writer
 from commons.utils import get_request_headers, get_request_content
 from commons.google_api import youtube_search, video_getdata, googledoc_write_as_pdf
-from six import iteritems
 
+from textanalysis.utils import get_googledoc_fileid
+
+from six import iteritems
 from pikepdf import Pdf
 
 from django.utils.text import format_lazy
@@ -707,6 +709,8 @@ class FolderDocument(models.Model, Publishable):
     def get_site(self):
         return self.folder.get_site()
 
+    def get_googledoc_id(self):
+        return self.embed_code and get_googledoc_fileid(self.embed_code) or None
 
 GENDERS = (
    ('-', _('not specified')),
