@@ -16,8 +16,24 @@
     {{ form.media.js }}
     <script type="text/javascript" src="{{ STATIC_URL }}pybb/js/jquery.formset.min.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}pybb/js/pybbjs.js"></script>
+	<script>
+		window.onload = function () {
+			data = {topic_id: {{ topic.id }}};
+		    fetch('/track_topic_view/', {
+		      method: 'POST',
+		      headers: { "Content-Type": "application/json", "X-Requested-With": "XMLHttpRequest" },
+		      body: JSON.stringify(data)
+		   	})
+		    .then(response => response.json())
+		    .then(data => {
+				warning = data['warning'];
+				if (!(warning === undefined))
+					window.alert(warning);
+		    })
+		    .catch(err => (window.alert(err)))
+		}
+	</script>
 {% endblock %}
-
 
 {% block body_class %}bc-white topic{% endblock %}
 

@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-"""
 
-# Python 2 - Python 3 compatibility
-
+import json
 from datetime import timedelta
 
 from django.conf import settings
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 
+from pybb.models import Topic
 import actstream
 from actstream.models import Action
 
@@ -92,3 +94,19 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
         success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, response=response, timeout=2)
         if not success:
             print ("--- tracciamento su LRS non riuscito ---")
+
+@csrf_exempt
+def track_topic_view(request):
+    """ called on load by pybb.topic.html """
+    if request.method == 'POST':
+        data = json.loads(request.body.decode('utf-8'))
+        topic_id = data['topic_id']
+    else:
+        topic_id = request.GET.get('topic_id', '')
+    data = {}
+    try:
+        topic = Topic.objects.get(id=topic_id)
+        track_action(request, request.user, 'View', topic, target=topic.forum)
+    except:
+        data['warning'] = _('invalid topic id')
+    return JsonResponse(data)

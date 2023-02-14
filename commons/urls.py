@@ -90,6 +90,7 @@ urlpatterns += [
     url(r"^project/(?P<project_slug>[\w-]+)/mailing_list/$", commons.views.project_mailing_list, name="project_mailing_list"),
     url(r"^project/(?P<project_id>[\d-]+)/create_forum/$", commons.views.project_create_forum, name="project_create_forum"),
     url(r"^forum_edit/(?P<forum_id>[\d-]+)/$", commons.views.forum_edit_by_id, name="forum_edit"),
+    url(r"^track_topic_view/$", commons.tracking.track_topic_view, name="track_topic_view"),
     url(r"^project/(?P<project_id>[\d-]+)/calendar/$", commons.views.project_calendar, name="project_calendar"),
     url(r"^project/(?P<project_id>[\d-]+)/create_calendar/$", commons.views.project_create_calendar, name="project_create_calendar"),
     url(r"^project/(?P<project_id>[\d-]+)/paste_oer/(?P<oer_id>[\d-]+)/$", commons.views.project_paste_oer, name="project_paste_oer"),
