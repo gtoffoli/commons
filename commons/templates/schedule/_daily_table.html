@@ -2,6 +2,9 @@
 <div class="table-day table-responsive">
   <table class="table table-striped">
     {% for slot in slots %}
+    {% with duration=slot_duration %}
+    {% with next_start=slot.start|add_delta:slot_duration %}
+    {% with previous_end=slot.end|sub_delta:slot_duration %}
     <tr>
       <td class="slot text-right">
         <span>{{ slot.start|time:"G:i" }}</span>
@@ -13,17 +16,17 @@
       <td class="occ">
         {% for occ in slot.occurrences %}
           {% if occ.event == event %}
-            {% if slot.start == occ.start and slot.end ==  occ.end %}
+            {% if occ.start >= slot.start and occ.start < next_start and occ.end <= slot.end and occ.end > previous_end %}
               <button class="btn btn-default" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %}">
                 {% options occ %}
                 {% title occ %}
               </button>
-            {% elif slot.start == occ.start %}
+            {% elif occ.start >= slot.start and occ.start < next_start %}
               <button class="btn btn-default" data-toggle="modal" data-target="#{% hash_occurrence occ %}" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %} border-bottom: none; border-bottom-left-radius:0; border-bottom-right-radius:0;">
                 {% options occ %}
                 {% title occ %}
               </button>
-            {% elif slot.end ==  occ.end %}
+            {% elif occ.end <= slot.end and occ.end > previous_end %}
               <div class="nobtn" style="{% if occ.event.color_event %} border-color:{{occ.event.color_event}};{% endif %} border-top: none; border-top-left-radius:0; border-top-right-radius:0;">
                 <span class="glyphicon glyphicon-pencil"></span>
                 <span class="glyphicon glyphicon-remove"></span>
@@ -42,6 +45,7 @@
       </td>
       {% endfor %}
     </tr>
+    {% endwith %}{% endwith %}{% endwith %}
     {% endfor %}
   </table>
 </div>
