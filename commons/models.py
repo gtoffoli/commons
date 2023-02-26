@@ -49,7 +49,7 @@ from zinnia.models import Entry as BlogArticle
 from datatrans.models import KeyValue
 from datatrans.utils import get_current_language
 from django_messages.models import Message
-from schedule.models import Calendar
+from schedule.models import Calendar, CalendarRelation
 
 from commons.vocabularies import LevelNode, LicenseNode, SubjectNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from commons.vocabularies import CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -301,6 +301,12 @@ def get_calendar_events(request, calendar):
         return events
     else:
         return calendar.event_set.prefetch_related("occurrence_set", "rule")
+
+def get_event_project(event):
+    calendar = event.calendar
+    relations = CalendarRelation.objects.filter(calendar=calendar)
+    project_id = relations[0].object_id
+    return Project.objects.get(id=project_id)
 
 LANGUAGE_CODES = [language[0] for language in settings.LANGUAGES]
 # @python_2_unicode_compatible

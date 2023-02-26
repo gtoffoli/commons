@@ -40,6 +40,8 @@ except NameError:
         DEBUG = True
 if DEBUG:
     TEMPLATE_STRING_IF_INVALID = '%s'
+    import mimetypes
+    mimetypes.add_type("application/javascript", ".js", True)
 
 try: BASE_DIR
 except NameError: BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
