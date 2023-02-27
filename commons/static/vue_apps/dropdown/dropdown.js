@@ -11,7 +11,7 @@ export default
     template: `
     <div class="btn-group">
         <li v-on:click="toggleMenu()" class="dropdown-toggle" v-if="selectedOption.name !== undefined">
-          {{ selectedOption.name }} - {{ selectedOption.start_date }}
+          {{ selectedOption.name }}
           <span class="caret"></span>
         </li>
 
@@ -23,7 +23,7 @@ export default
         <ul class="dropdown-menu" v-if="showMenu">
             <li v-for="(option, idx) in options" :key="idx">
                 <a v-on:click="updateOption(option)">
-                    {{ option.name }} - {{ option.start_date }}
+                    {{ option.name }}
                 </a>
             </li>
         </ul>
@@ -69,12 +69,14 @@ export default
 
     methods: {
         updateOption(option) {
+			console.log('updateOption', option);
             this.selectedOption = option;
             this.showMenu = false;
             this.$emit('update-option', this.selectedOption);
         },
 
         toggleMenu() {
+			console.log('toggleMenu');
             this.showMenu = !this.showMenu;
         },
 
