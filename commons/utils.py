@@ -308,4 +308,6 @@ def unshuffle_integers(shuffled, n_integers=2, l_substring=2):
     return [False, False] # illegal input
 
 def private_code(object, other_id):
+    if not other_id:
+        return ''
     return shuffle_integers(2, [object.id, other_id])
