@@ -137,7 +137,7 @@ def my_children(request):
          capfirst(_("text analysis")),
          url='/textanalysis/ta_input/',
         ))
-    if settings.SITE_ID in [1, 5]:
+    if settings.SITE_ID in [5]:
         children.append (MenuItem(
              capfirst(_("student feedback")),
              url='/feedback/attendee/',
