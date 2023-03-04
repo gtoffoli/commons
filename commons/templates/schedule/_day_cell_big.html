@@ -45,10 +45,12 @@
                                 <td class="text-center">{% trans "event dashboard"|capfirst %}</td>
                                 <td><a class="btn btn-default" href="/feedback/dashboard/{{ event_code }}/" target="_{{ event_code }}">{% trans "open"|capfirst %}</a></td>
                             </tr>
+                            <!--
                             <tr>
                                 <td class="text-center">{% trans "attendee panel"|capfirst %}</td>
                                 <td><a class="btn btn-default" href="/feedback/attendee/{{ event_code }}/" target="attendee">{% trans "open"|capfirst %}</a></td>
                             </tr>
+                            -->
                             {% endwith %}{% endwith %}
                             {% endif %}
                             {% if occurrence.event.rule %}
