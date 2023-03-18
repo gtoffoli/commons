@@ -2507,7 +2507,6 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                # qs = LearningPath.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
                 qs = LearningPath.objects.filter(Q(**{field_name: entry}), state__in=view_states)
                 qs = qs.filter_by_site(LearningPath)
                 n = qs.count()
@@ -2518,7 +2517,6 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label= pgettext(RequestContext(request), entry[1])
-                # qs = LearningPath.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
                 qs = LearningPath.objects.filter(Q(**{field_name: code}), state__in=view_states)
                 qs = qs.filter_by_site(LearningPath)
                 n = qs.count()
@@ -2552,7 +2550,6 @@ def browse(request):
                     prefix = '-' * entry.level
                 except:
                     prefix = ''
-                # qs = OER.objects.filter(Q(**{field_name: entry}), state=PUBLISHED)
                 qs = OER.objects.filter(Q(**{field_name: entry}), state__in=view_states)
                 qs = qs.filter_by_site(OER)
                 n = qs.count()
@@ -2563,7 +2560,6 @@ def browse(request):
             for entry in choices:
                 code = entry[0]
                 label = pgettext(RequestContext(request), entry[1])
-                # qs = OER.objects.filter(Q(**{field_name: code}), state=PUBLISHED)
                 qs = OER.objects.filter(Q(**{field_name: code}), state__in=view_states)
                 qs = qs.filter_by_site(OER)
                 n = qs.count()
@@ -2704,7 +2700,6 @@ def people_search(request, template='search_people.html', extra_context=None):
         else:
             form = PeopleSearchForm()
             request.session["post_dict"] = {}
-        # qs = UserProfile.objects.filter(user__is_active=True)
         qs = UserProfile.objects.distinct().filter(user__is_active=True)
         if settings.SITE_ID > 1:
             qs = qs.filter(user__in=site_member_users())
@@ -2715,7 +2710,6 @@ def people_search(request, template='search_people.html', extra_context=None):
                 profiles.append(profile)
     else:
         form = PeopleSearchForm()
-        # qs = UserProfile.objects.filter(user__is_active=True)
         qs = UserProfile.objects.distinct().filter(user__is_active=True)
         if settings.SITE_ID > 1:
             qs = qs.filter(user__in=site_member_users())
@@ -4359,7 +4353,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
     term = ''
     criteria = []
     include_all = ''
-    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
@@ -4517,13 +4510,11 @@ def oers_search(request, template='search_oers.html', extra_context=None):
         for q in qq:
             qs = qs.filter(q)
         if not include_all:
-            # qs = qs.filter(state=PUBLISHED)
             qs = qs.filter(state__in=view_states)
         qs = qs.filter_by_site(OER)
         oers = qs.distinct().order_by('title')
     else:
         form = OerSearchForm()
-        # qs = OER.objects.filter(state=PUBLISHED).distinct()
         qs = OER.objects.filter(state__in=view_states).distinct()
         qs = qs.filter_by_site(OER)
         oers = qs.distinct().order_by('title')
@@ -4538,7 +4529,6 @@ def oers_search(request, template='search_oers.html', extra_context=None):
 
     user = request.user
     if request.method == 'POST' and user.is_authenticated:
-        # track_action(request, user, 'Search', None, description='oer')
         track_action(request, user, 'Search', None, activity_id='oer')
     return render(request, template, context)
 
@@ -4549,7 +4539,6 @@ def lps_search(request, template='search_lps.html', extra_context=None):
     term= ''
     criteria = []
     include_all = ''
-    # view_states = settings.SITE_ID==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
     if request.method == 'POST' or (request.method == 'GET' and request.GET.get('page', '')):
         if request.method == 'GET' and request.session.get('post_dict', None):
@@ -4623,7 +4612,6 @@ def lps_search(request, template='search_lps.html', extra_context=None):
         for q in qq:
             qs = qs.filter(q)
         if not include_all:
-            # qs = qs.filter(state=PUBLISHED)
             qs = qs.filter(state__in=view_states)
         qs = qs.filter_by_site(LearningPath)
         lps = qs.distinct().order_by('title')
@@ -4740,8 +4728,6 @@ def user_fullname_autocomplete(request):
     create_option = []
     results = []
     if q and len(q) >= MIN_CHARS:
-        # qs = User.objects.filter(Q(last_name__icontains=q) | Q(first_name__icontains=q), is_active=True).order_by('last_name', 'first_name')
-        # if settings.SITE_ID in [3, 5] and not request.session.get('is_site_root', None):
         if settings.SITE_ID in settings.SITES_PRIVATE and not request.session.get('is_site_root', None):
             qs = site_member_users()
         else:
@@ -4758,7 +4744,8 @@ def repo_autocomplete(request):
     results = []
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
-            qs = Repo.objects.filter(state=PUBLISHED, name__icontains=q).order_by('name')
+            view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+            qs = Repo.objects.filter(state__in=view_states, name__icontains=q).order_by('name')
             qs = qs.filter_by_site(Repo)
             results = [{'id': repo.id, 'text': repo.name[:80]} for repo in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
@@ -4771,7 +4758,8 @@ def oer_autocomplete(request):
     results = []
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
-            qs = OER.objects.filter(state=PUBLISHED, title__icontains=q).order_by('title')
+            view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+            qs = OER.objects.filter(state__in=view_states, title__icontains=q).order_by('title')
             qs = qs.filter_by_site(OER)
             results = [{'id': oer.id, 'text': oer.title[:80]} for oer in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
@@ -4784,7 +4772,8 @@ def lp_autocomplete(request):
     results = []
     if request.user.is_authenticated:
         if q and len(q) >= MIN_CHARS:
-            qs = LearningPath.objects.filter(state=PUBLISHED, project__proj_type__name = 'roll', title__icontains=q).order_by('title')
+            view_states = (settings.SITE_ID==1 or not is_site_member(request.user)) and [PUBLISHED] or [RESTRICTED, PUBLISHED]
+            qs = LearningPath.objects.filter(state__in=view_states, project__proj_type__name = 'roll', title__icontains=q).order_by('title')
             qs = qs.filter_by_site(LearningPath)
             results = [{'id': lp.id, 'text': lp.title[:80]} for lp in qs] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
