@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-"""
 
 # Python 2 - Python 3 compatibility
-# from __future__ import unicode_literals
-# import future
-# from future.builtins import str
-# from django.utils.encoding import python_2_unicode_compatible
 from six import BytesIO
 
 from django.conf import settings
@@ -43,7 +39,6 @@ from django_extensions.db.fields import CreationDateTimeField, ModificationDateT
 from django_dag.models import node_factory, edge_factory
 from roles.models import Role, ObjectPermission
 from roles.utils import get_roles, get_local_roles, add_local_role, remove_local_role, has_permission, grant_permission
-# from django_messages.models import inbox_count_for
 from pybb.models import Forum
 from zinnia.models import Entry as BlogArticle
 from datatrans.models import KeyValue
@@ -504,7 +499,7 @@ class Publishable(object):
     def can_publish(self, request):
         return self.state in [SUBMITTED, UN_PUBLISHED] and self.project and self.project.is_admin(request.user)
     def can_un_publish(self, request):
-        return self.state in [PUBLISHED] and self.project and self.project.is_admin(request.user)
+        return self.state in [PUBLISHED, RESTRICTED] and self.project and self.project.is_admin(request.user)
 
     def share(self, request):
         if self.can_share(request):
@@ -1871,7 +1866,6 @@ class OER(Resource, Publishable):
     class Meta:
         verbose_name = _('OER')
         verbose_name_plural = _('OERs')
-        # ordering = ['title']
 
     def __str__(self):
         return self.title
@@ -1897,13 +1891,11 @@ class OER(Resource, Publishable):
         published_states = [PUBLISHED]
         if self.get_site() > 1 and is_site_member(user):
             published_states = [RESTRICTED, PUBLISHED]
-        # if self.get_site()==1 and self.state==PUBLISHED or self.state in [RESTRICTED, PUBLISHED]:
         if self.state in published_states:
             return True
         if not user.is_authenticated and self.state in (DRAFT, RESTRICTED, SUBMITTED):
             return False
         project = self.project
-        # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
         return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, RESTRICTED, SUBMITTED)) or self.state == UN_PUBLISHED
 
     def can_republish(self, user):
@@ -1912,16 +1904,13 @@ class OER(Resource, Publishable):
         if not user.is_authenticated:
             return False
         project = self.project
-        # return user.is_superuser or self.creator==user or project.is_admin(user) or (project.is_member(user) and self.state in (DRAFT, SUBMITTED))
         return user.is_superuser or self.creator==user or project.is_admin(user)
  
-    # def can_edit(self, user):
     def can_edit(self, request):
         user = request.user
         if not user.is_authenticated:
             return False
         project = self.project
-        # return user.is_superuser or self.creator==user or project.can_add_oer(user)
         return user.is_superuser or self.creator==user or project.is_admin(user)
  
     def can_delete(self, user):
@@ -1935,25 +1924,6 @@ class OER(Resource, Publishable):
             return OerEvaluation.objects.filter(user=user, oer=self)
         else:
             return OerEvaluation.objects.filter(oer=self).order_by('-modified')
-
-    """
-    def get_stars(self):
-        MAX_STARS = 5
-        evaluations = self.get_evaluations()
-        n = evaluations.count()
-        stars = sum([e.overall_score for e in evaluations])
-        half = False
-        if n:
-            float_stars = stars / float(n)
-            stars = int(float_stars)
-            remainder = float_stars - stars
-            half = remainder >= 0.4
-            full = 'i' * stars
-            empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
-            return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': n }
-        else:
-            return { 'n': n }
-    """
 
     def get_stars(self, evaluation=None, i_facet=None):
         MAX_STARS = 5
@@ -1989,7 +1959,6 @@ class OER(Resource, Publishable):
             return { 'n': n }
 
     def can_evaluate(self, user):
-        # if self.state not in [PUBLISHED]:
         published_states = self.get_site()==1 and [PUBLISHED] or [RESTRICTED, PUBLISHED]
         if self.state not in published_states:
             return False
@@ -2068,7 +2037,6 @@ def update_oer_type(sender, **kwargs):
 
 post_save.connect(update_oer_type, sender=OER)
    
-# @python_2_unicode_compatible
 class OerDocument(models.Model):
     """
     Link an OER to an attached document; attachments are ordered
@@ -2095,7 +2063,6 @@ class OerDocument(models.Model):
             self.order = last_order+1
         super(OerDocument, self).save(*args, **kwargs) # Call the "real" save() method.
        
-# @python_2_unicode_compatible
 class OerMetadata(models.Model):
     """
     Link an OER to a specific instance of a metadata type with it's current value
@@ -2112,7 +2079,6 @@ class OerMetadata(models.Model):
         verbose_name = _('additional metadatum')
         verbose_name_plural = _('additional metadata')
 
-# @python_2_unicode_compatible
 class SharedOer(models.Model):
     """
     Link to an OER catalogued in another project
@@ -2157,7 +2123,6 @@ def score_to_stars(score):
     empty = 'i' * (MAX_STARS - stars - (half and 1 or 0))
     return { 'stars': stars, 'full': full, 'half': half, 'empty': empty, 'n': stars }
 
-# @python_2_unicode_compatible
 class OerEvaluation(models.Model):
     """
     Link an OER to instances of quality metadata
@@ -2186,7 +2151,6 @@ class OerEvaluation(models.Model):
     def get_site(self):
         return self.oer.get_site()
 
-# @python_2_unicode_compatible
 class OerQualityMetadata(models.Model):
     """
     Link an OER evaluation to a specific instance of a quality facet with it's current value
@@ -2226,7 +2190,6 @@ LP_TYPE_CHOICES = (
     )
 LP_TYPE_DICT = dict(LP_TYPE_CHOICES)
 
-# @python_2_unicode_compatible
 class LearningPath(Resource, Publishable):
     slug = AutoSlugField(unique=True, populate_from='title', editable=True, overwrite=True, max_length=80)
     cloned_from = models.ForeignKey('self', on_delete=models.SET_NULL, verbose_name=_('original learning path'), blank=True, null=True, related_name='cloned_path')
@@ -2924,7 +2887,6 @@ class LearningPath(Resource, Publishable):
             pdf_add_bookmark(writer, node.get_label(), pagenum)
         return writer, mimetype
 
-# @python_2_unicode_compatible
 class SharedLearningPath(models.Model):
     """
     Link to an LearningPath created in another project

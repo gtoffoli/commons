@@ -2,6 +2,7 @@ private.py
 google_analytics.html
 *.key
 *.pem
+.*
 
 #############
 ## Python

@@ -2940,7 +2940,6 @@ def oer_detail(request, oer_id, oer=None):
             set_clipboard(request, key='bookmarked_oers', value=bookmarked_oers+[oer_id])
     var_dict['add_bookmarked'] = add_bookmarked
     var_dict['in_bookmarked_oers'] = in_bookmarked_oers = oer_id in (get_clipboard(request, key='bookmarked_oers') or [])
-    # var_dict['can_edit'] = can_edit = oer.can_edit(user)
     var_dict['can_edit'] = can_edit = oer.can_edit(request)
     var_dict['can_analyze_text'] = not user.is_anonymous and user.is_full_member()
     var_dict['can_translate'] = oer.can_translate(request)
@@ -2961,6 +2960,7 @@ def oer_detail(request, oer_id, oer=None):
     var_dict['can_publish'] = oer.can_publish(request)
     var_dict['can_un_publish'] = oer.can_un_publish(request)
     var_dict['can_republish'] = can_republish = oer.can_republish(user)
+    # print('oer_detail', var_dict['can_share'], var_dict['can_submit'], var_dict['can_withdraw'], var_dict['can_reject'], var_dict['can_publish'], var_dict['can_un_publish'], var_dict['is_published'], var_dict['is_un_published'])
     var_dict['can_evaluate'] = can_evaluate = oer.can_evaluate(user)
     var_dict['completed_profile'] = completed_profile
     var_dict['can_less_action'] = can_edit or can_delete or (add_bookmarked and not in_bookmarked_oers) or (can_delete and not in_cut_oers)
