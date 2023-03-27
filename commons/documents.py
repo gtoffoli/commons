@@ -51,6 +51,7 @@ VIEWABLE_MIMETYPES = (
   'opendocument.spreadsheet',
   'opendocument.presentation',
   'application/x-ipynb+json',
+  'application/x-tbx+xml',
 )
 
 VIEWERJS_MIMETYPES = (
@@ -352,7 +353,14 @@ class Document(models.Model):
 
     @property
     def file_mimetype(self):
-        return self.latest_version.mimetype
+        # return self.latest_version.mimetype
+        mimetype = self.latest_version.mimetype
+        if not mimetype:
+            if self.label.endswith('ipynb'):
+                mimetype = 'application/x-ipynb+json'
+            elif self.label.endswith('tbx'):
+                mimetype = 'application/x-tbx+xml'
+        return mimetype            
 
     # TODO: rename to file_encoding
     @property
@@ -396,7 +404,6 @@ class Document(models.Model):
     @property
     def viewable(self):
         mimetype = self.file_mimetype
-        # print mimetype
         if not mimetype:
             return False
         for mt in VIEWABLE_MIMETYPES:

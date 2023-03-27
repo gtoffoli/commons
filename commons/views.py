@@ -3346,11 +3346,13 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
     node = oer = project = ment_proj = 0
     document = get_object_or_404(Document, pk=document_id)
     folder = None
+    url = None
     node_doc = node_doc or request.GET.get('node', '')
     ment_node_doc = request.GET.get('ment_doc', '')
     proj = request.GET.get('proj', '')
     profile = request.GET.get('profile', '')
-    mimetype = document.latest_version.mimetype
+    # mimetype = document.latest_version.mimetype
+    mimetype = document.latest_version.mimetype or document.file_mimetype
     if document.viewable:
         domain = request.META['HTTP_HOST']
         if node_doc:
@@ -3386,6 +3388,8 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
                 print (error)
             else:
                 url = cp_dict['url']
+        elif mimetype == 'application/x-tbx+xml' or mimetype.count('tbx'):
+            return render(request, 'tbx_view.html', {'obj_type': 'doc', 'obj_id': document.id, 'VUE': True})
         else:
             url = protocol + '://%s/document/%s/serve/' % (domain, document_id)
         if return_url:

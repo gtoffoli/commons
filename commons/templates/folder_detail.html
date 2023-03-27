@@ -104,7 +104,7 @@ dl.eval dd:nth-child(even) {
                       <li class="marginR10"><a href="/document/{{ document.id }}/download/" title="{% trans "download" %}"><i class="fa fa-download"></i></a></li>
                       {% endif %}
                       {% if document.viewable %}
-                         <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}"><i class="fa fa-eye"></i></a></li>
+                         <li class="marginR10"><a href="/document/{{ document.id }}/view/?proj={{ project.id }}" title="{% trans "view" %}" {% if 'tbx' in folderdocument.document.label %}target="_blank"{% endif %}><i class="fa fa-eye"></i></a></li>
                       {% endif %}
                       {% if can_analyze_text and document.has_extractable_text %}
                          <li class="marginR10" {% if document.size > 100000 %}title="{% trans "warning"|capfirst %}: {% trans "text could be too long" %}"{% endif %}>{% include "_menu_text_analysis.html" with obj_type="doc" obj_id=document.id %}</li>
