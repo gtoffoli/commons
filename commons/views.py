@@ -41,6 +41,7 @@ from django.contrib.flatpages.views import flatpage, render_flatpage
 from datatrans.utils import get_current_language
 import actstream
 from schedule.models import Calendar, Event
+from textanalysis.views import tbx_view
 
 from .vocabularies import LevelNode, SubjectNode, LicenseNode, ProStatusNode, MaterialEntry, MediaEntry, AccessibilityEntry, Language
 from .vocabularies import CountryEntry, EduLevelEntry, EduFieldEntry, ProFieldEntry, NetworkEntry
@@ -3323,18 +3324,22 @@ def document_serve(request, document_id, document=None, save=False, forse_downlo
     latest_version = document.latest_version
     if not latest_version.exists():
         return HttpResponseNotFound()
-    mimetype = latest_version.mimetype
+    # mimetype = latest_version.mimetype
+    mimetype = latest_version.mimetype or document.file_mimetype
     if mimetype=='application/x-ipynb+json' and not forse_download:
         f = latest_version.open()
         data = f.read()
         f.close()
         html = ipynb_to_html(data)
         return HttpResponse(html, 'text/html')
+    elif mimetype=='application/x-tbx+xml' and not forse_download:
+        return tbx_view(request, obj_type='doc', obj_id=document.id)
     return serve_file(
         request,
         latest_version.file,
         save_as = save and '"%s"' % latest_version.document.label or None,
-        content_type=latest_version.mimetype or 'application/octet-stream' # if latest_version.mimetype else 'application/octet-stream'
+        # content_type=latest_version.mimetype or 'application/octet-stream'
+        content_type=mimetype or 'application/octet-stream'
         )
 
 def document_download(request, document_id, document=None):
@@ -3388,7 +3393,7 @@ def document_view(request, document_id, node_oer=False, return_url=False, return
                 print (error)
             else:
                 url = cp_dict['url']
-        elif mimetype == 'application/x-tbx+xml' or mimetype.count('tbx'):
+        elif (not return_mimetype) and (mimetype == 'application/x-tbx+xml' or mimetype.count('tbx')):
             return render(request, 'tbx_view.html', {'obj_type': 'doc', 'obj_id': document.id, 'VUE': True})
         else:
             url = protocol + '://%s/document/%s/serve/' % (domain, document_id)
@@ -3583,7 +3588,8 @@ def get_compatible_viewable_documents(documents, ranges):
     for document in documents:
         if not document.viewable:
             continue
-        mt = document.latest_version.mimetype
+        # mt = document.latest_version.mimetype
+        mt = document.latest_version.mimetype or document.file_mimetype
         if not mimetype or mt == mimetype:
             out_documents.append(document)
             mimetype = mt
@@ -3625,10 +3631,6 @@ def lp_play(request, lp_id, lp=None):
     current_text = current_node.get_text()
     ranges = current_node.get_ranges()
     def handle_view_template(mimetype, url, document=None):
-        """
-        if mimetype == 'application/pdf':
-            var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
-        """
         if mimetype.count('image/'): # view only first non-PDF
             var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
             var_dict['media_view'] = True
@@ -3639,7 +3641,7 @@ def lp_play(request, lp_id, lp=None):
             # 190604 MMR var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, document.label)
             var_dict['document_view'] = AUDIO_VIEW_TEMPLATE % (url, '100%', document.label)
             var_dict['media_view'] = True
-        else: # including ipynb and zip (SCORM content package)
+        else: # including ipynb, tbx and zip (SCORM content package)
             var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
     if oer:
         documents = oer.get_sorted_documents()
@@ -3659,8 +3661,6 @@ def lp_play(request, lp_id, lp=None):
                     var_dict['document_view'] = DOCUMENT_VIEW_TEMPLATE % url
                 elif mimetype.count('image/'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
-                    # var_dict['document_view'] = IMAGE_VIEW_TEMPLATE % url
-                    # var_dict['media_view'] = True
                     handle_view_template(mimetype, url)
                 elif mimetype.count('video/'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
@@ -3669,6 +3669,9 @@ def lp_play(request, lp_id, lp=None):
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     handle_view_template(mimetype, url, document=current_document)
                 elif mimetype.count('ipynb'): # view only first non-PDF
+                    url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
+                    handle_view_template(mimetype, url)
+                elif mimetype.count('tbx'): # view only first non-PDF
                     url = protocol + '://%s/document/%s/serve/' % (request.META['HTTP_HOST'], viewable_documents[0].id)
                     handle_view_template(mimetype, url)
                 elif mimetype in ('application/zip', 'application/x-zip', 'application/x-zip-compressed'):
