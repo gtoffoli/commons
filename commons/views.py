@@ -3318,7 +3318,7 @@ def serve_ipynb_url(request):
     html = ipynb_url_to_html(url)
     return HttpResponse(html, 'text/html')
 
-def document_serve(request, document_id, document=None, save=False, forse_download=False):
+def document_serve(request, document_id, document=None, save=False, force_download=False):
     if not document:
         document = get_object_or_404(Document, pk=document_id)
     latest_version = document.latest_version
@@ -3326,13 +3326,13 @@ def document_serve(request, document_id, document=None, save=False, forse_downlo
         return HttpResponseNotFound()
     # mimetype = latest_version.mimetype
     mimetype = latest_version.mimetype or document.file_mimetype
-    if mimetype=='application/x-ipynb+json' and not forse_download:
+    if mimetype=='application/x-ipynb+json' and not force_download:
         f = latest_version.open()
         data = f.read()
         f.close()
         html = ipynb_to_html(data)
         return HttpResponse(html, 'text/html')
-    elif mimetype=='application/x-tbx+xml' and not forse_download:
+    elif mimetype=='application/x-tbx+xml' and not force_download:
         return tbx_view(request, obj_type='doc', obj_id=document.id)
     return serve_file(
         request,
@@ -3343,7 +3343,7 @@ def document_serve(request, document_id, document=None, save=False, forse_downlo
         )
 
 def document_download(request, document_id, document=None):
-    return document_serve(request, document_id, document=document, save=True, forse_download=True)
+    return document_serve(request, document_id, document=document, save=True, force_download=True)
 
 def document_view(request, document_id, node_oer=False, return_url=False, return_mimetype=False, node_doc=False):
     user = request.user
