@@ -377,6 +377,7 @@ ROOT_URLCONF = 'commons.urls'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+CORPORA = os.path.join(MEDIA_ROOT, 'corpora')
 
 # print(sys.version_info)
 if sys.version_info[0] == 3 and sys.version_info[1] >= 6:
