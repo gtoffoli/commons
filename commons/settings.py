@@ -724,3 +724,6 @@ if not getattr(WSGIRequest, 'is_ajax', None):
     ASGIRequest.is_ajax = is_ajax
 
 # print(BASE_DIR, PROJECT_ROOT, TEMPLATES[0]['DIRS'], DEBUG, PROTOCOL)
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("text/javascript", ".js", True)
