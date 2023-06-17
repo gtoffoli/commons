@@ -3289,8 +3289,21 @@ def oer_evaluation_edit_by_id(request, evaluation_id):
 
 def handle_uploaded_file(file_object):
     document_type = DocumentType.objects.get(pk=2) # OER file type ??? non usato
-    # from documents.settings import LANGUAGE
     from .documents import LANGUAGE
+    # handle conversion of .csv file to .tbx (xml-TBX format)
+    if file_object.name.endswith('.csv') and file_object.content_type=='text/csv':
+        tsv_data = file_object.read().decode('utf-8')
+        lines = tsv_data.splitlines()
+        if len(lines)>=2:
+            heading = lines[0]
+            columns = ['id', 'lang', 'term']
+            if heading.count('\t')>=2 and all([c in heading for c in columns]):
+                from django.core.files.uploadedfile import UploadedFile
+                from textanalysis.tbx import tbx_tsv_2_dict, tbx_dict_2_xml
+                tbx_dict = tbx_tsv_2_dict(tsv_data)
+                xml_str = tbx_dict_2_xml(tbx_dict)
+                file_name = file_object.name.replace('.csv', '.tbx')
+                file_object = UploadedFile(BytesIO(xml_str.encode('utf-8')), name=file_name)
     version = Document.objects.upload_single_document(document_type, file_object, language=LANGUAGE)
     return version
 

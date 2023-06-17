@@ -605,7 +605,7 @@ HOMEPAGE_TIMEOUT = 60 * 60 * 24 # seconds in 1 day
 RECENT_HOURS = 24 # after this time posts and messages are no more new
 
 #file attachment
-EXTS_FILE_ATTACHMENT = 'txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip|apk|json|tbx'
+EXTS_FILE_ATTACHMENT = 'txt|doc|docx|ppt|pptx|pdf|xls|xlsx|odt|odp|ods|jpg|png|mp3|mp4|rtf|ipynb|zip|apk|json|csv|tbx'
 SIZE_FILE_ATTACHMENT = 10
 EXTS_FILE_USER_PROFILE = 'pdf'
 SIZE_FILE_USER_PROFILE = 2
@@ -727,3 +727,4 @@ if not getattr(WSGIRequest, 'is_ajax', None):
 if DEBUG:
     import mimetypes
     mimetypes.add_type("text/javascript", ".js", True)
+    mimetypes.add_type("application/javascript", ".js", True)
