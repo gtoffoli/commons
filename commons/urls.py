@@ -318,16 +318,3 @@ if settings.DEBUG:
     urlpatterns = urlpatterns + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 import commons.api
 import success.api
-
-"""
-    url(r"^ajax_contents/$", text_analysis.ajax_contents, name="ajax_contents"),
-    url(r"^ajax_new_corpus/$", text_analysis.ajax_new_corpus, name="ajax_new_corpus"),
-    url(r"^ajax_make_corpus/$", text_analysis.ajax_make_corpus, name="ajax_make_corpus"),
-    # url(r"^ajax_get_corpora/$", text_analysis.ajax_get_corpora, name="ajax_get_corpora"),
-    url(r"^ajax_delete_corpus/$", text_analysis.ajax_delete_corpus, name="ajax_delete_corpus"),
-    url(r"^ajax_insert_item/$", text_analysis.ajax_insert_item, name="ajax_insert_item"),
-    url(r"^ajax_resource_to_item/$", text_analysis.ajax_resource_to_item, name="ajax_resource_to_item"),
-    url(r"^ajax_remove_item/$", text_analysis.ajax_remove_item, name="ajax_remove_item"),
-    url(r"^ajax_update_domains/$", text_analysis.ajax_update_domains, name="ajax_update_domains"),
-    url(r"^ajax_compare_resources/$", text_analysis.ajax_compare_resources, name="ajax_compare_resources"),
-"""
