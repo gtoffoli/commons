@@ -15,6 +15,7 @@ TEXT_MIMETYPE_KEYS = (
   'msword',
   'wordprocessingml.document',
   'officedocument.wordprocessingml',
+  'officedocument.presentationml',
 )
 
 def filter_documents(documents):
