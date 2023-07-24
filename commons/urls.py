@@ -20,7 +20,7 @@ from commons.api import router
 import commons.user_spaces
 from commons import weblog
 import textanalysis
-from textanalysis import views as text_analysis
+# from textanalysis import views as text_analysis
 if settings.HAS_LRS:
     from xapi_client.report.views import MyStatements
 
@@ -244,11 +244,11 @@ urlpatterns += [
     url(r"^analytics/active_users/$", commons.analytics.active_users, name="active_users"),
     url(r"^analytics/active_comembers/$", commons.analytics.active_comembers, name="active_comembers"),
     url(r"^analytics/contributors/$", commons.analytics.resource_contributors, name="contributors"),
-    url(r"^context_dashboard/$", text_analysis.context_dashboard, name="context_dashboard_0"),
-    url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_1"),
-    url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_3"),
-    url(r"^context_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_2"),
-    url(r'^brat$', text_analysis.brat, name="brat"),
+    # url(r"^context_dashboard/$", text_analysis.context_dashboard, name="context_dashboard_0"),
+    # url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_1"),
+    # url(r"^context_dashboard/(?P<file_key>[\w\d-]+)/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_3"),
+    # url(r"^context_dashboard/(?P<obj_type>[\w\.-]+)/(?P<obj_id>[\w\d-]+)/$", text_analysis.context_dashboard, name="context_dashboard_2"),
+    # url(r'^brat$', text_analysis.brat, name="brat"),
     url(r"^project/(?P<project_slug>[\w-]+)/contents/$", commons.user_spaces.project_contents_view, name="project_contents_view"),
     url(r"^my_contents/$", commons.user_spaces.my_contents_view, name="my_contents"),
     url(r"^my_activity/$", commons.user_spaces.my_activity, name="my_activity"),
