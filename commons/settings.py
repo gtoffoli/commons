@@ -164,6 +164,7 @@ INSTALLED_APPS = (
     'tagging',
     'zinnia',
     'success',
+    'textanalysis',
     'commons',
     'pybb',
     'viewerjs',
@@ -186,7 +187,7 @@ INSTALLED_APPS = (
     'el_pagination',
     'datetimewidget',
     'schedule',
-    'textanalysis',
+    # 'textanalysis',
     # 'xblock',
 )
 """
