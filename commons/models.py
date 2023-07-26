@@ -2356,7 +2356,6 @@ class LearningPath(Resource, Publishable):
   
     def get_roots(self, nodes=[]):
         if not nodes:
-            # nodes = self.get_nodes(order_by='created')
             nodes = self.get_nodes(order_by='created')
         return [node for node in nodes if node.is_root()]
   
@@ -2996,12 +2995,10 @@ class PathNode(node_factory('PathEdge')):
         return self.path.get_site()
 
     def make_json(self):
-        # return {'type': 'basic.Rect', 'id': 'node-%d' % self.id, 'attrs': {'text': {'text': self.label.replace("'", "\'") }}}
         return {
             'type': 'basic.Rect',
             'id': 'node-%d' % self.id,
             'attrs': {'text': {'text': self.label }, 'nodetype': self.get_nodetype(),}
-            
         }
 
     def get_absolute_url(self):
@@ -3262,6 +3259,32 @@ class PathNode(node_factory('PathEdge')):
                 new, sublist = child.get_subtree_as_sublist(visited=visited)
                 visited.extend(new)
         return visited, sublist
+
+    def get_next_sibling(self):
+        parents = self.parents()
+        if not parents:
+            return None
+        siblings = parents[0].get_ordered_children()
+        n_siblings = len(siblings)
+        if n_siblings == 1:
+            return None
+        i_self = siblings.index(self)
+        if i_self == n_siblings-1:
+            return None
+        return siblings[i_self+1]
+
+    def get_previous_sibling(self):
+        parents = self.parents()
+        if not parents:
+            return None
+        siblings = parents[0].get_ordered_children()
+        n_siblings = len(siblings)
+        if n_siblings == 1:
+            return None
+        i_self = siblings.index(self)
+        if i_self == 0:
+            return None
+        return siblings[i_self-1]
 
 PathNode.get_translations = Resource.get_translations
 PathNode.get_translation_codes = Resource.get_translation_codes

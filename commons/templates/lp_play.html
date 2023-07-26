@@ -100,7 +100,14 @@ font-weight: 600;
         </div>
         <div class="col-sm-9 col-md-9 col-lg-9 bc-white" id="right">
             <div class="clearfix marginTB0 marginLR-12 bc-white padding812">
-                <div class="pull-left" style="width:10%">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
+                <div class="pull-left" style="width:15%">{% if i_node_prev < i_node %}
+					{% if i_previous_sibling %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_previous_sibling }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "skip children" %}</a> &nbsp;&nbsp;&nbsp;
+                	<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "prev" %} <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    {% else %}
+                	<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>
+                	{% endif %}
+                {% endif %}</div>
                 <div class="text-center pull-left" style="width:80%"><span class="paddingR10">{{ i_node|add:"1" }}/{{ nodes|length }}</span>
                 {% if current_node.oer %} {% if not EMBEDDED %}<a href="/oer/{{ oer.slug }}/">{% endif %}<span class="c-pacific-blue">OER <i class="fa fa-list-alt c-pacific-blue" aria-hidden="true"></i></span>{% if not EMBEDDED %}</a>{% endif %}
                 {% elif current_node.document or current_node.embed_code %} DOC {% else %} TXT {% endif %} - {{ current_node.label }}
@@ -108,7 +115,14 @@ font-weight: 600;
                 &nbsp; <a href="/pathnode/{{ current_node.id }}/edit/"><i class="fa fa-edit font18 c-mulberry" aria-hidden="true"></i></a>
                 {% endif %}{% endif %}
                 </div>
-                <div class="pull-right text-right" style="width:10%">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
+                <div class="pull-right text-right" style="width:15%">{% if i_node_next > i_node %}
+					{% if i_next_sibling %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-arrow-down" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_next_sibling }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "skip children" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                    {% else %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                	{% endif %}
+				{% endif %}</div>
             </div>
             {% if oer_is_published %}
                 {% if oer.url %}
@@ -156,8 +170,22 @@ font-weight: 600;
                 {% endif %}
             </div>
             <div class="clearfix clearfix marginTB0 marginLR-12 bc-white padding812">
-                <div class="pull-left">{% if i_node_prev < i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>{% endif %} </div>
-                <div class="pull-right">{% if i_node_next > i_node %}<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>{% endif %}</div>
+                <div class="pull-left">{% if i_node_prev < i_node %}
+					{% if i_previous_sibling %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_previous_sibling }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "skip children" %}</a> &nbsp;&nbsp;&nbsp;
+                	<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "prev" %} <i class="fa fa-arrow-up" aria-hidden="true"></i></a>
+                    {% else %}
+                	<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_prev }}{% if EMBEDDED %}&embed=true{% endif %}"><i class="fa fa-long-arrow-left" aria-hidden="true"></i> {% trans "prev" %}</a>
+                	{% endif %}
+                {% endif %} </div>
+                <div class="pull-right">{% if i_node_next > i_node %}
+					{% if i_next_sibling %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-arrow-down" aria-hidden="true"></i></a> &nbsp;&nbsp;&nbsp;
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_next_sibling }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "skip children" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                    {% else %}
+					<a href="/lp/{{ lp.slug }}/play/?node={{ i_node_next }}{% if EMBEDDED %}&embed=true{% endif %}">{% trans "next" %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a>
+                	{% endif %}
+               	{% endif %}</div>
             </div>
         </div>
     </div>

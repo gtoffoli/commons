@@ -3633,10 +3633,21 @@ def lp_play(request, lp_id, lp=None):
     from_start = not i_node
     i_node = i_node.isdigit() and int(i_node) or 0
     var_dict['i_node'] = i_node
-    var_dict['i_node_prev'] = i_node > 0 and (i_node - 1) or 0
-    var_dict['i_node_next'] = i_node < max_node and (i_node + 1) or i_node
+    var_dict['i_node_prev'] = i_node_prev = i_node > 0 and (i_node - 1) or 0
+    var_dict['i_node_next'] = i_node_next = i_node < max_node and (i_node + 1) or i_node
     current_node = nodes[i_node]
     var_dict['current_node'] = current_node
+    if lp.path_type == 3: # if LP_DAG, next sibling exists and differs from next node in depth-first visit?
+        next_sibling = current_node.get_next_sibling()
+        if next_sibling:
+            i_next_sibling = nodes.index(next_sibling)
+            if i_next_sibling != i_node_next:
+                var_dict['i_next_sibling'] = i_next_sibling
+        previous_sibling = current_node.get_previous_sibling()
+        if previous_sibling:
+            i_previous_sibling = nodes.index(previous_sibling)
+            if i_previous_sibling != i_node_prev:
+                var_dict['i_previous_sibling'] = i_previous_sibling
     oer = current_node.oer
     current_document = current_node.document
     embed_code = current_node.embed_code
