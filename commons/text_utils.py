@@ -30,7 +30,13 @@ obj_type_to_class_dict = {
 
 def get_oer_text(oer, return_has_text=False):
     text = ''
-    if oer.url:
+    if oer.embed_code:
+        fileid = get_googledoc_fileid(oer.url or oer.embed_code)
+        if fileid:
+            text = get_googledoc_text(oer.url or oer.embed_code, fileid=fileid)
+        else:
+            pass # to be completed
+    elif oer.url:
         try:
             response = requests.get(oer.url)
             if response.status_code == 200 and response.headers['content-type'].count('text'):
