@@ -653,6 +653,7 @@ XAPI_ACTIVITY_ALIASES = {
 XAPI_VERB_ALIASES = {
     'Accept': 'accepted',
     'Access': 'accessed',
+    'Analyze': 'analyzed',
     'Approve': 'approved',
     'Bookmark': 'bookmarked',
     'Comment': 'commented',

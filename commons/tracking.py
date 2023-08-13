@@ -92,6 +92,8 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
             target = target.forum
 
         success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, response=response, timeout=2)
+        # the idea was to manually override the activity description, when it can not be derived from a specific object
+        # success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, activity_description=description, response=response, timeout=2)
         if not success:
             print ("--- tracciamento su LRS non riuscito ---")
 

@@ -28,6 +28,13 @@ obj_type_to_class_dict = {
     'flatpage': FlatPage,
 }
 
+def get_commons_object(obj_type, obj_id):
+    klass = obj_type_to_class_dict.get(obj_type, None)
+    if klass:
+        return get_object_or_404(klass, id=obj_id)
+    else:
+        return None
+
 def get_oer_text(oer, return_has_text=False):
     text = ''
     if oer.embed_code:
@@ -60,18 +67,6 @@ def get_obj_text(obj, obj_type=None, obj_id=None, return_has_text=True, with_chi
     if obj and not obj_type:
         if isinstance(obj, Project):
             obj_type = 'project'
-            """
-        elif isinstance(obj, FolderDocument):
-            if obj.document:
-                obj_type = 'doc'
-                obj = obj.document
-                obj_id = obj.id
-                title = obj.label
-            elif obj.embed_code and get_googledoc_fileid(obj.embed_code):
-                obj_type = 'drive'
-                title = obj.label
-                fileid = get_googledoc_fileid(obj.embed_code)
-            """
         elif isinstance(obj, OER):
             obj_type = 'oer'
         elif isinstance(obj, LearningPath):
