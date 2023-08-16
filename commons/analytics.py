@@ -274,7 +274,11 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
         for action in all_actions:
             # if action.action_object:
             action_object = action.action_object
-            if action_object and hasattr(action_object, 'get_site'):
+            if not action_object:
+                actions.append(action)
+                continue
+            # if action_object and hasattr(action_object, 'get_site'):
+            elif hasattr(action_object, 'get_site'):
                 if action_object.get_site() == settings.SITE_ID:
                     actions.append(action)
                     continue
@@ -304,6 +308,7 @@ def activity_stream(request, user=None, max_actions=100, max_days=30):
 contenttype_weigth_dict = {
     'project': 1,
     'folderdocument': 0.5,
+    'document': 0.5,
     'projectmember': 1,
     'oer': 1.5,
     'learningpath': 2,

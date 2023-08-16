@@ -632,6 +632,7 @@ XAPI_ACTIVITY_ALIASES = {
     'UserProfile': 'user profile',
     'Folder': 'folder',
     'FolderDocument': 'document',
+    'Document': 'document',
     'Project': 'project',
     'ProjectMember': 'membership',
     'PrincipalRoleRelation': 'role',
