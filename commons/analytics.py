@@ -295,7 +295,8 @@ def filter_actions(user=None, verbs=[], object_content_type=None, project=None, 
     return actions
 
 def activity_stream(request, user=None, max_actions=100, max_days=30):
-    if not request.user.is_authenticated or not request.user.is_manager():
+    # if not request.user.is_authenticated or not request.user.is_manager():
+    if not request.user.is_authenticated or (user!=request.user and not request.user.is_manager()):
         return HttpResponseForbidden()
     actions = []
     if user==request.user or request.user.is_superuser or (request.user.is_authenticated and request.user.is_manager(1)):
