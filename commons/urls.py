@@ -13,7 +13,7 @@ from django.contrib.flatpages import views as flatpages_views
 from filebrowser.sites import site
 import commons
 from commons import search_indexes
-from commons.views import UserAutocomplete, FeaturedAutocompleteView # , OerAutocomplete
+from commons.views import UserAutocomplete, FeaturedAutocompleteView, DocumentAutocompleteView # , OerAutocomplete
 from commons import bookmarklets
 from commons import text_utils
 from commons.api import router
@@ -226,6 +226,7 @@ urlpatterns += [
     url('oer-autocomplete/$', commons.views.oer_autocomplete, name='oer-autocomplete',),
     url('lp-autocomplete/$', commons.views.lp_autocomplete, name='lp-autocomplete',),
     url('featured-autocomplete/$', FeaturedAutocompleteView.as_view(), name='featured-autocomplete'),
+    url('document-autocomplete/$', DocumentAutocompleteView.as_view(), name='document-autocomplete'),
     url(r"^report_meeting_in/(?P<project_id>[\d-]+)/$", commons.views.report_meeting_in, name="report_meeting_in"),
     url(r"^report_pageview/$", commons.bookmarklets.report_pageview, name="report_pageview"),
     url(r"^text_analyzer/$", commons.bookmarklets.text_analyzer, name="text_analyzer"),

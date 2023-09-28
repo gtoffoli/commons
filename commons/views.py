@@ -21,7 +21,6 @@ from django.core.validators import EmailValidator
 from django.template import RequestContext
 from django.db.models import Count
 from django.db.models import Q
-# from django.db import transaction
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.template.defaultfilters import slugify
@@ -38,6 +37,11 @@ from django_messages.models import Message
 from django_messages.views import compose as message_compose
 from django.contrib.flatpages.models import FlatPage
 from django.contrib.flatpages.views import flatpage, render_flatpage
+
+from queryset_sequence import QuerySetSequence
+from dal import autocomplete
+from dal_select2_queryset_sequence.views import Select2QuerySetSequenceView
+
 from datatrans.utils import get_current_language
 import actstream
 from schedule.models import Calendar, Event
@@ -280,8 +284,6 @@ def home(request):
             wall_dict['articles'] = articles
     return render(request, 'homepage.html', wall_dict)
 
-from queryset_sequence import QuerySetSequence
-from dal_select2_queryset_sequence.views import Select2QuerySetSequenceView
 class FeaturedAutocompleteView(Select2QuerySetSequenceView):
     def get_queryset(self):
         if self.q:
@@ -4736,8 +4738,6 @@ def folder_documents_search(request, template='search_folder_documents.html', ex
         track_action(request, user, 'Search', None, activity_id='document')
     return render(request, template, context)
 
-
-from dal import autocomplete
 class UserAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = User.objects.all(is_active=True)
@@ -4768,6 +4768,34 @@ def user_fullname_autocomplete(request):
         results = [{'id': user.id, 'text': user.get_display_name()[:80]} for user in qs if user.is_completed_profile()] + create_option
     body = json.dumps({ 'results': results, 'more': False, })
     return HttpResponse(body, content_type='application/json')
+
+class DocumentAutocompleteView(autocomplete.Select2QuerySetView):
+
+    def get_queryset(self):
+        qs = Document.objects.none()
+        if self.q:
+            qs = Document.objects.filter(label__icontains=self.q)
+            if qs:
+                folder_documents = FolderDocument.objects.filter( Q(state=PUBLISHED) | Q(user=self.request.user), document__in=qs )
+                oer_documents = OerDocument.objects.filter(Q(oer__state=PUBLISHED) | Q(oer__creator=self.request.user), document__in=qs )
+                node_documents = PathNode.objects.filter(Q(path__state=PUBLISHED) | Q(path__creator=self.request.user), document__in=qs )
+                qs = QuerySetSequence(folder_documents, oer_documents, node_documents,)
+        return qs
+
+def my_documents(q, user_id=10):
+    user = User.objects.get(id=user_id)
+    qs = Document.objects.none()
+    if q:
+        qs = Document.objects.filter(label__icontains=q)
+        if qs:
+            folder_documents = FolderDocument.objects.filter( Q(state=PUBLISHED) | Q(user=user), document__in=qs )
+            oer_documents = OerDocument.objects.filter(Q(oer__state=PUBLISHED) | Q(oer__creator=user), document__in=qs )
+            node_documents = PathNode.objects.filter(Q(path__state=PUBLISHED) | Q(path__creator=user), document__in=qs )
+            qs = QuerySetSequence(folder_documents, oer_documents, node_documents,)
+        for item in qs:
+            print(item)
+    return qs
+    
 
 def repo_autocomplete(request):
     MIN_CHARS = 2

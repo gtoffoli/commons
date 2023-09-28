@@ -28,10 +28,9 @@ from pybb.models import Forum
 from dal import autocomplete
 
 from commons.models import UserProfile, UserPreferences, GENDERS, CountryEntry, EduLevelEntry, ProStatusNode, EduFieldEntry, ProFieldEntry, NetworkEntry
-from commons.models import Project, ProjType, Folder, FolderDocument, Repo, Language, SubjectNode, RepoType, RepoFeature
-from commons.models import OER, MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
-from commons.models import LearningPath, PathNode, Featured
-from commons.models import ProjectMember
+from commons.models import Project, ProjType, ProjectMember, Folder, FolderDocument, Language, SubjectNode, RepoType, RepoFeature
+from commons.models import MaterialEntry, LicenseNode, LevelNode, MediaEntry, AccessibilityEntry, MetadataType, Document, OerMetadata, OerEvaluation, OerQualityMetadata
+from commons.models import Repo, OER, OerDocument, LearningPath, PathNode, Featured
 from commons.models import OER_TYPE_CHOICES, LP_TYPE_CHOICES, PUBLICATION_STATE_CHOICES, SOURCE_TYPE_CHOICES, QUALITY_SCORE_CHOICES
 from commons.models import PROJECT_STATE_CHOICES, PROJECT_OPEN, PROJECT_CLOSED, MENTORING_MODEL_CHOICES, CHAT_TYPE_CHOICES
 
@@ -263,6 +262,13 @@ class DocumentForm(forms.Form):
     docfile = forms.FileField(
         label=_('select a file'),
         widget=forms.FileInput(attrs={'class': 'btn btn-default',}))
+
+class DocumentLinkForm(forms.Form):
+    container = autocomplete.QuerySetSequenceModelField(
+        queryset=autocomplete.QuerySetSequence(FolderDocument.objects.all(), OerDocument.objects.all(), PathNode.objects.all(),),
+        required=False,
+        widget=autocomplete.QuerySetSequenceSelect2('document-autocomplete'),
+        )
 
 class FolderForm(forms.ModelForm):
     class Meta:
