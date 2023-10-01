@@ -345,18 +345,20 @@ RTL_LANGUAGES = ['ar']
 
 # this is used to display the language name
 LANGUAGE_MAPPING = {
-        'ar': 'Arabic',
-        'el': 'Greek',
-        'en': 'English',
-        'de': 'German',
-        'es': 'Spanish',
-        'hr': 'Croatian',
-        'pl': 'Polish',
-        'pt': 'Portuguese',
-        'fr': 'French',
-        'it': 'Italian',
-        'nl': 'Dutch',
-        'lt': 'Lithuanian',
+    'ar': {'label_en': 'Arabic', 'label': 'العربية', 'color': 'DarkCyan'}, # CastletonGreen
+    'da': {'label_en': 'Danish', 'label': 'Dansk', 'color': 'Red'}, # Crimson, CreativeRed
+    'de': {'label_en': 'German', 'label': 'Deutsch', 'color': 'Khaki'}, # Gold, PaleGoldenRod
+    'el': {'label_en': 'Greek', 'label': 'Ελληνικά', 'color': 'Cyan'},
+    'en': {'label_en': 'English', 'label': 'English', 'color': 'Black'},
+    'es': {'label_en': 'Spanish', 'label': 'Español', 'color': 'Gold'},
+    'fr': {'label_en': 'French', 'label': 'Français', 'color': 'MediumBlue'},
+    'hr': {'label_en': 'Croatian','label': 'Hrvatski', 'color': 'RoyalBlue'}, # Blue
+    'it': {'label_en': 'Italian', 'label': 'Italiano', 'color': 'ForestGreen'}, # Green
+    'lt': {'label_en': 'Lithuanian', 'label': 'Lietuvių', 'color': 'Yellow'},
+    'nl': {'label_en': 'Dutch', 'label': 'Nederlandse', 'color': 'Orange'},
+    'pl': {'label_en': 'Polish', 'label': 'Polski', 'color': 'Crimson'},
+    'pt': {'label_en': 'Portuguese', 'label': 'Português', 'color': 'OrangeRed '}, # Red
+    'ru': {'label_en': 'Russian', 'label': 'Русский', 'color': 'Red'},
 }
 
 DATE_INPUT_FORMATS = ('%d-%m-%Y', '%d/%m/%Y', '%d %b %Y',)
