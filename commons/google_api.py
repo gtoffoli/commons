@@ -63,7 +63,8 @@ def googledoc_write_as_pdf(writer, document_url, ranges=None, google_key=setting
         params['alt'] = 'media'
     querystring = urllib.parse.urlencode(params)
     url += '?' + querystring
-    response = requests.get(url)
+    # response = requests.get(url)
+    response = requests.get(url, timeout=settings.REQUESTS_TIMEOUT)
     if response.status_code != requests.codes.ok:
         return False, ''
     content_type = response.headers['content-type']

@@ -80,6 +80,9 @@ SOCIALACCOUNT_PROVIDERS = {
 HAS_LINKEDIN_AUTHENTICATION = DEBUG
 HAS_FACEBOOK_AUTHENTICATION = True
 
+# Number of seconds to wait for response (without,with) content from requests.get
+REQUESTS_TIMEOUT = (1,10)
+
 # Setup caching per Django docs. In actuality, you'd probably use memcached instead of local memory.
 CACHES = {
     'default': {

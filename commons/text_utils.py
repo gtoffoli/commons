@@ -45,7 +45,8 @@ def get_oer_text(oer, return_has_text=False):
             pass # to be completed
     elif oer.url:
         try:
-            response = requests.get(oer.url)
+            # response = requests.get(oer.url)
+            response = requests.get(oer.url, timeout=settings.REQUESTS_TIMEOUT)
             if response.status_code == 200 and response.headers['content-type'].count('text'):
                 text = response.text
                 if not return_has_text:
