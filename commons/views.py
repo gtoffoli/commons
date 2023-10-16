@@ -3297,6 +3297,8 @@ def handle_uploaded_file(file_object):
     if file_object.name.endswith('.csv') and file_object.content_type=='text/csv':
         tsv_data = file_object.read().decode('utf-8')
         lines = tsv_data.splitlines()
+        if len(lines)>=3 and lines[0].startswith('TBX'):
+            lines = lines[1:]
         if len(lines)>=2:
             heading = lines[0]
             columns = ['id', 'lang', 'term']
