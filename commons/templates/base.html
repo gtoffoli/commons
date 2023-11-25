@@ -165,7 +165,7 @@
                                       $("#top-menu-"+"{{item.slug }}").addClass('active');
                                     </script>
                                   {% endif %}
-                                  <li {% if child.selected %}class="active"{% endif %}><a href="{{ child.url }}">{{ classe }} {{ child.title }}</a></li>
+                                  <li {% if child.selected %}class="active"{% endif %}><a href="{{ child.url }}"{% if child.target %} target="child.target"{% endif %}>{{ classe }} {{ child.title }}</a></li>
                                 {% endfor %}
                               </ul>
                             {% else %}

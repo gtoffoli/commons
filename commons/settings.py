@@ -625,7 +625,8 @@ else:
     XAPI_DEFAULT_PLATFORM = 'CS Platform'
 
 XAPI_PLATFORMS = [
-    ('CS Platform', 'CommonSpaces'),
+    ('CS Platform', 'CS Platform 2023-'),
+    ('CommonS Platform', 'CS Platform 2022'),
     ('CS devel', 'CommonSpaces devel'),
     ('Moodle', 'Moodle'),
     # ('Jupyter', 'SWAN'),

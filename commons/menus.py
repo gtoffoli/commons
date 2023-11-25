@@ -16,7 +16,6 @@ def about_children(request):
             ))
     if not settings.SITE_ID == 1:
         children.append (MenuItem(
-             # capfirst(string_concat(_('the site'), ' ', settings.SITE_NAME)),
              capfirst(_("this site")),
              url='/'+settings.SITE_NAME.lower()+'/info/',
             ))
@@ -103,9 +102,32 @@ def resources_children(request):
             ))
     children.append (MenuItem(
          capfirst(_("all resources")),
-         # url='/repos/',
          url='/browse/',
         ))
+    return children
+
+def tools_children(request):
+    children = []
+    children.append (MenuItem(
+         capfirst(_("glossaries")),
+         url='/textanalysis/glossaries/',
+         target='_blank'
+        ))
+    children.append (MenuItem(
+         capfirst(_("text analysis")),
+         url='/textanalysis/ta_input/',
+        ))
+    children.append (MenuItem(
+         capfirst(_("corpora")),
+         url='/textanalysis/corpora/',
+         target='_blank'
+        ))
+    if settings.SITE_ID in [5]:
+        children.append (MenuItem(
+             capfirst(_("student feedback")),
+             url='/feedback/attendee/',
+             target='_blank'
+            ))
     return children
 
 def my_children(request):
@@ -125,23 +147,20 @@ def my_children(request):
             ))
     # new, test only:
     if settings.HAS_LRS and ((request.user.is_authenticated and settings.SITE_ID in [5]) or (request.user.is_staff and settings.SITE_ID in [1, 5])): # CS, WE-COLLAB
+        protocol = request.is_secure() and 'https' or 'http'
+        domain = request.META.get('HTTP_HOST', '')
         children.append (MenuItem(
-             capfirst(_("my statements")),
+             capfirst(_("my eXperiences")),
              url='/my_statements/',
+            ))
+        children.append (MenuItem(
+             capfirst(_("new eXperience")),
+             url='/xapi/record/?ca_type=project&ca_name=We-collab&ca_id={}://{}&ca_rel=grouping'.format(protocol, domain),
             ))
     children.append (MenuItem(
          capfirst(_("my contents")),
          url='/my_contents/',
         ))
-    children.append (MenuItem(
-         capfirst(_("text analysis")),
-         url='/textanalysis/ta_input/',
-        ))
-    if settings.SITE_ID in [5]:
-        children.append (MenuItem(
-             capfirst(_("student feedback")),
-             url='/feedback/attendee/',
-            ))
     return children
 
 def help_children(request):
@@ -207,7 +226,6 @@ def help_children(request):
 def admin_children(request):
     children = []
     user = request.user
-    # if user.is_superuser or (user.is_authenticated() and user.is_community_manager()):
     if user.is_superuser or (user.is_authenticated and user.is_manager(1)):
         children.append (MenuItem(
              capfirst(_("activity stream")),
@@ -246,7 +264,12 @@ Menu.add_item("main", MenuItem(capfirst(_("resources")),
                                check=True,
                                children=resources_children,
                                separator=True))
-#if settings.SITE_ID in [1, 5,]:
+Menu.add_item("main", MenuItem(capfirst(_("tools")),
+                               url='/p',
+                               weight=30,
+                               check=True,
+                               children=tools_children,
+                               separator=True))
 Menu.add_item("main", MenuItem(capfirst(_("my spaces")),
                                url='/p',
                                weight=30,
