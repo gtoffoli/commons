@@ -111,7 +111,6 @@ def tools_children(request):
     children.append (MenuItem(
          capfirst(_("glossaries")),
          url='/textanalysis/glossaries/',
-         target='_blank'
         ))
     children.append (MenuItem(
          capfirst(_("text analysis")),
@@ -160,6 +159,7 @@ def my_children(request):
     children.append (MenuItem(
          capfirst(_("my contents")),
          url='/my_contents/',
+         target='_blank'
         ))
     return children
 
