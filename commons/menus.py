@@ -116,12 +116,13 @@ def tools_children(request):
          capfirst(_("text analysis")),
          url='/textanalysis/ta_input/',
         ))
-    children.append (MenuItem(
-         capfirst(_("corpora")),
-         url='/textanalysis/corpora/',
-         target='_blank'
-        ))
-    if settings.SITE_ID in [5]:
+    if request.user.is_authenticated:
+        children.append (MenuItem(
+             capfirst(_("corpora")),
+             url='/textanalysis/corpora/',
+             target='_blank'
+            ))
+    if settings.SITE_ID in [5] and request.user.is_authenticated:
         children.append (MenuItem(
              capfirst(_("student feedback")),
              url='/feedback/attendee/',

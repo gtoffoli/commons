@@ -7,11 +7,16 @@ Disallow: /my_home
 Disallow: /my_profile
 Disallow: /my_mail
 Disallow: /my_chat
+Disallow: /my_projects
+Disallow: /my_contents
+Disallow: /my_activity
+Disallow: /my_statements
 Disallow: /user_welcome
 Disallow: /my_preferences
 Disallow: /edit_preferences
 Disallow: /profile
 Disallow: /project/*/edit
+Disallow: /project/*/contents
 Disallow: /oer/*/edit
 Disallow: /oer/*/view
 Disallow: /lp/*/edit
