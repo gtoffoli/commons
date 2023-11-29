@@ -24,6 +24,9 @@ Disallow: /lp/*/play
 Disallow: /pathnode
 Disallow: /folder
 Disallow: /online_resource
+Disallow: /textanalysis
+Allow: /textanalysis/glossaries
+Allow: /textanalysis/ta_input
 Crawl-delay: 12
 User-agent: BUbiNG
 Disallow: /
