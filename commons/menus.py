@@ -166,10 +166,10 @@ def my_children(request):
 
 def help_children(request):
     children = []
-/*    children.append (MenuItem(
-         capfirst(_("tutorials")),
-         url='/help/tutorials/',
-        )) */
+#    children.append (MenuItem(
+#        capfirst(_("tutorials")),
+#         url='/help/tutorials/',
+#       ))
     children.append (MenuItem(
          capfirst(_("registration and authentication")),
          url='/help/register/',
