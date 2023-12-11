@@ -1,6 +1,5 @@
 User-agent: *
 Disallow: /datatrans
-Disallow: /text_dashboard
 Disallow: /admin
 Disallow: /accounts
 Disallow: /my_home
@@ -24,9 +23,10 @@ Disallow: /lp/*/play
 Disallow: /pathnode
 Disallow: /folder
 Disallow: /online_resource
+Disallow: /xapi
+Disallow: /text_dashboard
 Disallow: /textanalysis
 Allow: /textanalysis/glossaries
-Allow: /textanalysis/ta_input
 Crawl-delay: 12
 User-agent: BUbiNG
 Disallow: /
