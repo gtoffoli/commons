@@ -68,6 +68,12 @@ from django.utils.text import format_lazy
 def string_concat(*strings):
     return format_lazy('{}' * len(strings), *strings)
 
+def calendar_get_project(self):
+    relations = CalendarRelation.objects.filter(calendar=self)
+    project_id = relations[0].object_id
+    return Project.objects.get(id=project_id)
+Calendar.get_project = calendar_get_project
+
 def group_project(self):
     projects = Project.objects.filter(group=self)
     if len(projects) == 1:

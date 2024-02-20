@@ -1,0 +1,5 @@
+{% load i18n %}
+
+{% if not 'virtual' in request.path %}
+  &nbsp; <a href="/project/{{calendar.get_project.slug }}/" title="{% trans "show project" %}"><i class="fa fa-group font07em c-{% if proj_type_name in 'roll,ment' %}white{% else %}demiblack{% endif %}" aria-hidden="true"></i></a>
+{% endif %}

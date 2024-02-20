@@ -7,7 +7,7 @@
 <div class="container-fluid">
 <div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
   <div class="text-center marginB10">
-    <h4>{{ calendar.name }}</h4>
+    <h4>{{ calendar.name }} {% include "schedule/_link_project.html" %}</h4>
     <div>{% prevnext "tri_month_calendar" calendar period "F Y" %}</div>
   </div>
   <div class="text-center marginB10">

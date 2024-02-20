@@ -8,7 +8,7 @@
 <div class="container-fluid">
 <div class="marginT20 marginB10 padding5 borderRadius4 bc-white">
   <div class="text-center" >
-  <h4>{{ calendar.name }}</h4>
+  <h4>{{ calendar.name }} {% include "schedule/_link_project.html" %}</h4>
   <div class="padding5">{% prevnext "year_calendar" calendar period "Y"%}</div>
       {% for month in period.get_months %}
         {% if forloop.counter == 1 or  forloop.counter == 5 or forloop.counter == 9 %}

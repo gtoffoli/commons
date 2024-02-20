@@ -122,7 +122,8 @@ def tools_children(request):
              url='/textanalysis/corpora/',
              target='_blank'
             ))
-    if settings.SITE_ID in [5] and request.user.is_authenticated:
+    # if settings.SITE_ID in [5] and request.user.is_authenticated:
+    if settings.SITE_ID in [5]:
         children.append (MenuItem(
              capfirst(_("student feedback")),
              url='/feedback/attendee/',
@@ -202,6 +203,11 @@ def help_children(request):
          capfirst(_("mentoring")),
          url='/help/mentoring/',
         ))
+    if settings.SITE_ID == 5:
+        children.append (MenuItem(
+             capfirst(_("student feedback")),
+             url='/help/feedback/',
+            ))
     children.append (MenuItem(
          capfirst(_("analytics")),
          url='/help/analytics/',
@@ -222,10 +228,11 @@ def help_children(request):
          capfirst(_("content evaluation")),
          url='/help/evaluation/',
         ))
-    children.append (MenuItem(
-         capfirst(_("editorial tools")),
-         url='/help/editorial/',
-        ))
+    if settings.SITE_ID in [1]:
+        children.append (MenuItem(
+             capfirst(_("editorial tools")),
+             url='/help/editorial/',
+            ))
     return children
 
 def admin_children(request):
