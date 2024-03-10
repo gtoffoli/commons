@@ -6,7 +6,7 @@
     {% with next_start=slot.start|add_delta:slot_duration %}
     {% with previous_end=slot.end|sub_delta:slot_duration %}
     <tr>
-      <td class="slot text-right">
+      <td class="slot">
         <span>{{ slot.start|time:"G:i" }}</span>
         {% if addable %}
           {% create_event_url calendar slot.start %}

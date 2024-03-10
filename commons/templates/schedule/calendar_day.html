@@ -10,7 +10,7 @@
   <h4>{{ calendar.name }} {% include "schedule/_link_project.html" %}</h4>
   <div>{% prevnext "day_calendar" calendar period "l, F d, Y"%}</div>
 </div>
-{% daily_table period %}
+{% daily_table period end=24%}
 <div class="text-center">
   <span>&bull;</span>
   <a href="{% url "day_calendar" calendar.slug %}">
