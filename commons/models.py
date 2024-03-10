@@ -174,7 +174,10 @@ def user_is_manager(self, level=1):
     if self.is_authenticated:
         groups = Group.objects.filter(level__lt=level+1)
         for group in groups:
-            project = group.project
+            try:
+                project = group.project
+            except:
+                project = None
             if project and project.is_admin(self):
                 return True
     return False
