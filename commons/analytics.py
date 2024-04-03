@@ -349,7 +349,8 @@ def popular_principals(principal_type_id, active=False, from_time=None, to_time=
             contenttype_factor = contenttype_weigth_dict['project']
         elif action.target_content_type_id == principal_type_id:
             project_id = action.target_object_id
-            contenttype_factor = contenttype_weigth_dict.get(action.action_object_content_type.model, 0)
+            # contenttype_factor = contenttype_weigth_dict.get(action.action_object_content_type.model, 0)
+            contenttype_factor = contenttype_weigth_dict.get(action.target_content_type.model, 0)
         else:
             continue
         if active and principal_type_id == project_type_id:
