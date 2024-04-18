@@ -63,11 +63,11 @@ def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMA
     
 # def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
 def track_action(request, actor, verb, action_object, activity_id=None, target=None, description=None, response=None, latency=0):
-    logger.debug('track_action - 1')
+    logger.debug('tracking 1')
     if request and not actor:
         actor = request.user
     if not (actor and verb and (action_object or activity_id)):
-        logger.debug('track_action - missing role')
+        logger.debug('tracking - missing role')
         return
     ### try:
     if latency:
@@ -83,8 +83,10 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
         return
     try:
         if not settings.HAS_LRS or not settings.LRS_ENDPOINT:
+            logger.debug('tracking - no LRS', settings.HAS_LRS, settings.LRS_ENDPOINT)
             return
     except:
+        logger.debug('tracking - no/bad LRS configuration')
         return
 
     action = action_object and action_object.__class__.__name__ or activity_id
@@ -92,15 +94,17 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
         action = 'Webpage' 
 
     if action and XAPI_VERB_ALIASES.get(verb, verb) in xapi_verbs and XAPI_ACTIVITY_ALIASES.get(action, action) in xapi_activities:
-        logger.debug('track_action - 3')
+        logger.debug('tracking 2')
         if action == 'Post' and target: # 190307 GT: Forum is a more useful context than Topic
             target = target.forum
 
         success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, response=response, timeout=2)
         # the idea was to manually override the activity description, when it can not be derived from a specific object
         # success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, activity_description=description, response=response, timeout=2)
-        if not success:
-            logger.debug("--- tracciamento su LRS non riuscito ---")
+        if success:
+            logger.debug('tracking 3')
+        else:
+            logger.debug("--- tracking on LRS unsuccessful ---")
 
 @csrf_exempt
 def track_topic_view(request):
