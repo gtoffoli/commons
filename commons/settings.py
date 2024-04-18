@@ -452,12 +452,23 @@ LOGGING = {
             'filename': os.path.join(BASE_DIR, 'logs', 'error.log'),
             'formatter': 'verbose'
         },
+        'trackinglog': {
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'tracking.log'),
+            'formatter': 'verbose'
+        },
     },
     'loggers': {
         'django.request': {
             'handlers': ['errorlog', 'mail_admins',],
             'level': 'ERROR',
             'include_html': True,
+            'propagate': False,
+        },
+        'tracking': {
+            'handlers': ['trackinglog',],
+            'level': 'DEBUG',
+            'include_html': False,
             'propagate': False,
         },
     }

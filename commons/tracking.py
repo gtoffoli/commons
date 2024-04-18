@@ -2,7 +2,6 @@
 
 import json
 from datetime import timedelta
-
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.http import JsonResponse
@@ -19,6 +18,9 @@ from actstream.models import Action
 from xapi_client.utils import xapi_activities, xapi_verbs
 from xapi_client.track.xapi_statements import put_statement
 from xapi_client.utils import XAPI_ACTIVITY_ALIASES, XAPI_VERB_ALIASES
+
+import logging
+logger = logging.getLogger('tracking')
 
 def user_to_email_address(user):
     return '"{}" <{}>'.format(user.get_display_name(), user.email)
@@ -61,11 +63,11 @@ def notify_event(recipients, subject, body, from_email=settings.DEFAULT_FROM_EMA
     
 # def track_action(request, actor, verb, action_object, target=None, description=None, latency=0):
 def track_action(request, actor, verb, action_object, activity_id=None, target=None, description=None, response=None, latency=0):
-    print('track_action - 1')
+    logger.debug('track_action - 1')
     if request and not actor:
         actor = request.user
     if not (actor and verb and (action_object or activity_id)):
-        print('track_action - missing role')
+        logger.debug('track_action - missing role')
         return
     ### try:
     if latency:
@@ -90,7 +92,7 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
         action = 'Webpage' 
 
     if action and XAPI_VERB_ALIASES.get(verb, verb) in xapi_verbs and XAPI_ACTIVITY_ALIASES.get(action, action) in xapi_activities:
-        print('track_action - 3')
+        logger.debug('track_action - 3')
         if action == 'Post' and target: # 190307 GT: Forum is a more useful context than Topic
             target = target.forum
 
@@ -98,7 +100,7 @@ def track_action(request, actor, verb, action_object, activity_id=None, target=N
         # the idea was to manually override the activity description, when it can not be derived from a specific object
         # success = put_statement(request, actor, verb, action_object, target, activity_id=activity_id, activity_description=description, response=response, timeout=2)
         if not success:
-            print ("--- tracciamento su LRS non riuscito ---")
+            logger.debug("--- tracciamento su LRS non riuscito ---")
 
 @csrf_exempt
 def track_topic_view(request):
