@@ -27,7 +27,8 @@ def about_children(request):
          capfirst(_("the platform")),
          url='/info/platform/',
          ))
-    if settings.SITE_ID == 1:
+    # if settings.SITE_ID == 1:
+    if False:
         children.append (MenuItem(
              capfirst(_("press releases")),
              url='/press_releases/',
