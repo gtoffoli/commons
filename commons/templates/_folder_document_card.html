@@ -9,7 +9,7 @@
      {% if folder_document.embed_code %}{% trans "online document" %}
          <a href="/online_resource/{{ folder_document.id }}/view/" title="{% trans "view document" %}"><i class="fa fa-eye"></i></a> &nbsp;
      {% else %}
-         {% if folder_document.document.viewable %}<a href="/document/{{ folder_document.document.id }}/view/" title="{% trans "view document" %}"><i class="fa fa-eye"></i></a>{% endif %}
+         {% if folder_document.document.viewable %}<a href="/document/{{ folder_document.document.id }}/view/?proj={{ folder_document.project.id }}" title="{% trans "view document" %}"><i class="fa fa-eye"></i></a>{% endif %}
          <a href="/document/{{ folder_document.document.id }}/download/" class="download-file" title="{% trans "download document" %}"><i class="fa fa-download"></i></a>
      {% endif %}  &nbsp;&nbsp;
      {% trans "in folder" %} {{ folder_document.folder.title }} 
