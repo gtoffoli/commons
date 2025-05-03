@@ -27,7 +27,7 @@ cssselect==1.1.0
 cssselect2==0.6.0
 daphne==3.0.2
 defusedxml==0.7.1
-Django==4.1.1
+Django==4.1.7
 -e git+https://github.com/justquick/django-activity-stream.git@dd097fc2d525590d584ea4d751a3516f811dcc7b#egg=django_activity_stream
 django-allauth==0.51.0
 django-annoying==0.10.6
