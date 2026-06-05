@@ -18,7 +18,7 @@
        <a  class="navbar-brand mynavbar-brand-xs visible-xs" href="/"><img src="{% static "commons/img/common_logo_white_short.png" %}" class="img-responsive"></a>
          {% if SITE_ID > 1 %}<a class="navbar-brand" style="margin-inline-start: -20px; color:white; line-height:22px" href="/"><span style="font-size:85%">{% trans "for" %}</span><span style="margin-left:5px; font-family: LeagueMonoVariable,sans-serif; font-size:x-large;">{{ site_name }}</span></a>{% endif %}
      </div>
-
+{%   if 0   %}
      {% if user.is_authenticated %}
        <ul class="nav navbar-nav pull-right my-navbar-user-auth">
          <li><a {% if user.is_completed_profile %} href="{% url "user_home" %}" title="{% trans "my home"|capfirst %}" {% else %} href="/user_welcome/" title="{% trans "complete your profile"|capfirst %}" {% endif %}>
@@ -140,5 +140,6 @@
        </div>
 {% endif %}{% comment %} VUE {% endcomment%}
      {% endif %}
+{%   endif   %}
     </div>
   </div>
