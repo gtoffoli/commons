@@ -32,10 +32,12 @@
               <div class="form-group">
                 <input type="submit" name="Submit" class="btn btn-primary" value="{% trans "Log in" %}">
               </div>
+{%   if 0   %}
               <ul class="list-unstyled">
                 {% if is_primary_domain %}<li><a href="/accounts/signup/">{% trans "Create an account" %} <span class="fa fa-arrow-right"></span></a></li>{% endif %}
                 <li><a href="/accounts/password/reset/">{% trans "Forgot Password?" %}</a></li>
               </ul>
+{%   endif   %}
             </fieldset>
           </form>
           <script type="text/javascript">
