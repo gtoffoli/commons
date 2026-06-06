@@ -46,6 +46,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^robots.txt$', commons.views.robots, name='robots'),
     url(r'^error/$', commons.views.error, name='error'),
+    url(r'^accounts/signup/', commons.views.block_view, name='block_view'),
     url(r'^ViewerJS', TemplateView.as_view(template_name='viewerjs/index.html')),
     url(r'^api-auth/', include('rest_framework.urls')),
     url(r'^api/', include(router.urls)),

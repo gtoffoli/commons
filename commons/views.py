@@ -166,6 +166,11 @@ def robots(request):
 def error(request):
     assert False
 
+def block_view(request, *args, **kwargs):
+    # raise Http404()
+    """Accetta qualsiasi parametro passato dall'URL e lancia un 403."""
+    return HttpResponseForbidden()
+
 def group_has_project(group):
     try:
         return group.project
