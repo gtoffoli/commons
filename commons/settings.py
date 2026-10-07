@@ -427,6 +427,9 @@ LOGGING = {
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
+        },
+        'block_slot_shortage_emails': {
+            '()': 'commons.log_filters.ConnectionSlotShortageFilter'
         }
     },
     'formatters': {
@@ -440,7 +443,8 @@ LOGGING = {
     'handlers': {
         'mail_admins': {
             'level': 'ERROR',
-            'filters': ['require_debug_false'],
+            'filters': ['require_debug_false',
+                        'block_slot_shortage_emails'], # Blocca l'invio di email per questo errore
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'stream': {
