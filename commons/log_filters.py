@@ -16,7 +16,7 @@ class ConnectionSlotShortageFilter(logging.Filter):
                 # Cattura il messaggio specifico che stai riscontrando
                 if "remaining connection slots" in err_msg:
                     # Chiave di cache unica per questo tipo di errore
-                    cache_key = "connection slots"
+                    cache_key = "connectionslots"
                     # Se la chiave esiste, blocca l'invio dell'email
                     if cache.get(cache_key):
                         return False
